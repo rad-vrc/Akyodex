@@ -17,6 +17,11 @@
     <!-- 子どもにやさしいデザイン -->
     <link rel="stylesheet" href="css/kid-friendly.css">
 
+    <!-- 画像最適化: R2 事前接続＆ロゴのプリロード -->
+    <link rel="dns-prefetch" href="https://images.akyodex.com">
+    <link rel="preconnect" href="https://images.akyodex.com" crossorigin>
+    <link rel="preload" as="image" href="images/logo.webp">
+
     <!-- Custom Styles -->
     <style>
         body {
@@ -387,7 +392,7 @@
 
                     headerLogoEl.innerHTML = `
                         <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                            <img src="images/logo.webp" onerror="this.style.display='none'"
+                            <img src="images/logo.webp" onerror="this.style.display='none'" fetchpriority="high" decoding="async"
                                  alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
                         </a>
                     `;

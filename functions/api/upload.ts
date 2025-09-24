@@ -22,7 +22,10 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     const key = `images/${id}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
 
     await (env as any).AKYO_BUCKET.put(key, file.stream(), {
-      httpMetadata: { contentType: (file as any).type || "application/octet-stream" },
+      httpMetadata: {
+        contentType: (file as any).type || "application/octet-stream",
+        cacheControl: "public, max-age=31536000, immutable",
+      },
     });
 
     const base = (env as any).PUBLIC_R2_BASE as string; // 例: https://images.akyodex.com
