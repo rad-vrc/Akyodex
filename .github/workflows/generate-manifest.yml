@@ -1,0 +1,45 @@
+name: Generate Images Manifest
+
+on:
+  push:
+    paths:
+      - 'images/**'
+      - '.github/workflows/generate-manifest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate manifest
+        run: node generate-manifest.mjs
+        env:
+          FULL_URL: 'true'
+          BASE_URL: 'https://images.akyodex.com/images'
+          IMAGES_DIR: 'images'
+          MANIFEST_OUTPUT: 'images/manifest.json'
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet --exit-code -- images/manifest.json; then
+            echo "No changes to commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add images/manifest.json
+            git commit -m "chore: auto-generate images manifest [skip ci]"
+            git push
+          fi
