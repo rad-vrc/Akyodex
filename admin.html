@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akyoずかん - 管理者モード</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- 子どもにやさしいデザイン -->
+    <link rel="stylesheet" href="css/kid-friendly.css">
+
+    <!-- ストレージ管理 -->
+    <script src="js/storage-manager.js"></script>
+    <script src="js/storage-adapter.js"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans JP', 'Kosugi Maru', sans-serif;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .drop-zone {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s;
+        }
+
+        .drop-zone.dragover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
+    <!-- ヘッダー -->
+    <header class="bg-gray-900 text-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-white"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold">Akyoずかん 管理者モード</h1>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span id="userRole" class="hidden px-3 py-2 rounded-lg bg-gray-700 text-white text-sm"></span>
+                    <button onclick="location.href='index.html'" class="px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm" id="backBtn">
+                        <i class="fas fa-home mr-1"></i> 図鑑に戻る
+                    </button>
+                    <button onclick="logout()" class="hidden px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt mr-1"></i> ログアウト
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ログイン画面 -->
+    <div id="loginScreen" class="flex items-center justify-center min-h-[calc(100vh-80px)]">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-white text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">管理者認証</h2>
+                <p class="text-gray-600 text-sm">パスワードを入力して管理機能にアクセス</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">パスワード</label>
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                        placeholder="パスワードを入力"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                    <i class="fas fa-sign-in-alt mr-2"></i> ログイン
+                </button>
+
+                <div id="loginError" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+                    <i class="fas fa-exclamation-circle mr-1"></i> パスワードが正しくありません
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 管理画面 -->
+    <div id="adminScreen" class="hidden container mx-auto px-4 py-8">
+        <!-- タブナビゲーション -->
+        <div class="bg-white rounded-xl shadow-lg mb-6">
+            <div class="flex border-b">
+                <button onclick="switchTab('add')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-red-500" data-tab="add">
+                    <i class="fas fa-plus-circle mr-2"></i> 新規登録
+                </button>
+                <button onclick="switchTab('edit')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-transparent" data-tab="edit">
+                    <i class="fas fa-edit mr-2"></i> 編集・削除
+                </button>
+                <button onclick="switchTab('tools')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-transparent" data-tab="tools">
+                    <i class="fas fa-tools mr-2"></i> ツール
+                </button>
+            </div>
+        </div>
+
+        <!-- 新規登録タブ -->
+        <div id="addTab" class="tab-content bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-plus-circle text-red-500 mr-2"></i> 新しいAkyoを登録
+            </h2>
+
+            <form onsubmit="handleAddAkyo(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-1">ID（自動採番）</label>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="nextIdDisplay"
+                                   class="flex-1 px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
+                                   disabled>
+                            <span class="text-sm text-gray-500">自動設定</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
+                        <input type="text" name="nickname"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               placeholder="例: チョコミントAkyo">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
+                        <input type="text" name="avatarName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               placeholder="例: Akyo origin">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-1">属性（カンマ区切り）</label>
+                        <input type="text" name="attribute" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               placeholder="例: チョコミント類,ギミック">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-1">作者</label>
+                        <input type="text" name="creator" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               placeholder="例: ugai">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-1">VRChat URL</label>
+                        <input type="url" name="avatarUrl"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               placeholder="https://vrchat.com/...">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">備考</label>
+                    <textarea name="notes" rows="3"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                              placeholder="Quest対応、特殊機能など"></textarea>
+                </div>
+
+                <!-- 画像アップロード -->
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">画像</label>
+                    <div class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-6 text-center" id="imageDropZone">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600">画像をドラッグ&ドロップ または</p>
+                        <input type="file" id="imageInput" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('imageInput').click()"
+                                class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                            ファイルを選択
+                        </button>
+
+                        <!-- プレビューとトリミングエリア -->
+                        <div id="imagePreview" class="mt-4 hidden">
+                            <div class="bg-gray-100 rounded-lg p-4">
+                                <div class="mb-3 text-sm text-gray-600">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    ドラッグで位置調整、スクロールで拡大縮小できます
+                                </div>
+
+                                <!-- トリミングコンテナ -->
+                                <div id="cropContainer" class="relative mx-auto mb-4" style="width: 300px; height: 200px; overflow: hidden; border: 2px solid #4f46e5; border-radius: 8px;">
+                                    <img id="cropImage" src="" alt="Crop preview"
+                                         style="position: absolute; cursor: move; transform-origin: center;">
+                                </div>
+
+                                <!-- コントロールボタン -->
+                                <div class="flex justify-center gap-2">
+                                    <button type="button" onclick="resetImagePosition()"
+                                            class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
+                                        <i class="fas fa-redo mr-1"></i> リセット
+                                    </button>
+                                    <button type="button" onclick="zoomImage(1.1)"
+                                            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                                        <i class="fas fa-search-plus mr-1"></i> 拡大
+                                    </button>
+                                    <button type="button" onclick="zoomImage(0.9)"
+                                            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                                        <i class="fas fa-search-minus mr-1"></i> 縮小
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                    <i class="fas fa-save mr-2"></i> 登録する
+                </button>
+            </form>
+        </div>
+
+        <!-- 編集・削除タブ -->
+        <div id="editTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-edit text-blue-500 mr-2"></i> Akyoの編集・削除
+            </h2>
+
+            <!-- 検索 -->
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" id="editSearchInput"
+                           placeholder="ID、名前、属性で検索..."
+                           class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- 編集リスト -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">ID</th>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">名前</th>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">属性</th>
+                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">作者</th>
+                            <th class="px-4 py-3 text-center text-sm font-medium text-gray-700">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="editList" class="divide-y divide-gray-200">
+                        <!-- データはJavaScriptで動的に追加 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- ツールタブ -->
+        <div id="toolsTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-tools text-orange-500 mr-2"></i> 管理ツール
+            </h2>
+
+            <div class="space-y-6">
+                <!-- ID再採番ツール -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">
+                        <i class="fas fa-sort-numeric-down text-blue-500 mr-2"></i> ID再採番
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        すべてのAkyoのIDを001から連番で振り直します。<br>
+                        ※ 画像とお気に入りの紐付けも自動で更新されます。
+                    </p>
+                    <button onclick="renumberAllIds()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-redo mr-2"></i> ID再採番を実行
+                    </button>
+                </div>
+
+                <!-- CSVインポート -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">
+                        <i class="fas fa-file-upload text-orange-500 mr-2"></i> CSVインポート（追加登録）
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        CSVファイルからAkyoデータを追加登録します。アップロード前に最初の数件をプレビューします。<br>
+                        対応形式: .csv（MIME: text/csv, application/vnd.ms-excel, text/plain なども許容）
+                    </p>
+
+                    <!-- ドロップゾーン -->
+                    <div id="csvDropZone" class="drop-zone rounded-lg p-6 text-center mb-4">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600">CSVファイルをドラッグ&ドロップ または</p>
+                        <input type="file" id="csvInput" accept=".csv,text/csv,text/plain,application/vnd.ms-excel" class="hidden">
+                        <button type="button" onclick="document.getElementById('csvInput').click()"
+                                class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                            ファイルを選択
+                        </button>
+                    </div>
+
+                    <!-- プレビュー -->
+                    <div id="csvPreview" class="hidden">
+                        <div class="bg-gray-50 rounded-lg p-3 mb-3 text-sm text-gray-600">
+                            ヘッダー行は無視し、既存データの最大IDから自動採番して追加されます。
+                        </div>
+                        <div class="overflow-x-auto border rounded-lg">
+                            <table class="min-w-full text-sm" id="csvPreviewTable"></table>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="uploadCSV()" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                                <i class="fas fa-check mr-2"></i> この内容で登録
+                            </button>
+                            <button type="button" onclick="document.getElementById('csvPreview').classList.add('hidden'); document.getElementById('csvInput').value='';" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                                クリア
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 編集モーダル -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="relative flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Akyoを編集</h2>
+                    <button onclick="closeEditModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div id="editModalContent" class="p-6">
+                    <!-- 編集フォーム -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+
+    <script>
+        // 画像トリミング用の変数
+        let imageScale = 1;
+        let imageX = 0;
+        let imageY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let originalImageSrc = null;
+
+        // 画像位置のリセット
+        function resetImagePosition() {
+            imageScale = 1;
+            imageX = 0;
+            imageY = 0;
+            updateImageTransform();
+        }
+
+        // 画像の拡大縮小
+        function zoomImage(factor) {
+            imageScale *= factor;
+            imageScale = Math.max(0.5, Math.min(3, imageScale));
+            updateImageTransform();
+        }
+
+        // 画像の変形を更新
+        function updateImageTransform() {
+            const img = document.getElementById('cropImage');
+            if (img) {
+                img.style.transform = `translate(${imageX}px, ${imageY}px) scale(${imageScale})`;
+            }
+        }
+
+        // トリミング機能の初期化
+        function initCropping() {
+            const container = document.getElementById('cropContainer');
+            const img = document.getElementById('cropImage');
+
+            if (!container || !img) return;
+
+            // マウスホイールでズーム
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                zoomImage(delta);
+            });
+
+            // ドラッグ開始
+            img.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragStartX = e.clientX - imageX;
+                dragStartY = e.clientY - imageY;
+                img.style.cursor = 'grabbing';
+            });
+
+            // ドラッグ中
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    imageX = e.clientX - dragStartX;
+                    imageY = e.clientY - dragStartY;
+                    updateImageTransform();
+                }
+            });
+
+            // ドラッグ終了
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                const img = document.getElementById('cropImage');
+                if (img) img.style.cursor = 'move';
+            });
+
+            // タッチイベント（モバイル対応）
+            img.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    dragStartX = e.touches[0].clientX - imageX;
+                    dragStartY = e.touches[0].clientY - imageY;
+                }
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    imageX = e.touches[0].clientX - dragStartX;
+                    imageY = e.touches[0].clientY - dragStartY;
+                    updateImageTransform();
+                }
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        }
+
+        // 画像選択時の処理を上書き
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageInput = document.getElementById('imageInput');
+            if (imageInput) {
+                imageInput.addEventListener('change', (event) => {
+                    handleImageSelectWithCrop(event);
+                });
+            }
+
+            // ドロップゾーンの設定も更新
+            const dropZone = document.getElementById('imageDropZone');
+            if (dropZone) {
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0 && files[0].type.startsWith('image/')) {
+                        handleImageFileWithCrop(files[0]);
+                    }
+                });
+            }
+        });
+
+        // 画像選択処理（トリミング付き）
+        function handleImageSelectWithCrop(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleImageFileWithCrop(file);
+            }
+        }
+
+        // 画像ファイル処理（トリミング付き）
+        function handleImageFileWithCrop(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgSrc = e.target.result;
+                originalImageSrc = imgSrc;
+
+                // プレビューを表示
+                document.getElementById('imagePreview').classList.remove('hidden');
+                const cropImg = document.getElementById('cropImage');
+                cropImg.src = imgSrc;
+
+                // 画像サイズを調整
+                cropImg.onload = () => {
+                    const container = document.getElementById('cropContainer');
+                    const containerWidth = container.offsetWidth;
+                    const containerHeight = container.offsetHeight;
+                    const imgAspect = cropImg.naturalWidth / cropImg.naturalHeight;
+                    const containerAspect = containerWidth / containerHeight;
+
+                    // 初期スケール設定
+                    if (imgAspect > containerAspect) {
+                        cropImg.style.height = containerHeight + 'px';
+                        cropImg.style.width = 'auto';
+                    } else {
+                        cropImg.style.width = containerWidth + 'px';
+                        cropImg.style.height = 'auto';
+                    }
+
+                    // 中央配置
+                    const imgWidth = cropImg.offsetWidth;
+                    const imgHeight = cropImg.offsetHeight;
+                    imageX = (containerWidth - imgWidth) / 2;
+                    imageY = (containerHeight - imgHeight) / 2;
+
+                    resetImagePosition();
+                    initCropping();
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // フォーム送信時にトリミング画像を生成
+        window.generateCroppedImage = function() {
+            return new Promise((resolve) => {
+                const container = document.getElementById('cropContainer');
+                const img = document.getElementById('cropImage');
+
+                if (!img || !img.src || img.src === window.location.href) {
+                    resolve(null);
+                    return;
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = 300;
+                canvas.height = 200;
+                const ctx = canvas.getContext('2d');
+
+                // 背景を白で塗りつぶす
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 画像を描画
+                const image = new Image();
+                image.onload = () => {
+                    ctx.save();
+
+                    // 現在の変形を適用
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.scale(imageScale, imageScale);
+                    ctx.translate(-canvas.width / 2 + imageX, -canvas.height / 2 + imageY);
+
+                    // 画像を描画
+                    const imgWidth = img.offsetWidth;
+                    const imgHeight = img.offsetHeight;
+                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight);
+
+                    ctx.restore();
+
+                    // 結果を返す
+                    canvas.toBlob((blob) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            resolve(reader.result);
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/jpeg', 0.9);
+                };
+                image.src = originalImageSrc || img.src;
+            });
+        };
+    </script>
+
+    <script>
+        // ログイン機能の直接実装（デバッグ用）
+        console.log('Admin page loaded');
+
+        // ページロード時に認証状態を確認
+        window.addEventListener('load', () => {
+            const savedAuth = sessionStorage.getItem('akyoAdminAuth');
+            console.log('Page loaded, auth state:', savedAuth);
+
+            if (savedAuth) {
+                // 既にログイン済みの場合
+                const loginScreen = document.getElementById('loginScreen');
+                const adminScreen = document.getElementById('adminScreen');
+
+                if (loginScreen && adminScreen) {
+                    loginScreen.classList.add('hidden');
+                    adminScreen.classList.remove('hidden');
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+
+                    const roleSpan = document.getElementById('userRole');
+                    if (roleSpan) {
+                        roleSpan.classList.remove('hidden');
+                        roleSpan.textContent = savedAuth === 'owner' ? 'オーナー権限' : '管理者権限';
+                        // ログアウトと同一スタイル
+                        roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
+                    }
+                }
+            }
+        });
+
+        // handleLogin関数が存在しない場合のフォールバック
+        if (typeof handleLogin === 'undefined') {
+            console.log('Creating handleLogin function directly in HTML');
+
+            window.handleLogin = function(event) {
+                event.preventDefault();
+                console.log('handleLogin called from HTML');
+
+                const password = document.getElementById('passwordInput').value;
+                const errorDiv = document.getElementById('loginError');
+
+                console.log('Password entered:', password);
+
+                if (password === 'RadAkyo') {
+                    console.log('Owner login successful');
+                    sessionStorage.setItem('akyoAdminAuth', 'owner');
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('adminScreen').classList.remove('hidden');
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+
+                    const roleSpan = document.getElementById('userRole');
+                    if (roleSpan) {
+                        roleSpan.classList.remove('hidden');
+                        roleSpan.textContent = 'オーナー権限';
+                        roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
+                    }
+
+                    // データ読み込み（存在する場合）
+                    if (typeof loadAkyoData === 'function') {
+                        loadAkyoData();
+                    }
+
+                } else if (password === 'Akyo') {
+                    console.log('Admin login successful');
+                    sessionStorage.setItem('akyoAdminAuth', 'admin');
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('adminScreen').classList.remove('hidden');
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+
+                    const roleSpan = document.getElementById('userRole');
+                    if (roleSpan) {
+                        roleSpan.classList.remove('hidden');
+                        roleSpan.textContent = '管理者権限';
+                        roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
+                    }
+
+                    // データ読み込み（存在する場合）
+                    if (typeof loadAkyoData === 'function') {
+                        loadAkyoData();
+                    }
+
+                } else {
+                    console.log('Invalid password');
+                    errorDiv.classList.remove('hidden');
+                    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> パスワードが正しくありません（RadAkyo または Akyo を入力してください）';
+                    setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+                }
+            }
+        }
+
+        // logout関数が存在しない場合のフォールバック
+        if (typeof logout === 'undefined') {
+            window.logout = function() {
+                sessionStorage.removeItem('akyoAdminAuth');
+                location.reload();
+            }
+        }
+
+        // switchTab関数が存在しない場合のフォールバック
+        if (typeof switchTab === 'undefined') {
+            window.switchTab = function(tabName) {
+                console.log('Switching to tab:', tabName);
+
+                // すべてのタブコンテンツを非表示
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+
+                // すべてのタブボタンのスタイルをリセット
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('border-red-500');
+                    btn.classList.add('border-transparent');
+                });
+
+                // 選択されたタブを表示
+                const targetTab = document.getElementById(`${tabName}Tab`);
+                if (targetTab) {
+                    targetTab.classList.remove('hidden');
+                } else {
+                    console.error('Tab not found:', `${tabName}Tab`);
+                }
+
+                const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
+                if (targetBtn) {
+                    targetBtn.classList.remove('border-transparent');
+                    targetBtn.classList.add('border-red-500');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

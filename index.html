@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akyoずかん - 500種類以上のAkyoがいるよ！</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- 子どもにやさしいデザイン -->
+    <link rel="stylesheet" href="css/kid-friendly.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', 'Kosugi Maru', sans-serif;
+        }
+
+        /* クローズボタンの確実な表示 */
+        #closeModal {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        #closeModal:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        #closeModal span {
+            color: white !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4) !important;
+            font-weight: bold !important;
+        }
+
+        .akyo-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .akyo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .akyo-image-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .attribute-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* カスタムスクロールバー */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* ローディングアニメーション */
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* モーダル背景 */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        /* 新しいアニメーション */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin-slow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin-slow {
+            animation: spin-slow 3s linear infinite;
+        }
+
+        /* モーダル表示アニメーション */
+        .modal-show {
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        .modal-content-bounce {
+            animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="text-white py-8 shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <!-- ヘッダーロゴ -->
+                <div id="headerLogo" class="flex items-center">
+                    <h1 class="logo-text">Akyoずかん</h1>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- 統計情報 -->
+                    <div class="hidden md:flex items-center gap-6 md:text-lg lg:text-xl text-gray-700">
+                        <span><i class="fas fa-layer-group"></i> 全<span id="totalCount">0</span>種</span>
+                        <span><i class="fas fa-eye"></i> 表示中: <span id="displayCount">0</span></span>
+                        <span><i class="fas fa-heart"></i> お気に入り: <span id="favoriteCount">0</span></span>
+                    </div>
+
+                    <!-- ビュー切り替え -->
+                    <div class="flex gap-3">
+                        <button id="gridViewBtn" class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-purple-500 text-white rounded-xl">
+                            <i class="fas fa-th text-xl md:text-2xl"></i>
+                        </button>
+                        <button id="listViewBtn" class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-gray-300 text-gray-600 rounded-xl">
+                            <i class="fas fa-list text-xl md:text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 検索・フィルター -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- 検索ボックス -->
+                <div class="md:col-span-2">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="　　Akyoを検索... (名前、ID、属性など)"
+                            class="w-full px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                        <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- 属性フィルター -->
+                <div>
+                    <select id="attributeFilter" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">すべての属性</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- クイックフィルター -->
+            <div class="mt-4 flex flex-wrap gap-2" id="quickFilters">
+                <button class="attribute-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-dice"></i> ランダム表示
+                </button>
+                <button class="attribute-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors">
+                    <i class="fas fa-star"></i> お気に入りのみ
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main class="container mx-auto px-4 pb-8">
+        <!-- ローディング表示 -->
+        <div id="loadingContainer" class="flex flex-col items-center justify-center py-20">
+            <div class="loading-spinner mb-4"></div>
+            <p class="text-gray-600">Akyoデータを読み込んでいます...</p>
+        </div>
+
+        <!-- グリッドビュー -->
+        <div id="gridView" class="hidden">
+            <div id="akyoGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <!-- カードがここに動的に追加されます -->
+            </div>
+        </div>
+
+        <!-- リストビュー -->
+        <div id="listView" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                        <tr>
+                            <th class="px-4 py-3 text-left">No.</th>
+                            <th class="px-4 py-3 text-left">見た目</th>
+                            <th class="px-4 py-3 text-left">名前</th>
+                            <th class="px-4 py-3 text-left">属性</th>
+                            <th class="px-4 py-3 text-left">作者</th>
+                            <th class="px-4 py-3 text-center">アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody id="akyoList">
+                        <!-- 行がここに動的に追加されます -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- データなし表示 -->
+        <div id="noDataContainer" class="hidden text-center py-20">
+            <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-600 text-lg">該当するAkyoが見つかりませんでした</p>
+        </div>
+    </main>
+
+    <!-- 詳細モーダル -->
+    <div id="detailModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="modal-backdrop fixed inset-0" onclick="closeModal()"></div>
+        <div class="relative min-h-screen px-4 py-8">
+            <div class="relative mx-auto max-w-2xl">
+                <div class="bg-white rounded-3xl shadow-2xl">
+                    <!-- クローズボタン -->
+                    <button id="closeModal" onclick="closeModal()"
+                            class="absolute top-4 right-4 w-14 h-14 rounded-full z-[60] flex items-center justify-center transition-all duration-300"
+                            style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="transition-transform duration-300 hover:rotate-90">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <!-- モーダルヘッダー -->
+                    <div class="bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 rounded-t-3xl p-6 border-b-4 border-dotted border-purple-200">
+                        <h2 class="text-3xl font-black flex items-center" id="modalTitle">
+                            <span class="mr-3 animate-bounce">🎆</span>
+                            Akyoじょうほう
+                        </h2>
+                    </div>
+
+                    <!-- モーダルコンテンツ -->
+                    <div id="modalContent" class="p-6 bg-gradient-to-b from-white to-blue-50">
+                        <!-- モーダルコンテンツがここに動的に追加されます -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <!-- ストレージ管理（最初に読み込み） -->
+    <script src="js/storage-manager.js"></script>
+    <script src="js/storage-adapter.js"></script>
+    <script src="js/image-loader.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- ヘッダーロゴ読み込み -->
+    <script>
+        // ヘッダーロゴを読み込み
+        async function loadHeaderLogo() {
+            try {
+                let headerLogoUrl = null;
+
+                // まずフォルダ（images/）からの既定ロゴPNGを試す（GETで存在確認）
+                try {
+                    const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
+                    const respPng = await fetch(`images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                    if (respPng.ok) headerLogoUrl = `images/logo.png?v=${encodeURIComponent(ver)}`;
+                    else {
+                        const respJpg = await fetch(`images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                        if (respJpg.ok) headerLogoUrl = `images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                    }
+                } catch (_) {}
+
+                // 既定が無い場合はIndexedDBから読み込みを試行
+                if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
+                    try {
+                        await window.storageManager.init();
+                        headerLogoUrl = await window.storageManager.getImage('headerLogo');
+                    } catch (error) {
+                        console.warn('IndexedDBからのヘッダーロゴ読み込みに失敗:', error);
+                    }
+                }
+
+                // IndexedDB/既定から読み込めなかった場合、localStorageを試行
+                if (!headerLogoUrl) {
+                    headerLogoUrl = localStorage.getItem('akyoHeaderLogo');
+                }
+
+                // ロゴが存在する場合は表示（クリック可能にする）
+                const headerLogoEl = document.getElementById('headerLogo');
+                if (headerLogoUrl && headerLogoEl) {
+                    // 現在のURLを判定してリンク先を設定
+                    const currentHost = window.location.hostname;
+                    let homeUrl = '/';
+
+                    // ホスト名に基づいてリンク先を設定
+                    if (currentHost.includes('akyodex.com')) {
+                        homeUrl = 'https://akyodex.com';
+                    } else if (currentHost.includes('netlify')) {
+                        homeUrl = '/';  // Netlifyの場合はルートに戻る
+                    } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+                        homeUrl = '/';  // ローカル環境ではルートに戻る
+                    }
+
+                    headerLogoEl.innerHTML = `
+                        <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
+                            <img src="${headerLogoUrl}"
+                                 alt="Akyoずかん"
+                                 class="h-full w-auto hover:opacity-90 transition-opacity"
+                                 style="object-fit: contain; max-width: 420px; cursor: pointer;">
+                        </a>
+                    `;
+                } else {
+                    // ロゴがない場合でもlogo.pngを直接試し、なければテキスト
+                    const currentHost = window.location.hostname;
+                    let homeUrl = '/';
+
+                    if (currentHost.includes('akyodex.com')) {
+                        homeUrl = 'https://akyodex.com';
+                    } else if (currentHost.includes('netlify')) {
+                        homeUrl = '/';
+                    } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+                        homeUrl = '/';
+                    }
+
+                    headerLogoEl.innerHTML = `
+                        <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
+                            <img src="images/logo.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'"
+                                 alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
+                            <h1 class="logo-text hover:opacity-90 transition-opacity" style="cursor: pointer; display:none; margin-left:8px;">Akyoずかん</h1>
+                        </a>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('ヘッダーロゴの読み込みに失敗しました:', error);
+            }
+        }
+
+        // ページ読み込み時に実行
+        async function bootstrapImages() {
+            try { if (window.loadImagesManifest) { await window.loadImagesManifest(); } } catch (e) {}
+            loadHeaderLogo();
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bootstrapImages);
+        } else {
+            bootstrapImages();
+        }
+
+        // 画像エラーハンドラ（PNG→JPG→プレースホルダー）
+        function handleImageError(img, id, color, mode) {
+            if (!img || !id) return;
+            const triedJpg = img.dataset.triedJpg === '1';
+            if (!triedJpg) {
+                img.dataset.triedJpg = '1';
+                img.src = `images/${id}.jpg`;
+                return;
+            }
+            // プレースホルダーへ
+            const placeholder = mode === 'modal'
+                ? `<div class="akyo-image-placeholder h-64 rounded-3xl shadow-lg" style="background: linear-gradient(135deg, ${color}, ${color}66)"><span class="text-6xl">${id}</span><p class="text-white text-lg mt-2">画像がまだないよ！</p></div>`
+                : `<div class="akyo-image-placeholder h-48" style="background: ${color}"><span class="text-4xl">${id}</span></div>`;
+            const parent = img.parentElement;
+            if (parent) parent.innerHTML = placeholder;
+        }
+    </script>
+</body>
+</html>
