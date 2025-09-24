@@ -88,11 +88,16 @@ function getAkyoImageUrl(akyoId) {
     // マニフェストから探す
     if (akyoImageManifestMap && akyoImageManifestMap[akyoId]) {
         const val = akyoImageManifestMap[akyoId];
-        // プレーンマップがフルURLを返す場合に対応
-        if (typeof val === 'string' && /^https?:\/\//.test(val)) {
-            return val;
+        if (typeof val === 'string') {
+            // 1) フルURL
+            if (/^https?:\/\//.test(val)) return val;
+            // 2) 先頭がスラッシュ、または既に images/ を含む相対パス
+            if (val.startsWith('/') || val.startsWith('images/')) {
+                return `${val}${getAssetsVersionSuffix()}`;
+            }
+            // 3) 純粋なファイル名
+            return `images/${val}${getAssetsVersionSuffix()}`;
         }
-        return `images/${val}${getAssetsVersionSuffix()}`;
     }
 
     // 次にローカルストレージから探す
