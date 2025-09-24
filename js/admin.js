@@ -635,7 +635,9 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
         form.set('file', file);
     }
 
-    const res = await fetch('/api/upload', {
+    // R2未設定時はGitHubアップロードにフォールバック
+    const endpoint = window.__USE_GH_UPLOAD__ ? '/api/gh-upload' : '/api/upload';
+    const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${adminPassword}` },
         body: form,

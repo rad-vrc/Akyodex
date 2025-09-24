@@ -409,6 +409,11 @@
             try { if (window.loadImagesManifest) { await window.loadImagesManifest(); } } catch (e) {}
             try { if (window.loadAkyoManifest) { await window.loadAkyoManifest(); } } catch (e) {}
             loadHeaderLogo();
+            // R2未設定時のGitHubアップロード切替
+            try {
+                const hasR2 = !!(window.PUBLIC_R2_BASE || '').length; // 参照用（ENV未公開のため常にfalse想定）
+                if (!hasR2) window.__USE_GH_UPLOAD__ = true;
+            } catch(_) {}
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', bootstrapImages);
