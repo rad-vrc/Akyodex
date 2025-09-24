@@ -5,6 +5,21 @@ interface GithubCommitResponse {
   commit?: { sha: string };
 }
 
+function arrayBufferToBase64(buffer: ArrayBuffer) {
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    let chunkBinary = "";
+    for (let j = 0; j < chunk.length; j++) {
+      chunkBinary += String.fromCharCode(chunk[j]);
+    }
+    binary += chunkBinary;
+  }
+  return btoa(binary);
+}
+
 async function githubFetch(path: string, token: string, init: RequestInit = {}): Promise<Response> {
   const url = `https://api.github.com${path}`;
   const headers = {
@@ -34,7 +49,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     const form = await request.formData();
     const idRaw = String(form.get("id") ?? "");
     const id = threeDigits(idRaw);
-    if (!/^\d{3}$/.test(id)) return errJSON(400, "invalid id");
+    if (!id) return errJSON(400, "invalid id");
 
     const file = form.get("file");
     if (!(file instanceof File)) return errJSON(400, "file is required");
@@ -46,7 +61,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
 
     // GitHubへファイルをPUT
     const arrayBuffer = await file.arrayBuffer();
-    const base64Content = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const base64Content = arrayBufferToBase64(arrayBuffer);
     const putFileRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(key)}`, token, {
       method: "PUT",
       body: JSON.stringify({

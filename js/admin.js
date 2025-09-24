@@ -7,64 +7,24 @@ console.log('admin.js loading started');
 let currentUserRole = null;
 let akyoData = [];
 let imageDataMap = {}; // AkyoIDと画像の紐付け
+let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded - Admin page');
+
+    // 旧バージョンで保存された認証ワードを確実に破棄
+    sessionStorage.removeItem('akyoAdminToken');
+
     // 初期ロード時に検索欄が空でも全件表示する
     const editSearchInput = document.getElementById('editSearchInput');
     if (editSearchInput && typeof searchForEdit === 'function') {
         setTimeout(() => searchForEdit(), 0);
     }
 
-    // 認証チェックを少し遅らせる
-    setTimeout(() => {
-        checkAuth();
-    }, 100);
-
     setupEventListeners();
     setupDragDrop();
 });
-
-// 認証チェック
-function checkAuth() {
-    const savedAuth = sessionStorage.getItem('akyoAdminAuth');
-    console.log('Checking auth:', savedAuth);
-
-    if (savedAuth) {
-        currentUserRole = savedAuth;
-        console.log('Auth found, showing admin screen');
-
-        // 既にログイン済みの場合は画面を表示
-        const loginScreen = document.getElementById('loginScreen');
-        const adminScreen = document.getElementById('adminScreen');
-
-        if (loginScreen && adminScreen) {
-            loginScreen.classList.add('hidden');
-            adminScreen.classList.remove('hidden');
-
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.classList.remove('hidden');
-            }
-
-            const roleSpan = document.getElementById('userRole');
-            if (roleSpan) {
-                roleSpan.classList.remove('hidden');
-                roleSpan.textContent = currentUserRole === 'owner' ? 'オーナー権限' : '管理者権限';
-                // ログアウトと同一スタイルに統一
-                roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
-            }
-
-            // データを読み込む（完了後に編集タブへ）
-            loadAkyoData().then(() => {
-                if (document.querySelector('.tab-content')) {
-                    switchTab('edit');
-                }
-            });
-        }
-    }
-}
 
 // イベントリスナー設定
 function setupEventListeners() {
@@ -142,8 +102,8 @@ async function handleLogin(event) {
     const password = document.getElementById('passwordInput').value;
     const errorDiv = document.getElementById('loginError');
 
-    // 入力したワードを一時保存してサーバー検証
-    sessionStorage.setItem('akyoAdminToken', password);
+    // メモリ上にのみ保持し、Storageへは保存しない
+    adminSessionToken = password;
     try {
         const res = await fetch('/api/whoami', {
             method: 'GET',
@@ -160,7 +120,7 @@ async function handleLogin(event) {
             throw new Error('unauthorized');
         }
     } catch (_) {
-        sessionStorage.removeItem('akyoAdminToken');
+        adminSessionToken = null;
         errorDiv.classList.remove('hidden');
         errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません';
         setTimeout(() => errorDiv.classList.add('hidden'), 3000);
@@ -227,6 +187,8 @@ function updateNextIdDisplay() {
 // ログアウト
 function logout() {
     sessionStorage.removeItem('akyoAdminAuth');
+    sessionStorage.removeItem('akyoAdminToken');
+    adminSessionToken = null;
     currentUserRole = null;
     location.reload();
 }
@@ -564,7 +526,11 @@ async function handleAddAkyo(event) {
         if (typeof uploadAkyoOnline === 'function') {
             const fileInput = document.getElementById('imageInput');
             const fileObj = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
-            const adminPassword = sessionStorage.getItem('akyoAdminToken');
+            const adminPassword = adminSessionToken;
+            if (!adminPassword) {
+                showNotification('認証が無効です。再度ログインしてください。', 'error');
+                return;
+            }
             if (fileObj) {
                 await uploadAkyoOnline({
                     id: newAkyo.id,

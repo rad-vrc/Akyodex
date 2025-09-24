@@ -11,8 +11,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
 
     const idRaw = String(form.get("id") ?? "");
     const id = threeDigits(idRaw);
-  if (!id) return errJSON(400, "id is required");
-  if (!/^\d{3}$/.test(id)) return errJSON(400, "invalid id");
+    if (!id) return errJSON(400, "invalid id");
 
     const file = form.get("file");
     if (!(file instanceof File)) return errJSON(400, "file is required");
@@ -41,7 +40,10 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     const data = { id, name, type, desc, key, url, updatedAt: now, updater };
     await (env as any).AKYO_KV.put(`akyo:${id}`, JSON.stringify(data));
 
-    return okJSON({ ok: true, id, url, key, updatedAt: now }, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+    return okJSON(
+      { ok: true, id, url, key, updatedAt: now },
+      { headers: corsHeaders(request.headers.get("origin") ?? undefined) }
+    );
   } catch (e: any) {
     if (e instanceof Response) return e;
     return errJSON(500, e?.message || "upload failed");
