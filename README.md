@@ -2,12 +2,12 @@
 
 ## 📚 プロジェクト概要
 
-Akyoずかんは、500種類以上存在する「AKyo」というなぞの生き物たちを検索・閲覧できるファン向けの図鑑サイトです。子どもでも親しみやすいモダンなカードデザインで、ポケモン図鑑のような楽しい体験を提供します。
+Akyoずかんは、500種類以上存在する「Akyo」というなぞの生き物たちを検索・閲覧できるファン向けの図鑑サイトです。子どもでも親しみやすいモダンなカードデザインで、ポケモン図鑑のような楽しい体験を提供します。
 
 ## 🎯 プロジェクトの目標
 
-- AKyoファンが全種類のAKyoを簡単に検索・閲覧できる
-- お気に入り機能で好きなAKyoをコレクション
+- Akyoファンが全種類のAkyoを簡単に検索・閲覧できる
+- お気に入り機能で好きなAkyoをコレクション
 - 属性や作者による詳細な分類と検索
 - VRChatアバターへの直接リンク提供
 - レスポンシブデザインでスマホ・タブレット対応
@@ -17,8 +17,8 @@ Akyoずかんは、500種類以上存在する「AKyo」というなぞの生き
 ### 🎆 現在実装済みの機能
 
 1. **データ管理**
-   - CSV形式のAKyoデータの読み込みと解析（data/akyo-data.csv または localStorage.akyoDataCSV）
-   - クロスタブ同期：'akyoDataCSV' の更新を検知して自動リロード
+   - CSV形式のAkyoデータの読み込みと解析（data/Akyo-data.csv または localStorage.AkyoDataCSV）
+   - クロスタブ同期：'AkyoDataCSV' の更新を検知して自動リロード
    - IndexedDBによる大容量画像データの保存（数GB対応）
 
 2. **表示モード**
@@ -45,7 +45,7 @@ Akyoずかんは、500種類以上存在する「AKyo」というなぞの生き
    - お気に入り数のリアルタイム表示
 
 6. **統計情報**
-   - 全AKyo数の表示
+   - 全Akyo数の表示
    - 現在表示中の件数
    - お気に入り登録数
 
@@ -77,7 +77,7 @@ Akyoずかんは、500種類以上存在する「AKyo」というなぞの生き
 
 ## 🔗 機能別エントリーポイント
 
-- `/index.html` - 図鑑（zukan）メインUI。CSV: data/akyo-data.csv または localStorage.akyoDataCSV
+- `/index.html` - 図鑑（zukan）メインUI。CSV: data/Akyo-data.csv または localStorage.AkyoDataCSV
 - `/admin.html` - 管理UI（タブ: 新規登録 / 編集・削除 / ツール（CSVインポート・ID再採番・エクスポート・統計））
 - `/admin.html` - 管理UI（タブ: 新規登録 / 編集・削除 / ツール（CSVインポート・ID再採番・統計））
 
@@ -85,7 +85,7 @@ URLパラメータ（将来検討）
 
 - `/?search={keyword}` - 検索キーワード指定
 - `/?attribute={attr}` - 属性フィルター指定
-- `/?id={akyoId}` - 特定AKyoの詳細表示
+- `/?id={AkyoId}` - 特定Akyoの詳細表示
 
 ## 📊 データ構造
 
@@ -137,7 +137,7 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 6. **PWA化**
    - オフライン対応
    - ホーム画面追加
-   - プッシュ通知（新AKyo追加時）
+   - プッシュ通知（新Akyo追加時）
 
 ## 💻 技術スタック
 
@@ -148,8 +148,8 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 - **データ形式**: CSV → JSON変換
 - **ストレージ**:
   - IndexedDB（画像Base64データの一次保存: object store 'images'）
-  - LocalStorage（お気に入り、CSVデータ 'akyoDataCSV'、画像のフォールバック 'akyoImages'）
-  - SessionStorage（認証情報 'akyoAdminAuth'）
+  - LocalStorage（お気に入り、CSVデータ 'AkyoDataCSV'、画像のフォールバック 'AkyoImages'）
+  - SessionStorage（認証情報 'AkyoAdminAuth'）
 
 ## 📁 ファイル構成
 
@@ -174,7 +174,7 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 ├── css/
 │   └── kid-friendly.css # 子ども向けデザインCSS
 ├── data/
-│   └── akyo-data.csv  # Akyoデータ
+│   └── Akyo-data.csv  # Akyoデータ
 └── README.md          # このファイル
 ```
 
@@ -191,7 +191,7 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 
 1. すべてのファイルをWebサーバーに配置
 2. `index.html`をブラウザで開く
-3. CSVファイルは`data/akyo-data.csv`に配置
+3. CSVファイルは`data/Akyo-data.csv`に配置
 4. 管理機能は`admin.html`からアクセス
 5. デバッグは`test-debug.html`で確認
 
@@ -310,8 +310,8 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 
 ## 📝 開発メモ
 
-- CSVの永続化は localStorage.akyoDataCSV。未設定時は data/akyo-data.csv をフェッチ
-- 画像はIndexedDB優先で保存し、フォールバックにlocalStorage.akyoImages
+- CSVの永続化は localStorage.AkyoDataCSV。未設定時は data/Akyo-data.csv をフェッチ
+- 画像はIndexedDB優先で保存し、フォールバックにlocalStorage.AkyoImages
 - 自動ID割り当ては001-020を優先的に使用
 - ID削除時は自動で後続IDを詰める（お気に入り・画像のIDマップも更新）
 
@@ -350,8 +350,8 @@ Akyoずかんに関するご意見・ご要望は、プロジェクト管理者�
 
 データモデル/ストレージまとめ
 
-- CSV: data/akyo-data.csv または localStorage.akyoDataCSV
-- 画像: IndexedDB 'images'（フォールバック localStorage.akyoImages）
-- 認証: sessionStorage.akyoAdminAuth
+- CSV: data/Akyo-data.csv または localStorage.AkyoDataCSV
+- 画像: IndexedDB 'images'（フォールバック localStorage.AkyoImages）
+- 認証: sessionStorage.AkyoAdminAuth
 
-**Akyoずかん** - すべてのAKyoファンのために 💜
+**Akyoずかん** - すべてのAkyoファンのために 💜
