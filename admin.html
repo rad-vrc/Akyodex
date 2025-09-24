@@ -377,6 +377,12 @@
     </div>
 
     <script src="js/image-manifest-loader.js"></script>
+    <script src="js/image-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.loadAkyoManifest) { window.loadAkyoManifest().catch(() => {}); }
+        });
+    </script>
     <script src="js/admin.js"></script>
 
     <script>

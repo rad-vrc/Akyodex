@@ -676,7 +676,11 @@ async function removeImageForId(akyoId) {
         delete imageDataMap[akyoId];
         localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
-        if (preview) preview.src = `images/${akyoId}.png`;
+    if (preview) {
+        const id3 = String(akyoId).padStart(3, '0');
+        preview.src = (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : `images/${id3}.webp`);
+        preview.onerror = function(){ this.style.display='none'; };
+    }
         updateImageGallery();
         showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
     } catch (e) {
@@ -750,6 +754,7 @@ function editAkyo(akyoId) {
 
     const modal = document.getElementById('editModal');
     const content = document.getElementById('editModalContent');
+    const id3 = String(akyoId).padStart(3, '0');
 
     content.innerHTML = `
         <form onsubmit="handleUpdateAkyo(event, '${akyoId}')">
@@ -800,12 +805,12 @@ function editAkyo(akyoId) {
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">画像</label>
                 <div class="flex items-center gap-3">
-                    <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || ('images/' + akyo.id + '.png')}" class="w-32 h-24 object-cover rounded border" />
-                    <input type="file" accept="image/*" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
+                    <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : '')}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
+                    <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
                     <button type="button" onclick="saveEditImage('${akyoId}')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">画像を保存</button>
                     <button type="button" onclick="removeImageForId('${akyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
-                <p class="text-xs text-gray-500 mt-1">保存するとIndexedDB（フォールバック: LocalStorage）に登録されます。公開用にはimages/${akyo.id}.pngも追加して再デプロイしてください。</p>
+                <p class="text-xs text-gray-500 mt-1">保存するとIndexedDB（フォールバック: LocalStorage）に登録されます。公開用にはマニフェストまたはimages/${akyo.id}.webp/.png/.jpgを追加して再デプロイしてください。</p>
             </div>
 
             <button type="submit" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:opacity-90">
