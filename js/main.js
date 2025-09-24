@@ -3,6 +3,7 @@
 // グローバル変数
 let akyoData = [];
 let filteredData = [];
+let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let currentView = 'grid';
 let imageDataMap = {}; // 画像データの格納
@@ -142,6 +143,7 @@ async function loadAkyoData() {
         }
 
         filteredData = [...akyoData];
+        buildSearchIndex();
 
         console.log(`${akyoData.length}種類のAKyoを読み込みました`);
 
@@ -331,22 +333,54 @@ function setupEventListeners() {
     }
 }
 
+// 正規化（ひらがな/カタカナ/全角半角）
+function normalizeForSearch(input) {
+    if (!input) return '';
+    const s = String(input)
+        .toLowerCase()
+        // 全角英数→半角
+        .replace(/[！-～]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
+        // カタカナ→ひらがな
+        .replace(/[ァ-ン]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))
+        // 記号・余分な空白を除去
+        .replace(/[\s\u3000]+/g, ' ')
+        .trim();
+    return s;
+}
+
+function buildSearchIndex() {
+    searchIndex = akyoData.map(a => {
+        const text = [a.id, a.nickname, a.avatarName, a.attribute, a.creator, a.notes]
+            .map(normalizeForSearch)
+            .join(' ');
+        return { id: a.id, text };
+    });
+}
+
 // 検索処理
 function handleSearch() {
-    const query = (document.getElementById('searchInput').value || '').toLowerCase();
+    const raw = (document.getElementById('searchInput').value || '');
+    const query = normalizeForSearch(raw);
 
-    if (!query) {
-        filteredData = [...akyoData];
-    } else {
-        filteredData = akyoData.filter(akyo => {
-            return (akyo.id || '').toLowerCase().includes(query) ||
-                   (akyo.nickname || '').toLowerCase().includes(query) ||
-                   (akyo.avatarName || '').toLowerCase().includes(query) ||
-                   (akyo.attribute || '').toLowerCase().includes(query) ||
-                   (akyo.creator || '').toLowerCase().includes(query) ||
-                   (akyo.notes || '').toLowerCase().includes(query);
-        });
-    }
+    if (!query) { filteredData = [...akyoData]; updateDisplay(); return; }
+
+    const terms = query.split(' ').filter(Boolean); // AND検索
+    const scored = searchIndex
+        .map(row => {
+            // 部分一致＋語幹的な簡易スコア（連続一致に重み）
+            let score = 0;
+            for (const t of terms) {
+                const idx = row.text.indexOf(t);
+                if (idx >= 0) score += 5 + Math.max(0, 20 - idx / 10);
+                else return null; // AND条件を満たさない
+            }
+            return { id: row.id, score };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.score - a.score);
+
+    const keep = new Set(scored.map(s => s.id));
+    filteredData = akyoData.filter(a => keep.has(a.id));
 
     updateDisplay();
 }
