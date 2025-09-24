@@ -1,10 +1,10 @@
 # Akyoずかん - 500種類以上のなぞの生き物を探索しよう
 
-## 📚 プロジェクト概要
+## プロジェクト概要
 
 Akyoずかんは、500種類以上存在する「Akyo」というなぞの生き物たちを検索・閲覧できるファン向けの図鑑サイトです。子どもでも親しみやすいモダンなカードデザインで、ポケモン図鑑のような楽しい体験を提供します。
 
-## 🎯 プロジェクトの目標
+## プロジェクトの目標
 
 - Akyoファンが全種類のAkyoを簡単に検索・閲覧できる
 - お気に入り機能で好きなAkyoをコレクション
@@ -355,3 +355,357 @@ Akyoずかんに関するご意見・ご要望は、プロジェクト管理者�
 - 認証: sessionStorage.AkyoAdminAuth
 
 **Akyoずかん** - すべてのAkyoファンのために 💜
+
+## Akyodex 公開手順・完全版（Cloudflare Pages＋Functions＋R2＋KV）
+
+- **API トークン**：`<CLOUDFLARE_API_TOKEN>`
+- **Cloudflare アカウント名**：`<CLOUDFLARE_ACCOUNT_EMAIL>`
+- **Pages プロジェクト名**：`akyodex-site`
+- **本番ドメイン**：`akyodex.com`
+- **画像配信ドメイン（R2公開用）**：`images.akyodex.com`
+- **R2 バケット名**：`akyodex-images`
+- **KV 名前空間**：`AKYO_KV`
+- **管理者パスワード（オーナー）**：`<ADMIN_PASSWORD_OWNER>`
+- **管理者パスワード（一般管理者）**：`<ADMIN_PASSWORD_ADMIN>`
+
+---
+
+## 0) 前提と現在のフォルダ構成
+
+- いまのフォルダは**まだ変更していない**（`functions/` や `api` など未作成）。
+- 画像は `images/001.webp`〜`images/612.webp`（3桁固定）＋ `images/logo.webp` と `images/profileIcon.webp` の計 **614枚**。
+- **方針**：
+
+  - ロゴ/アイコンは本体から直配信（`https://akyodex.com/images/logo.webp` など）。
+  - Akyo画像は **R2** に置き、`https://images.akyodex.com/images/NNN.webp` で配信。
+  - 表示側は **ID→URLマニフェスト**を `/api/manifest` から取得して解決。
+
+---
+
+## 1) Cloudflare 側の準備（ダッシュボード）
+
+1. **Pages プロジェクトの作成**
+
+   - プロジェクト名：`akyodex-site`
+   - デプロイ方式：一旦は **手動（wrangler）** を想定（Git連携でも可）。
+   - カスタムドメインに **`akyodex.com`** を割り当て（DNS が Cloudflare 管理下であること）。
+
+2. **R2 バケットの作成**
+
+   - バケット名：`akyodex-images`
+   - **公開バケット**に設定。
+   - カスタムドメイン **`images.akyodex.com`** を紐づけ（R2 側の「公開設定」→「カスタムドメイン」）。
+
+3. **KV 名前空間の作成**
+
+   - 名前空間：`AKYO_KV`
+
+4. **Pages Functions のバインディングと環境変数**
+
+   - 対象：`akyodex-site` → *Settings* → *Functions* → *Bindings*
+   - 追加：
+
+     - **R2**：`AKYO_BUCKET` → `akyodex-images`
+     - **KV**：`AKYO_KV` → さきほど作った名前空間
+     - **環境変数**：
+
+       - `ADMIN_PASSWORD_OWNER = <ADMIN_PASSWORD_OWNER>`
+       - `ADMIN_PASSWORD_ADMIN = <ADMIN_PASSWORD_ADMIN>`
+       - `PUBLIC_R2_BASE = https://images.akyodex.com`
+
+> ここまでで「Pages（本体）」「R2（公開画像）」「KV（メタデータ）」の受け皿が完成する。
+
+---
+
+## 2) ローカルの準備（wrangler とトークン）
+
+- Node.js を準備（v18+ 推奨）。
+- `npm i -D wrangler` または `npm i -g wrangler`
+- **APIトークン** を環境に設定：
+
+  - macOS/Linux: `export CLOUDFLARE_API_TOKEN=<CLOUDFLARE_API_TOKEN>`
+  - PowerShell: `$env:CLOUDFLARE_API_TOKEN = '<CLOUDFLARE_API_TOKEN>'`
+
+> 今回は **ユーザートークン（スコープ最小）**で運用する。Global API Key は使わない。
+
+---
+
+## 3) プロジェクト差分（ファイル追加）
+
+ルートに以下を追加する。ディレクトリが無ければ作成する。
+
+```
+functions/
+  _utils.ts
+  api/
+    upload.ts
+    manifest.ts
+public/  （使わない場合は作成不要。既存 index.html などがルートにあるならそのまま）
+js/
+  image-manifest-loader.js  （なければ追加）
+```
+
+### 3.1 functions/_utils.ts
+
+```ts
+export function okJSON(data: unknown, init: ResponseInit = {}) {
+  return new Response(JSON.stringify(data), {
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      ...(init.headers || {}),
+    },
+    status: init.status ?? 200,
+  });
+}
+
+export function errJSON(status: number, message: string) {
+  return okJSON({ error: message }, { status });
+}
+
+export function corsHeaders(origin?: string) {
+  return {
+    "access-control-allow-origin": origin ?? "*",
+    "access-control-allow-methods": "GET,POST,OPTIONS,DELETE",
+    "access-control-allow-headers": "authorization,content-type",
+  };
+}
+
+export function requireAuth(request: Request, env: { ADMIN_PASSWORD_OWNER: string; ADMIN_PASSWORD_ADMIN: string }) {
+  const h = request.headers.get("authorization") ?? "";
+  const token = h.startsWith("Bearer ") ? h.slice(7) : "";
+  if (!token) throw new Response("Unauthorized", { status: 401 });
+  if (token === env.ADMIN_PASSWORD_OWNER) return "owner" as const;
+  if (token === env.ADMIN_PASSWORD_ADMIN) return "admin" as const;
+  throw new Response("Unauthorized", { status: 401 });
+}
+
+export function threeDigits(id: string) {
+  return id?.trim().slice(0, 3).padStart(3, "0");
+}
+
+export function sanitizeFileName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9._-]+/g, "_");
+}
+```
+
+### 3.2 functions/api/upload.ts
+
+```ts
+import { okJSON, errJSON, corsHeaders, requireAuth, threeDigits, sanitizeFileName } from "../_utils";
+
+export const onRequestOptions: PagesFunction = async ({ request }) => {
+  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+};
+
+export const onRequestPost: PagesFunction = async ({ request, env }) => {
+  try {
+    const role = requireAuth(request, env as any); // "owner" | "admin"
+    const form = await request.formData();
+
+    const idRaw = String(form.get("id") ?? "");
+    const id = threeDigits(idRaw);
+    if (!id) return errJSON(400, "id is required");
+
+    const file = form.get("file");
+    if (!(file instanceof File)) return errJSON(400, "file is required");
+
+    const original = file.name || `${id}.webp`;
+    const safeName = sanitizeFileName(original);
+    const key = `images/${id}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
+
+    await (env as any).AKYO_BUCKET.put(key, file.stream(), {
+      httpMetadata: { contentType: file.type || "application/octet-stream" },
+    });
+
+    const base = (env as any).PUBLIC_R2_BASE as string; // 例: https://images.akyodex.com
+    const url = `${base}/${key}`;
+
+    // メタデータ（最小）
+    const name = String(form.get("name") ?? "");
+    const type = String(form.get("type") ?? "");
+    const desc = String(form.get("desc") ?? "");
+    const now = new Date().toISOString();
+    const updater = role; // ロールのみ記録（必要ならIP/UAも）
+
+    const data = { id, name, type, desc, key, url, updatedAt: now, updater };
+    await (env as any).AKYO_KV.put(`akyo:${id}`, JSON.stringify(data));
+
+    return okJSON({ ok: true, id, url, key, updatedAt: now }, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+  } catch (e: any) {
+    if (e instanceof Response) return e;
+    return errJSON(500, e?.message || "upload failed");
+  }
+};
+```
+
+### 3.3 functions/api/manifest.ts
+
+```ts
+import { okJSON, errJSON, corsHeaders } from "../_utils";
+
+export const onRequestOptions: PagesFunction = async ({ request }) => {
+  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+};
+
+export const onRequestGet: PagesFunction = async ({ request, env }) => {
+  try {
+    const list = await (env as any).AKYO_KV.list({ prefix: "akyo:" });
+    const out: Record<string, string> = {};
+    const values = await Promise.all(list.keys.map((k: any) => (env as any).AKYO_KV.get(k.name, "json")));
+    for (const v of values) {
+      if (v?.id && v?.url) out[v.id] = v.url;
+    }
+    return okJSON(out, {
+      headers: {
+        ...corsHeaders(request.headers.get("origin") ?? undefined),
+        "cache-control": "public, max-age=60, stale-while-revalidate=300",
+      },
+    });
+  } catch (e: any) {
+    return errJSON(500, e?.message || "manifest failed");
+  }
+};
+```
+
+### 3.4 js/image-manifest-loader.js（最小）
+
+```js
+window.akyoImageManifest = {};
+
+async function loadAkyoManifest() {
+  try {
+    const res = await fetch('/api/manifest', { cache: 'no-store' });
+    window.akyoImageManifest = await res.json();
+  } catch (e) {
+    console.warn('manifest fetch failed', e);
+    window.akyoImageManifest = window.akyoImageManifest || {};
+  }
+}
+
+function getAkyoImageUrl(id3) {
+  return window.akyoImageManifest[id3] || `/images/${id3}.webp`; // フォールバック
+}
+
+window.loadAkyoManifest = loadAkyoManifest;
+window.getAkyoImageUrl = getAkyoImageUrl;
+```
+
+### 3.5 HTML の読み込み
+
+- `index.html` と `admin.html` の末尾で以下を読み込む：
+
+```html
+<script src="js/image-manifest-loader.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAkyoManifest();
+  });
+  </script>
+```
+
+### 3.6 管理画面からのアップロード（追記）
+
+```js
+async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
+  const form = new FormData();
+  form.set('id', id);
+  form.set('name', name);
+  form.set('type', type);
+  form.set('desc', desc);
+  form.set('file', file);
+
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${adminPassword}` },
+    body: form,
+  });
+  const json = await res.json();
+  if (!res.ok || !json.ok) throw new Error(json.error || 'upload failed');
+
+  await loadAkyoManifest();
+  return json;
+}
+```
+
+---
+
+## 4) 既存画像の初期投入（R2）
+
+### 推奨：ダッシュボードでドラッグ＆ドロップ
+
+1. R2 の `akyodex-images` を開く。
+2. `images/` フォルダを作成。
+3. ローカルの `images/001.webp`〜`612.webp` を **`images/` 以下にまとめてアップロード**する。
+4. 途中でエラーになった場合は、重複ファイルは**上書き**で良い。
+
+## 5) デプロイ
+
+### 5.1 単発デプロイ（wrangler）
+
+- ルートがそのまま公開ルートなら：
+
+```
+npx wrangler pages deploy . --project-name <PAGES_PROJECT_NAME>
+```
+
+- `dist/` などビルド成果がある場合はそのパスを指定：
+
+```
+npx wrangler pages deploy dist --project-name akyodex-site
+```
+
+> 実行前に `CLOUDFLARE_API_TOKEN=<CLOUDFLARE_API_TOKEN>` を環境に設定しておく。
+
+### 5.2 カスタムドメイン確認
+
+- Pages プロジェクトの *Custom domains* で `akyodex.com` の状況が **Active** になっていること。
+- R2 公開設定のカスタムドメイン `images.akyodex.com` も **有効**であること。
+
+---
+
+## 6) 動作確認
+
+1. ブラウザで `https://akyodex.com/api/manifest` を開き、`{"001": "https://images.akyodex.com/images/001.webp", ...}` が返ること。
+2. `index.html` を開き、ID→画像が正しく表示されること（必要に応じてキャッシュを無効化）。
+3. `admin.html` からログイン（`<ADMIN_PASSWORD_OWNER>` / `<ADMIN_PASSWORD_ADMIN>`）、任意のIDで画像をアップロード → 即時反映を確認。
+
+---
+
+## 7) 運用ルール
+
+- 新しい画像は **`id=NNN` を指定してアップロード**（`NNN` は3桁、フォーマットは `.webp` 推奨）。
+- 既存画像の差し替えは **同じIDで上書き**する。
+- 削除操作は **`<ADMIN_PASSWORD_OWNER>` のみ許可**（必要なら `DELETE /api/akyo/:id` を追加実装）。
+- 画像は `loading="lazy"` と `width/height` 指定を維持し、パフォーマンスを確保。
+
+---
+
+## 8) 既知のハマりどころと対処
+
+- **/api/manifest が空**：KV に `akyo:*` が無い。少なくとも1件を `/api/upload` から登録してから再確認する。
+- **403 Unauthorized**：Bearer が未設定／誤り。`<ADMIN_PASSWORD_OWNER>` か `<ADMIN_PASSWORD_ADMIN>` を入力して送っているか確認。
+- **R2 の URL が 403**：公開設定とカスタムドメイン割当を再確認。パスは `images/NNN_*.webp` になっているか。
+- **CORS エラー**：`corsHeaders` を確認。基本は同一オリジンだが、別ドメインから管理する場合は許可オリジンを調整。
+
+---
+
+## 9) 付録：リネーム・クリーンアップ（PowerShell）
+
+## 10) 片付けのチェックリスト（公開直前）
+
+- [ ] `functions/` 3ファイルを追加済み
+- [ ] `js/image-manifest-loader.js` を読み込み、起動時に `loadAkyoManifest()` を実行
+- [ ] R2 に `images/001.webp`〜`612.webp` が配置済み（`images/` フォルダ直下）
+- [ ] Pages Functions の **Bindings**（`AKYO_BUCKET` / `AKYO_KV` / `PUBLIC_R2_BASE`）と **ENV**（`ADMIN_PASSWORD_*`）を設定
+- [ ] `npx wrangler pages deploy . --project-name akyodex-site` を実行し公開
+- [ ] `/api/manifest` が正しいJSONを返し、トップページで画像が見える
+- [ ] `admin.html` からのアップロードが反映される
+
+---
+
+### 完了後の運用メモ
+
+- 画像の追加・差し替えは管理画面から実行（再デプロイ不要）。
+- コストを抑えるため、順次 **WebP** 化と **サムネイル**導入を検討（`thumbs/NNN.webp` など）。
+- 需要が増えたら、`/api/akyo/:id` のメタデータCRUDや履歴（更新ログ）を追加していく。

@@ -309,6 +309,7 @@
     <!-- ストレージ管理（最初に読み込み） -->
     <script src="js/storage-manager.js"></script>
     <script src="js/storage-adapter.js"></script>
+    <script src="js/image-manifest-loader.js"></script>
     <script src="js/image-loader.js"></script>
     <script src="js/main.js"></script>
 
@@ -399,6 +400,7 @@
         // ページ読み込み時に実行
         async function bootstrapImages() {
             try { if (window.loadImagesManifest) { await window.loadImagesManifest(); } } catch (e) {}
+            try { if (window.loadAkyoManifest) { await window.loadAkyoManifest(); } } catch (e) {}
             loadHeaderLogo();
         }
         if (document.readyState === 'loading') {

@@ -73,13 +73,26 @@ function setupLazyLoading() {
 
 // 画像URLを取得
 function getAkyoImageUrl(akyoId) {
+    // まずwindowにロードされたマニフェストを優先
+    try {
+        if (typeof window !== 'undefined' && window.akyoImageManifestMap && window.akyoImageManifestMap[akyoId]) {
+            const v = window.akyoImageManifestMap[akyoId];
+            if (typeof v === 'string' && /^https?:\/\//.test(v)) return v;
+            return `images/${v}${getAssetsVersionSuffix()}`;
+        }
+    } catch (_) {}
     // まずURLマッピングから探す
     if (akyoImageUrls[akyoId]) {
         return akyoImageUrls[akyoId];
     }
     // マニフェストから探す
     if (akyoImageManifestMap && akyoImageManifestMap[akyoId]) {
-        return `images/${akyoImageManifestMap[akyoId]}${getAssetsVersionSuffix()}`;
+        const val = akyoImageManifestMap[akyoId];
+        // プレーンマップがフルURLを返す場合に対応
+        if (typeof val === 'string' && /^https?:\/\//.test(val)) {
+            return val;
+        }
+        return `images/${val}${getAssetsVersionSuffix()}`;
     }
 
     // 次にローカルストレージから探す

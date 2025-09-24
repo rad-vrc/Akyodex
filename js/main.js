@@ -311,7 +311,7 @@ function setupEventListeners() {
     const adminBtn = document.createElement('button');
     adminBtn.className = 'fixed bottom-4 right-4 bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 z-50';
     adminBtn.innerHTML = '<i class="fas fa-cog"></i>';
-    adminBtn.title = '管理者モード';
+    adminBtn.title = 'ファインダーモード';
     adminBtn.addEventListener('click', () => {
         window.location.href = 'admin.html';
     });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akyoずかん - 管理者モード</title>
+    <title>Akyoずかん - ファインダーモード</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,7 @@
     <!-- 子どもにやさしいデザイン -->
     <link rel="stylesheet" href="css/kid-friendly.css">
 
-    <!-- ストレージ管理 -->
+    <!-- ストレージファインダー -->
     <script src="js/storage-manager.js"></script>
     <script src="js/storage-adapter.js"></script>
 
@@ -60,7 +60,7 @@
                     <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
                         <i class="fas fa-shield-alt text-white"></i>
                     </div>
-                    <h1 class="text-2xl font-bold">Akyoずかん 管理者モード</h1>
+                    <h1 class="text-2xl font-bold">Akyoずかん ファインダーモード</h1>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -83,18 +83,18 @@
                 <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-lock text-white text-3xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">管理者認証</h2>
-                <p class="text-gray-600 text-sm">パスワードを入力して管理機能にアクセス</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">ファインダー認証</h2>
+                <p class="text-gray-600 text-sm">Akyoワードを入力してファインダー機能にアクセス</p>
             </div>
 
             <form onsubmit="handleLogin(event)">
                 <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-medium mb-2">パスワード</label>
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Akyoワード</label>
                     <input
                         type="password"
                         id="passwordInput"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                        placeholder="パスワードを入力"
+                        placeholder="Akyoワードを入力"
                         required
                     >
                 </div>
@@ -104,13 +104,24 @@
                 </button>
 
                 <div id="loginError" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-                    <i class="fas fa-exclamation-circle mr-1"></i> パスワードが正しくありません
+                    <i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません
                 </div>
             </form>
+            <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-gray-700">
+                <p class="font-semibold mb-2">見つけたAkyoを登録したい？</p>
+                <p class="mb-2">次のいずれかのアカウント宛に：</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><a href="https://x.com/rad_vrc" target="_blank" rel="noopener" class="text-blue-600 underline hover:text-blue-800">らど https://x.com/rad_vrc</a></li>
+                    <li><a href="https://x.com/nknmnThe_VRC" target="_blank" rel="noopener" class="text-blue-600 underline hover:text-blue-800">ネコノミ https://x.com/nknmnThe_VRC</a></li>
+                    <li><a href="https://x.com/KAYA_Vchat" target="_blank" rel="noopener" class="text-blue-600 underline hover:text-blue-800">カヤ https://x.com/KAYA_Vchat</a></li>
+                    <li><a href="https://x.com/zhoney666" target="_blank" rel="noopener" class="text-blue-600 underline hover:text-blue-800">ジョニー https://x.com/zhoney666</a></li>
+                </ul>
+                <p class="mt-2">「ひみつのAkyoワードを教えて」とメッセージを送ってみてね！</p>
+            </div>
         </div>
     </div>
 
-    <!-- 管理画面 -->
+    <!-- ファインダー画面 -->
     <div id="adminScreen" class="hidden container mx-auto px-4 py-8">
         <!-- タブナビゲーション -->
         <div class="bg-white rounded-xl shadow-lg mb-6">
@@ -194,7 +205,7 @@
                     <div class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-6 text-center" id="imageDropZone">
                         <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
                         <p class="text-gray-600">画像をドラッグ&ドロップ または</p>
-                        <input type="file" id="imageInput" accept="image/*" class="hidden">
+                        <input type="file" id="imageInput" accept=".webp,.png,.jpg,.jpeg" class="hidden">
                         <button type="button" onclick="document.getElementById('imageInput').click()"
                                 class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
                             ファイルを選択
@@ -282,7 +293,7 @@
         <!-- ツールタブ -->
         <div id="toolsTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-tools text-orange-500 mr-2"></i> 管理ツール
+                <i class="fas fa-tools text-orange-500 mr-2"></i> ファインダーツール
             </h2>
 
             <div class="space-y-6">
@@ -365,6 +376,7 @@
         </div>
     </div>
 
+    <script src="js/image-manifest-loader.js"></script>
     <script src="js/admin.js"></script>
 
     <script>
@@ -606,7 +618,7 @@
                     const roleSpan = document.getElementById('userRole');
                     if (roleSpan) {
                         roleSpan.classList.remove('hidden');
-                        roleSpan.textContent = savedAuth === 'owner' ? 'オーナー権限' : '管理者権限';
+                        roleSpan.textContent = savedAuth === 'owner' ? 'マスター権限' : 'ファインダー権限';
                         // ログアウトと同一スタイル
                         roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
                     }
@@ -614,70 +626,13 @@
             }
         });
 
-        // handleLogin関数が存在しない場合のフォールバック
-        if (typeof handleLogin === 'undefined') {
-            console.log('Creating handleLogin function directly in HTML');
-
-            window.handleLogin = function(event) {
-                event.preventDefault();
-                console.log('handleLogin called from HTML');
-
-                const password = document.getElementById('passwordInput').value;
-                const errorDiv = document.getElementById('loginError');
-
-                console.log('Password entered:', password);
-
-                if (password === 'RadAkyo') {
-                    console.log('Owner login successful');
-                    sessionStorage.setItem('akyoAdminAuth', 'owner');
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    document.getElementById('adminScreen').classList.remove('hidden');
-                    document.getElementById('logoutBtn').classList.remove('hidden');
-
-                    const roleSpan = document.getElementById('userRole');
-                    if (roleSpan) {
-                        roleSpan.classList.remove('hidden');
-                        roleSpan.textContent = 'オーナー権限';
-                        roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
-                    }
-
-                    // データ読み込み（存在する場合）
-                    if (typeof loadAkyoData === 'function') {
-                        loadAkyoData();
-                    }
-
-                } else if (password === 'Akyo') {
-                    console.log('Admin login successful');
-                    sessionStorage.setItem('akyoAdminAuth', 'admin');
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    document.getElementById('adminScreen').classList.remove('hidden');
-                    document.getElementById('logoutBtn').classList.remove('hidden');
-
-                    const roleSpan = document.getElementById('userRole');
-                    if (roleSpan) {
-                        roleSpan.classList.remove('hidden');
-                        roleSpan.textContent = '管理者権限';
-                        roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
-                    }
-
-                    // データ読み込み（存在する場合）
-                    if (typeof loadAkyoData === 'function') {
-                        loadAkyoData();
-                    }
-
-                } else {
-                    console.log('Invalid password');
-                    errorDiv.classList.remove('hidden');
-                    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> パスワードが正しくありません（RadAkyo または Akyo を入力してください）';
-                    setTimeout(() => errorDiv.classList.add('hidden'), 3000);
-                }
-            }
-        }
+        // handleLogin のフォールバックは無効化（admin.js 実装を使用）
 
         // logout関数が存在しない場合のフォールバック
         if (typeof logout === 'undefined') {
             window.logout = function() {
                 sessionStorage.removeItem('akyoAdminAuth');
+                sessionStorage.removeItem('akyoAdminToken');
                 location.reload();
             }
         }

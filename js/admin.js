@@ -1,11 +1,7 @@
 // Akyo図鑑 管理者用JavaScript
 console.log('admin.js loading started');
 
-// パスワード設定（実際の運用では環境変数やサーバー側で管理すべき）
-const PASSWORDS = {
-    owner: 'RadAkyo',  // オーナー用（らどさん専用）- 全権限
-    admin: 'Akyo'      // 管理者用（協力者用）- 追加・編集のみ
-};
+// 認証ワードはサーバー側（Cloudflare ENV）で検証。フロントには保存しない
 
 // グローバル変数
 let currentUserRole = null;
@@ -140,29 +136,33 @@ function setupDropZone(element, dropHandler) {
 }
 
 // ログイン処理
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault();
 
     const password = document.getElementById('passwordInput').value;
     const errorDiv = document.getElementById('loginError');
 
-    if (password === PASSWORDS.owner) {
-        currentUserRole = 'owner';
-        sessionStorage.setItem('akyoAdminAuth', 'owner');
-        showAdminScreen();
-        showNotification('オーナー権限でログインしました（全機能使用可能）', 'success');
-        // データを読み込む
-        loadAkyoData();
-    } else if (password === PASSWORDS.admin) {
-        currentUserRole = 'admin';
-        sessionStorage.setItem('akyoAdminAuth', 'admin');
-        showAdminScreen();
-        showNotification('管理者権限でログインしました（追加・編集のみ）', 'success');
-        // データを読み込む
-        loadAkyoData();
-    } else {
+    // 入力したワードを一時保存してサーバー検証
+    sessionStorage.setItem('akyoAdminToken', password);
+    try {
+        const res = await fetch('/api/whoami', {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${password}` },
+        });
+        const json = await res.json();
+        if (res.ok && json?.role) {
+            currentUserRole = json.role;
+            sessionStorage.setItem('akyoAdminAuth', currentUserRole);
+            showAdminScreen();
+            showNotification(`${currentUserRole === 'owner' ? 'マスター' : 'ファインダー'}権限でログインしました`, 'success');
+            loadAkyoData();
+        } else {
+            throw new Error('unauthorized');
+        }
+    } catch (_) {
+        sessionStorage.removeItem('akyoAdminToken');
         errorDiv.classList.remove('hidden');
-        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> パスワードが正しくありません（RadAkyo または Akyo を入力してください）';
+        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません';
         setTimeout(() => errorDiv.classList.add('hidden'), 3000);
     }
 }
@@ -559,6 +559,27 @@ async function handleAddAkyo(event) {
         console.error('Image save error:', error);
     }
 
+    // オンラインアップロード（存在すれば実行）
+    try {
+        if (typeof uploadAkyoOnline === 'function') {
+            const fileInput = document.getElementById('imageInput');
+            const fileObj = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+            const adminPassword = sessionStorage.getItem('akyoAdminToken');
+            if (fileObj) {
+                await uploadAkyoOnline({
+                    id: newAkyo.id,
+                    name: newAkyo.nickname || newAkyo.avatarName || '',
+                    type: newAkyo.attribute || '',
+                    desc: newAkyo.notes || '',
+                    file: fileObj,
+                    adminPassword,
+                });
+            }
+        }
+    } catch (e) {
+        console.warn('オンラインアップロード失敗（ローカル保存は完了）:', e);
+    }
+
     // フォームリセット
     event.target.reset();
     const imagePreview = document.getElementById('imagePreview');
@@ -588,6 +609,46 @@ async function handleAddAkyo(event) {
 
 // グローバルスコープに公開
 window.handleAddAkyo = handleAddAkyo;
+
+// Cloudflare Pages Functions 経由のオンラインアップロード
+async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
+    const form = new FormData();
+    form.set('id', id);
+    form.set('name', name);
+    form.set('type', type);
+    form.set('desc', desc);
+    // 可能ならトリミング済みDataURLをBlob変換して送信
+    try {
+        if (window.generateCroppedImage) {
+            const dataUrl = await window.generateCroppedImage();
+            if (dataUrl) {
+                const blob = await (await fetch(dataUrl)).blob();
+                const fname = (file && file.name) ? file.name.replace(/\.[^.]+$/, '.webp') : `${id}.webp`;
+                form.set('file', new File([blob], fname, { type: blob.type || 'image/webp' }));
+            } else {
+                form.set('file', file);
+            }
+        } else {
+            form.set('file', file);
+        }
+    } catch(_) {
+        form.set('file', file);
+    }
+
+    const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+        body: form,
+    });
+    const json = await res.json();
+    if (!res.ok || !json.ok) throw new Error(json.error || 'upload failed');
+
+    try { if (window.loadAkyoManifest) await window.loadAkyoManifest(); } catch (_) {}
+    return json;
+}
+
+// グローバル公開
+window.uploadAkyoOnline = uploadAkyoOnline;
 
 // 画像選択処理
 function handleImageSelect(event) {
@@ -903,18 +964,25 @@ window.closeEditModal = closeEditModal;
 // CSV更新
 async function updateCSVFile() {
     // CSVフォーマットに変換
-    let csvContent = ',見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
+    const escapeCsv = (val) => {
+        const s = (val ?? '').toString();
+        const needsQuote = /[",\n]/.test(s);
+        const body = s.replace(/"/g, '""');
+        return needsQuote ? `"${body}"` : body;
+    };
+
+    let csvContent = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
 
     akyoData.forEach(akyo => {
         const row = [
-            akyo.id,
-            akyo.appearance,
-            akyo.nickname,
-            akyo.avatarName,
-            akyo.attribute,
-            akyo.notes.includes(',') || akyo.notes.includes('\n') ? `"${akyo.notes}"` : akyo.notes,
-            akyo.creator,
-            akyo.avatarUrl
+            escapeCsv(akyo.id),
+            escapeCsv(akyo.appearance),
+            escapeCsv(akyo.nickname),
+            escapeCsv(akyo.avatarName),
+            escapeCsv(akyo.attribute),
+            escapeCsv(akyo.notes),
+            escapeCsv(akyo.creator),
+            escapeCsv(akyo.avatarUrl)
         ].join(',');
         csvContent += row + '\n';
     });
@@ -1497,7 +1565,8 @@ window.removeImage = removeImage;
 
 // 編集用検索
 function searchForEdit() {
-    const query = document.getElementById('editSearchInput').value.toLowerCase();
+    const inputEl = document.getElementById('editSearchInput');
+    const query = (inputEl && inputEl.value ? inputEl.value : '').toLowerCase();
 
     const filtered = query
         ? akyoData.filter(akyo =>
