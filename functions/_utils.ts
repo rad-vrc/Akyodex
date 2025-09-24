@@ -31,8 +31,12 @@ export function requireAuth(request: Request, env: { ADMIN_PASSWORD_OWNER: strin
   throw new Response("Unauthorized", { status: 401 });
 }
 
-export function threeDigits(id: string) {
-  return id?.trim().slice(0, 3).padStart(3, "0");
+export function threeDigits(id: string): string | null {
+  if (typeof id !== "string") return null;
+  const trimmed = id.trim();
+  if (!trimmed) return null;
+  if (!/^\d{1,3}$/.test(trimmed)) return null;
+  return trimmed.padStart(3, "0");
 }
 
 export function sanitizeFileName(name: string) {

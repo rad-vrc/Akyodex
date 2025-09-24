@@ -600,30 +600,10 @@
         // ログイン機能の直接実装（デバッグ用）
         console.log('Admin page loaded');
 
-        // ページロード時に認証状態を確認
+        // ページロード時に旧バージョンの認証ワードを確実に破棄
         window.addEventListener('load', () => {
-            const savedAuth = sessionStorage.getItem('akyoAdminAuth');
-            console.log('Page loaded, auth state:', savedAuth);
-
-            if (savedAuth) {
-                // 既にログイン済みの場合
-                const loginScreen = document.getElementById('loginScreen');
-                const adminScreen = document.getElementById('adminScreen');
-
-                if (loginScreen && adminScreen) {
-                    loginScreen.classList.add('hidden');
-                    adminScreen.classList.remove('hidden');
-                    document.getElementById('logoutBtn').classList.remove('hidden');
-
-                    const roleSpan = document.getElementById('userRole');
-                    if (roleSpan) {
-                        roleSpan.classList.remove('hidden');
-                        roleSpan.textContent = savedAuth === 'owner' ? 'マスター権限' : 'ファインダー権限';
-                        // ログアウトと同一スタイル
-                        roleSpan.className = 'px-3 py-2 rounded-lg bg-gray-700 text-white text-sm';
-                    }
-                }
-            }
+            sessionStorage.removeItem('akyoAdminToken');
+            console.log('Admin fallback loaded');
         });
 
         // handleLogin のフォールバックは無効化（admin.js 実装を使用）
@@ -632,7 +612,6 @@
         if (typeof logout === 'undefined') {
             window.logout = function() {
                 sessionStorage.removeItem('akyoAdminAuth');
-                sessionStorage.removeItem('akyoAdminToken');
                 location.reload();
             }
         }
