@@ -578,11 +578,16 @@ function showDetail(akyoId) {
             // まずフォルダ（images/）からの既定アイコンを試す（GETで存在確認）
             try {
                 const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
-                const respPng = await fetch(`images/profileIcon.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                if (respPng.ok) profileIcon = `images/profileIcon.png?v=${encodeURIComponent(ver)}`;
+                // webp → png → jpg の順に確認
+                const respWebp = await fetch(`images/profileIcon.webp?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                if (respWebp.ok) profileIcon = `images/profileIcon.webp?v=${encodeURIComponent(ver)}`;
                 else {
-                    const respJpg = await fetch(`images/profileIcon.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                    if (respJpg.ok) profileIcon = `images/profileIcon.jpg?v=${encodeURIComponent(ver)}`;
+                    const respPng = await fetch(`images/profileIcon.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                    if (respPng.ok) profileIcon = `images/profileIcon.png?v=${encodeURIComponent(ver)}`;
+                    else {
+                        const respJpg = await fetch(`images/profileIcon.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                        if (respJpg.ok) profileIcon = `images/profileIcon.jpg?v=${encodeURIComponent(ver)}`;
+                    }
                 }
             } catch (_) {}
 
@@ -603,9 +608,9 @@ function showDetail(akyoId) {
                     #${akyo.id} ${akyo.nickname || akyo.avatarName}
                 `;
             } else {
-                // 画像ファイルを直接試す（存在しなければ非表示）
+                // 画像ファイルを直接試す（webp→pngの順。見つからなければ非表示）
                 modalTitle.innerHTML = `
-                    <img src="images/profileIcon.png" onerror="this.style.display='none'" class="w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400">
+                    <img src="images/profileIcon.webp" onerror="this.onerror=null; this.src='images/profileIcon.png';" class="w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400">
                     #${akyo.id} ${akyo.nickname || akyo.avatarName}
                 `;
             }

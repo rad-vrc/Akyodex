@@ -320,14 +320,19 @@
             try {
                 let headerLogoUrl = null;
 
-                // まずフォルダ（images/）からの既定ロゴPNGを試す（GETで存在確認）
+                // まずフォルダ（images/）からの既定ロゴを試す（GETで存在確認）
                 try {
                     const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
-                    const respPng = await fetch(`images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                    if (respPng.ok) headerLogoUrl = `images/logo.png?v=${encodeURIComponent(ver)}`;
+                    // webp → png → jpg の順に確認
+                    const respWebp = await fetch(`images/logo.webp?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                    if (respWebp.ok) headerLogoUrl = `images/logo.webp?v=${encodeURIComponent(ver)}`;
                     else {
-                        const respJpg = await fetch(`images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                        if (respJpg.ok) headerLogoUrl = `images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                        const respPng = await fetch(`images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                        if (respPng.ok) headerLogoUrl = `images/logo.png?v=${encodeURIComponent(ver)}`;
+                        else {
+                            const respJpg = await fetch(`images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                            if (respJpg.ok) headerLogoUrl = `images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                        }
                     }
                 } catch (_) {}
 
@@ -385,7 +390,7 @@
 
                     headerLogoEl.innerHTML = `
                         <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                            <img src="images/logo.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'"
+                            <img src="images/logo.webp" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'"
                                  alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
                             <h1 class="logo-text hover:opacity-90 transition-opacity" style="cursor: pointer; display:none; margin-left:8px;">Akyoずかん</h1>
                         </a>
