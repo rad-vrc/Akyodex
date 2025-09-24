@@ -105,7 +105,8 @@ function getAkyoImageUrl(akyoId) {
     }
 
     // 最後のフォールバック: デプロイ先の静的フォルダ images/{id}.png を参照（PNG優先）
-    return `images/${akyoId}.png${getAssetsVersionSuffix()}`;
+    // 最終フォールバックは .webp を優先
+    return `images/${akyoId}.webp${getAssetsVersionSuffix()}`;
 }
 
 // エクスポート
