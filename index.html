@@ -21,6 +21,7 @@
     <link rel="dns-prefetch" href="https://images.akyodex.com">
     <link rel="preconnect" href="https://images.akyodex.com" crossorigin>
     <link rel="preload" as="image" href="images/logo.webp">
+    <link rel="preload" as="image" href="images/profileIcon.webp">
 
     <!-- Custom Styles -->
     <style>
@@ -430,6 +431,13 @@
                 : `<div class="akyo-image-placeholder h-48" style="background: ${color}"><span class="text-4xl">${id}</span></div>`;
             const parent = img.parentElement;
             if (parent) parent.innerHTML = placeholder;
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
         }
     </script>
 </body>
