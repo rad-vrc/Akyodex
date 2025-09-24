@@ -165,10 +165,8 @@
     <header class="text-white py-8 shadow-lg sticky top-0 z-40">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
-                <!-- ヘッダーロゴ -->
-                <div id="headerLogo" class="flex items-center">
-                    <h1 class="logo-text">Akyoずかん</h1>
-                </div>
+                <!-- ヘッダーロゴ（初期テキストは出さない） -->
+                <div id="headerLogo" class="flex items-center"></div>
 
                 <div class="flex items-center gap-4">
                     <!-- 統計情報 -->
@@ -390,9 +388,8 @@
 
                     headerLogoEl.innerHTML = `
                         <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                            <img src="images/logo.webp" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'"
+                            <img src="images/logo.webp" onerror="this.style.display='none'"
                                  alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
-                            <h1 class="logo-text hover:opacity-90 transition-opacity" style="cursor: pointer; display:none; margin-left:8px;">Akyoずかん</h1>
                         </a>
                     `;
                 }
