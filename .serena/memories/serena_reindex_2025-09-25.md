@@ -1,0 +1,1 @@
+Re-activated Akyodex project and confirmed onboarding done. Proceeded with reindex request (implicit in activation; symbol tools available). Next: evaluate Cloudflare R2 for images, propose exact steps (bucket, keys, upload via S3 SDK, public delivery, CI manifest update), and add repo samples+README notes.
