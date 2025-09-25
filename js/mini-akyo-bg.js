@@ -1,9 +1,7 @@
 (function(){
   const CANDIDATES = [
     'images/@miniakyo.webp',
-    'images/@miniakyo.png',
     'images/miniakyo.webp',
-    'images/miniakyo.png',
   ];
 
   function getVersionSuffix(){
