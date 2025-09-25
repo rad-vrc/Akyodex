@@ -1,9 +1,10 @@
 export const onRequest = async (context) => {
     const url = new URL(context.request.url);
-    // pages.dev でアクセスされたら独自ドメインへ恒久リダイレクト
-    if (url.hostname.endsWith('.pages.dev')) {
+    // 本番用 preview ドメインのみをリダイレクト対象に限定（他 preview は残す）
+    if (url.hostname === 'akyodex.pages.dev') {
         const target = `https://akyodex.com${url.pathname}${url.search}`;
-        return Response.redirect(target, 301);
+        // 302にしてデバッグ/プレビュー時のキャッシュ固着を避ける
+        return Response.redirect(target, 302);
     }
     return context.next();
 };
