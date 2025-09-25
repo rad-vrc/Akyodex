@@ -1,15 +1,14 @@
 (function(){
   const CANDIDATES = [
-// 相対（Pages静的）
+    // 本番の実体（R2 直下）を最優先
     'https://images.akyodex.com/miniakyo.webp',
-    'images/@miniakyo.webp',
-    'images/miniakyo.webp',
-    // 絶対（R2のカスタムドメイン）
-    'https://images.akyodex.com/images/@miniakyo.webp',
-    'https://images.akyodex.com/images/miniakyo.webp',
-    // 直下配置パターン（R2でキーを直下にした場合）
     'https://images.akyodex.com/@miniakyo.webp',
-    'https://images.akyodex.com/miniakyo.webp',
+    // R2 images/ 下パターン
+    'https://images.akyodex.com/images/miniakyo.webp',
+    'https://images.akyodex.com/images/@miniakyo.webp',
+    // 相対（Pages/ローカル）
+    'images/miniakyo.webp',
+    'images/@miniakyo.webp',
   ];
 
   function getVersionSuffix(){
@@ -65,10 +64,9 @@
 
     const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
     let fallback = null;
-
     for (const path of CANDIDATES){
       const candidate = path + ver;
-      fallback = fallback || candidate;
+      if (!fallback) fallback = candidate;
       try{
         const r = await fetch(candidate, { cache: 'no-cache' });
         if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
@@ -76,7 +74,6 @@
         }
       }catch(_){ /* continue */ }
     }
-
     return fallback;
   }
 
@@ -101,11 +98,6 @@
       host.setAttribute('aria-hidden', 'true');
       document.body.prepend(host);
     }
-    try{
-      const p = new URLSearchParams(location.search);
-      const bg = (p.get('bg') || '').toLowerCase();
-      if (bg === 'front' || bg === '1') host.style.zIndex = '10';
-    }catch(_){ }
     return host;
   }
 
@@ -162,11 +154,13 @@
       // 初期クリア（再初期化時の重複防止）
       while (host.firstChild) host.removeChild(host.firstChild);
 
-      let initial = Math.min(18, Math.max(10, Math.round(window.innerWidth/110)));
+      // 初期密度: 画面サイズから自動算出（上限を少し引き上げ）。URLで ?bgdensity=NN 上書き可。
+      const side = Math.sqrt(window.innerWidth * window.innerHeight);
+      let initial = Math.round(side / 95); // 大きい画面は密度を上げる
+      initial = Math.min(28, Math.max(10, initial));
       try{
-        const p = new URLSearchParams(location.search);
-        const dens = parseInt(p.get('bgdensity')||'', 10);
-        if (!isNaN(dens) && dens>0 && dens<=50) initial = dens;
+        const dens = parseInt(new URLSearchParams(location.search).get('bgdensity')||'', 10);
+        if (!isNaN(dens) && dens >= 6 && dens <= 50) initial = dens;
       }catch(_){ }
       // ストラタム分割で均等配置（各スライス内にランダム）
       for (let i=0;i<initial;i++){
@@ -179,10 +173,10 @@
       if (maintainTimer) clearInterval(maintainTimer);
       maintainTimer = setInterval(() => {
         const current = host.children.length;
-        const deficit = targetDensity - current + Math.floor(Math.random()*2); // -1..+?
-        const spawnCount = Math.max(0, Math.min(4, deficit));
+        const deficit = targetDensity - current;
+        const spawnCount = deficit > 0 ? Math.min(5, Math.max(1, deficit)) : 0; // 常に最低1体補充
         for (let i=0;i<spawnCount;i++) spawnOne(host, url);
-      }, 2000);
+      }, 1600);
 
       if (resizeHandler) window.removeEventListener('resize', resizeHandler);
       resizeHandler = () => {
