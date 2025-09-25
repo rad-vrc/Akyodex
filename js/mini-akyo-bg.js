@@ -1,5 +1,6 @@
 (function(){
   const CANDIDATES = [
+    'https://images.akyodex.com/miniakyo.webp',
     'images/@miniakyo.webp',
     'images/miniakyo.webp',
   ];
@@ -15,18 +16,56 @@
     }catch(_){ return ''; }
   }
 
+  function applyVersion(path, ver){
+    if (!ver) return path;
+    if (path.includes('?')){
+      return path + ver.replace('?', '&');
+    }
+    return path + ver;
+  }
+
+  function probeImage(url, timeout = 8000){
+    if (typeof Image === 'undefined'){
+      return Promise.reject(new Error('Image unavailable'));
+    }
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      let settled = false;
+      const finalize = (ok) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        img.onload = img.onerror = null;
+        img.src = '';
+        if (ok){
+          resolve(url);
+        }else{
+          reject(new Error('load failed'));
+        }
+      };
+      const timer = setTimeout(() => finalize(false), timeout);
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.onload = () => finalize(true);
+      img.onerror = () => finalize(false);
+      img.src = url;
+    });
+  }
+
   async function resolveMiniAkyoUrl(){
     const ver = getVersionSuffix();
-    const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
+    const fallback = applyVersion(CANDIDATES.at(-1) || 'images/miniakyo.webp', ver);
+
     for (const path of CANDIDATES){
+      const candidate = applyVersion(path, ver);
       try{
-        const r = await fetch(path + ver, { cache: 'no-cache' });
-        if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
-          return path + ver;
-        }
+        await probeImage(candidate);
+        return candidate;
       }catch(_){ /* continue */ }
     }
-    return null;
+
+    return fallback;
   }
 
   function ensureStyles(){
@@ -88,12 +127,20 @@
     host.appendChild(el);
   }
 
-  async function initMiniAkyoBackground(){
+  let initializing = false;
+  let maintainTimer = null;
+  let resizeHandler = null;
+
+  async function initMiniAkyoBackground(force){
+    if (initializing) return;
+    initializing = true;
     try{
       ensureStyles();
       const url = await resolveMiniAkyoUrl();
       if (!url) return;
       const host = createHost();
+
+      if (!force && host.children.length > 0) return;
 
       // 初期クリア（再初期化時の重複防止）
       while (host.firstChild) host.removeChild(host.firstChild);
@@ -106,21 +153,36 @@
       }
 
       const targetDensity = initial;
-      setInterval(() => {
+
+      if (maintainTimer) clearInterval(maintainTimer);
+      maintainTimer = setInterval(() => {
         const current = host.children.length;
         const deficit = targetDensity - current + Math.floor(Math.random()*2); // -1..+?
         const spawnCount = Math.max(0, Math.min(4, deficit));
         for (let i=0;i<spawnCount;i++) spawnOne(host, url);
       }, 2000);
 
-      window.addEventListener('resize', () => {
+      if (resizeHandler) window.removeEventListener('resize', resizeHandler);
+      resizeHandler = () => {
         const ideal = Math.min(22, Math.max(10, Math.round(window.innerWidth/110)));
         while (host.children.length > ideal) host.removeChild(host.firstChild);
-      });
-    }catch(_){ }
+      };
+      window.addEventListener('resize', resizeHandler);
+    }catch(_){
+    }finally{
+      initializing = false;
+    }
   }
 
   if (typeof window !== 'undefined'){
     window.initMiniAkyoBackground = initMiniAkyoBackground;
+    const start = () => {
+      try{ initMiniAkyoBackground(); }catch(_){ }
+    };
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    }else{
+      start();
+    }
   }
 })();
