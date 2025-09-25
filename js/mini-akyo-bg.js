@@ -65,14 +65,26 @@
     const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
     let fallback = null;
     for (const path of CANDIDATES){
-      const candidate = path + ver;
+      // ?v= の連結は '?' 有無に応じて安全に
+      const candidate = applyVersion(path, ver);
       if (!fallback) fallback = candidate;
       try{
         const r = await fetch(candidate, { cache: 'no-cache' });
         if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
           return candidate;
         }
-      }catch(_){ /* continue */ }
+        // fetchがCDN設定で弾かれるケース向けにImageプローブを試みる
+        try{
+          const okUrl = await probeImage(candidate);
+          return okUrl;
+        }catch(_){ /* fall through */ }
+      }catch(_){
+        // fetch自体が失敗でも最終的にfallbackで返す
+        try{
+          const okUrl = await probeImage(candidate);
+          return okUrl;
+        }catch(__){ /* continue */ }
+      }
     }
     return fallback;
   }
