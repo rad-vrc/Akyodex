@@ -50,19 +50,26 @@
     return host;
   }
 
-  function spawnOne(host, url){
+  // 左右偏りを抑えるための低差異シーケンス（黄金比擬似乱数）
+  let __seqU = Math.random();
+  const PHI = 0.6180339887498949; // (sqrt(5)-1)/2
+  function nextUniform(){ __seqU = (__seqU + PHI) % 1; return __seqU; }
+  function clamp(v, min, max){ return v < min ? min : (v > max ? max : v); }
+
+  function spawnOne(host, url, uOverride){
     const el = document.createElement('div');
     el.className = 'mini-akyo';
 
     const size = Math.round(64 + Math.random()*96); // 64-160px
-    const left = Math.round(Math.random()*100);
+    const u = (typeof uOverride === 'number') ? uOverride : nextUniform();
+    const leftVW = clamp(u*100, 2, 98);
     const duration = 18 + Math.random()*14; // 18-32s
     const delay = Math.random()*8; // 0-8s
     const opacity = 0.24 + Math.random()*0.18; // 0.24-0.42
     const drift = (Math.random()*40 - 20);
 
     el.style.setProperty('--size', size+'px');
-    el.style.setProperty('--left', `calc(${left}vw + ${drift}px)`);
+    el.style.setProperty('--left', `calc(${leftVW}vw + ${drift}px)`);
     el.style.setProperty('--opacity', String(opacity));
     el.style.setProperty('--duration', duration+'s');
     el.style.animationDuration = duration+'s';
@@ -89,7 +96,11 @@
       while (host.firstChild) host.removeChild(host.firstChild);
 
       const initial = Math.min(18, Math.max(10, Math.round(window.innerWidth/110)));
-      for (let i=0;i<initial;i++) spawnOne(host, url);
+      // ストラタム分割で均等配置（各スライス内にランダム）
+      for (let i=0;i<initial;i++){
+        const u = (i + Math.random()) / initial;
+        spawnOne(host, url, u);
+      }
 
       const targetDensity = initial;
       setInterval(() => {
