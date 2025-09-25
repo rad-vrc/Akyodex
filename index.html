@@ -109,6 +109,12 @@
             font-weight: 500;
         }
 
+        /* クイックフィルター専用のレスポンシブ微調整 */
+        .quick-filter-badge { padding: 0.2rem 0.5rem; font-size: 0.72rem; }
+        @media (min-width: 640px) { /* sm: */
+            .quick-filter-badge { padding: 0.25rem 0.75rem; font-size: 0.875rem; }
+        }
+
         /* カスタムスクロールバー */
         ::-webkit-scrollbar {
             width: 8px;
@@ -286,6 +292,15 @@
                         >
                         <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
                     </div>
+                    <!-- クイックフィルター（検索ボックス直下に移動） -->
+                    <div class="mt-2 flex flex-wrap gap-2 items-center" id="quickFilters">
+                        <button class="attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
+                            <i class="fas fa-dice"></i> ランダム表示
+                        </button>
+                        <button class="attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors">
+                            <i class="fas fa-star"></i> お気に入りのみ
+                        </button>
+                    </div>
                 </div>
 
                 <!-- 属性・作者フィルター -->
@@ -299,16 +314,7 @@
                 </div>
             </div>
 
-            <!-- クイックフィルター -->
-            <div class="mt-4 flex flex-wrap gap-2" id="quickFilters">
-                <button class="attribute-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
-                    <i class="fas fa-dice"></i> ランダム表示
-                </button>
-                <button class="attribute-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors">
-                    <i class="fas fa-star"></i> お気に入りのみ
-                </button>
 
-            </div>
         </div>
     </div>
 
