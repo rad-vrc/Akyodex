@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } catch(_) {}
         } else {
-            showError('初期化に失敗しました。ネットワークをご確認ください。');
+            // 詳細なエラーパネル（loadAkyoDataのcatchで描画済み）を保持するため、ここではトーストのみ表示
             showToast('初期化に失敗しました。再読み込みしますか？', 'error', () => location.reload());
         }
     });
