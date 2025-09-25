@@ -14,7 +14,12 @@ let akyoImageManifestMap = {};
 
 async function loadImagesManifest() {
     try {
-        const resp = await fetch('images/manifest.json', { cache: 'no-cache' });
+        // 1) R2/KV 由来の最新マニフェスト（完全URLを返す想定）
+        let resp = await fetch('/api/manifest', { cache: 'no-store' });
+        if (!resp.ok) {
+            // 2) 旧来の静的マニフェスト
+            resp = await fetch('images/manifest.json', { cache: 'no-cache' });
+        }
         if (!resp.ok) return false;
         const data = await resp.json();
         let map = {};
@@ -30,6 +35,9 @@ async function loadImagesManifest() {
             });
         } else if (data && data.map && typeof data.map === 'object') {
             map = { ...data.map };
+        } else if (data && typeof data === 'object') {
+            // /api/manifest のような { "001": "https://..." } 形式
+            map = { ...data };
         }
         akyoImageManifestMap = map;
         return Object.keys(akyoImageManifestMap).length > 0;

@@ -618,6 +618,42 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
 // グローバル公開
 window.uploadAkyoOnline = uploadAkyoOnline;
 
+// フォームから直接オンライン登録（パスワード欄＋既存入力値を使用）
+async function uploadAkyoOnlineFromForm() {
+    try {
+        const idDisplay = document.getElementById('nextIdDisplay');
+        const imageInput = document.getElementById('imageInput');
+        const passInput = document.getElementById('adminPasswordOnline');
+        const nameInput = document.querySelector('input[name="nickname"]') || { value: '' };
+        const avatarNameInput = document.querySelector('input[name="avatarName"]') || { value: '' };
+        const typeInput = document.querySelector('input[name="attribute"]') || { value: '' };
+        const descInput = document.querySelector('textarea[name="notes"]') || { value: '' };
+
+        const displayText = idDisplay && idDisplay.value ? idDisplay.value.replace(/^#/,'') : '';
+        const id = displayText || (akyoData.length > 0 ? String(Math.max(...akyoData.map(a=>parseInt(a.id)||0))+1).padStart(3,'0') : '001');
+        const file = imageInput && imageInput.files && imageInput.files[0] ? imageInput.files[0] : null;
+        const adminPassword = passInput && passInput.value ? passInput.value : '';
+        if (!id || !file || !adminPassword) { showNotification('ID・画像・パスワードを入力してください', 'warning'); return; }
+
+        const result = await uploadAkyoOnline({
+            id,
+            name: nameInput.value || avatarNameInput.value || '',
+            type: typeInput.value || '',
+            desc: descInput.value || '',
+            file,
+            adminPassword,
+        });
+
+        try { if (window.loadImagesManifest) await window.loadImagesManifest(); } catch(_){ }
+        showNotification(`オンライン登録完了: #${result.id}`, 'success');
+    } catch(e) {
+        console.error(e);
+        showNotification('オンライン登録に失敗しました', 'error');
+    }
+}
+
+window.uploadAkyoOnlineFromForm = uploadAkyoOnlineFromForm;
+
 // 画像選択処理
 function handleImageSelect(event) {
     const file = event.target.files[0];
