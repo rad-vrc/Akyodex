@@ -24,6 +24,7 @@ let filteredData = [];
 let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let currentView = 'grid';
+let favoritesOnlyMode = false; // お気に入りのみ表示トグル
 let currentSearchTerms = [];
 let imageDataMap = {}; // 画像データの格納
 let profileIconCache = { resolved: false, url: null };
@@ -604,10 +605,16 @@ function setupEventListeners() {
     if (quickFiltersContainer) {
         const quickFilters = quickFiltersContainer.children;
         if (quickFilters.length > 0) {
-    quickFilters[0].addEventListener('click', showRandom); // ランダム
+            quickFilters[0].addEventListener('click', showRandom); // ランダム
         }
         if (quickFilters.length > 1) {
-    quickFilters[1].addEventListener('click', showFavorites); // お気に入り
+            // お気に入りのみトグル
+            quickFilters[1].addEventListener('click', () => {
+                favoritesOnlyMode = !favoritesOnlyMode;
+                updateQuickFilterStyles();
+                applyFilters();
+            });
+            updateQuickFilterStyles();
         }
     }
 
@@ -700,9 +707,14 @@ function applyFilters() {
         });
     }
 
+    // お気に入りのみモード
+    if (favoritesOnlyMode) {
+        data = data.filter(akyo => akyo.isFavorite);
+    }
+
     if (!currentSearchTerms.length) {
         filteredData = data;
-    updateDisplay();
+        updateDisplay();
         return;
     }
 
@@ -733,6 +745,22 @@ function applyFilters() {
     // フィルタ変更時にレンダー上限をリセット
     renderLimit = INITIAL_RENDER_COUNT;
     updateDisplay();
+}
+
+// クイックフィルターのスタイル更新（無効時はランダムの無効色に合わせる）
+function updateQuickFilterStyles() {
+    const quickFiltersContainer = document.getElementById('quickFilters');
+    if (!quickFiltersContainer) return;
+    const quickFilters = quickFiltersContainer.children;
+    if (quickFilters.length < 2) return;
+    const favoriteBtn = quickFilters[1];
+    if (favoritesOnlyMode) {
+        // 有効時: 元の黄色系を強調
+        favoriteBtn.className = 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors';
+    } else {
+        // 無効時: ランダム無効時と同じグレー系
+        favoriteBtn.className = 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+    }
 }
 
 // ランダム表示
@@ -1348,8 +1376,12 @@ function toggleFavorite(akyoId) {
     // ローカルストレージに保存
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
-    // 表示更新
-    updateDisplay();
+    // 表示更新（お気に入りのみモードならフィルタを再適用）
+    if (favoritesOnlyMode) {
+        applyFilters();
+    } else {
+        updateDisplay();
+    }
 }
 
 // 統計情報の更新
