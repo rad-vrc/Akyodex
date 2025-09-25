@@ -355,6 +355,7 @@
     <script src="js/image-loader.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mini-akyo-bg.js?v=2"></script>
+    <script src="/js/akyo-float.js"></script>
 
     <!-- ヘッダーロゴ読み込み -->
     <script>
@@ -497,6 +498,21 @@
                 navigator.serviceWorker.register('/sw.js').catch(console.warn);
             });
         }
+
+        // クエリが無くても既定で起動。?bg=off でだけ無効化
+        document.addEventListener('DOMContentLoaded', async () => {
+          try {
+            if (typeof loadAkyoManifest === 'function') {
+              await loadAkyoManifest();
+            }
+            const q = new URLSearchParams(location.search);
+            const bg = (q.get('bg') || 'front').toLowerCase();
+            const density = Number(q.get('bgdensity') || '20');
+            if (bg !== 'off' && typeof startAkyoFloat === 'function') {
+              startAkyoFloat('001', { density });
+            }
+          } catch (e) { console.warn('init float failed:', e); }
+        });
     </script>
 </body>
 </html>
