@@ -1,5 +1,7 @@
 (function(){
   const dbg = (...a)=>{ try{ if (window && window.console && console.debug) console.debug('[mini-bg]',...a);}catch(_){} };
+  // 全体の出現頻度ブースト（1=従来）。リクエストに合わせて1.5倍へ。
+  const FREQ_BOOST = 1.5;
   const CANDIDATES = [
     // 本番の実体（R2 直下）を最優先
     'https://images.akyodex.com/miniakyo.webp',
@@ -179,10 +181,12 @@
       // 初期クリア（再初期化時の重複防止）
       while (host.firstChild) host.removeChild(host.firstChild);
 
-      // 初期密度: 画面サイズから自動算出（上限を少し引き上げ）。URLで ?bgdensity=NN 上書き可。
+      // 初期密度: 画面サイズから自動算出 → 1.5倍ブースト（リクエスト対応）。
       const side = Math.sqrt(window.innerWidth * window.innerHeight);
-      let initial = Math.round(side / 95); // 大きい画面は密度を上げる
-      initial = Math.min(28, Math.max(10, initial));
+      let base = Math.round(side / 95); // 大きい画面は密度を上げる
+      base = Math.min(28, Math.max(10, base));
+      let initial = Math.round(base * FREQ_BOOST);
+      initial = Math.min(Math.round(28 * FREQ_BOOST), Math.max(10, initial));
       try{
         const dens = parseInt(new URLSearchParams(location.search).get('bgdensity')||'', 10);
         if (!isNaN(dens) && dens >= 6 && dens <= 50) initial = dens;
@@ -201,11 +205,12 @@
         const deficit = targetDensity - current;
         const spawnCount = deficit > 0 ? Math.min(5, Math.max(1, deficit)) : 0; // 常に最低1体補充
         for (let i=0;i<spawnCount;i++) spawnOne(host, url);
-      }, 1600);
+      }, Math.round(1600 / FREQ_BOOST));
 
       if (resizeHandler) window.removeEventListener('resize', resizeHandler);
       resizeHandler = () => {
-        const ideal = Math.min(22, Math.max(10, Math.round(window.innerWidth/110)));
+        const idealBase = Math.min(22, Math.max(10, Math.round(window.innerWidth/110)));
+        const ideal = Math.min(Math.round(22 * FREQ_BOOST), Math.max(10, Math.round(idealBase * FREQ_BOOST)));
         while (host.children.length > ideal) host.removeChild(host.firstChild);
       };
       window.addEventListener('resize', resizeHandler);
