@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/webp" href="images/profileIcon.webp">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon-180.png">
+
     <title>Akyoずかん - ロゴ設定（オーナー専用）</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
@@ -17,7 +22,7 @@
             background: #f0f0f0;
             border-radius: 10px;
         }
-        
+
         .crop-area {
             position: absolute;
             border: 3px solid #FF6B9D;
@@ -25,7 +30,7 @@
             cursor: move;
             box-sizing: border-box;
         }
-        
+
         .resize-handle {
             position: absolute;
             width: 16px;
@@ -35,46 +40,46 @@
             border-radius: 50%;
             cursor: nwse-resize;
         }
-        
+
         .resize-handle-e {
             right: -8px;
             top: 50%;
             transform: translateY(-50%);
             cursor: ew-resize;
         }
-        
+
         .resize-handle-w {
             left: -8px;
             top: 50%;
             transform: translateY(-50%);
             cursor: ew-resize;
         }
-        
+
         .resize-handle-se {
             bottom: -8px;
             right: -8px;
             cursor: nwse-resize;
         }
-        
+
         canvas {
             border: 3px solid #66B2FF;
             border-radius: 10px;
             background: white;
         }
-        
+
         .tab-button {
             padding: 10px 20px;
             border-radius: 10px 10px 0 0;
             font-weight: bold;
             transition: all 0.3s;
         }
-        
+
         .tab-button.active {
             background: white;
             color: #FF6B9D;
             transform: translateY(2px);
         }
-        
+
         .tab-button:not(.active) {
             background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
             color: white;
@@ -94,9 +99,9 @@
         <div id="authSection" class="card-style mb-8">
             <h2 class="text-2xl font-bold mb-4 text-center">🔒 オーナー認証</h2>
             <div class="flex gap-2">
-                <input type="password" id="passwordInput" placeholder="オーナーパスワード" 
+                <input type="password" id="passwordInput" placeholder="オーナーパスワード"
                        class="flex-1 px-4 py-2 border-2 border-purple-300 rounded-full focus:border-purple-500 focus:outline-none">
-                <button onclick="authenticate()" 
+                <button onclick="authenticate()"
                         class="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:scale-105 transition font-bold">
                     認証
                 </button>
@@ -122,7 +127,7 @@
                     <h2 class="text-xl font-semibold mb-4">
                         <i class="fas fa-panorama mr-2 text-purple-500"></i>ヘッダーロゴ（横長画像）
                     </h2>
-                    
+
                     <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
                         <p class="text-blue-700">
                             <i class="fas fa-info-circle mr-2"></i>
@@ -130,14 +135,14 @@
                             高さは48pxに固定され、幅は最大300pxまで自動調整されます。
                         </p>
                     </div>
-                    
+
                     <p class="text-gray-600 text-sm mb-3">
                         💡 どんな解像度の画像でも最適にトリミングできます。マウスホイールで拡大・縮小、ドラッグで位置調整、ハンドルでサイズ変更が可能です。
                     </p>
-                    
-                    <input type="file" id="headerLogoInput" accept="image/*" 
+
+                    <input type="file" id="headerLogoInput" accept="image/*"
                            class="mb-4 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50">
-                    
+
                     <div id="headerCropContainer" class="hidden mb-4">
                         <div class="crop-container" style="height: 400px;">
                             <img id="headerImage" style="max-width: 100%; max-height: 100%;">
@@ -147,25 +152,25 @@
                                 <div class="resize-handle resize-handle-se"></div>
                             </div>
                         </div>
-                        
+
                         <div class="mt-4 flex gap-2">
-                            <button onclick="cropImage('header')" 
+                            <button onclick="cropImage('header')"
                                     class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600">
                                 <i class="fas fa-crop mr-2"></i>切り抜き
                             </button>
-                            <button onclick="resetCrop('header')" 
+                            <button onclick="resetCrop('header')"
                                     class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600">
                                 <i class="fas fa-undo mr-2"></i>リセット
                             </button>
                         </div>
                     </div>
-                    
+
                     <div id="headerPreview" class="hidden">
                         <p class="font-semibold mb-2">プレビュー（実際の表示サイズ）:</p>
                         <div class="bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 p-4 rounded-lg">
                             <canvas id="headerPreviewCanvas" width="300" height="48"></canvas>
                         </div>
-                        <button onclick="saveLogo('header')" 
+                        <button onclick="saveLogo('header')"
                                 class="mt-4 px-6 py-2 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full hover:scale-105 transition font-bold">
                             <i class="fas fa-save mr-2"></i>保存
                         </button>
@@ -179,14 +184,14 @@
                     <h2 class="text-xl font-semibold mb-4">
                         <i class="fas fa-id-card mr-2 text-purple-500"></i>プロフィールアイコン
                     </h2>
-                    
+
                     <p class="text-gray-600 text-sm mb-3">
                         💡 詳細画面の番号横に表示される正方形のアイコンです。
                     </p>
-                    
-                    <input type="file" id="profileIconInput" accept="image/*" 
+
+                    <input type="file" id="profileIconInput" accept="image/*"
                            class="mb-4 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50">
-                    
+
                     <div id="profileCropContainer" class="hidden mb-4">
                         <div class="crop-container" style="height: 400px;">
                             <img id="profileImage" style="max-width: 100%; max-height: 100%;">
@@ -194,23 +199,23 @@
                                 <div class="resize-handle resize-handle-se"></div>
                             </div>
                         </div>
-                        
+
                         <div class="mt-4 flex gap-2">
-                            <button onclick="cropImage('profile')" 
+                            <button onclick="cropImage('profile')"
                                     class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600">
                                 <i class="fas fa-crop mr-2"></i>切り抜き
                             </button>
-                            <button onclick="resetCrop('profile')" 
+                            <button onclick="resetCrop('profile')"
                                     class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600">
                                 <i class="fas fa-undo mr-2"></i>リセット
                             </button>
                         </div>
                     </div>
-                    
+
                     <div id="profilePreview" class="hidden">
                         <p class="font-semibold mb-2">プレビュー:</p>
                         <canvas id="profilePreviewCanvas" width="100" height="100"></canvas>
-                        <button onclick="saveLogo('profile')" 
+                        <button onclick="saveLogo('profile')"
                                 class="mt-4 px-6 py-2 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full hover:scale-105 transition font-bold">
                             <i class="fas fa-save mr-2"></i>保存
                         </button>
@@ -258,7 +263,7 @@
         // 認証
         function authenticate() {
             const password = document.getElementById('passwordInput').value;
-            
+
             if (password === 'RadAkyo') {
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('mainSection').classList.remove('hidden');
@@ -299,10 +304,10 @@
                     headerLogo = localStorage.getItem('akyoHeaderLogo');
                 }
                 if (headerLogo) {
-                    document.getElementById('currentHeaderLogo').innerHTML = 
+                    document.getElementById('currentHeaderLogo').innerHTML =
                         `<img src="${headerLogo}" class="h-12 w-auto object-contain" style="max-width: 300px;">`;
                 }
-                
+
                 // プロフィールアイコン
                 let profileIcon = null;
                 if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
@@ -312,7 +317,7 @@
                     profileIcon = localStorage.getItem('akyoProfileIcon');
                 }
                 if (profileIcon) {
-                    document.getElementById('currentProfileIcon').innerHTML = 
+                    document.getElementById('currentProfileIcon').innerHTML =
                         `<img src="${profileIcon}" class="w-full h-full object-cover rounded-lg">`;
                 }
             } catch (error) {
@@ -324,7 +329,7 @@
         function handleFileSelect(event, type) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
@@ -342,21 +347,21 @@
             const container = document.getElementById(`${type}CropContainer`);
             const image = document.getElementById(`${type}Image`);
             const cropArea = document.getElementById(`${type}CropArea`);
-            
+
             image.src = imageSrc;
             container.classList.remove('hidden');
             document.getElementById(`${type}Preview`).classList.add('hidden');
-            
+
             // クロップエリアの初期設定
             setTimeout(() => {
                 const rect = image.getBoundingClientRect();
-                
+
                 if (type === 'header') {
                     // ヘッダーロゴ用：横長の初期設定
                     const aspectRatio = 300 / 48; // 6.25:1
                     const height = rect.height * 0.3;
                     const width = height * aspectRatio;
-                    
+
                     cropData[type] = {
                         x: (rect.width - width) / 2,
                         y: (rect.height - height) / 2,
@@ -373,10 +378,10 @@
                         height: size
                     };
                 }
-                
+
                 updateCropArea(type);
             }, 100);
-            
+
             // ドラッグとリサイズ機能
             setupDragAndResize(type);
         }
@@ -385,7 +390,7 @@
         function updateCropArea(type) {
             const cropArea = document.getElementById(`${type}CropArea`);
             const data = cropData[type];
-            
+
             cropArea.style.left = data.x + 'px';
             cropArea.style.top = data.y + 'px';
             cropArea.style.width = data.width + 'px';
@@ -397,12 +402,12 @@
             const cropArea = document.getElementById(`${type}CropArea`);
             const image = document.getElementById(`${type}Image`);
             const handles = cropArea.querySelectorAll('.resize-handle');
-            
+
             let isDragging = false;
             let isResizing = false;
             let currentHandle = null;
             let startX, startY, startWidth, startHeight, startCropX, startCropY;
-            
+
             // ドラッグ
             cropArea.addEventListener('mousedown', (e) => {
                 if (e.target.classList.contains('resize-handle')) {
@@ -421,19 +426,19 @@
                 }
                 e.preventDefault();
             });
-            
+
             // マウスホイールでサイズ変更
             cropArea.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 const delta = e.deltaY > 0 ? -10 : 10;
                 const rect = image.getBoundingClientRect();
-                
+
                 if (type === 'header') {
                     // 横長：アスペクト比を維持
                     const aspectRatio = cropData[type].width / cropData[type].height;
                     cropData[type].height = Math.max(20, Math.min(rect.height, cropData[type].height + delta));
                     cropData[type].width = cropData[type].height * aspectRatio;
-                    
+
                     // 境界チェック
                     if (cropData[type].width > rect.width) {
                         cropData[type].width = rect.width;
@@ -448,13 +453,13 @@
                     cropData[type].width = newSize;
                     cropData[type].height = newSize;
                 }
-                
+
                 updateCropArea(type);
             });
-            
+
             document.addEventListener('mousemove', (e) => {
                 const rect = image.getBoundingClientRect();
-                
+
                 if (isDragging) {
                     cropData[type].x = Math.max(0, Math.min(rect.width - cropData[type].width, e.clientX - startX));
                     cropData[type].y = Math.max(0, Math.min(rect.height - cropData[type].height, e.clientY - startY));
@@ -462,7 +467,7 @@
                 } else if (isResizing) {
                     const deltaX = e.clientX - startX;
                     const deltaY = e.clientY - startY;
-                    
+
                     if (type === 'header') {
                         // 横長の場合
                         if (currentHandle.classList.contains('resize-handle-e')) {
@@ -488,11 +493,11 @@
                         cropData[type].width = newSize;
                         cropData[type].height = newSize;
                     }
-                    
+
                     updateCropArea(type);
                 }
             });
-            
+
             document.addEventListener('mouseup', () => {
                 isDragging = false;
                 isResizing = false;
@@ -505,14 +510,14 @@
             const img = loadedImages[type];
             const data = cropData[type];
             const image = document.getElementById(`${type}Image`);
-            
+
             if (!img) return;
-            
+
             // 画像の実際のサイズと表示サイズの比率を計算
             const rect = image.getBoundingClientRect();
             const scaleX = img.width / rect.width;
             const scaleY = img.height / rect.height;
-            
+
             // キャンバスの設定
             let canvas, ctx;
             if (type === 'header') {
@@ -526,20 +531,20 @@
                 canvas.width = 100;
                 canvas.height = 100;
             }
-            
+
             // クリアして描画
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(
-                img, 
-                data.x * scaleX, 
-                data.y * scaleY, 
-                data.width * scaleX, 
-                data.height * scaleY, 
-                0, 0, 
-                canvas.width, 
+                img,
+                data.x * scaleX,
+                data.y * scaleY,
+                data.width * scaleX,
+                data.height * scaleY,
+                0, 0,
+                canvas.width,
                 canvas.height
             );
-            
+
             document.getElementById(`${type}Preview`).classList.remove('hidden');
         }
 
@@ -562,9 +567,9 @@
             } else {
                 canvas = document.getElementById('profilePreviewCanvas');
             }
-            
+
             const dataUrl = canvas.toDataURL('image/png');
-            
+
             // IndexedDBに保存を試行
             if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
                 try {
@@ -576,7 +581,7 @@
                     console.error('IndexedDBへの保存に失敗:', error);
                 }
             }
-            
+
             // localStorageにも保存
             try {
                 const key = type === 'header' ? 'akyoHeaderLogo' : 'akyoProfileIcon';
@@ -585,11 +590,11 @@
             } catch (error) {
                 console.error('localStorageへの保存に失敗:', error);
             }
-            
+
             const typeName = type === 'header' ? 'ヘッダーロゴ' : 'プロフィールアイコン';
             alert(`${typeName}を保存しました！`);
             loadCurrentLogos();
-            
+
             // メインページに反映
             if (confirm('変更を反映するために、メインページをリロードしますか？')) {
                 window.open('index.html', '_blank');
@@ -609,11 +614,11 @@
                         console.error('IndexedDBからの削除に失敗:', error);
                     }
                 }
-                
+
                 // localStorageから削除
                 localStorage.removeItem('akyoHeaderLogo');
                 localStorage.removeItem('akyoProfileIcon');
-                
+
                 alert('すべてのロゴをクリアしました');
                 loadCurrentLogos();
                 location.reload();
