@@ -1,6 +1,7 @@
 (function(){
   const CANDIDATES = [
-    // 相対（Pages静的）
+// 相対（Pages静的）
+    'https://images.akyodex.com/miniakyo.webp',
     'images/@miniakyo.webp',
     'images/miniakyo.webp',
     // 絶対（R2のカスタムドメイン）
@@ -22,8 +23,46 @@
     }catch(_){ return ''; }
   }
 
+  function applyVersion(path, ver){
+    if (!ver) return path;
+    if (path.includes('?')){
+      return path + ver.replace('?', '&');
+    }
+    return path + ver;
+  }
+
+  function probeImage(url, timeout = 8000){
+    if (typeof Image === 'undefined'){
+      return Promise.reject(new Error('Image unavailable'));
+    }
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      let settled = false;
+      const finalize = (ok) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        img.onload = img.onerror = null;
+        img.src = '';
+        if (ok){
+          resolve(url);
+        }else{
+          reject(new Error('load failed'));
+        }
+      };
+      const timer = setTimeout(() => finalize(false), timeout);
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.onload = () => finalize(true);
+      img.onerror = () => finalize(false);
+      img.src = url;
+    });
+  }
+
   async function resolveMiniAkyoUrl(){
     const ver = getVersionSuffix();
+
     const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
     let fallback = null;
 
