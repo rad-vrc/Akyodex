@@ -28,18 +28,19 @@ jobs:
         run: node generate-manifest.mjs
         env:
           FULL_URL: 'true'
-          BASE_URL: 'https://images.akyodex.com/images'
+          BASE_URL: ${{ secrets.R2_BASE_URL }}
+          SITE_BASE: ${{ secrets.SITE_BASE }}
           IMAGES_DIR: 'images'
           MANIFEST_OUTPUT: 'images/manifest.json'
 
       - name: Commit changes
         run: |
-          if git diff --quiet --exit-code -- images/manifest.json; then
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet --exit-code -- images/manifest.json sitemap.*; then
             echo "No changes to commit"
           else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add images/manifest.json
-            git commit -m "chore: auto-generate images manifest [skip ci]"
+            git add images/manifest.json sitemap.*
+            git commit -m "chore: auto-generate images manifest"
             git push
           fi
