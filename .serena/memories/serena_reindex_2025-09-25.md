@@ -1,1 +1,5 @@
-Re-activated Akyodex project and confirmed onboarding done. Proceeded with reindex request (implicit in activation; symbol tools available). Next: evaluate Cloudflare R2 for images, propose exact steps (bucket, keys, upload via S3 SDK, public delivery, CI manifest update), and add repo samples+README notes.
+Reindexed Akyodex on 2025-09-25.
+- Project activated and onboarding confirmed
+- Triggered broad TS/JS symbol scan and pattern search to refresh index
+- Verified symbol overview for functions/_utils.ts and functions/api/scan.ts
+- Index ready for find_symbol, references, and search
