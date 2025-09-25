@@ -62,6 +62,20 @@ for (const cand of miniCandidates){
 
 const manifest = { version, map, ...(miniAkyo ? { miniAkyo } : {}) };
 
+// ついでに sitemap.txt / sitemap.xml を出力（簡易）
+try {
+  const base = process.env.SITE_BASE || 'https://akyodex.com';
+  const urls = Object.keys(map).map(id => `${base}/index.html?id=${id}`);
+  fs.writeFileSync(path.join(repoRoot, 'sitemap.txt'), urls.join('\n') + '\n', 'utf8');
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...urls.map(u => `  <url><loc>${u}</loc></url>`),
+    '</urlset>'
+  ].join('\n');
+  fs.writeFileSync(path.join(repoRoot, 'sitemap.xml'), xml + '\n', 'utf8');
+} catch(_) {}
+
 ensureDir(outputPath);
 fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 

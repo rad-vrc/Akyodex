@@ -344,6 +344,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (hasSuccess) {
             applyFilters();
+            // deeplink対応: ?id=NNN で詳細を開く＋canonical更新
+            try {
+                const q = new URLSearchParams(location.search);
+                const deepId = q.get('id');
+                if (deepId && /^\d{3}$/.test(deepId)) {
+                    showDetail(deepId);
+                    const link = document.getElementById('canonicalLink');
+                    if (link) link.href = `${location.origin}/index.html?id=${deepId}`;
+                    history.replaceState(null, '', `?id=${deepId}`);
+                }
+            } catch(_) {}
         } else {
             showError('初期化に失敗しました。ネットワークをご確認ください。');
             showToast('初期化に失敗しました。再読み込みしますか？', 'error', () => location.reload());
@@ -377,7 +388,7 @@ async function loadAkyoData() {
         console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
 
         // CSV解析
-    akyoData = parseCSV(csvText);
+        akyoData = parseCSV(csvText);
     window.publicAkyoList = akyoData;
         gridCardCache.clear();
         listRowCache.clear();
@@ -667,7 +678,7 @@ function applyFilters() {
 
     if (!currentSearchTerms.length) {
         filteredData = data;
-        updateDisplay();
+    updateDisplay();
         return;
     }
 
@@ -682,7 +693,7 @@ function applyFilters() {
                 const idx = row.text.indexOf(term);
                 if (idx >= 0) {
                     score += 5 + Math.max(0, 20 - idx / 10);
-                } else {
+    } else {
                     return null;
                 }
             }

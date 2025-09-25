@@ -29,6 +29,7 @@
     <meta name="twitter:image" content="https://akyodex.com/images/logo-200.png?v=20250925-1">
     <meta name="twitter:image:alt" content="Akyoずかん ロゴ">
     <meta name="twitter:url" content="https://akyodex.com/">
+    <link rel="canonical" id="canonicalLink" href="https://akyodex.com/">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,6 +57,20 @@
             "target": "https://akyodex.com/index.html?search={search_term_string}",
             "query-input": "required name=search_term_string"
         }
+    }
+    </script>
+
+    <!-- 代表画像の構造化データ（ImageObject） -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageObject",
+      "name": "Akyoずかん ロゴ",
+      "contentUrl": "https://akyodex.com/images/logo-200.png",
+      "url": "https://akyodex.com/images/logo-200.png",
+      "encodingFormat": "image/png",
+      "width": 200,
+      "height": 200
     }
     </script>
 
