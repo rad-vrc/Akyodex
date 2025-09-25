@@ -174,7 +174,7 @@
             height: 100%;
             overflow: hidden;
             pointer-events: none;
-            z-index: 0;
+            z-index: 10; /* コンテンツの上・ヘッダー(z-40)の下 */
         }
         .mini-akyo {
             position: absolute;
@@ -202,6 +202,8 @@
     </style>
 </head>
 <body>
+    <!-- 背景ミニAkyo レイヤー -->
+    <div id="miniAkyoBg" aria-hidden="true"></div>
     <!-- ヘッダー -->
     <header class="text-white py-8 shadow-lg sticky top-0 z-40">
         <div class="container mx-auto px-4">
