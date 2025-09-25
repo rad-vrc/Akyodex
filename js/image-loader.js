@@ -11,6 +11,7 @@ const akyoImageUrls = {
 // 形式2: { "files": ["001オリジン.png", ...] }
 // 形式3: ["001オリジン.png", ...]
 let akyoImageManifestMap = {};
+const PUBLIC_R2_BASE = 'https://images.akyodex.com';
 
 async function loadImagesManifest() {
     try {
@@ -108,6 +109,13 @@ function getAkyoImageUrl(akyoId) {
         }
     }
 
+    // R2直URL（強制フォールバック）
+    try {
+        if (PUBLIC_R2_BASE) {
+            return `${PUBLIC_R2_BASE}/${akyoId}.webp${getAssetsVersionSuffix()}`;
+        }
+    } catch (_) {}
+
     // 次にローカルストレージから探す
     const savedImages = localStorage.getItem('akyoImages');
     if (savedImages) {
@@ -117,8 +125,7 @@ function getAkyoImageUrl(akyoId) {
         }
     }
 
-    // 最後のフォールバック: デプロイ先の静的フォルダ images/{id}.png を参照（PNG優先）
-    // 最終フォールバックは .webp を優先
+    // 最後のフォールバック: デプロイ先の静的フォルダ images/{id}.webp
     return `images/${akyoId}.webp${getAssetsVersionSuffix()}`;
 }
 
