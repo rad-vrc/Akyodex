@@ -24,6 +24,8 @@ let filteredData = [];
 let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let currentView = 'grid';
+let favoritesOnlyMode = false; // お気に入りのみ表示トグル
+let randomMode = false;        // ランダム表示（現在の絞り込みから抽出）
 let currentSearchTerms = [];
 let imageDataMap = {}; // 画像データの格納
 let profileIconCache = { resolved: false, url: null };
@@ -604,10 +606,21 @@ function setupEventListeners() {
     if (quickFiltersContainer) {
         const quickFilters = quickFiltersContainer.children;
         if (quickFilters.length > 0) {
-    quickFilters[0].addEventListener('click', showRandom); // ランダム
+            // ランダム表示トグル（applyFiltersで一貫処理）
+            quickFilters[0].addEventListener('click', () => {
+                randomMode = !randomMode;
+                updateQuickFilterStyles();
+                applyFilters();
+            });
         }
         if (quickFilters.length > 1) {
-    quickFilters[1].addEventListener('click', showFavorites); // お気に入り
+            // お気に入りのみトグル
+            quickFilters[1].addEventListener('click', () => {
+                favoritesOnlyMode = !favoritesOnlyMode;
+                updateQuickFilterStyles();
+                applyFilters();
+            });
+            updateQuickFilterStyles();
         }
     }
 
@@ -700,50 +713,81 @@ function applyFilters() {
         });
     }
 
-    if (!currentSearchTerms.length) {
-        filteredData = data;
-    updateDisplay();
-        return;
+    // お気に入りのみモード
+    if (favoritesOnlyMode) {
+        data = data.filter(akyo => akyo.isFavorite);
     }
 
-    const filteredIds = new Set(data.map(akyo => akyo.id));
-    const idToAkyo = new Map(data.map(akyo => [akyo.id, akyo]));
-
-    const scored = searchIndex
-        .filter(row => filteredIds.has(row.id))
-        .map(row => {
-            let score = 0;
-            for (const term of currentSearchTerms) {
-                const idx = row.text.indexOf(term);
-                if (idx >= 0) {
-                    score += 5 + Math.max(0, 20 - idx / 10);
+    // 検索語が無ければそのまま、あればスコアリング
+    let result;
+    if (!currentSearchTerms.length) {
+        result = data;
     } else {
-                    return null;
-                }
-            }
-            return { id: row.id, score };
-        })
-        .filter(Boolean)
-        .sort((a, b) => b.score - a.score);
+        const filteredIds = new Set(data.map(akyo => akyo.id));
+        const idToAkyo = new Map(data.map(akyo => [akyo.id, akyo]));
 
-    filteredData = scored
-        .map(({ id }) => idToAkyo.get(id))
-        .filter(Boolean);
+        const scored = searchIndex
+            .filter(row => filteredIds.has(row.id))
+            .map(row => {
+                let score = 0;
+                for (const term of currentSearchTerms) {
+                    const idx = row.text.indexOf(term);
+                    if (idx >= 0) {
+                        score += 5 + Math.max(0, 20 - idx / 10);
+                    } else {
+                        return null;
+                    }
+                }
+                return { id: row.id, score };
+            })
+            .filter(Boolean)
+            .sort((a, b) => b.score - a.score);
+
+        result = scored
+            .map(({ id }) => idToAkyo.get(id))
+            .filter(Boolean);
+    }
+
+    // ランダムモード: 現在の絞り込み結果から20件を抽出
+    if (randomMode) {
+        const pool = [...result];
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        result = pool.slice(0, 20);
+    }
+
+    filteredData = result;
 
     // フィルタ変更時にレンダー上限をリセット
     renderLimit = INITIAL_RENDER_COUNT;
     updateDisplay();
 }
 
+// クイックフィルターのスタイル更新（無効時はランダムの無効色に合わせる）
+function updateQuickFilterStyles() {
+    const quickFiltersContainer = document.getElementById('quickFilters');
+    if (!quickFiltersContainer) return;
+    const quickFilters = quickFiltersContainer.children;
+    if (quickFilters.length < 2) return;
+    const randomBtn = quickFilters[0];
+    const favoriteBtn = quickFilters[1];
+    // お気に入りのみの見た目
+    favoriteBtn.className = favoritesOnlyMode
+        ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
+        : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+    // ランダムボタンの見た目（有効時は黄色で強調）
+    randomBtn.className = randomMode
+        ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
+        : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+}
+
 // ランダム表示
 function showRandom() {
-    const pool = [...akyoData];
-    for (let i = pool.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    filteredData = pool.slice(0, 20);
-    updateDisplay();
+    randomMode = !randomMode;
+    updateQuickFilterStyles();
+    applyFilters();
 }
 
 // お気に入り表示
@@ -777,14 +821,27 @@ function switchView(view) {
 function updateDisplay() {
     updateStatistics();
 
-    if (filteredData.length === 0) {
-        document.getElementById('noDataContainer').classList.remove('hidden');
-        document.getElementById('gridView').classList.add('hidden');
-        document.getElementById('listView').classList.add('hidden');
-        return;
-    }
+    const noData = filteredData.length === 0;
+    const noDataEl = document.getElementById('noDataContainer');
+    const gridEl = document.getElementById('gridView');
+    const listEl = document.getElementById('listView');
 
-    document.getElementById('noDataContainer').classList.add('hidden');
+    if (noData) {
+        noDataEl.classList.remove('hidden');
+        gridEl.classList.add('hidden');
+        listEl.classList.add('hidden');
+        return;
+    } else {
+        // 一度非表示にした要素を復帰させる
+        noDataEl.classList.add('hidden');
+        if (currentView === 'grid') {
+            gridEl.classList.remove('hidden');
+            listEl.classList.add('hidden');
+        } else {
+            gridEl.classList.add('hidden');
+            listEl.classList.remove('hidden');
+        }
+    }
 
     // レンダリング上限を適用
     if (currentView === 'grid') {
@@ -1161,7 +1218,7 @@ async function showDetail(akyoId) {
         imageWrapper.appendChild(imageContainer);
 
         const sparkle = document.createElement('div');
-        sparkle.className = 'absolute -top-2 -right-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce';
+        sparkle.className = 'absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center animate-bounce';
         const sparkleIcon = document.createElement('span');
         sparkleIcon.className = 'text-2xl';
         sparkleIcon.textContent = '✨';
@@ -1348,8 +1405,12 @@ function toggleFavorite(akyoId) {
     // ローカルストレージに保存
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
-    // 表示更新
-    updateDisplay();
+    // 表示更新（お気に入りのみ or ランダムモード時はフィルタを再適用）
+    if (favoritesOnlyMode || randomMode) {
+        applyFilters();
+    } else {
+        updateDisplay();
+    }
 }
 
 // 統計情報の更新
