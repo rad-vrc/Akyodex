@@ -63,6 +63,27 @@ function sanitizeImageSource(url) {
     return '';
 }
 
+const DEFAULT_PROFILE_ICON_DATA_URL = (() => {
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+            <defs>
+                <linearGradient id="akyoProfileGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#6366f1" />
+                </linearGradient>
+            </defs>
+            <rect x="8" y="8" width="112" height="112" rx="32" fill="url(#akyoProfileGradient)" />
+            <circle cx="64" cy="48" r="24" fill="rgba(255, 255, 255, 0.85)" />
+            <path d="M64 76c-24 0-36 12-36 24v8h72v-8c0-12-12-24-36-24z" fill="rgba(255, 255, 255, 0.9)" />
+        </svg>
+    `;
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg.replace(/\s+/g, ' '))}`;
+})();
+
+function getDefaultProfileIconDataUrl() {
+    return DEFAULT_PROFILE_ICON_DATA_URL;
+}
+
 function computeAkyoRenderState(akyo) {
     const nickname = akyo.nickname || '';
     const avatarName = akyo.avatarName || '';
@@ -175,7 +196,11 @@ async function resolveProfileIcon() {
         console.error('Error while resolving profile icon:', error);
     }
 
-    profileIconCache = { resolved: true, url: sanitizeImageSource(profileIcon) || null };
+    const sanitizedIcon = sanitizeImageSource(profileIcon);
+    profileIconCache = {
+        resolved: true,
+        url: sanitizedIcon || getDefaultProfileIconDataUrl()
+    };
     return profileIconCache.url;
 }
 
@@ -971,23 +996,18 @@ async function showDetail(akyoId) {
     const profileIconUrl = await resolveProfileIcon();
 
     modalTitle.textContent = '';
-    if (profileIconUrl) {
-        const icon = document.createElement('img');
-        icon.src = profileIconUrl;
-        icon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
-        icon.alt = 'Profile Icon';
-        modalTitle.appendChild(icon);
-            } else {
-        const fallbackIcon = document.createElement('img');
-        fallbackIcon.src = 'images/profileIcon.webp';
-        fallbackIcon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
-        fallbackIcon.alt = 'Profile Icon';
-        fallbackIcon.addEventListener('error', () => {
-            fallbackIcon.onerror = null;
-            fallbackIcon.src = 'images/profileIcon.png';
-        });
-        modalTitle.appendChild(fallbackIcon);
-    }
+    const profileIconSrc = profileIconUrl || getDefaultProfileIconDataUrl();
+    const icon = document.createElement('img');
+    icon.src = profileIconSrc;
+    icon.loading = 'lazy';
+    icon.decoding = 'async';
+    icon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
+    icon.alt = 'Profile Icon';
+    icon.addEventListener('error', () => {
+        icon.onerror = null;
+        icon.src = getDefaultProfileIconDataUrl();
+    });
+    modalTitle.appendChild(icon);
     const titleText = document.createElement('span');
     titleText.textContent = `#${akyo.id} ${displayName}`;
     modalTitle.appendChild(titleText);
