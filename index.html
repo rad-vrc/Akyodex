@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akyoずかん - 500種類以上のAkyoがいるよ！</title>
+    <title>VRChatアバター図鑑 Akyoずかん | VRChat アバター インデックス</title>
+    <meta name="description" content="VRChatアバターを500体以上収録したAkyoずかん。作者・属性・URLから検索できるVRChat アバター インデックスで、お気に入りのアバターをすぐに見つけよう。">
+    <meta name="keywords" content="VRChat アバター インデックス, VRChatアバター図鑑, VRChat Avatar Index, Akyoずかん, VRChat アバター 検索">
+    <meta name="author" content="Akyoずかんチーム">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://akyodex.com/">
+    <meta name="theme-color" content="#f97316">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:title" content="VRChatアバター図鑑 Akyoずかん">
+    <meta property="og:description" content="VRChatアバターを500体以上収録した図鑑サイト。作者・属性・URLで探せる日本語対応のVRChat アバター インデックス。">
+    <meta property="og:url" content="https://akyodex.com/">
+    <meta property="og:site_name" content="Akyoずかん">
+    <meta property="og:image" content="https://akyodex.com/images/logo.webp">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VRChatアバター図鑑 Akyoずかん">
+    <meta name="twitter:description" content="VRChat アバター インデックスとして500体以上のAkyoを検索・お気に入り登録できるファン向け図鑑。">
+    <meta name="twitter:image" content="https://akyodex.com/images/logo.webp">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,6 +35,23 @@
 
     <!-- 子どもにやさしいデザイン -->
     <link rel="stylesheet" href="css/kid-friendly.css">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Akyoずかん",
+        "url": "https://akyodex.com/",
+        "description": "VRChatアバターを500体以上収録したファン向けVRChat アバター インデックス。属性や作者から簡単検索。",
+        "inLanguage": "ja",
+        "alternateName": "VRChat Avatar Index",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://akyodex.com/index.html?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
 
     <!-- 画像最適化: R2 事前接続＆ロゴのプリロード -->
     <link rel="dns-prefetch" href="https://images.akyodex.com">
@@ -252,10 +288,13 @@
                     </div>
                 </div>
 
-                <!-- 属性フィルター -->
-                <div>
+                <!-- 属性・作者フィルター -->
+                <div class="space-y-2">
                     <select id="attributeFilter" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="">すべての属性</option>
+                    </select>
+                    <select id="creatorFilter" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">すべての作者</option>
                     </select>
                 </div>
             </div>
