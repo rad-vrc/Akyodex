@@ -1,6 +1,10 @@
 (function(){
-  const IMG_WEBP = 'images/@miniakyo.webp';
-  const IMG_PNG  = 'images/@miniakyo.png';
+  const CANDIDATES = [
+    'images/@miniakyo.webp',
+    'images/@miniakyo.png',
+    'images/miniakyo.webp',
+    'images/miniakyo.png',
+  ];
 
   function getVersionSuffix(){
     try{
@@ -11,14 +15,12 @@
 
   async function resolveMiniAkyoUrl(){
     const ver = getVersionSuffix();
-    try{
-      const r = await fetch(IMG_WEBP + ver, { cache: 'no-cache' });
-      if (r.ok) return IMG_WEBP + ver;
-    }catch(_){}
-    try{
-      const r2 = await fetch(IMG_PNG + ver, { cache: 'no-cache' });
-      if (r2.ok) return IMG_PNG + ver;
-    }catch(_){ }
+    for (const path of CANDIDATES){
+      try{
+        const r = await fetch(path + ver, { cache: 'no-cache' });
+        if (r.ok) return path + ver;
+      }catch(_){ /* continue */ }
+    }
     return null;
   }
 
@@ -41,7 +43,7 @@
     const duration = 14 + Math.random()*12; // 14-26s
     const delay = Math.random()*10; // 0-10s
     const opacity = 0.10 + Math.random()*0.18; // 0.10-0.28
-    const drift = (Math.random()*40 - 20); // -20~+20 px 近似
+    const drift = (Math.random()*40 - 20);
 
     el.style.setProperty('--size', size+'px');
     el.style.setProperty('--left', `calc(${left}vw + ${drift}px)`);

@@ -453,7 +453,18 @@
                 if (!hasR2) window.__USE_GH_UPLOAD__ = true;
             } catch(_) {}
             // 背景ミニAkyoの初期化（存在する場合のみ）
-            try { if (window.initMiniAkyoBackground) { window.initMiniAkyoBackground(); } } catch(_) {}
+            try {
+                if (window.initMiniAkyoBackground) {
+                    // devフラグでSW未反映時でも強制再生成できるよう再初期化
+                    if (document.getElementById('miniAkyoBg')?.children?.length === 0) {
+                        window.initMiniAkyoBackground();
+                    } else if (new URLSearchParams(location.search).has('reloadBg')) {
+                        const host = document.getElementById('miniAkyoBg');
+                        if (host) host.innerHTML = '';
+                        window.initMiniAkyoBackground();
+                    }
+                }
+            } catch(_) {}
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', bootstrapImages);
