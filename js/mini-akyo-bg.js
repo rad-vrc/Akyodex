@@ -27,7 +27,7 @@
   function ensureStyles(){
     if (document.getElementById('miniAkyoBgStyles')) return;
     const css = `
-#miniAkyoBg{position:fixed;inset:0;width:100vw;height:100vh;overflow:hidden;pointer-events:none;z-index:20}
+#miniAkyoBg{position:fixed;inset:0;width:100vw;height:100vh;overflow:hidden;pointer-events:none;z-index:-1}
 .mini-akyo{position:absolute;bottom:-12%;background-size:contain;background-repeat:no-repeat;opacity:var(--opacity,0.35);width:var(--size,96px);height:var(--size,96px);left:var(--left,50vw);animation:akyo-float-up var(--duration,22s) linear infinite;will-change:transform,opacity;filter:drop-shadow(0 3px 10px rgba(0,0,0,.35))}
 @keyframes akyo-float-up{0%{transform:translateY(0) rotate(var(--rotate,0deg));opacity:var(--opacity,0.35)}100%{transform:translateY(-120vh) rotate(calc(var(--rotate,0deg) + 360deg));opacity:0}}
 `;
