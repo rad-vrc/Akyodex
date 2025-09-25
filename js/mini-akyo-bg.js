@@ -1,7 +1,11 @@
 (function(){
   const CANDIDATES = [
+    // 相対（Pages静的）
     'images/@miniakyo.webp',
     'images/miniakyo.webp',
+    // 絶対（R2のカスタムドメイン）
+    'https://images.akyodex.com/images/@miniakyo.webp',
+    'https://images.akyodex.com/images/miniakyo.webp',
   ];
 
   function getVersionSuffix(){
