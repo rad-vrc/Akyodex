@@ -164,6 +164,41 @@
         .modal-content-bounce {
             animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+
+        /* ミニAkyo 背景（試験実装） */
+        #miniAkyoBg {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .mini-akyo {
+            position: absolute;
+            left: var(--left, 50vw);
+            bottom: -20%;
+            width: var(--size, 64px);
+            height: var(--size, 64px);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: var(--opacity, 0.18);
+            transform: translateY(0);
+            animation: akyo-float-up linear infinite;
+            will-change: transform, opacity;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        @keyframes akyo-float-up {
+            0%   { transform: translateY(110%); opacity: 0; }
+            10%  { opacity: var(--opacity, 0.18); }
+            100% { transform: translateY(-130%); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mini-akyo { animation: none; opacity: 0.08; }
+        }
     </style>
 </head>
 <body>
@@ -315,6 +350,7 @@
     <script src="js/image-manifest-loader.js"></script>
     <script src="js/image-loader.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/mini-akyo-bg.js"></script>
 
     <!-- ヘッダーロゴ読み込み -->
     <script>
@@ -414,6 +450,8 @@
                 const hasR2 = !!(window.PUBLIC_R2_BASE || '').length; // 参照用（ENV未公開のため常にfalse想定）
                 if (!hasR2) window.__USE_GH_UPLOAD__ = true;
             } catch(_) {}
+            // 背景ミニAkyoの初期化（存在する場合のみ）
+            try { if (window.initMiniAkyoBackground) { window.initMiniAkyoBackground(); } } catch(_) {}
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', bootstrapImages);
