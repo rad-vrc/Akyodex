@@ -104,6 +104,12 @@ function extractAttributes(attributeString) {
         .filter(Boolean);
 }
 
+// 表示用の属性名変換
+function displayAttributeName(attr) {
+    if (!attr) return '';
+    return attr === '未分類' ? '未分類(まだ追加されてないよ！もう少し待っててね！)' : attr;
+}
+
 function resolveAkyoImageUrl(akyoId) {
     const storedImage = sanitizeImageSource(imageDataMap[akyoId]);
     if (storedImage) {
@@ -187,14 +193,14 @@ async function loadImageData() {
         if (!window.storageManager && attempts >= 50) {
             console.warn('StorageManager did not become available within expected time. Falling back.');
         }
-
+        
         if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
             // IndexedDBから読み込み
             console.log('Loading from IndexedDB...');
             await window.storageManager.init();
             imageDataMap = await window.storageManager.getAllImages();
             console.log(`Loaded ${Object.keys(imageDataMap).length} images from IndexedDB`);
-
+            
             // IndexedDBが空の場合、LocalStorageも確認
             if (Object.keys(imageDataMap).length === 0) {
                 const savedImages = localStorage.getItem('akyoImages');
@@ -217,9 +223,9 @@ async function loadImageData() {
                 console.log(`Loaded ${Object.keys(imageDataMap).length} images from localStorage`);
             }
         }
-
+        
         console.log('Image data loaded. Total images:', Object.keys(imageDataMap).length);
-
+        
     } catch (error) {
         console.error('Failed to load images:', error);
         imageDataMap = {};
@@ -229,13 +235,13 @@ async function loadImageData() {
 // DOMコンテンツ読み込み完了後の処理
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Akyoずかんを初期化中...');
-
+    
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
-
+    
     // 初期表示を先に実行（ローディング表示など）
     document.getElementById('noDataContainer').classList.remove('hidden');
-
+    
     // LocalStorageのCSV更新を別タブから検知して自動反映
     window.addEventListener('storage', (e) => {
         if (e.key === 'akyoDataCSV' || e.key === 'akyoDataVersion') {
@@ -257,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.removeItem('akyoLogo');
                 localStorage.removeItem('akyoHeaderImage');
                 localStorage.removeItem('headerImage');
-
+                
                 if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
                     await window.storageManager.init();
                     // 削除は非同期で実行（待たない）
@@ -267,10 +273,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } catch (error) {}
         })(),
-
+        
         // 画像データ読み込み
         loadImageData(),
-
+        
         // CSVデータ読み込み
         loadAkyoData()
     ]).then(() => {
@@ -283,58 +289,58 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadAkyoData() {
     try {
         console.log('CSVデータを読み込み中...');
-
+        
         // まずLocalStorageから更新されたデータを確認
         const updatedCSV = localStorage.getItem('akyoDataCSV');
         let csvText;
-
+        
         if (updatedCSV) {
             console.log('LocalStorageから更新データを読み込み');
             csvText = updatedCSV;
         } else {
             // LocalStorageにない場合はファイルから読み込み
             const response = await fetch('data/akyo-data.csv');
-
+            
             if (!response.ok) {
                 throw new Error(`CSVファイルの読み込みに失敗: ${response.status}`);
             }
-
+            
             csvText = await response.text();
         }
-
+        
         console.log('CSVデータ取得完了:', csvText.length, 'bytes');
-
+        
         // CSV解析
         akyoData = parseCSV(csvText);
         gridCardCache.clear();
         listRowCache.clear();
-
+        
         if (!akyoData || akyoData.length === 0) {
             throw new Error('CSVデータが空です');
         }
-
+        
         filteredData = [...akyoData];
         buildSearchIndex();
-
+        
         console.log(`${akyoData.length}種類のAKyoを読み込みました`);
-
+        
         // 属性リストの作成
         createAttributeFilter();
-
+        
         // 画像データの再確認
         console.log('Current imageDataMap size:', Object.keys(imageDataMap).length);
         if (Object.keys(imageDataMap).length === 0) {
             console.log('imageDataMap is empty, reloading...');
             await loadImageData();
         }
-
+        
         // 統計情報の更新
         updateStatistics();
-
+        
         // ローディング非表示
         document.getElementById('loadingContainer').classList.add('hidden');
         document.getElementById('gridView').classList.remove('hidden');
-
+        
     } catch (error) {
         console.error('データ読み込みエラー:', error);
         // エラー表示
@@ -356,19 +362,19 @@ function parseCSV(csvText) {
     const rows = [];
     let currentField = '';
     let currentRow = [];
-    let inQuotes = false;
+        let inQuotes = false;
 
     for (let i = 0; i < csvText.length; i++) {
         const char = csvText[i];
 
-        if (char === '"') {
+                if (char === '"') {
             if (inQuotes && csvText[i + 1] === '"') {
                 currentField += '"';
                 i++;
             } else {
-                inQuotes = !inQuotes;
+                    inQuotes = !inQuotes;
             }
-        } else if (char === ',' && !inQuotes) {
+                } else if (char === ',' && !inQuotes) {
             currentRow.push(currentField);
             currentField = '';
         } else if ((char === '\n' || char === '\r') && !inQuotes) {
@@ -379,7 +385,7 @@ function parseCSV(csvText) {
             rows.push(currentRow);
             currentRow = [];
             currentField = '';
-        } else {
+                } else {
             currentField += char;
         }
     }
@@ -441,7 +447,7 @@ function parseCSV(csvText) {
             data.push(akyo);
         }
     });
-
+    
     return data;
 }
 
@@ -452,14 +458,14 @@ function createAttributeFilter() {
         extractAttributes(akyo.attribute).forEach(attr => attributeSet.add(attr));
         // 正規化も追加：全角/半角空白の除去
     });
-
+    
     const select = document.getElementById('attributeFilter');
     select.innerHTML = '<option value="">すべての属性</option>';
-
+    
     Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).forEach(attr => {
         const option = document.createElement('option');
         option.value = attr;
-        option.textContent = attr;
+        option.textContent = displayAttributeName(attr);
         select.appendChild(option);
     });
 }
@@ -469,26 +475,26 @@ function setupEventListeners() {
     // 検索ボックス
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', debounce(handleSearch, 300));
-
+    
     // 属性フィルター
     document.getElementById('attributeFilter').addEventListener('change', handleAttributeFilter);
-
+    
     // ビュー切り替え
     document.getElementById('gridViewBtn').addEventListener('click', () => switchView('grid'));
     document.getElementById('listViewBtn').addEventListener('click', () => switchView('list'));
-
+    
     // クイックフィルター
     const quickFiltersContainer = document.getElementById('quickFilters');
     if (quickFiltersContainer) {
         const quickFilters = quickFiltersContainer.children;
         if (quickFilters.length > 0) {
-            quickFilters[0].addEventListener('click', showRandom); // ランダム
+    quickFilters[0].addEventListener('click', showRandom); // ランダム
         }
         if (quickFilters.length > 1) {
-            quickFilters[1].addEventListener('click', showFavorites); // お気に入り
+    quickFilters[1].addEventListener('click', showFavorites); // お気に入り
         }
     }
-
+    
     // 管理者ボタンを追加
     const adminBtn = document.createElement('button');
     adminBtn.className = 'fixed bottom-4 right-4 bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 z-50';
@@ -498,13 +504,13 @@ function setupEventListeners() {
         window.location.href = 'admin.html';
     });
     document.body.appendChild(adminBtn);
-
+    
     // モーダルクローズ
     const closeModalBtn = document.getElementById('closeModal');
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeModal);
     }
-
+    
     const detailModal = document.getElementById('detailModal');
     if (detailModal) {
         detailModal.addEventListener('click', (e) => {
@@ -563,14 +569,14 @@ function handleSearch() {
     filteredData = scored
         .map(({ id }) => idToAkyo.get(id))
         .filter(Boolean);
-
+    
     updateDisplay();
 }
 
 // 属性フィルター処理
 function handleAttributeFilter() {
     const selectedAttribute = document.getElementById('attributeFilter').value;
-
+    
     if (!selectedAttribute) {
         filteredData = [...akyoData];
     } else {
@@ -579,7 +585,7 @@ function handleAttributeFilter() {
             return attributes.includes(selectedAttribute);
         });
     }
-
+    
     updateDisplay();
 }
 
@@ -605,7 +611,7 @@ function showFavorites() {
 // ビュー切り替え
 function switchView(view) {
     currentView = view;
-
+    
     if (view === 'grid') {
         document.getElementById('gridView').classList.remove('hidden');
         document.getElementById('listView').classList.add('hidden');
@@ -617,23 +623,23 @@ function switchView(view) {
         document.getElementById('gridViewBtn').className = 'inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-gray-300 text-gray-600 rounded-xl';
         document.getElementById('listViewBtn').className = 'inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-purple-500 text-white rounded-xl';
     }
-
+    
     updateDisplay();
 }
 
 // 表示更新
 function updateDisplay() {
     updateStatistics();
-
+    
     if (filteredData.length === 0) {
         document.getElementById('noDataContainer').classList.remove('hidden');
         document.getElementById('gridView').classList.add('hidden');
         document.getElementById('listView').classList.add('hidden');
         return;
     }
-
+    
     document.getElementById('noDataContainer').classList.add('hidden');
-
+    
     if (currentView === 'grid') {
         renderGridView();
     } else {
@@ -645,7 +651,7 @@ function updateDisplay() {
 function renderGridView() {
     const grid = document.getElementById('akyoGrid');
     const fragment = document.createDocumentFragment();
-
+    
     filteredData.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
         let card = gridCardCache.get(state.id);
@@ -657,7 +663,7 @@ function renderGridView() {
         }
         fragment.appendChild(card);
     });
-
+    
     grid.replaceChildren(fragment);
 }
 
@@ -707,12 +713,12 @@ function createAkyoCard(state) {
     const detailButton = document.createElement('button');
     detailButton.className = 'detail-button w-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white py-3 rounded-2xl hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-bold text-lg shadow-lg hover:shadow-xl relative overflow-hidden';
     detailButton.innerHTML = `
-        <span class="relative z-10 flex items-center justify-center">
-            <span class="text-2xl mr-2 animate-bounce">🌟</span>
-            <span>くわしく見る</span>
-            <span class="text-2xl ml-2 animate-bounce" style="animation-delay: 0.2s">🌟</span>
-        </span>
-        <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
+                <span class="relative z-10 flex items-center justify-center">
+                    <span class="text-2xl mr-2 animate-bounce">🌟</span>
+                    <span>くわしく見る</span>
+                    <span class="text-2xl ml-2 animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
     `;
     detailButton.addEventListener('click', () => showDetail(state.id));
     content.appendChild(detailButton);
@@ -720,7 +726,7 @@ function createAkyoCard(state) {
     card.appendChild(content);
 
     updateAkyoCard(card, state);
-
+    
     return card;
 }
 
@@ -751,7 +757,7 @@ function updateAkyoCard(card, state) {
             const color = getAttributeColor(attr);
             badge.style.background = `${color}20`;
             badge.style.color = color;
-            badge.textContent = attr;
+            badge.textContent = displayAttributeName(attr);
             badgeContainer.appendChild(badge);
         });
     }
@@ -796,7 +802,7 @@ function updateAkyoCard(card, state) {
 function renderListView() {
     const list = document.getElementById('akyoList');
     const fragment = document.createDocumentFragment();
-
+    
     filteredData.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
         let row = listRowCache.get(state.id);
@@ -813,8 +819,8 @@ function renderListView() {
 }
 
 function createListRow(state) {
-    const row = document.createElement('tr');
-    row.className = 'border-b hover:bg-gray-50 transition-colors';
+        const row = document.createElement('tr');
+        row.className = 'border-b hover:bg-gray-50 transition-colors';
     row.dataset.akyoId = state.id;
 
     const idCell = document.createElement('td');
@@ -930,7 +936,7 @@ function updateListRow(row, state) {
             const color = getAttributeColor(attr);
             badge.style.background = `${color}20`;
             badge.style.color = color;
-            badge.textContent = attr;
+            badge.textContent = displayAttributeName(attr);
             attributeContainer.appendChild(badge);
         });
     }
@@ -950,11 +956,11 @@ function updateListRow(row, state) {
 async function showDetail(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
     if (!akyo) return;
-
+    
     const modal = document.getElementById('detailModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalContent = document.getElementById('modalContent');
-
+    
     const displayName = akyo.nickname || akyo.avatarName || '';
     const attributeColor = getAttributeColor(akyo.attribute);
     const imageUrl = resolveAkyoImageUrl(akyo.id);
@@ -971,7 +977,7 @@ async function showDetail(akyoId) {
         icon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
         icon.alt = 'Profile Icon';
         modalTitle.appendChild(icon);
-    } else {
+            } else {
         const fallbackIcon = document.createElement('img');
         fallbackIcon.src = 'images/profileIcon.webp';
         fallbackIcon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
@@ -1036,9 +1042,9 @@ async function showDetail(akyoId) {
     const nameCard = document.createElement('div');
     nameCard.className = 'bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4';
     nameCard.innerHTML = `
-        <h3 class="text-sm font-bold text-purple-600 mb-2">
-            <i class="fas fa-tag mr-1"></i>なまえ
-        </h3>
+                    <h3 class="text-sm font-bold text-purple-600 mb-2">
+                        <i class="fas fa-tag mr-1"></i>なまえ
+                    </h3>
     `;
     const nameValue = document.createElement('p');
     nameValue.className = 'text-xl font-black';
@@ -1049,9 +1055,9 @@ async function showDetail(akyoId) {
     const avatarCard = document.createElement('div');
     avatarCard.className = 'bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4';
     avatarCard.innerHTML = `
-        <h3 class="text-sm font-bold text-blue-600 mb-2">
-            <i class="fas fa-user-astronaut mr-1"></i>アバター
-        </h3>
+                    <h3 class="text-sm font-bold text-blue-600 mb-2">
+                        <i class="fas fa-user-astronaut mr-1"></i>アバター
+                    </h3>
     `;
     const avatarValue = document.createElement('p');
     avatarValue.className = 'text-xl font-black';
@@ -1062,9 +1068,9 @@ async function showDetail(akyoId) {
     const attributeCard = document.createElement('div');
     attributeCard.className = 'bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4';
     attributeCard.innerHTML = `
-        <h3 class="text-sm font-bold text-orange-600 mb-2">
-            <i class="fas fa-sparkles mr-1"></i>ぞくせい
-        </h3>
+                    <h3 class="text-sm font-bold text-orange-600 mb-2">
+                        <i class="fas fa-sparkles mr-1"></i>ぞくせい
+                    </h3>
     `;
     const attributeContainer = document.createElement('div');
     attributeContainer.className = 'flex flex-wrap gap-2 mt-1';
@@ -1073,7 +1079,7 @@ async function showDetail(akyoId) {
         badge.className = 'px-3 py-1 rounded-full text-sm font-bold text-white shadow-md';
         const color = getAttributeColor(attr);
         badge.style.background = `linear-gradient(135deg, ${color}, ${color}dd)`;
-        badge.textContent = attr;
+        badge.textContent = displayAttributeName(attr);
         attributeContainer.appendChild(badge);
     });
     attributeCard.appendChild(attributeContainer);
@@ -1082,9 +1088,9 @@ async function showDetail(akyoId) {
     const creatorCard = document.createElement('div');
     creatorCard.className = 'bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4';
     creatorCard.innerHTML = `
-        <h3 class="text-sm font-bold text-green-600 mb-2">
-            <i class="fas fa-palette mr-1"></i>つくったひと
-        </h3>
+                    <h3 class="text-sm font-bold text-green-600 mb-2">
+                        <i class="fas fa-palette mr-1"></i>つくったひと
+                    </h3>
     `;
     const creatorValue = document.createElement('p');
     creatorValue.className = 'text-xl font-black';
@@ -1120,9 +1126,9 @@ async function showDetail(akyoId) {
         const notesSection = document.createElement('div');
         notesSection.className = 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5';
         notesSection.innerHTML = `
-            <h3 class="text-lg font-bold text-purple-600 mb-3">
-                <i class="fas fa-gift mr-2"></i>おまけ情報
-            </h3>
+                <h3 class="text-lg font-bold text-purple-600 mb-3">
+                    <i class="fas fa-gift mr-2"></i>おまけ情報
+                </h3>
         `;
         const notesWrapper = document.createElement('div');
         notesWrapper.className = 'bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner';
@@ -1164,7 +1170,7 @@ async function showDetail(akyoId) {
 
     modalContent.innerHTML = '';
     modalContent.appendChild(container);
-
+    
     modal.classList.remove('hidden');
 }
 
@@ -1177,9 +1183,9 @@ function closeModal() {
 function toggleFavorite(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
     if (!akyo) return;
-
+    
     akyo.isFavorite = !akyo.isFavorite;
-
+    
     if (akyo.isFavorite) {
         if (!favorites.includes(akyoId)) {
             favorites.push(akyoId);
@@ -1190,10 +1196,10 @@ function toggleFavorite(akyoId) {
             favorites.splice(index, 1);
         }
     }
-
+    
     // ローカルストレージに保存
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
-
+    
     // 表示更新
     updateDisplay();
 }
@@ -1232,14 +1238,14 @@ function getAttributeColor(attribute) {
         'クール': '#5c6bc0',
         'シンプル': '#78909c'
     };
-
+    
     // 最初にマッチする属性の色を返す
     for (const [key, color] of Object.entries(colorMap)) {
         if (attribute && attribute.includes(key)) {
             return color;
         }
     }
-
+    
     // デフォルト色（グラデーションの一部）
     const defaultColors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
     const hash = attribute ? attribute.charCodeAt(0) : 0;
