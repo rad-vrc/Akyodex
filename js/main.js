@@ -193,14 +193,14 @@ async function loadImageData() {
         if (!window.storageManager && attempts >= 50) {
             console.warn('StorageManager did not become available within expected time. Falling back.');
         }
-        
+
         if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
             // IndexedDBから読み込み
             console.log('Loading from IndexedDB...');
             await window.storageManager.init();
             imageDataMap = await window.storageManager.getAllImages();
             console.log(`Loaded ${Object.keys(imageDataMap).length} images from IndexedDB`);
-            
+
             // IndexedDBが空の場合、LocalStorageも確認
             if (Object.keys(imageDataMap).length === 0) {
                 const savedImages = localStorage.getItem('akyoImages');
@@ -223,9 +223,9 @@ async function loadImageData() {
                 console.log(`Loaded ${Object.keys(imageDataMap).length} images from localStorage`);
             }
         }
-        
+
         console.log('Image data loaded. Total images:', Object.keys(imageDataMap).length);
-        
+
     } catch (error) {
         console.error('Failed to load images:', error);
         imageDataMap = {};
@@ -235,13 +235,13 @@ async function loadImageData() {
 // DOMコンテンツ読み込み完了後の処理
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Akyoずかんを初期化中...');
-    
+
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
-    
+
     // 初期表示を先に実行（ローディング表示など）
     document.getElementById('noDataContainer').classList.remove('hidden');
-    
+
     // LocalStorageのCSV更新を別タブから検知して自動反映
     window.addEventListener('storage', (e) => {
         if (e.key === 'akyoDataCSV' || e.key === 'akyoDataVersion') {
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.removeItem('akyoLogo');
                 localStorage.removeItem('akyoHeaderImage');
                 localStorage.removeItem('headerImage');
-                
+
                 if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
                     await window.storageManager.init();
                     // 削除は非同期で実行（待たない）
@@ -273,10 +273,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } catch (error) {}
         })(),
-        
+
         // 画像データ読み込み
         loadImageData(),
-        
+
         // CSVデータ読み込み
         loadAkyoData()
     ]).then(() => {
@@ -289,58 +289,58 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadAkyoData() {
     try {
         console.log('CSVデータを読み込み中...');
-        
+
         // まずLocalStorageから更新されたデータを確認
         const updatedCSV = localStorage.getItem('akyoDataCSV');
         let csvText;
-        
+
         if (updatedCSV) {
             console.log('LocalStorageから更新データを読み込み');
             csvText = updatedCSV;
         } else {
             // LocalStorageにない場合はファイルから読み込み
             const response = await fetch('data/akyo-data.csv');
-            
+
             if (!response.ok) {
                 throw new Error(`CSVファイルの読み込みに失敗: ${response.status}`);
             }
-            
+
             csvText = await response.text();
         }
-        
+
         console.log('CSVデータ取得完了:', csvText.length, 'bytes');
-        
+
         // CSV解析
         akyoData = parseCSV(csvText);
         gridCardCache.clear();
         listRowCache.clear();
-        
+
         if (!akyoData || akyoData.length === 0) {
             throw new Error('CSVデータが空です');
         }
-        
+
         filteredData = [...akyoData];
         buildSearchIndex();
-        
+
         console.log(`${akyoData.length}種類のAKyoを読み込みました`);
-        
+
         // 属性リストの作成
         createAttributeFilter();
-        
+
         // 画像データの再確認
         console.log('Current imageDataMap size:', Object.keys(imageDataMap).length);
         if (Object.keys(imageDataMap).length === 0) {
             console.log('imageDataMap is empty, reloading...');
             await loadImageData();
         }
-        
+
         // 統計情報の更新
         updateStatistics();
-        
+
         // ローディング非表示
         document.getElementById('loadingContainer').classList.add('hidden');
         document.getElementById('gridView').classList.remove('hidden');
-        
+
     } catch (error) {
         console.error('データ読み込みエラー:', error);
         // エラー表示
@@ -447,7 +447,7 @@ function parseCSV(csvText) {
             data.push(akyo);
         }
     });
-    
+
     return data;
 }
 
@@ -458,10 +458,10 @@ function createAttributeFilter() {
         extractAttributes(akyo.attribute).forEach(attr => attributeSet.add(attr));
         // 正規化も追加：全角/半角空白の除去
     });
-    
+
     const select = document.getElementById('attributeFilter');
     select.innerHTML = '<option value="">すべての属性</option>';
-    
+
     Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).forEach(attr => {
         const option = document.createElement('option');
         option.value = attr;
@@ -475,14 +475,14 @@ function setupEventListeners() {
     // 検索ボックス
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', debounce(handleSearch, 300));
-    
+
     // 属性フィルター
     document.getElementById('attributeFilter').addEventListener('change', handleAttributeFilter);
-    
+
     // ビュー切り替え
     document.getElementById('gridViewBtn').addEventListener('click', () => switchView('grid'));
     document.getElementById('listViewBtn').addEventListener('click', () => switchView('list'));
-    
+
     // クイックフィルター
     const quickFiltersContainer = document.getElementById('quickFilters');
     if (quickFiltersContainer) {
@@ -494,7 +494,7 @@ function setupEventListeners() {
     quickFilters[1].addEventListener('click', showFavorites); // お気に入り
         }
     }
-    
+
     // 管理者ボタンを追加
     const adminBtn = document.createElement('button');
     adminBtn.className = 'fixed bottom-4 right-4 bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 z-50';
@@ -504,13 +504,13 @@ function setupEventListeners() {
         window.location.href = 'admin.html';
     });
     document.body.appendChild(adminBtn);
-    
+
     // モーダルクローズ
     const closeModalBtn = document.getElementById('closeModal');
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeModal);
     }
-    
+
     const detailModal = document.getElementById('detailModal');
     if (detailModal) {
         detailModal.addEventListener('click', (e) => {
@@ -569,14 +569,14 @@ function handleSearch() {
     filteredData = scored
         .map(({ id }) => idToAkyo.get(id))
         .filter(Boolean);
-    
+
     updateDisplay();
 }
 
 // 属性フィルター処理
 function handleAttributeFilter() {
     const selectedAttribute = document.getElementById('attributeFilter').value;
-    
+
     if (!selectedAttribute) {
         filteredData = [...akyoData];
     } else {
@@ -585,7 +585,7 @@ function handleAttributeFilter() {
             return attributes.includes(selectedAttribute);
         });
     }
-    
+
     updateDisplay();
 }
 
@@ -611,7 +611,7 @@ function showFavorites() {
 // ビュー切り替え
 function switchView(view) {
     currentView = view;
-    
+
     if (view === 'grid') {
         document.getElementById('gridView').classList.remove('hidden');
         document.getElementById('listView').classList.add('hidden');
@@ -623,23 +623,23 @@ function switchView(view) {
         document.getElementById('gridViewBtn').className = 'inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-gray-300 text-gray-600 rounded-xl';
         document.getElementById('listViewBtn').className = 'inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-purple-500 text-white rounded-xl';
     }
-    
+
     updateDisplay();
 }
 
 // 表示更新
 function updateDisplay() {
     updateStatistics();
-    
+
     if (filteredData.length === 0) {
         document.getElementById('noDataContainer').classList.remove('hidden');
         document.getElementById('gridView').classList.add('hidden');
         document.getElementById('listView').classList.add('hidden');
         return;
     }
-    
+
     document.getElementById('noDataContainer').classList.add('hidden');
-    
+
     if (currentView === 'grid') {
         renderGridView();
     } else {
@@ -651,7 +651,7 @@ function updateDisplay() {
 function renderGridView() {
     const grid = document.getElementById('akyoGrid');
     const fragment = document.createDocumentFragment();
-    
+
     filteredData.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
         let card = gridCardCache.get(state.id);
@@ -663,7 +663,7 @@ function renderGridView() {
         }
         fragment.appendChild(card);
     });
-    
+
     grid.replaceChildren(fragment);
 }
 
@@ -726,7 +726,7 @@ function createAkyoCard(state) {
     card.appendChild(content);
 
     updateAkyoCard(card, state);
-    
+
     return card;
 }
 
@@ -802,7 +802,7 @@ function updateAkyoCard(card, state) {
 function renderListView() {
     const list = document.getElementById('akyoList');
     const fragment = document.createDocumentFragment();
-    
+
     filteredData.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
         let row = listRowCache.get(state.id);
@@ -956,11 +956,11 @@ function updateListRow(row, state) {
 async function showDetail(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
     if (!akyo) return;
-    
+
     const modal = document.getElementById('detailModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalContent = document.getElementById('modalContent');
-    
+
     const displayName = akyo.nickname || akyo.avatarName || '';
     const attributeColor = getAttributeColor(akyo.attribute);
     const imageUrl = resolveAkyoImageUrl(akyo.id);
@@ -1170,7 +1170,7 @@ async function showDetail(akyoId) {
 
     modalContent.innerHTML = '';
     modalContent.appendChild(container);
-    
+
     modal.classList.remove('hidden');
 }
 
@@ -1183,9 +1183,9 @@ function closeModal() {
 function toggleFavorite(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
     if (!akyo) return;
-    
+
     akyo.isFavorite = !akyo.isFavorite;
-    
+
     if (akyo.isFavorite) {
         if (!favorites.includes(akyoId)) {
             favorites.push(akyoId);
@@ -1196,10 +1196,10 @@ function toggleFavorite(akyoId) {
             favorites.splice(index, 1);
         }
     }
-    
+
     // ローカルストレージに保存
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
-    
+
     // 表示更新
     updateDisplay();
 }
@@ -1238,14 +1238,14 @@ function getAttributeColor(attribute) {
         'クール': '#5c6bc0',
         'シンプル': '#78909c'
     };
-    
+
     // 最初にマッチする属性の色を返す
     for (const [key, color] of Object.entries(colorMap)) {
         if (attribute && attribute.includes(key)) {
             return color;
         }
     }
-    
+
     // デフォルト色（グラデーションの一部）
     const defaultColors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
     const hash = attribute ? attribute.charCodeAt(0) : 0;
