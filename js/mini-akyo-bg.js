@@ -6,6 +6,9 @@
     // 絶対（R2のカスタムドメイン）
     'https://images.akyodex.com/images/@miniakyo.webp',
     'https://images.akyodex.com/images/miniakyo.webp',
+    // 直下配置パターン（R2でキーを直下にした場合）
+    'https://images.akyodex.com/@miniakyo.webp',
+    'https://images.akyodex.com/miniakyo.webp',
   ];
 
   function getVersionSuffix(){
