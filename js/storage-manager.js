@@ -13,7 +13,7 @@ class StorageManager {
     // IndexedDBが利用可能かチェック
     checkIndexedDB() {
         if (!window.indexedDB) {
-            console.warn('IndexedDB is not available. Falling back to localStorage.');
+            console.debug('IndexedDB is not available. Falling back to localStorage.');
             return false;
         }
         return true;
@@ -35,18 +35,18 @@ class StorageManager {
 
             request.onsuccess = () => {
                 this.db = request.result;
-                console.log('IndexedDB initialized successfully');
+                console.debug('IndexedDB initialized successfully');
                 resolve(true);
             };
 
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
-                
+
                 // 画像ストアの作成
                 if (!db.objectStoreNames.contains(this.imageStoreName)) {
                     const imageStore = db.createObjectStore(this.imageStoreName, { keyPath: 'id' });
                     imageStore.createIndex('id', 'id', { unique: true });
-                    console.log('Image store created');
+                    console.debug('Image store created');
                 }
             };
         });
@@ -61,7 +61,7 @@ class StorageManager {
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction([this.imageStoreName], 'readwrite');
             const store = transaction.objectStore(this.imageStoreName);
-            
+
             const request = store.put({
                 id: id,
                 data: imageData,
@@ -69,7 +69,7 @@ class StorageManager {
             });
 
             request.onsuccess = () => {
-                console.log(`Image saved: ${id}`);
+                console.debug(`Image saved: ${id}`);
                 resolve(true);
             };
 
@@ -144,7 +144,7 @@ class StorageManager {
             const request = store.delete(id);
 
             request.onsuccess = () => {
-                console.log(`Image deleted: ${id}`);
+                console.debug(`Image deleted: ${id}`);
                 resolve(true);
             };
 
@@ -167,7 +167,7 @@ class StorageManager {
             const request = store.clear();
 
             request.onsuccess = () => {
-                console.log('All images cleared');
+                console.debug('All images cleared');
                 resolve(true);
             };
 
@@ -183,23 +183,23 @@ class StorageManager {
         try {
             const localData = localStorage.getItem('akyoImages');
             if (!localData) {
-                console.log('No data to migrate from localStorage');
+                console.debug('No data to migrate from localStorage');
                 return { migrated: 0, failed: 0 };
             }
 
             const images = JSON.parse(localData);
             const imageIds = Object.keys(images);
-            
+
             let migratedCount = 0;
             let failedCount = 0;
 
-            console.log(`Starting migration of ${imageIds.length} images...`);
+            console.debug(`Starting migration of ${imageIds.length} images...`);
 
             for (const id of imageIds) {
                 try {
                     await this.saveImage(id, images[id]);
                     migratedCount++;
-                    console.log(`Migrated: ${id} (${migratedCount}/${imageIds.length})`);
+                    console.debug(`Migrated: ${id} (${migratedCount}/${imageIds.length})`);
                 } catch (error) {
                     console.error(`Failed to migrate ${id}:`, error);
                     failedCount++;
@@ -209,10 +209,10 @@ class StorageManager {
             // 移行成功後、localStorageから削除（オプション）
             if (migratedCount > 0 && failedCount === 0) {
                 localStorage.removeItem('akyoImages');
-                console.log('Removed old data from localStorage');
+                console.debug('Removed old data from localStorage');
             }
 
-            console.log(`Migration complete: ${migratedCount} succeeded, ${failedCount} failed`);
+            console.debug(`Migration complete: ${migratedCount} succeeded, ${failedCount} failed`);
             return { migrated: migratedCount, failed: failedCount };
 
         } catch (error) {
@@ -279,7 +279,7 @@ class StorageManager {
             try {
                 const images = await this.getAllImages();
                 info.indexedDBImages = Object.keys(images).length;
-                
+
                 // サイズ計算
                 let totalSize = 0;
                 for (const data of Object.values(images)) {

@@ -214,7 +214,7 @@ async function resolveProfileIcon() {
 
 // 画像データの読み込み関数
 async function loadImageData() {
-    console.log('Loading image data...');
+    console.debug('Loading image data...');
     try {
         // StorageManagerが初期化されるまで待機
         let attempts = 0;
@@ -224,15 +224,15 @@ async function loadImageData() {
         }
 
         if (!window.storageManager && attempts >= 50) {
-            console.warn('StorageManager did not become available within expected time. Falling back.');
+            console.debug('StorageManager did not become available within expected time. Falling back.');
         }
 
         if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
             // IndexedDBから読み込み
-            console.log('Loading from IndexedDB...');
+            console.debug('Loading from IndexedDB...');
             await window.storageManager.init();
             imageDataMap = await window.storageManager.getAllImages();
-            console.log(`Loaded ${Object.keys(imageDataMap).length} images from IndexedDB`);
+            console.debug(`Loaded ${Object.keys(imageDataMap).length} images from IndexedDB`);
 
             // IndexedDBが空の場合、LocalStorageも確認
             if (Object.keys(imageDataMap).length === 0) {
@@ -240,7 +240,7 @@ async function loadImageData() {
                 if (savedImages) {
                     try {
                         const localImages = JSON.parse(savedImages);
-                        console.log(`Found ${Object.keys(localImages).length} images in LocalStorage`);
+                        console.debug(`Found ${Object.keys(localImages).length} images in LocalStorage`);
                         imageDataMap = localImages;
                     } catch (e) {
                         console.error('Failed to parse LocalStorage data:', e);
@@ -249,15 +249,15 @@ async function loadImageData() {
             }
         } else {
             // フォールバック: LocalStorageから読み込み
-            console.log('StorageManager not available, loading from LocalStorage...');
+            console.debug('StorageManager not available, loading from LocalStorage...');
             const savedImages = localStorage.getItem('akyoImages');
             if (savedImages) {
                 imageDataMap = JSON.parse(savedImages);
-                console.log(`Loaded ${Object.keys(imageDataMap).length} images from localStorage`);
+                console.debug(`Loaded ${Object.keys(imageDataMap).length} images from localStorage`);
             }
         }
 
-        console.log('Image data loaded. Total images:', Object.keys(imageDataMap).length);
+        console.debug('Image data loaded. Total images:', Object.keys(imageDataMap).length);
 
     } catch (error) {
         console.error('Failed to load images:', error);
@@ -267,7 +267,7 @@ async function loadImageData() {
 
 // DOMコンテンツ読み込み完了後の処理
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Akyoずかんを初期化中...');
+    console.debug('Akyoずかんを初期化中...');
 
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // LocalStorageのCSV更新を別タブから検知して自動反映
     window.addEventListener('storage', (e) => {
         if (e.key === 'akyoDataCSV' || e.key === 'akyoDataVersion') {
-            console.log('Data changed in another tab. Reloading data...');
+            console.debug('Data changed in another tab. Reloading data...');
             loadAkyoData().then(applyFilters).catch(err => console.error(err));
         }
     });
@@ -321,14 +321,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 // CSVデータの読み込みと解析
 async function loadAkyoData() {
     try {
-        console.log('CSVデータを読み込み中...');
+        console.debug('CSVデータを読み込み中...');
 
         // まずLocalStorageから更新されたデータを確認
         const updatedCSV = localStorage.getItem('akyoDataCSV');
         let csvText;
 
         if (updatedCSV) {
-            console.log('LocalStorageから更新データを読み込み');
+            console.debug('LocalStorageから更新データを読み込み');
             csvText = updatedCSV;
         } else {
             // LocalStorageにない場合はファイルから読み込み
@@ -341,7 +341,7 @@ async function loadAkyoData() {
             csvText = await response.text();
         }
 
-        console.log('CSVデータ取得完了:', csvText.length, 'bytes');
+        console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
 
         // CSV解析
         akyoData = parseCSV(csvText);
@@ -355,16 +355,16 @@ async function loadAkyoData() {
         filteredData = [...akyoData];
         buildSearchIndex();
 
-        console.log(`${akyoData.length}種類のAKyoを読み込みました`);
+        console.debug(`${akyoData.length}種類のAKyoを読み込みました`);
 
         // 属性・作者リストの作成
         createAttributeFilter();
         createCreatorFilter();
 
         // 画像データの再確認
-        console.log('Current imageDataMap size:', Object.keys(imageDataMap).length);
+        console.debug('Current imageDataMap size:', Object.keys(imageDataMap).length);
         if (Object.keys(imageDataMap).length === 0) {
-            console.log('imageDataMap is empty, reloading...');
+            console.debug('imageDataMap is empty, reloading...');
             await loadImageData();
         }
 

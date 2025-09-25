@@ -45,7 +45,21 @@ const version = [
   two(now.getDate())
 ].join('') + '-' + [two(now.getHours()), two(now.getMinutes()), two(now.getSeconds())].join('');
 
-const manifest = { version, map };
+// 将来の拡張: ミニAkyo背景のキーを併載（存在すれば）
+let miniAkyo = null;
+const miniCandidates = [
+  'miniakyo.webp', '@miniakyo.webp',
+  'images/miniakyo.webp', 'images/@miniakyo.webp'
+];
+for (const cand of miniCandidates){
+  const p = path.join(imagesPath, cand);
+  if (fs.existsSync(p)){
+    miniAkyo = FULL_URL ? `${BASE_URL}/${cand.replace(/^images\//,'')}` : cand;
+    break;
+  }
+}
+
+const manifest = { version, map, ...(miniAkyo ? { miniAkyo } : {}) };
 
 ensureDir(outputPath);
 fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');

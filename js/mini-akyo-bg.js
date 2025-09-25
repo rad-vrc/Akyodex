@@ -1,4 +1,5 @@
 (function(){
+  const dbg = (...a)=>{ try{ if (window && window.console && console.debug) console.debug('[mini-bg]',...a);}catch(_){} };
   const CANDIDATES = [
     // 本番の実体（R2 直下）を最優先
     'https://images.akyodex.com/miniakyo.webp',
@@ -60,6 +61,15 @@
   }
 
   async function resolveMiniAkyoUrl(){
+    try{
+      const m = (typeof window!=='undefined' && window.akyoImageManifestMap) ? window.akyoImageManifestMap : null;
+      const ver = getVersionSuffix();
+      if (m && m.miniAkyo){
+        const url = applyVersion(m.miniAkyo, ver);
+        dbg('manifest miniAkyo hit:', url);
+        return url;
+      }
+    }catch(_){ }
     const ver = getVersionSuffix();
 
     const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
@@ -71,17 +81,20 @@
       try{
         const r = await fetch(candidate, { cache: 'no-cache' });
         if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
+          dbg('fetch ok:', candidate);
           return candidate;
         }
         // fetchがCDN設定で弾かれるケース向けにImageプローブを試みる
         try{
           const okUrl = await probeImage(candidate);
+          dbg('probe ok:', okUrl);
           return okUrl;
         }catch(_){ /* fall through */ }
       }catch(_){
         // fetch自体が失敗でも最終的にfallbackで返す
         try{
           const okUrl = await probeImage(candidate);
+          dbg('probe ok after fetch fail:', okUrl);
           return okUrl;
         }catch(__){ /* continue */ }
       }
@@ -204,9 +217,7 @@
 
   if (typeof window !== 'undefined'){
     window.initMiniAkyoBackground = initMiniAkyoBackground;
-    const start = () => {
-      try{ initMiniAkyoBackground(); }catch(_){ }
-    };
+    const start = () => { try{ initMiniAkyoBackground(); }catch(_){ } };
     if (document.readyState === 'loading'){
       document.addEventListener('DOMContentLoaded', start, { once: true });
     }else{

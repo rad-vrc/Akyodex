@@ -4,7 +4,7 @@
 (function() {
     // StorageManagerのインスタンスを確認
     if (!window.storageManager) {
-        console.log('StorageManager not found. Creating new instance...');
+        console.debug('StorageManager not found. Creating new instance...');
         // storage-manager.jsが読み込まれていない場合は動的に読み込む
         const script = document.createElement('script');
         script.src = 'js/storage-manager.js';
@@ -16,25 +16,25 @@
         try {
             // まずIndexedDBから読み込みを試行
             if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
-                console.log('Loading images from IndexedDB...');
+                console.debug('Loading images from IndexedDB...');
                 const images = await window.storageManager.getAllImages();
-                
+
                 if (Object.keys(images).length > 0) {
-                    console.log(`Loaded ${Object.keys(images).length} images from IndexedDB`);
+                    console.debug(`Loaded ${Object.keys(images).length} images from IndexedDB`);
                     return images;
                 }
             }
         } catch (error) {
-            console.warn('Failed to load from IndexedDB:', error);
+            console.debug('Failed to load from IndexedDB:', error);
         }
 
         // IndexedDBから読み込めない場合はLocalStorageを試行
         try {
-            console.log('Loading images from LocalStorage...');
+            console.debug('Loading images from LocalStorage...');
             const localData = localStorage.getItem('akyoImages');
             if (localData) {
                 const images = JSON.parse(localData);
-                console.log(`Loaded ${Object.keys(images).length} images from LocalStorage`);
+                console.debug(`Loaded ${Object.keys(images).length} images from LocalStorage`);
                 return images;
             }
         } catch (error) {
@@ -51,12 +51,12 @@
         // IndexedDBへの保存を試行
         if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
             try {
-                console.log('Saving images to IndexedDB...');
-                
+                console.debug('Saving images to IndexedDB...');
+
                 // 各画像を個別に保存
                 const imageIds = Object.keys(imageDataMap);
                 let successCount = 0;
-                
+
                 for (const id of imageIds) {
                     try {
                         await window.storageManager.saveImage(id, imageDataMap[id]);
@@ -65,12 +65,12 @@
                         console.error(`Failed to save image ${id}:`, error);
                     }
                 }
-                
+
                 if (successCount > 0) {
-                    console.log(`Saved ${successCount}/${imageIds.length} images to IndexedDB`);
+                    console.debug(`Saved ${successCount}/${imageIds.length} images to IndexedDB`);
                     savedToIndexedDB = true;
                 }
-                
+
             } catch (error) {
                 console.error('Failed to save to IndexedDB:', error);
             }
@@ -79,14 +79,14 @@
         // IndexedDBに保存できなかった場合、LocalStorageに保存を試行
         if (!savedToIndexedDB) {
             try {
-                console.log('Saving images to LocalStorage...');
+                console.debug('Saving images to LocalStorage...');
                 localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-                console.log('Images saved to LocalStorage');
+                console.debug('Images saved to LocalStorage');
                 return true;
             } catch (error) {
                 // LocalStorageも失敗（容量オーバーの可能性）
                 console.error('Failed to save to LocalStorage:', error);
-                
+
                 if (error.name === 'QuotaExceededError') {
                     alert('ストレージ容量が不足しています。\n\n「migrate-storage.html」を開いてIndexedDBへの移行を実行してください。');
                     throw error;
@@ -103,10 +103,10 @@
         if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
             try {
                 await window.storageManager.saveImage(id, imageData);
-                console.log(`Image ${id} saved to IndexedDB`);
+                console.debug(`Image ${id} saved to IndexedDB`);
                 return true;
             } catch (error) {
-                console.warn(`Failed to save image ${id} to IndexedDB:`, error);
+                console.debug(`Failed to save image ${id} to IndexedDB:`, error);
             }
         }
 
@@ -116,11 +116,11 @@
             const images = existingData ? JSON.parse(existingData) : {};
             images[id] = imageData;
             localStorage.setItem('akyoImages', JSON.stringify(images));
-            console.log(`Image ${id} saved to LocalStorage`);
+            console.debug(`Image ${id} saved to LocalStorage`);
             return true;
         } catch (error) {
             console.error(`Failed to save image ${id}:`, error);
-            
+
             if (error.name === 'QuotaExceededError') {
                 alert('ストレージ容量が不足しています。\n\n「migrate-storage.html」を開いてIndexedDBへの移行を実行してください。');
             }
@@ -136,10 +136,10 @@
         if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
             try {
                 await window.storageManager.deleteImage(id);
-                console.log(`Image ${id} deleted from IndexedDB`);
+                console.debug(`Image ${id} deleted from IndexedDB`);
                 deletedFromIndexedDB = true;
             } catch (error) {
-                console.warn(`Failed to delete image ${id} from IndexedDB:`, error);
+                console.debug(`Failed to delete image ${id} from IndexedDB:`, error);
             }
         }
 
@@ -151,11 +151,11 @@
                 if (images[id]) {
                     delete images[id];
                     localStorage.setItem('akyoImages', JSON.stringify(images));
-                    console.log(`Image ${id} deleted from LocalStorage`);
+                    console.debug(`Image ${id} deleted from LocalStorage`);
                 }
             }
         } catch (error) {
-            console.warn(`Failed to delete image ${id} from LocalStorage:`, error);
+                console.debug(`Failed to delete image ${id} from LocalStorage:`, error);
         }
 
         return deletedFromIndexedDB;
@@ -174,7 +174,7 @@
                 const images = await window.storageManager.getAllImages();
                 info.indexedDB.available = true;
                 info.indexedDB.count = Object.keys(images).length;
-                
+
                 // サイズ計算
                 let totalSize = 0;
                 for (const data of Object.values(images)) {
@@ -182,7 +182,7 @@
                 }
                 info.indexedDB.size = totalSize;
             } catch (error) {
-                console.warn('Failed to get IndexedDB info:', error);
+                console.debug('Failed to get IndexedDB info:', error);
             }
         }
 
@@ -195,12 +195,12 @@
                 info.localStorage.size = localData.length;
             }
         } catch (error) {
-            console.warn('Failed to get LocalStorage info:', error);
+            console.debug('Failed to get LocalStorage info:', error);
         }
 
         return info;
     };
 
     // 初期化完了をログ出力
-    console.log('Storage Adapter initialized. Use migrate-storage.html to migrate to IndexedDB for unlimited storage.');
+    console.debug('Storage Adapter initialized. Use migrate-storage.html to migrate to IndexedDB for unlimited storage.');
 })();

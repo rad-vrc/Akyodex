@@ -1,5 +1,5 @@
 // Akyo図鑑 管理者用JavaScript
-console.log('admin.js loading started');
+console.debug('admin.js loading started');
 
 // 認証ワードはサーバー側（Cloudflare ENV）で検証。フロントには保存しない
 
@@ -11,7 +11,7 @@ let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded - Admin page');
+    console.debug('DOMContentLoaded - Admin page');
 
     // 旧バージョンで保存された認証ワードを確実に破棄
     sessionStorage.removeItem('akyoAdminToken');
@@ -132,7 +132,7 @@ window.handleLogin = handleLogin;
 
 // 管理画面表示
 function showAdminScreen() {
-    console.log('showAdminScreen called');
+    console.debug('showAdminScreen called');
 
     const loginScreen = document.getElementById('loginScreen');
     const adminScreen = document.getElementById('adminScreen');
@@ -161,7 +161,7 @@ function showAdminScreen() {
 
     // データ読み込み
     loadAkyoData().then(() => {
-        console.log('Data loaded in showAdminScreen');
+        console.debug('Data loaded in showAdminScreen');
         // 初期状態で編集タブを表示（全件一覧）
         if (document.querySelector('.tab-content')) {
             switchTab('edit');
@@ -181,7 +181,7 @@ function updateNextIdDisplay() {
     const nextId = String(maxId + 1).padStart(3, '0');
     nextIdInput.value = `#${nextId}`;
 
-    console.log(`次のID更新: ${nextId} (Akyo最大: ${akyoMaxId}, 画像最大: ${imageMaxId})`);
+    console.debug(`次のID更新: ${nextId} (Akyo最大: ${akyoMaxId}, 画像最大: ${imageMaxId})`);
 }
 
 // ログアウト
@@ -199,14 +199,14 @@ window.logout = logout;
 // データ読み込み
 async function loadAkyoData() {
     try {
-        console.log('Loading Akyo data...');
+        console.debug('Loading Akyo data...');
 
         // まずLocalStorageから更新されたデータを確認
         const updatedCSV = localStorage.getItem('akyoDataCSV');
         let csvText;
 
         if (updatedCSV) {
-            console.log('LocalStorageから更新データを読み込み');
+            console.debug('LocalStorageから更新データを読み込み');
             csvText = updatedCSV;
         } else {
             // LocalStorageにない場合はファイルから読み込み
@@ -253,7 +253,7 @@ async function loadAkyoData() {
             }
         }
 
-        console.log(`データ読み込み完了: Akyo ${akyoData.length}件, 画像 ${Object.keys(imageDataMap).length}件`);
+        console.debug(`データ読み込み完了: Akyo ${akyoData.length}件, 画像 ${Object.keys(imageDataMap).length}件`);
 
         // 各関数の実行前に要素の存在を確認
         if (document.getElementById('editList')) {
@@ -272,7 +272,7 @@ async function loadAkyoData() {
         if (updatedCSV) {
             try {
                 akyoData = parseCSV(updatedCSV);
-                console.log('LocalStorageからフォールバック読み込み');
+                console.debug('LocalStorageからフォールバック読み込み');
             } catch (e) {
                 akyoData = [];
             }
@@ -303,7 +303,7 @@ async function loadAkyoData() {
             }
         }
 
-        console.log('CSVなし、画像データのみで動作');
+        console.debug('CSVなし、画像データのみで動作');
 
         // 各関数の実行前に要素の存在を確認
         if (document.getElementById('editList')) {
@@ -401,7 +401,7 @@ function parseCSV(csvText) {
 
 // タブ切り替え
 function switchTab(tabName) {
-    console.log('Switching to tab:', tabName);
+    console.debug('Switching to tab:', tabName);
 
     // すべてのタブコンテンツを非表示
     document.querySelectorAll('.tab-content').forEach(tab => {
@@ -473,8 +473,8 @@ async function handleAddAkyo(event) {
     akyoData.push(newAkyo);
     akyoData.sort((a, b) => a.id.localeCompare(b.id));
 
-    console.log('New Akyo added:', newAkyo);
-    console.log('Total Akyo count:', akyoData.length);
+    console.debug('New Akyo added:', newAkyo);
+    console.debug('Total Akyo count:', akyoData.length);
 
     // CSV更新
     await updateCSVFile();
@@ -493,7 +493,7 @@ async function handleAddAkyo(event) {
                         await window.storageManager.saveImage(newAkyo.id, croppedImage);
                     }
                 } catch (e) {
-                    console.log('IndexedDB save failed, using localStorage');
+                    console.debug('IndexedDB save failed, using localStorage');
                 }
 
                 // LocalStorageにも保存（バックアップ）
@@ -511,7 +511,7 @@ async function handleAddAkyo(event) {
                         await window.storageManager.saveImage(newAkyo.id, imagePreview.src);
                     }
                 } catch (e) {
-                    console.log('IndexedDB save failed, using localStorage');
+                    console.debug('IndexedDB save failed, using localStorage');
                 }
 
                 localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
@@ -561,8 +561,8 @@ async function handleAddAkyo(event) {
     showNotification(`Akyo #${newAkyo.id} を登録しました`, 'success');
 
     // 認証状態を確認
-    console.log('Current role after save:', currentUserRole);
-    console.log('Session auth:', sessionStorage.getItem('akyoAdminAuth'));
+    console.debug('Current role after save:', currentUserRole);
+    console.debug('Session auth:', sessionStorage.getItem('akyoAdminAuth'));
 
     // 更新処理
     if (document.getElementById('editList')) {
@@ -747,13 +747,13 @@ function handleImageDrop(event) {
 function updateEditList() {
     const editList = document.getElementById('editList');
     if (!editList) {
-        console.log('editList element not found');
+        console.debug('editList element not found');
         return;
     }
 
     editList.innerHTML = '';
 
-    console.log('Updating edit list with', akyoData.length, 'items');
+    console.debug('Updating edit list with', akyoData.length, 'items');
 
     akyoData.forEach(akyo => {
         const row = document.createElement('tr');
@@ -998,8 +998,8 @@ async function updateCSVFile() {
 
     // ローカルストレージに保存（本番環境ではサーバーに送信）
     localStorage.setItem('akyoDataCSV', csvContent);
-    console.log('CSV saved to localStorage, size:', csvContent.length, 'bytes');
-    console.log('First 200 chars:', csvContent.substring(0, 200));
+    console.debug('CSV saved to localStorage, size:', csvContent.length, 'bytes');
+    console.debug('First 200 chars:', csvContent.substring(0, 200));
 
     // ファイルとして保存するためのBlobを作成
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1013,7 +1013,7 @@ async function updateCSVFile() {
     document.body.appendChild(link);
 
     // 更新があったことを通知
-    console.log('CSV data updated. Download link created.');
+    console.debug('CSV data updated. Download link created.');
 }
 
 // CSV一括アップロード処理
@@ -1252,7 +1252,7 @@ function handleBulkImages(files) {
 }
 
 async function saveImageMapping(inputId) {
-    console.log(`saveImageMapping called with inputId: ${inputId}`);
+    console.debug(`saveImageMapping called with inputId: ${inputId}`);
 
     const input = document.getElementById(inputId);
     if (!input) {
@@ -1264,7 +1264,7 @@ async function saveImageMapping(inputId) {
     const akyoId = input.value.trim();
     const imageData = input.dataset.image;
 
-    console.log(`Attempting to save - ID: ${akyoId}, Image data length: ${imageData ? imageData.length : 0}`);
+    console.debug(`Attempting to save - ID: ${akyoId}, Image data length: ${imageData ? imageData.length : 0}`);
 
     if (!akyoId || !akyoId.match(/^\d{3}$/)) {
         showNotification('正しいAkyoID（3桁の数字）を入力してください', 'error');
@@ -1287,7 +1287,7 @@ async function saveImageMapping(inputId) {
             localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
         }
 
-        console.log(`Image saved for ID ${akyoId}`);
+        console.debug(`Image saved for ID ${akyoId}`);
 
         // ボタンを更新
         const button = input.parentElement.querySelector('.save-btn');
@@ -1312,10 +1312,10 @@ async function saveImageMapping(inputId) {
 
 // 自動ID割り当て
 function autoAssignIds() {
-    console.log('=== 自動ID割り当て開始 ===');
+    console.debug('=== 自動ID割り当て開始 ===');
     const inputs = document.querySelectorAll('.mapping-id-input');
 
-    console.log(`対象入力フィールド数: ${inputs.length}`);
+    console.debug(`対象入力フィールド数: ${inputs.length}`);
 
     if (inputs.length === 0) {
         showNotification('割り当てる画像がありません', 'warning');
@@ -1343,11 +1343,11 @@ function autoAssignIds() {
         }
     })
 
-    console.log('現在使用済みの画像ID:', Array.from(usedIds).sort());
-    console.log('特に001-020の使用状況:');
+    console.debug('現在使用済みの画像ID:', Array.from(usedIds).sort());
+    console.debug('特に001-020の使用状況:');
     for (let i = 1; i <= 20; i++) {
         const id = String(i).padStart(3, '0');
-        console.log(`  ${id}: ${usedIds.has(id) ? '使用済み' : '未使用'}`);
+            console.debug(`  ${id}: ${usedIds.has(id) ? '使用済み' : '未使用'}`);
     }
 
     let assignedCount = 0;
@@ -1355,11 +1355,11 @@ function autoAssignIds() {
 
     // 各入力フィールドに対して処理
     inputs.forEach((input, index) => {
-        console.log(`処理中 [${index}]: 現在値="${input.value}"`);
+        console.debug(`処理中 [${index}]: 現在値="${input.value}"`);
 
         // すでに有効な値がある場合はスキップ
         if (input.value && input.value.match(/^\d{3}$/)) {
-            console.log(`  → スキップ（既存値あり）: ${input.value}`);
+            console.debug(`  → スキップ（既存値あり）: ${input.value}`);
             skippedCount++;
             return;
         }
@@ -1373,7 +1373,7 @@ function autoAssignIds() {
                 usedIds.add(candidateId);
                 assignedCount++;
                 assigned = true;
-                console.log(`  ✓ ID割り当て成功（優先範囲）: ${candidateId}`);
+                console.debug(`  ✓ ID割り当て成功（優先範囲）: ${candidateId}`);
             }
         }
 
@@ -1387,11 +1387,11 @@ function autoAssignIds() {
             input.value = newId;
             usedIds.add(newId);
             assignedCount++;
-            console.log(`  ✓ ID割り当て成功（通常範囲）: ${newId}`);
+            console.debug(`  ✓ ID割り当て成功（通常範囲）: ${newId}`);
         }
     });
 
-    console.log(`=== 割り当て完了: 新規=${assignedCount}, スキップ=${skippedCount} ===`);
+    console.debug(`=== 割り当て完了: 新規=${assignedCount}, スキップ=${skippedCount} ===`);
 
     if (assignedCount > 0) {
         showNotification(`${assignedCount}件のIDを自動割り当てしました`, 'success');
@@ -1404,10 +1404,10 @@ function autoAssignIds() {
 
 // すべて保存
 async function saveAllMappings() {
-    console.log('=== すべて保存開始 ===');
+    console.debug('=== すべて保存開始 ===');
     const inputs = document.querySelectorAll('.mapping-id-input');
 
-    console.log(`保存対象数: ${inputs.length}`);
+    console.debug(`保存対象数: ${inputs.length}`);
 
     if (inputs.length === 0) {
         showNotification('保存する画像がありません', 'warning');
@@ -1432,19 +1432,19 @@ async function saveAllMappings() {
         // すでに保存済みの場合はスキップ
         if (button && button.disabled) {
             skippedCount++;
-            console.log(`スキップ: ${akyoId} (保存済み)`);
+            console.debug(`スキップ: ${akyoId} (保存済み)`);
             continue;
         }
 
         if (!akyoId || !akyoId.match(/^\d{3}$/)) {
             errorCount++;
-            console.log(`エラー: 無効なID - "${akyoId}"`);
+            console.debug(`エラー: 無効なID - "${akyoId}"`);
             continue;
         }
 
         if (!imageData) {
             errorCount++;
-            console.log(`エラー: 画像データなし - ID ${akyoId}`);
+            console.debug(`エラー: 画像データなし - ID ${akyoId}`);
             continue;
         }
 
@@ -1457,7 +1457,7 @@ async function saveAllMappings() {
                 imageDataMap[akyoId] = imageData;
             }
             savedCount++;
-            console.log(`保存: ${akyoId}`);
+            console.debug(`保存: ${akyoId}`);
 
             // ボタンを更新
             if (button) {
@@ -1475,7 +1475,7 @@ async function saveAllMappings() {
     if (!window.saveSingleImage && savedCount > 0) {
         try {
             localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-            console.log(`LocalStorageに保存: ${savedCount}件`);
+            console.debug(`LocalStorageに保存: ${savedCount}件`);
         } catch (error) {
             if (error.name === 'QuotaExceededError') {
                 showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
@@ -1755,4 +1755,4 @@ function debounce(func, wait) {
     };
 }
 
-console.log('admin.js loaded successfully');
+console.debug('admin.js loaded successfully');

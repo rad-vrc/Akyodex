@@ -107,8 +107,8 @@ async function fetchSpreadsheetData() {
     // CSV形式でのエクスポートURL
     const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
 
-    console.log('Spreadsheet CSV URL:', csvUrl);
-    console.log('Note: CORS制限により直接取得はできません。CSVファイルとしてダウンロードして使用してください。');
+    console.debug('Spreadsheet CSV URL:', csvUrl);
+    console.debug('Note: CORS制限により直接取得はできません。CSVファイルとしてダウンロードして使用してください。');
 
     return csvUrl;
 }
@@ -135,7 +135,7 @@ function batchUpdateImageUrls() {
     });
 
     localStorage.setItem('akyoImages', JSON.stringify(existingImages));
-    console.log('画像URLを更新しました:', Object.keys(existingImages).length, '件');
+    console.debug('画像URLを更新しました:', Object.keys(existingImages).length, '件');
 
     return existingImages;
 }

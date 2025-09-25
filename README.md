@@ -712,3 +712,13 @@ npx wrangler pages deploy dist --project-name akyodex-site
 - 画像の追加・差し替えは管理画面から実行（再デプロイ不要）。
 - コストを抑えるため、順次 **WebP** 化と **サムネイル**導入を検討（`thumbs/NNN.webp` など）。
 - 需要が増えたら、`/api/akyo/:id` のメタデータCRUDや履歴（更新ログ）を追加していく。
+
+---
+
+### ミニAkyo背景のデバッグクエリ
+
+- `?reloadBg=1`: 背景を強制再初期化（SWキャッシュを跨いで最新版を読みたいときに有効）
+- `?bgdensity=NN`: 同時表示体数を上書き（推奨 10–28）例: `?bgdensity=24`
+- `?bg=front`: 一時的に前面へ出して視認性を上げる（確認用）
+
+本番では R2 画像 `https://images.akyodex.com/miniakyo.webp` → `https://images.akyodex.com/images/miniakyo.webp` → 相対 `images/miniakyo.webp` の順で自動解決します。画像を更新した場合は `?reloadBg=1` を付けて再読込してください。
