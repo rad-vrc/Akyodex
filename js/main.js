@@ -30,6 +30,12 @@ let profileIconCache = { resolved: false, url: null };
 const gridCardCache = new Map();
 const listRowCache = new Map();
 
+// パフォーマンス最適化: 初期レンダリング件数を制限し、スクロールで段階的に追加
+const INITIAL_RENDER_COUNT = 60;
+const RENDER_CHUNK = 60;
+let renderLimit = INITIAL_RENDER_COUNT;
+let tickingScroll = false;
+
 function escapeHTML(value) {
     if (value === null || value === undefined) return '';
     return String(value).replace(/[&<>"']/g, (char) => {
@@ -360,6 +366,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast('初期化に失敗しました。再読み込みしますか？', 'error', () => location.reload());
         }
     });
+
+    // スクロールで段階的に追加ロード
+    window.addEventListener('scroll', () => {
+        if (tickingScroll) return;
+        tickingScroll = true;
+        requestAnimationFrame(() => {
+            const nearBottom = (window.innerHeight + window.scrollY) > (document.body.offsetHeight - 800);
+            if (nearBottom && renderLimit < filteredData.length) {
+                renderLimit = Math.min(filteredData.length, renderLimit + RENDER_CHUNK);
+                updateDisplay();
+            }
+            tickingScroll = false;
+        });
+    }, { passive: true });
 });
 
 // CSVデータの読み込みと解析
@@ -706,6 +726,8 @@ function applyFilters() {
         .map(({ id }) => idToAkyo.get(id))
         .filter(Boolean);
 
+    // フィルタ変更時にレンダー上限をリセット
+    renderLimit = INITIAL_RENDER_COUNT;
     updateDisplay();
 }
 
@@ -760,6 +782,7 @@ function updateDisplay() {
 
     document.getElementById('noDataContainer').classList.add('hidden');
 
+    // レンダリング上限を適用
     if (currentView === 'grid') {
         renderGridView();
     } else {
@@ -772,7 +795,8 @@ function renderGridView() {
     const grid = document.getElementById('akyoGrid');
     const fragment = document.createDocumentFragment();
 
-    filteredData.forEach(akyo => {
+    const slice = filteredData.slice(0, renderLimit);
+    slice.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
         let card = gridCardCache.get(state.id);
         if (!card) {
@@ -903,6 +927,8 @@ function updateAkyoCard(card, state) {
             img.alt = state.displayName;
             img.className = 'w-full h-full object-cover';
             img.loading = 'lazy';
+            img.decoding = 'async';
+            img.fetchPriority = 'low';
             img.addEventListener('error', () => handleImageError(img, state.id, state.attributeColor, 'card'));
             imageContainer.appendChild(img);
             mediaContent.appendChild(imageContainer);
@@ -923,7 +949,8 @@ function renderListView() {
     const list = document.getElementById('akyoList');
     const fragment = document.createDocumentFragment();
 
-    filteredData.forEach(akyo => {
+    const slice = filteredData.slice(0, renderLimit);
+    slice.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
         let row = listRowCache.get(state.id);
         if (!row) {
@@ -1023,6 +1050,8 @@ function updateListRow(row, state) {
             img.alt = state.displayName;
             img.className = 'w-12 h-12 rounded-lg object-cover';
             img.loading = 'lazy';
+            img.decoding = 'async';
+            img.fetchPriority = 'low';
             img.addEventListener('error', () => handleImageError(img, state.id, state.attributeColor, 'list'));
             imageWrapper.appendChild(img);
         } else {
