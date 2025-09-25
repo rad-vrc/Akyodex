@@ -9,6 +9,10 @@ let akyoData = [];
 let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 
+// 命名整合用のエイリアス（徐々に adminAkyoRecords / adminImageDataMap へ移行）
+window.adminAkyoRecords = akyoData;
+window.adminImageDataMap = imageDataMap;
+
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
     console.debug('DOMContentLoaded - Admin page');
@@ -109,21 +113,35 @@ async function handleLogin(event) {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${password}` },
         });
-        const json = await res.json();
+        let json = null;
+        try { json = await res.json(); } catch(_) {}
         if (res.ok && json?.role) {
             currentUserRole = json.role;
             sessionStorage.setItem('akyoAdminAuth', currentUserRole);
             showAdminScreen();
             showNotification(`${currentUserRole === 'owner' ? 'マスター' : 'ファインダー'}権限でログインしました`, 'success');
             loadAkyoData();
-        } else {
-            throw new Error('unauthorized');
+            return;
         }
-    } catch (_) {
+        // ステータス別エラー
+        if (res.status === 401 || res.status === 403) {
+            throw new Error('unauthorized');
+        } else if (res.status >= 500) {
+            throw new Error('server');
+        } else {
+            throw new Error('request');
+        }
+    } catch (e) {
         adminSessionToken = null;
         errorDiv.classList.remove('hidden');
-        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません';
-        setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+        const kind = (e && e.message) || '';
+        let msg = '<i class="fas fa-exclamation-circle mr-1"></i> 予期せぬエラーが発生しました';
+        if (kind === 'unauthorized') msg = '<i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません';
+        else if (kind === 'server') msg = '<i class="fas fa-server mr-1"></i> サーバーエラーです。しばらく待って再試行してください';
+        else if (kind === 'request') msg = '<i class="fas fa-exclamation-triangle mr-1"></i> 認証に失敗しました';
+        else if (e && (e.name === 'TypeError' || e.message === 'Failed to fetch')) msg = '<i class="fas fa-wifi mr-1"></i> ネットワークに接続できません';
+        errorDiv.innerHTML = msg;
+        setTimeout(() => errorDiv.classList.add('hidden'), 4000);
     }
 }
 
@@ -215,6 +233,7 @@ async function loadAkyoData() {
         }
 
         akyoData = parseCSV(csvText);
+        window.adminAkyoRecords = akyoData;
 
         // フォールバック: LocalStorageのCSVが壊れていた場合はファイルから再読込
         if ((!akyoData || akyoData.length === 0) && updatedCSV) {
@@ -234,6 +253,7 @@ async function loadAkyoData() {
                 await window.storageManager.init();
                 const indexedImages = await window.storageManager.getAllImages();
                 imageDataMap = indexedImages || {};
+                window.adminImageDataMap = imageDataMap;
             }
         } catch (e) {
             console.warn('IndexedDBからの画像読み込みに失敗:', e);
@@ -244,12 +264,14 @@ async function loadAkyoData() {
             if (savedImages) {
                 try {
                     imageDataMap = JSON.parse(savedImages) || {};
+                    window.adminImageDataMap = imageDataMap;
                 } catch (e) {
                     console.error('画像データの読み込みエラー:', e);
                     imageDataMap = {};
                 }
             } else {
                 imageDataMap = {};
+                window.adminImageDataMap = imageDataMap;
             }
         }
 

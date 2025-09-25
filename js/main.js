@@ -1,7 +1,25 @@
+// 選択要素を汎用的に構築するヘルパー
+function populateSelect(selectElement, options, placeholderLabel){
+    if (!selectElement) return;
+    selectElement.innerHTML = '';
+    const def = document.createElement('option');
+    def.value = '';
+    def.textContent = placeholderLabel || '選択してください';
+    selectElement.appendChild(def);
+    (options || []).forEach(({value, label}) => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        selectElement.appendChild(opt);
+    });
+}
+
 // Akyoずかん メインJavaScriptファイル
 
 // グローバル変数
+// 閲覧用データ（命名: publicAkyoList）
 let akyoData = [];
+window.publicAkyoList = akyoData;
 let filteredData = [];
 let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
@@ -283,13 +301,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // タブ復帰時にも最新反映
+    // タブ復帰時にも最新反映（エラーはトースト通知＋再試行）
     window.addEventListener('focus', () => {
-        loadAkyoData().then(applyFilters).catch(() => {});
+        loadAkyoData()
+            .then(applyFilters)
+            .catch(() => {
+                showToast('最新データの取得に失敗しました。再試行してください。', 'warning', () => {
+                    loadAkyoData().then(applyFilters).catch(() => {});
+                });
+            });
     });
 
-    // 非同期でデータ読み込み（並列処理で高速化）
-    Promise.all([
+    // 非同期でデータ読み込み（部分成功を許容）
+    Promise.allSettled([
         // 旧データクリア（非ブロッキング）
         (async () => {
             try {
@@ -312,9 +336,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // CSVデータ読み込み
         loadAkyoData()
-    ]).then(() => {
-        // すべての読み込み完了後に表示更新
-        applyFilters();
+    ]).then((results) => {
+        const hasSuccess = results.some(r => r.status === 'fulfilled');
+        const failures = results.filter(r => r.status === 'rejected').length;
+        if (failures > 0) {
+            showToast('一部の読み込みに失敗しました。ページを更新するか再試行してください。', 'warning', () => location.reload());
+        }
+        if (hasSuccess) {
+            applyFilters();
+        } else {
+            showError('初期化に失敗しました。ネットワークをご確認ください。');
+            showToast('初期化に失敗しました。再読み込みしますか？', 'error', () => location.reload());
+        }
     });
 });
 
@@ -344,7 +377,8 @@ async function loadAkyoData() {
         console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
 
         // CSV解析
-        akyoData = parseCSV(csvText);
+    akyoData = parseCSV(csvText);
+    window.publicAkyoList = akyoData;
         gridCardCache.clear();
         listRowCache.clear();
 
@@ -490,18 +524,10 @@ function createAttributeFilter() {
     const attributeSet = new Set();
     akyoData.forEach(akyo => {
         extractAttributes(akyo.attribute).forEach(attr => attributeSet.add(attr));
-        // 正規化も追加：全角/半角空白の除去
     });
 
     const select = document.getElementById('attributeFilter');
-    select.innerHTML = '<option value="">すべての属性</option>';
-
-    Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).forEach(attr => {
-        const option = document.createElement('option');
-        option.value = attr;
-        option.textContent = displayAttributeName(attr);
-        select.appendChild(option);
-    });
+    populateSelect(select, Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).map(v => ({ value: v, label: displayAttributeName(v) })), 'すべての属性');
 }
 
 function createCreatorFilter() {
@@ -513,16 +539,8 @@ function createCreatorFilter() {
     const select = document.getElementById('creatorFilter');
     if (!select) return;
 
-    select.innerHTML = '<option value="">すべての作者</option>';
-
-    Array.from(creatorSet)
-        .sort((a, b) => a.localeCompare(b, 'ja'))
-        .forEach(name => {
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            select.appendChild(option);
-        });
+    const options = Array.from(creatorSet).sort((a,b)=>a.localeCompare(b,'ja')).map(v => ({ value: v, label: v }));
+    populateSelect(select, options, 'すべての作者');
 }
 
 // イベントリスナーの設定
@@ -1351,16 +1369,31 @@ function debounce(func, wait) {
     };
 }
 
-// エラー表示
+// エラー表示（未使用のため簡潔化し、必要時の再利用に備えて保持）
 function showError(message) {
-    const container = document.getElementById('loadingContainer');
-    container.innerHTML = `
-        <div class="text-center">
-            <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4"></i>
-            <p class="text-red-600 text-lg font-medium">${message}</p>
-            <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                再読み込み
-            </button>
-        </div>
-    `;
+    const el = document.getElementById('loadingContainer');
+    if (!el) return;
+    el.textContent = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'text-center text-red-600';
+    wrap.innerHTML = `<p class="text-lg font-medium">${message}</p>`;
+    el.appendChild(wrap);
+}
+
+// 共通トースト通知（任意でリトライボタンを付与）
+function showToast(message, type = 'info', retryHandler) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3';
+    toast.style.backgroundColor = (type === 'error') ? '#ef4444' : (type === 'warning') ? '#f59e0b' : '#3b82f6';
+    toast.style.color = '#fff';
+    toast.innerHTML = `<i class="fas ${type==='error'?'fa-exclamation-circle': type==='warning'?'fa-exclamation-triangle':'fa-info-circle'}"></i><span>${message}</span>`;
+    if (typeof retryHandler === 'function') {
+        const btn = document.createElement('button');
+        btn.className = 'ml-2 px-3 py-1 bg-white text-gray-800 rounded';
+        btn.textContent = '再試行';
+        btn.onclick = () => { try { retryHandler(); } finally { document.body.removeChild(toast); } };
+        toast.appendChild(btn);
+    }
+    document.body.appendChild(toast);
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
 }

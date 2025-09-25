@@ -610,57 +610,6 @@
         };
     </script>
 
-    <script>
-        // ログイン機能の直接実装（デバッグ用）
-        console.log('Admin page loaded');
-
-        // ページロード時に旧バージョンの認証ワードを確実に破棄
-        window.addEventListener('load', () => {
-            sessionStorage.removeItem('akyoAdminToken');
-            console.log('Admin fallback loaded');
-        });
-
-        // handleLogin のフォールバックは無効化（admin.js 実装を使用）
-
-        // logout関数が存在しない場合のフォールバック
-        if (typeof logout === 'undefined') {
-            window.logout = function() {
-                sessionStorage.removeItem('akyoAdminAuth');
-                location.reload();
-            }
-        }
-
-        // switchTab関数が存在しない場合のフォールバック
-        if (typeof switchTab === 'undefined') {
-            window.switchTab = function(tabName) {
-                console.log('Switching to tab:', tabName);
-
-                // すべてのタブコンテンツを非表示
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.classList.add('hidden');
-                });
-
-                // すべてのタブボタンのスタイルをリセット
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.classList.remove('border-red-500');
-                    btn.classList.add('border-transparent');
-                });
-
-                // 選択されたタブを表示
-                const targetTab = document.getElementById(`${tabName}Tab`);
-                if (targetTab) {
-                    targetTab.classList.remove('hidden');
-                } else {
-                    console.error('Tab not found:', `${tabName}Tab`);
-                }
-
-                const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
-                if (targetBtn) {
-                    targetBtn.classList.remove('border-transparent');
-                    targetBtn.classList.add('border-red-500');
-                }
-            }
-        }
-    </script>
+    <!-- フォールバックスクリプトは重複と競合回避のため削除（admin.js 実装を使用） -->
 </body>
 </html>
