@@ -348,7 +348,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (failures > 0) {
             showToast('一部の読み込みに失敗しました。ページを更新するか再試行してください。', 'warning', () => location.reload());
         }
-        if (hasSuccess) {
+        // CSV失敗時はapplyFiltersを走らせない
+        const csvOk = results[2] && results[2].status === 'fulfilled';
+        if (hasSuccess && csvOk) {
             applyFilters();
             // deeplink対応: ?id=NNN で詳細を開く＋canonical更新
             try {
@@ -453,6 +455,8 @@ async function loadAkyoData() {
                 </div>
             `;
         }
+        // 呼び出し元へ伝播して全体フローを止める
+        throw error;
     }
 }
 
