@@ -17,10 +17,13 @@
 
   async function resolveMiniAkyoUrl(){
     const ver = getVersionSuffix();
+    const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
     for (const path of CANDIDATES){
       try{
         const r = await fetch(path + ver, { cache: 'no-cache' });
-        if (r.ok) return path + ver;
+        if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
+          return path + ver;
+        }
       }catch(_){ /* continue */ }
     }
     return null;
