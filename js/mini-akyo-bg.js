@@ -6,8 +6,12 @@
 
   function getVersionSuffix(){
     try{
-      const v = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1';
-      return `?v=${encodeURIComponent(v)}`;
+      const href = (typeof window !== 'undefined' ? window.location.href : '');
+      const params = new URL(href).searchParams;
+      const force = params.get('reloadBg') === '1' || params.has('nocache');
+      const base = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1';
+      const bump = force ? `.${Date.now().toString(36)}` : '';
+      return `?v=${encodeURIComponent(base + bump)}`;
     }catch(_){ return ''; }
   }
 
