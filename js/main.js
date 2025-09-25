@@ -104,6 +104,12 @@ function extractAttributes(attributeString) {
         .filter(Boolean);
 }
 
+// 表示用の属性名変換
+function displayAttributeName(attr) {
+    if (!attr) return '';
+    return attr === '未分類' ? '未分類(まだ追加されてないよ！もう少し待っててね！)' : attr;
+}
+
 function resolveAkyoImageUrl(akyoId) {
     const storedImage = sanitizeImageSource(imageDataMap[akyoId]);
     if (storedImage) {
@@ -356,19 +362,19 @@ function parseCSV(csvText) {
     const rows = [];
     let currentField = '';
     let currentRow = [];
-    let inQuotes = false;
+        let inQuotes = false;
 
     for (let i = 0; i < csvText.length; i++) {
         const char = csvText[i];
 
-        if (char === '"') {
+                if (char === '"') {
             if (inQuotes && csvText[i + 1] === '"') {
                 currentField += '"';
                 i++;
             } else {
-                inQuotes = !inQuotes;
+                    inQuotes = !inQuotes;
             }
-        } else if (char === ',' && !inQuotes) {
+                } else if (char === ',' && !inQuotes) {
             currentRow.push(currentField);
             currentField = '';
         } else if ((char === '\n' || char === '\r') && !inQuotes) {
@@ -379,7 +385,7 @@ function parseCSV(csvText) {
             rows.push(currentRow);
             currentRow = [];
             currentField = '';
-        } else {
+                } else {
             currentField += char;
         }
     }
@@ -459,7 +465,7 @@ function createAttributeFilter() {
     Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).forEach(attr => {
         const option = document.createElement('option');
         option.value = attr;
-        option.textContent = attr;
+        option.textContent = displayAttributeName(attr);
         select.appendChild(option);
     });
 }
@@ -482,10 +488,10 @@ function setupEventListeners() {
     if (quickFiltersContainer) {
         const quickFilters = quickFiltersContainer.children;
         if (quickFilters.length > 0) {
-            quickFilters[0].addEventListener('click', showRandom); // ランダム
+    quickFilters[0].addEventListener('click', showRandom); // ランダム
         }
         if (quickFilters.length > 1) {
-            quickFilters[1].addEventListener('click', showFavorites); // お気に入り
+    quickFilters[1].addEventListener('click', showFavorites); // お気に入り
         }
     }
 
@@ -707,12 +713,12 @@ function createAkyoCard(state) {
     const detailButton = document.createElement('button');
     detailButton.className = 'detail-button w-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white py-3 rounded-2xl hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-bold text-lg shadow-lg hover:shadow-xl relative overflow-hidden';
     detailButton.innerHTML = `
-        <span class="relative z-10 flex items-center justify-center">
-            <span class="text-2xl mr-2 animate-bounce">🌟</span>
-            <span>くわしく見る</span>
-            <span class="text-2xl ml-2 animate-bounce" style="animation-delay: 0.2s">🌟</span>
-        </span>
-        <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
+                <span class="relative z-10 flex items-center justify-center">
+                    <span class="text-2xl mr-2 animate-bounce">🌟</span>
+                    <span>くわしく見る</span>
+                    <span class="text-2xl ml-2 animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
     `;
     detailButton.addEventListener('click', () => showDetail(state.id));
     content.appendChild(detailButton);
@@ -751,7 +757,7 @@ function updateAkyoCard(card, state) {
             const color = getAttributeColor(attr);
             badge.style.background = `${color}20`;
             badge.style.color = color;
-            badge.textContent = attr;
+            badge.textContent = displayAttributeName(attr);
             badgeContainer.appendChild(badge);
         });
     }
@@ -813,8 +819,8 @@ function renderListView() {
 }
 
 function createListRow(state) {
-    const row = document.createElement('tr');
-    row.className = 'border-b hover:bg-gray-50 transition-colors';
+        const row = document.createElement('tr');
+        row.className = 'border-b hover:bg-gray-50 transition-colors';
     row.dataset.akyoId = state.id;
 
     const idCell = document.createElement('td');
@@ -930,7 +936,7 @@ function updateListRow(row, state) {
             const color = getAttributeColor(attr);
             badge.style.background = `${color}20`;
             badge.style.color = color;
-            badge.textContent = attr;
+            badge.textContent = displayAttributeName(attr);
             attributeContainer.appendChild(badge);
         });
     }
@@ -971,7 +977,7 @@ async function showDetail(akyoId) {
         icon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
         icon.alt = 'Profile Icon';
         modalTitle.appendChild(icon);
-    } else {
+            } else {
         const fallbackIcon = document.createElement('img');
         fallbackIcon.src = 'images/profileIcon.webp';
         fallbackIcon.className = 'w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400';
@@ -1036,9 +1042,9 @@ async function showDetail(akyoId) {
     const nameCard = document.createElement('div');
     nameCard.className = 'bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4';
     nameCard.innerHTML = `
-        <h3 class="text-sm font-bold text-purple-600 mb-2">
-            <i class="fas fa-tag mr-1"></i>なまえ
-        </h3>
+                    <h3 class="text-sm font-bold text-purple-600 mb-2">
+                        <i class="fas fa-tag mr-1"></i>なまえ
+                    </h3>
     `;
     const nameValue = document.createElement('p');
     nameValue.className = 'text-xl font-black';
@@ -1049,9 +1055,9 @@ async function showDetail(akyoId) {
     const avatarCard = document.createElement('div');
     avatarCard.className = 'bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4';
     avatarCard.innerHTML = `
-        <h3 class="text-sm font-bold text-blue-600 mb-2">
-            <i class="fas fa-user-astronaut mr-1"></i>アバター
-        </h3>
+                    <h3 class="text-sm font-bold text-blue-600 mb-2">
+                        <i class="fas fa-user-astronaut mr-1"></i>アバター
+                    </h3>
     `;
     const avatarValue = document.createElement('p');
     avatarValue.className = 'text-xl font-black';
@@ -1062,9 +1068,9 @@ async function showDetail(akyoId) {
     const attributeCard = document.createElement('div');
     attributeCard.className = 'bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4';
     attributeCard.innerHTML = `
-        <h3 class="text-sm font-bold text-orange-600 mb-2">
-            <i class="fas fa-sparkles mr-1"></i>ぞくせい
-        </h3>
+                    <h3 class="text-sm font-bold text-orange-600 mb-2">
+                        <i class="fas fa-sparkles mr-1"></i>ぞくせい
+                    </h3>
     `;
     const attributeContainer = document.createElement('div');
     attributeContainer.className = 'flex flex-wrap gap-2 mt-1';
@@ -1073,7 +1079,7 @@ async function showDetail(akyoId) {
         badge.className = 'px-3 py-1 rounded-full text-sm font-bold text-white shadow-md';
         const color = getAttributeColor(attr);
         badge.style.background = `linear-gradient(135deg, ${color}, ${color}dd)`;
-        badge.textContent = attr;
+        badge.textContent = displayAttributeName(attr);
         attributeContainer.appendChild(badge);
     });
     attributeCard.appendChild(attributeContainer);
@@ -1082,9 +1088,9 @@ async function showDetail(akyoId) {
     const creatorCard = document.createElement('div');
     creatorCard.className = 'bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4';
     creatorCard.innerHTML = `
-        <h3 class="text-sm font-bold text-green-600 mb-2">
-            <i class="fas fa-palette mr-1"></i>つくったひと
-        </h3>
+                    <h3 class="text-sm font-bold text-green-600 mb-2">
+                        <i class="fas fa-palette mr-1"></i>つくったひと
+                    </h3>
     `;
     const creatorValue = document.createElement('p');
     creatorValue.className = 'text-xl font-black';
@@ -1120,9 +1126,9 @@ async function showDetail(akyoId) {
         const notesSection = document.createElement('div');
         notesSection.className = 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5';
         notesSection.innerHTML = `
-            <h3 class="text-lg font-bold text-purple-600 mb-3">
-                <i class="fas fa-gift mr-2"></i>おまけ情報
-            </h3>
+                <h3 class="text-lg font-bold text-purple-600 mb-3">
+                    <i class="fas fa-gift mr-2"></i>おまけ情報
+                </h3>
         `;
         const notesWrapper = document.createElement('div');
         notesWrapper.className = 'bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner';

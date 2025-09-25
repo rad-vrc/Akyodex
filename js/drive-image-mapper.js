@@ -6,7 +6,7 @@ function convertDriveUrl(fileName) {
     // Google Driveの直接アクセスURLパターン
     // 共有フォルダID: 1m_NYhQaGHPO1palTotxu611svE6Yvx9p
     const folderId = '1m_NYhQaGHPO1palTotxu611svE6Yvx9p';
-    
+
     // ファイル名からIDを抽出
     const match = fileName.match(/^(\d{3})/);
     if (match) {
@@ -23,27 +23,27 @@ function convertDriveUrl(fileName) {
 // ファイル名リスト（Google Driveフォルダ内の画像）
 // 実際のファイル名に基づいて更新が必要
 const driveImageList = [
-    "001オリジンAkyo.png",
-    "002チョコミントAkyo.png",
-    "003赤チョコミントAkyo.png",
-    "004緑チョコミントAkyo.png",
-    "005青チョコミントAkyo.png",
-    "006黄チョコミントAkyo.png",
-    "007黒チョコミントAkyo.png",
-    "008白チョコミントAkyo.png",
-    "009灰チョコミントAkyo.png",
-    "010ミニチョコミントAkyo.png",
-    "011スーパー汎用Akyo.png",
-    "012スーパースタッフAkyo.png",
-    "013スーパーワープAkyo.png",
-    "014スーパーフライング運送Akyo.png",
-    "015ランAkyo.png",
-    "016バルブAkyo.png",
-    "017N_A.png",
-    "018ヒューマノイドAkyo.png",
-    "019キツネツキ式狐Akyo.png",
-    "020キツネツキ式幽霊狐Akyo.png",
-    "021キツネツキ式溶け狐Akyo.png",
+    "001オリジンAkyo.webp",
+    "002チョコミントAkyo.webp",
+    "003赤チョコミントAkyo.webp",
+    "004緑チョコミントAkyo.webp",
+    "005青チョコミントAkyo.webp",
+    "006黄チョコミントAkyo.webp",
+    "007黒チョコミントAkyo.webp",
+    "008白チョコミントAkyo.webp",
+    "009灰チョコミントAkyo.webp",
+    "010ミニチョコミントAkyo.webp",
+    "011スーパー汎用Akyo.webp",
+    "012スーパースタッフAkyo.webp",
+    "013スーパーワープAkyo.webp",
+    "014スーパーフライング運送Akyo.webp",
+    "015ランAkyo.webp",
+    "016バルブAkyo.webp",
+    "017N_A.webp",
+    "018ヒューマノイドAkyo.webp",
+    "019キツネツキ式狐Akyo.webp",
+    "020キツネツキ式幽霊狐Akyo.webp",
+    "021キツネツキ式溶け狐Akyo.webp",
     // 続きのファイル名を追加
 ];
 
@@ -62,7 +62,7 @@ const spreadsheetColumns = {
 // 画像マッピングを生成
 function generateImageMapping() {
     const mapping = {};
-    
+
     driveImageList.forEach(fileName => {
         const data = convertDriveUrl(fileName);
         if (data) {
@@ -74,7 +74,7 @@ function generateImageMapping() {
             };
         }
     });
-    
+
     return mapping;
 }
 
@@ -84,7 +84,7 @@ function preloadImages(ids) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             const mapping = generateImageMapping();
-            
+
             if (mapping[id]) {
                 img.onload = () => resolve({id, status: 'loaded'});
                 img.onerror = () => resolve({id, status: 'error'});
@@ -94,7 +94,7 @@ function preloadImages(ids) {
             }
         });
     });
-    
+
     return Promise.all(promises);
 }
 
@@ -103,13 +103,13 @@ function preloadImages(ids) {
 async function fetchSpreadsheetData() {
     const spreadsheetId = '15CrxihXlmHLDcEtg-BamJHQrmtmJFpiHvThAmhe6rPQ';
     const sheetName = 'PublicAkyo';
-    
+
     // CSV形式でのエクスポートURL
     const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
-    
+
     console.log('Spreadsheet CSV URL:', csvUrl);
     console.log('Note: CORS制限により直接取得はできません。CSVファイルとしてダウンロードして使用してください。');
-    
+
     return csvUrl;
 }
 
@@ -117,7 +117,7 @@ async function fetchSpreadsheetData() {
 function batchUpdateImageUrls() {
     const mapping = generateImageMapping();
     const updateScript = [];
-    
+
     Object.entries(mapping).forEach(([id, data]) => {
         updateScript.push({
             id: id,
@@ -125,7 +125,7 @@ function batchUpdateImageUrls() {
             source: 'google_drive'
         });
     });
-    
+
     // LocalStorageに保存
     const existingImages = JSON.parse(localStorage.getItem('akyoImages') || '{}');
     updateScript.forEach(item => {
@@ -133,19 +133,19 @@ function batchUpdateImageUrls() {
             existingImages[item.id] = item.imageUrl;
         }
     });
-    
+
     localStorage.setItem('akyoImages', JSON.stringify(existingImages));
     console.log('画像URLを更新しました:', Object.keys(existingImages).length, '件');
-    
+
     return existingImages;
 }
 
 // エクスポート
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { 
-        convertDriveUrl, 
-        generateImageMapping, 
-        preloadImages, 
+    module.exports = {
+        convertDriveUrl,
+        generateImageMapping,
+        preloadImages,
         fetchSpreadsheetData,
         batchUpdateImageUrls
     };
