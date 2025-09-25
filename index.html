@@ -174,8 +174,10 @@
             height: 100%;
             overflow: hidden;
             pointer-events: none;
-            z-index: -1; /* 一番後ろの背景より一つ上（コンテンツの下） */
+            z-index: 0; /* コンテンツ(main, header)の下、背景の上 */
         }
+        /* コンテンツを前面へ（全ブラウザでの前後関係を安定化） */
+        main { position: relative; z-index: 1; }
         .mini-akyo {
             position: absolute;
             left: var(--left, 50vw);
