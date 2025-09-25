@@ -264,6 +264,11 @@
         @media (prefers-reduced-motion: reduce) {
             .mini-akyo { animation: none; opacity: 0.08; }
         }
+
+        /* リスト表示の画像比率固定（スマホでの縦長化対策） */
+        #listView td.akyo-list-image { width: 56px; min-width: 56px; }
+        .akyo-list-image-wrapper { width: 48px; height: 48px; min-width: 48px; min-height: 48px; overflow: hidden; border-radius: 0.5rem; }
+        .akyo-list-image-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
     </style>
 </head>
 <body>
