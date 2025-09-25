@@ -1,15 +1,6 @@
 name: Generate Images Manifest
 
 on:
-  push:
-    paths:
-      - 'images/**/*.png'
-      - 'images/**/*.jpg'
-      - 'images/**/*.jpeg'
-      - 'images/**/*.webp'
-      - 'images/**/*.gif'
-      - 'images/**/*.svg'
-      - '.github/workflows/generate-manifest.yml'
   workflow_dispatch:
 
 permissions:
