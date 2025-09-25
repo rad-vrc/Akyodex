@@ -777,9 +777,9 @@ function updateQuickFilterStyles() {
     favoriteBtn.className = favoritesOnlyMode
         ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
         : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-    // ランダムボタンの見た目（有効時は文字色を少し濃く）
+    // ランダムボタンの見た目（有効時は黄色で強調）
     randomBtn.className = randomMode
-        ? 'attribute-badge quick-filter-badge bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors'
+        ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
         : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
 }
 
@@ -821,14 +821,27 @@ function switchView(view) {
 function updateDisplay() {
     updateStatistics();
 
-    if (filteredData.length === 0) {
-        document.getElementById('noDataContainer').classList.remove('hidden');
-        document.getElementById('gridView').classList.add('hidden');
-        document.getElementById('listView').classList.add('hidden');
-        return;
-    }
+    const noData = filteredData.length === 0;
+    const noDataEl = document.getElementById('noDataContainer');
+    const gridEl = document.getElementById('gridView');
+    const listEl = document.getElementById('listView');
 
-    document.getElementById('noDataContainer').classList.add('hidden');
+    if (noData) {
+        noDataEl.classList.remove('hidden');
+        gridEl.classList.add('hidden');
+        listEl.classList.add('hidden');
+        return;
+    } else {
+        // 一度非表示にした要素を復帰させる
+        noDataEl.classList.add('hidden');
+        if (currentView === 'grid') {
+            gridEl.classList.remove('hidden');
+            listEl.classList.add('hidden');
+        } else {
+            gridEl.classList.add('hidden');
+            listEl.classList.remove('hidden');
+        }
+    }
 
     // レンダリング上限を適用
     if (currentView === 'grid') {
