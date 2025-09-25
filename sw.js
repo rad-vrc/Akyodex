@@ -101,6 +101,25 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // 1.5) 画像マニフェストは常に最新を優先（SWキャッシュに阻害されないよう特別扱い）
+  if (url.pathname === '/images/manifest.json') {
+    event.respondWith((async () => {
+      const cache = await caches.open(PRECACHE);
+      try {
+        const fresh = await fetch(req);
+        if (fresh && fresh.ok) await cache.put(req, fresh.clone());
+        return fresh;
+      } catch (_) {
+        const cached = await cache.match(req);
+        return cached || new Response(JSON.stringify({ map: {}, version: Date.now() }), {
+          headers: { 'content-type': 'application/json' },
+          status: 200,
+        });
+      }
+    })());
+    return;
+  }
+
   // 2) APIはネットワーク優先（キャッシュしない）
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
