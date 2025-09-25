@@ -8,6 +8,8 @@ let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let currentView = 'grid';
 let imageDataMap = {}; // 画像データの格納
 let profileIconCache = { resolved: false, url: null };
+const gridCardCache = new Map();
+const listRowCache = new Map();
 
 function escapeHTML(value) {
     if (value === null || value === undefined) return '';
@@ -59,6 +61,40 @@ function sanitizeImageSource(url) {
     }
 
     return '';
+}
+
+function computeAkyoRenderState(akyo) {
+    const nickname = akyo.nickname || '';
+    const avatarName = akyo.avatarName || '';
+    const displayName = nickname || avatarName || '';
+    const attributeRaw = akyo.attribute || '';
+    const attributes = extractAttributes(attributeRaw);
+    const attributeColor = getAttributeColor(attributeRaw);
+    const creator = akyo.creator || '';
+    const imageUrl = resolveAkyoImageUrl(akyo.id);
+    const signature = [
+        akyo.id,
+        displayName,
+        avatarName,
+        attributeRaw,
+        creator,
+        akyo.isFavorite ? '1' : '0',
+        imageUrl || ''
+    ].join('|');
+
+    return {
+        id: akyo.id,
+        nickname,
+        avatarName,
+        displayName,
+        attributes,
+        attributeRaw,
+        attributeColor,
+        creator,
+        isFavorite: !!akyo.isFavorite,
+        imageUrl,
+        signature
+    };
 }
 
 function extractAttributes(attributeString) {
@@ -270,6 +306,8 @@ async function loadAkyoData() {
 
         // CSV解析
         akyoData = parseCSV(csvText);
+        gridCardCache.clear();
+        listRowCache.clear();
 
         if (!akyoData || akyoData.length === 0) {
             throw new Error('CSVデータが空です');
@@ -606,61 +644,39 @@ function updateDisplay() {
 // グリッドビューのレンダリング
 function renderGridView() {
     const grid = document.getElementById('akyoGrid');
-    grid.innerHTML = '';
-
-    // DocumentFragmentを使用してDOM操作を最適化
     const fragment = document.createDocumentFragment();
 
     filteredData.forEach(akyo => {
-        const card = createAkyoCard(akyo);
+        const state = computeAkyoRenderState(akyo);
+        let card = gridCardCache.get(state.id);
+        if (!card) {
+            card = createAkyoCard(state);
+            gridCardCache.set(state.id, card);
+        } else {
+            updateAkyoCard(card, state);
+        }
         fragment.appendChild(card);
     });
 
-    grid.appendChild(fragment);
+    grid.replaceChildren(fragment);
 }
 
-// AKyoカードの作成
-function createAkyoCard(akyo) {
+function createAkyoCard(state) {
     const card = document.createElement('div');
     card.className = 'akyo-card bg-white rounded-xl shadow-lg overflow-hidden';
-
-    // 属性に基づく色の決定
-    const attributeColor = getAttributeColor(akyo.attribute);
-
-    // 画像URLを取得
-    const imageUrl = resolveAkyoImageUrl(akyo.id);
-    const hasImage = !!imageUrl;
+    card.dataset.akyoId = state.id;
 
     const mediaWrapper = document.createElement('div');
-    mediaWrapper.className = 'relative';
-
-    if (hasImage) {
-        const imageContainer = document.createElement('div');
-        imageContainer.className = 'h-48 overflow-hidden bg-gray-100';
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = akyo.nickname || akyo.avatarName || '';
-        img.className = 'w-full h-full object-cover';
-        img.loading = 'lazy';
-        img.addEventListener('error', () => handleImageError(img, akyo.id, attributeColor, 'card'));
-        imageContainer.appendChild(img);
-        mediaWrapper.appendChild(imageContainer);
-    } else {
-        const placeholder = document.createElement('div');
-        placeholder.className = 'akyo-image-placeholder h-48';
-        placeholder.style.background = attributeColor;
-        const placeholderText = document.createElement('span');
-        placeholderText.className = 'text-4xl';
-        placeholderText.textContent = akyo.id;
-        placeholder.appendChild(placeholderText);
-        mediaWrapper.appendChild(placeholder);
-    }
+    mediaWrapper.className = 'relative akyo-media';
+    const mediaContent = document.createElement('div');
+    mediaContent.className = 'akyo-media-content';
+    mediaWrapper.appendChild(mediaContent);
 
     const favoriteButton = document.createElement('button');
     favoriteButton.className = 'absolute top-2 right-2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform';
-    favoriteButton.addEventListener('click', () => toggleFavorite(akyo.id));
+    favoriteButton.addEventListener('click', () => toggleFavorite(state.id));
     const favoriteIcon = document.createElement('i');
-    favoriteIcon.className = `fas fa-heart ${akyo.isFavorite ? 'text-red-500' : 'text-gray-300'}`;
+    favoriteIcon.dataset.favoriteIcon = 'grid';
     favoriteButton.appendChild(favoriteIcon);
     mediaWrapper.appendChild(favoriteButton);
 
@@ -672,32 +688,20 @@ function createAkyoCard(akyo) {
     const idWrapper = document.createElement('div');
     idWrapper.className = 'flex items-center justify-between mb-2';
     const idLabel = document.createElement('span');
-    idLabel.className = 'text-sm font-bold text-gray-500';
-    idLabel.textContent = `#${akyo.id}`;
+    idLabel.className = 'text-sm font-bold text-gray-500 akyo-id-label';
     idWrapper.appendChild(idLabel);
     content.appendChild(idWrapper);
 
     const title = document.createElement('h3');
-    title.className = 'font-bold text-lg mb-1 text-gray-800';
-    title.textContent = akyo.nickname || akyo.avatarName || '';
+    title.className = 'font-bold text-lg mb-1 text-gray-800 akyo-title';
     content.appendChild(title);
 
     const badgeContainer = document.createElement('div');
-    badgeContainer.className = 'flex flex-wrap gap-1 mb-2';
-    extractAttributes(akyo.attribute).forEach(attr => {
-        const badge = document.createElement('span');
-        badge.className = 'attribute-badge text-xs';
-        const color = getAttributeColor(attr);
-        badge.style.background = `${color}20`;
-        badge.style.color = color;
-        badge.textContent = attr;
-        badgeContainer.appendChild(badge);
-    });
+    badgeContainer.className = 'flex flex-wrap gap-1 mb-2 akyo-attribute-container';
     content.appendChild(badgeContainer);
 
     const creator = document.createElement('p');
-    creator.className = 'text-xs text-gray-600 mb-2';
-    creator.textContent = `作者: ${akyo.creator}`;
+    creator.className = 'text-xs text-gray-600 mb-2 akyo-creator';
     content.appendChild(creator);
 
     const detailButton = document.createElement('button');
@@ -710,71 +714,217 @@ function createAkyoCard(akyo) {
         </span>
         <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
     `;
-    detailButton.addEventListener('click', () => showDetail(akyo.id));
+    detailButton.addEventListener('click', () => showDetail(state.id));
     content.appendChild(detailButton);
 
     card.appendChild(content);
 
+    updateAkyoCard(card, state);
+
     return card;
 }
 
-// リストビューのレンダリング
+function updateAkyoCard(card, state) {
+    if (card.dataset.akyoSignature === state.signature) {
+        return;
+    }
+
+    card.dataset.akyoSignature = state.signature;
+    card.dataset.akyoId = state.id;
+
+    const idLabel = card.querySelector('.akyo-id-label');
+    if (idLabel) {
+        idLabel.textContent = `#${state.id}`;
+    }
+
+    const title = card.querySelector('.akyo-title');
+    if (title) {
+        title.textContent = state.displayName;
+    }
+
+    const badgeContainer = card.querySelector('.akyo-attribute-container');
+    if (badgeContainer) {
+        badgeContainer.textContent = '';
+        state.attributes.forEach(attr => {
+            const badge = document.createElement('span');
+            badge.className = 'attribute-badge text-xs';
+            const color = getAttributeColor(attr);
+            badge.style.background = `${color}20`;
+            badge.style.color = color;
+            badge.textContent = attr;
+            badgeContainer.appendChild(badge);
+        });
+    }
+
+    const creator = card.querySelector('.akyo-creator');
+    if (creator) {
+        creator.textContent = `作者: ${state.creator}`;
+    }
+
+    const favoriteIcon = card.querySelector('[data-favorite-icon="grid"]');
+    if (favoriteIcon) {
+        favoriteIcon.className = `fas fa-heart ${state.isFavorite ? 'text-red-500' : 'text-gray-300'}`;
+    }
+
+    const mediaContent = card.querySelector('.akyo-media-content');
+    if (mediaContent) {
+        mediaContent.textContent = '';
+        if (state.imageUrl) {
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'h-48 overflow-hidden bg-gray-100';
+            const img = document.createElement('img');
+            img.src = state.imageUrl;
+            img.alt = state.displayName;
+            img.className = 'w-full h-full object-cover';
+            img.loading = 'lazy';
+            img.addEventListener('error', () => handleImageError(img, state.id, state.attributeColor, 'card'));
+            imageContainer.appendChild(img);
+            mediaContent.appendChild(imageContainer);
+        } else {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'akyo-image-placeholder h-48';
+            placeholder.style.background = state.attributeColor;
+            const placeholderText = document.createElement('span');
+            placeholderText.className = 'text-4xl';
+            placeholderText.textContent = state.id;
+            placeholder.appendChild(placeholderText);
+            mediaContent.appendChild(placeholder);
+        }
+    }
+}
+
 function renderListView() {
     const list = document.getElementById('akyoList');
-    list.innerHTML = '';
-
-    // DocumentFragmentを使用してDOM操作を最適化
     const fragment = document.createDocumentFragment();
 
     filteredData.forEach(akyo => {
-        const row = document.createElement('tr');
-        row.className = 'border-b hover:bg-gray-50 transition-colors';
+        const state = computeAkyoRenderState(akyo);
+        let row = listRowCache.get(state.id);
+        if (!row) {
+            row = createListRow(state);
+            listRowCache.set(state.id, row);
+        } else {
+            updateListRow(row, state);
+        }
+        fragment.appendChild(row);
+    });
 
-        const idCell = document.createElement('td');
-        idCell.className = 'px-4 py-3 font-mono text-sm';
-        idCell.textContent = akyo.id;
-        row.appendChild(idCell);
+    list.replaceChildren(fragment);
+}
 
-        const imageCell = document.createElement('td');
-        imageCell.className = 'px-4 py-3';
-        const listImageUrl = resolveAkyoImageUrl(akyo.id);
-        if (listImageUrl) {
+function createListRow(state) {
+    const row = document.createElement('tr');
+    row.className = 'border-b hover:bg-gray-50 transition-colors';
+    row.dataset.akyoId = state.id;
+
+    const idCell = document.createElement('td');
+    idCell.className = 'px-4 py-3 font-mono text-sm akyo-list-id';
+    row.appendChild(idCell);
+
+    const imageCell = document.createElement('td');
+    imageCell.className = 'px-4 py-3 akyo-list-image';
+    const imageWrapper = document.createElement('div');
+    imageWrapper.className = 'akyo-list-image-wrapper';
+    imageCell.appendChild(imageWrapper);
+    row.appendChild(imageCell);
+
+    const nameCell = document.createElement('td');
+    nameCell.className = 'px-4 py-3';
+    const nickname = document.createElement('div');
+    nickname.className = 'font-medium akyo-list-nickname';
+    nameCell.appendChild(nickname);
+    const avatarName = document.createElement('div');
+    avatarName.className = 'text-xs text-gray-500 akyo-list-avatar-name';
+    nameCell.appendChild(avatarName);
+    row.appendChild(nameCell);
+
+    const attributeCell = document.createElement('td');
+    attributeCell.className = 'px-4 py-3';
+    const attributeContainer = document.createElement('div');
+    attributeContainer.className = 'flex flex-wrap gap-1 akyo-attribute-container';
+    attributeCell.appendChild(attributeContainer);
+    row.appendChild(attributeCell);
+
+    const creatorCell = document.createElement('td');
+    creatorCell.className = 'px-4 py-3 text-sm akyo-list-creator';
+    row.appendChild(creatorCell);
+
+    const actionCell = document.createElement('td');
+    actionCell.className = 'px-4 py-3 text-center';
+
+    const favoriteButton = document.createElement('button');
+    favoriteButton.className = 'p-2 hover:bg-gray-100 rounded-lg mr-1';
+    favoriteButton.addEventListener('click', () => toggleFavorite(state.id));
+    const favoriteIcon = document.createElement('i');
+    favoriteIcon.dataset.favoriteIcon = 'list';
+    favoriteButton.appendChild(favoriteIcon);
+    actionCell.appendChild(favoriteButton);
+
+    const detailButton = document.createElement('button');
+    detailButton.className = 'p-2 hover:bg-gray-100 rounded-lg';
+    detailButton.addEventListener('click', () => showDetail(state.id));
+    const detailIcon = document.createElement('i');
+    detailIcon.className = 'fas fa-info-circle text-blue-500';
+    detailButton.appendChild(detailIcon);
+    actionCell.appendChild(detailButton);
+
+    row.appendChild(actionCell);
+
+    updateListRow(row, state);
+
+    return row;
+}
+
+function updateListRow(row, state) {
+    if (row.dataset.akyoSignature === state.signature) {
+        return;
+    }
+
+    row.dataset.akyoSignature = state.signature;
+    row.dataset.akyoId = state.id;
+
+    const idCell = row.querySelector('.akyo-list-id');
+    if (idCell) {
+        idCell.textContent = state.id;
+    }
+
+    const imageWrapper = row.querySelector('.akyo-list-image-wrapper');
+    if (imageWrapper) {
+        imageWrapper.textContent = '';
+        if (state.imageUrl) {
             const img = document.createElement('img');
-            img.src = listImageUrl;
-            img.alt = akyo.nickname || akyo.avatarName || '';
+            img.src = state.imageUrl;
+            img.alt = state.displayName;
             img.className = 'w-12 h-12 rounded-lg object-cover';
             img.loading = 'lazy';
-            img.addEventListener('error', () => handleImageError(img, akyo.id, getAttributeColor(akyo.attribute), 'list'));
-            imageCell.appendChild(img);
+            img.addEventListener('error', () => handleImageError(img, state.id, state.attributeColor, 'list'));
+            imageWrapper.appendChild(img);
         } else {
             const placeholder = document.createElement('div');
             placeholder.className = 'w-12 h-12 rounded-lg';
-            placeholder.style.background = getAttributeColor(akyo.attribute);
+            placeholder.style.background = state.attributeColor;
             const placeholderContent = document.createElement('div');
             placeholderContent.className = 'w-full h-full flex items-center justify-center text-white text-xs font-bold';
-            placeholderContent.textContent = akyo.id;
+            placeholderContent.textContent = state.id;
             placeholder.appendChild(placeholderContent);
-            imageCell.appendChild(placeholder);
+            imageWrapper.appendChild(placeholder);
         }
-        row.appendChild(imageCell);
+    }
 
-        const nameCell = document.createElement('td');
-        nameCell.className = 'px-4 py-3';
-        const nickname = document.createElement('div');
-        nickname.className = 'font-medium';
-        nickname.textContent = akyo.nickname || '-';
-        const avatarName = document.createElement('div');
-        avatarName.className = 'text-xs text-gray-500';
-        avatarName.textContent = akyo.avatarName || '';
-        nameCell.appendChild(nickname);
-        nameCell.appendChild(avatarName);
-        row.appendChild(nameCell);
+    const nickname = row.querySelector('.akyo-list-nickname');
+    if (nickname) {
+        nickname.textContent = state.nickname || '-';
+    }
 
-        const attributeCell = document.createElement('td');
-        attributeCell.className = 'px-4 py-3';
-        const attributeContainer = document.createElement('div');
-        attributeContainer.className = 'flex flex-wrap gap-1';
-        extractAttributes(akyo.attribute).forEach(attr => {
+    const avatarName = row.querySelector('.akyo-list-avatar-name');
+    if (avatarName) {
+        avatarName.textContent = state.avatarName || '';
+    }
+
+    const attributeContainer = row.querySelector('.akyo-attribute-container');
+    if (attributeContainer) {
+        attributeContainer.textContent = '';
+        state.attributes.forEach(attr => {
             const badge = document.createElement('span');
             badge.className = 'attribute-badge text-xs';
             const color = getAttributeColor(attr);
@@ -783,39 +933,17 @@ function renderListView() {
             badge.textContent = attr;
             attributeContainer.appendChild(badge);
         });
-        attributeCell.appendChild(attributeContainer);
-        row.appendChild(attributeCell);
+    }
 
-        const creatorCell = document.createElement('td');
-        creatorCell.className = 'px-4 py-3 text-sm';
-        creatorCell.textContent = akyo.creator;
-        row.appendChild(creatorCell);
+    const creatorCell = row.querySelector('.akyo-list-creator');
+    if (creatorCell) {
+        creatorCell.textContent = state.creator;
+    }
 
-        const actionCell = document.createElement('td');
-        actionCell.className = 'px-4 py-3 text-center';
-
-        const favoriteButton = document.createElement('button');
-        favoriteButton.className = 'p-2 hover:bg-gray-100 rounded-lg mr-1';
-        favoriteButton.addEventListener('click', () => toggleFavorite(akyo.id));
-        const favoriteIcon = document.createElement('i');
-        favoriteIcon.className = `fas fa-heart ${akyo.isFavorite ? 'text-red-500' : 'text-gray-300'}`;
-        favoriteButton.appendChild(favoriteIcon);
-        actionCell.appendChild(favoriteButton);
-
-        const detailButton = document.createElement('button');
-        detailButton.className = 'p-2 hover:bg-gray-100 rounded-lg';
-        detailButton.addEventListener('click', () => showDetail(akyo.id));
-        const detailIcon = document.createElement('i');
-        detailIcon.className = 'fas fa-info-circle text-blue-500';
-        detailButton.appendChild(detailIcon);
-        actionCell.appendChild(detailButton);
-
-        row.appendChild(actionCell);
-
-        fragment.appendChild(row);
-    });
-
-    list.appendChild(fragment);
+    const favoriteIcon = row.querySelector('[data-favorite-icon="list"]');
+    if (favoriteIcon) {
+        favoriteIcon.className = `fas fa-heart ${state.isFavorite ? 'text-red-500' : 'text-gray-300'}`;
+    }
 }
 
 // 詳細モーダル表示

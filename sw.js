@@ -1,13 +1,46 @@
-const PRECACHE = 'akyo-precache-v2';
+const PRECACHE = 'akyo-precache-v3';
+let precacheUrlList = null;
+let precacheUrlSet = null;
+
+function getScope() {
+  return (self.registration && self.registration.scope) || self.location.href;
+}
+
+function buildPrecacheUrls() {
+  const scope = getScope();
+  const coreAssets = [
+    './',
+    './index.html',
+    './admin.html',
+    './logo-upload.html',
+    './css/kid-friendly.css',
+    './js/storage-manager.js',
+    './js/storage-adapter.js',
+    './js/image-manifest-loader.js',
+    './js/image-loader.js',
+    './js/main.js',
+    './js/admin.js',
+    './data/akyo-data.csv',
+    './images/logo.webp',
+    './images/profileIcon.webp',
+  ];
+
+  return coreAssets.map((path) => new URL(path, scope).toString());
+}
 
 function getPrecacheUrls() {
-  const scope = (self.registration && self.registration.scope) || self.location.href;
-  return [
-    new URL('./', scope).toString(),
-    new URL('./index.html', scope).toString(),
-    new URL('./images/logo.webp', scope).toString(),
-    new URL('./images/profileIcon.webp', scope).toString(),
-  ];
+  if (!precacheUrlList) {
+    precacheUrlList = buildPrecacheUrls();
+    precacheUrlSet = new Set(precacheUrlList);
+  }
+  return precacheUrlList;
+}
+
+function getPrecacheUrlSet() {
+  if (!precacheUrlSet) {
+    getPrecacheUrls();
+  }
+  return precacheUrlSet;
 }
 
 self.addEventListener('install', (event) => {
@@ -47,44 +80,90 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  const scope = (self.registration && self.registration.scope) || self.location.href;
-  const logoPath = new URL('./images/logo.webp', scope).pathname;
-  const profilePath = new URL('./images/profileIcon.webp', scope).pathname;
-  const isIconRequest = url.pathname === logoPath || url.pathname === profilePath;
-
-  if (!isIconRequest) {
+  if (request.mode === 'navigate') {
+    handleNavigationRequest(event);
     return;
   }
 
-  event.respondWith(handleIconRequest(event));
+  const precacheSet = getPrecacheUrlSet();
+  if (precacheSet.has(url.toString())) {
+    respondWithCacheFirst(event);
+  }
 });
 
-async function handleIconRequest(event) {
+function handleNavigationRequest(event) {
   const { request } = event;
-  const cache = await caches.open(PRECACHE);
-  const cachedResponse = await cache.match(request);
 
-  const networkFetch = (async () => {
-    try {
-      const response = await fetch(request);
-      if (response && response.ok) {
-        await cache.put(request, response.clone());
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(PRECACHE);
+      const cachedResponse = await cache.match(request);
+
+      if (cachedResponse) {
+        event.waitUntil(updateCache(cache, request));
+        return cachedResponse;
       }
-      return response;
-    } catch (error) {
-      return undefined;
+
+      try {
+        const networkResponse = await fetch(request);
+        if (networkResponse && networkResponse.ok) {
+          await cache.put(request, networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (error) {
+        const scope = getScope();
+        const fallbacks = [
+          new URL('./index.html', scope).toString(),
+          new URL('./', scope).toString(),
+        ];
+
+        for (const fallback of fallbacks) {
+          const match = await cache.match(fallback);
+          if (match) {
+            return match;
+          }
+        }
+
+        return Response.error();
+      }
+    })()
+  );
+}
+
+function respondWithCacheFirst(event) {
+  const { request } = event;
+
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(PRECACHE);
+      const cachedResponse = await cache.match(request);
+
+      if (cachedResponse) {
+        event.waitUntil(updateCache(cache, request));
+        return cachedResponse;
+      }
+
+      try {
+        const networkResponse = await fetch(request);
+        if (networkResponse && networkResponse.ok) {
+          await cache.put(request, networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (error) {
+        const fallback = await cache.match(request);
+        return fallback || Response.error();
+      }
+    })()
+  );
+}
+
+async function updateCache(cache, request) {
+  try {
+    const response = await fetch(request);
+    if (response && response.ok) {
+      await cache.put(request, response.clone());
     }
-  })();
-
-  if (cachedResponse) {
-    event.waitUntil(networkFetch);
-    return cachedResponse;
+  } catch (error) {
+    // Ignore network errors during background update
   }
-
-  const networkResponse = await networkFetch;
-  if (networkResponse) {
-    return networkResponse;
-  }
-
-  return Response.error();
 }
