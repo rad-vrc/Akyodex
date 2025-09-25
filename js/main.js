@@ -6,6 +6,7 @@ let filteredData = [];
 let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let currentView = 'grid';
+let currentSearchTerms = [];
 let imageDataMap = {}; // 画像データの格納
 let profileIconCache = { resolved: false, url: null };
 const gridCardCache = new Map();
@@ -101,6 +102,13 @@ function extractAttributes(attributeString) {
     return (attributeString || '')
         .split(/[,、]/)
         .map(attr => attr.trim())
+        .filter(Boolean);
+}
+
+function extractCreators(creatorString) {
+    return (creatorString || '')
+        .split(/[\/／＆&]/)
+        .map(name => name.trim())
         .filter(Boolean);
 }
 
@@ -246,13 +254,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('storage', (e) => {
         if (e.key === 'akyoDataCSV' || e.key === 'akyoDataVersion') {
             console.log('Data changed in another tab. Reloading data...');
-            loadAkyoData().then(updateDisplay).catch(err => console.error(err));
+            loadAkyoData().then(applyFilters).catch(err => console.error(err));
         }
     });
 
     // タブ復帰時にも最新反映
     window.addEventListener('focus', () => {
-        loadAkyoData().then(updateDisplay).catch(() => {});
+        loadAkyoData().then(applyFilters).catch(() => {});
     });
 
     // 非同期でデータ読み込み（並列処理で高速化）
@@ -281,7 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadAkyoData()
     ]).then(() => {
         // すべての読み込み完了後に表示更新
-        updateDisplay();
+        applyFilters();
     });
 });
 
@@ -324,8 +332,9 @@ async function loadAkyoData() {
 
         console.log(`${akyoData.length}種類のAKyoを読み込みました`);
 
-        // 属性リストの作成
+        // 属性・作者リストの作成
         createAttributeFilter();
+        createCreatorFilter();
 
         // 画像データの再確認
         console.log('Current imageDataMap size:', Object.keys(imageDataMap).length);
@@ -470,14 +479,43 @@ function createAttributeFilter() {
     });
 }
 
+function createCreatorFilter() {
+    const creatorSet = new Set();
+    akyoData.forEach(akyo => {
+        extractCreators(akyo.creator).forEach(name => creatorSet.add(name));
+    });
+
+    const select = document.getElementById('creatorFilter');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">すべての作者</option>';
+
+    Array.from(creatorSet)
+        .sort((a, b) => a.localeCompare(b, 'ja'))
+        .forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            select.appendChild(option);
+        });
+}
+
 // イベントリスナーの設定
 function setupEventListeners() {
     // 検索ボックス
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', debounce(handleSearch, 300));
 
-    // 属性フィルター
-    document.getElementById('attributeFilter').addEventListener('change', handleAttributeFilter);
+    // 属性・作者フィルター
+    const attributeFilter = document.getElementById('attributeFilter');
+    if (attributeFilter) {
+        attributeFilter.addEventListener('change', handleAttributeFilter);
+    }
+
+    const creatorFilter = document.getElementById('creatorFilter');
+    if (creatorFilter) {
+        creatorFilter.addEventListener('change', handleCreatorFilter);
+    }
 
     // ビュー切り替え
     document.getElementById('gridViewBtn').addEventListener('click', () => switchView('grid'));
@@ -547,44 +585,72 @@ function buildSearchIndex() {
 function handleSearch() {
     const raw = (document.getElementById('searchInput').value || '');
     const query = normalizeForSearch(raw);
+    currentSearchTerms = query ? query.split(' ').filter(Boolean) : [];
 
-    if (!query) { filteredData = [...akyoData]; updateDisplay(); return; }
+    applyFilters();
+}
 
-    const terms = query.split(' ').filter(Boolean); // AND検索
+// 属性フィルター処理
+function handleAttributeFilter() {
+    applyFilters();
+}
+
+function handleCreatorFilter() {
+    applyFilters();
+}
+
+function applyFilters() {
+    const attributeSelect = document.getElementById('attributeFilter');
+    const creatorSelect = document.getElementById('creatorFilter');
+
+    const selectedAttribute = attributeSelect ? attributeSelect.value : '';
+    const selectedCreator = creatorSelect ? creatorSelect.value : '';
+
+    let data = [...akyoData];
+
+    if (selectedAttribute) {
+        data = data.filter(akyo => {
+            const attributes = extractAttributes(akyo.attribute);
+            return attributes.includes(selectedAttribute);
+        });
+    }
+
+    if (selectedCreator) {
+        data = data.filter(akyo => {
+            const creators = extractCreators(akyo.creator);
+            return creators.includes(selectedCreator);
+        });
+    }
+
+    if (!currentSearchTerms.length) {
+        filteredData = data;
+        updateDisplay();
+        return;
+    }
+
+    const filteredIds = new Set(data.map(akyo => akyo.id));
+    const idToAkyo = new Map(data.map(akyo => [akyo.id, akyo]));
+
     const scored = searchIndex
+        .filter(row => filteredIds.has(row.id))
         .map(row => {
-            // 部分一致＋語幹的な簡易スコア（連続一致に重み）
             let score = 0;
-            for (const t of terms) {
-                const idx = row.text.indexOf(t);
-                if (idx >= 0) score += 5 + Math.max(0, 20 - idx / 10);
-                else return null; // AND条件を満たさない
+            for (const term of currentSearchTerms) {
+                const idx = row.text.indexOf(term);
+                if (idx >= 0) {
+                    score += 5 + Math.max(0, 20 - idx / 10);
+                } else {
+                    return null;
+                }
             }
             return { id: row.id, score };
         })
         .filter(Boolean)
         .sort((a, b) => b.score - a.score);
 
-    const idToAkyo = new Map(akyoData.map(a => [a.id, a]));
     filteredData = scored
         .map(({ id }) => idToAkyo.get(id))
         .filter(Boolean);
-
-    updateDisplay();
-}
-
-// 属性フィルター処理
-function handleAttributeFilter() {
-    const selectedAttribute = document.getElementById('attributeFilter').value;
-
-    if (!selectedAttribute) {
-        filteredData = [...akyoData];
-    } else {
-        filteredData = akyoData.filter(akyo => {
-            const attributes = extractAttributes(akyo.attribute);
-            return attributes.includes(selectedAttribute);
-        });
-    }
 
     updateDisplay();
 }
