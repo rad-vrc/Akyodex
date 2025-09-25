@@ -50,6 +50,11 @@
       host.setAttribute('aria-hidden', 'true');
       document.body.prepend(host);
     }
+    try{
+      const p = new URLSearchParams(location.search);
+      const bg = (p.get('bg') || '').toLowerCase();
+      if (bg === 'front' || bg === '1') host.style.zIndex = '10';
+    }catch(_){ }
     return host;
   }
 
@@ -98,7 +103,12 @@
       // 初期クリア（再初期化時の重複防止）
       while (host.firstChild) host.removeChild(host.firstChild);
 
-      const initial = Math.min(18, Math.max(10, Math.round(window.innerWidth/110)));
+      let initial = Math.min(18, Math.max(10, Math.round(window.innerWidth/110)));
+      try{
+        const p = new URLSearchParams(location.search);
+        const dens = parseInt(p.get('bgdensity')||'', 10);
+        if (!isNaN(dens) && dens>0 && dens<=50) initial = dens;
+      }catch(_){ }
       // ストラタム分割で均等配置（各スライス内にランダム）
       for (let i=0;i<initial;i++){
         const u = (i + Math.random()) / initial;
