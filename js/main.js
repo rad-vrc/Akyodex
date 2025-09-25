@@ -25,6 +25,7 @@ let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let currentView = 'grid';
 let favoritesOnlyMode = false; // お気に入りのみ表示トグル
+let randomMode = false;        // ランダム表示（現在の絞り込みから抽出）
 let currentSearchTerms = [];
 let imageDataMap = {}; // 画像データの格納
 let profileIconCache = { resolved: false, url: null };
@@ -605,7 +606,12 @@ function setupEventListeners() {
     if (quickFiltersContainer) {
         const quickFilters = quickFiltersContainer.children;
         if (quickFilters.length > 0) {
-            quickFilters[0].addEventListener('click', showRandom); // ランダム
+            // ランダム表示トグル（applyFiltersで一貫処理）
+            quickFilters[0].addEventListener('click', () => {
+                randomMode = !randomMode;
+                updateQuickFilterStyles();
+                applyFilters();
+            });
         }
         if (quickFilters.length > 1) {
             // お気に入りのみトグル
@@ -712,35 +718,47 @@ function applyFilters() {
         data = data.filter(akyo => akyo.isFavorite);
     }
 
+    // 検索語が無ければそのまま、あればスコアリング
+    let result;
     if (!currentSearchTerms.length) {
-        filteredData = data;
-        updateDisplay();
-        return;
+        result = data;
+    } else {
+        const filteredIds = new Set(data.map(akyo => akyo.id));
+        const idToAkyo = new Map(data.map(akyo => [akyo.id, akyo]));
+
+        const scored = searchIndex
+            .filter(row => filteredIds.has(row.id))
+            .map(row => {
+                let score = 0;
+                for (const term of currentSearchTerms) {
+                    const idx = row.text.indexOf(term);
+                    if (idx >= 0) {
+                        score += 5 + Math.max(0, 20 - idx / 10);
+                    } else {
+                        return null;
+                    }
+                }
+                return { id: row.id, score };
+            })
+            .filter(Boolean)
+            .sort((a, b) => b.score - a.score);
+
+        result = scored
+            .map(({ id }) => idToAkyo.get(id))
+            .filter(Boolean);
     }
 
-    const filteredIds = new Set(data.map(akyo => akyo.id));
-    const idToAkyo = new Map(data.map(akyo => [akyo.id, akyo]));
+    // ランダムモード: 現在の絞り込み結果から20件を抽出
+    if (randomMode) {
+        const pool = [...result];
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        result = pool.slice(0, 20);
+    }
 
-    const scored = searchIndex
-        .filter(row => filteredIds.has(row.id))
-        .map(row => {
-            let score = 0;
-            for (const term of currentSearchTerms) {
-                const idx = row.text.indexOf(term);
-                if (idx >= 0) {
-                    score += 5 + Math.max(0, 20 - idx / 10);
-    } else {
-                    return null;
-                }
-            }
-            return { id: row.id, score };
-        })
-        .filter(Boolean)
-        .sort((a, b) => b.score - a.score);
-
-    filteredData = scored
-        .map(({ id }) => idToAkyo.get(id))
-        .filter(Boolean);
+    filteredData = result;
 
     // フィルタ変更時にレンダー上限をリセット
     renderLimit = INITIAL_RENDER_COUNT;
@@ -753,25 +771,23 @@ function updateQuickFilterStyles() {
     if (!quickFiltersContainer) return;
     const quickFilters = quickFiltersContainer.children;
     if (quickFilters.length < 2) return;
+    const randomBtn = quickFilters[0];
     const favoriteBtn = quickFilters[1];
-    if (favoritesOnlyMode) {
-        // 有効時: 元の黄色系を強調
-        favoriteBtn.className = 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors';
-    } else {
-        // 無効時: ランダム無効時と同じグレー系
-        favoriteBtn.className = 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-    }
+    // お気に入りのみの見た目
+    favoriteBtn.className = favoritesOnlyMode
+        ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
+        : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+    // ランダムボタンの見た目（有効時は文字色を少し濃く）
+    randomBtn.className = randomMode
+        ? 'attribute-badge quick-filter-badge bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors'
+        : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
 }
 
 // ランダム表示
 function showRandom() {
-    const pool = [...akyoData];
-    for (let i = pool.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    filteredData = pool.slice(0, 20);
-    updateDisplay();
+    randomMode = !randomMode;
+    updateQuickFilterStyles();
+    applyFilters();
 }
 
 // お気に入り表示
@@ -1189,7 +1205,7 @@ async function showDetail(akyoId) {
         imageWrapper.appendChild(imageContainer);
 
         const sparkle = document.createElement('div');
-        sparkle.className = 'absolute -top-2 -right-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce';
+        sparkle.className = 'absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center animate-bounce';
         const sparkleIcon = document.createElement('span');
         sparkleIcon.className = 'text-2xl';
         sparkleIcon.textContent = '✨';
@@ -1376,8 +1392,8 @@ function toggleFavorite(akyoId) {
     // ローカルストレージに保存
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
-    // 表示更新（お気に入りのみモードならフィルタを再適用）
-    if (favoritesOnlyMode) {
+    // 表示更新（お気に入りのみ or ランダムモード時はフィルタを再適用）
+    if (favoritesOnlyMode || randomMode) {
         applyFilters();
     } else {
         updateDisplay();
