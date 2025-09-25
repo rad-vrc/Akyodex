@@ -25,18 +25,18 @@ function extractIdAndScore(key: string): { id: string | null; dirScore: number; 
   return { id, dirScore, posScore };
 }
 
-export const onRequestOptions: PagesFunction = async ({ request }) => {
+export const onRequestOptions = async ({ request }: any) => {
   return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
 };
 
 // 管理者専用: R2を走査して 3桁ID => 実キー をKVへ再構築
-export const onRequestPost: PagesFunction = async ({ request, env }) => {
+export const onRequestPost = async ({ request, env }: any) => {
   try {
     // 認証（owner/admin）
     requireAuth(request, env as any);
 
-    const bucket: R2Bucket = (env as any).AKYO_BUCKET;
-    const kv = (env as any).AKYO_KV as KVNamespace;
+    const bucket = (env as any).AKYO_BUCKET;
+    const kv = (env as any).AKYO_KV;
     const base = (env as any).PUBLIC_R2_BASE as string; // 例: https://images.akyodex.com
 
     const extScore = (ext: string) => (ext === "webp" ? 3 : ext === "png" ? 2 : /jpe?g/i.test(ext) ? 1 : 0);
