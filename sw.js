@@ -68,27 +68,69 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  const { request } = event;
+  const req = event.request;
+  if (req.method !== 'GET') return;
 
-  if (request.method !== 'GET') {
+  const url = new URL(req.url);
+  // クロスオリジン（R2等）はSWで触らない
+  if (url.origin !== self.location.origin) return;
+
+  const accept = req.headers.get('accept') || '';
+
+  // 1) HTMLはネットワーク優先＋必ずフォールバックを返す
+  if (req.mode === 'navigate' || accept.includes('text/html')) {
+    event.respondWith((async () => {
+      try {
+        // 直取り（最新を優先）
+        return await fetch(req);
+      } catch (_) {
+        // キャッシュ→index.htmlの順に保険
+        const cache = await caches.open(PRECACHE);
+        const scope = getScope();
+        const cached = (await cache.match(req))
+          || (await cache.match(new URL('./index.html', scope).toString()))
+          || (await cache.match(new URL('./', scope).toString()));
+        if (cached) return cached;
+        // どうしても無い場合は空HTMLを返して ERR_FAILED を回避
+        return new Response('<!doctype html><title>offline</title>', {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        });
+      }
+    })());
     return;
   }
 
-  const url = new URL(request.url);
-
-  if (url.origin !== self.location.origin) {
+  // 2) APIはネットワーク優先（キャッシュしない）
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(req).catch(() => new Response(JSON.stringify({ error: 'offline' }), {
+        headers: { 'content-type': 'application/json' },
+        status: 503,
+      }))
+    );
     return;
   }
 
-  if (request.mode === 'navigate') {
-    handleNavigationRequest(event);
-    return;
-  }
-
-  const precacheSet = getPrecacheUrlSet();
-  if (precacheSet.has(url.toString())) {
-    respondWithCacheFirst(event);
-  }
+  // 3) 画像/CSS/JS等はキャッシュ優先＋ネットワーク、最後にフォールバック
+  event.respondWith((async () => {
+    const cache = await caches.open(PRECACHE);
+    const hit = await cache.match(req);
+    if (hit) {
+      event.waitUntil(updateCache(cache, req));
+      return hit;
+    }
+    try {
+      const net = await fetch(req);
+      if (net && net.ok) await cache.put(req, net.clone());
+      return net;
+    } catch (_) {
+      const scope = getScope();
+      const fallback = (await cache.match(new URL('./index.html', scope).toString()))
+        || (await cache.match(new URL('./', scope).toString()));
+      return fallback || new Response('', { status: 204 });
+    }
+  })());
 });
 
 function handleNavigationRequest(event) {

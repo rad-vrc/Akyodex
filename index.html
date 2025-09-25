@@ -491,14 +491,12 @@
             if (parent) parent.innerHTML = placeholder;
         }
     </script>
-    <!-- 一時無効化: Service Worker 登録
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
+                navigator.serviceWorker.register('/sw.js').catch(console.warn);
             });
         }
     </script>
-    -->
 </body>
 </html>

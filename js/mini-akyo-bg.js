@@ -1,8 +1,15 @@
 (function(){
   const CANDIDATES = [
+// 相対（Pages静的）
     'https://images.akyodex.com/miniakyo.webp',
     'images/@miniakyo.webp',
     'images/miniakyo.webp',
+    // 絶対（R2のカスタムドメイン）
+    'https://images.akyodex.com/images/@miniakyo.webp',
+    'https://images.akyodex.com/images/miniakyo.webp',
+    // 直下配置パターン（R2でキーを直下にした場合）
+    'https://images.akyodex.com/@miniakyo.webp',
+    'https://images.akyodex.com/miniakyo.webp',
   ];
 
   function getVersionSuffix(){
@@ -55,13 +62,18 @@
 
   async function resolveMiniAkyoUrl(){
     const ver = getVersionSuffix();
-    const fallback = applyVersion(CANDIDATES.at(-1) || 'images/miniakyo.webp', ver);
+
+    const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
+    let fallback = null;
 
     for (const path of CANDIDATES){
-      const candidate = applyVersion(path, ver);
+      const candidate = path + ver;
+      fallback = fallback || candidate;
       try{
-        await probeImage(candidate);
-        return candidate;
+        const r = await fetch(candidate, { cache: 'no-cache' });
+        if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
+          return candidate;
+        }
       }catch(_){ /* continue */ }
     }
 
@@ -89,6 +101,11 @@
       host.setAttribute('aria-hidden', 'true');
       document.body.prepend(host);
     }
+    try{
+      const p = new URLSearchParams(location.search);
+      const bg = (p.get('bg') || '').toLowerCase();
+      if (bg === 'front' || bg === '1') host.style.zIndex = '10';
+    }catch(_){ }
     return host;
   }
 
@@ -145,7 +162,12 @@
       // 初期クリア（再初期化時の重複防止）
       while (host.firstChild) host.removeChild(host.firstChild);
 
-      const initial = Math.min(18, Math.max(10, Math.round(window.innerWidth/110)));
+      let initial = Math.min(18, Math.max(10, Math.round(window.innerWidth/110)));
+      try{
+        const p = new URLSearchParams(location.search);
+        const dens = parseInt(p.get('bgdensity')||'', 10);
+        if (!isNaN(dens) && dens>0 && dens<=50) initial = dens;
+      }catch(_){ }
       // ストラタム分割で均等配置（各スライス内にランダム）
       for (let i=0;i<initial;i++){
         const u = (i + Math.random()) / initial;
