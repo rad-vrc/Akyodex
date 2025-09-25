@@ -6,36 +6,58 @@ const repoRoot = process.cwd();
 const IMAGES_DIR = process.env.IMAGES_DIR || 'images';
 const OUTPUT = process.env.MANIFEST_OUTPUT || 'images/manifest.json';
 const FULL_URL = String(process.env.FULL_URL || '').toLowerCase() === 'true';
-const BASE_URL = process.env.BASE_URL || 'https://images.akyodex.com/images';
+const USE_CSV_IDS = String(process.env.USE_CSV_IDS || '').toLowerCase() === 'true';
+const DEFAULT_EXT = (process.env.DEFAULT_EXT || 'webp').replace(/^\./,'');
+const BASE_URL = process.env.BASE_URL || 'https://images.akyodex.com';
 
 const imagesPath = path.join(repoRoot, IMAGES_DIR);
 const outputPath = path.join(repoRoot, OUTPUT);
-
-if (!fs.existsSync(imagesPath)) {
-  console.error(`Images directory not found: ${imagesPath}`);
-  process.exit(1);
-}
 
 const ensureDir = (p) => {
   const dir = path.dirname(p);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
-const entries = fs
-  .readdirSync(imagesPath, { withFileTypes: true })
-  .filter(d => d.isFile())
-  .map(d => d.name)
-  .filter(n => /\.(webp|png|jpg|jpeg)$/i.test(n))
-  .filter(n => ['logo.webp','logo-200.png','profileIcon.png','miniakyo.webp','manifest.json'].indexOf(n) === -1)
-  .sort();
+let map = {};
 
-const map = {};
-for (const name of entries) {
-  const m = name.match(/^(\d{3})/);
-  if (!m) continue;
-  const id = m[1];
-  if (map[id]) continue;
-  map[id] = FULL_URL ? `${BASE_URL}/${name}` : name;
+if (USE_CSV_IDS) {
+  // Build from CSV IDs → BASE_URL/ID.DEFAULT_EXT
+  const csvPath = path.join(repoRoot, 'data', 'akyo-data.csv');
+  try {
+    const content = fs.readFileSync(csvPath, 'utf8');
+    const lines = content.split(/\r?\n/);
+    const seen = new Set();
+    for (const line of lines) {
+      const m = line.match(/^(\d{3}),/);
+      if (!m) continue;
+      const id = m[1];
+      if (seen.has(id)) continue;
+      seen.add(id);
+      map[id] = FULL_URL ? `${BASE_URL}/${id}.${DEFAULT_EXT}` : `${id}.${DEFAULT_EXT}`;
+    }
+  } catch (e) {
+    console.error('Failed to read CSV for IDs:', e.message);
+  }
+} else {
+  if (!fs.existsSync(imagesPath)) {
+    console.error(`Images directory not found: ${imagesPath}`);
+  } else {
+    const entries = fs
+      .readdirSync(imagesPath, { withFileTypes: true })
+      .filter(d => d.isFile())
+      .map(d => d.name)
+      .filter(n => /\.(webp|png|jpg|jpeg)$/i.test(n))
+      .filter(n => ['logo.webp','logo-200.png','profileIcon.png','miniakyo.webp','manifest.json'].indexOf(n) === -1)
+      .sort();
+
+    for (const name of entries) {
+      const m = name.match(/^(\d{3})/);
+      if (!m) continue;
+      const id = m[1];
+      if (map[id]) continue;
+      map[id] = FULL_URL ? `${BASE_URL}/${name.replace(/^images\//,'')}` : name;
+    }
+  }
 }
 
 const two = (n) => String(n).padStart(2, '0');
@@ -47,18 +69,7 @@ const version = [
 ].join('') + '-' + [two(now.getHours()), two(now.getMinutes()), two(now.getSeconds())].join('');
 
 // 将来の拡張: ミニAkyo背景のキーを併載（存在すれば）
-let miniAkyo = null;
-const miniCandidates = [
-  'miniakyo.webp', '@miniakyo.webp',
-  'images/miniakyo.webp', 'images/@miniakyo.webp'
-];
-for (const cand of miniCandidates){
-  const p = path.join(imagesPath, cand);
-  if (fs.existsSync(p)){
-    miniAkyo = FULL_URL ? `${BASE_URL}/${cand.replace(/^images\//,'')}` : cand;
-    break;
-  }
-}
+let miniAkyo = `${BASE_URL}/miniakyo.webp`;
 
 const manifest = { version, map, ...(miniAkyo ? { miniAkyo } : {}) };
 
