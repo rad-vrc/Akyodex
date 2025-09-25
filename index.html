@@ -269,6 +269,15 @@
         #listView td.akyo-list-image { width: 56px; min-width: 56px; }
         .akyo-list-image-wrapper { width: 48px; height: 48px; min-width: 48px; min-height: 48px; overflow: hidden; border-radius: 0.5rem; }
         .akyo-list-image-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        /* モバイル限定の横スクロールと間隔圧縮 */
+        @media (max-width: 640px) {
+            #listView .list-scroll-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            #listView table { min-width: 720px; } /* 横スクロール対象の最低幅 */
+            #listView th, #listView td { padding: 0.5rem 0.5rem; } /* 余白圧縮 */
+            #listView .akyo-attribute-container .attribute-badge { padding: 0.1rem 0.4rem; font-size: 0.7rem; }
+            #listView .akyo-list-avatar-name { font-size: 0.68rem; }
+        }
     </style>
 </head>
 <body>
@@ -361,7 +370,7 @@
 
         <!-- リストビュー -->
         <div id="listView" class="hidden">
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden list-scroll-wrapper">
                 <table class="w-full">
                     <thead class="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                         <tr>
