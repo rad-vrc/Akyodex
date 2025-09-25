@@ -26,6 +26,7 @@ const entries = fs
   .filter(d => d.isFile())
   .map(d => d.name)
   .filter(n => /\.(webp|png|jpg|jpeg)$/i.test(n))
+  .filter(n => ['logo.webp','logo-200.png','profileIcon.png','miniakyo.webp','manifest.json'].indexOf(n) === -1)
   .sort();
 
 const map = {};

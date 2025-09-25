@@ -704,6 +704,18 @@ npx wrangler pages deploy dist --project-name akyodex-site
 - [ ] `npx wrangler pages deploy . --project-name akyodex-site` を実行し公開
 - [ ] `/api/manifest` が正しいJSONを返し、トップページで画像が見える
 - [ ] `admin.html` からのアップロードが反映される
+- [ ] 画像はR2へ集約。ローカルは `images/logo.webp`, `images/logo-200.png`, `images/profileIcon.png`, `images/miniakyo.webp` のみ
+
+### 画像移行メモ
+
+1. R2へ同期（AWS CLI例）
+   ```bash
+   aws s3 sync ./images s3://$AKYO_BUCKET/images \
+     --endpoint-url https://$ACCOUNT_ID.r2.cloudflarestorage.com \
+     --exclude "*" --include "[0-9][0-9][0-9]*.webp" --include "[0-9][0-9][0-9]*.png" --include "[0-9][0-9][0-9]*.jpg"
+   ```
+2. CI/ローカルで `node generate-manifest.mjs` 実行（`FULL_URL=true BASE_URL=https://images.akyodex.com/images` 推奨）
+3. デプロイ後 `?reloadBg=1` でキャッシュ刷新
 
 ---
 
