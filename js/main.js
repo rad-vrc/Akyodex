@@ -912,7 +912,7 @@ function createAkyoCard(state) {
     content.appendChild(badgeContainer);
 
     const creator = document.createElement('p');
-    creator.className = 'text-xs text-gray-600 mb-2 akyo-creator';
+    creator.className = 'text-xs text-gray-600 mb-2 akyo-creator whitespace-pre-line';
     content.appendChild(creator);
 
     const detailButton = document.createElement('button');
