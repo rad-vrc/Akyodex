@@ -29,6 +29,33 @@ function applyFinderRegistrationDefaults({ force = false } = {}) {
     }
 }
 
+// 必須/任意DOMの存在チェック（初期化時に一括検査）
+function verifyRequiredDom() {
+    // ページ機能の中核に必要な要素
+    const requiredIds = [
+        'loginScreen', 'adminScreen',
+        'addTab', 'editTab', 'toolsTab',
+        'editList', 'editSearchInput',
+        'editModal', 'editModalContent'
+    ];
+    const missing = requiredIds.filter(id => !document.getElementById(id));
+    if (missing.length) {
+        const msg = `管理画面の必須要素が見つかりません: ${missing.join(', ')}`;
+        console.warn(msg);
+        try { showNotification(msg, 'warning'); } catch(_) {}
+    }
+
+    // 機能限定で使用する任意要素（欠落時は機能を自動的に無効化）
+    const optionalIds = [
+        'imageGallery', 'imageCount',
+        'imageMappingList', 'uploadProgress', 'progressBar', 'progressText', 'totalFiles'
+    ];
+    const missingOpt = optionalIds.filter(id => !document.getElementById(id));
+    if (missingOpt.length) {
+        console.debug('任意要素が未配置のため、関連機能は自動的にスキップ:', missingOpt);
+    }
+}
+
 // 命名整合用のエイリアス（徐々に adminAkyoRecords / adminImageDataMap へ移行）
 window.adminAkyoRecords = akyoData;
 window.adminImageDataMap = imageDataMap;
@@ -48,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupEventListeners();
     setupDragDrop();
+
+    // DOMの検査（欠落は警告表示）
+    verifyRequiredDom();
 
     applyFinderRegistrationDefaults();
 });
