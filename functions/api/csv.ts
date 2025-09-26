@@ -14,13 +14,21 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     const branch = ((env as any).GITHUB_BRANCH as string) || "main";
     if (!owner || !repo) return errJSON(500, "GitHub settings missing");
 
-    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/data/akyo-data.csv`;
+    // クエリの v（または現在時刻）で上流キャッシュを確実に回避
+    const reqUrl = new URL(request.url);
+    const bust = reqUrl.searchParams.get("v") || String(Date.now());
+    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/data/akyo-data.csv?bust=${encodeURIComponent(bust)}`;
 
-    const upstream = await fetch(url, { cache: "no-store" });
+    const upstream = await fetch(url, {
+      // Cloudflare キャッシュを確実に無効化
+      cf: { cacheTtl: 0, cacheEverything: false },
+      headers: { "cache-control": "no-cache", pragma: "no-cache" },
+    } as RequestInit);
     if (!upstream.ok) {
       return errJSON(502, `upstream failed: ${upstream.status}`);
     }
     const text = await upstream.text();
+    const rowCount = (text.match(/^\d{3},/gm) || []).length;
     return new Response(text, {
       headers: {
         ...corsHeaders(origin),
@@ -28,6 +36,8 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
         "cache-control": "no-cache, no-store, must-revalidate",
         pragma: "no-cache",
         expires: "0",
+        "x-akyo-row-count": String(rowCount),
+        "x-akyo-source-url": url,
       },
       status: 200,
     });
