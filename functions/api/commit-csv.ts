@@ -103,19 +103,45 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       }
     }
 
-    function csvQuote(val: string): string {
-      const needs = /[",\n\r]/.test(val);
-      const body = val.replace(/"/g, '""');
-      return needs ? `"${body}"` : body;
+    function parseCsvLineToFields(line: string): string[] {
+      const fields: string[] = [];
+      if (line.charCodeAt(0) === 0xFEFF) line = line.slice(1);
+      let i = 0;
+      const n = line.length;
+      while (i < n) {
+        let field = "";
+        let quoted = false;
+        if (line[i] === '"') {
+          quoted = true;
+          i++;
+          while (i < n) {
+            const ch = line[i];
+            if (ch === '"') {
+              if (i + 1 < n && line[i + 1] === '"') { field += '"'; i += 2; continue; }
+              i++;
+              break;
+            }
+            field += ch;
+            i++;
+          }
+        } else {
+          let j = i;
+          while (j < n && line[j] !== ',') j++;
+          field = line.slice(i, j);
+          i = j;
+        }
+        fields.push(field);
+        if (quoted) {
+          while (i < n && line[i] !== ',') i++;
+        }
+        if (i < n && line[i] === ',') i++;
+      }
+      return fields;
     }
 
-    function buildLineFromArray(arr: string[]): string {
-      return arr.map(csvQuote).join(',');
-    }
-
-    function parseCsvToRows(text: string): { header?: string; rows: Array<{ id: string; raw: string; fields?: string[] }> } {
+    function parseCsvToRows(text: string): { header?: string; rows: Array<{ id: string; raw: string; fields: string[] }> } {
       const lines = splitLinesPreserve(text);
-      const out: Array<{ id: string; raw: string; fields?: string[] }> = [];
+      const out: Array<{ id: string; raw: string; fields: string[] }> = [];
       let header: string | undefined;
       for (let idx = 0; idx < lines.length; idx++) {
         const line = lines[idx];
@@ -123,27 +149,32 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
         if (!header && isHeader(line)) { header = line; continue; }
         const id = (parseFirstField(line) || '').trim();
         if (!id || !/^\d{3}$/.test(id)) continue;
-        out.push({ id, raw: line });
+        const fields = parseCsvLineToFields(line);
+        out.push({ id, raw: line, fields });
       }
       return { header, rows: out };
     }
 
-    function parseCsvToMap(text: string): Map<string, string> {
+    function parseCsvToMap(text: string): Map<string, { raw: string; fields: string[] }> {
       const { rows } = parseCsvToRows(text);
-      const m = new Map<string, string>();
-      rows.forEach(r => m.set(r.id, r.raw));
+      const m = new Map<string, { raw: string; fields: string[] }>();
+      rows.forEach(r => m.set(r.id, { raw: r.raw, fields: r.fields }));
       return m;
     }
 
     // 新CSVのID→行データ
     const newMap = parseCsvToMap(csvText);
-    const newOrder = Array.from(newMap.keys());
 
     // 旧CSV取得
     const { sha: baseSha, text: baseText, eol } = await getCurrentBase();
     const baseParsed = parseCsvToRows(baseText);
-    const baseMap = new Map<string, string>();
-    baseParsed.rows.forEach(r => baseMap.set(r.id, r.raw));
+    function arraysEqual(a: string[], b: string[]): boolean {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
 
     // headerは既存優先→新CSVの先頭行がヘッダならそれ→デフォルト
     let header = baseParsed.header;
@@ -159,9 +190,13 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     for (const r of baseParsed.rows) {
       const id = r.id;
       if (newMap.has(id)) {
-        const newLine = newMap.get(id)!;
-        if (newLine !== r.raw) changed.push(id);
-        keptOrderLines.push(newLine);
+        const next = newMap.get(id)!;
+        if (arraysEqual(next.fields, r.fields)) {
+          keptOrderLines.push(r.raw);
+        } else {
+          changed.push(id);
+          keptOrderLines.push(next.raw);
+        }
         newMap.delete(id); // 消費
       } else {
         // 削除
@@ -172,7 +207,10 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
 
     // 追加（旧に無いID）は新CSVの順で末尾へ
     const addedIds = Array.from(newMap.keys());
-    const addedLines = addedIds.map(id => newMap.get(id)!).filter(Boolean);
+    const addedLines = addedIds
+      .map(id => newMap.get(id))
+      .filter((entry): entry is { raw: string; fields: string[] } => !!entry)
+      .map(entry => entry.raw);
     const allLines = [header, ...keptOrderLines, ...addedLines].filter(Boolean) as string[];
     const newBody = allLines.join(eol) + eol;
 
