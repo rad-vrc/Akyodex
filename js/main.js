@@ -24,6 +24,24 @@ let filteredData = [];
 let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
 let serverCsvRowCount = 0; // /api/csv が返す期待行数（ヘッダで受け取り）
+// 行末ダングリング引用符などの単純な破損を自動修復
+function sanitizeCsvText(text){
+    try{
+        const lines = String(text).split(/\r?\n/);
+        const out = [];
+        for (let i=0;i<lines.length;i++){
+            let line = lines[i];
+            if (!line) { out.push(line); continue; }
+            // ダブルクオートの数が奇数なら、行末に閉じクオートを補う（暫定）
+            const dq = (line.match(/\"/g)||[]).length;
+            if (dq % 2 === 1) {
+                line = line + '"';
+            }
+            out.push(line);
+        }
+        return out.join('\n');
+    }catch(_){ return text; }
+}
 let currentView = 'grid';
 let favoritesOnlyMode = false; // お気に入りのみ表示トグル
 let randomMode = false;        // ランダム表示（現在の絞り込みから抽出）
@@ -430,6 +448,9 @@ async function loadAkyoData() {
 
         console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
 
+        // 速報対処: 行ごとの引用符不整合を自動修復（奇数個の行末に閉じ"を補う）
+        csvText = sanitizeCsvText(csvText);
+
         // CSV解析
         akyoData = parseCSV(csvText);
     window.publicAkyoList = akyoData;
@@ -491,10 +512,16 @@ function parseCSV(csvText) {
     for (let i = 0; i < csvText.length; i++) {
         const char = csvText[i];
 
-                if (char === '"') {
-            if (inQuotes && csvText[i + 1] === '"') {
+            if (char === '"') {
+            const prev = csvText[i - 1];
+            const next = csvText[i + 1];
+            // 連続する二重引用符はエスケープとして扱う
+            if (inQuotes && next === '"') {
                 currentField += '"';
                 i++;
+            } else if (!inQuotes && prev && prev !== ',' && prev !== '\n' && prev !== '\r') {
+                // 開く位置が不正（例: 途中から始まる）→ リテラルとして扱う
+                currentField += '"';
             } else {
                     inQuotes = !inQuotes;
             }
@@ -521,8 +548,8 @@ function parseCSV(csvText) {
 
     if (rows.length === 0) return [];
 
-    // ヘッダー行を除外
-    rows.shift();
+    // ヘッダー行を除外（壊れていても1行目はヘッダとみなす）
+    if (rows.length) rows.shift();
 
     const data = [];
 
@@ -531,7 +558,7 @@ function parseCSV(csvText) {
             return;
         }
 
-        const normalized = values.map(value => value.replace(/\r/g, '').trim());
+        const normalized = values.map(value => value.replace(/\r/g, '').replace(/^\"|\"$/g,'"').trim());
 
         if (normalized[0] && normalized[0].match(/^\d{3}/)) {
             let [id = '', appearance = '', nickname = '', avatarName = ''] = normalized;
@@ -551,6 +578,7 @@ function parseCSV(csvText) {
                 attribute = normalized[4] || '未分類';
                 notes = normalized.slice(5, normalized.length - 2).join(',');
             } else {
+                // 不足列は空で埋める（行崩れの暫定救済）
                 attribute = normalized[4] || '未分類';
                 notes = normalized[5] || '';
                 creator = normalized[6] || '不明';
