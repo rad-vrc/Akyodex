@@ -918,10 +918,14 @@ function createAkyoCard(state) {
     const detailButton = document.createElement('button');
     detailButton.className = 'detail-button w-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white py-3 rounded-2xl hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-bold text-lg shadow-lg hover:shadow-xl relative overflow-hidden';
     detailButton.innerHTML = `
-                <span class="relative z-10 flex items-center justify-center">
-                    <span class="text-2xl mr-2 animate-bounce">🌟</span>
-                    <span>くわしく見る</span>
-                    <span class="text-2xl ml-2 animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                <span class="relative z-10 flex items-center justify-center whitespace-nowrap">
+                    <span class="text-2xl mr-2 hidden sm:inline animate-bounce">🌟</span>
+                    <span class="relative inline-flex items-center">
+                        <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-xl hidden sm:inline animate-bounce">🌟</span>
+                        <span>くわしく見る</span>
+                        <span class="absolute -bottom-4 left-1/2 -translate-x-1/2 text-xl hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                    </span>
+                    <span class="text-2xl ml-2 hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
                 </span>
                 <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
     `;
