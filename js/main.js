@@ -1516,10 +1516,10 @@ function updateStatistics() {
                 .then(text => {
                     const fresh = parseCSV(text);
                     if (Array.isArray(fresh) && fresh.length >= total) {
+                        // データ更新時も現在のフィルタ/モード（検索語・属性/作者・ランダム・お気に入り）を保持する
                         akyoData = fresh;
-                        filteredData = [...akyoData];
                         buildSearchIndex();
-                        updateDisplay();
+                        applyFilters();
                     }
                 })
                 .catch(() => {});

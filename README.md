@@ -12,9 +12,9 @@ Akyoずかんは、500種類以上存在する「Akyo」というなぞの生き
 - VRChatアバターへの直接リンク提供
 - レスポンシブデザインでスマホ・タブレット対応
 
-## ✨ 主な機能
+## 主な機能
 
-### 🎆 現在実装済みの機能
+### 現在実装済みの機能
 
 1. **データ管理**
    - CSV形式のAkyoデータの読み込みと解析（data/Akyo-data.csv または localStorage.AkyoDataCSV）
@@ -66,7 +66,7 @@ Akyoずかんは、500種類以上存在する「Akyo」というなぞの生き
    - 使用済みIDの可視化
    - デバッグログ表示
 
-10. **子供向けデザイン** 🌈
+10. **子供向けデザイン**
     - パステルカラーの優しい配色
     - 丸みを帯びたデザイン要素
     - 楽しいアニメーション効果
@@ -111,7 +111,7 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 }
 ```
 
-## 🚀 今後の実装予定機能
+## 今後の実装予定機能
 
 1. **高度な検索機能**
    - 複数条件の組み合わせ検索
@@ -709,11 +709,13 @@ npx wrangler pages deploy dist --project-name akyodex-site
 ### 画像移行メモ
 
 1. R2へ同期（AWS CLI例）
+
    ```bash
    aws s3 sync ./images s3://$AKYO_BUCKET/images \
      --endpoint-url https://$ACCOUNT_ID.r2.cloudflarestorage.com \
      --exclude "*" --include "[0-9][0-9][0-9]*.webp" --include "[0-9][0-9][0-9]*.png" --include "[0-9][0-9][0-9]*.jpg"
    ```
+
 2. CI/ローカルで `node generate-manifest.mjs` 実行（`FULL_URL=true BASE_URL=https://images.akyodex.com/images` 推奨）
 3. デプロイ後 `?reloadBg=1` でキャッシュ刷新
 
