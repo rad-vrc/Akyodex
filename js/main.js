@@ -27,11 +27,13 @@ let serverCsvRowCount = 0; // /api/csv が返す期待行数（ヘッダで受�
 let currentView = 'grid';
 let favoritesOnlyMode = false; // お気に入りのみ表示トグル
 let randomMode = false;        // ランダム表示（現在の絞り込みから抽出）
+let sortOrder = 'asc';         // 昇順/降順の切り替え
 let currentSearchTerms = [];
 let imageDataMap = {}; // 画像データの格納
 let profileIconCache = { resolved: false, url: null };
 const gridCardCache = new Map();
 const listRowCache = new Map();
+const idCollator = new Intl.Collator(undefined, { numeric: true });
 
 // パフォーマンス最適化: 初期レンダリング件数を制限し、スクロールで段階的に追加
 const INITIAL_RENDER_COUNT = 60;
@@ -619,27 +621,34 @@ function setupEventListeners() {
     document.getElementById('listViewBtn').addEventListener('click', () => switchView('list'));
 
     // クイックフィルター
-    const quickFiltersContainer = document.getElementById('quickFilters');
-    if (quickFiltersContainer) {
-        const quickFilters = quickFiltersContainer.children;
-        if (quickFilters.length > 0) {
-            // ランダム表示トグル（applyFiltersで一貫処理）
-            quickFilters[0].addEventListener('click', () => {
-                randomMode = !randomMode;
-                updateQuickFilterStyles();
-                applyFilters();
-            });
-        }
-        if (quickFilters.length > 1) {
-            // お気に入りのみトグル
-            quickFilters[1].addEventListener('click', () => {
-                favoritesOnlyMode = !favoritesOnlyMode;
-                updateQuickFilterStyles();
-                applyFilters();
-            });
+    const sortToggleBtn = document.getElementById('sortToggleBtn');
+    if (sortToggleBtn) {
+        sortToggleBtn.addEventListener('click', () => {
+            sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
             updateQuickFilterStyles();
-        }
+            applyFilters();
+        });
     }
+
+    const randomToggleBtn = document.getElementById('randomToggleBtn');
+    if (randomToggleBtn) {
+        randomToggleBtn.addEventListener('click', () => {
+            randomMode = !randomMode;
+            updateQuickFilterStyles();
+            applyFilters();
+        });
+    }
+
+    const favoritesToggleBtn = document.getElementById('favoritesToggleBtn');
+    if (favoritesToggleBtn) {
+        favoritesToggleBtn.addEventListener('click', () => {
+            favoritesOnlyMode = !favoritesOnlyMode;
+            updateQuickFilterStyles();
+            applyFilters();
+        });
+    }
+
+    updateQuickFilterStyles();
 
     // 管理者ボタンを追加
     const adminBtn = document.createElement('button');
@@ -735,6 +744,12 @@ function applyFilters() {
         data = data.filter(akyo => akyo.isFavorite);
     }
 
+    // 並び順を適用
+    const comparator = sortOrder === 'asc'
+        ? (a, b) => idCollator.compare(a.id, b.id)
+        : (a, b) => idCollator.compare(b.id, a.id);
+    data.sort(comparator);
+
     // 検索語が無ければそのまま、あればスコアリング
     let result;
     if (!currentSearchTerms.length) {
@@ -784,20 +799,33 @@ function applyFilters() {
 
 // クイックフィルターのスタイル更新（無効時はランダムの無効色に合わせる）
 function updateQuickFilterStyles() {
-    const quickFiltersContainer = document.getElementById('quickFilters');
-    if (!quickFiltersContainer) return;
-    const quickFilters = quickFiltersContainer.children;
-    if (quickFilters.length < 2) return;
-    const randomBtn = quickFilters[0];
-    const favoriteBtn = quickFilters[1];
-    // お気に入りのみの見た目
-    favoriteBtn.className = favoritesOnlyMode
-        ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
-        : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-    // ランダムボタンの見た目（有効時は黄色で強調）
-    randomBtn.className = randomMode
-        ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
-        : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+    const sortBtn = document.getElementById('sortToggleBtn');
+    const randomBtn = document.getElementById('randomToggleBtn');
+    const favoriteBtn = document.getElementById('favoritesToggleBtn');
+
+    if (sortBtn) {
+        if (sortOrder === 'asc') {
+            sortBtn.className = 'attribute-badge quick-filter-badge bg-green-200 text-green-800 hover:bg-green-300 transition-colors';
+            sortBtn.innerHTML = '<i class="fas fa-arrow-up-1-9"></i> 昇順';
+        } else {
+            sortBtn.className = 'attribute-badge quick-filter-badge bg-blue-200 text-blue-800 hover:bg-blue-300 transition-colors';
+            sortBtn.innerHTML = '<i class="fas fa-arrow-down-9-1"></i> 降順';
+        }
+    }
+
+    if (randomBtn) {
+        randomBtn.className = randomMode
+            ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
+            : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+        randomBtn.innerHTML = '<i class="fas fa-dice"></i> ランダム表示';
+    }
+
+    if (favoriteBtn) {
+        favoriteBtn.className = favoritesOnlyMode
+            ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
+            : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
+        favoriteBtn.innerHTML = '<i class="fas fa-star"></i> お気に入りのみ';
+    }
 }
 
 // ランダム表示
