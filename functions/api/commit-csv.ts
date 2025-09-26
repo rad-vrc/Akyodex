@@ -49,18 +49,135 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return errJSON(400, "csv body required");
     }
 
-    // base64（UTF-8 対応）
-    const base64Content = btoa(unescape(encodeURIComponent(csvText)));
-
     const path = `data/akyo-data.csv`;
 
-    // sha 取得関数
-    async function getCurrentSha(): Promise<string | undefined> {
+    // 現行CSVの取得（shaと本文）
+    async function getCurrentBase(): Promise<{ sha?: string; text: string; eol: "\n" | "\r\n" }> {
       const res = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`, token);
-      if (!res.ok) return undefined;
+      if (!res.ok) return { sha: undefined, text: "", eol: "\n" };
       const json = await res.json();
-      return json?.sha as string | undefined;
+      const sha = json?.sha as string | undefined;
+      let text = "";
+      try {
+        const raw = json?.content ? String(json.content).replace(/\n/g, "") : "";
+        text = decodeURIComponent(escape(atob(raw)));
+      } catch (_) {
+        text = "";
+      }
+      const eol = text.includes("\r\n") ? "\r\n" : "\n";
+      return { sha, text, eol };
     }
+
+    // 旧→新の最小差分で組み立て
+    function splitLinesPreserve(text: string): string[] {
+      if (!text) return [];
+      return text.replace(/\r\n/g, "\n").split("\n");
+    }
+
+    function isHeader(line: string): boolean {
+      return /^\s*ID\s*,/i.test(line) || /^\s*,?\s*見た目,/.test(line);
+    }
+
+    function parseFirstField(line: string): string | null {
+      if (!line) return null;
+      let i = 0; const n = line.length;
+      // handle optional BOM
+      if (line.charCodeAt(0) === 0xFEFF) i = 1;
+      if (i >= n) return null;
+      if (line[i] === '"') {
+        i++; let field = "";
+        while (i < n) {
+          const ch = line[i];
+          if (ch === '"') {
+            if (i + 1 < n && line[i + 1] === '"') { field += '"'; i += 2; continue; }
+            // end quote
+            i++;
+            // next should be comma or end
+            return field;
+          } else { field += ch; i++; }
+        }
+        return field || null;
+      } else {
+        const j = line.indexOf(',');
+        return (j >= 0 ? line.slice(0, j) : line).trim() || null;
+      }
+    }
+
+    function csvQuote(val: string): string {
+      const needs = /[",\n\r]/.test(val);
+      const body = val.replace(/"/g, '""');
+      return needs ? `"${body}"` : body;
+    }
+
+    function buildLineFromArray(arr: string[]): string {
+      return arr.map(csvQuote).join(',');
+    }
+
+    function parseCsvToRows(text: string): { header?: string; rows: Array<{ id: string; raw: string; fields?: string[] }> } {
+      const lines = splitLinesPreserve(text);
+      const out: Array<{ id: string; raw: string; fields?: string[] }> = [];
+      let header: string | undefined;
+      for (let idx = 0; idx < lines.length; idx++) {
+        const line = lines[idx];
+        if (!line) continue;
+        if (!header && isHeader(line)) { header = line; continue; }
+        const id = (parseFirstField(line) || '').trim();
+        if (!id || !/^\d{3}$/.test(id)) continue;
+        out.push({ id, raw: line });
+      }
+      return { header, rows: out };
+    }
+
+    function parseCsvToMap(text: string): Map<string, string> {
+      const { rows } = parseCsvToRows(text);
+      const m = new Map<string, string>();
+      rows.forEach(r => m.set(r.id, r.raw));
+      return m;
+    }
+
+    // 新CSVのID→行データ
+    const newMap = parseCsvToMap(csvText);
+    const newOrder = Array.from(newMap.keys());
+
+    // 旧CSV取得
+    const { sha: baseSha, text: baseText, eol } = await getCurrentBase();
+    const baseParsed = parseCsvToRows(baseText);
+    const baseMap = new Map<string, string>();
+    baseParsed.rows.forEach(r => baseMap.set(r.id, r.raw));
+
+    // headerは既存優先→新CSVの先頭行がヘッダならそれ→デフォルト
+    let header = baseParsed.header;
+    if (!header) {
+      const firstLine = splitLinesPreserve(csvText).find(l => !!l);
+      if (firstLine && isHeader(firstLine)) header = firstLine;
+    }
+    if (!header) header = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL';
+
+    // 旧順序を基準に差し替え、無いIDはスキップ、削除は落ちる
+    const changed: string[] = [];
+    const keptOrderLines: string[] = [];
+    for (const r of baseParsed.rows) {
+      const id = r.id;
+      if (newMap.has(id)) {
+        const newLine = newMap.get(id)!;
+        if (newLine !== r.raw) changed.push(id);
+        keptOrderLines.push(newLine);
+        newMap.delete(id); // 消費
+      } else {
+        // 削除
+        changed.push(id);
+        // 何もpushしない
+      }
+    }
+
+    // 追加（旧に無いID）は新CSVの順で末尾へ
+    const addedIds = Array.from(newMap.keys());
+    const addedLines = addedIds.map(id => newMap.get(id)!).filter(Boolean);
+    const allLines = [header, ...keptOrderLines, ...addedLines].filter(Boolean) as string[];
+    const newBody = allLines.join(eol) + eol;
+
+    // コミット
+    const base64Content = btoa(unescape(encodeURIComponent(newBody)));
 
     // 競合時リトライ
     let attempt = 0;
@@ -68,11 +185,11 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     let lastErrorText = "";
     while (attempt < maxAttempts) {
       attempt++;
-      const sha = await getCurrentSha();
+      const sha = baseSha;
       const putRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`, token, {
         method: "PUT",
         body: JSON.stringify({
-          message: `chore: update akyo-data.csv (via API)` ,
+          message: `chore: update akyo-data.csv (via API)\nchanged: ${changed.join(', ')}\nadded: ${addedIds.join(', ')}` ,
           content: base64Content,
           branch,
           // 既存が無ければ sha 省略で新規作成
