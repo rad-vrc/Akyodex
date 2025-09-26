@@ -969,7 +969,11 @@ function updateAkyoCard(card, state) {
 
     const creator = card.querySelector('.akyo-creator');
     if (creator) {
-        creator.textContent = `作者: ${state.creator}`;
+        let creatorText = `作者: ${state.creator}`;
+        if (state.avatarName && state.avatarName !== state.displayName) {
+            creatorText = `アバター名: ${state.avatarName}\n${creatorText}`;
+        }
+        creator.textContent = creatorText;
     }
 
     const favoriteIcon = card.querySelector('[data-favorite-icon="grid"]');
