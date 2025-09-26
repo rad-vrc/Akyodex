@@ -131,6 +131,47 @@
         });
     </script>
     <script src="js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isFinderPage = window.location.pathname.endsWith('finder.html');
+            if (!isFinderPage) return;
+
+            const addTab = document.getElementById('addTab');
+            if (!addTab) return;
+
+            const prefillAkyoDefaults = () => {
+                const form = addTab.querySelector('form');
+                if (!form) return;
+
+                const nicknameInput = form.querySelector('input[name="nickname"]');
+                if (nicknameInput && !nicknameInput.value) {
+                    nicknameInput.value = 'Akyo';
+                }
+
+                const avatarNameInput = form.querySelector('input[name="avatarName"]');
+                if (avatarNameInput && !avatarNameInput.value) {
+                    avatarNameInput.value = 'Akyo';
+                }
+            };
+
+            // 監視してフォームが読み込まれたら初期値を設定
+            const observer = new MutationObserver(() => prefillAkyoDefaults());
+            observer.observe(addTab, { childList: true, subtree: true });
+
+            prefillAkyoDefaults();
+
+            if (typeof window.switchTab === 'function') {
+                const originalSwitchTab = window.switchTab;
+                window.switchTab = function(tabName) {
+                    const result = originalSwitchTab.apply(this, arguments);
+                    if (tabName === 'add') {
+                        prefillAkyoDefaults();
+                    }
+                    return result;
+                };
+            }
+        });
+    </script>
 </body>
 </html>
 
