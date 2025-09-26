@@ -1259,8 +1259,8 @@ function handleBulkImages(files) {
     // プログレス表示
     if (progressDiv) {
         progressDiv.classList.remove('hidden');
-        totalFilesSpan.textContent = imageFiles.length;
-        progressText.textContent = '0';
+        if (totalFilesSpan) totalFilesSpan.textContent = imageFiles.length;
+        if (progressText) progressText.textContent = '0';
     }
 
     // グローバル変数に一時保存
@@ -1299,7 +1299,9 @@ function handleBulkImages(files) {
                 </button>
             `;
 
-            mappingList.appendChild(div);
+            if (mappingList) {
+                mappingList.appendChild(div);
+            }
 
             // データを一時保存
             window.pendingImageMappings.push({
@@ -1618,6 +1620,7 @@ function removeMapping(button) {
 function updateImageGallery() {
     const gallery = document.getElementById('imageGallery');
     const imageCount = document.getElementById('imageCount');
+    if (!gallery) return;
     gallery.innerHTML = '';
 
     // 画像数を更新
