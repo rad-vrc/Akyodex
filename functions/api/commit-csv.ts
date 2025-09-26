@@ -79,7 +79,25 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       });
 
       if (putRes.ok) {
-        return okJSON({ ok: true, committed: true, attempt }, { headers: corsHeaders(origin) });
+        let payload: any = null;
+        try { payload = await putRes.json(); } catch (_) {}
+        const commitSha = payload?.commit?.sha as string | undefined;
+        const contentSha = payload?.content?.sha as string | undefined;
+        const fileHtmlUrl = payload?.content?.html_url as string | undefined;
+        const commitUrl = commitSha ? `https://github.com/${owner}/${repo}/commit/${commitSha}` : undefined;
+        return okJSON({
+          ok: true,
+          committed: true,
+          attempt,
+          owner,
+          repo,
+          branch,
+          path,
+          commitSha,
+          contentSha,
+          commitUrl,
+          fileHtmlUrl,
+        }, { headers: corsHeaders(origin) });
       }
 
       const status = putRes.status;
