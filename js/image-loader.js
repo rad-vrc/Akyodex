@@ -1,11 +1,5 @@
 // Akyo画像データマッピング
 // 画像URLとAkyoIDの対応表
-// 1-20番の画像は管理画面から再登録するため、空オブジェクトに初期化
-
-const akyoImageUrls = {
-    // 管理画面から再登録してください
-};
-
 // 画像マニフェスト（images/manifest.json）からのマッピング
 // 形式1: { "map": { "001": "001オリジン.png", ... } }
 // 形式2: { "files": ["001オリジン.png", ...] }
@@ -90,10 +84,6 @@ function getAkyoImageUrl(akyoId) {
             return `images/${v}${getAssetsVersionSuffix()}`;
         }
     } catch (_) {}
-    // まずURLマッピングから探す
-    if (akyoImageUrls[akyoId]) {
-        return akyoImageUrls[akyoId];
-    }
     // マニフェストから探す
     if (akyoImageManifestMap && akyoImageManifestMap[akyoId]) {
         const val = akyoImageManifestMap[akyoId];
@@ -131,5 +121,5 @@ function getAkyoImageUrl(akyoId) {
 
 // エクスポート
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { akyoImageUrls, setupLazyLoading, getAkyoImageUrl, loadImagesManifest };
+    module.exports = { setupLazyLoading, getAkyoImageUrl, loadImagesManifest };
 }

@@ -2,13 +2,8 @@
 // 既存のコードと互換性を保ちながら、IndexedDBを使用可能にする
 
 (function() {
-    // StorageManagerのインスタンスを確認
     if (!window.storageManager) {
-        console.debug('StorageManager not found. Creating new instance...');
-        // storage-manager.jsが読み込まれていない場合は動的に読み込む
-        const script = document.createElement('script');
-        script.src = 'js/storage-manager.js';
-        document.head.appendChild(script);
+        console.warn('StorageManager not found. Ensure js/storage-manager.js is loaded before storage-adapter.js');
     }
 
     // 画像データ読み込み（LocalStorage → IndexedDB の順で試行）

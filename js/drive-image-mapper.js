@@ -70,7 +70,7 @@ function generateImageMapping() {
                 fileName: data.fileName,
                 driveUrl: data.previewUrl,
                 // 既存の画像URLがあれば保持
-                fallbackUrl: akyoImageUrls ? akyoImageUrls[data.id] : null
+                fallbackUrl: null
             };
         }
     });
