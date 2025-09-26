@@ -1,4 +1,4 @@
-const PRECACHE = 'akyo-precache-v4';
+const PRECACHE = 'akyo-precache-v5';
 let precacheUrlList = null;
 let precacheUrlSet = null;
 
@@ -20,7 +20,6 @@ function buildPrecacheUrls() {
     './js/image-loader.js',
     './js/main.js',
     './js/admin.js',
-    './data/akyo-data.csv',
     './images/logo.webp',
   ];
 
@@ -114,6 +113,22 @@ self.addEventListener('fetch', (event) => {
           headers: { 'content-type': 'application/json' },
           status: 200,
         });
+      }
+    })());
+    return;
+  }
+
+  // 1.6) CSVは常にネットワーク優先（最新版を即時反映）
+  if (url.pathname === '/data/akyo-data.csv') {
+    event.respondWith((async () => {
+      const cache = await caches.open(PRECACHE);
+      try {
+        const fresh = await fetch(new Request(req, { cache: 'no-cache' }));
+        if (fresh && fresh.ok) await cache.put(req, fresh.clone());
+        return fresh;
+      } catch (_) {
+        const cached = await cache.match(req);
+        return cached || new Response('', { status: 204 });
       }
     })());
     return;

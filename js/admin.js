@@ -227,9 +227,15 @@ async function loadAkyoData() {
             console.debug('LocalStorageから更新データを読み込み');
             csvText = updatedCSV;
         } else {
-            // LocalStorageにない場合はファイルから読み込み
-            const response = await fetch('data/akyo-data.csv');
-            csvText = await response.text();
+            // LocalStorageにない場合はファイルから読み込み（API経由で最新を取得）
+            const ver = localStorage.getItem('akyoDataVersion') || localStorage.getItem('akyoAssetsVersion') || String(Date.now());
+            const response = await fetch(`/api/csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+            if (!response.ok) {
+                const fallback = await fetch(`data/akyo-data.csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                csvText = await fallback.text();
+            } else {
+                csvText = await response.text();
+            }
         }
 
         akyoData = parseCSV(csvText);
@@ -1022,6 +1028,48 @@ async function updateCSVFile() {
     localStorage.setItem('akyoDataCSV', csvContent);
     console.debug('CSV saved to localStorage, size:', csvContent.length, 'bytes');
     console.debug('First 200 chars:', csvContent.substring(0, 200));
+
+    // GitHubへ即時反映（サーバーレスAPI）
+    try {
+        const adminPassword = adminSessionToken;
+        if (adminPassword) {
+            const res = await fetch('/api/commit-csv', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'text/plain; charset=utf-8',
+                    'authorization': `Bearer ${adminPassword}`,
+                },
+                body: csvContent,
+            });
+            let json = null;
+            try { json = await res.clone().json(); } catch(_) {}
+            if (!res.ok) {
+                let detail = '';
+                try {
+                    if (json && typeof json === 'object') {
+                        detail = json.error || JSON.stringify(json);
+                    } else {
+                        detail = await res.text();
+                    }
+                } catch(_) {}
+                const msg = `GitHubへの反映に失敗しました (${res.status}) ${detail ? String(detail).slice(0, 200) : ''}`.trim();
+                console.error('commit-csv failed', res.status, detail || json);
+                showNotification(msg, 'error');
+            } else {
+                console.debug('commit-csv ok', json);
+                // バージョンアップで即時反映
+                const ver = parseInt(localStorage.getItem('akyoDataVersion') || '0', 10) + 1;
+                localStorage.setItem('akyoDataVersion', String(ver));
+                localStorage.setItem('akyoAssetsVersion', String(ver));
+                showNotification('GitHubに反映しました（最新データを取得します）', 'success');
+            }
+        }
+    } catch (e) {
+        console.error('commit-csv request error', e);
+        const detail = (e && (e.message || e.toString && e.toString())) || '';
+        const msg = `GitHubへの反映通信でエラーが発生しました ${detail ? `- ${String(detail).slice(0, 200)}` : ''}`.trim();
+        showNotification(msg, 'error');
+    }
 
     // ファイルとして保存するためのBlobを作成
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

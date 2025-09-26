@@ -399,14 +399,17 @@ async function loadAkyoData() {
             console.debug('LocalStorageから更新データを読み込み');
             csvText = updatedCSV;
         } else {
-            // LocalStorageにない場合はファイルから読み込み
-            const response = await fetch('data/akyo-data.csv');
-
+            // LocalStorageにない場合はファイルから最新を読み込み（バージョン付与＋no-cache）
+            const ver = localStorage.getItem('akyoDataVersion') || localStorage.getItem('akyoAssetsVersion') || String(Date.now());
+            const response = await fetch(`/api/csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
             if (!response.ok) {
-                throw new Error(`CSVファイルの読み込みに失敗: ${response.status}`);
+                // フォールバック: 直接CSV
+                const fallback = await fetch(`data/akyo-data.csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                if (!fallback.ok) throw new Error(`CSVファイルの読み込みに失敗: ${response.status}`);
+                csvText = await fallback.text();
+            } else {
+                csvText = await response.text();
             }
-
-            csvText = await response.text();
         }
 
         console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
