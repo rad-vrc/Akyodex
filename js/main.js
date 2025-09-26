@@ -1424,8 +1424,10 @@ function toggleFavorite(akyoId) {
 
 // 統計情報の更新
 function updateStatistics() {
-    document.getElementById('totalCount').textContent = akyoData.length;
-    document.getElementById('displayCount').textContent = filteredData.length;
+    const total = akyoData.length;
+    const displayed = Math.min(filteredData.length, renderLimit);
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('displayCount').textContent = displayed;
     document.getElementById('favoriteCount').textContent = favorites.length;
 }
 
