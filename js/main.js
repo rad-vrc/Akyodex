@@ -23,6 +23,7 @@ window.publicAkyoList = akyoData;
 let filteredData = [];
 let searchIndex = []; // { id, text }
 let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
+let serverCsvRowCount = 0; // /api/csv が返す期待行数（ヘッダで受け取り）
 let currentView = 'grid';
 let favoritesOnlyMode = false; // お気に入りのみ表示トグル
 let randomMode = false;        // ランダム表示（現在の絞り込みから抽出）
@@ -397,6 +398,11 @@ async function loadAkyoData() {
         try {
             const response = await fetch(`/api/csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
             if (!response.ok) throw new Error(`api/csv failed: ${response.status}`);
+            const headerRowCount = response.headers.get('x-akyo-row-count');
+            if (headerRowCount) {
+                serverCsvRowCount = parseInt(headerRowCount, 10) || 0;
+                console.debug('server row count header:', serverCsvRowCount);
+            }
             csvText = await response.text();
             // 正常取得できたら、古い手動保存データは無効化
             if (localStorage.getItem('akyoDataCSV')) {
@@ -1441,7 +1447,8 @@ function updateStatistics() {
     // 自己修復: 描画数 < 総数 かつ、フィルタなし・ランダム/お気に入りモードでない場合はCSVを再取得
     const noFilter = !(document.getElementById('attributeFilter')?.value) && !(document.getElementById('creatorFilter')?.value) && currentSearchTerms.length === 0;
     if (noFilter && !randomMode && !favoritesOnlyMode) {
-        if (total > displayed) {
+        // サーバが告げる期待総数が取得総数を上回る場合も再取得
+        if (total > displayed || (serverCsvRowCount && serverCsvRowCount > total)) {
             // 過去キャッシュの可能性 → 最新CSVを再取得
             const ts = Date.now();
             fetch(`/api/csv?v=${ts}`, { cache: 'no-cache' })
