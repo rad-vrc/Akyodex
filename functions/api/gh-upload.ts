@@ -1,5 +1,12 @@
 import { corsHeaders, errJSON, okJSON, requireAuth, sanitizeFileName, threeDigits } from "../_utils";
 
+// Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
+type PagesFunction = (context: {
+  request: Request;
+  env?: Record<string, any>;
+  [key: string]: any;
+}) => Promise<Response> | Response;
+
 interface GithubCommitResponse {
   content?: { sha: string };
   commit?: { sha: string };
