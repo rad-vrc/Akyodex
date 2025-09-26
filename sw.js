@@ -1,4 +1,4 @@
-const PRECACHE = 'akyo-precache-v3';
+const PRECACHE = 'akyo-precache-v4';
 let precacheUrlList = null;
 let precacheUrlSet = null;
 
@@ -22,7 +22,6 @@ function buildPrecacheUrls() {
     './js/admin.js',
     './data/akyo-data.csv',
     './images/logo.webp',
-    './images/profileIcon.webp',
   ];
 
   return coreAssets.map((path) => new URL(path, scope).toString());
