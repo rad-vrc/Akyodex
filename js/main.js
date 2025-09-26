@@ -921,9 +921,13 @@ function createAkyoCard(state) {
                 <span class="relative z-10 flex items-center justify-center whitespace-nowrap">
                     <span class="text-2xl mr-2 hidden sm:inline animate-bounce">🌟</span>
                     <span class="relative inline-flex items-center">
-                        <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-xl hidden sm:inline animate-bounce">🌟</span>
-                        <span>くわしく見る</span>
-                        <span class="absolute -bottom-4 left-1/2 -translate-x-1/2 text-xl hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                        <span>くわ</span>
+                        <span class="relative inline-block">
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-[0.75em] sm:text-xl animate-bounce">🌟</span>
+                            <span>しく</span>
+                            <span class="absolute -bottom-3 left-1/2 -translate-x-1/2 text-[0.75em] sm:text-xl animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                        </span>
+                        <span>見る</span>
                     </span>
                     <span class="text-2xl ml-2 hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
                 </span>
