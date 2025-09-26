@@ -69,9 +69,34 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     }
 
     // 旧→新の最小差分で組み立て
-    function splitLinesPreserve(text: string): string[] {
+    // 引用符内の改行を保持したまま、レコード単位で分割
+    function splitCsvRecordsPreserveQuotes(text: string): string[] {
       if (!text) return [];
-      return text.replace(/\r\n/g, "\n").split("\n");
+      const records: string[] = [];
+      let cur = "";
+      let inQuotes = false;
+      const s = text.replace(/\r\n/g, "\n");
+      for (let i = 0; i < s.length; i++) {
+        const ch = s[i];
+        cur += ch;
+        if (ch === '"') {
+          const next = s[i + 1];
+          if (inQuotes && next === '"') { // エスケープ "" はそのまま消費
+            cur += next;
+            i++;
+            continue;
+          }
+          inQuotes = !inQuotes;
+        }
+        if (!inQuotes && ch === '\n') {
+          // レコード終端（引用外の改行）
+          // 行末の\nは残しつつ、recordsには改行を含まない文字列として格納
+          records.push(cur.endsWith("\n") ? cur.slice(0, -1) : cur);
+          cur = "";
+        }
+      }
+      if (cur.length) records.push(cur);
+      return records;
     }
 
     function isHeader(line: string): boolean {
@@ -104,53 +129,44 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     }
 
     function parseCsvLineToFields(line: string): string[] {
+      // レコード全体（改行を含む場合あり）から値配列へ
       const fields: string[] = [];
+      if (!line) return fields;
       if (line.charCodeAt(0) === 0xFEFF) line = line.slice(1);
       let i = 0;
       const n = line.length;
       while (i < n) {
         let field = "";
-        let quoted = false;
-        if (line[i] === '"') {
-          quoted = true;
-          i++;
-          while (i < n) {
-            const ch = line[i];
-            if (ch === '"') {
-              if (i + 1 < n && line[i + 1] === '"') { field += '"'; i += 2; continue; }
-              i++;
-              break;
-            }
-            field += ch;
-            i++;
+        let inQ = false;
+        if (line[i] === '"') { inQ = true; i++; }
+        while (i < n) {
+          const ch = line[i];
+          if (ch === '"') {
+            const next = line[i + 1];
+            if (inQ && next === '"') { field += '"'; i += 2; continue; }
+            if (inQ) { i++; inQ = false; continue; }
           }
-        } else {
-          let j = i;
-          while (j < n && line[j] !== ',') j++;
-          field = line.slice(i, j);
-          i = j;
+          if (!inQ && ch === ',') { i++; break; }
+          field += ch; i++;
         }
         fields.push(field);
-        if (quoted) {
-          while (i < n && line[i] !== ',') i++;
-        }
-        if (i < n && line[i] === ',') i++;
+        // カンマが無く終了した場合は次ループでbreakされる
       }
       return fields;
     }
 
     function parseCsvToRows(text: string): { header?: string; rows: Array<{ id: string; raw: string; fields: string[] }> } {
-      const lines = splitLinesPreserve(text);
+      const records = splitCsvRecordsPreserveQuotes(text);
       const out: Array<{ id: string; raw: string; fields: string[] }> = [];
       let header: string | undefined;
-      for (let idx = 0; idx < lines.length; idx++) {
-        const line = lines[idx];
-        if (!line) continue;
-        if (!header && isHeader(line)) { header = line; continue; }
-        const id = (parseFirstField(line) || '').trim();
+      for (let idx = 0; idx < records.length; idx++) {
+        const rec = records[idx];
+        if (rec == null || rec === "") continue;
+        if (!header && isHeader(rec)) { header = rec; continue; }
+        const id = (parseFirstField(rec) || '').trim();
         if (!id || !/^\d{3}$/.test(id)) continue;
-        const fields = parseCsvLineToFields(line);
-        out.push({ id, raw: line, fields });
+        const fields = parseCsvLineToFields(rec);
+        out.push({ id, raw: rec, fields });
       }
       return { header, rows: out };
     }
@@ -162,12 +178,9 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return m;
     }
 
-    // 新CSVのID→行データ
-    const newMap = parseCsvToMap(csvText);
+    // 新CSVのID→行データ（レコード単位）
+    const newMapOriginal = parseCsvToMap(csvText);
 
-    // 旧CSV取得
-    const { sha: baseSha, text: baseText, eol } = await getCurrentBase();
-    const baseParsed = parseCsvToRows(baseText);
     function arraysEqual(a: string[], b: string[]): boolean {
       if (a.length !== b.length) return false;
       for (let i = 0; i < a.length; i++) {
@@ -176,54 +189,56 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return true;
     }
 
-    // headerは既存優先→新CSVの先頭行がヘッダならそれ→デフォルト
-    let header = baseParsed.header;
-    if (!header) {
-      const firstLine = splitLinesPreserve(csvText).find(l => !!l);
-      if (firstLine && isHeader(firstLine)) header = firstLine;
-    }
-    if (!header) header = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL';
-
-    // 旧順序を基準に差し替え、無いIDはスキップ、削除は落ちる
-    const changed: string[] = [];
-    const keptOrderLines: string[] = [];
-    for (const r of baseParsed.rows) {
-      const id = r.id;
-      if (newMap.has(id)) {
-        const next = newMap.get(id)!;
-        if (arraysEqual(next.fields, r.fields)) {
-          keptOrderLines.push(r.raw);
-        } else {
-          changed.push(id);
-          keptOrderLines.push(next.raw);
-        }
-        newMap.delete(id); // 消費
-      } else {
-        // 削除
-        changed.push(id);
-        // 何もpushしない
-      }
-    }
-
-    // 追加（旧に無いID）は新CSVの順で末尾へ
-    const addedIds = Array.from(newMap.keys());
-    const addedLines = addedIds
-      .map(id => newMap.get(id))
-      .filter((entry): entry is { raw: string; fields: string[] } => !!entry)
-      .map(entry => entry.raw);
-    const allLines = [header, ...keptOrderLines, ...addedLines].filter(Boolean) as string[];
-    const newBody = allLines.join(eol) + eol;
-
-    // コミット
-    const base64Content = btoa(unescape(encodeURIComponent(newBody)));
-
     // 競合時リトライ
     let attempt = 0;
     const maxAttempts = 3;
     let lastErrorText = "";
     while (attempt < maxAttempts) {
       attempt++;
-      const sha = baseSha;
+      // 最新のベースを毎回取得
+      const { sha: currentSha, text: currentBaseText, eol } = await getCurrentBase();
+      const baseParsed = parseCsvToRows(currentBaseText);
+
+      // headerは既存優先→新CSVの先頭レコードがヘッダならそれ→デフォルト
+      let header = baseParsed.header;
+      if (!header) {
+        const firstRec = splitCsvRecordsPreserveQuotes(csvText).find(l => !!l);
+        if (firstRec && isHeader(firstRec)) header = firstRec;
+      }
+      if (!header) header = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL';
+
+      // 差分組み立て（旧順序を尊重）。毎回 fresh なマップを使う
+      const newMap = new Map(newMapOriginal);
+      const changed: string[] = [];
+      const keptOrderLines: string[] = [];
+      for (const r of baseParsed.rows) {
+        const id = r.id;
+        if (newMap.has(id)) {
+          const next = newMap.get(id)!;
+          if (arraysEqual(next.fields, r.fields)) {
+            keptOrderLines.push(r.raw);
+          } else {
+            changed.push(id);
+            keptOrderLines.push(next.raw);
+          }
+          newMap.delete(id);
+        } else {
+          // 削除
+          changed.push(id);
+          // 何もpushしない（落とす）
+        }
+      }
+      // 追加（旧に無いID）は新CSV順のまま末尾へ
+      const addedIds = Array.from(newMap.keys());
+      const addedLines = addedIds
+        .map(id => newMap.get(id))
+        .filter((entry): entry is { raw: string; fields: string[] } => !!entry)
+        .map(entry => entry.raw);
+      const allLines = [header, ...keptOrderLines, ...addedLines].filter(Boolean) as string[];
+      const newBody = allLines.join(eol) + eol;
+      const base64Content = btoa(unescape(encodeURIComponent(newBody)));
+
+      const sha = currentSha;
       const putRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`, token, {
         method: "PUT",
         body: JSON.stringify({
@@ -259,7 +274,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
 
       const status = putRes.status;
       lastErrorText = await putRes.text();
-      // 409/422 は競合・検証エラー。再取得→再試行
+      // 409/422 は競合・検証エラー。短い指数バックオフで再試行
       if (status === 409 || status === 422) {
         await new Promise((r) => setTimeout(r, 300 * attempt));
         continue;
