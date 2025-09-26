@@ -12,6 +12,13 @@ const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg"]);
 const ALLOWED_EXTENSIONS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
 const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
+// Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
+type PagesFunction = (context: {
+  request: Request;
+  env?: Record<string, any>;
+  [key: string]: any;
+}) => Promise<Response> | Response;
+
 interface GithubCommitResponse {
   content?: { sha: string };
   commit?: { sha: string };

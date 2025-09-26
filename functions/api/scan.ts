@@ -1,5 +1,12 @@
 import { corsHeaders, enforceRateLimit, errJSON, okJSON, requireAuth } from "../_utils";
 
+// Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
+type PagesFunction = (context: {
+  request: Request;
+  env?: Record<string, any>;
+  [key: string]: any;
+}) => Promise<Response> | Response;
+
 type Choice = {
   key: string;
   extScore: number;

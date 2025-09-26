@@ -1,5 +1,12 @@
 import { corsHeaders, errJSON, okJSON, requireAuth } from "../_utils";
 
+// Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
+type PagesFunction = (context: {
+  request: Request;
+  env?: Record<string, any>;
+  [key: string]: any;
+}) => Promise<Response> | Response;
+
 export const onRequestOptions: PagesFunction = async ({ request }) => {
   return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
 };
