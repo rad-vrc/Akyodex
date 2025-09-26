@@ -1061,7 +1061,8 @@ async function updateCSVFile() {
                 const ver = parseInt(localStorage.getItem('akyoDataVersion') || '0', 10) + 1;
                 localStorage.setItem('akyoDataVersion', String(ver));
                 localStorage.setItem('akyoAssetsVersion', String(ver));
-                showNotification('GitHubに反映しました（最新データを取得します）', 'success');
+                const link = (json && (json.commitUrl || json.fileHtmlUrl)) ? `\n${json.commitUrl || json.fileHtmlUrl}` : '';
+                showNotification(`GitHubに反映しました（最新データを取得します）${link}`, 'success');
             }
         }
     } catch (e) {

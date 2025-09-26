@@ -13,6 +13,8 @@ async function githubFetch(path: string, token: string, init: RequestInit = {}):
     authorization: `Bearer ${token}`,
     accept: "application/vnd.github+json",
     "content-type": "application/json; charset=utf-8",
+    "user-agent": "Akyodex-Worker/1.0",
+    "x-github-api-version": "2022-11-28",
     ...(init.headers as Record<string, string> | undefined),
   } as Record<string, string>;
   return fetch(url, { ...init, headers });
