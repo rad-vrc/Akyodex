@@ -54,10 +54,15 @@
     // グローバルへ反映
     if (typeof window !== 'undefined'){
       window.akyoImageManifestMap = map;
-      // バージョン連携（任意）
+      // バージョン連携（安定化）
       try {
-        const ver = (manifest && (manifest.version || manifest.v)) || Date.now().toString();
-        localStorage.setItem('akyoAssetsVersion', String(ver));
+        const current = localStorage.getItem('akyoAssetsVersion');
+        const manifestVer = (manifest && (manifest.version || manifest.v)) || '';
+        // 1) マニフェストにversionがあれば採用
+        // 2) 無ければ既存値を維持
+        // 3) それも無ければ '1' を使用（時間依存の値は使わない）
+        const ver = String(manifestVer || current || '1');
+        localStorage.setItem('akyoAssetsVersion', ver);
       } catch(_){ }
     }
     return map;

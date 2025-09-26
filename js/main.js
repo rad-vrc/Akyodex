@@ -31,11 +31,13 @@ function sanitizeCsvText(text){
         const out = [];
         for (let i=0;i<lines.length;i++){
             let line = lines[i];
-            if (!line) { out.push(line); continue; }
-            // ダブルクオートの数が奇数なら、行末に閉じクオートを補う（暫定）
-            const dq = (line.match(/\"/g)||[]).length;
-            if (dq % 2 === 1) {
-                line = line + '"';
+            if (line == null) { out.push(''); continue; }
+            // 末尾CR除去
+            if (line.endsWith('\r')) line = line.slice(0, -1);
+            // 外側の不整合な引用符の暫定修復：先頭と末尾のダブルクオートが奇数なら末尾に補完
+            const dqCount = (line.match(/\"/g) || []).length;
+            if (dqCount % 2 === 1) {
+                line += '"';
             }
             out.push(line);
         }
@@ -507,25 +509,25 @@ function parseCSV(csvText) {
     const rows = [];
     let currentField = '';
     let currentRow = [];
-        let inQuotes = false;
+    let inQuotes = false;
 
     for (let i = 0; i < csvText.length; i++) {
         const char = csvText[i];
 
-            if (char === '"') {
+        if (char === '"') {
             const prev = csvText[i - 1];
             const next = csvText[i + 1];
-            // 連続する二重引用符はエスケープとして扱う
+            // ダブルクオートのエスケープ（"" -> ")
             if (inQuotes && next === '"') {
                 currentField += '"';
                 i++;
             } else if (!inQuotes && prev && prev !== ',' && prev !== '\n' && prev !== '\r') {
-                // 開く位置が不正（例: 途中から始まる）→ リテラルとして扱う
+                // 非正規な場所のダブルクオートは文字として扱う
                 currentField += '"';
             } else {
-                    inQuotes = !inQuotes;
+                inQuotes = !inQuotes;
             }
-                } else if (char === ',' && !inQuotes) {
+        } else if (char === ',' && !inQuotes) {
             currentRow.push(currentField);
             currentField = '';
         } else if ((char === '\n' || char === '\r') && !inQuotes) {
@@ -536,7 +538,7 @@ function parseCSV(csvText) {
             rows.push(currentRow);
             currentRow = [];
             currentField = '';
-                } else {
+        } else {
             currentField += char;
         }
     }
@@ -558,7 +560,14 @@ function parseCSV(csvText) {
             return;
         }
 
-        const normalized = values.map(value => value.replace(/\r/g, '').replace(/^\"|\"$/g,'"').trim());
+        // フィールドの外側ダブルクオートのみ除去（両端がダブルクオートで囲まれている場合）
+        const normalized = values.map(value => {
+            const v = (value || '').replace(/\r/g, '');
+            if (v.length >= 2 && v.startsWith('"') && v.endsWith('"')) {
+                return v.slice(1, -1);
+            }
+            return v.trim();
+        });
 
         if (normalized[0] && normalized[0].match(/^\d{3}/)) {
             let [id = '', appearance = '', nickname = '', avatarName = ''] = normalized;
