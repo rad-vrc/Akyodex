@@ -1,4 +1,4 @@
-import { corsHeaders, errJSON, okJSON, requireAuth } from "../_utils";
+import { corsHeaders, enforceRateLimit, errJSON, okJSON, requireAuth } from "../_utils";
 
 type Choice = {
   key: string;
@@ -34,6 +34,11 @@ export const onRequestPost = async ({ request, env }: any) => {
   try {
     // 認証（owner/admin）
     requireAuth(request, env as any);
+    await enforceRateLimit(request, env as any, {
+      prefix: "scan",
+      limit: 5,
+      windowSeconds: 300,
+    });
 
     const bucket = (env as any).AKYO_BUCKET;
     const kv = (env as any).AKYO_KV;

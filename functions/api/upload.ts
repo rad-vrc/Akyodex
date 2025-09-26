@@ -1,4 +1,16 @@
-import { corsHeaders, errJSON, okJSON, requireAuth, sanitizeFileName, threeDigits } from "../_utils";
+import {
+  corsHeaders,
+  enforceRateLimit,
+  errJSON,
+  okJSON,
+  requireAuth,
+  sanitizeFileName,
+  threeDigits,
+} from "../_utils";
+
+const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg"]);
+const ALLOWED_EXTENSIONS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
+const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export const onRequestOptions: PagesFunction = async ({ request }) => {
   return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
@@ -7,6 +19,11 @@ export const onRequestOptions: PagesFunction = async ({ request }) => {
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
   try {
     const role = requireAuth(request, env as any); // "owner" | "admin"
+    await enforceRateLimit(request, env as any, {
+      prefix: `upload:${role}`,
+      limit: role === "owner" ? 60 : 20,
+      windowSeconds: 60,
+    });
     const form = await request.formData();
 
     const idRaw = String(form.get("id") ?? "");
@@ -18,11 +35,27 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
 
     const original = file.name || `${id}.webp`;
     const safeName = sanitizeFileName(original);
+    const extIndex = safeName.lastIndexOf(".");
+    const ext = extIndex >= 0 ? safeName.slice(extIndex) : "";
+    if (!ALLOWED_EXTENSIONS.has(ext)) {
+      return errJSON(415, "unsupported file extension");
+    }
+
+    const mime = (file as any).type ? String((file as any).type).toLowerCase() : "";
+    if (mime && !ALLOWED_MIME_TYPES.has(mime)) {
+      return errJSON(415, "unsupported mime type");
+    }
+
+    const maxSize = Number((env as any).MAX_UPLOAD_SIZE_BYTES ?? DEFAULT_MAX_SIZE);
+    if (Number.isFinite(maxSize) && file.size > maxSize) {
+      return errJSON(413, "file too large");
+    }
+
     const key = `images/${id}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
 
     await (env as any).AKYO_BUCKET.put(key, file.stream(), {
       httpMetadata: {
-        contentType: (file as any).type || "application/octet-stream",
+        contentType: mime || "application/octet-stream",
         cacheControl: "public, max-age=31536000, immutable",
       },
     });
@@ -49,5 +82,3 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     return errJSON(500, e?.message || "upload failed");
   }
 };
-
-

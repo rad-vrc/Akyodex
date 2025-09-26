@@ -1,4 +1,16 @@
-import { corsHeaders, errJSON, okJSON, requireAuth, sanitizeFileName, threeDigits } from "../_utils";
+import {
+  corsHeaders,
+  enforceRateLimit,
+  errJSON,
+  okJSON,
+  requireAuth,
+  sanitizeFileName,
+  threeDigits,
+} from "../_utils";
+
+const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg"]);
+const ALLOWED_EXTENSIONS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
+const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 interface GithubCommitResponse {
   content?: { sha: string };
@@ -38,7 +50,12 @@ export const onRequestOptions: PagesFunction = async ({ request }) => {
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
   try {
     // 認証（Akyoワード）
-    requireAuth(request, env as any);
+    const role = requireAuth(request, env as any);
+    await enforceRateLimit(request, env as any, {
+      prefix: `gh-upload:${role}`,
+      limit: role === "owner" ? 60 : 20,
+      windowSeconds: 60,
+    });
 
     const token = (env as any).GITHUB_TOKEN as string;
     const owner = ((env as any).GITHUB_REPO_OWNER as string) || ((env as any).REPO_OWNER as string);
@@ -54,9 +71,26 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     const file = form.get("file");
     if (!(file instanceof File)) return errJSON(400, "file is required");
 
+    const originalName = file.name || `${id}.webp`;
+    const safeNameFull = sanitizeFileName(originalName);
+    const extIndex = safeNameFull.lastIndexOf(".");
+    const ext = extIndex >= 0 ? safeNameFull.slice(extIndex) : "";
+    if (!ALLOWED_EXTENSIONS.has(ext)) {
+      return errJSON(415, "unsupported file extension");
+    }
+
+    const mime = (file as any).type ? String((file as any).type).toLowerCase() : "";
+    if (mime && !ALLOWED_MIME_TYPES.has(mime)) {
+      return errJSON(415, "unsupported mime type");
+    }
+
+    const maxSize = Number((env as any).MAX_UPLOAD_SIZE_BYTES ?? DEFAULT_MAX_SIZE);
+    if (Number.isFinite(maxSize) && file.size > maxSize) {
+      return errJSON(413, "file too large");
+    }
+
     // ファイル名決定（拡張子は入力に合わせる）
-    const original = file.name || `${id}.bin`;
-    const safeNameOnly = sanitizeFileName(original).replace(/^\.+/, "");
+    const safeNameOnly = safeNameFull.replace(/^\.+/, "");
     const key = `images/${id}_${safeNameOnly}`;
 
     // GitHubへファイルをPUT
