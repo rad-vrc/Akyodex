@@ -391,24 +391,32 @@ async function loadAkyoData() {
     try {
         console.debug('CSVデータを読み込み中...');
 
-        // まずLocalStorageから更新されたデータを確認
-        const updatedCSV = localStorage.getItem('akyoDataCSV');
+        // ネットワーク優先（バージョン付与＋no-cache）。失敗時のみローカルにフォールバック
+        const ver = localStorage.getItem('akyoDataVersion') || localStorage.getItem('akyoAssetsVersion') || String(Date.now());
         let csvText;
-
-        if (updatedCSV) {
-            console.debug('LocalStorageから更新データを読み込み');
-            csvText = updatedCSV;
-        } else {
-            // LocalStorageにない場合はファイルから最新を読み込み（バージョン付与＋no-cache）
-            const ver = localStorage.getItem('akyoDataVersion') || localStorage.getItem('akyoAssetsVersion') || String(Date.now());
+        try {
             const response = await fetch(`/api/csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-            if (!response.ok) {
-                // フォールバック: 直接CSV
+            if (!response.ok) throw new Error(`api/csv failed: ${response.status}`);
+            csvText = await response.text();
+            // 正常取得できたら、古い手動保存データは無効化
+            if (localStorage.getItem('akyoDataCSV')) {
+                localStorage.removeItem('akyoDataCSV');
+            }
+        } catch (_) {
+            // フォールバック1: 直リンクCSVをno-cacheで
+            try {
                 const fallback = await fetch(`data/akyo-data.csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                if (!fallback.ok) throw new Error(`CSVファイルの読み込みに失敗: ${response.status}`);
+                if (!fallback.ok) throw new Error(`fallback csv failed: ${fallback.status}`);
                 csvText = await fallback.text();
-            } else {
-                csvText = await response.text();
+            } catch (__) {
+                // フォールバック2: ローカル保存（最終手段）
+                const updatedCSV = localStorage.getItem('akyoDataCSV');
+                if (updatedCSV) {
+                    console.debug('ネットワーク失敗のためLocalStorageから読み込み');
+                    csvText = updatedCSV;
+                } else {
+                    throw new Error('CSV取得に失敗しました（ネットワーク/ローカル保存なし）');
+                }
             }
         }
 
@@ -1429,6 +1437,27 @@ function updateStatistics() {
     document.getElementById('totalCount').textContent = total;
     document.getElementById('displayCount').textContent = displayed;
     document.getElementById('favoriteCount').textContent = favorites.length;
+
+    // 自己修復: 描画数 < 総数 かつ、フィルタなし・ランダム/お気に入りモードでない場合はCSVを再取得
+    const noFilter = !(document.getElementById('attributeFilter')?.value) && !(document.getElementById('creatorFilter')?.value) && currentSearchTerms.length === 0;
+    if (noFilter && !randomMode && !favoritesOnlyMode) {
+        if (total > displayed) {
+            // 過去キャッシュの可能性 → 最新CSVを再取得
+            const ts = Date.now();
+            fetch(`/api/csv?v=${ts}`, { cache: 'no-cache' })
+                .then(r => r.ok ? r.text() : Promise.reject(new Error(String(r.status))))
+                .then(text => {
+                    const fresh = parseCSV(text);
+                    if (Array.isArray(fresh) && fresh.length >= total) {
+                        akyoData = fresh;
+                        filteredData = [...akyoData];
+                        buildSearchIndex();
+                        updateDisplay();
+                    }
+                })
+                .catch(() => {});
+        }
+    }
 }
 
 // 属性による色の取得

@@ -1,4 +1,4 @@
-const PRECACHE = 'akyo-precache-v5';
+const PRECACHE = 'akyo-precache-v6';
 let precacheUrlList = null;
 let precacheUrlSet = null;
 
@@ -119,7 +119,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // 1.6) CSVは常にネットワーク優先（最新版を即時反映）
-  if (url.pathname === '/data/akyo-data.csv') {
+  if (url.pathname === '/data/akyo-data.csv' || url.pathname === '/api/csv') {
     event.respondWith((async () => {
       const cache = await caches.open(PRECACHE);
       try {

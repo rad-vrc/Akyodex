@@ -937,13 +937,6 @@ async function handleUpdateAkyo(event, akyoId) {
 
     await updateCSVFile();
 
-    // main側へ変更通知（storageイベント）
-    try {
-        const ver = parseInt(localStorage.getItem('akyoDataVersion') || '0', 10) + 1;
-        localStorage.setItem('akyoDataVersion', String(ver));
-        localStorage.setItem('akyoAssetsVersion', String(ver));
-    } catch (_) {}
-
     closeEditModal();
     showNotification(`Akyo #${akyoId} を更新しました`, 'success');
     updateEditList();
