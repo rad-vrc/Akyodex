@@ -971,7 +971,7 @@ function updateAkyoCard(card, state) {
     if (creator) {
         let creatorText = `作者: ${state.creator}`;
         if (state.avatarName && state.avatarName !== state.displayName) {
-            creatorText = `${creatorText}\nアバター名: ${state.avatarName}`;
+            creatorText = `アバター名: ${state.avatarName}\n${creatorText}`;
         }
         creator.textContent = creatorText;
     }
