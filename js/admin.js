@@ -9,6 +9,26 @@ let akyoData = [];
 let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 
+const FINDER_PREFILL_VALUE = 'Akyo';
+const isFinderModePage = typeof window !== 'undefined' && window.location.pathname.endsWith('finder.html');
+
+function applyFinderRegistrationDefaults({ force = false } = {}) {
+    if (!(isFinderModePage || currentUserRole === 'finder')) return;
+
+    const addTab = document.getElementById('addTab');
+    if (!addTab) return;
+
+    const nicknameInput = addTab.querySelector('input[name="nickname"]');
+    if (nicknameInput && (force || !nicknameInput.value)) {
+        nicknameInput.value = FINDER_PREFILL_VALUE;
+    }
+
+    const avatarNameInput = addTab.querySelector('input[name="avatarName"]');
+    if (avatarNameInput && (force || !avatarNameInput.value)) {
+        avatarNameInput.value = FINDER_PREFILL_VALUE;
+    }
+}
+
 // 命名整合用のエイリアス（徐々に adminAkyoRecords / adminImageDataMap へ移行）
 window.adminAkyoRecords = akyoData;
 window.adminImageDataMap = imageDataMap;
@@ -28,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupEventListeners();
     setupDragDrop();
+
+    applyFinderRegistrationDefaults();
 });
 
 // イベントリスナー設定
@@ -120,6 +142,7 @@ async function handleLogin(event) {
             sessionStorage.setItem('akyoAdminAuth', currentUserRole);
             showAdminScreen();
             showNotification(`${currentUserRole === 'owner' ? 'マスター' : 'ファインダー'}権限でログインしました`, 'success');
+            applyFinderRegistrationDefaults();
             loadAkyoData();
             return;
         }
@@ -184,6 +207,7 @@ function showAdminScreen() {
         if (document.querySelector('.tab-content')) {
             switchTab('edit');
         }
+        applyFinderRegistrationDefaults();
     });
 }
 
@@ -463,6 +487,10 @@ function switchTab(tabName) {
         targetBtn.classList.add('border-red-500');
     }
 
+    if (tabName === 'add') {
+        applyFinderRegistrationDefaults();
+    }
+
     // ツールタブの統計は削除済み
 
     // 画像管理タブの場合は画像ギャラリーを更新
@@ -580,6 +608,8 @@ async function handleAddAkyo(event) {
     if (imagePreview) {
         imagePreview.classList.add('hidden');
     }
+
+    applyFinderRegistrationDefaults({ force: true });
 
     // トリミング状態をリセット
     if (window.resetImagePosition) {
