@@ -402,81 +402,71 @@ async function loadAkyoData() {
 
 // CSV解析（main.jsと同じロジック）
 function parseCSV(csvText) {
-    const lines = csvText.split('\n');
+    // CRLF正規化
+    csvText = String(csvText).replace(/\r\n/g, '\n');
     const data = [];
-
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-
-        const values = [];
-        let currentValue = '';
-        let inQuotes = false;
-        let currentLine = line;
-
-        while (i < lines.length) {
-            for (let char of currentLine) {
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    values.push(currentValue.trim());
-                    currentValue = '';
-                } else {
-                    currentValue += char;
+    // 先頭行はヘッダとしてスキップ
+    let i = 0;
+    let inQuotes = false;
+    let field = '';
+    let record = [];
+    let lineIndex = 0;
+    const pushField = () => { record.push(field.trim()); field = ''; };
+    const pushRecord = () => {
+        if (record.length > 0) {
+            // ヘッダ行はスキップ
+            if (lineIndex > 0) {
+                const values = record;
+                if (values[0] && /^\d{3}$/.test(values[0])) {
+                    const akyo = {
+                        id: values[0] || '',
+                        appearance: values[1] || '',
+                        nickname: values[2] || '',
+                        avatarName: values[3] || '',
+                        attribute: '',
+                        notes: '',
+                        creator: '',
+                        avatarUrl: ''
+                    };
+                    if (values.length === 8) {
+                        akyo.attribute = values[4] || '未分類';
+                        akyo.notes = values[5] || '';
+                        akyo.creator = values[6] || '不明';
+                        akyo.avatarUrl = values[7] || '';
+                    } else if (values.length > 8) {
+                        akyo.avatarUrl = values[values.length - 1] || '';
+                        akyo.creator = values[values.length - 2] || '不明';
+                        akyo.attribute = values[4] || '未分類';
+                        akyo.notes = values.slice(5, values.length - 2).join(',');
+                    } else {
+                        akyo.attribute = values[4] || '未分類';
+                        akyo.notes = values[5] || '';
+                        akyo.creator = values[6] || '不明';
+                        akyo.avatarUrl = values[7] || '';
+                    }
+                    data.push(akyo);
                 }
             }
-
-            if (inQuotes && i + 1 < lines.length) {
-                currentValue += '\n';
-                i++;
-                currentLine = lines[i];
-            } else {
-                break;
-            }
+            lineIndex++;
         }
+        record = [];
+    };
 
-        values.push(currentValue.trim());
-
-        if (values[0] && values[0].match(/^\d{3}/)) {
-            let id = values[0] || '';
-            let appearance = values[1] || '';
-            let nickname = values[2] || '';
-            let avatarName = values[3] || '';
-            let attribute = '';
-            let notes = '';
-            let creator = '';
-            let avatarUrl = '';
-
-            if (values.length === 8) {
-                attribute = values[4] || '未分類';
-                notes = values[5] || '';
-                creator = values[6] || '不明';
-                avatarUrl = values[7] || '';
-            } else if (values.length > 8) {
-                avatarUrl = values[values.length - 1] || '';
-                creator = values[values.length - 2] || '不明';
-                attribute = values[4] || '未分類';
-                notes = values.slice(5, values.length - 2).join(',');
-            } else {
-                attribute = values[4] || '未分類';
-                notes = values[5] || '';
-                creator = values[6] || '不明';
-                avatarUrl = values[7] || '';
-            }
-
-            const akyo = {
-                id,
-                appearance,
-                nickname,
-                avatarName,
-                attribute,
-                notes,
-                creator,
-                avatarUrl
-            };
-            data.push(akyo);
+    for (let idx = 0; idx < csvText.length; idx++) {
+        const ch = csvText[idx];
+        if (ch === '"') {
+            const next = csvText[idx + 1];
+            // 連続する二重引用符はエスケープ: 1つの " を追加し、inQuotesは維持
+            if (inQuotes && next === '"') { field += '"'; idx++; continue; }
+            inQuotes = !inQuotes;
+            continue;
         }
+        if (!inQuotes && ch === ',') { pushField(); continue; }
+        if (!inQuotes && ch === '\n') { pushField(); pushRecord(); continue; }
+        field += ch;
     }
+    // 最終レコードを反映
+    pushField(); pushRecord();
 
     return data;
 }

@@ -1503,10 +1503,14 @@ function updateStatistics() {
     // 自己修復: 描画数 < 総数 かつ、フィルタなし・ランダム/お気に入りモードでない場合はCSVを再取得
     const noFilter = !(document.getElementById('attributeFilter')?.value) && !(document.getElementById('creatorFilter')?.value) && currentSearchTerms.length === 0;
     if (noFilter && !randomMode && !favoritesOnlyMode) {
-        // サーバが告げる期待総数が取得総数を上回る場合も再取得
-        if (total > displayed || (serverCsvRowCount && serverCsvRowCount > total)) {
-            // 過去キャッシュの可能性 → 最新CSVを再取得
-            const ts = Date.now();
+        // クールダウン（30秒）で連続再取得を抑制
+        const lastRefetchAt = Number(localStorage.getItem('akyoCsvLastRefetchAt') || '0');
+        const now = Date.now();
+        const cooled = now - lastRefetchAt > 30_000;
+        // 取得総数がサーバ期待より少ない場合のみ再取得
+        if (cooled && serverCsvRowCount && serverCsvRowCount > total) {
+            const ts = now;
+            localStorage.setItem('akyoCsvLastRefetchAt', String(now));
             fetch(`/api/csv?v=${ts}`, { cache: 'no-cache' })
                 .then(r => r.ok ? r.text() : Promise.reject(new Error(String(r.status))))
                 .then(text => {
