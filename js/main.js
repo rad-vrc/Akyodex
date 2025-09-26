@@ -971,7 +971,7 @@ function updateAkyoCard(card, state) {
     if (creator) {
         let creatorText = `作者: ${state.creator}`;
         if (state.avatarName && state.avatarName !== state.displayName) {
-            creatorText = `アバター名: ${state.avatarName}\n${creatorText}`;
+            creatorText = `${creatorText}\nアバター名: ${state.avatarName}`;
         }
         creator.textContent = creatorText;
     }
@@ -1265,7 +1265,7 @@ async function showDetail(akyoId) {
     avatarCard.className = 'bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4';
     avatarCard.innerHTML = `
                     <h3 class="text-sm font-bold text-blue-600 mb-2">
-                        <i class="fas fa-user-astronaut mr-1"></i>アバター
+                        <i class="fas fa-user-astronaut mr-1"></i>アバター名
                     </h3>
     `;
     const avatarValue = document.createElement('p');
