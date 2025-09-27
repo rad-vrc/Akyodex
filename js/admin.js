@@ -654,30 +654,179 @@ async function handleAddAkyo(event) {
 // グローバルスコープに公開
 window.handleAddAkyo = handleAddAkyo;
 
+async function readFileAsDataUrl(file) {
+    if (!file) return null;
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('ファイルの読み込みに失敗しました'));
+        reader.readAsDataURL(file);
+    });
+}
+
+// Data URL 補助
+function inferExtensionFromMime(mime) {
+    if (!mime) return '.webp';
+    const lower = mime.toLowerCase();
+    if (lower.includes('webp')) return '.webp';
+    if (lower.includes('png')) return '.png';
+    if (lower.includes('jpeg') || lower.includes('jpg')) return '.jpg';
+    if (lower.includes('gif')) return '.gif';
+    return '.bin';
+}
+
+function dataUrlToBlob(dataUrl) {
+    if (typeof dataUrl !== 'string') return null;
+    const match = dataUrl.match(/^data:([^;,]+)?(;base64)?,(.*)$/);
+    if (!match) return null;
+    const mime = match[1] || 'application/octet-stream';
+    const isBase64 = !!match[2];
+    const data = match[3] || '';
+    try {
+        if (isBase64) {
+            const binary = atob(data);
+            const len = binary.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return new Blob([bytes], { type: mime });
+        }
+        const decoded = decodeURIComponent(data);
+        return new Blob([decoded], { type: mime });
+    } catch (e) {
+        console.debug('dataUrlToBlob failed', e);
+        return null;
+    }
+}
+
+async function convertDataUrlToWebpFile(dataUrl, id) {
+    if (!dataUrl) return null;
+    const id3 = String(id).padStart(3, '0');
+
+    const tryDomCanvas = () => new Promise((resolve, reject) => {
+        const image = new Image();
+        image.decoding = 'async';
+        image.crossOrigin = 'anonymous';
+        image.onload = () => {
+            try {
+                const width = image.naturalWidth || image.width;
+                const height = image.naturalHeight || image.height;
+                if (!width || !height) {
+                    reject(new Error('画像サイズを取得できません'));
+                    return;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image, 0, 0, width, height);
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        reject(new Error('WEBP変換に失敗しました'));
+                        return;
+                    }
+                    resolve(new File([blob], `${id3}.webp`, { type: 'image/webp' }));
+                }, 'image/webp', 0.92);
+            } catch (err) {
+                reject(err);
+            }
+        };
+        image.onerror = () => reject(new Error('画像の読み込みに失敗しました'));
+        image.src = dataUrl;
+    });
+
+    try {
+        return await tryDomCanvas();
+    } catch (primaryError) {
+        console.debug('DOM canvas WEBP conversion failed', primaryError);
+        try {
+            if (typeof OffscreenCanvas === 'function' && typeof createImageBitmap === 'function') {
+                const blob = dataUrlToBlob(dataUrl);
+                if (blob) {
+                    const bitmap = await createImageBitmap(blob);
+                    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) throw new Error('OffscreenCanvas 2D context unavailable');
+                    ctx.drawImage(bitmap, 0, 0);
+                    const webpBlob = await canvas.convertToBlob({ type: 'image/webp', quality: 0.92 });
+                    return new File([webpBlob], `${id3}.webp`, { type: 'image/webp' });
+                }
+            }
+        } catch (offscreenError) {
+            console.debug('OffscreenCanvas WEBP conversion failed', offscreenError);
+        }
+
+        const fallbackBlob = dataUrlToBlob(dataUrl);
+        if (fallbackBlob) {
+            const ext = inferExtensionFromMime(fallbackBlob.type);
+            return new File([fallbackBlob], `${id3}${ext}`, { type: fallbackBlob.type || 'application/octet-stream' });
+        }
+
+        throw primaryError;
+    }
+}
+
+async function prepareWebpFileForUpload({ id, file, dataUrl }) {
+    const id3 = String(id).padStart(3, '0');
+    let sourceDataUrl = dataUrl || null;
+
+    if (!sourceDataUrl && typeof window.generateCroppedImage === 'function') {
+        try {
+            const generated = await window.generateCroppedImage();
+            if (generated) sourceDataUrl = generated;
+        } catch (e) {
+            console.debug('generateCroppedImage failed', e);
+        }
+    }
+
+    if (!sourceDataUrl && file) {
+        try {
+            sourceDataUrl = await readFileAsDataUrl(file);
+        } catch (e) {
+            console.debug('readFileAsDataUrl failed', e);
+        }
+    }
+
+    if (sourceDataUrl) {
+        try {
+            const converted = await convertDataUrlToWebpFile(sourceDataUrl, id3);
+            if (converted) return converted;
+        } catch (e) {
+            console.debug('WEBP conversion failed', e);
+            const blob = dataUrlToBlob(sourceDataUrl);
+            if (blob) {
+                const ext = inferExtensionFromMime(blob.type);
+                return new File([blob], `${id3}${ext}`, { type: blob.type || 'application/octet-stream' });
+            }
+        }
+    }
+
+    if (file) {
+        if (/\.webp$/i.test(file.name) || file.type === 'image/webp') {
+            return new File([file], `${id3}.webp`, { type: 'image/webp' });
+        }
+        return file;
+    }
+
+    throw new Error('画像データが見つかりません');
+}
+
 // Cloudflare Pages Functions 経由のオンラインアップロード
-async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
+async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword, dataUrl }) {
+    if (!adminPassword) throw new Error('認証情報がありません');
+
     const form = new FormData();
     form.set('id', id);
     form.set('name', name);
     form.set('type', type);
     form.set('desc', desc);
-    // 可能ならトリミング済みDataURLをBlob変換して送信
-    try {
-        if (window.generateCroppedImage) {
-            const dataUrl = await window.generateCroppedImage();
-            if (dataUrl) {
-                const blob = await (await fetch(dataUrl)).blob();
-                const fname = (file && file.name) ? file.name.replace(/\.[^.]+$/, '.webp') : `${id}.webp`;
-                form.set('file', new File([blob], fname, { type: blob.type || 'image/webp' }));
-            } else {
-                form.set('file', file);
-            }
-        } else {
-            form.set('file', file);
-        }
-    } catch(_) {
-        form.set('file', file);
+
+    const preparedFile = await prepareWebpFileForUpload({ id, file, dataUrl });
+    if (!(preparedFile instanceof File)) {
+        throw new Error('アップロード用の画像を生成できませんでした');
     }
+    form.set('file', preparedFile, preparedFile.name);
 
     // R2未設定時はGitHubアップロードにフォールバック
     const endpoint = window.__USE_GH_UPLOAD__ ? '/api/gh-upload' : '/api/upload';
@@ -690,10 +839,25 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
     if (!res.ok || !json.ok) throw new Error(json.error || 'upload failed');
 
     try { if (window.loadAkyoManifest) await window.loadAkyoManifest(); } catch (_) {}
+    try { if (window.loadImagesManifest) await window.loadImagesManifest(); } catch (_) {}
+
+    try {
+        if (json?.url && typeof window !== 'undefined') {
+            window.akyoImageManifestMap = window.akyoImageManifestMap || {};
+            window.akyoImageManifestMap[id] = json.url;
+        }
+    } catch (_) {}
+
+    try {
+        const stamp = String(Date.now());
+        localStorage.setItem('akyoAssetsVersion', stamp);
+    } catch (_) {}
+
     return json;
 }
 
 // グローバル公開
+window.prepareWebpFileForUpload = prepareWebpFileForUpload;
 window.uploadAkyoOnline = uploadAkyoOnline;
 
 // フォームから直接オンライン登録（パスワード欄＋既存入力値を使用）
@@ -761,22 +925,66 @@ function handleEditImageSelect(event, akyoId) {
     reader.readAsDataURL(file);
 }
 
-// 編集用 画像保存（IndexedDB優先）
-async function saveEditImage(akyoId) {
+// 編集用 画像同期（ローカル保存 + 公開アップロード）
+async function syncPendingEditImage(akyoId) {
+    const pendingMap = window.__pendingEditImages || {};
+    window.__pendingEditImages = pendingMap;
+    const dataUrl = pendingMap[akyoId];
+
+    if (!dataUrl) {
+        return { hasPending: false };
+    }
+
+    // まずはローカルストレージ系へ保存
+    imageDataMap[akyoId] = dataUrl;
     try {
-        const dataUrl = window.__pendingEditImages && window.__pendingEditImages[akyoId];
-        if (!dataUrl) { showNotification('画像が選択されていません', 'warning'); return; }
         if (window.saveSingleImage) {
             await window.saveSingleImage(akyoId, dataUrl);
-        } else {
-            imageDataMap[akyoId] = dataUrl;
-            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
         }
-        showNotification(`Akyo #${akyoId} の画像を保存しました`, 'success');
-        updateImageGallery();
-        delete window.__pendingEditImages[akyoId];
     } catch (e) {
-        showNotification('保存エラー: ' + e.message, 'error');
+        throw new Error(`ローカル保存に失敗しました: ${e?.message || e}`);
+    }
+
+    try {
+        localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+    } catch (e) {
+        console.debug('Failed to persist pending edit image to localStorage', e);
+    }
+
+    const preview = document.getElementById(`editImagePreview-${akyoId}`);
+    if (preview) {
+        preview.src = dataUrl;
+        preview.style.display = '';
+    }
+
+    if (typeof updateImageGallery === 'function') {
+        try { updateImageGallery(); } catch (_) {}
+    }
+
+    if (!adminSessionToken) {
+        return {
+            hasPending: true,
+            uploaded: false,
+            warning: '画像アップロードには再ログインが必要です',
+        };
+    }
+
+    const akyo = akyoData.find(a => a.id === akyoId) || {};
+
+    try {
+        await uploadAkyoOnline({
+            id: akyoId,
+            name: akyo.nickname || akyo.avatarName || '',
+            type: akyo.attribute || '',
+            desc: akyo.notes || '',
+            file: null,
+            adminPassword: adminSessionToken,
+            dataUrl,
+        });
+        delete pendingMap[akyoId];
+        return { hasPending: true, uploaded: true };
+    } catch (e) {
+        throw new Error(`公開アップロードに失敗しました: ${e?.message || e}`);
     }
 }
 
@@ -790,11 +998,11 @@ async function removeImageForId(akyoId) {
         delete imageDataMap[akyoId];
         localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
-    if (preview) {
-        const id3 = String(akyoId).padStart(3, '0');
-        preview.src = (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : `images/${id3}.webp`);
-        preview.onerror = function(){ this.style.display='none'; };
-    }
+        if (preview) {
+            const id3 = String(akyoId).padStart(3, '0');
+            preview.src = (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : `images/${id3}.webp`);
+            preview.onerror = function(){ this.style.display='none'; };
+        }
         updateImageGallery();
         showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
     } catch (e) {
@@ -804,8 +1012,10 @@ async function removeImageForId(akyoId) {
 
 // グローバル公開
 window.handleEditImageSelect = handleEditImageSelect;
-window.saveEditImage = saveEditImage;
 window.removeImageForId = removeImageForId;
+// 互換用エイリアス（既存の onclick="saveEditImage(...)" 呼び出しを考慮）
+window.syncPendingEditImage = syncPendingEditImage;
+window.saveEditImage = syncPendingEditImage;
 
 // 画像ドロップ処理
 function handleImageDrop(event) {
@@ -921,10 +1131,9 @@ function editAkyo(akyoId) {
                 <div class="flex items-center gap-3">
                     <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : '')}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
                     <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
-                    <button type="button" onclick="saveEditImage('${akyoId}')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">画像を保存</button>
                     <button type="button" onclick="removeImageForId('${akyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
-                <p class="text-xs text-gray-500 mt-1">保存するとIndexedDB（フォールバック: LocalStorage）に登録されます。公開用にはマニフェストまたはimages/${akyo.id}.webp/.png/.jpgを追加して再デプロイしてください。</p>
+                <p class="text-xs text-gray-500 mt-1">「更新する」を押すと画像も公開環境へ反映されます。</p>
             </div>
 
             <button type="submit" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:opacity-90">
@@ -955,11 +1164,33 @@ async function handleUpdateAkyo(event, akyoId) {
         avatarUrl: formData.get('avatarUrl')
     };
 
-    await updateCSVFile();
+    try {
+        await updateCSVFile();
+    } catch (e) {
+        console.error('updateCSVFile failed', e);
+        showNotification('更新内容の保存に失敗しました', 'error');
+        return;
+    }
+
+    let messageSuffix = '';
+    try {
+        const imageResult = await syncPendingEditImage(akyoId);
+        if (imageResult?.hasPending) {
+            if (imageResult.uploaded) {
+                messageSuffix = '（画像も更新されました）';
+            } else if (imageResult.warning) {
+                messageSuffix = `（画像アップロードは未完了: ${imageResult.warning}）`;
+            }
+        }
+    } catch (e) {
+        console.error('syncPendingEditImage failed', e);
+        showNotification(`Akyo #${akyoId} の画像更新に失敗しました: ${e.message || e}`, 'error');
+        return;
+    }
 
     closeEditModal();
-    showNotification(`Akyo #${akyoId} を更新しました`, 'success');
     updateEditList();
+    showNotification(`Akyo #${akyoId} を更新しました${messageSuffix}`, 'success');
 }
 
 // グローバルスコープに公開
@@ -1363,7 +1594,7 @@ function handleBulkImages(files) {
             showNotification(`${file.name} の読み込みに失敗しました`, 'error');
         };
 
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(files[0] ?? file);
     });
 }
 
@@ -1457,13 +1688,13 @@ function autoAssignIds() {
         if (input.value && input.value.match(/^\d{3}$/)) {
             usedIds.add(input.value);
         }
-    })
+    });
 
     console.debug('現在使用済みの画像ID:', Array.from(usedIds).sort());
     console.debug('特に001-020の使用状況:');
     for (let i = 1; i <= 20; i++) {
         const id = String(i).padStart(3, '0');
-            console.debug(`  ${id}: ${usedIds.has(id) ? '使用済み' : '未使用'}`);
+        console.debug(`  ${id}: ${usedIds.has(id) ? '使用済み' : '未使用'}`);
     }
 
     let assignedCount = 0;
