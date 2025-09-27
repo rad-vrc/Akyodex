@@ -186,8 +186,6 @@ function handleAdminActionClick(event) {
 
 // イベントリスナー設定
 function setupEventListeners() {
-    const useCustomCropper = !!document.getElementById('cropContainer');
-
     // ログインフォーム
     const loginForm = document.getElementById('finderLoginForm') || document.querySelector('#loginScreen form');
     if (loginForm) {
@@ -196,6 +194,7 @@ function setupEventListeners() {
 
     // 画像入力
     const imageInput = document.getElementById('imageInput');
+    const useCustomCropper = !!document.getElementById('cropContainer');
     if (imageInput && !useCustomCropper) {
         imageInput.addEventListener('change', handleImageSelect);
     }
@@ -227,12 +226,28 @@ function setupEventListeners() {
 
 // ドラッグ&ドロップ設定
 function setupDragDrop() {
-    const useCustomCropper = !!document.getElementById('cropContainer');
-
-    // 画像ドロップゾーン
+    // 画像ドロップゾーン（トリミングUIがある場合は drop ハンドラを切り替え）
     const imageDropZone = document.getElementById('imageDropZone');
-    if (!useCustomCropper) {
-        setupDropZone(imageDropZone, handleImageDrop);
+    if (imageDropZone) {
+        const useCustomCropper = !!document.getElementById('cropContainer') && typeof window.handleImageFileWithCrop === 'function';
+        imageDropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageDropZone.classList.add('dragover');
+        });
+        imageDropZone.addEventListener('dragleave', () => {
+            imageDropZone.classList.remove('dragover');
+        });
+        imageDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageDropZone.classList.remove('dragover');
+            const file = e.dataTransfer?.files?.[0];
+            if (!file || !file.type?.startsWith('image/')) return;
+            if (useCustomCropper) {
+                window.handleImageFileWithCrop(file);
+            } else {
+                handleImageDrop(e);
+            }
+        });
     }
 
     // CSV ドロップゾーン

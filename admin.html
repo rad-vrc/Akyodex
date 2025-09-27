@@ -404,11 +404,22 @@
         let dragStartY = 0;
         let originalImageSrc = null;
 
-        // 画像位置のリセット
+        // 画像位置のリセット（中央に戻す）
         function resetImagePosition() {
             imageScale = 1;
-            imageX = 0;
-            imageY = 0;
+            const container = document.getElementById('cropContainer');
+            const img = document.getElementById('cropImage');
+            if (container && img) {
+                const cw = container.offsetWidth;
+                const ch = container.offsetHeight;
+                const iw = img.offsetWidth;
+                const ih = img.offsetHeight;
+                imageX = (cw - iw) / 2;
+                imageY = (ch - ih) / 2;
+            } else {
+                imageX = 0;
+                imageY = 0;
+            }
             updateImageTransform();
         }
 
