@@ -61,10 +61,25 @@ function getPrecacheUrlSet() {
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(PRECACHE)
-      .then((cache) => cache.addAll(getPrecacheUrls()))
-      .then(() => self.skipWaiting())
+    (async () => {
+      const cache = await caches.open(PRECACHE);
+      const urls = getPrecacheUrls();
+
+      await Promise.all(
+        urls.map(async (url) => {
+          const request = new Request(url, { cache: 'reload' });
+          const response = await fetch(request);
+
+          if (!response || !response.ok) {
+            throw new Error(`Failed to precache: ${url}`);
+          }
+
+          await cache.put(url, response.clone());
+        })
+      );
+
+      await self.skipWaiting();
+    })()
   );
 });
 
@@ -256,7 +271,8 @@ function respondWithCacheFirst(event) {
 
 async function updateCache(cache, request) {
   try {
-    const response = await fetch(request);
+    const reloadableRequest = new Request(request, { cache: 'reload' });
+    const response = await fetch(reloadableRequest);
     if (response && response.ok) {
       await cache.put(request, response.clone());
     }
