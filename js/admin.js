@@ -407,20 +407,10 @@ function updateNextIdDisplay() {
     const nextIdInput = document.getElementById('nextIdDisplay');
     if (!nextIdInput) return;
 
-    // akyoDataとimageDataMapの両方から最大IDを取得
-    const akyoIds = akyoData
-        .map(a => Number.parseInt(a.id, 10))
-        .filter(Number.isFinite);
-    const imageIds = Object.keys(imageDataMap)
-        .map(id => Number.parseInt(id, 10))
-        .filter(Number.isFinite);
-    const akyoMaxId = akyoIds.length ? Math.max(...akyoIds) : 0;
-    const imageMaxId = imageIds.length ? Math.max(...imageIds) : 0;
-    const maxId = Math.max(akyoMaxId, imageMaxId, 0);
-    const nextId = String(maxId + 1).padStart(3, '0');
+    const nextId = String(getMaxAssignedAkyoId() + 1).padStart(3, '0');
     nextIdInput.value = `#${nextId}`;
 
-    console.debug(`次のID更新: ${nextId} (Akyo最大: ${akyoMaxId}, 画像最大: ${imageMaxId})`);
+    console.debug(`次のID更新: ${nextId}`);
 }
 
 // ログアウト
@@ -770,10 +760,8 @@ async function handleAddAkyo(event) {
             const fileObj = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
             const adminPassword = adminSessionToken;
             if (!adminPassword) {
-                showNotification('認証が無効です。再度ログインしてください。', 'error');
-                return;
-            }
-            if (fileObj || latestImageDataUrl) {
+                showNotification('認証が無効です。画像の公開アップロードはスキップしました。', 'warning');
+            } else if (fileObj || latestImageDataUrl) {
                 const result = await uploadAkyoOnline({
                     id: newAkyo.id,
                     name: newAkyo.nickname || newAkyo.avatarName || '',
@@ -1149,7 +1137,15 @@ async function removeImageForId(akyoId) {
             await window.deleteSingleImage(akyoId);
         }
         delete imageDataMap[akyoId];
-        localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        try {
+            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        } catch (e) {
+            if (e && e.name === 'QuotaExceededError') {
+                showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+            } else {
+                console.debug('localStorage persist failed', e);
+            }
+        }
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
         if (preview) {
             const id3 = String(akyoId).padStart(3, '0');
@@ -1816,7 +1812,16 @@ async function saveImageMapping(inputId) {
         } else {
             // フォールバック: 従来のLocalStorage保存
             imageDataMap[akyoId] = imageData;
-            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+            try {
+                localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+            } catch (e) {
+                if (e && e.name === 'QuotaExceededError') {
+                    delete imageDataMap[akyoId];
+                    showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+                    return;
+                }
+                throw e;
+            }
         }
 
         console.debug(`Image saved for ID ${akyoId}`);
@@ -2268,9 +2273,8 @@ async function renumberAllIds() {
     // IDマッピングの作成
     const oldToNewIdMap = {};
 
-    // 名前順でソート（または任意の基準）してから連番を振る
+    // 現在のID順でソートしてから連番を振る
     akyoData.sort((a, b) => {
-        // 現在のID順でソート
         return (Number.parseInt(a.id, 10) || 0) - (Number.parseInt(b.id, 10) || 0);
     });
 
