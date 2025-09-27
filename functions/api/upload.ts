@@ -8,8 +8,8 @@ import {
   threeDigits,
 } from "../_utils";
 
-const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg"]);
-const ALLOWED_EXTENSIONS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
+const ALLOWED_MIME_TYPES = new Set(["image/webp"]);
+const ALLOWED_EXTENSIONS = new Set([".webp"]);
 const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 // Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
@@ -58,7 +58,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return errJSON(413, "file too large");
     }
 
-    const key = `images/${id}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
+    const key = `${id}.webp`;
 
     await (env as any).AKYO_BUCKET.put(key, file.stream(), {
       httpMetadata: {
@@ -67,8 +67,9 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       },
     });
 
-    const base = (env as any).PUBLIC_R2_BASE as string; // 例: https://images.akyodex.com
-    const url = `${base}/${key}`;
+    const baseRaw = (env as any).PUBLIC_R2_BASE as string | undefined;
+    const base = typeof baseRaw === "string" ? baseRaw.replace(/\/+$/, "") : "";
+    const url = base ? `${base}/${key}` : key;
 
     // メタデータ（最小）
     const name = String(form.get("name") ?? "");

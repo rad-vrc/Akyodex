@@ -8,8 +8,8 @@ import {
     threeDigits,
 } from "../_utils";
 
-const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg"]);
-const ALLOWED_EXTENSIONS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
+const ALLOWED_MIME_TYPES = new Set(["image/webp"]);
+const ALLOWED_EXTENSIONS = new Set([".webp"]);
 const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 // Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
@@ -98,9 +98,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return errJSON(413, "file too large");
     }
 
-    // ファイル名決定（拡張子は入力に合わせる）
-    const safeNameOnly = safeNameFull.replace(/^\.+/, "");
-    const key = `images/${id}_${safeNameOnly}`;
+    const key = `images/${id}.webp`;
 
     // GitHubへファイルをPUT
     const arrayBuffer = await file.arrayBuffer();
@@ -130,9 +128,13 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       try { manifest = JSON.parse(content) || { map: {} }; } catch (_) { manifest = { map: {} }; }
     }
 
-    // mapにフル/相対パスを格納（相対: images/...）
+    const baseRaw = (env as any).PUBLIC_R2_BASE as string | undefined;
+    const base = typeof baseRaw === "string" ? baseRaw.replace(/\/+$/, "") : "";
+    const publicUrl = base ? `${base}/${id}.webp` : key;
+
+    // mapにフル/相対パスを格納
     if (!manifest.map || typeof manifest.map !== "object") manifest.map = {};
-    manifest.map[id] = key; // 例: images/001_foo.jpg
+    manifest.map[id] = publicUrl;
 
     const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2))));
     const putManRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(manifestPath)}`, token, {
@@ -149,7 +151,10 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return errJSON(500, `github manifest update failed: ${putManRes.status} ${txt}`);
     }
 
-    return okJSON({ ok: true, id, key, manifestUpdated: true }, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+    return okJSON(
+      { ok: true, id, key, url: publicUrl, manifestUpdated: true },
+      { headers: corsHeaders(request.headers.get("origin") ?? undefined) }
+    );
   } catch (e: any) {
     if (e instanceof Response) return e;
     return errJSON(500, e?.message || "gh-upload failed");

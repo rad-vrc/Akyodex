@@ -256,7 +256,7 @@
                             画像を公開用にアップロード
                         </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">保存に成功すると、図鑑でもすぐ表示されます（対応形式: WebP / PNG / JPG）。</p>
+                    <p class="text-xs text-gray-500 mt-1">保存に成功すると、図鑑でもすぐ表示されます（アップロード時に自動でWebPへ変換されます。入力形式: WebP / PNG / JPG）。</p>
                 </div>
 
                 <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
@@ -604,12 +604,16 @@
 
                     // 結果を返す
                     canvas.toBlob((blob) => {
+                        if (!blob) {
+                            resolve(null);
+                            return;
+                        }
                         const reader = new FileReader();
                         reader.onloadend = () => {
                             resolve(reader.result);
                         };
                         reader.readAsDataURL(blob);
-                    }, 'image/jpeg', 0.9);
+                    }, 'image/webp', 0.92);
                 };
                 image.src = originalImageSrc || img.src;
             });
