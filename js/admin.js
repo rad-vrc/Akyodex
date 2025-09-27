@@ -8,9 +8,50 @@ let currentUserRole = null;
 let akyoData = [];
 let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
+let hasBoundActionDelegation = false;
 
 const FINDER_PREFILL_VALUE = 'Akyo';
-const isFinderModePage = typeof window !== 'undefined' && window.location.pathname.endsWith('finder.html');
+
+function getMaxAssignedAkyoId() {
+    const akyoIds = Array.isArray(akyoData)
+        ? akyoData
+            .map(item => {
+                const parsed = parseInt(item?.id, 10);
+                return Number.isFinite(parsed) ? parsed : null;
+            })
+            .filter((value) => value !== null)
+        : [];
+
+    const imageIds = imageDataMap && typeof imageDataMap === 'object'
+        ? Object.keys(imageDataMap)
+            .map(id => {
+                const parsed = parseInt(id, 10);
+                return Number.isFinite(parsed) ? parsed : null;
+            })
+            .filter((value) => value !== null)
+        : [];
+
+    if (akyoIds.length === 0 && imageIds.length === 0) {
+        return 0;
+    }
+
+    return Math.max(...akyoIds, ...imageIds, 0);
+}
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) {
+        return '';
+    }
+    const escapeMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '`': '&#96;',
+    };
+    return String(value).replace(/[&<>"'`]/g, (char) => escapeMap[char] || char);
+}
 
 function loadFavoritesArray() {
     try {
@@ -26,8 +67,6 @@ function loadFavoritesArray() {
 }
 
 function applyFinderRegistrationDefaults({ force = false } = {}) {
-    if (!(isFinderModePage || currentUserRole === 'finder')) return;
-
     const addTab = document.getElementById('addTab');
     if (!addTab) return;
 
@@ -42,12 +81,38 @@ function applyFinderRegistrationDefaults({ force = false } = {}) {
     }
 }
 
+async function migrateIndexedDbImages(oldToNewIdMap, { removeOld = true } = {}) {
+    if (!(window.storageManager && window.storageManager.isIndexedDBAvailable)) return;
+    try {
+        await window.storageManager.init();
+        for (const [oldId, newId] of Object.entries(oldToNewIdMap)) {
+            if (!newId) continue;
+            const dataUrl = imageDataMap[newId] || imageDataMap[oldId];
+            if (!dataUrl) continue;
+            try {
+                await window.storageManager.saveImage(newId, dataUrl);
+            } catch (_) {
+                // no-op (fallback handled by memory/localStorage)
+            }
+            if (removeOld) {
+                try {
+                    await window.storageManager.deleteImage(oldId);
+                } catch (_) {
+                    // ignore deletion failures to keep process resilient
+                }
+            }
+        }
+    } catch (error) {
+        console.debug('IndexedDB migration error:', error);
+    }
+}
+
 // 必須/任意DOMの存在チェック（初期化時に一括検査）
 function verifyRequiredDom() {
     // ページ機能の中核に必要な要素
     const requiredIds = [
         'loginScreen', 'adminScreen',
-        'addTab', 'editTab', 'toolsTab',
+        'addTab', 'editTab',
         'editList', 'editSearchInput',
         'editModal', 'editModalContent'
     ];
@@ -70,8 +135,13 @@ function verifyRequiredDom() {
 }
 
 // 命名整合用のエイリアス（徐々に adminAkyoRecords / adminImageDataMap へ移行）
-window.adminAkyoRecords = akyoData;
-window.adminImageDataMap = imageDataMap;
+try {
+    Object.defineProperty(window, 'adminAkyoRecords', { get: () => akyoData });
+    Object.defineProperty(window, 'adminImageDataMap', { get: () => imageDataMap });
+} catch (_) {
+    window.adminAkyoRecords = akyoData;
+    window.adminImageDataMap = imageDataMap;
+}
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
@@ -80,12 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 旧バージョンで保存された認証ワードを確実に破棄
     sessionStorage.removeItem('akyoAdminToken');
 
-    // 初期ロード時に検索欄が空でも全件表示する
-    const editSearchInput = document.getElementById('editSearchInput');
-    if (editSearchInput && typeof searchForEdit === 'function') {
-        setTimeout(() => searchForEdit(), 0);
-    }
-
     setupEventListeners();
     setupDragDrop();
 
@@ -93,19 +157,99 @@ document.addEventListener('DOMContentLoaded', () => {
     verifyRequiredDom();
 
     applyFinderRegistrationDefaults();
+
+    // 未保存の作業がある場合は離脱確認を表示
+    window.addEventListener('beforeunload', (e) => {
+        if (!hasUnsavedWork()) return;
+        e.preventDefault();
+        e.returnValue = '';
+    });
+
+    // 他タブのログアウト操作と同期
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'akyo:logoutTS') {
+            location.reload();
+        }
+    });
 });
+
+function hasUnsavedWork() {
+    if (Array.isArray(window.pendingCSVData) && window.pendingCSVData.length > 0) {
+        return true;
+    }
+
+    const pendingEditImages = window.__pendingEditImages;
+    if (pendingEditImages && typeof pendingEditImages === 'object' && Object.keys(pendingEditImages).length > 0) {
+        return true;
+    }
+
+    if (Array.isArray(window.pendingImageMappings) && window.pendingImageMappings.length > 0) {
+        if (document.querySelector('.mapping-item .save-btn:not([disabled])')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ESCで編集モーダルを閉じる
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('editModal');
+        if (modal && !modal.classList.contains('hidden')) {
+            closeEditModal();
+        }
+    }
+});
+
+function handleAdminActionClick(event) {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+
+    const action = button.dataset.action;
+    const id = button.dataset.id;
+
+    if (action === 'remove-image') {
+        event.preventDefault();
+        if (id) {
+            removeImage(id);
+        }
+        return;
+    }
+
+    if (action === 'remove-edit-image') {
+        event.preventDefault();
+        if (id) {
+            removeImageForId(id);
+        }
+        return;
+    }
+
+    if (!id) return;
+
+    if (action === 'edit') {
+        event.preventDefault();
+        editAkyo(id);
+    } else if (action === 'delete') {
+        event.preventDefault();
+        deleteAkyo(id);
+    }
+}
 
 // イベントリスナー設定
 function setupEventListeners() {
-    // ログインフォーム
-    const loginForm = document.querySelector('#loginScreen form');
+    // ログインフォーム（IDがあれば優先）
+    const loginForm = document.getElementById('finderLoginForm') || document.querySelector('#loginScreen form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
 
+    // トリミングUIの有無を検出
+    const useCustomCropper = !!document.getElementById('cropContainer');
+
     // 画像入力
     const imageInput = document.getElementById('imageInput');
-    if (imageInput) {
+    if (imageInput && !useCustomCropper) {
         imageInput.addEventListener('change', handleImageSelect);
     }
 
@@ -127,13 +271,40 @@ function setupEventListeners() {
         // 初期表示で全件を表示（空文字検索）
         setTimeout(() => searchForEdit(), 0);
     }
+
+    if (!hasBoundActionDelegation) {
+        document.addEventListener('click', handleAdminActionClick);
+        hasBoundActionDelegation = true;
+    }
 }
 
 // ドラッグ&ドロップ設定
 function setupDragDrop() {
-    // 画像ドロップゾーン
+    // 画像ドロップゾーン（トリミングUIがある場合は drop ハンドラを切り替え）
     const imageDropZone = document.getElementById('imageDropZone');
-    setupDropZone(imageDropZone, handleImageDrop);
+    if (imageDropZone) {
+        const useCustomCropper =
+            !!document.getElementById('cropContainer') &&
+            typeof window.handleImageFileWithCrop === 'function';
+        imageDropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageDropZone.classList.add('dragover');
+        });
+        imageDropZone.addEventListener('dragleave', () => {
+            imageDropZone.classList.remove('dragover');
+        });
+        imageDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageDropZone.classList.remove('dragover');
+            const file = e.dataTransfer?.files?.[0];
+            if (!file || !file.type?.startsWith('image/')) return;
+            if (useCustomCropper) {
+                window.handleImageFileWithCrop(file);
+            } else {
+                handleImageDrop(e);
+            }
+        });
+    }
 
     // CSV ドロップゾーン
     const csvDropZone = document.getElementById('csvDropZone');
@@ -186,7 +357,6 @@ async function handleLogin(event) {
             showAdminScreen();
             showNotification(`${currentUserRole === 'owner' ? 'マスター' : 'ファインダー'}権限でログインしました`, 'success');
             applyFinderRegistrationDefaults();
-            loadAkyoData();
             return;
         }
         // ステータス別エラー
@@ -199,15 +369,19 @@ async function handleLogin(event) {
         }
     } catch (e) {
         adminSessionToken = null;
-        errorDiv.classList.remove('hidden');
         const kind = (e && e.message) || '';
         let msg = '<i class="fas fa-exclamation-circle mr-1"></i> 予期せぬエラーが発生しました';
         if (kind === 'unauthorized') msg = '<i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません';
         else if (kind === 'server') msg = '<i class="fas fa-server mr-1"></i> サーバーエラーです。しばらく待って再試行してください';
         else if (kind === 'request') msg = '<i class="fas fa-exclamation-triangle mr-1"></i> 認証に失敗しました';
         else if (e && (e.name === 'TypeError' || e.message === 'Failed to fetch')) msg = '<i class="fas fa-wifi mr-1"></i> ネットワークに接続できません';
-        errorDiv.innerHTML = msg;
-        setTimeout(() => errorDiv.classList.add('hidden'), 4000);
+        if (errorDiv) {
+            errorDiv.classList.remove('hidden');
+            errorDiv.innerHTML = msg;
+            setTimeout(() => errorDiv.classList.add('hidden'), 4000);
+        } else {
+            showNotification(msg.replace(/<[^>]+>/g, ''), 'error');
+        }
     }
 }
 
@@ -259,14 +433,10 @@ function updateNextIdDisplay() {
     const nextIdInput = document.getElementById('nextIdDisplay');
     if (!nextIdInput) return;
 
-    // akyoDataとimageDataMapの両方から最大IDを取得
-    const akyoMaxId = akyoData.length > 0 ? Math.max(...akyoData.map(a => parseInt(a.id) || 0)) : 0;
-    const imageMaxId = Object.keys(imageDataMap).length > 0 ? Math.max(...Object.keys(imageDataMap).map(id => parseInt(id) || 0)) : 0;
-    const maxId = Math.max(akyoMaxId, imageMaxId, 0);
-    const nextId = String(maxId + 1).padStart(3, '0');
+    const nextId = String(getMaxAssignedAkyoId() + 1).padStart(3, '0');
     nextIdInput.value = `#${nextId}`;
 
-    console.debug(`次のID更新: ${nextId} (Akyo最大: ${akyoMaxId}, 画像最大: ${imageMaxId})`);
+    console.debug(`次のID更新: ${nextId}`);
 }
 
 // ログアウト
@@ -275,6 +445,7 @@ function logout() {
     sessionStorage.removeItem('akyoAdminToken');
     adminSessionToken = null;
     currentUserRole = null;
+    try { localStorage.setItem('akyo:logoutTS', String(Date.now())); } catch (_) {}
     location.reload();
 }
 
@@ -306,7 +477,6 @@ async function loadAkyoData() {
         }
 
         akyoData = parseCSV(csvText);
-        window.adminAkyoRecords = akyoData;
 
         // フォールバック: LocalStorageのCSVが壊れていた場合はファイルから再読込
         if ((!akyoData || akyoData.length === 0) && updatedCSV) {
@@ -326,7 +496,6 @@ async function loadAkyoData() {
                 await window.storageManager.init();
                 const indexedImages = await window.storageManager.getAllImages();
                 imageDataMap = indexedImages || {};
-                window.adminImageDataMap = imageDataMap;
             }
         } catch (e) {
             console.warn('IndexedDBからの画像読み込みに失敗:', e);
@@ -337,14 +506,12 @@ async function loadAkyoData() {
             if (savedImages) {
                 try {
                     imageDataMap = JSON.parse(savedImages) || {};
-                    window.adminImageDataMap = imageDataMap;
                 } catch (e) {
                     console.error('画像データの読み込みエラー:', e);
                     imageDataMap = {};
                 }
             } else {
                 imageDataMap = {};
-                window.adminImageDataMap = imageDataMap;
             }
         }
 
@@ -418,8 +585,6 @@ function parseCSV(csvText) {
     // CRLF正規化
     csvText = String(csvText).replace(/\r\n/g, '\n');
     const data = [];
-    // 先頭行はヘッダとしてスキップ
-    let i = 0;
     let inQuotes = false;
     let field = '';
     let record = [];
@@ -543,8 +708,8 @@ async function handleAddAkyo(event) {
 
     const formData = new FormData(event.target);
 
-    // ID自動採番（最大値+1）
-    const maxId = Math.max(0, ...akyoData.map(a => parseInt(a.id) || 0));
+    // ID自動採番（データ/画像の双方で最大値+1）
+    const maxId = getMaxAssignedAkyoId();
     const newId = String(maxId + 1).padStart(3, '0');
 
     const newAkyo = {
@@ -568,12 +733,15 @@ async function handleAddAkyo(event) {
     // CSV更新
     await updateCSVFile();
 
+    let latestImageDataUrl = null;
+
     // トリミングした画像を保存
     try {
         if (window.generateCroppedImage) {
             const croppedImage = await window.generateCroppedImage();
             if (croppedImage) {
                 imageDataMap[newAkyo.id] = croppedImage;
+                latestImageDataUrl = croppedImage;
 
                 // IndexedDBに保存を試みる
                 try {
@@ -593,6 +761,7 @@ async function handleAddAkyo(event) {
             const imagePreview = document.querySelector('#cropImage');
             if (imagePreview && imagePreview.src && imagePreview.src !== window.location.href) {
                 imageDataMap[newAkyo.id] = imagePreview.src;
+                latestImageDataUrl = imagePreview.src;
 
                 try {
                     if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
@@ -617,22 +786,25 @@ async function handleAddAkyo(event) {
             const fileObj = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
             const adminPassword = adminSessionToken;
             if (!adminPassword) {
-                showNotification('認証が無効です。再度ログインしてください。', 'error');
-                return;
-            }
-            if (fileObj) {
-                await uploadAkyoOnline({
+                showNotification('認証が無効です。画像の公開アップロードはスキップしました。', 'warning');
+            } else if (fileObj || latestImageDataUrl) {
+                const result = await uploadAkyoOnline({
                     id: newAkyo.id,
                     name: newAkyo.nickname || newAkyo.avatarName || '',
                     type: newAkyo.attribute || '',
                     desc: newAkyo.notes || '',
                     file: fileObj,
+                    dataUrl: latestImageDataUrl,
                     adminPassword,
                 });
+                const uploadedId = result?.id || newAkyo.id;
+                showNotification(`Akyo #${uploadedId} の画像を公開環境にアップロードしました`, 'success');
             }
         }
     } catch (e) {
         console.warn('オンラインアップロード失敗（ローカル保存は完了）:', e);
+        const message = e && e.message ? e.message : 'オンラインアップロードに失敗しました';
+        showNotification(`Akyo #${newAkyo.id} の画像アップロードに失敗しました: ${message}`, 'error');
     }
 
     // フォームリセット
@@ -729,11 +901,15 @@ async function convertDataUrlToWebpFile(dataUrl, id) {
                     reject(new Error('画像サイズを取得できません'));
                     return;
                 }
+                const maxEdge = 2048;
+                const scale = Math.min(1, maxEdge / Math.max(width, height));
+                const targetWidth = Math.max(1, Math.round(width * scale));
+                const targetHeight = Math.max(1, Math.round(height * scale));
                 const canvas = document.createElement('canvas');
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(image, 0, 0, width, height);
+                ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
                 canvas.toBlob(blob => {
                     if (!blob) {
                         reject(new Error('WEBP変換に失敗しました'));
@@ -758,11 +934,18 @@ async function convertDataUrlToWebpFile(dataUrl, id) {
                 const blob = dataUrlToBlob(dataUrl);
                 if (blob) {
                     const bitmap = await createImageBitmap(blob);
-                    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+                    const maxEdge = 2048;
+                    const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+                    const targetWidth = Math.max(1, Math.round(bitmap.width * scale));
+                    const targetHeight = Math.max(1, Math.round(bitmap.height * scale));
+                    const canvas = new OffscreenCanvas(targetWidth, targetHeight);
                     const ctx = canvas.getContext('2d');
                     if (!ctx) throw new Error('OffscreenCanvas 2D context unavailable');
-                    ctx.drawImage(bitmap, 0, 0);
+                    ctx.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
                     const webpBlob = await canvas.convertToBlob({ type: 'image/webp', quality: 0.92 });
+                    if (typeof bitmap.close === 'function') {
+                        bitmap.close();
+                    }
                     return new File([webpBlob], `${id3}.webp`, { type: 'image/webp' });
                 }
             }
@@ -781,7 +964,6 @@ async function convertDataUrlToWebpFile(dataUrl, id) {
 }
 
 async function prepareWebpFileForUpload({ id, file, dataUrl }) {
-    const id3 = String(id).padStart(3, '0');
     let sourceDataUrl = dataUrl || null;
 
     if (!sourceDataUrl && typeof window.generateCroppedImage === 'function') {
@@ -803,21 +985,23 @@ async function prepareWebpFileForUpload({ id, file, dataUrl }) {
 
     if (sourceDataUrl) {
         try {
-            const converted = await convertDataUrlToWebpFile(sourceDataUrl, id3);
+            const converted = await convertDataUrlToWebpFile(sourceDataUrl, id);
             if (converted) return converted;
         } catch (e) {
             console.debug('WEBP conversion failed', e);
             const blob = dataUrlToBlob(sourceDataUrl);
             if (blob) {
                 const ext = inferExtensionFromMime(blob.type);
-                return new File([blob], `${id3}${ext}`, { type: blob.type || 'application/octet-stream' });
+                const idStr = String(id).padStart(3, '0');
+                return new File([blob], `${idStr}${ext}`, { type: blob.type || 'application/octet-stream' });
             }
         }
     }
 
     if (file) {
         if (/\.webp$/i.test(file.name) || file.type === 'image/webp') {
-            return new File([file], `${id3}.webp`, { type: 'image/webp' });
+            const idStr = String(id).padStart(3, '0');
+            return new File([file], `${idStr}.webp`, { type: 'image/webp' });
         }
         return file;
     }
@@ -877,41 +1061,6 @@ window.prepareWebpFileForUpload = prepareWebpFileForUpload;
 window.uploadAkyoOnline = uploadAkyoOnline;
 
 // フォームから直接オンライン登録（パスワード欄＋既存入力値を使用）
-async function uploadAkyoOnlineFromForm() {
-    try {
-        const idDisplay = document.getElementById('nextIdDisplay');
-        const imageInput = document.getElementById('imageInput');
-        const passInput = document.getElementById('adminPasswordOnline');
-        const nameInput = document.querySelector('input[name="nickname"]') || { value: '' };
-        const avatarNameInput = document.querySelector('input[name="avatarName"]') || { value: '' };
-        const typeInput = document.querySelector('input[name="attribute"]') || { value: '' };
-        const descInput = document.querySelector('textarea[name="notes"]') || { value: '' };
-
-        const displayText = idDisplay && idDisplay.value ? idDisplay.value.replace(/^#/,'') : '';
-        const id = displayText || (akyoData.length > 0 ? String(Math.max(...akyoData.map(a=>parseInt(a.id)||0))+1).padStart(3,'0') : '001');
-        const file = imageInput && imageInput.files && imageInput.files[0] ? imageInput.files[0] : null;
-        const adminPassword = passInput && passInput.value ? passInput.value : '';
-        if (!id || !file || !adminPassword) { showNotification('ID・画像・パスワードを入力してください', 'warning'); return; }
-
-        const result = await uploadAkyoOnline({
-            id,
-            name: nameInput.value || avatarNameInput.value || '',
-            type: typeInput.value || '',
-            desc: descInput.value || '',
-            file,
-            adminPassword,
-        });
-
-        try { if (window.loadImagesManifest) await window.loadImagesManifest(); } catch(_){ }
-        showNotification(`オンライン登録完了: #${result.id}`, 'success');
-    } catch(e) {
-        console.error(e);
-        showNotification('オンライン登録に失敗しました', 'error');
-    }
-}
-
-window.uploadAkyoOnlineFromForm = uploadAkyoOnlineFromForm;
-
 // 画像選択処理
 function handleImageSelect(event) {
     const file = event.target.files[0];
@@ -988,7 +1137,7 @@ async function syncPendingEditImage(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId) || {};
 
     try {
-        await uploadAkyoOnline({
+        const result = await uploadAkyoOnline({
             id: akyoId,
             name: akyo.nickname || akyo.avatarName || '',
             type: akyo.attribute || '',
@@ -998,6 +1147,8 @@ async function syncPendingEditImage(akyoId) {
             dataUrl,
         });
         delete pendingMap[akyoId];
+        const uploadedId = result?.id || akyoId;
+        showNotification(`Akyo #${uploadedId} の画像を公開環境にアップロードしました`, 'success');
         return { hasPending: true, uploaded: true };
     } catch (e) {
         throw new Error(`公開アップロードに失敗しました: ${e?.message || e}`);
@@ -1012,7 +1163,15 @@ async function removeImageForId(akyoId) {
             await window.deleteSingleImage(akyoId);
         }
         delete imageDataMap[akyoId];
-        localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        try {
+            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        } catch (e) {
+            if (e && e.name === 'QuotaExceededError') {
+                showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+            } else {
+                console.debug('localStorage persist failed', e);
+            }
+        }
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
         if (preview) {
             const id3 = String(akyoId).padStart(3, '0');
@@ -1063,20 +1222,26 @@ function updateEditList() {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
 
+        const safeId = escapeHtml(akyo.id);
+        const safeNickname = escapeHtml(akyo.nickname || '-');
+        const safeAvatarName = escapeHtml(akyo.avatarName || '');
+        const safeAttribute = escapeHtml(akyo.attribute || '');
+        const safeCreator = escapeHtml(akyo.creator || '');
+
         row.innerHTML = `
-            <td class="px-4 py-3 font-mono text-sm">${akyo.id}</td>
+            <td class="px-4 py-3 font-mono text-sm">${safeId}</td>
             <td class="px-4 py-3">
-                <div class="font-medium">${akyo.nickname || '-'}</div>
-                <div class="text-xs text-gray-500">${akyo.avatarName}</div>
+                <div class="font-medium">${safeNickname}</div>
+                <div class="text-xs text-gray-500">${safeAvatarName}</div>
             </td>
-            <td class="px-4 py-3 text-sm">${akyo.attribute}</td>
-            <td class="px-4 py-3 text-sm">${akyo.creator}</td>
+            <td class="px-4 py-3 text-sm">${safeAttribute}</td>
+            <td class="px-4 py-3 text-sm">${safeCreator}</td>
             <td class="px-4 py-3 text-center">
-                <button onclick="editAkyo('${akyo.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
+                <button type="button" data-action="edit" data-id="${safeId}" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
                     <i class="fas fa-edit"></i>
                 </button>
                 ${currentUserRole === 'owner' ? `
-                <button onclick="deleteAkyo('${akyo.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                <button type="button" data-action="delete" data-id="${safeId}" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     <i class="fas fa-trash"></i>
                 </button>
                 ` : ''}
@@ -1087,6 +1252,7 @@ function updateEditList() {
     });
 }
 
+
 // Akyo編集
 function editAkyo(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
@@ -1096,42 +1262,53 @@ function editAkyo(akyoId) {
     const content = document.getElementById('editModalContent');
     const id3 = String(akyoId).padStart(3, '0');
 
+    const safeAkyoId = escapeHtml(akyoId);
+    const safeDisplayId = escapeHtml(akyo.id);
+    const safeNickname = escapeHtml(akyo.nickname || '');
+    const safeAvatarName = escapeHtml(akyo.avatarName || '');
+    const safeAttribute = escapeHtml(akyo.attribute || '');
+    const safeCreator = escapeHtml(akyo.creator || '');
+    const safeAvatarUrl = escapeHtml(akyo.avatarUrl || '');
+    const safeNotes = escapeHtml(akyo.notes || '');
+    const previewSrc = imageDataMap[akyo.id] || (typeof getAkyoImageUrl === 'function' ? getAkyoImageUrl(id3) : '');
+    const safePreviewSrc = escapeHtml(previewSrc || '');
+
     content.innerHTML = `
-        <form onsubmit="handleUpdateAkyo(event, '${akyoId}')">
+        <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">ID（変更不可）</label>
-                    <input type="text" value="${akyo.id}" disabled
+                    <input type="text" value="${safeDisplayId}" disabled
                            class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
-                    <input type="text" name="nickname" value="${akyo.nickname || ''}"
+                    <input type="text" name="nickname" value="${safeNickname}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
-                    <input type="text" name="avatarName" value="${akyo.avatarName || ''}" required
+                    <input type="text" name="avatarName" value="${safeAvatarName}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
-                    <input type="text" name="attribute" value="${akyo.attribute || ''}" required
+                    <input type="text" name="attribute" value="${safeAttribute}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">作者</label>
-                    <input type="text" name="creator" value="${akyo.creator || ''}" required
+                    <input type="text" name="creator" value="${safeCreator}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">VRChat URL</label>
-                    <input type="url" name="avatarUrl" value="${akyo.avatarUrl || ''}"
+                    <input type="url" name="avatarUrl" value="${safeAvatarUrl}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
@@ -1139,15 +1316,15 @@ function editAkyo(akyoId) {
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">備考</label>
                 <textarea name="notes" rows="3"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">${akyo.notes || ''}</textarea>
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">${safeNotes}</textarea>
             </div>
 
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">画像</label>
                 <div class="flex items-center gap-3">
-                    <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : '')}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
-                    <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
-                    <button type="button" onclick="removeImageForId('${akyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
+                    <img id="editImagePreview-${safeAkyoId}" src="${safePreviewSrc}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
+                    <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${safeAkyoId}')" class="text-sm" />
+                    <button type="button" data-action="remove-edit-image" data-id="${safeAkyoId}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
                 <p class="text-xs text-gray-500 mt-1">「更新する」を押すと画像も公開環境へ反映されます。</p>
             </div>
@@ -1160,6 +1337,7 @@ function editAkyo(akyoId) {
 
     modal.classList.remove('hidden');
 }
+
 
 // Akyo更新処理
 async function handleUpdateAkyo(event, akyoId) {
@@ -1217,6 +1395,10 @@ window.editAkyo = editAkyo;
 
 // Akyo削除（ID自動詰め機能付き）
 async function deleteAkyo(akyoId) {
+    if (!adminSessionToken) {
+        showNotification('認証が切れています。再ログインしてください。', 'error');
+        return;
+    }
     if (currentUserRole !== 'owner') {
         showNotification('削除権限がありません', 'error');
         return;
@@ -1226,8 +1408,11 @@ async function deleteAkyo(akyoId) {
         return;
     }
 
-    const deletedIndex = akyoData.findIndex(a => a.id === akyoId);
-    const deletedIdNum = parseInt(akyoId);
+    const deletedIdNum = Number.parseInt(akyoId, 10);
+    if (Number.isNaN(deletedIdNum)) {
+        showNotification('削除対象のIDが不正です', 'error');
+        return;
+    }
 
     // 削除対象を除外
     akyoData = akyoData.filter(a => a.id !== akyoId);
@@ -1235,7 +1420,10 @@ async function deleteAkyo(akyoId) {
     // ID詰め処理：削除されたIDより大きいIDを1つずつ繰り上げ
     const oldToNewIdMap = {};
     akyoData.forEach(akyo => {
-        const currentIdNum = parseInt(akyo.id);
+        const currentIdNum = Number.parseInt(akyo.id, 10);
+        if (Number.isNaN(currentIdNum)) {
+            return;
+        }
         if (currentIdNum > deletedIdNum) {
             const newId = String(currentIdNum - 1).padStart(3, '0');
             oldToNewIdMap[akyo.id] = newId;
@@ -1259,6 +1447,19 @@ async function deleteAkyo(akyoId) {
     });
     imageDataMap = newImageDataMap;
     localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+    try {
+        if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
+            await window.storageManager.init();
+            try {
+                await window.storageManager.deleteImage(akyoId);
+            } catch (_) {
+                // ignore delete failures
+            }
+            await migrateIndexedDbImages(oldToNewIdMap, { removeOld: true });
+        }
+    } catch (error) {
+        console.debug('IndexedDB sync failed in deleteAkyo:', error);
+    }
 
     // お気に入りデータのID更新
     let favorites = loadFavoritesArray();
@@ -1352,7 +1553,7 @@ async function updateCSVFile() {
                 localStorage.setItem('akyoDataVersion', String(ver));
                 localStorage.setItem('akyoAssetsVersion', String(ver));
                 const link = (json && (json.commitUrl || json.fileHtmlUrl)) ? `\n${json.commitUrl || json.fileHtmlUrl}` : '';
-                showNotification(`GitHubに反映しました（最新データを取得します）${link}`, 'success');
+                showNotification(`GitHubに反映しました（最新データを取得します）${link}`, 'success', { linkify: true });
             }
         }
     } catch (e) {
@@ -1362,19 +1563,7 @@ async function updateCSVFile() {
         showNotification(msg, 'error');
     }
 
-    // ファイルとして保存するためのBlobを作成
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    // ダウンロードリンクを作成（自動保存はしない）
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'akyo-data-updated.csv');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-
-    // 更新があったことを通知
-    console.debug('CSV data updated. Download link created.');
+    // ここではダウンロード用リンクを生成しない（必要時のみ別処理で作成）
 }
 
 // CSV一括アップロード処理
@@ -1418,10 +1607,11 @@ function previewCSV(csvText) {
     const newData = parseCSV(csvText);
 
     // 現在の最大IDを取得して、新規IDを仮設定
-    let maxId = Math.max(0, ...akyoData.map(a => parseInt(a.id) || 0));
+    let maxId = getMaxAssignedAkyoId();
 
     const preview = document.getElementById('csvPreview');
     const table = document.getElementById('csvPreviewTable');
+    if (!preview || !table) return;
 
     // プレビュー表示（最初の5件）
     table.innerHTML = `
@@ -1437,13 +1627,18 @@ function previewCSV(csvText) {
         <tbody>
             ${newData.slice(0, 5).map((akyo, index) => {
                 const newId = String(maxId + index + 1).padStart(3, '0');
+                const safeNewId = escapeHtml(newId);
+                const safeOriginalId = escapeHtml(akyo.id || '');
+                const safeName = escapeHtml(akyo.nickname || akyo.avatarName || '');
+                const safeAttribute = escapeHtml(akyo.attribute || '');
+                const safeCreator = escapeHtml(akyo.creator || '');
                 return `
                 <tr>
-                    <td class="px-2 py-1 font-mono font-bold text-green-600">${newId}</td>
-                    <td class="px-2 py-1 font-mono text-gray-400">${akyo.id}</td>
-                    <td class="px-2 py-1">${akyo.nickname || akyo.avatarName}</td>
-                    <td class="px-2 py-1">${akyo.attribute}</td>
-                    <td class="px-2 py-1">${akyo.creator}</td>
+                    <td class="px-2 py-1 font-mono font-bold text-green-600">${safeNewId}</td>
+                    <td class="px-2 py-1 font-mono text-gray-400">${safeOriginalId}</td>
+                    <td class="px-2 py-1">${safeName}</td>
+                    <td class="px-2 py-1">${safeAttribute}</td>
+                    <td class="px-2 py-1">${safeCreator}</td>
                 </tr>
                 `;
             }).join('')}
@@ -1472,7 +1667,7 @@ async function uploadCSV() {
     if (!window.pendingCSVData) return;
 
     // 現在の最大IDを取得
-    let maxId = Math.max(0, ...akyoData.map(a => parseInt(a.id) || 0));
+    let maxId = getMaxAssignedAkyoId();
 
     // CSVデータのIDを自動採番で上書き
     window.pendingCSVData.forEach(akyo => {
@@ -1536,27 +1731,34 @@ function handleBulkImages(files) {
     let processedCount = 0;
 
     imageFiles.forEach((file, index) => {
+        const currentFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
             const div = document.createElement('div');
             div.className = 'flex items-center gap-2 p-2 bg-gray-50 rounded mapping-item';
 
             // ファイル名からIDを推測
-            const match = file.name.match(/(\d{3})/);
+            const match = currentFile.name.match(/(\d{3})/);
             const suggestedId = match ? match[1] : '';
 
             // ユニークなIDを生成
             const uniqueId = `mapping-${Date.now()}-${index}`;
 
+            const safeImageData = escapeHtml(e.target.result || '');
+            const safeSuggestedId = escapeHtml(suggestedId);
+            const safeFileName = escapeHtml(currentFile.name || '');
+            const safeUniqueId = escapeHtml(uniqueId);
+
             div.innerHTML = `
-                <img src="${e.target.result}" class="w-12 h-12 object-cover rounded">
-                <input type="text" placeholder="AkyoID" value="${suggestedId}"
+                <img src="${safeImageData}" class="w-12 h-12 object-cover rounded">
+                <input type="text" placeholder="AkyoID" value="${safeSuggestedId}"
                        class="px-2 py-1 border rounded w-20 mapping-id-input"
-                       data-image="${e.target.result}"
-                       data-filename="${file.name}"
-                       id="${uniqueId}">
-                <span class="text-sm text-gray-600 flex-1">${file.name}</span>
-                <button onclick="saveImageMapping('${uniqueId}')"
+                       inputmode="numeric" pattern="\\d{3}" maxlength="3"
+                       data-image="${safeImageData}"
+                       data-filename="${safeFileName}"
+                       id="${safeUniqueId}">
+                <span class="text-sm text-gray-600 flex-1">${safeFileName}</span>
+                <button onclick="saveImageMapping('${safeUniqueId}')"
                         class="save-btn px-2 py-1 bg-purple-500 text-white rounded text-sm hover:bg-purple-600">
                     保存
                 </button>
@@ -1575,7 +1777,7 @@ function handleBulkImages(files) {
                 id: uniqueId,
                 suggestedId: suggestedId,
                 imageData: e.target.result,
-                fileName: file.name
+                fileName: currentFile.name
             });
 
             // プログレス更新
@@ -1607,10 +1809,10 @@ function handleBulkImages(files) {
         // エラーハンドリング
         reader.onerror = () => {
             processedCount++;
-            showNotification(`${file.name} の読み込みに失敗しました`, 'error');
+            showNotification(`${currentFile.name} の読み込みに失敗しました`, 'error');
         };
 
-        reader.readAsDataURL(files[0] ?? file);
+        reader.readAsDataURL(file);
     });
 }
 
@@ -1641,13 +1843,24 @@ async function saveImageMapping(inputId) {
 
     try {
         // ストレージアダプターを使用して保存（IndexedDB優先）
+        if (!imageDataMap) imageDataMap = {};
         if (window.saveSingleImage) {
             await window.saveSingleImage(akyoId, imageData);
+            imageDataMap[akyoId] = imageData;
+            try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
         } else {
             // フォールバック: 従来のLocalStorage保存
-            if (!imageDataMap) imageDataMap = {};
             imageDataMap[akyoId] = imageData;
-            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+            try {
+                localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+            } catch (e) {
+                if (e && e.name === 'QuotaExceededError') {
+                    delete imageDataMap[akyoId];
+                    showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+                    return;
+                }
+                throw e;
+            }
         }
 
         console.debug(`Image saved for ID ${akyoId}`);
@@ -1815,6 +2028,8 @@ async function saveAllMappings() {
         try {
             if (window.saveSingleImage) {
                 await window.saveSingleImage(akyoId, imageData);
+                imageDataMap[akyoId] = imageData;
+                try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
             } else {
                 // フォールバック
                 imageDataMap[akyoId] = imageData;
@@ -1880,7 +2095,15 @@ function clearMappingList() {
 
 // 個別削除
 function removeMapping(button) {
-    button.parentElement.remove();
+    const row = button.parentElement;
+    const input = row ? row.querySelector('.mapping-id-input') : null;
+    const uid = input ? input.id : null;
+    if (row) {
+        row.remove();
+    }
+    if (uid && Array.isArray(window.pendingImageMappings)) {
+        window.pendingImageMappings = window.pendingImageMappings.filter(m => m.id !== uid);
+    }
 }
 
 // 画像ギャラリー更新
@@ -1902,18 +2125,23 @@ function updateImageGallery() {
         const akyo = akyoData.find(a => a.id === akyoId);
         const div = document.createElement('div');
         div.className = 'relative group';
+        div.tabIndex = 0;
+
+        const safeAkyoId = escapeHtml(akyoId);
+        const safeImageData = escapeHtml(imageData || '');
+        const safeLabel = escapeHtml(akyo ? (akyo.nickname || akyo.avatarName || '') : '未登録');
 
         div.innerHTML = `
-            <img src="${imageData}" class="w-full h-24 object-cover rounded-lg">
-            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+            <img src="${safeImageData}" class="w-full h-24 object-cover rounded-lg">
+            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                 <div class="text-white text-center">
-                    <div class="font-bold">#${akyoId}</div>
-                    <div class="text-xs">${akyo ? akyo.nickname || akyo.avatarName : '未登録'}</div>
+                    <div class="font-bold">#${safeAkyoId}</div>
+                    <div class="text-xs">${safeLabel}</div>
                 </div>
             </div>
             ${currentUserRole === 'owner' ? `
-            <button onclick="removeImage('${akyoId}')"
-                    class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+            <button type="button" data-action="remove-image" data-id="${safeAkyoId}"
+                    class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                 <i class="fas fa-times text-xs"></i>
             </button>
             ` : ''}
@@ -1923,14 +2151,20 @@ function updateImageGallery() {
     });
 }
 
-// 画像削除
-function removeImage(akyoId) {
+// 画像削除（IndexedDB/Local双方）
+async function removeImage(akyoId) {
     if (!confirm(`Akyo #${akyoId} の画像を削除しますか？`)) return;
-
-    delete imageDataMap[akyoId];
-    localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-    updateImageGallery();
-    showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+    try {
+        if (window.deleteSingleImage) {
+            await window.deleteSingleImage(akyoId);
+        }
+        delete imageDataMap[akyoId];
+        try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
+        updateImageGallery();
+        showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+    } catch (e) {
+        showNotification('削除エラー: ' + (e?.message || e), 'error');
+    }
 }
 
 // グローバルスコープに公開
@@ -1958,20 +2192,26 @@ function searchForEdit() {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
 
+        const safeId = escapeHtml(akyo.id);
+        const safeNickname = escapeHtml(akyo.nickname || '-');
+        const safeAvatarName = escapeHtml(akyo.avatarName || '');
+        const safeAttribute = escapeHtml(akyo.attribute || '');
+        const safeCreator = escapeHtml(akyo.creator || '');
+
         row.innerHTML = `
-            <td class="px-4 py-3 font-mono text-sm">${akyo.id}</td>
+            <td class="px-4 py-3 font-mono text-sm">${safeId}</td>
             <td class="px-4 py-3">
-                <div class="font-medium">${akyo.nickname || '-'}</div>
-                <div class="text-xs text-gray-500">${akyo.avatarName}</div>
+                <div class="font-medium">${safeNickname}</div>
+                <div class="text-xs text-gray-500">${safeAvatarName}</div>
             </td>
-            <td class="px-4 py-3 text-sm">${akyo.attribute}</td>
-            <td class="px-4 py-3 text-sm">${akyo.creator}</td>
+            <td class="px-4 py-3 text-sm">${safeAttribute}</td>
+            <td class="px-4 py-3 text-sm">${safeCreator}</td>
             <td class="px-4 py-3 text-center">
-                <button onclick="editAkyo('${akyo.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
+                <button type="button" data-action="edit" data-id="${safeId}" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
                     <i class="fas fa-edit"></i>
                 </button>
                 ${currentUserRole === 'owner' ? `
-                <button onclick="deleteAkyo('${akyo.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                <button type="button" data-action="delete" data-id="${safeId}" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     <i class="fas fa-trash"></i>
                 </button>
                 ` : ''}
@@ -1983,41 +2223,88 @@ function searchForEdit() {
 }
 
 // 通知表示
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all transform translate-x-0`;
+function showNotification(message, type = 'info', opts = {}) {
+    const { linkify = false } = opts;
+    let container = document.getElementById('notificationContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notificationContainer';
+        container.className = 'fixed top-20 right-4 flex flex-col items-end gap-2 z-50';
+        document.body.appendChild(container);
+    }
+    container.setAttribute('role', 'region');
+    container.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
 
-    switch (type) {
-        case 'success':
-            notification.className += ' bg-green-500 text-white';
-            break;
-        case 'error':
-            notification.className += ' bg-red-500 text-white';
-            break;
-        case 'warning':
-            notification.className += ' bg-yellow-500 text-white';
-            break;
-        default:
-            notification.className += ' bg-blue-500 text-white';
+    const notification = document.createElement('div');
+    notification.className = 'px-6 py-3 rounded-lg shadow-lg transition-all transform translate-x-0 text-white bg-blue-500';
+    notification.setAttribute('role', type === 'error' ? 'alert' : 'status');
+
+    if (type === 'success') {
+        notification.classList.remove('bg-blue-500');
+        notification.classList.add('bg-green-500');
+    } else if (type === 'error') {
+        notification.classList.remove('bg-blue-500');
+        notification.classList.add('bg-red-500');
+    } else if (type === 'warning') {
+        notification.classList.remove('bg-blue-500');
+        notification.classList.add('bg-yellow-500');
     }
 
-    notification.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i>
-            ${message}
-        </div>
-    `;
+    const iconClass = type === 'success'
+        ? 'fa-check-circle'
+        : type === 'error'
+            ? 'fa-exclamation-circle'
+            : type === 'warning'
+                ? 'fa-exclamation-triangle'
+                : 'fa-info-circle';
 
-    document.body.appendChild(notification);
+    const row = document.createElement('div');
+    row.className = 'flex items-center';
+    const icon = document.createElement('i');
+    icon.className = `fas ${iconClass} mr-2`;
+    row.appendChild(icon);
+
+    const text = String(message ?? '');
+    if (linkify) {
+        const parts = text.split(/(https?:\/\/[^\s]+)/g);
+        parts.forEach(part => {
+            if (/^https?:\/\//.test(part)) {
+                const anchor = document.createElement('a');
+                anchor.href = part;
+                anchor.target = '_blank';
+                anchor.rel = 'noopener noreferrer';
+                anchor.className = 'underline';
+                anchor.textContent = part;
+                row.appendChild(anchor);
+            } else if (part) {
+                row.appendChild(document.createTextNode(part));
+            }
+        });
+    } else {
+        row.appendChild(document.createTextNode(text));
+    }
+
+    notification.appendChild(row);
+
+    container.appendChild(notification);
 
     setTimeout(() => {
         notification.style.transform = 'translateX(400px)';
-        setTimeout(() => notification.remove(), 300);
+        setTimeout(() => {
+            notification.remove();
+            if (!container.hasChildNodes()) {
+                container.remove();
+            }
+        }, 300);
     }, 3000);
 }
 
 // ID再採番機能
 async function renumberAllIds() {
+    if (!adminSessionToken) {
+        showNotification('認証が切れています。再ログインしてください。', 'error');
+        return;
+    }
     if (!confirm('すべてのAkyoのIDを001から振り直します。\nこの操作は取り消せません。続行しますか？')) {
         return;
     }
@@ -2025,10 +2312,9 @@ async function renumberAllIds() {
     // IDマッピングの作成
     const oldToNewIdMap = {};
 
-    // 名前順でソート（または任意の基準）してから連番を振る
+    // 現在のID順でソートしてから連番を振る
     akyoData.sort((a, b) => {
-        // 現在のID順でソート
-        return parseInt(a.id) - parseInt(b.id);
+        return (Number.parseInt(a.id, 10) || 0) - (Number.parseInt(b.id, 10) || 0);
     });
 
     // 新しいIDを割り当て
@@ -2048,6 +2334,7 @@ async function renumberAllIds() {
     });
     imageDataMap = newImageDataMap;
     localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+    await migrateIndexedDbImages(oldToNewIdMap, { removeOld: true });
 
     // お気に入りデータのID更新
     let favorites = loadFavoritesArray();
@@ -2067,19 +2354,24 @@ window.renumberAllIds = renumberAllIds;
 
 // CSVエクスポート機能
 function exportCSV() {
+    const csvEscape = (value) => {
+        const str = value === null || value === undefined ? '' : String(value);
+        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+
     // CSVフォーマットに変換
-    let csvContent = ',見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
+    let csvContent = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
 
     akyoData.forEach(akyo => {
         const row = [
-            akyo.id,
-            akyo.appearance,
-            akyo.nickname,
-            akyo.avatarName,
-            akyo.attribute,
-            akyo.notes.includes(',') || akyo.notes.includes('\n') ? `"${akyo.notes}"` : akyo.notes,
-            akyo.creator,
-            akyo.avatarUrl
+            csvEscape(akyo.id),
+            csvEscape(akyo.appearance),
+            csvEscape(akyo.nickname),
+            csvEscape(akyo.avatarName),
+            csvEscape(akyo.attribute),
+            csvEscape(akyo.notes),
+            csvEscape(akyo.creator),
+            csvEscape(akyo.avatarUrl)
         ].join(',');
         csvContent += row + '\n';
     });
@@ -2097,6 +2389,7 @@ function exportCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
     showNotification('CSVファイルをダウンロードしました', 'success');
 }
