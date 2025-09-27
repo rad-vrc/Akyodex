@@ -481,6 +481,12 @@
                 console.warn('ローカルストレージのシークレット消去に失敗:', error);
             }
 
+            try {
+                sessionStorage.clear();
+            } catch (error) {
+                console.warn('セッションストレージのシークレット消去に失敗:', error);
+            }
+
             const cleanupTasks = [];
 
             if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
@@ -534,13 +540,24 @@
             if (!anchor || anchor.dataset.secretModeBound === '1') return;
             anchor.dataset.secretModeBound = '1';
             anchor.addEventListener('click', async (event) => {
+                if (
+                    event.defaultPrevented ||
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.button === 1
+                ) {
+                    return;
+                }
+
                 try { event.preventDefault(); } catch (_) {}
 
+                anchor.setAttribute('aria-disabled', 'true');
                 anchor.style.pointerEvents = 'none';
                 const navigateTo = buildSecretNavigationUrl(homeUrl);
 
                 const fallbackTimer = setTimeout(() => {
-                    window.location.assign(navigateTo);
+                    window.location.replace(navigateTo);
                 }, 1500);
 
                 try {
@@ -549,9 +566,9 @@
                     console.warn('シークレット効果の適用に失敗:', error);
                 } finally {
                     clearTimeout(fallbackTimer);
-                    window.location.assign(navigateTo);
+                    window.location.replace(navigateTo);
                 }
-            });
+            }, { once: true });
         }
 
         // ヘッダーロゴを読み込み
