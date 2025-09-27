@@ -152,6 +152,18 @@ Value: [username].github.io
 
 ---
 
+## ♻️ デザイン変更時のキャッシュ更新ルール
+
+`css/kid-friendly.css` と `images/akyo-bg.webp` を更新した際は、ブラウザやCDNのキャッシュを確実に更新するため、以下の値を同時に上げてください。
+
+- `sw.js` の `CSS_VERSION`
+- 各HTMLの `css/kid-friendly.css?v=...` クエリ（ビルド済みファイルを直接編集する場合）
+- `css/kid-friendly.css` 内の `akyo-bg.webp?v=...` 指定
+
+また、`sw.js` の `PRECACHE` 定数も必要に応じて increment し、古いプリキャッシュを破棄できるようにします。Cloudflare Pages など主要なCDNではクエリストリングがキャッシュキーに含まれるため、この運用で最新の背景画像が即時に反映されます。
+
+---
+
 ## 💡 おすすめの組み合わせ
 
 ### 🏆 **最もおすすめ**: Netlify + Namecheap

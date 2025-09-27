@@ -1,5 +1,6 @@
-const PRECACHE = 'akyo-precache-v7';
+const PRECACHE = 'akyo-precache-v8';
 const CSS_VERSION = '20250927';
+const THEME_BACKGROUND = './images/akyo-bg.webp';
 let precacheUrlList = null;
 let precacheUrlSet = null;
 
@@ -9,19 +10,23 @@ function getScope() {
 
 function buildPrecacheUrls() {
   const scope = getScope();
-  const cssAssets = CSS_VERSION
-    ? [
-        './css/kid-friendly.css',
-        `./css/kid-friendly.css?v=${CSS_VERSION}`,
-      ]
+
+  const currentCssAssets = CSS_VERSION
+    ? [`./css/kid-friendly.css?v=${CSS_VERSION}`]
     : ['./css/kid-friendly.css'];
+  const legacyCssAssets = CSS_VERSION ? ['./css/kid-friendly.css'] : [];
+
+  const currentBackgroundAssets = CSS_VERSION
+    ? [`${THEME_BACKGROUND}?v=${CSS_VERSION}`]
+    : [THEME_BACKGROUND];
+  const legacyBackgroundAssets = CSS_VERSION ? [THEME_BACKGROUND] : [];
 
   const coreAssets = [
     './',
     './index.html',
     './admin.html',
     './logo-upload.html',
-    ...cssAssets,
+    ...currentCssAssets,
     './js/storage-manager.js',
     './js/storage-adapter.js',
     './js/image-manifest-loader.js',
@@ -29,9 +34,14 @@ function buildPrecacheUrls() {
     './js/main.js',
     './js/admin.js',
     './images/logo.webp',
+    ...currentBackgroundAssets,
   ];
 
-  return coreAssets.map((path) => new URL(path, scope).toString());
+  const supplementalAssets = [...legacyCssAssets, ...legacyBackgroundAssets];
+
+  return [...coreAssets, ...supplementalAssets].map((path) =>
+    new URL(path, scope).toString()
+  );
 }
 
 function getPrecacheUrls() {

@@ -30,8 +30,9 @@ body {
     font-family: 'Kosugi Maru', 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif !important;
     color: var(--text-primary);
 
+    /* akyo-bg.webp 側も CSS_VERSION に合わせて ?v= を付与してキャッシュ更新 */
     background:
-      center top / contain no-repeat url('../images/akyo-bg.webp'),
+      center top / contain no-repeat url('../images/akyo-bg.webp?v=20250927'),
       linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     background-attachment: fixed, fixed;      /* 両レイヤー固定 */
     background-repeat: no-repeat, no-repeat;  /* 念のためタイル防止 */
