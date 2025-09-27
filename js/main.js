@@ -704,10 +704,43 @@ function setupEventListeners() {
     }
 
     const detailModal = document.getElementById('detailModal');
-    if (detailModal) {
-        detailModal.addEventListener('click', (e) => {
-            if (e.target.id === 'detailModal') closeModal();
+    if (detailModal && !detailModal.dataset.outsideCloseInitialized) {
+        const isEventInsideModal = (event) => {
+            const modalContentContainer = detailModal.querySelector('[data-modal-content]');
+            return modalContentContainer ? modalContentContainer.contains(event.target) : false;
+        };
+
+        const handlePointerDownOutsideModal = (event) => {
+            if (detailModal.classList.contains('hidden')) return;
+            if (!isEventInsideModal(event)) {
+                closeModal();
+            }
+        };
+
+        const handleClickOutsideModal = (event) => {
+            if (detailModal.classList.contains('hidden')) return;
+            if (!isEventInsideModal(event)) {
+                closeModal();
+            }
+        };
+
+        const outsideCloseEvents = window.PointerEvent
+            ? ['pointerdown']
+            : ['mousedown', 'touchstart'];
+
+        outsideCloseEvents.forEach((eventName) => {
+            document.addEventListener(eventName, handlePointerDownOutsideModal, true);
         });
+
+        detailModal.addEventListener('click', handleClickOutsideModal);
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !detailModal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        detailModal.dataset.outsideCloseInitialized = 'true';
     }
 }
 
@@ -1469,7 +1502,9 @@ async function showDetail(akyoId) {
 
 // モーダルを閉じる
 function closeModal() {
-    document.getElementById('detailModal').classList.add('hidden');
+    const modal = document.getElementById('detailModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
 }
 
 // お気に入り切り替え
