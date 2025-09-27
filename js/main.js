@@ -704,21 +704,22 @@ function setupEventListeners() {
     }
 
     const detailModal = document.getElementById('detailModal');
+// モーダルの外側クリック/ESCで閉じる（重複防止フラグ）
 const detailModal = document.getElementById('detailModal');
 if (detailModal && !detailModal.dataset.outsideCloseInitialized) {
+    const isEventInsideModal = (event) => {
+        const modalContentContainer = detailModal.querySelector('[data-modal-content]');
+        return modalContentContainer ? modalContentContainer.contains(event.target) : false;
+    };
+
     const handlePointerDownOutsideModal = (event) => {
         if (detailModal.classList.contains('hidden')) return;
-        const modalContentContainer = detailModal.querySelector('[data-modal-content]');
-        if (!modalContentContainer) return;
-        if (!modalContentContainer.contains(event.target)) {
+        if (!isEventInsideModal(event)) {
             closeModal();
         }
     };
 
-    const outsideCloseEvents = window.PointerEvent
-        ? ['pointerdown']
-        : ['mousedown', 'touchstart'];
-
+    const outsideCloseEvents = window.PointerEvent ? ['pointerdown'] : ['mousedown', 'touchstart'];
     outsideCloseEvents.forEach((eventName) => {
         document.addEventListener(eventName, handlePointerDownOutsideModal, true);
     });
@@ -731,6 +732,7 @@ if (detailModal && !detailModal.dataset.outsideCloseInitialized) {
 
     detailModal.dataset.outsideCloseInitialized = 'true';
 }
+
 
 
 // 正規化（ひらがな/カタカナ/全角半角）
