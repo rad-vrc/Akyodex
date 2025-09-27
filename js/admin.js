@@ -122,6 +122,14 @@ function handleAdminActionClick(event) {
         return;
     }
 
+    if (action === 'remove-edit-image') {
+        event.preventDefault();
+        if (id) {
+            removeImageForId(id);
+        }
+        return;
+    }
+
     if (!id) return;
 
     if (action === 'edit') {
@@ -306,8 +314,14 @@ function updateNextIdDisplay() {
     if (!nextIdInput) return;
 
     // akyoDataとimageDataMapの両方から最大IDを取得
-    const akyoMaxId = akyoData.length > 0 ? Math.max(...akyoData.map(a => Number.parseInt(a.id, 10) || 0)) : 0;
-    const imageMaxId = Object.keys(imageDataMap).length > 0 ? Math.max(...Object.keys(imageDataMap).map(id => Number.parseInt(id, 10) || 0)) : 0;
+    const akyoIds = akyoData
+        .map(a => Number.parseInt(a.id, 10))
+        .filter(Number.isFinite);
+    const imageIds = Object.keys(imageDataMap)
+        .map(id => Number.parseInt(id, 10))
+        .filter(Number.isFinite);
+    const akyoMaxId = akyoIds.length ? Math.max(...akyoIds) : 0;
+    const imageMaxId = imageIds.length ? Math.max(...imageIds) : 0;
     const maxId = Math.max(akyoMaxId, imageMaxId, 0);
     const nextId = String(maxId + 1).padStart(3, '0');
     nextIdInput.value = `#${nextId}`;
@@ -1181,7 +1195,7 @@ function editAkyo(akyoId) {
                 <div class="flex items-center gap-3">
                     <img id="editImagePreview-${safeAkyoId}" src="${safePreviewSrc}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
                     <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${safeAkyoId}')" class="text-sm" />
-                    <button type="button" onclick="removeImageForId('${safeAkyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
+                    <button type="button" data-action="remove-edit-image" data-id="${safeAkyoId}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
                 <p class="text-xs text-gray-500 mt-1">「更新する」を押すと画像も公開環境へ反映されます。</p>
             </div>
@@ -1403,11 +1417,7 @@ async function updateCSVFile() {
         showNotification(msg, 'error');
     }
 
-    // ファイルとして保存するためのBlobを作成し、URLは即座に破棄
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    console.debug('CSV data updated. Temporary blob URL generated.');
-    URL.revokeObjectURL(url);
+    // ここではダウンロード用リンクを生成しない（必要時のみ別処理で作成）
 }
 
 // CSV一括アップロード処理
@@ -1974,14 +1984,20 @@ function updateImageGallery() {
     });
 }
 
-// 画像削除
-function removeImage(akyoId) {
+// 画像削除（IndexedDB/Local双方）
+async function removeImage(akyoId) {
     if (!confirm(`Akyo #${akyoId} の画像を削除しますか？`)) return;
-
-    delete imageDataMap[akyoId];
-    localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-    updateImageGallery();
-    showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+    try {
+        if (window.deleteSingleImage) {
+            await window.deleteSingleImage(akyoId);
+        }
+        delete imageDataMap[akyoId];
+        try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
+        updateImageGallery();
+        showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+    } catch (e) {
+        showNotification('削除エラー: ' + (e?.message || e), 'error');
+    }
 }
 
 // グローバルスコープに公開
