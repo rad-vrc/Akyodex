@@ -1643,3 +1643,5 @@ function showToast(message, type = 'info', retryHandler) {
     document.body.appendChild(toast);
     setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
 }
+
+}
