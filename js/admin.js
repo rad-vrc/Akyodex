@@ -11,6 +11,415 @@ let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 let hasBoundActionDelegation = false;
 
 const FINDER_PREFILL_VALUE = 'Akyo';
+const DEFAULT_ATTRIBUTE_NAME = '未分類';
+
+const attributeManagerApi = window.attributeManager;
+if (!attributeManagerApi) {
+    throw new Error('attributeManager module failed to load. Please ensure js/attribute-manager.js is loaded before js/admin.js');
+}
+
+attributeManagerApi.configure({
+    notify: (message, type = 'info', options) => showNotification(message, type, options),
+    confirmDelete: (message) => window.confirm(message),
+    getCurrentRole: () => currentUserRole,
+    canDelete: (meta, role) => {
+        const name = typeof meta?.name === 'string' ? meta.name.trim() : '';
+        if (name === DEFAULT_ATTRIBUTE_NAME) {
+            return false;
+        }
+        return meta?.isSession ? true : role === 'owner';
+    },
+    onDelete: handleAttributeDeletion,
+    onAttributesChanged: () => {
+        // No-op for now; hook reserved for future analytics or persistence triggers.
+    },
+});
+
+const authorSuggestionState = {
+    authors: [],
+    isBound: false,
+    isOpen: false,
+    lastFilter: '',
+    handleDocumentClick: null,
+    hasDelegatedEvents: false,
+    boundInput: null,
+};
+
+function rebuildCreatorSuggestionSource() {
+    const uniqueCreators = new Set();
+    if (Array.isArray(akyoData)) {
+        akyoData.forEach((akyo) => {
+            const value = typeof akyo?.creator === 'string' ? akyo.creator.trim() : '';
+            if (value) {
+                uniqueCreators.add(value);
+            }
+        });
+    }
+
+    const sorted = Array.from(uniqueCreators);
+    sorted.sort((a, b) => a.localeCompare(b, 'ja'));
+
+    authorSuggestionState.authors = sorted;
+
+    if (authorSuggestionState.isOpen) {
+        renderCreatorSuggestions(authorSuggestionState.lastFilter);
+    }
+}
+
+function bindCreatorSuggestionInput() {
+    if (authorSuggestionState.isBound) {
+        return;
+    }
+
+    const input = document.getElementById('addCreatorInput');
+    const panel = document.getElementById('addCreatorSuggestions');
+
+    if (!input || !panel) {
+        return;
+    }
+
+    authorSuggestionState.boundInput = input;
+
+    const handleInput = () => {
+        if (authorSuggestionState.isOpen) {
+            renderCreatorSuggestions(input.value || '');
+        } else {
+            showCreatorSuggestions();
+        }
+    };
+
+    input.addEventListener('focus', showCreatorSuggestions);
+    input.addEventListener('click', showCreatorSuggestions);
+    input.addEventListener('input', handleInput);
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            hideCreatorSuggestions();
+        } else if (event.key === 'ArrowDown') {
+            const firstOption = panel.querySelector('button');
+            if (firstOption) {
+                event.preventDefault();
+                showCreatorSuggestions();
+                window.requestAnimationFrame(() => firstOption.focus());
+            }
+        }
+    });
+    input.addEventListener('blur', () => {
+        window.requestAnimationFrame(() => {
+            const active = document.activeElement;
+            if (!panel.contains(active)) {
+                hideCreatorSuggestions();
+            }
+        });
+    });
+
+    if (!authorSuggestionState.hasDelegatedEvents) {
+        const handlePanelPointer = (event) => {
+            const option = event.target.closest('[data-author-option]');
+            if (!option) {
+                return;
+            }
+            const targetInput = authorSuggestionState.boundInput;
+            if (!targetInput) {
+                return;
+            }
+            event.preventDefault();
+            const value = option.dataset.authorOption || '';
+            targetInput.value = value;
+            hideCreatorSuggestions();
+            targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+            window.requestAnimationFrame(() => targetInput.focus());
+        };
+
+        const handlePanelKeydown = (event) => {
+            if (event.key === 'Escape') {
+                hideCreatorSuggestions();
+                window.requestAnimationFrame(() => input.focus());
+                return;
+            }
+
+            if (event.key !== 'Enter' && event.key !== ' ') {
+                return;
+            }
+
+            const option = event.target.closest('[data-author-option]');
+            if (!option) {
+                return;
+            }
+
+            event.preventDefault();
+            const targetInput = authorSuggestionState.boundInput;
+            if (!targetInput) {
+                return;
+            }
+
+            const value = option.dataset.authorOption || '';
+            targetInput.value = value;
+            hideCreatorSuggestions();
+            window.requestAnimationFrame(() => targetInput.focus());
+        };
+
+        panel.addEventListener('mousedown', handlePanelPointer);
+        panel.addEventListener('keydown', handlePanelKeydown);
+        authorSuggestionState.hasDelegatedEvents = true;
+    }
+
+    authorSuggestionState.handleDocumentClick = (event) => {
+        if (!authorSuggestionState.isOpen) {
+            return;
+        }
+        if (event.target === input || panel.contains(event.target)) {
+            return;
+        }
+        hideCreatorSuggestions();
+    };
+
+    document.addEventListener('mousedown', authorSuggestionState.handleDocumentClick);
+
+    authorSuggestionState.isBound = true;
+}
+
+function showCreatorSuggestions() {
+    const input = document.getElementById('addCreatorInput');
+    const panel = document.getElementById('addCreatorSuggestions');
+    if (!input || !panel) {
+        return;
+    }
+
+    renderCreatorSuggestions(input.value || '');
+
+    panel.classList.remove('hidden');
+    panel.setAttribute('aria-hidden', 'false');
+    authorSuggestionState.isOpen = true;
+}
+
+function hideCreatorSuggestions() {
+    const panel = document.getElementById('addCreatorSuggestions');
+    if (!panel) {
+        return;
+    }
+
+    panel.classList.add('hidden');
+    panel.setAttribute('aria-hidden', 'true');
+    authorSuggestionState.isOpen = false;
+}
+
+function renderCreatorSuggestions(filterText = '') {
+    const panel = document.getElementById('addCreatorSuggestions');
+    const input = document.getElementById('addCreatorInput');
+
+    if (!panel || !input) {
+        return;
+    }
+
+    panel.setAttribute('role', 'listbox');
+    authorSuggestionState.lastFilter = filterText;
+
+    const normalized = filterText.trim().toLocaleLowerCase('ja');
+    const allAuthors = authorSuggestionState.authors || [];
+    const matches = normalized
+        ? allAuthors.filter((author) => author.toLocaleLowerCase('ja').includes(normalized))
+        : allAuthors;
+
+    panel.textContent = '';
+    panel.scrollTop = 0;
+
+    if (allAuthors.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'px-3 py-2 text-sm text-gray-500';
+        empty.textContent = '登録済みの作者がまだありません';
+        panel.appendChild(empty);
+        return;
+    }
+
+    if (matches.length === 0) {
+        const noMatch = document.createElement('p');
+        noMatch.className = 'px-3 py-2 text-sm text-gray-500';
+        noMatch.textContent = '一致する作者が見つかりません';
+        panel.appendChild(noMatch);
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    matches.forEach((author) => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'w-full text-left px-3 py-2 text-sm hover:bg-green-100 focus:bg-green-100 focus:outline-none';
+        option.setAttribute('role', 'option');
+        option.dataset.authorOption = author;
+        option.textContent = author;
+        fragment.appendChild(option);
+    });
+
+    panel.appendChild(fragment);
+}
+
+async function handleAttributeDeletion({ name, meta }) {
+    const parsed = attributeManagerApi.parseAttributeString(name);
+    const normalized = parsed.length > 0 ? parsed[0] : '';
+    if (!normalized) {
+        return false;
+    }
+
+    if (normalized === DEFAULT_ATTRIBUTE_NAME) {
+        showNotification(`属性「${DEFAULT_ATTRIBUTE_NAME}」は削除できません`, 'error');
+        return false;
+    }
+
+    let csvUpdated = false;
+    const touchedRecords = [];
+
+    if (!meta?.isSession && Array.isArray(akyoData) && akyoData.length > 0) {
+        akyoData.forEach((akyo) => {
+            const attributeValue = typeof akyo?.attribute === 'string' ? akyo.attribute : '';
+            const attrs = attributeManagerApi.parseAttributeString(attributeValue);
+            if (!attrs.includes(normalized)) {
+                return;
+            }
+
+            const filtered = attrs.filter(attr => attr !== normalized);
+            if (filtered.length === 0) {
+                filtered.push(DEFAULT_ATTRIBUTE_NAME);
+            }
+            const updatedValue = filtered.join(',');
+            if (updatedValue !== attributeValue) {
+                touchedRecords.push({ akyo, original: attributeValue, updated: updatedValue });
+            }
+        });
+
+        if (touchedRecords.length > 0) {
+            touchedRecords.forEach(({ akyo, updated }) => {
+                akyo.attribute = updated;
+            });
+
+            try {
+                await updateCSVFile();
+                csvUpdated = true;
+            } catch (error) {
+                touchedRecords.forEach(({ akyo, original }) => {
+                    akyo.attribute = original;
+                });
+                console.error('Failed to persist attribute removal', error);
+                showNotification('属性の削除内容を保存できませんでした', 'error');
+                refreshDerivedCollections();
+                return false;
+            }
+        }
+    }
+
+    if (csvUpdated) {
+        try {
+            updateEditList();
+        } catch (_) {
+            // 編集リストが未初期化の場合は無視
+        }
+    }
+
+    refreshDerivedCollections();
+
+    return { message: `属性「${normalized}」を削除しました`, type: 'success' };
+}
+
+function refreshDerivedCollections() {
+    attributeManagerApi.rebuildFromAkyoData(akyoData);
+    rebuildCreatorSuggestionSource();
+}
+
+function normalizeForDuplicateComparison(value) {
+    if (typeof value !== 'string') {
+        return '';
+    }
+    return value.trim().toLocaleLowerCase('ja');
+}
+
+function findDuplicateIdsByField(fieldName, value, { excludeId } = {}) {
+    const target = normalizeForDuplicateComparison(value);
+    if (!target || !Array.isArray(akyoData)) {
+        return [];
+    }
+
+    return akyoData.reduce((matches, entry) => {
+        if (!entry || (excludeId && entry.id === excludeId)) {
+            return matches;
+        }
+
+        const candidate = normalizeForDuplicateComparison(entry[fieldName]);
+        if (candidate && candidate === target) {
+            matches.push(entry.id);
+        }
+        return matches;
+    }, []);
+}
+
+function formatAkyoIdLabel(id) {
+    const numeric = Number.parseInt(id, 10);
+    if (Number.isFinite(numeric)) {
+        return `#${String(numeric).padStart(3, '0')}`;
+    }
+    return `#${String(id)}`;
+}
+
+function setDuplicateStatus(element, { message, tone }) {
+    if (!element) {
+        return;
+    }
+
+    const baseClass = element.dataset.statusBaseClass ? element.dataset.statusBaseClass.trim() : '';
+    if (!message) {
+        const hiddenClass = baseClass ? `${baseClass} hidden` : 'hidden';
+        element.className = hiddenClass;
+        element.textContent = '';
+        return;
+    }
+
+    let toneClass = 'text-gray-600';
+    if (tone === 'error') {
+        toneClass = 'text-red-600';
+    } else if (tone === 'success') {
+        toneClass = 'text-green-600';
+    }
+
+    const className = baseClass ? `${baseClass} ${toneClass}` : toneClass;
+    element.className = className;
+    element.textContent = message;
+}
+
+function clearDuplicateStatus(element) {
+    setDuplicateStatus(element, { message: '', tone: 'neutral' });
+}
+
+function attachDuplicateChecker({ button, input, status, field, texts, excludeId }) {
+    if (!button || !input || !status) {
+        return;
+    }
+
+    const { empty, success, duplicatePrefix } = texts || {};
+
+    const runCheck = () => {
+        const rawValue = input.value || '';
+        if (!rawValue.trim()) {
+            setDuplicateStatus(status, { message: empty || '値を入力してください', tone: 'neutral' });
+            return;
+        }
+
+        const matches = findDuplicateIdsByField(field, rawValue, { excludeId });
+        if (matches.length === 0) {
+            setDuplicateStatus(status, { message: success || '重複は見つかりませんでした', tone: 'success' });
+            return;
+        }
+
+        const formatted = matches.map(formatAkyoIdLabel).join('、');
+        setDuplicateStatus(status, {
+            message: `${duplicatePrefix || '重複が見つかりました: '}${formatted}`,
+            tone: 'error',
+        });
+    };
+
+    button.addEventListener('click', runCheck);
+
+    const resetHandler = () => clearDuplicateStatus(status);
+    input.addEventListener('input', resetHandler);
+    input.addEventListener('change', resetHandler);
+}
 
 function getMaxAssignedAkyoId() {
     const akyoIds = Array.isArray(akyoData)
@@ -152,6 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupEventListeners();
     setupDragDrop();
+    attributeManagerApi.init();
 
     // DOMの検査（欠落は警告表示）
     verifyRequiredDom();
@@ -195,6 +605,11 @@ function hasUnsavedWork() {
 // ESCで編集モーダルを閉じる
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
+        if (attributeManagerApi.isModalOpen()) {
+            event.preventDefault();
+            attributeManagerApi.closeModal();
+            return;
+        }
         const modal = document.getElementById('editModal');
         if (modal && !modal.classList.contains('hidden')) {
             closeEditModal();
@@ -244,6 +659,8 @@ function setupEventListeners() {
         loginForm.addEventListener('submit', handleLogin);
     }
 
+    bindCreatorSuggestionInput();
+
     // トリミングUIの有無を検出
     const useCustomCropper = !!document.getElementById('cropContainer');
 
@@ -271,6 +688,30 @@ function setupEventListeners() {
         // 初期表示で全件を表示（空文字検索）
         setTimeout(() => searchForEdit(), 0);
     }
+
+    attachDuplicateChecker({
+        button: document.getElementById('checkNicknameDuplicateButton'),
+        input: document.getElementById('addNicknameInput'),
+        status: document.getElementById('nicknameDuplicateStatus'),
+        field: 'nickname',
+        texts: {
+            empty: '通称を入力してください',
+            success: '重複している通称はありません',
+            duplicatePrefix: '重複している通称が見つかりました: ',
+        },
+    });
+
+    attachDuplicateChecker({
+        button: document.getElementById('checkAvatarDuplicateButton'),
+        input: document.getElementById('addAvatarNameInput'),
+        status: document.getElementById('avatarDuplicateStatus'),
+        field: 'avatarName',
+        texts: {
+            empty: 'アバター名を入力してください',
+            success: '重複しているアバター名はありません',
+            duplicatePrefix: '重複しているアバター名が見つかりました: ',
+        },
+    });
 
     if (!hasBoundActionDelegation) {
         document.addEventListener('click', handleAdminActionClick);
@@ -517,6 +958,8 @@ async function loadAkyoData() {
 
         console.debug(`データ読み込み完了: Akyo ${akyoData.length}件, 画像 ${Object.keys(imageDataMap).length}件`);
 
+        refreshDerivedCollections();
+
         // 各関数の実行前に要素の存在を確認
         if (document.getElementById('editList')) {
             updateEditList();
@@ -566,6 +1009,8 @@ async function loadAkyoData() {
         }
 
         console.debug('CSVなし、画像データのみで動作');
+
+        refreshDerivedCollections();
 
         // 各関数の実行前に要素の存在を確認
         if (document.getElementById('editList')) {
@@ -660,8 +1105,7 @@ function switchTab(tabName) {
 
     // すべてのタブボタンのスタイルをリセット
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-red-500');
-        btn.classList.add('border-transparent');
+        btn.classList.remove('tab-active');
     });
 
     // 選択されたタブを表示
@@ -681,8 +1125,7 @@ function switchTab(tabName) {
 
     const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
     if (targetBtn) {
-        targetBtn.classList.remove('border-transparent');
-        targetBtn.classList.add('border-red-500');
+        targetBtn.classList.add('tab-active');
     }
 
     if (tabName === 'add') {
@@ -705,6 +1148,11 @@ window.switchTab = switchTab;
 // 新規Akyo追加
 async function handleAddAkyo(event) {
     event.preventDefault();
+
+    if (!attributeManagerApi.hasSelection('add')) {
+        showNotification('属性を1つ以上選択してください', 'error');
+        return;
+    }
 
     const formData = new FormData(event.target);
 
@@ -732,6 +1180,7 @@ async function handleAddAkyo(event) {
 
     // CSV更新
     await updateCSVFile();
+    refreshDerivedCollections();
 
     let latestImageDataUrl = null;
 
@@ -809,6 +1258,9 @@ async function handleAddAkyo(event) {
 
     // フォームリセット
     event.target.reset();
+    attributeManagerApi.resetField('add');
+    clearDuplicateStatus(document.getElementById('nicknameDuplicateStatus'));
+    clearDuplicateStatus(document.getElementById('avatarDuplicateStatus'));
     const imagePreview = document.getElementById('imagePreview');
     if (imagePreview) {
         imagePreview.classList.add('hidden');
@@ -1266,15 +1718,34 @@ function editAkyo(akyoId) {
     const safeDisplayId = escapeHtml(akyo.id);
     const safeNickname = escapeHtml(akyo.nickname || '');
     const safeAvatarName = escapeHtml(akyo.avatarName || '');
-    const safeAttribute = escapeHtml(akyo.attribute || '');
+    const attributeRawValue = akyo.attribute || '';
+    const safeAttribute = escapeHtml(attributeRawValue);
     const safeCreator = escapeHtml(akyo.creator || '');
     const safeAvatarUrl = escapeHtml(akyo.avatarUrl || '');
     const safeNotes = escapeHtml(akyo.notes || '');
     const previewSrc = imageDataMap[akyo.id] || (typeof getAkyoImageUrl === 'function' ? getAkyoImageUrl(id3) : '');
     const safePreviewSrc = escapeHtml(previewSrc || '');
 
+    const nicknameInputId = `editNickname-${safeAkyoId}`;
+    const nicknameStatusId = `nicknameStatus-${safeAkyoId}`;
+    const nicknameCheckButtonId = `nicknameCheck-${safeAkyoId}`;
+    const avatarInputId = `editAvatarName-${safeAkyoId}`;
+    const avatarStatusId = `avatarStatus-${safeAkyoId}`;
+    const avatarCheckButtonId = `avatarCheck-${safeAkyoId}`;
+    const attributeFieldId = `edit-${safeAkyoId}`;
+    const attributeHiddenId = `attributeInput-${safeAkyoId}`;
+    const attributeListId = `attributeList-${safeAkyoId}`;
+    const attributePlaceholderId = `attributePlaceholder-${safeAkyoId}`;
+    const attributeSelections = attributeManagerApi.parseAttributeString(attributeRawValue);
+    const attributeListClass = attributeSelections.length
+        ? 'mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1'
+        : 'hidden mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1';
+    const attributePlaceholderClass = attributeSelections.length
+        ? 'hidden text-sm text-gray-500'
+        : 'text-sm text-gray-500';
+
     content.innerHTML = `
-        <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')">
+        <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')" data-attribute-field-id="${attributeFieldId}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">ID（変更不可）</label>
@@ -1283,21 +1754,50 @@ function editAkyo(akyoId) {
                 </div>
 
                 <div>
-                    <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
-                    <input type="text" name="nickname" value="${safeNickname}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="flex items-center justify-between gap-2">
+                        <label class="block text-gray-700 text-sm font-medium">通称</label>
+                        <button type="button" id="${nicknameCheckButtonId}"
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-search"></i>
+                            同じ通称が既に登録されているか確認
+                        </button>
+                    </div>
+                    <input type="text" name="nickname" id="${nicknameInputId}" value="${safeNickname}"
+                           class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p id="${nicknameStatusId}" class="mt-2 text-sm hidden" data-status-base-class="mt-2 text-sm" aria-live="polite"></p>
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
-                    <input type="text" name="avatarName" value="${safeAvatarName}" required
+                    <input type="text" name="avatarName" id="${avatarInputId}" value="${safeAvatarName}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                        <button type="button" id="${avatarCheckButtonId}"
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-search"></i>
+                            同じアバター名が既に登録されているか確認
+                        </button>
+                        <p id="${avatarStatusId}" class="text-sm hidden mt-1 sm:mt-0 sm:ml-2" data-status-base-class="text-sm mt-1 sm:mt-0 sm:ml-2" aria-live="polite"></p>
+                    </div>
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
-                    <input type="text" name="attribute" value="${safeAttribute}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="space-y-2">
+                        <button type="button"
+                                class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
+                                data-attribute-target="${attributeFieldId}">
+                            <i class="fas fa-tags"></i>
+                            属性を管理
+                        </button>
+                        <input type="hidden" name="attribute" id="${attributeHiddenId}" value="${safeAttribute}">
+                        <div class="border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
+                            <p id="${attributePlaceholderId}" class="${attributePlaceholderClass}">
+                                選択された属性がここに表示されます
+                            </p>
+                            <div id="${attributeListId}" class="${attributeListClass}" role="list"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -1335,6 +1835,51 @@ function editAkyo(akyoId) {
         </form>
     `;
 
+    const attributeHiddenInput = content.querySelector(`#${attributeHiddenId}`);
+    const attributeBadgeContainer = content.querySelector(`#${attributeListId}`);
+    const attributePlaceholderEl = content.querySelector(`#${attributePlaceholderId}`);
+    const attributeButton = content.querySelector(`[data-attribute-target="${attributeFieldId}"]`);
+    attributeManagerApi.registerField(attributeFieldId, {
+        hiddenInput: attributeHiddenInput,
+        badgeContainer: attributeBadgeContainer,
+        placeholder: attributePlaceholderEl,
+        button: attributeButton,
+    }, { initialValue: attributeRawValue });
+    attributeManagerApi.setCurrentEditField(attributeFieldId);
+    attributeManagerApi.ensureFieldSync(attributeFieldId, attributeRawValue);
+
+    const nicknameCheckButton = content.querySelector(`#${nicknameCheckButtonId}`);
+    const nicknameInputEl = content.querySelector(`#${nicknameInputId}`);
+    const nicknameStatusEl = content.querySelector(`#${nicknameStatusId}`);
+    attachDuplicateChecker({
+        button: nicknameCheckButton,
+        input: nicknameInputEl,
+        status: nicknameStatusEl,
+        field: 'nickname',
+        texts: {
+            empty: '通称を入力してください',
+            success: '重複している通称はありません',
+            duplicatePrefix: '重複している通称が見つかりました: ',
+        },
+        excludeId: akyo.id,
+    });
+
+    const avatarCheckButton = content.querySelector(`#${avatarCheckButtonId}`);
+    const avatarInputEl = content.querySelector(`#${avatarInputId}`);
+    const avatarStatusEl = content.querySelector(`#${avatarStatusId}`);
+    attachDuplicateChecker({
+        button: avatarCheckButton,
+        input: avatarInputEl,
+        status: avatarStatusEl,
+        field: 'avatarName',
+        texts: {
+            empty: 'アバター名を入力してください',
+            success: '重複しているアバター名はありません',
+            duplicatePrefix: '重複しているアバター名が見つかりました: ',
+        },
+        excludeId: akyo.id,
+    });
+
     modal.classList.remove('hidden');
 }
 
@@ -1342,6 +1887,12 @@ function editAkyo(akyoId) {
 // Akyo更新処理
 async function handleUpdateAkyo(event, akyoId) {
     event.preventDefault();
+
+    const fieldId = event.target.getAttribute('data-attribute-field-id');
+    if (fieldId && !attributeManagerApi.hasSelection(fieldId)) {
+        showNotification('属性を1つ以上選択してください', 'error');
+        return;
+    }
 
     const formData = new FormData(event.target);
     const akyoIndex = akyoData.findIndex(a => a.id === akyoId);
@@ -1360,6 +1911,7 @@ async function handleUpdateAkyo(event, akyoId) {
 
     try {
         await updateCSVFile();
+        refreshDerivedCollections();
     } catch (e) {
         console.error('updateCSVFile failed', e);
         showNotification('更新内容の保存に失敗しました', 'error');
@@ -1469,6 +2021,7 @@ async function deleteAkyo(akyoId) {
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
     await updateCSVFile();
+    refreshDerivedCollections();
 
     showNotification(`Akyo #${akyoId} を削除し、後続のIDを詰めました`, 'success');
     updateEditList();
@@ -1483,6 +2036,7 @@ window.deleteAkyo = deleteAkyo;
 
 // 編集モーダルを閉じる
 function closeEditModal() {
+    attributeManagerApi.clearCurrentEditField();
     document.getElementById('editModal').classList.add('hidden');
 }
 
@@ -1679,6 +2233,7 @@ async function uploadCSV() {
     akyoData = [...akyoData, ...window.pendingCSVData].sort((a, b) => a.id.localeCompare(b.id));
 
     await updateCSVFile();
+    refreshDerivedCollections();
     try {
         const ver = parseInt(localStorage.getItem('akyoDataVersion') || '0', 10) + 1;
         localStorage.setItem('akyoDataVersion', String(ver));
@@ -2342,6 +2897,7 @@ async function renumberAllIds() {
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
     await updateCSVFile();
+    refreshDerivedCollections();
 
     showNotification('すべてのIDを再採番しました', 'success');
     updateEditList();

@@ -27,32 +27,336 @@
     <script src="js/storage-adapter.js"></script>
 
     <style>
-        body { font-family: 'Noto Sans JP', 'Kosugi Maru', sans-serif; }
-        .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .drop-zone { border: 2px dashed #cbd5e0; transition: all 0.3s; }
-        .drop-zone.dragover { border-color: #667eea; background-color: #f7fafc; }
+        :root {
+            color-scheme: light;
+        }
+
+        body.finder-body {
+            --finder-accent: #ef4444;
+            --finder-accent-strong: #dc2626;
+            --finder-accent-secondary: #f97316;
+            --finder-accent-soft: #fff4ed;
+            --finder-accent-soft-border: #fecaca;
+            --finder-surface: #ffffff;
+            --finder-surface-muted: #fff7f3;
+            --finder-text-primary: #1f2937;
+            --finder-text-secondary: #4b5563;
+            --finder-divider: #fde8e8;
+            --finder-header-shadow: 0 18px 32px rgba(249, 115, 22, 0.22);
+            --tab-accent-color: var(--finder-accent);
+            --tab-accent-text: var(--finder-accent-strong);
+            --attribute-accent: var(--finder-accent);
+            --attribute-accent-strong: var(--finder-accent-strong);
+            --attribute-accent-soft: var(--finder-accent-soft);
+            --attribute-border: rgba(239, 68, 68, 0.45);
+            --attribute-border-soft: rgba(249, 115, 22, 0.22);
+            --attribute-shadow: rgba(249, 115, 22, 0.28);
+            --attribute-chip-bg: rgba(249, 115, 22, 0.12);
+            --attribute-chip-border: rgba(249, 115, 22, 0.24);
+
+            font-family: 'Noto Sans JP', 'Kosugi Maru', sans-serif;
+            background:
+                radial-gradient(120% 120% at 0% 0%, rgba(249, 115, 22, 0.18), transparent 55%),
+                radial-gradient(140% 140% at 100% 0%, rgba(239, 68, 68, 0.14), transparent 60%),
+                linear-gradient(180deg, #fff7f3 0%, #fff1ec 45%, #fffdf9 100%);
+            color: var(--finder-text-primary);
+        }
+
+        .finder-header {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.95), rgba(249, 115, 22, 0.92));
+            backdrop-filter: saturate(160%) blur(8px);
+            box-shadow: var(--finder-header-shadow);
+        }
+
+        .finder-logo {
+            background: linear-gradient(140deg, #f87171, #f97316);
+            box-shadow: 0 12px 24px rgba(249, 115, 22, 0.32);
+        }
+
+        .finder-header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .finder-header-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.85rem;
+            border-radius: 0.9rem;
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            font-weight: 600;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .finder-header-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-1px);
+        }
+
+        .finder-header-btn:focus-visible,
+        .finder-primary-btn:focus-visible,
+        .finder-secondary-btn:focus-visible,
+        .finder-mini-btn:focus-visible,
+        .finder-chip-button:focus-visible,
+        .finder-ghost-btn:focus-visible,
+        .finder-apply-btn:focus-visible {
+            outline: 3px solid rgba(255, 255, 255, 0);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35);
+        }
+
+        .finder-primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--finder-accent), var(--finder-accent-secondary));
+            color: #fff;
+            border-radius: 0.9rem;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 14px 24px rgba(249, 115, 22, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .finder-primary-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 28px rgba(249, 115, 22, 0.3);
+            opacity: 0.95;
+        }
+
+        .finder-secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-radius: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #fff;
+            padding: 0.45rem 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .finder-secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .finder-mini-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--finder-accent);
+            color: #fff;
+            border-radius: 0.75rem;
+            padding: 0.35rem 0.85rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .finder-mini-btn:hover {
+            transform: translateY(-0.5px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.25);
+        }
+
+        .finder-card {
+            background: var(--finder-surface);
+            border-radius: 1.25rem;
+            box-shadow: 0 14px 28px rgba(148, 163, 184, 0.18);
+        }
+
+        .finder-card-border {
+            border: 1px solid rgba(249, 115, 22, 0.08);
+        }
+
+        .tab-btn {
+            border-bottom-width: 2px !important;
+            border-color: transparent !important;
+            color: var(--finder-text-secondary) !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--finder-accent-strong) !important;
+        }
+
+        .tab-btn.tab-active {
+            border-color: var(--tab-accent-color) !important;
+            color: var(--tab-accent-text) !important;
+            font-weight: 700 !important;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(239, 68, 68, 0.15);
+            border-top: 4px solid var(--finder-accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--finder-accent-soft-border);
+            background: var(--finder-surface);
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--finder-accent);
+            background-color: var(--finder-accent-soft);
+        }
+
+        .finder-section-title {
+            color: var(--finder-text-primary);
+        }
+
+        .finder-accent-text {
+            color: var(--finder-accent-strong);
+        }
+
+        .finder-badge-container {
+            border: 1px dashed var(--finder-accent-soft-border);
+            background: rgba(249, 115, 22, 0.05);
+        }
+
+        .attribute-badge {
+            background: rgba(249, 115, 22, 0.12);
+            color: var(--finder-accent-strong);
+            border-radius: 9999px;
+            font-weight: 600;
+            padding: 0.2rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .finder-modal-header {
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.9), rgba(254, 226, 226, 0.9));
+        }
+
+        .finder-modal-title {
+            color: var(--finder-text-primary);
+        }
+
+        .finder-modal-accent {
+            color: var(--finder-accent-strong);
+        }
+
+        .finder-modal-search {
+            border-color: var(--finder-accent-soft-border);
+        }
+
+        .finder-modal-search:focus {
+            border-color: var(--finder-accent);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.16);
+        }
+
+        .finder-modal-create {
+            border: 1px solid var(--finder-accent-soft-border);
+            background: rgba(249, 115, 22, 0.08);
+        }
+
+        .finder-modal-create label {
+            color: var(--finder-accent-strong);
+        }
+
+        .finder-modal-create-input {
+            border-color: var(--finder-accent-soft-border);
+        }
+
+        .finder-modal-create-input:focus {
+            border-color: var(--finder-accent);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.18);
+        }
+
+        .finder-modal-scroll {
+            border: 1px solid var(--finder-divider);
+        }
+
+        .finder-modal-footer {
+            background: rgba(254, 242, 242, 0.9);
+        }
+
+        .finder-chip-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            border: 1px solid var(--finder-accent-soft-border);
+            background: rgba(249, 115, 22, 0.08);
+            color: var(--finder-accent-strong);
+            border-radius: 0.85rem;
+            padding: 0.6rem 1.05rem;
+            font-weight: 600;
+        }
+
+        .finder-chip-button:hover {
+            background: rgba(249, 115, 22, 0.16);
+        }
+
+        .finder-ghost-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            border: 1px solid rgba(249, 115, 22, 0.25);
+            color: var(--finder-accent-strong);
+            border-radius: 0.9rem;
+            padding: 0.55rem 1.1rem;
+            font-weight: 600;
+        }
+
+        .finder-ghost-btn:hover {
+            background: rgba(249, 115, 22, 0.08);
+        }
+
+        .finder-apply-btn {
+            background: linear-gradient(135deg, var(--finder-accent), var(--finder-accent-secondary));
+            color: #fff;
+            box-shadow: 0 16px 30px rgba(249, 115, 22, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .finder-apply-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 34px rgba(249, 115, 22, 0.3);
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
+<body class="finder-body min-h-screen">
     <!-- ヘッダー -->
-    <header class="bg-gray-900 text-white shadow-lg sticky top-0 z-40">
+    <header class="finder-header text-white sticky top-0 z-40">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 finder-logo rounded-full flex items-center justify-center">
                         <i class="fas fa-shield-alt text-white"></i>
                     </div>
                     <h1 class="text-2xl font-bold">Akyoずかん ファインダーモード</h1>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <span id="userRole" class="hidden px-3 py-2 rounded-lg bg-gray-700 text-white text-sm"></span>
-                    <button onclick="location.href='index.html'" class="px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm" id="backBtn">
-                        <i class="fas fa-home mr-1"></i> 図鑑に戻る
+                    <span id="userRole" class="hidden finder-header-badge text-sm"></span>
+                    <button onclick="location.href='index.html'" class="finder-header-btn text-sm" id="backBtn">
+                        <i class="fas fa-home"></i>
+                        図鑑に戻る
                     </button>
-                    <button onclick="logout()" class="hidden px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt mr-1"></i> ログアウト
+                    <button onclick="logout()" class="hidden finder-header-btn text-sm" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        ログアウト
                     </button>
                 </div>
             </div>
@@ -63,7 +367,7 @@
     <div id="loginScreen" class="flex items-center justify-center min-h-[calc(100vh-80px)]">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-20 h-20 finder-logo rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-lock text-white text-3xl"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">ファインダー認証</h2>
@@ -73,10 +377,11 @@
             <form id="finderLoginForm">
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Akyoワード</label>
-                    <input type="password" id="passwordInput" name="password" autocomplete="current-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Akyoワードを入力" required>
+                    <input type="password" id="passwordInput" name="password" autocomplete="current-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400" placeholder="Akyoワードを入力" required>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
-                    <i class="fas fa-sign-in-alt mr-2"></i> ログイン
+                <button type="submit" class="finder-primary-btn w-full">
+                    <i class="fas fa-sign-in-alt"></i>
+                    ログイン
                 </button>
                 <div id="loginError" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm" role="alert" aria-live="assertive">
                     <i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません
@@ -87,70 +392,84 @@
 
     <!-- ファインダー画面（admin.htmlと同一構成） -->
     <div id="adminScreen" class="hidden container mx-auto px-4 py-8">
-        <div class="bg-white rounded-xl shadow-lg mb-6">
+        <div class="bg-white rounded-xl shadow-lg mb-6 finder-card-border">
             <div class="flex border-b">
-                <button onclick="switchTab('add')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-red-500" data-tab="add">
-                    <i class="fas fa-plus-circle mr-2"></i> 新規登録
+                <button onclick="switchTab('add')" class="tab-btn tab-active px-6 py-4 font-medium" data-tab="add">
+                    <i class="fas fa-plus-circle"></i>
+                    新規登録
                 </button>
-                <button onclick="switchTab('edit')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-transparent" data-tab="edit">
-                    <i class="fas fa-edit mr-2"></i> 編集・削除
+                <button onclick="switchTab('edit')" class="tab-btn px-6 py-4 font-medium" data-tab="edit">
+                    <i class="fas fa-edit"></i>
+                    編集・削除
                 </button>
-                <button onclick="switchTab('tools')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-transparent" data-tab="tools">
-                    <i class="fas fa-tools mr-2"></i> ツール
+                <button onclick="switchTab('tools')" class="tab-btn px-6 py-4 font-medium" data-tab="tools">
+                    <i class="fas fa-tools"></i>
+                    ツール
                 </button>
             </div>
         </div>
 
         <!-- admin.htmlと同一のタブ内容 -->
-        <div id="addTab" class="tab-content bg-white rounded-xl shadow-lg p-6">
+        <div id="addTab" class="tab-content bg-white rounded-xl shadow-lg p-6 finder-card-border">
             <h2 class="text-xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-plus-circle text-red-500 mr-2"></i> 新しいAkyoを登録
+                <i class="fas fa-plus-circle finder-accent-text mr-2"></i> 新しいAkyoを登録
             </h2>
 
             <form onsubmit="handleAddAkyo(event)" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">ID（自動採番）</label>
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="nextIdDisplay"
-                                   class="flex-1 px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
-                                   disabled>
-                            <span class="text-sm text-gray-500">自動設定</span>
-                        </div>
+                        <input type="text" id="nextIdDisplay"
+                               class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
+                               disabled>
                     </div>
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
                         <input type="text" name="nickname"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
                                placeholder="例: チョコミントAkyo">
                     </div>
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
                         <input type="text" name="avatarName" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
                                placeholder="例: Akyo origin">
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 text-sm font-medium mb-1">属性（カンマ区切り）</label>
-                        <input type="text" name="attribute" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                               placeholder="例: チョコミント類,ギミック">
+                        <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
+                        <div class="space-y-2">
+                            <button type="button"
+                                    class="w-full flex items-center justify-center gap-2 px-3 py-2 finder-chip-button rounded-lg transition-colors"
+                                    data-attribute-target="add">
+                                <i class="fas fa-tags"></i>
+                                属性を管理
+                            </button>
+                            <input type="hidden" name="attribute" id="addAttributeInput">
+                            <div class="finder-badge-container rounded-lg p-3">
+                                <p id="addAttributePlaceholder" class="text-sm text-gray-500">
+                                    選択された属性がここに表示されます
+                                </p>
+                                <div id="addAttributeList"
+                                     class="hidden mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1"
+                                     role="list"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">作者</label>
                         <input type="text" name="creator" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
                                placeholder="例: ugai">
                     </div>
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">VRChat URL</label>
                         <input type="url" name="avatarUrl"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
                                placeholder="https://vrchat.com/...">
                     </div>
                 </div>
@@ -158,7 +477,7 @@
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">備考</label>
                     <textarea name="notes" rows="3"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
                               placeholder="Quest対応、特殊機能など"></textarea>
                 </div>
 
@@ -192,15 +511,17 @@
                                 <div class="flex justify-center gap-2">
                                     <button type="button" onclick="resetImagePosition()"
                                             class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
-                                        <i class="fas fa-redo mr-1"></i> リセット
+                                        <i class="fas fa-redo"></i> リセット
                                     </button>
                                     <button type="button" onclick="zoomImage(1.1)"
-                                            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
-                                        <i class="fas fa-search-plus mr-1"></i> 拡大
+                                            class="finder-mini-btn text-sm">
+                                        <i class="fas fa-search-plus"></i>
+                                        拡大
                                     </button>
                                     <button type="button" onclick="zoomImage(0.9)"
-                                            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
-                                        <i class="fas fa-search-minus mr-1"></i> 縮小
+                                            class="finder-mini-btn text-sm">
+                                        <i class="fas fa-search-minus"></i>
+                                        縮小
                                     </button>
                                 </div>
                             </div>
@@ -209,16 +530,17 @@
                     <p class="text-xs text-gray-500 mt-3">登録すると画像も公開環境へ自動でアップロードされ、図鑑でもすぐ表示されます（対応形式: WebP / PNG / JPG）。</p>
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
-                    <i class="fas fa-save mr-2"></i> 登録する
+                <button type="submit" class="finder-primary-btn w-full">
+                    <i class="fas fa-save"></i>
+                    登録する
                 </button>
             </form>
         </div>
 
         <!-- 編集・削除タブ -->
-        <div id="editTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6">
+        <div id="editTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6 finder-card-border">
             <h2 class="text-xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-edit text-blue-500 mr-2"></i> Akyoの編集・削除
+                <i class="fas fa-edit finder-accent-text mr-2"></i> Akyoの編集・削除
             </h2>
 
             <!-- 検索 -->
@@ -226,7 +548,7 @@
                 <div class="relative">
                     <input type="text" id="editSearchInput"
                            placeholder="ID、名前、属性で検索..."
-                           class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
                     <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
                 </div>
             </div>
@@ -251,30 +573,31 @@
         </div>
 
         <!-- ツールタブ -->
-        <div id="toolsTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6">
+        <div id="toolsTab" class="tab-content hidden bg-white rounded-xl shadow-lg p-6 finder-card-border">
             <h2 class="text-xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-tools text-orange-500 mr-2"></i> ファインダーツール
+                <i class="fas fa-tools finder-accent-text mr-2"></i> ファインダーツール
             </h2>
 
             <div class="space-y-6">
                 <!-- ID再採番ツール -->
-                <div class="border rounded-lg p-4">
+                <div class="finder-card-border rounded-lg p-4 bg-white">
                     <h3 class="font-bold text-lg mb-2 text-gray-800">
-                        <i class="fas fa-sort-numeric-down text-blue-500 mr-2"></i> ID再採番
+                        <i class="fas fa-sort-numeric-down finder-accent-text mr-2"></i> ID再採番
                     </h3>
                     <p class="text-sm text-gray-600 mb-4">
                         すべてのAkyoのIDを001から連番で振り直します。<br>
                         ※ 画像とお気に入りの紐付けも自動で更新されます。
                     </p>
-                    <button onclick="renumberAllIds()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                        <i class="fas fa-redo mr-2"></i> ID再採番を実行
+                    <button onclick="renumberAllIds()" class="finder-primary-btn">
+                        <i class="fas fa-redo"></i>
+                        ID再採番を実行
                     </button>
                 </div>
 
                 <!-- CSVインポート -->
-                <div class="border rounded-lg p-4">
+                <div class="finder-card-border rounded-lg p-4 bg-white">
                     <h3 class="font-bold text-lg mb-2 text-gray-800">
-                        <i class="fas fa-file-upload text-orange-500 mr-2"></i> CSVインポート（追加登録）
+                        <i class="fas fa-file-upload finder-accent-text mr-2"></i> CSVインポート（追加登録）
                     </h3>
                     <p class="text-sm text-gray-600 mb-4">
                         CSVファイルからAkyoデータを追加登録します。アップロード前に最初の数件をプレビューします。<br>
@@ -301,8 +624,9 @@
                             <table class="min-w-full text-sm" id="csvPreviewTable"></table>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <button onclick="uploadCSV()" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
-                                <i class="fas fa-check mr-2"></i> この内容で登録
+                            <button onclick="uploadCSV()" class="finder-primary-btn">
+                                <i class="fas fa-check"></i>
+                                この内容で登録
                             </button>
                             <button type="button" onclick="document.getElementById('csvPreview').classList.add('hidden'); document.getElementById('csvInput').value='';" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
                                 クリア
@@ -330,6 +654,77 @@
         </div>
     </div>
 
+    <!-- 属性管理モーダル -->
+    <div id="attributeModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="attributeModalTitle">
+        <div class="absolute inset-0 bg-black/40" data-attribute-overlay></div>
+        <div class="relative mx-auto my-10 w-full max-w-3xl px-4">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden finder-card-border">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 finder-modal-header">
+                    <h3 id="attributeModalTitle" class="text-lg font-bold finder-modal-title flex items-center gap-2">
+                        <i class="fas fa-tags finder-modal-accent"></i>
+                        属性を管理
+                    </h3>
+                    <button type="button" class="text-gray-500 hover:text-gray-700" data-attribute-close>
+                        <span class="sr-only">閉じる</span>
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="px-6 py-5 space-y-5">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="search" id="attributeSearchInput"
+                                   class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none finder-modal-search focus:ring-0"
+                                   placeholder="属性を検索">
+                        </div>
+                        <button type="button" id="attributeCreateStart"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg finder-chip-button transition-colors">
+                            <i class="fas fa-plus-circle"></i>
+                            新しい属性を作成
+                        </button>
+                    </div>
+
+                    <div id="attributeCreateForm" class="hidden finder-modal-create rounded-xl p-4 space-y-3">
+                        <div>
+                            <label for="attributeNewInput" class="block text-sm font-medium mb-1">新しい属性名</label>
+                            <input type="text" id="attributeNewInput"
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none finder-modal-create-input"
+                                   placeholder="例: チョコミント類">
+                        </div>
+                        <div class="flex items-center justify-end gap-2">
+                            <button type="button" id="attributeCreateCancel"
+                                    class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">
+                            キャンセル
+                            </button>
+                            <button type="button" id="attributeCreateConfirm"
+                                    class="px-4 py-2 rounded-lg finder-primary-btn">
+                                追加する
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="finder-modal-scroll rounded-2xl">
+                        <div id="attributeListScroll" class="max-h-72 overflow-y-auto pr-1" tabindex="0">
+                            <div id="attributeListGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3"></div>
+                        </div>
+                        <p id="attributeEmptyMessage" class="hidden px-4 pb-4 text-sm text-gray-500">一致する属性がありません。</p>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 border-t border-gray-200 finder-modal-footer flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+                    <button type="button" class="px-4 py-2 rounded-lg finder-ghost-btn bg-white" data-attribute-close>
+                        キャンセル
+                    </button>
+                    <button type="button" id="attributeApplyButton"
+                            class="px-5 py-2 rounded-lg finder-apply-btn font-semibold">
+                        選択を決定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/image-manifest-loader.js"></script>
     <script src="js/image-loader.js"></script>
     <script>
@@ -337,6 +732,7 @@
             if (window.loadAkyoManifest) { window.loadAkyoManifest().catch(() => {}); }
         });
     </script>
+    <script src="js/attribute-manager.js"></script>
     <script src="js/admin.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
