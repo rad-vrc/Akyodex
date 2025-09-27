@@ -704,12 +704,34 @@ function setupEventListeners() {
     }
 
     const detailModal = document.getElementById('detailModal');
-    if (detailModal) {
-        detailModal.addEventListener('click', (e) => {
-            if (e.target.id === 'detailModal') closeModal();
-        });
-    }
+const detailModal = document.getElementById('detailModal');
+if (detailModal && !detailModal.dataset.outsideCloseInitialized) {
+    const handlePointerDownOutsideModal = (event) => {
+        if (detailModal.classList.contains('hidden')) return;
+        const modalContentContainer = detailModal.querySelector('[data-modal-content]');
+        if (!modalContentContainer) return;
+        if (!modalContentContainer.contains(event.target)) {
+            closeModal();
+        }
+    };
+
+    const outsideCloseEvents = window.PointerEvent
+        ? ['pointerdown']
+        : ['mousedown', 'touchstart'];
+
+    outsideCloseEvents.forEach((eventName) => {
+        document.addEventListener(eventName, handlePointerDownOutsideModal, true);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !detailModal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+
+    detailModal.dataset.outsideCloseInitialized = 'true';
 }
+
 
 // 正規化（ひらがな/カタカナ/全角半角）
 function normalizeForSearch(input) {
@@ -1469,7 +1491,9 @@ async function showDetail(akyoId) {
 
 // モーダルを閉じる
 function closeModal() {
-    document.getElementById('detailModal').classList.add('hidden');
+    const modal = document.getElementById('detailModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
 }
 
 // お気に入り切り替え

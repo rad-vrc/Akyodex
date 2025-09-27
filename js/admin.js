@@ -664,6 +664,7 @@ async function readFileAsDataUrl(file) {
     });
 }
 
+// Data URL 補助
 function inferExtensionFromMime(mime) {
     if (!mime) return '.webp';
     const lower = mime.toLowerCase();
@@ -997,11 +998,11 @@ async function removeImageForId(akyoId) {
         delete imageDataMap[akyoId];
         localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
-    if (preview) {
-        const id3 = String(akyoId).padStart(3, '0');
-        preview.src = (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : `images/${id3}.webp`);
-        preview.onerror = function(){ this.style.display='none'; };
-    }
+        if (preview) {
+            const id3 = String(akyoId).padStart(3, '0');
+            preview.src = (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : `images/${id3}.webp`);
+            preview.onerror = function(){ this.style.display='none'; };
+        }
         updateImageGallery();
         showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
     } catch (e) {
@@ -1593,7 +1594,7 @@ function handleBulkImages(files) {
             showNotification(`${file.name} の読み込みに失敗しました`, 'error');
         };
 
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(files[0] ?? file);
     });
 }
 
@@ -1687,13 +1688,13 @@ function autoAssignIds() {
         if (input.value && input.value.match(/^\d{3}$/)) {
             usedIds.add(input.value);
         }
-    })
+    });
 
     console.debug('現在使用済みの画像ID:', Array.from(usedIds).sort());
     console.debug('特に001-020の使用状況:');
     for (let i = 1; i <= 20; i++) {
         const id = String(i).padStart(3, '0');
-            console.debug(`  ${id}: ${usedIds.has(id) ? '使用済み' : '未使用'}`);
+        console.debug(`  ${id}: ${usedIds.has(id) ? '使用済み' : '未使用'}`);
     }
 
     let assignedCount = 0;
