@@ -105,6 +105,49 @@ document.addEventListener('DOMContentLoaded', () => {
     verifyRequiredDom();
 
     applyFinderRegistrationDefaults();
+
+    // 未保存の作業がある場合は離脱確認を表示
+    window.addEventListener('beforeunload', (e) => {
+        if (!hasUnsavedWork()) return;
+        e.preventDefault();
+        e.returnValue = '';
+    });
+
+    // 他タブのログアウト操作と同期
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'akyo:logoutTS') {
+            location.reload();
+        }
+    });
+});
+
+function hasUnsavedWork() {
+    if (Array.isArray(window.pendingCSVData) && window.pendingCSVData.length > 0) {
+        return true;
+    }
+
+    const pendingEditImages = window.__pendingEditImages;
+    if (pendingEditImages && typeof pendingEditImages === 'object' && Object.keys(pendingEditImages).length > 0) {
+        return true;
+    }
+
+    if (Array.isArray(window.pendingImageMappings) && window.pendingImageMappings.length > 0) {
+        if (document.querySelector('.mapping-item .save-btn:not([disabled])')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ESCで編集モーダルを閉じる
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('editModal');
+        if (modal && !modal.classList.contains('hidden')) {
+            closeEditModal();
+        }
+    }
 });
 
 function handleAdminActionClick(event) {
@@ -335,6 +378,7 @@ function logout() {
     sessionStorage.removeItem('akyoAdminToken');
     adminSessionToken = null;
     currentUserRole = null;
+    try { localStorage.setItem('akyo:logoutTS', String(Date.now())); } catch (_) {}
     location.reload();
 }
 
@@ -792,11 +836,15 @@ async function convertDataUrlToWebpFile(dataUrl, id) {
                     reject(new Error('画像サイズを取得できません'));
                     return;
                 }
+                const maxEdge = 2048;
+                const scale = Math.min(1, maxEdge / Math.max(width, height));
+                const targetWidth = Math.max(1, Math.round(width * scale));
+                const targetHeight = Math.max(1, Math.round(height * scale));
                 const canvas = document.createElement('canvas');
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(image, 0, 0, width, height);
+                ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
                 canvas.toBlob(blob => {
                     if (!blob) {
                         reject(new Error('WEBP変換に失敗しました'));
@@ -821,11 +869,18 @@ async function convertDataUrlToWebpFile(dataUrl, id) {
                 const blob = dataUrlToBlob(dataUrl);
                 if (blob) {
                     const bitmap = await createImageBitmap(blob);
-                    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+                    const maxEdge = 2048;
+                    const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+                    const targetWidth = Math.max(1, Math.round(bitmap.width * scale));
+                    const targetHeight = Math.max(1, Math.round(bitmap.height * scale));
+                    const canvas = new OffscreenCanvas(targetWidth, targetHeight);
                     const ctx = canvas.getContext('2d');
                     if (!ctx) throw new Error('OffscreenCanvas 2D context unavailable');
-                    ctx.drawImage(bitmap, 0, 0);
+                    ctx.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
                     const webpBlob = await canvas.convertToBlob({ type: 'image/webp', quality: 0.92 });
+                    if (typeof bitmap.close === 'function') {
+                        bitmap.close();
+                    }
                     return new File([webpBlob], `${id3}.webp`, { type: 'image/webp' });
                 }
             }
@@ -1611,6 +1666,7 @@ function handleBulkImages(files) {
                 <img src="${safeImageData}" class="w-12 h-12 object-cover rounded">
                 <input type="text" placeholder="AkyoID" value="${safeSuggestedId}"
                        class="px-2 py-1 border rounded w-20 mapping-id-input"
+                       inputmode="numeric" pattern="\\d{3}" maxlength="3"
                        data-image="${safeImageData}"
                        data-filename="${safeFileName}"
                        id="${safeUniqueId}">
@@ -1669,7 +1725,7 @@ function handleBulkImages(files) {
             showNotification(`${currentFile.name} の読み込みに失敗しました`, 'error');
         };
 
-        reader.readAsDataURL(currentFile);
+        reader.readAsDataURL(file);
     });
 }
 
@@ -2077,11 +2133,14 @@ function showNotification(message, type = 'info') {
         container = document.createElement('div');
         container.id = 'notificationContainer';
         container.className = 'fixed top-20 right-4 flex flex-col items-end gap-2 z-50';
+        container.setAttribute('role', 'region');
+        container.setAttribute('aria-live', 'polite');
         document.body.appendChild(container);
     }
 
     const notification = document.createElement('div');
     notification.className = 'px-6 py-3 rounded-lg shadow-lg transition-all transform translate-x-0 text-white bg-blue-500';
+    notification.setAttribute('role', 'status');
 
     if (type === 'success') {
         notification.classList.remove('bg-blue-500');
