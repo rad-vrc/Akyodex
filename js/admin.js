@@ -821,6 +821,9 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword, dat
     form.set('name', name);
     form.set('type', type);
     form.set('desc', desc);
+    if (dataUrl) {
+        form.set('dataUrl', dataUrl);
+    }
 
     const preparedFile = await prepareWebpFileForUpload({ id, file, dataUrl });
     if (!(preparedFile instanceof File)) {
