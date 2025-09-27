@@ -30,30 +30,39 @@ body {
     font-family: 'Kosugi Maru', 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif !important;
     color: var(--text-primary);
 
-    /* akyo-bg.webp 側も CSS_VERSION に合わせて ?v= を付与してキャッシュ更新 */
-    background:
-      center top / contain no-repeat url('../images/akyo-bg.webp?v=20250927'),
-      linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-    background-attachment: fixed, fixed;      /* 両レイヤー固定 */
-    background-repeat: no-repeat, no-repeat;  /* 念のためタイル防止 */
-
     background-color: var(--bg-gradient-start);
     min-height: 100vh;
-  }
+    position: relative;
+}
 
-  /* ワイド画面では左右の余白を消すために画像だけ cover に */
-  @media (min-aspect-ratio: 16/10) {
-    body {
-      background-size: cover, auto;            /* 1枚目=画像 / 2枚目=グラデ */
-      background-position: center center, top; /* 好みで center top にしてもOK */
+/* PC と同じくモバイルでも背景を固定するための擬似要素 */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+
+    /* akyo-bg.webp 側も CSS_VERSION に合わせて ?v= を付与してキャッシュ更新 */
+    background:
+        center top / cover no-repeat url('../images/akyo-bg.webp?v=20250927'),
+        linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    background-repeat: no-repeat, no-repeat;
+    background-size: cover, auto;
+    background-position: center top, top;
+    z-index: -2;
+}
+
+/* ワイド画面では見切れ方を整えるために中央寄せ */
+@media (min-aspect-ratio: 16/10) {
+    body::before {
+        background-position: center center, top; /* 好みで center top にしてもOK */
     }
-  }
+}
 
 
 
 
 /* 背景にかわいい模様を追加 */
-body::before {
+body::after {
     content: '';
     position: fixed;
     top: 0;
