@@ -735,28 +735,34 @@ function setupEventListeners() {
 
 
 // 正規化（ひらがな/カタカナ/全角半角）
+// 検索用の正規化（既にあるはず。無ければ併せて置いてください）
 function normalizeForSearch(input) {
     if (!input) return '';
     const s = String(input)
-        .toLowerCase()
-        // 全角英数→半角
-        .replace(/[！-～]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
-        // カタカナ→ひらがな
-        .replace(/[ァ-ン]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))
-        // 記号・余分な空白を除去
-        .replace(/[\s\u3000]+/g, ' ')
-        .trim();
+      .toLowerCase()
+      .replace(/[！-～]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)) // 全角英数→半角
+      .replace(/[ァ-ン]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))   // カタカナ→ひらがな
+      .replace(/[\s\u3000]+/g, ' ')
+      .trim();
     return s;
-}
+  }
 
-function buildSearchIndex() {
+  // ★ これを main.js に追加（または復活）してください
+  function buildSearchIndex() {
+    // searchIndex はグローバルのままでOK（ let searchIndex = [] が上にある前提 ）
     searchIndex = akyoData.map(a => {
-        const text = [a.id, a.nickname, a.avatarName, a.attribute, a.creator, a.notes]
-            .map(normalizeForSearch)
-            .join(' ');
-        return { id: a.id, text };
+      const text = [a.id, a.nickname, a.avatarName, a.attribute, a.creator, a.notes]
+        .map(normalizeForSearch)
+        .join(' ');
+      return { id: a.id, text };
     });
-}
+  }
+
+  // どこからでも呼べるように（任意）
+  if (typeof window !== 'undefined') {
+    window.buildSearchIndex = buildSearchIndex;
+  }
+
 
 // 検索処理
 function handleSearch() {
