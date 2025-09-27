@@ -515,7 +515,11 @@ async function loadAkyoData() {
         }
 
         filteredData = [...akyoData];
-        buildSearchIndex();
+(
+  (typeof window !== 'undefined' && typeof window.buildSearchIndex === 'function') ? window.buildSearchIndex :
+  (typeof buildSearchIndex === 'function') ? buildSearchIndex : null
+)?.();
+
 
         console.debug(`${akyoData.length}種類のAKyoを読み込みました`);
 
@@ -1607,11 +1611,13 @@ function updateStatistics() {
                 .then(text => {
                     const fresh = parseCSV(text);
                     if (Array.isArray(fresh) && fresh.length >= total) {
-                        // データ更新時も現在のフィルタ/モード（検索語・属性/作者・ランダム・お気に入り）を保持する
                         akyoData = fresh;
-                        buildSearchIndex();
+                        (
+                          (typeof window !== 'undefined' && typeof window.buildSearchIndex === 'function') ? window.buildSearchIndex :
+                          (typeof buildSearchIndex === 'function') ? buildSearchIndex : null
+                        )?.();
                         applyFilters();
-                    }
+                      }
                 })
                 .catch(() => {});
         }
