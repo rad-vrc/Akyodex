@@ -60,7 +60,7 @@ function verifyRequiredDom() {
     // ページ機能の中核に必要な要素
     const requiredIds = [
         'loginScreen', 'adminScreen',
-        'addTab', 'editTab', 'toolsTab',
+        'addTab', 'editTab',
         'editList', 'editSearchInput',
         'editModal', 'editModalContent'
     ];
@@ -83,8 +83,13 @@ function verifyRequiredDom() {
 }
 
 // 命名整合用のエイリアス（徐々に adminAkyoRecords / adminImageDataMap へ移行）
-window.adminAkyoRecords = akyoData;
-window.adminImageDataMap = imageDataMap;
+try {
+    Object.defineProperty(window, 'adminAkyoRecords', { get: () => akyoData });
+    Object.defineProperty(window, 'adminImageDataMap', { get: () => imageDataMap });
+} catch (_) {
+    window.adminAkyoRecords = akyoData;
+    window.adminImageDataMap = imageDataMap;
+}
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
@@ -334,7 +339,6 @@ async function loadAkyoData() {
         }
 
         akyoData = parseCSV(csvText);
-        window.adminAkyoRecords = akyoData;
 
         // フォールバック: LocalStorageのCSVが壊れていた場合はファイルから再読込
         if ((!akyoData || akyoData.length === 0) && updatedCSV) {
@@ -354,7 +358,6 @@ async function loadAkyoData() {
                 await window.storageManager.init();
                 const indexedImages = await window.storageManager.getAllImages();
                 imageDataMap = indexedImages || {};
-                window.adminImageDataMap = imageDataMap;
             }
         } catch (e) {
             console.warn('IndexedDBからの画像読み込みに失敗:', e);
@@ -365,14 +368,12 @@ async function loadAkyoData() {
             if (savedImages) {
                 try {
                     imageDataMap = JSON.parse(savedImages) || {};
-                    window.adminImageDataMap = imageDataMap;
                 } catch (e) {
                     console.error('画像データの読み込みエラー:', e);
                     imageDataMap = {};
                 }
             } else {
                 imageDataMap = {};
-                window.adminImageDataMap = imageDataMap;
             }
         }
 
