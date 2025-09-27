@@ -10,6 +10,8 @@ images/**
 !images/akyodexIcon-16.png
 !images/akyodexIcon-192.png
 !images/akyodexIcon-512.png
+!images/akyo-bg.webp
+!images/akyo-bg2.webp
 # Allow a checked-in manifest when needed
 !images/manifest.json
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Akyoずかん - 子どもにやさしいデザイン
  * カラーパレット：明るく温かみのある色合い
  */
@@ -10,27 +10,46 @@
     --primary-blue: #66B2FF;       /* 空色 */
     --primary-green: #66D9A5;      /* ミントグリーン */
     --primary-orange: #FFA06D;     /* やさしいオレンジ */
-    
+
     /* 背景グラデーション */
     --bg-gradient-start: #FFF5E6;  /* クリーム色 */
     --bg-gradient-end: #E6F7FF;    /* 薄い水色 */
-    
+
     /* テキストカラー */
     --text-primary: #4A4A4A;       /* ソフトな黒 */
     --text-secondary: #6B6B6B;     /* グレー */
-    
+
     /* カードの影 */
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
     --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
+/* 基準：画像＋グラデ、両方固定 */
 body {
     font-family: 'Kosugi Maru', 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif !important;
     color: var(--text-primary);
-    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+
+    background:
+      center top / contain no-repeat url('../images/akyo-bg.webp'),
+      linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    background-attachment: fixed, fixed;      /* 両レイヤー固定 */
+    background-repeat: no-repeat, no-repeat;  /* 念のためタイル防止 */
+
+    background-color: var(--bg-gradient-start);
     min-height: 100vh;
-}
+  }
+
+  /* ワイド画面では左右の余白を消すために画像だけ cover に */
+  @media (min-aspect-ratio: 16/10) {
+    body {
+      background-size: cover, auto;            /* 1枚目=画像 / 2枚目=グラデ */
+      background-position: center center, top; /* 好みで center top にしてもOK */
+    }
+  }
+
+
+
 
 /* 背景にかわいい模様を追加 */
 body::before {
@@ -40,7 +59,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
+    background-image:
         radial-gradient(circle at 20% 50%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(102, 217, 165, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 20%, rgba(102, 178, 255, 0.1) 0%, transparent 50%);
@@ -64,9 +83,9 @@ header {
     position: relative;
     display: inline-block;
     /* 多重縁取り効果 */
-    text-shadow: 
+    text-shadow:
         /* 内側の縁取り - ピンク */
-        -1px -1px 0 #FF6B9D,  
+        -1px -1px 0 #FF6B9D,
         1px -1px 0 #FF6B9D,
         -1px 1px 0 #FF6B9D,
         1px 1px 0 #FF6B9D,
@@ -100,10 +119,10 @@ header {
 }
 
 @keyframes logo-shine {
-    0%, 100% { 
+    0%, 100% {
         filter: brightness(1);
     }
-    50% { 
+    50% {
         filter: brightness(1.2);
         transform: scale(1.05);
     }
@@ -382,7 +401,7 @@ select:focus {
     position: relative !important;
     overflow: hidden !important;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2) !important;
-    box-shadow: 
+    box-shadow:
         0 6px 20px rgba(255, 107, 157, 0.4),
         0 8px 25px rgba(255, 217, 61, 0.3),
         inset 0 1px 0 rgba(255,255,255,0.5) !important;
@@ -390,7 +409,7 @@ select:focus {
 
 .detail-button:hover {
     transform: translateY(-3px) scale(1.08) rotate(1deg) !important;
-    box-shadow: 
+    box-shadow:
         0 10px 30px rgba(255, 107, 157, 0.5),
         0 12px 35px rgba(255, 217, 61, 0.4),
         inset 0 1px 0 rgba(255,255,255,0.7) !important;
@@ -408,13 +427,13 @@ select:focus {
 }
 
 @keyframes star-bounce {
-    0%, 100% { 
+    0%, 100% {
         transform: translateY(0) rotate(0deg) scale(1);
     }
-    25% { 
+    25% {
         transform: translateY(-3px) rotate(-15deg) scale(1.1);
     }
-    75% { 
+    75% {
         transform: translateY(-3px) rotate(15deg) scale(1.1);
     }
 }
@@ -492,13 +511,13 @@ select:focus {
 }
 
 @keyframes logo-float {
-    0%, 100% { 
+    0%, 100% {
         transform: translateY(0) rotate(0deg);
     }
-    25% { 
+    25% {
         transform: translateY(-5px) rotate(-5deg);
     }
-    75% { 
+    75% {
         transform: translateY(-5px) rotate(5deg);
     }
 }
@@ -520,40 +539,40 @@ select:focus {
 }
 
 /* 属性別カラー（より鮮やかに） */
-.attribute-fire { 
-    background: linear-gradient(135deg, #FF6B6B, #FF9F40) !important; 
+.attribute-fire {
+    background: linear-gradient(135deg, #FF6B6B, #FF9F40) !important;
     color: white !important;
 }
-.attribute-water { 
-    background: linear-gradient(135deg, #4ECDC4, #44A3D5) !important; 
+.attribute-water {
+    background: linear-gradient(135deg, #4ECDC4, #44A3D5) !important;
     color: white !important;
 }
-.attribute-grass { 
-    background: linear-gradient(135deg, #95E77E, #68D391) !important; 
+.attribute-grass {
+    background: linear-gradient(135deg, #95E77E, #68D391) !important;
     color: white !important;
 }
-.attribute-electric { 
-    background: linear-gradient(135deg, #FFD93D, #FCB045) !important; 
+.attribute-electric {
+    background: linear-gradient(135deg, #FFD93D, #FCB045) !important;
     color: white !important;
 }
-.attribute-psychic { 
-    background: linear-gradient(135deg, #F687B3, #D946EF) !important; 
+.attribute-psychic {
+    background: linear-gradient(135deg, #F687B3, #D946EF) !important;
     color: white !important;
 }
-.attribute-ice { 
-    background: linear-gradient(135deg, #A5F3FC, #60A5FA) !important; 
+.attribute-ice {
+    background: linear-gradient(135deg, #A5F3FC, #60A5FA) !important;
     color: white !important;
 }
-.attribute-dragon { 
-    background: linear-gradient(135deg, #C084FC, #9333EA) !important; 
+.attribute-dragon {
+    background: linear-gradient(135deg, #C084FC, #9333EA) !important;
     color: white !important;
 }
-.attribute-dark { 
-    background: linear-gradient(135deg, #64748B, #334155) !important; 
+.attribute-dark {
+    background: linear-gradient(135deg, #64748B, #334155) !important;
     color: white !important;
 }
-.attribute-fairy { 
-    background: linear-gradient(135deg, #FBB6CE, #F9A8D4) !important; 
+.attribute-fairy {
+    background: linear-gradient(135deg, #FBB6CE, #F9A8D4) !important;
     color: white !important;
 }
 
