@@ -443,132 +443,16 @@
     <script src="js/image-loader.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mini-akyo-bg.js?v=2"></script>
+    <script src="js/secret-mode.js"></script>
 
     <!-- ヘッダーロゴ読み込み -->
     <script>
-        const SECRET_MODE_PARAM_KEY = '_akyoFresh';
-        const SECRET_MODE_LOCAL_KEYS = [
-            'akyoDataCSV',
-            'akyoDataVersion',
-            'akyoAssetsVersion',
-            'akyoImages',
-            'akyoHeaderLogo',
-            'akyoHeaderImage',
-            'headerImage',
-            'akyoLogo',
-            'akyoProfileIcon',
-            'akyoCsvLastRefetchAt'
-        ];
-
-        function buildSecretNavigationUrl(homeUrl) {
-            try {
-                const targetUrl = new URL(homeUrl, window.location.href);
-                targetUrl.searchParams.set(SECRET_MODE_PARAM_KEY, Date.now().toString(36));
-                return targetUrl.toString();
-            } catch (_) {
-                return homeUrl;
-            }
-        }
-
-        async function clearTemporarySecretData() {
-            try {
-                SECRET_MODE_LOCAL_KEYS.forEach((key) => {
-                    try {
-                        localStorage.removeItem(key);
-                    } catch (_) {}
-                });
-            } catch (error) {
-                console.warn('ローカルストレージのシークレット消去に失敗:', error);
-            }
-
-            try {
-                sessionStorage.clear();
-            } catch (error) {
-                console.warn('セッションストレージのシークレット消去に失敗:', error);
-            }
-
-            const cleanupTasks = [];
-
-            if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
-                cleanupTasks.push((async () => {
-                    try {
-                        await window.storageManager.init();
-                        await window.storageManager.clearAllImages();
-                    } catch (error) {
-                        console.warn('IndexedDB画像のシークレット消去に失敗:', error);
-                    }
-                })());
-            } else if (window.indexedDB) {
-                cleanupTasks.push(new Promise((resolve) => {
-                    try {
-                        const request = indexedDB.deleteDatabase('AkyoDatabase');
-                        const finish = () => resolve();
-                        request.onsuccess = finish;
-                        request.onerror = finish;
-                        request.onblocked = finish;
-                    } catch (_) {
-                        resolve();
-                    }
-                }));
-            }
-
-            if (window.caches && typeof caches.keys === 'function') {
-                cleanupTasks.push(
-                    caches.keys()
-                        .then((keys) => keys.filter((key) => key.toLowerCase().includes('akyo')))
-                        .then((targetKeys) => Promise.all(targetKeys.map((key) => caches.delete(key).catch(() => false))))
-                        .catch((error) => {
-                            console.warn('キャッシュストレージのシークレット消去に失敗:', error);
-                        })
-                );
-            }
-
-            if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
-                cleanupTasks.push(
-                    navigator.serviceWorker.getRegistrations()
-                        .then((registrations) => Promise.all(registrations.map((reg) => reg.unregister().catch(() => false))))
-                        .catch((error) => {
-                            console.warn('ServiceWorkerのシークレット解除に失敗:', error);
-                        })
-                );
-            }
-
-            await Promise.allSettled(cleanupTasks);
-        }
-
-        function setupSecretModeNavigation(anchor, homeUrl) {
-            if (!anchor || anchor.dataset.secretModeBound === '1') return;
-            anchor.dataset.secretModeBound = '1';
-            anchor.addEventListener('click', async (event) => {
-                if (
-                    event.defaultPrevented ||
-                    event.metaKey ||
-                    event.ctrlKey ||
-                    event.shiftKey ||
-                    event.button === 1
-                ) {
-                    return;
-                }
-
-                try { event.preventDefault(); } catch (_) {}
-
-                anchor.setAttribute('aria-disabled', 'true');
-                anchor.style.pointerEvents = 'none';
-                const navigateTo = buildSecretNavigationUrl(homeUrl);
-
-                const fallbackTimer = setTimeout(() => {
-                    window.location.replace(navigateTo);
-                }, 1500);
-
-                try {
-                    await clearTemporarySecretData();
-                } catch (error) {
-                    console.warn('シークレット効果の適用に失敗:', error);
-                } finally {
-                    clearTimeout(fallbackTimer);
-                    window.location.replace(navigateTo);
-                }
-            }, { once: true });
+        const secretMode = window.secretMode;
+        const setupSecretModeNavigation = typeof secretMode?.setupSecretModeNavigation === 'function'
+            ? secretMode.setupSecretModeNavigation
+            : null;
+        if (!setupSecretModeNavigation) {
+            console.warn('Secret mode utilities were not initialised correctly.');
         }
 
         // ヘッダーロゴを読み込み
@@ -632,7 +516,9 @@
                         </a>
                     `;
                     const logoLink = headerLogoEl.querySelector('a');
-                    setupSecretModeNavigation(logoLink, homeUrl);
+                    if (setupSecretModeNavigation && logoLink) {
+                        setupSecretModeNavigation(logoLink, homeUrl);
+                    }
                 } else {
                     // ロゴがない場合でもlogo.pngを直接試し、なければテキスト
                     const currentHost = window.location.hostname;
@@ -653,7 +539,9 @@
                         </a>
                     `;
                     const logoLink = headerLogoEl.querySelector('a');
-                    setupSecretModeNavigation(logoLink, homeUrl);
+                    if (setupSecretModeNavigation && logoLink) {
+                        setupSecretModeNavigation(logoLink, homeUrl);
+                    }
                 }
 
             } catch (error) {
