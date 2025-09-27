@@ -844,7 +844,6 @@ async function convertDataUrlToWebpFile(dataUrl, id) {
 }
 
 async function prepareWebpFileForUpload({ id, file, dataUrl }) {
-    const id3 = String(id).padStart(3, '0');
     let sourceDataUrl = dataUrl || null;
 
     if (!sourceDataUrl && typeof window.generateCroppedImage === 'function') {
@@ -866,21 +865,23 @@ async function prepareWebpFileForUpload({ id, file, dataUrl }) {
 
     if (sourceDataUrl) {
         try {
-            const converted = await convertDataUrlToWebpFile(sourceDataUrl, id3);
+            const converted = await convertDataUrlToWebpFile(sourceDataUrl, id);
             if (converted) return converted;
         } catch (e) {
             console.debug('WEBP conversion failed', e);
             const blob = dataUrlToBlob(sourceDataUrl);
             if (blob) {
                 const ext = inferExtensionFromMime(blob.type);
-                return new File([blob], `${id3}${ext}`, { type: blob.type || 'application/octet-stream' });
+                const idStr = String(id).padStart(3, '0');
+                return new File([blob], `${idStr}${ext}`, { type: blob.type || 'application/octet-stream' });
             }
         }
     }
 
     if (file) {
         if (/\.webp$/i.test(file.name) || file.type === 'image/webp') {
-            return new File([file], `${id3}.webp`, { type: 'image/webp' });
+            const idStr = String(id).padStart(3, '0');
+            return new File([file], `${idStr}.webp`, { type: 'image/webp' });
         }
         return file;
     }
@@ -1266,6 +1267,10 @@ window.editAkyo = editAkyo;
 
 // Akyo削除（ID自動詰め機能付き）
 async function deleteAkyo(akyoId) {
+    if (!adminSessionToken) {
+        showNotification('認証が切れています。再ログインしてください。', 'error');
+        return;
+    }
     if (currentUserRole !== 'owner') {
         showNotification('削除権限がありません', 'error');
         return;
@@ -1584,13 +1589,14 @@ function handleBulkImages(files) {
     let processedCount = 0;
 
     imageFiles.forEach((file, index) => {
+        const currentFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
             const div = document.createElement('div');
             div.className = 'flex items-center gap-2 p-2 bg-gray-50 rounded mapping-item';
 
             // ファイル名からIDを推測
-            const match = file.name.match(/(\d{3})/);
+            const match = currentFile.name.match(/(\d{3})/);
             const suggestedId = match ? match[1] : '';
 
             // ユニークなIDを生成
@@ -1598,7 +1604,7 @@ function handleBulkImages(files) {
 
             const safeImageData = escapeHtml(e.target.result || '');
             const safeSuggestedId = escapeHtml(suggestedId);
-            const safeFileName = escapeHtml(file.name || '');
+            const safeFileName = escapeHtml(currentFile.name || '');
             const safeUniqueId = escapeHtml(uniqueId);
 
             div.innerHTML = `
@@ -1628,7 +1634,7 @@ function handleBulkImages(files) {
                 id: uniqueId,
                 suggestedId: suggestedId,
                 imageData: e.target.result,
-                fileName: file.name
+                fileName: currentFile.name
             });
 
             // プログレス更新
@@ -1660,10 +1666,10 @@ function handleBulkImages(files) {
         // エラーハンドリング
         reader.onerror = () => {
             processedCount++;
-            showNotification(`${file.name} の読み込みに失敗しました`, 'error');
+            showNotification(`${currentFile.name} の読み込みに失敗しました`, 'error');
         };
 
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(currentFile);
     });
 }
 
@@ -1937,7 +1943,15 @@ function clearMappingList() {
 
 // 個別削除
 function removeMapping(button) {
-    button.parentElement.remove();
+    const row = button.parentElement;
+    const input = row ? row.querySelector('.mapping-id-input') : null;
+    const uid = input ? input.id : null;
+    if (row) {
+        row.remove();
+    }
+    if (uid && Array.isArray(window.pendingImageMappings)) {
+        window.pendingImageMappings = window.pendingImageMappings.filter(m => m.id !== uid);
+    }
 }
 
 // 画像ギャラリー更新
@@ -1959,6 +1973,7 @@ function updateImageGallery() {
         const akyo = akyoData.find(a => a.id === akyoId);
         const div = document.createElement('div');
         div.className = 'relative group';
+        div.tabIndex = 0;
 
         const safeAkyoId = escapeHtml(akyoId);
         const safeImageData = escapeHtml(imageData || '');
@@ -1966,7 +1981,7 @@ function updateImageGallery() {
 
         div.innerHTML = `
             <img src="${safeImageData}" class="w-full h-24 object-cover rounded-lg">
-            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                 <div class="text-white text-center">
                     <div class="font-bold">#${safeAkyoId}</div>
                     <div class="text-xs">${safeLabel}</div>
@@ -1974,7 +1989,7 @@ function updateImageGallery() {
             </div>
             ${currentUserRole === 'owner' ? `
             <button type="button" data-action="remove-image" data-id="${safeAkyoId}"
-                    class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
                 <i class="fas fa-times text-xs"></i>
             </button>
             ` : ''}
@@ -2111,6 +2126,10 @@ function showNotification(message, type = 'info') {
 
 // ID再採番機能
 async function renumberAllIds() {
+    if (!adminSessionToken) {
+        showNotification('認証が切れています。再ログインしてください。', 'error');
+        return;
+    }
     if (!confirm('すべてのAkyoのIDを001から振り直します。\nこの操作は取り消せません。続行しますか？')) {
         return;
     }
