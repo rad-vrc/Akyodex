@@ -8,6 +8,7 @@ let currentUserRole = null;
 let akyoData = [];
 let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
+let hasBoundActionDelegation = false;
 
 const FINDER_PREFILL_VALUE = 'Akyo';
 
@@ -92,12 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 旧バージョンで保存された認証ワードを確実に破棄
     sessionStorage.removeItem('akyoAdminToken');
 
-    // 初期ロード時に検索欄が空でも全件表示する
-    const editSearchInput = document.getElementById('editSearchInput');
-    if (editSearchInput && typeof searchForEdit === 'function') {
-        setTimeout(() => searchForEdit(), 0);
-    }
-
     setupEventListeners();
     setupDragDrop();
 
@@ -106,6 +101,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyFinderRegistrationDefaults();
 });
+
+function handleAdminActionClick(event) {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+
+    const action = button.dataset.action;
+    const id = button.dataset.id;
+    if (!id) return;
+
+    if (action === 'edit') {
+        event.preventDefault();
+        editAkyo(id);
+    } else if (action === 'delete') {
+        event.preventDefault();
+        deleteAkyo(id);
+    }
+}
 
 // イベントリスナー設定
 function setupEventListeners() {
@@ -138,6 +150,11 @@ function setupEventListeners() {
         editSearchInput.addEventListener('input', debounce(searchForEdit, 300));
         // 初期表示で全件を表示（空文字検索）
         setTimeout(() => searchForEdit(), 0);
+    }
+
+    if (!hasBoundActionDelegation) {
+        document.addEventListener('click', handleAdminActionClick);
+        hasBoundActionDelegation = true;
     }
 }
 
@@ -198,7 +215,6 @@ async function handleLogin(event) {
             showAdminScreen();
             showNotification(`${currentUserRole === 'owner' ? 'マスター' : 'ファインダー'}権限でログインしました`, 'success');
             applyFinderRegistrationDefaults();
-            loadAkyoData();
             return;
         }
         // ステータス別エラー
@@ -272,8 +288,8 @@ function updateNextIdDisplay() {
     if (!nextIdInput) return;
 
     // akyoDataとimageDataMapの両方から最大IDを取得
-    const akyoMaxId = akyoData.length > 0 ? Math.max(...akyoData.map(a => parseInt(a.id) || 0)) : 0;
-    const imageMaxId = Object.keys(imageDataMap).length > 0 ? Math.max(...Object.keys(imageDataMap).map(id => parseInt(id) || 0)) : 0;
+    const akyoMaxId = akyoData.length > 0 ? Math.max(...akyoData.map(a => Number.parseInt(a.id, 10) || 0)) : 0;
+    const imageMaxId = Object.keys(imageDataMap).length > 0 ? Math.max(...Object.keys(imageDataMap).map(id => Number.parseInt(id, 10) || 0)) : 0;
     const maxId = Math.max(akyoMaxId, imageMaxId, 0);
     const nextId = String(maxId + 1).padStart(3, '0');
     nextIdInput.value = `#${nextId}`;
@@ -430,8 +446,6 @@ function parseCSV(csvText) {
     // CRLF正規化
     csvText = String(csvText).replace(/\r\n/g, '\n');
     const data = [];
-    // 先頭行はヘッダとしてスキップ
-    let i = 0;
     let inQuotes = false;
     let field = '';
     let record = [];
@@ -556,7 +570,7 @@ async function handleAddAkyo(event) {
     const formData = new FormData(event.target);
 
     // ID自動採番（最大値+1）
-    const maxId = Math.max(0, ...akyoData.map(a => parseInt(a.id) || 0));
+    const maxId = Math.max(0, ...akyoData.map(a => Number.parseInt(a.id, 10) || 0));
     const newId = String(maxId + 1).padStart(3, '0');
 
     const newAkyo = {
@@ -1066,11 +1080,11 @@ function updateEditList() {
             <td class="px-4 py-3 text-sm">${safeAttribute}</td>
             <td class="px-4 py-3 text-sm">${safeCreator}</td>
             <td class="px-4 py-3 text-center">
-                <button onclick="editAkyo('${safeId}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2" >
+                <button type="button" data-action="edit" data-id="${safeId}" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
                     <i class="fas fa-edit"></i>
                 </button>
                 ${currentUserRole === 'owner' ? `
-                <button onclick="deleteAkyo('${safeId}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                <button type="button" data-action="delete" data-id="${safeId}" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     <i class="fas fa-trash"></i>
                 </button>
                 ` : ''}
@@ -1233,8 +1247,11 @@ async function deleteAkyo(akyoId) {
         return;
     }
 
-    const deletedIndex = akyoData.findIndex(a => a.id === akyoId);
-    const deletedIdNum = parseInt(akyoId);
+    const deletedIdNum = Number.parseInt(akyoId, 10);
+    if (Number.isNaN(deletedIdNum)) {
+        showNotification('削除対象のIDが不正です', 'error');
+        return;
+    }
 
     // 削除対象を除外
     akyoData = akyoData.filter(a => a.id !== akyoId);
@@ -1242,7 +1259,10 @@ async function deleteAkyo(akyoId) {
     // ID詰め処理：削除されたIDより大きいIDを1つずつ繰り上げ
     const oldToNewIdMap = {};
     akyoData.forEach(akyo => {
-        const currentIdNum = parseInt(akyo.id);
+        const currentIdNum = Number.parseInt(akyo.id, 10);
+        if (Number.isNaN(currentIdNum)) {
+            return;
+        }
         if (currentIdNum > deletedIdNum) {
             const newId = String(currentIdNum - 1).padStart(3, '0');
             oldToNewIdMap[akyo.id] = newId;
@@ -1369,19 +1389,11 @@ async function updateCSVFile() {
         showNotification(msg, 'error');
     }
 
-    // ファイルとして保存するためのBlobを作成
+    // ファイルとして保存するためのBlobを作成し、URLは即座に破棄
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-
-    // ダウンロードリンクを作成（自動保存はしない）
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'akyo-data-updated.csv');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-
-    // 更新があったことを通知
-    console.debug('CSV data updated. Download link created.');
+    console.debug('CSV data updated. Temporary blob URL generated.');
+    URL.revokeObjectURL(url);
 }
 
 // CSV一括アップロード処理
@@ -1425,7 +1437,7 @@ function previewCSV(csvText) {
     const newData = parseCSV(csvText);
 
     // 現在の最大IDを取得して、新規IDを仮設定
-    let maxId = Math.max(0, ...akyoData.map(a => parseInt(a.id) || 0));
+    let maxId = Math.max(0, ...akyoData.map(a => Number.parseInt(a.id, 10) || 0));
 
     const preview = document.getElementById('csvPreview');
     const table = document.getElementById('csvPreviewTable');
@@ -1484,7 +1496,7 @@ async function uploadCSV() {
     if (!window.pendingCSVData) return;
 
     // 現在の最大IDを取得
-    let maxId = Math.max(0, ...akyoData.map(a => parseInt(a.id) || 0));
+    let maxId = Math.max(0, ...akyoData.map(a => Number.parseInt(a.id, 10) || 0));
 
     // CSVデータのIDを自動採番で上書き
     window.pendingCSVData.forEach(akyo => {
@@ -1994,11 +2006,11 @@ function searchForEdit() {
             <td class="px-4 py-3 text-sm">${safeAttribute}</td>
             <td class="px-4 py-3 text-sm">${safeCreator}</td>
             <td class="px-4 py-3 text-center">
-                <button onclick="editAkyo('${safeId}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2" >
+                <button type="button" data-action="edit" data-id="${safeId}" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
                     <i class="fas fa-edit"></i>
                 </button>
                 ${currentUserRole === 'owner' ? `
-                <button onclick="deleteAkyo('${safeId}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                <button type="button" data-action="delete" data-id="${safeId}" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     <i class="fas fa-trash"></i>
                 </button>
                 ` : ''}
@@ -2075,7 +2087,7 @@ async function renumberAllIds() {
     // 名前順でソート（または任意の基準）してから連番を振る
     akyoData.sort((a, b) => {
         // 現在のID順でソート
-        return parseInt(a.id) - parseInt(b.id);
+        return (Number.parseInt(a.id, 10) || 0) - (Number.parseInt(b.id, 10) || 0);
     });
 
     // 新しいIDを割り当て
@@ -2149,6 +2161,7 @@ function exportCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
     showNotification('CSVファイルをダウンロードしました', 'success');
 }
