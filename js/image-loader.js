@@ -7,6 +7,75 @@
 let akyoImageManifestMap = {};
 const PUBLIC_R2_BASE = 'https://images.akyodex.com';
 
+function extractImageEntryInfo(rawValue, explicitId) {
+    const value = String(rawValue || '');
+    const noQuery = value.split('?')[0];
+    const parts = noQuery.split('/');
+    const filename = parts[parts.length - 1] || '';
+    let id = '';
+    let versionStr = '';
+    const match = filename.match(/^(\d{3})(?:_([0-9a-z]+))?/i);
+    if (match) {
+        id = match[1];
+        if (match[2]) {
+            versionStr = match[2].toLowerCase();
+        }
+    }
+    if (explicitId) {
+        id = String(explicitId).padStart(3, '0');
+    }
+    let versionNum = null;
+    if (versionStr) {
+        const parsed = parseInt(versionStr, 36);
+        if (!Number.isNaN(parsed)) {
+            versionNum = parsed;
+        }
+    }
+    return {
+        raw: value,
+        id,
+        hasVersion: Boolean(versionStr),
+        versionStr,
+        versionNum,
+    };
+}
+
+function shouldPreferCandidate(currentInfo, candidateInfo) {
+    if (!candidateInfo || !candidateInfo.id) return false;
+    if (!currentInfo || !currentInfo.id) return true;
+    if (candidateInfo.id !== currentInfo.id) return false;
+
+    if (candidateInfo.hasVersion && !currentInfo.hasVersion) return true;
+    if (!candidateInfo.hasVersion && currentInfo.hasVersion) return false;
+
+    if (candidateInfo.hasVersion && currentInfo.hasVersion) {
+        if (candidateInfo.versionNum !== null && currentInfo.versionNum !== null) {
+            if (candidateInfo.versionNum > currentInfo.versionNum) return true;
+            if (candidateInfo.versionNum < currentInfo.versionNum) return false;
+        } else if (candidateInfo.versionStr > currentInfo.versionStr) {
+            return true;
+        } else if (candidateInfo.versionStr < currentInfo.versionStr) {
+            return false;
+        }
+    }
+
+    return true; // 同じ情報の場合は後勝ち（最新を優先）
+}
+
+function updateManifestEntry(map, rawValue, explicitId) {
+    const candidateInfo = extractImageEntryInfo(rawValue, explicitId);
+    if (!candidateInfo.id) return;
+    const currentRaw = map[candidateInfo.id];
+    if (!currentRaw) {
+        map[candidateInfo.id] = candidateInfo.raw;
+        return;
+    }
+    const currentInfo = extractImageEntryInfo(currentRaw, candidateInfo.id);
+    if (shouldPreferCandidate(currentInfo, candidateInfo)) {
+        map[candidateInfo.id] = candidateInfo.raw;
+    }
+}
+
 async function loadImagesManifest() {
     try {
         // 1) R2/KV 由来の最新マニフェスト（完全URLを返す想定）
@@ -19,20 +88,19 @@ async function loadImagesManifest() {
         const data = await resp.json();
         let map = {};
         if (Array.isArray(data)) {
-            data.forEach(name => {
-                const m = String(name).match(/^(\d{3})/);
-                if (m) { const id = m[1]; if (!map[id]) map[id] = name; }
-            });
+            data.forEach(name => updateManifestEntry(map, name));
         } else if (data && Array.isArray(data.files)) {
-            data.files.forEach(name => {
-                const m = String(name).match(/^(\d{3})/);
-                if (m) { const id = m[1]; if (!map[id]) map[id] = name; }
-            });
+            data.files.forEach(name => updateManifestEntry(map, name));
         } else if (data && data.map && typeof data.map === 'object') {
-            map = { ...data.map };
+            Object.entries(data.map).forEach(([key, value]) => {
+                const id = String(key).padStart(3, '0');
+                updateManifestEntry(map, value, id);
+            });
         } else if (data && typeof data === 'object') {
-            // /api/manifest のような { "001": "https://..." } 形式
-            map = { ...data };
+            Object.entries(data).forEach(([key, value]) => {
+                const id = String(key).padStart(3, '0');
+                updateManifestEntry(map, value, id);
+            });
         }
         akyoImageManifestMap = map;
         return Object.keys(akyoImageManifestMap).length > 0;
