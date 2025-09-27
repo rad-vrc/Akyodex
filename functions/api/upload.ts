@@ -58,7 +58,8 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return errJSON(413, "file too large");
     }
 
-    const key = `images/${id}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
+    const version = Date.now().toString(36);
+    const key = `images/${id}_${version}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
 
     await (env as any).AKYO_BUCKET.put(key, file.stream(), {
       httpMetadata: {
@@ -77,7 +78,7 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     const now = new Date().toISOString();
     const updater = role; // ロールのみ記録（必要ならIP/UAも）
 
-    const data = { id, name, type, desc, key, url, updatedAt: now, updater };
+    const data = { id, name, type, desc, key, url, updatedAt: now, updater, version };
     await (env as any).AKYO_KV.put(`akyo:${id}`, JSON.stringify(data));
 
     return okJSON(
