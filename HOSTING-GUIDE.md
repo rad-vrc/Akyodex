@@ -157,10 +157,20 @@ Value: [username].github.io
 `css/kid-friendly.css` と `images/akyo-bg.webp` を更新した際は、ブラウザやCDNのキャッシュを確実に更新するため、以下の値を同時に上げてください。
 
 - `sw.js` の `CSS_VERSION`
-- 各HTMLの `css/kid-friendly.css?v=...` クエリ（ビルド済みファイルを直接編集する場合）
-- `css/kid-friendly.css` 内の `akyo-bg.webp?v=...` 指定
+- 各HTMLの `css/kid-friendly.css?v=20250927` クエリ（ビルド済みファイルを直接編集する場合）
+- `css/kid-friendly.css` 内の `akyo-bg.webp?v=20250927` 指定
 
 また、`sw.js` の `PRECACHE` 定数も必要に応じて increment し、古いプリキャッシュを破棄できるようにします。Cloudflare Pages など主要なCDNではクエリストリングがキャッシュキーに含まれるため、この運用で最新の背景画像が即時に反映されます。
+
+> ⛏️ **バージョンの一括更新コマンド**
+>
+> 手作業の更新が煩雑な場合は、次のヘルパースクリプトでHTML/CSS/Service Worker/ドキュメントのバージョン番号をまとめて置換できます。
+>
+> ```bash
+> node tools/bump-kid-friendly-version.mjs 20250927
+> ```
+>
+> バージョン文字列（例: `20250927`）を新しい値に差し替えて実行してください。`PRECACHE` の更新は自動化していないため、必要に応じて手動でインクリメントします。
 
 ---
 
