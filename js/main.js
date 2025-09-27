@@ -22,7 +22,20 @@ let akyoData = [];
 window.publicAkyoList = akyoData;
 let filteredData = [];
 let searchIndex = []; // { id, text }
-let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
+function loadFavoritesFromStorage() {
+    try {
+        const raw = localStorage.getItem('akyoFavorites');
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        console.warn('Failed to parse favorites from localStorage. Resetting storage.', error);
+        try { localStorage.removeItem('akyoFavorites'); } catch (_) {}
+        return [];
+    }
+}
+
+let favorites = loadFavoritesFromStorage();
 let serverCsvRowCount = 0; // /api/csv が返す期待行数（ヘッダで受け取り）
 // 行末ダングリング引用符などの単純な破損を自動修復
 function sanitizeCsvText(text){
@@ -732,7 +745,7 @@ function setupEventListeners() {
         detailModal.dataset.outsideCloseInitialized = 'true';
     }
 
-
+    }
 
 // 正規化（ひらがな/カタカナ/全角半角）
 // 検索用の正規化（既にあるはず。無ければ併せて置いてください）

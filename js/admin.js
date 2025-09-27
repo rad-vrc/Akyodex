@@ -12,6 +12,19 @@ let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 const FINDER_PREFILL_VALUE = 'Akyo';
 const isFinderModePage = typeof window !== 'undefined' && window.location.pathname.endsWith('finder.html');
 
+function loadFavoritesArray() {
+    try {
+        const raw = localStorage.getItem('akyoFavorites');
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        console.warn('Failed to parse favorites for admin tools. Resetting storage.', error);
+        try { localStorage.removeItem('akyoFavorites'); } catch (_) {}
+        return [];
+    }
+}
+
 function applyFinderRegistrationDefaults({ force = false } = {}) {
     if (!(isFinderModePage || currentUserRole === 'finder')) return;
 
@@ -1248,7 +1261,7 @@ async function deleteAkyo(akyoId) {
     localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
 
     // お気に入りデータのID更新
-    let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
+    let favorites = loadFavoritesArray();
     favorites = favorites
         .filter(id => id !== akyoId)  // 削除対象を除外
         .map(id => oldToNewIdMap[id] || id);  // ID更新
@@ -2037,7 +2050,7 @@ async function renumberAllIds() {
     localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
 
     // お気に入りデータのID更新
-    let favorites = JSON.parse(localStorage.getItem('akyoFavorites')) || [];
+    let favorites = loadFavoritesArray();
     favorites = favorites.map(oldId => oldToNewIdMap[oldId]).filter(Boolean);
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
