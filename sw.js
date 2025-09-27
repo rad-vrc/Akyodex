@@ -1,4 +1,5 @@
-const PRECACHE = 'akyo-precache-v6';
+const PRECACHE = 'akyo-precache-v7';
+const CSS_VERSION = '20250927';
 let precacheUrlList = null;
 let precacheUrlSet = null;
 
@@ -8,12 +9,19 @@ function getScope() {
 
 function buildPrecacheUrls() {
   const scope = getScope();
+  const cssAssets = CSS_VERSION
+    ? [
+        './css/kid-friendly.css',
+        `./css/kid-friendly.css?v=${CSS_VERSION}`,
+      ]
+    : ['./css/kid-friendly.css'];
+
   const coreAssets = [
     './',
     './index.html',
     './admin.html',
     './logo-upload.html',
-    './css/kid-friendly.css',
+    ...cssAssets,
     './js/storage-manager.js',
     './js/storage-adapter.js',
     './js/image-manifest-loader.js',
