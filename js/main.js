@@ -72,7 +72,45 @@ const idCollator = new Intl.Collator(undefined, { numeric: true });
 const INITIAL_RENDER_COUNT = 60;
 const RENDER_CHUNK = 60;
 let renderLimit = INITIAL_RENDER_COUNT;
+// ← ここまでがグローバル変数群
 let tickingScroll = false;
+
+/* === HOTFIX: buildSearchIndex の復活・固定（ここから貼り付け） === */
+if (typeof buildSearchIndex !== 'function') {
+  // normalizeForSearch が未定義でも動く最小版を同梱
+  if (typeof normalizeForSearch !== 'function') {
+    function normalizeForSearch(input) {
+      if (!input) return '';
+      return String(input)
+        .toLowerCase()
+        .replace(/[！-～]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)) // 全角→半角
+        .replace(/[ァ-ン]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))   // ｶﾅ→ひらがな
+        .replace(/[\s\u3000]+/g, ' ')
+        .trim();
+    }
+  }
+
+  var buildSearchIndex = function () {
+    try {
+      // searchIndex / akyoData は既存のグローバルを利用
+      searchIndex = (akyoData || []).map(a => {
+        const text = [a.id, a.nickname, a.avatarName, a.attribute, a.creator, a.notes]
+          .map(normalizeForSearch)
+          .join(' ');
+        return { id: a.id, text };
+      });
+    } catch (e) {
+      console.error('buildSearchIndex failed:', e);
+      searchIndex = [];
+    }
+  };
+
+  if (typeof window !== 'undefined') window.buildSearchIndex = buildSearchIndex;
+}
+/* === HOTFIX: ここまで === */
+
+// （この下に続く既存の関数たち：escapeHTML, sanitizeUrl, ...）
+
 
 function escapeHTML(value) {
     if (value === null || value === undefined) return '';
