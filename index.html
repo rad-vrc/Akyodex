@@ -446,156 +446,161 @@
     <script src="js/secret-mode.js"></script>
 
     <!-- ヘッダーロゴ読み込み -->
+
     <script>
-        const secretModeApi = window.secretMode;
-        const setupSecretModeNavigation = typeof secretModeApi?.setupSecretModeNavigation === 'function'
-            ? secretModeApi.setupSecretModeNavigation
-            : null;
-        if (!setupSecretModeNavigation) {
-            console.warn('Secret mode utilities were not initialised correctly.');
-        }
+        (() => {
+            const secretModeApi = window.secretMode;
+            const setupSecretModeNavigation = typeof secretModeApi?.setupSecretModeNavigation === 'function'
+                ? secretModeApi.setupSecretModeNavigation
+                : null;
+            if (!setupSecretModeNavigation) {
+                console.warn('Secret mode utilities were not initialised correctly.');
+            }
 
-        // ヘッダーロゴを読み込み
-        async function loadHeaderLogo() {
-            try {
-                let headerLogoUrl = null;
-
-                // まずフォルダ（images/）からの既定ロゴを試す（GETで存在確認）
+            // ヘッダーロゴを読み込み
+            async function loadHeaderLogo() {
                 try {
-                    const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
-                    // webp → png → jpg の順に確認
-                    const respWebp = await fetch(`images/logo.webp?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                    if (respWebp.ok) headerLogoUrl = `images/logo.webp?v=${encodeURIComponent(ver)}`;
-                    else {
-                        const respPng = await fetch(`images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                        if (respPng.ok) headerLogoUrl = `images/logo.png?v=${encodeURIComponent(ver)}`;
+                    let headerLogoUrl = null;
+
+                    // まずフォルダ（images/）からの既定ロゴを試す（GETで存在確認）
+                    try {
+                        const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
+                        // webp → png → jpg の順に確認
+                        const respWebp = await fetch(`images/logo.webp?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                        if (respWebp.ok) headerLogoUrl = `images/logo.webp?v=${encodeURIComponent(ver)}`;
                         else {
-                            const respJpg = await fetch(`images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                            if (respJpg.ok) headerLogoUrl = `images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                            const respPng = await fetch(`images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                            if (respPng.ok) headerLogoUrl = `images/logo.png?v=${encodeURIComponent(ver)}`;
+                            else {
+                                const respJpg = await fetch(`images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                                if (respJpg.ok) headerLogoUrl = `images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                            }
+                        }
+                    } catch (_) {}
+
+                    // 既定が無い場合はIndexedDBから読み込みを試行
+                    if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
+                        try {
+                            await window.storageManager.init();
+                            headerLogoUrl = await window.storageManager.getImage('headerLogo');
+                        } catch (error) {
+                            console.warn('IndexedDBからのヘッダーロゴ読み込みに失敗:', error);
                         }
                     }
-                } catch (_) {}
 
-                // 既定が無い場合はIndexedDBから読み込みを試行
-                if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
-                    try {
-                        await window.storageManager.init();
-                        headerLogoUrl = await window.storageManager.getImage('headerLogo');
-                    } catch (error) {
-                        console.warn('IndexedDBからのヘッダーロゴ読み込みに失敗:', error);
+                    // IndexedDB/既定から読み込めなかった場合、localStorageを試行
+                    if (!headerLogoUrl) {
+                        headerLogoUrl = localStorage.getItem('akyoHeaderLogo');
                     }
+
+                    // ロゴが存在する場合は表示（クリック可能にする）
+                    const headerLogoEl = document.getElementById('headerLogo');
+                    if (headerLogoUrl && headerLogoEl) {
+                        // 現在のURLを判定してリンク先を設定
+                        const currentHost = window.location.hostname;
+                        let homeUrl = '/';
+
+                        // ホスト名に基づいてリンク先を設定
+                        if (currentHost.includes('akyodex.com')) {
+                            homeUrl = 'https://akyodex.com';
+                        } else if (currentHost.includes('netlify')) {
+                            homeUrl = '/';  // Netlifyの場合はルートに戻る
+                        } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+                            homeUrl = '/';  // ローカル環境ではルートに戻る
+                        }
+
+                        headerLogoEl.innerHTML = `
+                            <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
+                                <img src="${headerLogoUrl}"
+                                     alt="Akyoずかん"
+                                     class="h-full w-auto hover:opacity-90 transition-opacity"
+                                     style="object-fit: contain; max-width: 420px; cursor: pointer;">
+                            </a>
+                        `;
+                        const logoLink = headerLogoEl.querySelector('a');
+                        if (setupSecretModeNavigation && logoLink) {
+                            setupSecretModeNavigation(logoLink, homeUrl);
+                        }
+                    } else if (headerLogoEl) {
+                        // ロゴがない場合でもlogo.pngを直接試し、なければテキスト
+                        const currentHost = window.location.hostname;
+                        let homeUrl = '/';
+
+                        if (currentHost.includes('akyodex.com')) {
+                            homeUrl = 'https://akyodex.com';
+                        } else if (currentHost.includes('netlify')) {
+                            homeUrl = '/';
+                        } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+                            homeUrl = '/';
+                        }
+
+                        headerLogoEl.innerHTML = `
+                            <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
+                                <img src="images/logo.webp" onerror="this.style.display='none'" fetchpriority="high" decoding="async"
+                                     alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
+                            </a>
+                        `;
+                        const logoLink = headerLogoEl.querySelector('a');
+                        if (setupSecretModeNavigation && logoLink) {
+                            setupSecretModeNavigation(logoLink, homeUrl);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('ヘッダーロゴの読み込みに失敗しました:', error);
                 }
-
-                // IndexedDB/既定から読み込めなかった場合、localStorageを試行
-                if (!headerLogoUrl) {
-                    headerLogoUrl = localStorage.getItem('akyoHeaderLogo');
-                }
-
-                // ロゴが存在する場合は表示（クリック可能にする）
-                const headerLogoEl = document.getElementById('headerLogo');
-                if (headerLogoUrl && headerLogoEl) {
-                    // 現在のURLを判定してリンク先を設定
-                    const currentHost = window.location.hostname;
-                    let homeUrl = '/';
-
-                    // ホスト名に基づいてリンク先を設定
-                    if (currentHost.includes('akyodex.com')) {
-                        homeUrl = 'https://akyodex.com';
-                    } else if (currentHost.includes('netlify')) {
-                        homeUrl = '/';  // Netlifyの場合はルートに戻る
-                    } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-                        homeUrl = '/';  // ローカル環境ではルートに戻る
-                    }
-
-                    headerLogoEl.innerHTML = `
-                        <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                            <img src="${headerLogoUrl}"
-                                 alt="Akyoずかん"
-                                 class="h-full w-auto hover:opacity-90 transition-opacity"
-                                 style="object-fit: contain; max-width: 420px; cursor: pointer;">
-                        </a>
-                    `;
-                    const logoLink = headerLogoEl.querySelector('a');
-                    if (setupSecretModeNavigation && logoLink) {
-                        setupSecretModeNavigation(logoLink, homeUrl);
-                    }
-                } else {
-                    // ロゴがない場合でもlogo.pngを直接試し、なければテキスト
-                    const currentHost = window.location.hostname;
-                    let homeUrl = '/';
-
-                    if (currentHost.includes('akyodex.com')) {
-                        homeUrl = 'https://akyodex.com';
-                    } else if (currentHost.includes('netlify')) {
-                        homeUrl = '/';
-                    } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-                        homeUrl = '/';
-                    }
-
-                    headerLogoEl.innerHTML = `
-                        <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                            <img src="images/logo.webp" onerror="this.style.display='none'" fetchpriority="high" decoding="async"
-                                 alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
-                        </a>
-                    `;
-                    const logoLink = headerLogoEl.querySelector('a');
-                    if (setupSecretModeNavigation && logoLink) {
-                        setupSecretModeNavigation(logoLink, homeUrl);
-                    }
-                }
-
-            } catch (error) {
-                console.error('ヘッダーロゴの読み込みに失敗しました:', error);
             }
-        }
 
-        // ページ読み込み時に実行
-        async function bootstrapImages() {
-            try { if (window.loadImagesManifest) { await window.loadImagesManifest(); } } catch (e) {}
-            try { if (window.loadAkyoManifest) { await window.loadAkyoManifest(); } } catch (e) {}
-            loadHeaderLogo();
-            // R2未設定時のGitHubアップロード切替
-            try {
-                const hasR2 = !!(window.PUBLIC_R2_BASE || '').length; // 参照用（ENV未公開のため常にfalse想定）
-                if (!hasR2) window.__USE_GH_UPLOAD__ = true;
-            } catch(_) {}
-            // 背景ミニAkyoの初期化（存在する場合のみ）
-            try {
-                if (window.initMiniAkyoBackground) {
-                    // devフラグでSW未反映時でも強制再生成できるよう再初期化
-                    if (document.getElementById('miniAkyoBg')?.children?.length === 0) {
-                        window.initMiniAkyoBackground();
-                    } else if (new URLSearchParams(location.search).has('reloadBg')) {
-                        const host = document.getElementById('miniAkyoBg');
-                        if (host) host.innerHTML = '';
-                        window.initMiniAkyoBackground();
+            // ページ読み込み時に実行
+            async function bootstrapImages() {
+                try { if (window.loadImagesManifest) { await window.loadImagesManifest(); } } catch (e) {}
+                try { if (window.loadAkyoManifest) { await window.loadAkyoManifest(); } } catch (e) {}
+                loadHeaderLogo();
+                // R2未設定時のGitHubアップロード切替
+                try {
+                    const hasR2 = !!(window.PUBLIC_R2_BASE || '').length; // 参照用（ENV未公開のため常にfalse想定）
+                    if (!hasR2) window.__USE_GH_UPLOAD__ = true;
+                } catch(_) {}
+                // 背景ミニAkyoの初期化（存在する場合のみ）
+                try {
+                    if (window.initMiniAkyoBackground) {
+                        // devフラグでSW未反映時でも強制再生成できるよう再初期化
+                        if (document.getElementById('miniAkyoBg')?.children?.length === 0) {
+                            window.initMiniAkyoBackground();
+                        } else if (new URLSearchParams(location.search).has('reloadBg')) {
+                            const host = document.getElementById('miniAkyoBg');
+                            if (host) host.innerHTML = '';
+                            window.initMiniAkyoBackground();
+                        }
                     }
-                }
-            } catch(_) {}
-        }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', bootstrapImages);
-        } else {
-            bootstrapImages();
-        }
-
-        // 画像エラーハンドラ（PNG→JPG→プレースホルダー）
-        function handleImageError(img, id, color, mode) {
-            if (!img || !id) return;
-            const triedJpg = img.dataset.triedJpg === '1';
-            if (!triedJpg) {
-                img.dataset.triedJpg = '1';
-                img.src = `images/${id}.jpg`;
-                return;
+                } catch(_) {}
             }
-            // プレースホルダーへ
-            const placeholder = mode === 'modal'
-                ? `<div class="akyo-image-placeholder h-64 rounded-3xl shadow-lg" style="background: linear-gradient(135deg, ${color}, ${color}66)"><span class="text-6xl">${id}</span><p class="text-white text-lg mt-2">画像がまだないよ！</p></div>`
-                : `<div class="akyo-image-placeholder h-48" style="background: ${color}"><span class="text-4xl">${id}</span></div>`;
-            const parent = img.parentElement;
-            if (parent) parent.innerHTML = placeholder;
-        }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', bootstrapImages);
+            } else {
+                bootstrapImages();
+            }
+
+            // 画像エラーハンドラ（PNG→JPG→プレースホルダー）
+            function handleImageError(img, id, color, mode) {
+                if (!img || !id) return;
+                const triedJpg = img.dataset.triedJpg === '1';
+                if (!triedJpg) {
+                    img.dataset.triedJpg = '1';
+                    img.src = `images/${id}.jpg`;
+                    return;
+                }
+                // プレースホルダーへ
+                const placeholder = mode === 'modal'
+                    ? `<div class="akyo-image-placeholder h-64 rounded-3xl shadow-lg" style="background: linear-gradient(135deg, ${color}, ${color}66)"><span class="text-6xl">${id}</span><p class="text-white text-lg mt-2">画像がまだないよ！</p></div>`
+                    : `<div class="akyo-image-placeholder h-48" style="background: ${color}"><span class="text-4xl">${id}</span></div>`;
+                const parent = img.parentElement;
+                if (parent) parent.innerHTML = placeholder;
+            }
+        })();
     </script>
+
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
