@@ -117,14 +117,11 @@
         }
 
         if (global.caches && typeof global.caches.keys === 'function') {
-            const filterNeedle = SECRET_MODE_CACHE_KEY_FILTER.toLowerCase();
             cleanupTasks.push(
                 global.caches.keys()
-                    .then((keys) => {
-                        if (!filterNeedle) return keys;
-                        return keys.filter((key) => key.toLowerCase().startsWith(filterNeedle));
-                    })
-                    .then((targetKeys) => Promise.all(targetKeys.map((key) => global.caches.delete(key).catch(() => false))))
+                    .then((keys) => Promise.all(
+                        keys.map((key) => global.caches.delete(key).catch(() => false))
+                    ))
                     .catch((error) => {
                         console.warn('キャッシュストレージのシークレット消去に失敗:', error);
                     })

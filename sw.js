@@ -95,10 +95,14 @@ self.addEventListener('fetch', (event) => {
 
   // 1) HTMLはネットワーク優先＋必ずフォールバックを返す
   if (req.mode === 'navigate' || accept.includes('text/html')) {
+    const wantsFreshNavigation = url.searchParams.has('_akyoFresh');
     event.respondWith((async () => {
       try {
-        // 直取り（最新を優先）
-        return await fetch(req);
+        // 直取り（最新を優先）。_akyoFresh付きはHTTPキャッシュも迂回
+        const requestForNavigation = wantsFreshNavigation
+          ? new Request(req, { cache: 'reload' })
+          : req;
+        return await fetch(requestForNavigation);
       } catch (_) {
         // キャッシュ→index.htmlの順に保険
         const cache = await caches.open(PRECACHE);
