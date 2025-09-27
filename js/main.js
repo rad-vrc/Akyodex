@@ -704,34 +704,33 @@ function setupEventListeners() {
     }
 
     const detailModal = document.getElementById('detailModal');
-// モーダルの外側クリック/ESCで閉じる（重複防止フラグ）
-const detailModal = document.getElementById('detailModal');
-if (detailModal && !detailModal.dataset.outsideCloseInitialized) {
-    const isEventInsideModal = (event) => {
-        const modalContentContainer = detailModal.querySelector('[data-modal-content]');
-        return modalContentContainer ? modalContentContainer.contains(event.target) : false;
-    };
+    // モーダルの外側クリック/ESCで閉じる（重複防止フラグ）
+    if (detailModal && !detailModal.dataset.outsideCloseInitialized) {
+        const isEventInsideModal = (event) => {
+            const modalContentContainer = detailModal.querySelector('[data-modal-content]');
+            return modalContentContainer ? modalContentContainer.contains(event.target) : false;
+        };
 
-    const handlePointerDownOutsideModal = (event) => {
-        if (detailModal.classList.contains('hidden')) return;
-        if (!isEventInsideModal(event)) {
-            closeModal();
-        }
-    };
+        const handlePointerDownOutsideModal = (event) => {
+            if (detailModal.classList.contains('hidden')) return;
+            if (!isEventInsideModal(event)) {
+                closeModal();
+            }
+        };
 
-    const outsideCloseEvents = window.PointerEvent ? ['pointerdown'] : ['mousedown', 'touchstart'];
-    outsideCloseEvents.forEach((eventName) => {
-        document.addEventListener(eventName, handlePointerDownOutsideModal, true);
-    });
+        const outsideCloseEvents = window.PointerEvent ? ['pointerdown'] : ['mousedown', 'touchstart'];
+        outsideCloseEvents.forEach((eventName) => {
+            document.addEventListener(eventName, handlePointerDownOutsideModal, true);
+        });
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !detailModal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !detailModal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
 
-    detailModal.dataset.outsideCloseInitialized = 'true';
-}
+        detailModal.dataset.outsideCloseInitialized = 'true';
+    }
 
 
 
