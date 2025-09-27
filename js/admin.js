@@ -113,6 +113,15 @@ function handleAdminActionClick(event) {
 
     const action = button.dataset.action;
     const id = button.dataset.id;
+
+    if (action === 'remove-image') {
+        event.preventDefault();
+        if (id) {
+            removeImage(id);
+        }
+        return;
+    }
+
     if (!id) return;
 
     if (action === 'edit') {
@@ -232,15 +241,19 @@ async function handleLogin(event) {
         }
     } catch (e) {
         adminSessionToken = null;
-        errorDiv.classList.remove('hidden');
         const kind = (e && e.message) || '';
         let msg = '<i class="fas fa-exclamation-circle mr-1"></i> 予期せぬエラーが発生しました';
         if (kind === 'unauthorized') msg = '<i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません';
         else if (kind === 'server') msg = '<i class="fas fa-server mr-1"></i> サーバーエラーです。しばらく待って再試行してください';
         else if (kind === 'request') msg = '<i class="fas fa-exclamation-triangle mr-1"></i> 認証に失敗しました';
         else if (e && (e.name === 'TypeError' || e.message === 'Failed to fetch')) msg = '<i class="fas fa-wifi mr-1"></i> ネットワークに接続できません';
-        errorDiv.innerHTML = msg;
-        setTimeout(() => errorDiv.classList.add('hidden'), 4000);
+        if (errorDiv) {
+            errorDiv.classList.remove('hidden');
+            errorDiv.innerHTML = msg;
+            setTimeout(() => errorDiv.classList.add('hidden'), 4000);
+        } else {
+            showNotification(msg.replace(/<[^>]+>/g, ''), 'error');
+        }
     }
 }
 
@@ -1671,11 +1684,13 @@ async function saveImageMapping(inputId) {
 
     try {
         // ストレージアダプターを使用して保存（IndexedDB優先）
+        if (!imageDataMap) imageDataMap = {};
         if (window.saveSingleImage) {
             await window.saveSingleImage(akyoId, imageData);
+            imageDataMap[akyoId] = imageData;
+            try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
         } else {
             // フォールバック: 従来のLocalStorage保存
-            if (!imageDataMap) imageDataMap = {};
             imageDataMap[akyoId] = imageData;
             localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
         }
@@ -1845,6 +1860,8 @@ async function saveAllMappings() {
         try {
             if (window.saveSingleImage) {
                 await window.saveSingleImage(akyoId, imageData);
+                imageDataMap[akyoId] = imageData;
+                try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
             } else {
                 // フォールバック
                 imageDataMap[akyoId] = imageData;
@@ -1946,7 +1963,7 @@ function updateImageGallery() {
                 </div>
             </div>
             ${currentUserRole === 'owner' ? `
-            <button onclick="removeImage('${safeAkyoId}')"
+            <button type="button" data-action="remove-image" data-id="${safeAkyoId}"
                     class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <i class="fas fa-times text-xs"></i>
             </button>
