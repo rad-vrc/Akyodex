@@ -619,3 +619,32 @@ footer {
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
 }
+/* Secret-mode refresh feedback */
+.secret-mode-progress {
+    cursor: progress !important;
+}
+
+.secret-mode-busy {
+    position: relative !important;
+}
+
+.secret-mode-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-top: -0.875rem;
+    margin-left: -0.875rem;
+    border-radius: 9999px;
+    border: 3px solid rgba(255, 255, 255, 0.65);
+    border-top-color: rgba(249, 115, 22, 0.9);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    animation: secret-mode-spin 0.75s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes secret-mode-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
