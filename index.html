@@ -443,9 +443,18 @@
     <script src="js/image-loader.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mini-akyo-bg.js?v=2"></script>
+    <script src="js/secret-mode.js"></script>
 
     <!-- ヘッダーロゴ読み込み -->
     <script>
+        const secretMode = window.secretMode;
+        const setupSecretModeNavigation = typeof secretMode?.setupSecretModeNavigation === 'function'
+            ? secretMode.setupSecretModeNavigation
+            : null;
+        if (!setupSecretModeNavigation) {
+            console.warn('Secret mode utilities were not initialised correctly.');
+        }
+
         // ヘッダーロゴを読み込み
         async function loadHeaderLogo() {
             try {
@@ -506,6 +515,10 @@
                                  style="object-fit: contain; max-width: 420px; cursor: pointer;">
                         </a>
                     `;
+                    const logoLink = headerLogoEl.querySelector('a');
+                    if (setupSecretModeNavigation && logoLink) {
+                        setupSecretModeNavigation(logoLink, homeUrl);
+                    }
                 } else {
                     // ロゴがない場合でもlogo.pngを直接試し、なければテキスト
                     const currentHost = window.location.hostname;
@@ -525,6 +538,10 @@
                                  alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
                         </a>
                     `;
+                    const logoLink = headerLogoEl.querySelector('a');
+                    if (setupSecretModeNavigation && logoLink) {
+                        setupSecretModeNavigation(logoLink, homeUrl);
+                    }
                 }
 
             } catch (error) {
