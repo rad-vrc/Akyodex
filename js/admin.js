@@ -81,6 +81,32 @@ function applyFinderRegistrationDefaults({ force = false } = {}) {
     }
 }
 
+async function migrateIndexedDbImages(oldToNewIdMap, { removeOld = true } = {}) {
+    if (!(window.storageManager && window.storageManager.isIndexedDBAvailable)) return;
+    try {
+        await window.storageManager.init();
+        for (const [oldId, newId] of Object.entries(oldToNewIdMap)) {
+            if (!newId) continue;
+            const dataUrl = imageDataMap[newId] || imageDataMap[oldId];
+            if (!dataUrl) continue;
+            try {
+                await window.storageManager.saveImage(newId, dataUrl);
+            } catch (_) {
+                // no-op (fallback handled by memory/localStorage)
+            }
+            if (removeOld) {
+                try {
+                    await window.storageManager.deleteImage(oldId);
+                } catch (_) {
+                    // ignore deletion failures to keep process resilient
+                }
+            }
+        }
+    } catch (error) {
+        console.debug('IndexedDB migration error:', error);
+    }
+}
+
 // 必須/任意DOMの存在チェック（初期化時に一括検査）
 function verifyRequiredDom() {
     // ページ機能の中核に必要な要素
@@ -1421,6 +1447,19 @@ async function deleteAkyo(akyoId) {
     });
     imageDataMap = newImageDataMap;
     localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+    try {
+        if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
+            await window.storageManager.init();
+            try {
+                await window.storageManager.deleteImage(akyoId);
+            } catch (_) {
+                // ignore delete failures
+            }
+            await migrateIndexedDbImages(oldToNewIdMap, { removeOld: true });
+        }
+    } catch (error) {
+        console.debug('IndexedDB sync failed in deleteAkyo:', error);
+    }
 
     // お気に入りデータのID更新
     let favorites = loadFavoritesArray();
@@ -2295,6 +2334,7 @@ async function renumberAllIds() {
     });
     imageDataMap = newImageDataMap;
     localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+    await migrateIndexedDbImages(oldToNewIdMap, { removeOld: true });
 
     // お気に入りデータのID更新
     let favorites = loadFavoritesArray();
