@@ -1012,6 +1012,9 @@ async function removeImageForId(akyoId) {
 // グローバル公開
 window.handleEditImageSelect = handleEditImageSelect;
 window.removeImageForId = removeImageForId;
+// 互換用エイリアス（既存の onclick="saveEditImage(...)" 呼び出しを考慮）
+window.syncPendingEditImage = syncPendingEditImage;
+window.saveEditImage = syncPendingEditImage;
 
 // 画像ドロップ処理
 function handleImageDrop(event) {
