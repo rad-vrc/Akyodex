@@ -186,15 +186,17 @@ function handleAdminActionClick(event) {
 
 // イベントリスナー設定
 function setupEventListeners() {
-    // ログインフォーム
+    // ログインフォーム（IDがあれば優先）
     const loginForm = document.getElementById('finderLoginForm') || document.querySelector('#loginScreen form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
 
+    // トリミングUIの有無を検出
+    const useCustomCropper = !!document.getElementById('cropContainer');
+
     // 画像入力
     const imageInput = document.getElementById('imageInput');
-    const useCustomCropper = !!document.getElementById('cropContainer');
     if (imageInput && !useCustomCropper) {
         imageInput.addEventListener('change', handleImageSelect);
     }
@@ -229,7 +231,9 @@ function setupDragDrop() {
     // 画像ドロップゾーン（トリミングUIがある場合は drop ハンドラを切り替え）
     const imageDropZone = document.getElementById('imageDropZone');
     if (imageDropZone) {
-        const useCustomCropper = !!document.getElementById('cropContainer') && typeof window.handleImageFileWithCrop === 'function';
+        const useCustomCropper =
+            !!document.getElementById('cropContainer') &&
+            typeof window.handleImageFileWithCrop === 'function';
         imageDropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             imageDropZone.classList.add('dragover');
