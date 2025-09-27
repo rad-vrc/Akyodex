@@ -124,7 +124,9 @@
                         if (!filterNeedle) return keys;
                         return keys.filter((key) => key.toLowerCase().startsWith(filterNeedle));
                     })
-                    .then((targetKeys) => Promise.all(targetKeys.map((key) => global.caches.delete(key).catch(() => false))))
+                    .then((targetKeys) =>
+                        Promise.all(targetKeys.map((key) => global.caches.delete(key).catch(() => false)))
+                    )
                     .catch((error) => {
                         console.warn('キャッシュストレージのシークレット消去に失敗:', error);
                     })
