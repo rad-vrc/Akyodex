@@ -654,30 +654,108 @@ async function handleAddAkyo(event) {
 // グローバルスコープに公開
 window.handleAddAkyo = handleAddAkyo;
 
+async function readFileAsDataUrl(file) {
+    if (!file) return null;
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('ファイルの読み込みに失敗しました'));
+        reader.readAsDataURL(file);
+    });
+}
+
+async function convertDataUrlToWebpFile(dataUrl, id) {
+    if (!dataUrl) return null;
+    const id3 = String(id).padStart(3, '0');
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+            try {
+                const width = image.naturalWidth || image.width;
+                const height = image.naturalHeight || image.height;
+                if (!width || !height) {
+                    reject(new Error('画像サイズを取得できません'));
+                    return;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image, 0, 0, width, height);
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        reject(new Error('WEBP変換に失敗しました'));
+                        return;
+                    }
+                    resolve(new File([blob], `${id3}.webp`, { type: 'image/webp' }));
+                }, 'image/webp', 0.92);
+            } catch (err) {
+                reject(err);
+            }
+        };
+        image.onerror = () => reject(new Error('画像の読み込みに失敗しました'));
+        image.src = dataUrl;
+    });
+}
+
+async function prepareWebpFileForUpload({ id, file, dataUrl }) {
+    const id3 = String(id).padStart(3, '0');
+    let sourceDataUrl = dataUrl || null;
+
+    if (!sourceDataUrl && typeof window.generateCroppedImage === 'function') {
+        try {
+            const generated = await window.generateCroppedImage();
+            if (generated) sourceDataUrl = generated;
+        } catch (e) {
+            console.debug('generateCroppedImage failed', e);
+        }
+    }
+
+    if (!sourceDataUrl && file) {
+        try {
+            sourceDataUrl = await readFileAsDataUrl(file);
+        } catch (e) {
+            console.debug('readFileAsDataUrl failed', e);
+        }
+    }
+
+    if (sourceDataUrl) {
+        try {
+            const converted = await convertDataUrlToWebpFile(sourceDataUrl, id3);
+            if (converted) return converted;
+        } catch (e) {
+            console.debug('WEBP conversion failed', e);
+            try {
+                const blob = await (await fetch(sourceDataUrl)).blob();
+                return new File([blob], `${id3}.webp`, { type: blob.type || 'image/webp' });
+            } catch (e2) {
+                console.debug('DataURL blob fallback failed', e2);
+            }
+        }
+    }
+
+    if (file) {
+        if (/\.webp$/i.test(file.name) || file.type === 'image/webp') {
+            return new File([file], `${id3}.webp`, { type: 'image/webp' });
+        }
+        return file;
+    }
+
+    throw new Error('画像データが見つかりません');
+}
+
 // Cloudflare Pages Functions 経由のオンラインアップロード
-async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
+async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword, dataUrl }) {
+    if (!adminPassword) throw new Error('認証情報がありません');
+
     const form = new FormData();
     form.set('id', id);
     form.set('name', name);
     form.set('type', type);
     form.set('desc', desc);
-    // 可能ならトリミング済みDataURLをBlob変換して送信
-    try {
-        if (window.generateCroppedImage) {
-            const dataUrl = await window.generateCroppedImage();
-            if (dataUrl) {
-                const blob = await (await fetch(dataUrl)).blob();
-                const fname = (file && file.name) ? file.name.replace(/\.[^.]+$/, '.webp') : `${id}.webp`;
-                form.set('file', new File([blob], fname, { type: blob.type || 'image/webp' }));
-            } else {
-                form.set('file', file);
-            }
-        } else {
-            form.set('file', file);
-        }
-    } catch(_) {
-        form.set('file', file);
-    }
+
+    const preparedFile = await prepareWebpFileForUpload({ id, file, dataUrl });
+    form.set('file', preparedFile);
 
     // R2未設定時はGitHubアップロードにフォールバック
     const endpoint = window.__USE_GH_UPLOAD__ ? '/api/gh-upload' : '/api/upload';
@@ -690,10 +768,12 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
     if (!res.ok || !json.ok) throw new Error(json.error || 'upload failed');
 
     try { if (window.loadAkyoManifest) await window.loadAkyoManifest(); } catch (_) {}
+    try { if (window.loadImagesManifest) await window.loadImagesManifest(); } catch (_) {}
     return json;
 }
 
 // グローバル公開
+window.prepareWebpFileForUpload = prepareWebpFileForUpload;
 window.uploadAkyoOnline = uploadAkyoOnline;
 
 // フォームから直接オンライン登録（パスワード欄＋既存入力値を使用）
@@ -761,22 +841,41 @@ function handleEditImageSelect(event, akyoId) {
     reader.readAsDataURL(file);
 }
 
-// 編集用 画像保存（IndexedDB優先）
-async function saveEditImage(akyoId) {
+// 編集用 画像アップロード
+async function uploadEditImage(akyoId) {
+    const pendingMap = window.__pendingEditImages || {};
+    window.__pendingEditImages = pendingMap;
+    const dataUrl = pendingMap[akyoId];
+    if (!dataUrl) { showNotification('画像が選択されていません', 'warning'); return; }
+    if (!adminSessionToken) { showNotification('認証が無効です。再度ログインしてください。', 'error'); return; }
+
     try {
-        const dataUrl = window.__pendingEditImages && window.__pendingEditImages[akyoId];
-        if (!dataUrl) { showNotification('画像が選択されていません', 'warning'); return; }
-        if (window.saveSingleImage) {
-            await window.saveSingleImage(akyoId, dataUrl);
-        } else {
-            imageDataMap[akyoId] = dataUrl;
-            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        const akyo = akyoData.find(a => a.id === akyoId) || {};
+        await uploadAkyoOnline({
+            id: akyoId,
+            name: akyo.nickname || akyo.avatarName || '',
+            type: akyo.attribute || '',
+            desc: akyo.notes || '',
+            file: null,
+            adminPassword: adminSessionToken,
+            dataUrl,
+        });
+
+        const preview = document.getElementById(`editImagePreview-${akyoId}`);
+        if (preview) {
+            preview.src = dataUrl;
+            preview.style.display = '';
         }
-        showNotification(`Akyo #${akyoId} の画像を保存しました`, 'success');
-        updateImageGallery();
-        delete window.__pendingEditImages[akyoId];
+
+        if (typeof updateImageGallery === 'function') {
+            try { updateImageGallery(); } catch (_) {}
+        }
+
+        delete pendingMap[akyoId];
+        showNotification(`Akyo #${akyoId} の画像をアップロードしました`, 'success');
     } catch (e) {
-        showNotification('保存エラー: ' + e.message, 'error');
+        console.error('uploadEditImage failed', e);
+        showNotification('アップロードエラー: ' + (e?.message || e), 'error');
     }
 }
 
@@ -804,7 +903,8 @@ async function removeImageForId(akyoId) {
 
 // グローバル公開
 window.handleEditImageSelect = handleEditImageSelect;
-window.saveEditImage = saveEditImage;
+window.uploadEditImage = uploadEditImage;
+window.saveEditImage = uploadEditImage;
 window.removeImageForId = removeImageForId;
 
 // 画像ドロップ処理
@@ -921,10 +1021,10 @@ function editAkyo(akyoId) {
                 <div class="flex items-center gap-3">
                     <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : '')}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
                     <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
-                    <button type="button" onclick="saveEditImage('${akyoId}')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">画像を保存</button>
+                    <button type="button" onclick="uploadEditImage('${akyoId}')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">画像をアップロード</button>
                     <button type="button" onclick="removeImageForId('${akyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
-                <p class="text-xs text-gray-500 mt-1">保存するとIndexedDB（フォールバック: LocalStorage）に登録されます。公開用にはマニフェストまたはimages/${akyo.id}.webp/.png/.jpgを追加して再デプロイしてください。</p>
+                <p class="text-xs text-gray-500 mt-1">アップロードすると公開環境の画像が更新されます。</p>
             </div>
 
             <button type="submit" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:opacity-90">
