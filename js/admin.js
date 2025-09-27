@@ -10,7 +10,21 @@ let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 
 const FINDER_PREFILL_VALUE = 'Akyo';
-const isFinderModePage = typeof window !== 'undefined' && window.location.pathname.endsWith('finder.html');
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) {
+        return '';
+    }
+    const escapeMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '`': '&#96;',
+    };
+    return String(value).replace(/[&<>"'`]/g, (char) => escapeMap[char] || char);
+}
 
 function loadFavoritesArray() {
     try {
@@ -26,8 +40,6 @@ function loadFavoritesArray() {
 }
 
 function applyFinderRegistrationDefaults({ force = false } = {}) {
-    if (!(isFinderModePage || currentUserRole === 'finder')) return;
-
     const addTab = document.getElementById('addTab');
     if (!addTab) return;
 
@@ -1039,20 +1051,26 @@ function updateEditList() {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
 
+        const safeId = escapeHtml(akyo.id);
+        const safeNickname = escapeHtml(akyo.nickname || '-');
+        const safeAvatarName = escapeHtml(akyo.avatarName || '');
+        const safeAttribute = escapeHtml(akyo.attribute || '');
+        const safeCreator = escapeHtml(akyo.creator || '');
+
         row.innerHTML = `
-            <td class="px-4 py-3 font-mono text-sm">${akyo.id}</td>
+            <td class="px-4 py-3 font-mono text-sm">${safeId}</td>
             <td class="px-4 py-3">
-                <div class="font-medium">${akyo.nickname || '-'}</div>
-                <div class="text-xs text-gray-500">${akyo.avatarName}</div>
+                <div class="font-medium">${safeNickname}</div>
+                <div class="text-xs text-gray-500">${safeAvatarName}</div>
             </td>
-            <td class="px-4 py-3 text-sm">${akyo.attribute}</td>
-            <td class="px-4 py-3 text-sm">${akyo.creator}</td>
+            <td class="px-4 py-3 text-sm">${safeAttribute}</td>
+            <td class="px-4 py-3 text-sm">${safeCreator}</td>
             <td class="px-4 py-3 text-center">
-                <button onclick="editAkyo('${akyo.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
+                <button onclick="editAkyo('${safeId}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2" >
                     <i class="fas fa-edit"></i>
                 </button>
                 ${currentUserRole === 'owner' ? `
-                <button onclick="deleteAkyo('${akyo.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                <button onclick="deleteAkyo('${safeId}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     <i class="fas fa-trash"></i>
                 </button>
                 ` : ''}
@@ -1063,6 +1081,7 @@ function updateEditList() {
     });
 }
 
+
 // Akyo編集
 function editAkyo(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
@@ -1072,42 +1091,53 @@ function editAkyo(akyoId) {
     const content = document.getElementById('editModalContent');
     const id3 = String(akyoId).padStart(3, '0');
 
+    const safeAkyoId = escapeHtml(akyoId);
+    const safeDisplayId = escapeHtml(akyo.id);
+    const safeNickname = escapeHtml(akyo.nickname || '');
+    const safeAvatarName = escapeHtml(akyo.avatarName || '');
+    const safeAttribute = escapeHtml(akyo.attribute || '');
+    const safeCreator = escapeHtml(akyo.creator || '');
+    const safeAvatarUrl = escapeHtml(akyo.avatarUrl || '');
+    const safeNotes = escapeHtml(akyo.notes || '');
+    const previewSrc = imageDataMap[akyo.id] || (typeof getAkyoImageUrl === 'function' ? getAkyoImageUrl(id3) : '');
+    const safePreviewSrc = escapeHtml(previewSrc || '');
+
     content.innerHTML = `
-        <form onsubmit="handleUpdateAkyo(event, '${akyoId}')">
+        <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">ID（変更不可）</label>
-                    <input type="text" value="${akyo.id}" disabled
+                    <input type="text" value="${safeDisplayId}" disabled
                            class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
-                    <input type="text" name="nickname" value="${akyo.nickname || ''}"
+                    <input type="text" name="nickname" value="${safeNickname}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
-                    <input type="text" name="avatarName" value="${akyo.avatarName || ''}" required
+                    <input type="text" name="avatarName" value="${safeAvatarName}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
-                    <input type="text" name="attribute" value="${akyo.attribute || ''}" required
+                    <input type="text" name="attribute" value="${safeAttribute}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">作者</label>
-                    <input type="text" name="creator" value="${akyo.creator || ''}" required
+                    <input type="text" name="creator" value="${safeCreator}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">VRChat URL</label>
-                    <input type="url" name="avatarUrl" value="${akyo.avatarUrl || ''}"
+                    <input type="url" name="avatarUrl" value="${safeAvatarUrl}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
@@ -1115,15 +1145,15 @@ function editAkyo(akyoId) {
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">備考</label>
                 <textarea name="notes" rows="3"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">${akyo.notes || ''}</textarea>
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">${safeNotes}</textarea>
             </div>
 
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">画像</label>
                 <div class="flex items-center gap-3">
-                    <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : '')}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
-                    <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
-                    <button type="button" onclick="removeImageForId('${akyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
+                    <img id="editImagePreview-${safeAkyoId}" src="${safePreviewSrc}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
+                    <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${safeAkyoId}')" class="text-sm" />
+                    <button type="button" onclick="removeImageForId('${safeAkyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
                 <p class="text-xs text-gray-500 mt-1">「更新する」を押すと画像も公開環境へ反映されます。</p>
             </div>
@@ -1136,6 +1166,7 @@ function editAkyo(akyoId) {
 
     modal.classList.remove('hidden');
 }
+
 
 // Akyo更新処理
 async function handleUpdateAkyo(event, akyoId) {
@@ -1413,13 +1444,18 @@ function previewCSV(csvText) {
         <tbody>
             ${newData.slice(0, 5).map((akyo, index) => {
                 const newId = String(maxId + index + 1).padStart(3, '0');
+                const safeNewId = escapeHtml(newId);
+                const safeOriginalId = escapeHtml(akyo.id || '');
+                const safeName = escapeHtml(akyo.nickname || akyo.avatarName || '');
+                const safeAttribute = escapeHtml(akyo.attribute || '');
+                const safeCreator = escapeHtml(akyo.creator || '');
                 return `
                 <tr>
-                    <td class="px-2 py-1 font-mono font-bold text-green-600">${newId}</td>
-                    <td class="px-2 py-1 font-mono text-gray-400">${akyo.id}</td>
-                    <td class="px-2 py-1">${akyo.nickname || akyo.avatarName}</td>
-                    <td class="px-2 py-1">${akyo.attribute}</td>
-                    <td class="px-2 py-1">${akyo.creator}</td>
+                    <td class="px-2 py-1 font-mono font-bold text-green-600">${safeNewId}</td>
+                    <td class="px-2 py-1 font-mono text-gray-400">${safeOriginalId}</td>
+                    <td class="px-2 py-1">${safeName}</td>
+                    <td class="px-2 py-1">${safeAttribute}</td>
+                    <td class="px-2 py-1">${safeCreator}</td>
                 </tr>
                 `;
             }).join('')}
@@ -1524,15 +1560,20 @@ function handleBulkImages(files) {
             // ユニークなIDを生成
             const uniqueId = `mapping-${Date.now()}-${index}`;
 
+            const safeImageData = escapeHtml(e.target.result || '');
+            const safeSuggestedId = escapeHtml(suggestedId);
+            const safeFileName = escapeHtml(file.name || '');
+            const safeUniqueId = escapeHtml(uniqueId);
+
             div.innerHTML = `
-                <img src="${e.target.result}" class="w-12 h-12 object-cover rounded">
-                <input type="text" placeholder="AkyoID" value="${suggestedId}"
+                <img src="${safeImageData}" class="w-12 h-12 object-cover rounded">
+                <input type="text" placeholder="AkyoID" value="${safeSuggestedId}"
                        class="px-2 py-1 border rounded w-20 mapping-id-input"
-                       data-image="${e.target.result}"
-                       data-filename="${file.name}"
-                       id="${uniqueId}">
-                <span class="text-sm text-gray-600 flex-1">${file.name}</span>
-                <button onclick="saveImageMapping('${uniqueId}')"
+                       data-image="${safeImageData}"
+                       data-filename="${safeFileName}"
+                       id="${safeUniqueId}">
+                <span class="text-sm text-gray-600 flex-1">${safeFileName}</span>
+                <button onclick="saveImageMapping('${safeUniqueId}')"
                         class="save-btn px-2 py-1 bg-purple-500 text-white rounded text-sm hover:bg-purple-600">
                     保存
                 </button>
@@ -1586,7 +1627,7 @@ function handleBulkImages(files) {
             showNotification(`${file.name} の読み込みに失敗しました`, 'error');
         };
 
-        reader.readAsDataURL(files[0] ?? file);
+        reader.readAsDataURL(file);
     });
 }
 
@@ -1879,16 +1920,20 @@ function updateImageGallery() {
         const div = document.createElement('div');
         div.className = 'relative group';
 
+        const safeAkyoId = escapeHtml(akyoId);
+        const safeImageData = escapeHtml(imageData || '');
+        const safeLabel = escapeHtml(akyo ? (akyo.nickname || akyo.avatarName || '') : '未登録');
+
         div.innerHTML = `
-            <img src="${imageData}" class="w-full h-24 object-cover rounded-lg">
+            <img src="${safeImageData}" class="w-full h-24 object-cover rounded-lg">
             <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                 <div class="text-white text-center">
-                    <div class="font-bold">#${akyoId}</div>
-                    <div class="text-xs">${akyo ? akyo.nickname || akyo.avatarName : '未登録'}</div>
+                    <div class="font-bold">#${safeAkyoId}</div>
+                    <div class="text-xs">${safeLabel}</div>
                 </div>
             </div>
             ${currentUserRole === 'owner' ? `
-            <button onclick="removeImage('${akyoId}')"
+            <button onclick="removeImage('${safeAkyoId}')"
                     class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <i class="fas fa-times text-xs"></i>
             </button>
@@ -1934,20 +1979,26 @@ function searchForEdit() {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
 
+        const safeId = escapeHtml(akyo.id);
+        const safeNickname = escapeHtml(akyo.nickname || '-');
+        const safeAvatarName = escapeHtml(akyo.avatarName || '');
+        const safeAttribute = escapeHtml(akyo.attribute || '');
+        const safeCreator = escapeHtml(akyo.creator || '');
+
         row.innerHTML = `
-            <td class="px-4 py-3 font-mono text-sm">${akyo.id}</td>
+            <td class="px-4 py-3 font-mono text-sm">${safeId}</td>
             <td class="px-4 py-3">
-                <div class="font-medium">${akyo.nickname || '-'}</div>
-                <div class="text-xs text-gray-500">${akyo.avatarName}</div>
+                <div class="font-medium">${safeNickname}</div>
+                <div class="text-xs text-gray-500">${safeAvatarName}</div>
             </td>
-            <td class="px-4 py-3 text-sm">${akyo.attribute}</td>
-            <td class="px-4 py-3 text-sm">${akyo.creator}</td>
+            <td class="px-4 py-3 text-sm">${safeAttribute}</td>
+            <td class="px-4 py-3 text-sm">${safeCreator}</td>
             <td class="px-4 py-3 text-center">
-                <button onclick="editAkyo('${akyo.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
+                <button onclick="editAkyo('${safeId}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2" >
                     <i class="fas fa-edit"></i>
                 </button>
                 ${currentUserRole === 'owner' ? `
-                <button onclick="deleteAkyo('${akyo.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                <button onclick="deleteAkyo('${safeId}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     <i class="fas fa-trash"></i>
                 </button>
                 ` : ''}
@@ -1990,10 +2041,12 @@ function showNotification(message, type = 'info') {
                 ? 'fa-exclamation-triangle'
                 : 'fa-info-circle';
 
+    const safeMessage = escapeHtml(message);
+
     notification.innerHTML = `
         <div class="flex items-center">
             <i class="fas ${iconClass} mr-2"></i>
-            ${message}
+            ${safeMessage}
         </div>
     `;
 
@@ -2061,19 +2114,24 @@ window.renumberAllIds = renumberAllIds;
 
 // CSVエクスポート機能
 function exportCSV() {
+    const csvEscape = (value) => {
+        const str = value === null || value === undefined ? '' : String(value);
+        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+
     // CSVフォーマットに変換
-    let csvContent = ',見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
+    let csvContent = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
 
     akyoData.forEach(akyo => {
         const row = [
-            akyo.id,
-            akyo.appearance,
-            akyo.nickname,
-            akyo.avatarName,
-            akyo.attribute,
-            akyo.notes.includes(',') || akyo.notes.includes('\n') ? `"${akyo.notes}"` : akyo.notes,
-            akyo.creator,
-            akyo.avatarUrl
+            csvEscape(akyo.id),
+            csvEscape(akyo.appearance),
+            csvEscape(akyo.nickname),
+            csvEscape(akyo.avatarName),
+            csvEscape(akyo.attribute),
+            csvEscape(akyo.notes),
+            csvEscape(akyo.creator),
+            csvEscape(akyo.avatarUrl)
         ].join(',');
         csvContent += row + '\n';
     });
