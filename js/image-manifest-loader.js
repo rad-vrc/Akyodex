@@ -2,12 +2,79 @@
 // WebP/PNG/JPG を含む画像マニフェストをロードして、先頭3桁ID => URL/ファイル名のマップを作成
 
 (function(){
+  function extractImageEntryInfo(rawValue, explicitId){
+    const value = String(rawValue || '');
+    const noQuery = value.split('?')[0];
+    const parts = noQuery.split('/');
+    const filename = parts[parts.length - 1] || '';
+    let id = '';
+    let versionStr = '';
+    const match = filename.match(/^(\d{3})(?:_([0-9a-z]+))?/i);
+    if (match){
+      id = match[1];
+      if (match[2]){
+        versionStr = match[2].toLowerCase();
+      }
+    }
+    if (explicitId){
+      id = String(explicitId).padStart(3, '0');
+    }
+    let versionNum = null;
+    if (versionStr){
+      const parsed = parseInt(versionStr, 36);
+      if (!Number.isNaN(parsed)){
+        versionNum = parsed;
+      }
+    }
+    return {
+      raw: value,
+      id,
+      hasVersion: Boolean(versionStr),
+      versionStr,
+      versionNum,
+    };
+  }
+
+  function shouldPreferCandidate(currentInfo, candidateInfo){
+    if (!candidateInfo || !candidateInfo.id) return false;
+    if (!currentInfo || !currentInfo.id) return true;
+    if (candidateInfo.id !== currentInfo.id) return false;
+
+    if (candidateInfo.hasVersion && !currentInfo.hasVersion) return true;
+    if (!candidateInfo.hasVersion && currentInfo.hasVersion) return false;
+
+    if (candidateInfo.hasVersion && currentInfo.hasVersion){
+      if (candidateInfo.versionNum !== null && currentInfo.versionNum !== null){
+        if (candidateInfo.versionNum > currentInfo.versionNum) return true;
+        if (candidateInfo.versionNum < currentInfo.versionNum) return false;
+      } else if (candidateInfo.versionStr > currentInfo.versionStr){
+        return true;
+      } else if (candidateInfo.versionStr < currentInfo.versionStr){
+        return false;
+      }
+    }
+
+    return true; // デフォルトは候補を優先（最新を採用）
+  }
+
+  function updateManifestEntry(map, rawValue, explicitId){
+    const candidateInfo = extractImageEntryInfo(rawValue, explicitId);
+    if (!candidateInfo.id) return;
+    const currentRaw = map[candidateInfo.id];
+    if (!currentRaw){
+      map[candidateInfo.id] = candidateInfo.raw;
+      return;
+    }
+    const currentInfo = extractImageEntryInfo(currentRaw, candidateInfo.id);
+    if (shouldPreferCandidate(currentInfo, candidateInfo)){
+      map[candidateInfo.id] = candidateInfo.raw;
+    }
+  }
+
   function normalizeMapFromList(list){
     const map = {};
     (list || []).forEach((name) => {
-      const n = String(name || '');
-      const m = n.match(/^(\d{3})/);
-      if (m){ const id = m[1]; if (!map[id]) map[id] = n; }
+      updateManifestEntry(map, name);
     });
     return map;
   }
@@ -30,10 +97,20 @@
       } else if (Array.isArray(manifest.files)){
         map = normalizeMapFromList(manifest.files);
       } else if (manifest.map && typeof manifest.map === 'object'){
-        map = { ...manifest.map };
+        const temp = {};
+        Object.entries(manifest.map).forEach(([key, value]) => {
+          const id = String(key).padStart(3, '0');
+          updateManifestEntry(temp, value, id);
+        });
+        map = temp;
       } else if (manifest && typeof manifest === 'object'){
         // APIが { "001": "https://.../001.webp", ... } のようなプレーンマップを返す場合
-        map = { ...manifest };
+        const temp = {};
+        Object.entries(manifest).forEach(([key, value]) => {
+          const id = String(key).padStart(3, '0');
+          updateManifestEntry(temp, value, id);
+        });
+        map = temp;
       }
     }
 
@@ -46,7 +123,12 @@
         } else if (Array.isArray(manifest.files)){
           map = normalizeMapFromList(manifest.files);
         } else if (manifest.map && typeof manifest.map === 'object'){
-          map = { ...manifest.map };
+          const temp = {};
+          Object.entries(manifest.map).forEach(([key, value]) => {
+            const id = String(key).padStart(3, '0');
+            updateManifestEntry(temp, value, id);
+          });
+          map = temp;
         }
       }
     }
