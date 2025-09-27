@@ -327,10 +327,12 @@
                         <input
                             type="text"
                             id="searchInput"
-                            placeholder="  Akyoを検索... (名前、ID、属性など)"
-                            class="w-full px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Akyoを検索... (名前、ID、属性など)"
+                            class="w-full px-4 py-3 pl-14 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                         >
-                        <i class="fas fa-search absolute left-4 top-4 text-gray-400"></i>
+                        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </span>
                     </div>
                     <!-- クイックフィルター（検索ボックス直下に移動） -->
                     <div class="mt-2 flex flex-wrap gap-2 items-center" id="quickFilters">
