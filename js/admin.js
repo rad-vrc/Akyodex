@@ -12,6 +12,32 @@ let hasBoundActionDelegation = false;
 
 const FINDER_PREFILL_VALUE = 'Akyo';
 
+function getMaxAssignedAkyoId() {
+    const akyoIds = Array.isArray(akyoData)
+        ? akyoData
+            .map(item => {
+                const parsed = parseInt(item?.id, 10);
+                return Number.isFinite(parsed) ? parsed : null;
+            })
+            .filter((value) => value !== null)
+        : [];
+
+    const imageIds = imageDataMap && typeof imageDataMap === 'object'
+        ? Object.keys(imageDataMap)
+            .map(id => {
+                const parsed = parseInt(id, 10);
+                return Number.isFinite(parsed) ? parsed : null;
+            })
+            .filter((value) => value !== null)
+        : [];
+
+    if (akyoIds.length === 0 && imageIds.length === 0) {
+        return 0;
+    }
+
+    return Math.max(...akyoIds, ...imageIds, 0);
+}
+
 function escapeHtml(value) {
     if (value === null || value === undefined) {
         return '';
@@ -666,8 +692,8 @@ async function handleAddAkyo(event) {
 
     const formData = new FormData(event.target);
 
-    // ID自動採番（最大値+1）
-    const maxId = Math.max(0, ...akyoData.map(a => Number.parseInt(a.id, 10) || 0));
+    // ID自動採番（データ/画像の双方で最大値+1）
+    const maxId = getMaxAssignedAkyoId();
     const newId = String(maxId + 1).padStart(3, '0');
 
     const newAkyo = {
@@ -1492,7 +1518,7 @@ async function updateCSVFile() {
                 localStorage.setItem('akyoDataVersion', String(ver));
                 localStorage.setItem('akyoAssetsVersion', String(ver));
                 const link = (json && (json.commitUrl || json.fileHtmlUrl)) ? `\n${json.commitUrl || json.fileHtmlUrl}` : '';
-                showNotification(`GitHubに反映しました（最新データを取得します）${link}`, 'success');
+                showNotification(`GitHubに反映しました（最新データを取得します）${link}`, 'success', { linkify: true });
             }
         }
     } catch (e) {
@@ -1546,10 +1572,11 @@ function previewCSV(csvText) {
     const newData = parseCSV(csvText);
 
     // 現在の最大IDを取得して、新規IDを仮設定
-    let maxId = Math.max(0, ...akyoData.map(a => Number.parseInt(a.id, 10) || 0));
+    let maxId = getMaxAssignedAkyoId();
 
     const preview = document.getElementById('csvPreview');
     const table = document.getElementById('csvPreviewTable');
+    if (!preview || !table) return;
 
     // プレビュー表示（最初の5件）
     table.innerHTML = `
@@ -1605,7 +1632,7 @@ async function uploadCSV() {
     if (!window.pendingCSVData) return;
 
     // 現在の最大IDを取得
-    let maxId = Math.max(0, ...akyoData.map(a => Number.parseInt(a.id, 10) || 0));
+    let maxId = getMaxAssignedAkyoId();
 
     // CSVデータのIDを自動採番で上書き
     window.pendingCSVData.forEach(akyo => {
@@ -2152,20 +2179,21 @@ function searchForEdit() {
 }
 
 // 通知表示
-function showNotification(message, type = 'info') {
+function showNotification(message, type = 'info', opts = {}) {
+    const { linkify = false } = opts;
     let container = document.getElementById('notificationContainer');
     if (!container) {
         container = document.createElement('div');
         container.id = 'notificationContainer';
         container.className = 'fixed top-20 right-4 flex flex-col items-end gap-2 z-50';
-        container.setAttribute('role', 'region');
-        container.setAttribute('aria-live', 'polite');
         document.body.appendChild(container);
     }
+    container.setAttribute('role', 'region');
+    container.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
 
     const notification = document.createElement('div');
     notification.className = 'px-6 py-3 rounded-lg shadow-lg transition-all transform translate-x-0 text-white bg-blue-500';
-    notification.setAttribute('role', 'status');
+    notification.setAttribute('role', type === 'error' ? 'alert' : 'status');
 
     if (type === 'success') {
         notification.classList.remove('bg-blue-500');
@@ -2186,14 +2214,33 @@ function showNotification(message, type = 'info') {
                 ? 'fa-exclamation-triangle'
                 : 'fa-info-circle';
 
-    const safeMessage = escapeHtml(message);
+    const row = document.createElement('div');
+    row.className = 'flex items-center';
+    const icon = document.createElement('i');
+    icon.className = `fas ${iconClass} mr-2`;
+    row.appendChild(icon);
 
-    notification.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${iconClass} mr-2"></i>
-            ${safeMessage}
-        </div>
-    `;
+    const text = String(message ?? '');
+    if (linkify) {
+        const parts = text.split(/(https?:\/\/[^\s]+)/g);
+        parts.forEach(part => {
+            if (/^https?:\/\//.test(part)) {
+                const anchor = document.createElement('a');
+                anchor.href = part;
+                anchor.target = '_blank';
+                anchor.rel = 'noopener noreferrer';
+                anchor.className = 'underline';
+                anchor.textContent = part;
+                row.appendChild(anchor);
+            } else if (part) {
+                row.appendChild(document.createTextNode(part));
+            }
+        });
+    } else {
+        row.appendChild(document.createTextNode(text));
+    }
+
+    notification.appendChild(row);
 
     container.appendChild(notification);
 
