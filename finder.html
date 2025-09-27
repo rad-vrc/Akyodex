@@ -70,15 +70,15 @@
                 <p class="text-gray-600 text-sm">Akyoワードを入力してファインダー機能にアクセス</p>
             </div>
 
-            <form onsubmit="handleLogin(event)">
+            <form id="finderLoginForm">
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Akyoワード</label>
-                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Akyoワードを入力" required>
+                    <input type="password" id="passwordInput" name="password" autocomplete="current-password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Akyoワードを入力" required>
                 </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
                     <i class="fas fa-sign-in-alt mr-2"></i> ログイン
                 </button>
-                <div id="loginError" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+                <div id="loginError" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm" role="alert" aria-live="assertive">
                     <i class="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません
                 </div>
             </form>

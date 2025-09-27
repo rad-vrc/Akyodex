@@ -186,15 +186,17 @@ function handleAdminActionClick(event) {
 
 // イベントリスナー設定
 function setupEventListeners() {
+    const useCustomCropper = !!document.getElementById('cropContainer');
+
     // ログインフォーム
-    const loginForm = document.querySelector('#loginScreen form');
+    const loginForm = document.getElementById('finderLoginForm') || document.querySelector('#loginScreen form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
 
     // 画像入力
     const imageInput = document.getElementById('imageInput');
-    if (imageInput) {
+    if (imageInput && !useCustomCropper) {
         imageInput.addEventListener('change', handleImageSelect);
     }
 
@@ -225,9 +227,13 @@ function setupEventListeners() {
 
 // ドラッグ&ドロップ設定
 function setupDragDrop() {
+    const useCustomCropper = !!document.getElementById('cropContainer');
+
     // 画像ドロップゾーン
     const imageDropZone = document.getElementById('imageDropZone');
-    setupDropZone(imageDropZone, handleImageDrop);
+    if (!useCustomCropper) {
+        setupDropZone(imageDropZone, handleImageDrop);
+    }
 
     // CSV ドロップゾーン
     const csvDropZone = document.getElementById('csvDropZone');
