@@ -706,7 +706,12 @@ function setupEventListeners() {
     const detailModal = document.getElementById('detailModal');
     if (detailModal) {
         detailModal.addEventListener('click', (e) => {
-            if (e.target.id === 'detailModal') closeModal();
+            const modalContentContainer = detailModal.querySelector('.bg-white');
+            if (!modalContentContainer) return;
+            const clickedOutside = !modalContentContainer.contains(e.target);
+            if (clickedOutside) {
+                closeModal();
+            }
         });
     }
 }
