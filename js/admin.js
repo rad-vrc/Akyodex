@@ -841,16 +841,49 @@ function handleEditImageSelect(event, akyoId) {
     reader.readAsDataURL(file);
 }
 
-// 編集用 画像アップロード
-async function uploadEditImage(akyoId) {
+// 編集用 画像同期（ローカル保存 + 公開アップロード）
+async function syncPendingEditImage(akyoId) {
     const pendingMap = window.__pendingEditImages || {};
     window.__pendingEditImages = pendingMap;
     const dataUrl = pendingMap[akyoId];
-    if (!dataUrl) { showNotification('画像が選択されていません', 'warning'); return; }
-    if (!adminSessionToken) { showNotification('認証が無効です。再度ログインしてください。', 'error'); return; }
+
+    if (!dataUrl) {
+        return { hasPending: false };
+    }
+
+    // まずはローカルストレージ系へ保存
+    try {
+        if (window.saveSingleImage) {
+            await window.saveSingleImage(akyoId, dataUrl);
+        } else {
+            imageDataMap[akyoId] = dataUrl;
+            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        }
+    } catch (e) {
+        throw new Error(`ローカル保存に失敗しました: ${e?.message || e}`);
+    }
+
+    const preview = document.getElementById(`editImagePreview-${akyoId}`);
+    if (preview) {
+        preview.src = dataUrl;
+        preview.style.display = '';
+    }
+
+    if (typeof updateImageGallery === 'function') {
+        try { updateImageGallery(); } catch (_) {}
+    }
+
+    if (!adminSessionToken) {
+        return {
+            hasPending: true,
+            uploaded: false,
+            warning: '画像アップロードには再ログインが必要です',
+        };
+    }
+
+    const akyo = akyoData.find(a => a.id === akyoId) || {};
 
     try {
-        const akyo = akyoData.find(a => a.id === akyoId) || {};
         await uploadAkyoOnline({
             id: akyoId,
             name: akyo.nickname || akyo.avatarName || '',
@@ -860,22 +893,10 @@ async function uploadEditImage(akyoId) {
             adminPassword: adminSessionToken,
             dataUrl,
         });
-
-        const preview = document.getElementById(`editImagePreview-${akyoId}`);
-        if (preview) {
-            preview.src = dataUrl;
-            preview.style.display = '';
-        }
-
-        if (typeof updateImageGallery === 'function') {
-            try { updateImageGallery(); } catch (_) {}
-        }
-
         delete pendingMap[akyoId];
-        showNotification(`Akyo #${akyoId} の画像をアップロードしました`, 'success');
+        return { hasPending: true, uploaded: true };
     } catch (e) {
-        console.error('uploadEditImage failed', e);
-        showNotification('アップロードエラー: ' + (e?.message || e), 'error');
+        throw new Error(`公開アップロードに失敗しました: ${e?.message || e}`);
     }
 }
 
@@ -903,8 +924,6 @@ async function removeImageForId(akyoId) {
 
 // グローバル公開
 window.handleEditImageSelect = handleEditImageSelect;
-window.uploadEditImage = uploadEditImage;
-window.saveEditImage = uploadEditImage;
 window.removeImageForId = removeImageForId;
 
 // 画像ドロップ処理
@@ -1021,10 +1040,9 @@ function editAkyo(akyoId) {
                 <div class="flex items-center gap-3">
                     <img id="editImagePreview-${akyoId}" src="${imageDataMap[akyo.id] || (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : '')}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
                     <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${akyoId}')" class="text-sm" />
-                    <button type="button" onclick="uploadEditImage('${akyoId}')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">画像をアップロード</button>
                     <button type="button" onclick="removeImageForId('${akyoId}')" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
-                <p class="text-xs text-gray-500 mt-1">アップロードすると公開環境の画像が更新されます。</p>
+                <p class="text-xs text-gray-500 mt-1">「更新する」を押すと画像も公開環境へ反映されます。</p>
             </div>
 
             <button type="submit" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:opacity-90">
@@ -1055,11 +1073,33 @@ async function handleUpdateAkyo(event, akyoId) {
         avatarUrl: formData.get('avatarUrl')
     };
 
-    await updateCSVFile();
+    try {
+        await updateCSVFile();
+    } catch (e) {
+        console.error('updateCSVFile failed', e);
+        showNotification('更新内容の保存に失敗しました', 'error');
+        return;
+    }
+
+    let messageSuffix = '';
+    try {
+        const imageResult = await syncPendingEditImage(akyoId);
+        if (imageResult?.hasPending) {
+            if (imageResult.uploaded) {
+                messageSuffix = '（画像も更新されました）';
+            } else if (imageResult.warning) {
+                messageSuffix = `（画像アップロードは未完了: ${imageResult.warning}）`;
+            }
+        }
+    } catch (e) {
+        console.error('syncPendingEditImage failed', e);
+        showNotification(`Akyo #${akyoId} の画像更新に失敗しました: ${e.message || e}`, 'error');
+        return;
+    }
 
     closeEditModal();
-    showNotification(`Akyo #${akyoId} を更新しました`, 'success');
     updateEditList();
+    showNotification(`Akyo #${akyoId} を更新しました${messageSuffix}`, 'success');
 }
 
 // グローバルスコープに公開
