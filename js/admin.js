@@ -568,12 +568,15 @@ async function handleAddAkyo(event) {
     // CSV更新
     await updateCSVFile();
 
+    let latestImageDataUrl = null;
+
     // トリミングした画像を保存
     try {
         if (window.generateCroppedImage) {
             const croppedImage = await window.generateCroppedImage();
             if (croppedImage) {
                 imageDataMap[newAkyo.id] = croppedImage;
+                latestImageDataUrl = croppedImage;
 
                 // IndexedDBに保存を試みる
                 try {
@@ -593,6 +596,7 @@ async function handleAddAkyo(event) {
             const imagePreview = document.querySelector('#cropImage');
             if (imagePreview && imagePreview.src && imagePreview.src !== window.location.href) {
                 imageDataMap[newAkyo.id] = imagePreview.src;
+                latestImageDataUrl = imagePreview.src;
 
                 try {
                     if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
@@ -620,19 +624,24 @@ async function handleAddAkyo(event) {
                 showNotification('認証が無効です。再度ログインしてください。', 'error');
                 return;
             }
-            if (fileObj) {
-                await uploadAkyoOnline({
+            if (fileObj || latestImageDataUrl) {
+                const result = await uploadAkyoOnline({
                     id: newAkyo.id,
                     name: newAkyo.nickname || newAkyo.avatarName || '',
                     type: newAkyo.attribute || '',
                     desc: newAkyo.notes || '',
                     file: fileObj,
+                    dataUrl: latestImageDataUrl,
                     adminPassword,
                 });
+                const uploadedId = result?.id || newAkyo.id;
+                showNotification(`Akyo #${uploadedId} の画像を公開環境にアップロードしました`, 'success');
             }
         }
     } catch (e) {
         console.warn('オンラインアップロード失敗（ローカル保存は完了）:', e);
+        const message = e && e.message ? e.message : 'オンラインアップロードに失敗しました';
+        showNotification(`Akyo #${newAkyo.id} の画像アップロードに失敗しました: ${message}`, 'error');
     }
 
     // フォームリセット
@@ -877,41 +886,6 @@ window.prepareWebpFileForUpload = prepareWebpFileForUpload;
 window.uploadAkyoOnline = uploadAkyoOnline;
 
 // フォームから直接オンライン登録（パスワード欄＋既存入力値を使用）
-async function uploadAkyoOnlineFromForm() {
-    try {
-        const idDisplay = document.getElementById('nextIdDisplay');
-        const imageInput = document.getElementById('imageInput');
-        const passInput = document.getElementById('adminPasswordOnline');
-        const nameInput = document.querySelector('input[name="nickname"]') || { value: '' };
-        const avatarNameInput = document.querySelector('input[name="avatarName"]') || { value: '' };
-        const typeInput = document.querySelector('input[name="attribute"]') || { value: '' };
-        const descInput = document.querySelector('textarea[name="notes"]') || { value: '' };
-
-        const displayText = idDisplay && idDisplay.value ? idDisplay.value.replace(/^#/,'') : '';
-        const id = displayText || (akyoData.length > 0 ? String(Math.max(...akyoData.map(a=>parseInt(a.id)||0))+1).padStart(3,'0') : '001');
-        const file = imageInput && imageInput.files && imageInput.files[0] ? imageInput.files[0] : null;
-        const adminPassword = passInput && passInput.value ? passInput.value : '';
-        if (!id || !file || !adminPassword) { showNotification('ID・画像・パスワードを入力してください', 'warning'); return; }
-
-        const result = await uploadAkyoOnline({
-            id,
-            name: nameInput.value || avatarNameInput.value || '',
-            type: typeInput.value || '',
-            desc: descInput.value || '',
-            file,
-            adminPassword,
-        });
-
-        try { if (window.loadImagesManifest) await window.loadImagesManifest(); } catch(_){ }
-        showNotification(`オンライン登録完了: #${result.id}`, 'success');
-    } catch(e) {
-        console.error(e);
-        showNotification('オンライン登録に失敗しました', 'error');
-    }
-}
-
-window.uploadAkyoOnlineFromForm = uploadAkyoOnlineFromForm;
-
 // 画像選択処理
 function handleImageSelect(event) {
     const file = event.target.files[0];
@@ -988,7 +962,7 @@ async function syncPendingEditImage(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId) || {};
 
     try {
-        await uploadAkyoOnline({
+        const result = await uploadAkyoOnline({
             id: akyoId,
             name: akyo.nickname || akyo.avatarName || '',
             type: akyo.attribute || '',
@@ -998,6 +972,8 @@ async function syncPendingEditImage(akyoId) {
             dataUrl,
         });
         delete pendingMap[akyoId];
+        const uploadedId = result?.id || akyoId;
+        showNotification(`Akyo #${uploadedId} の画像を公開環境にアップロードしました`, 'success');
         return { hasPending: true, uploaded: true };
     } catch (e) {
         throw new Error(`公開アップロードに失敗しました: ${e?.message || e}`);
@@ -1984,35 +1960,53 @@ function searchForEdit() {
 
 // 通知表示
 function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all transform translate-x-0`;
-
-    switch (type) {
-        case 'success':
-            notification.className += ' bg-green-500 text-white';
-            break;
-        case 'error':
-            notification.className += ' bg-red-500 text-white';
-            break;
-        case 'warning':
-            notification.className += ' bg-yellow-500 text-white';
-            break;
-        default:
-            notification.className += ' bg-blue-500 text-white';
+    let container = document.getElementById('notificationContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notificationContainer';
+        container.className = 'fixed top-20 right-4 flex flex-col items-end gap-2 z-50';
+        document.body.appendChild(container);
     }
+
+    const notification = document.createElement('div');
+    notification.className = 'px-6 py-3 rounded-lg shadow-lg transition-all transform translate-x-0 text-white bg-blue-500';
+
+    if (type === 'success') {
+        notification.classList.remove('bg-blue-500');
+        notification.classList.add('bg-green-500');
+    } else if (type === 'error') {
+        notification.classList.remove('bg-blue-500');
+        notification.classList.add('bg-red-500');
+    } else if (type === 'warning') {
+        notification.classList.remove('bg-blue-500');
+        notification.classList.add('bg-yellow-500');
+    }
+
+    const iconClass = type === 'success'
+        ? 'fa-check-circle'
+        : type === 'error'
+            ? 'fa-exclamation-circle'
+            : type === 'warning'
+                ? 'fa-exclamation-triangle'
+                : 'fa-info-circle';
 
     notification.innerHTML = `
         <div class="flex items-center">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i>
+            <i class="fas ${iconClass} mr-2"></i>
             ${message}
         </div>
     `;
 
-    document.body.appendChild(notification);
+    container.appendChild(notification);
 
     setTimeout(() => {
         notification.style.transform = 'translateX(400px)';
-        setTimeout(() => notification.remove(), 300);
+        setTimeout(() => {
+            notification.remove();
+            if (!container.hasChildNodes()) {
+                container.remove();
+            }
+        }, 300);
     }, 3000);
 }
 
