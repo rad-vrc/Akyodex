@@ -38,10 +38,10 @@
     --attribute-chip-border: rgba(102, 217, 165, 0.35);
 
     /* 重複チェックボタン */
-    --duplicate-accent: #7c3aed;
-    --duplicate-accent-strong: #5b21b6;
-    --duplicate-accent-soft: rgba(124, 58, 237, 0.14);
-    --duplicate-accent-hover: rgba(124, 58, 237, 0.22);
+    --duplicate-accent: #f97316;
+    --duplicate-accent-strong: #c2410c;
+    --duplicate-accent-soft: rgba(249, 115, 22, 0.18);
+    --duplicate-accent-hover: rgba(249, 115, 22, 0.26);
 }
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
@@ -261,9 +261,9 @@ button, .btn {
 
 .duplicate-check-button {
     border: 1px solid var(--duplicate-accent);
-    background: linear-gradient(135deg, var(--duplicate-accent-soft), rgba(124, 58, 237, 0.05));
+    background: linear-gradient(135deg, var(--duplicate-accent-soft), rgba(249, 115, 22, 0.08));
     color: var(--duplicate-accent-strong);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.16);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.18);
 }
 
 .duplicate-check-button:hover,
@@ -277,9 +277,9 @@ button, .btn {
 }
 
 .duplicate-check-button[disabled] {
-    background: rgba(124, 58, 237, 0.08);
-    color: rgba(91, 33, 182, 0.55);
-    border-color: rgba(124, 58, 237, 0.35);
+    background: rgba(249, 115, 22, 0.1);
+    color: rgba(194, 65, 12, 0.6);
+    border-color: rgba(249, 115, 22, 0.32);
     box-shadow: none;
 }
 
