@@ -134,14 +134,17 @@
         <!-- タブナビゲーション -->
         <div class="bg-white rounded-xl shadow-lg mb-6">
             <div class="flex border-b">
-                <button onclick="switchTab('add')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-red-500" data-tab="add">
-                    <i class="fas fa-plus-circle mr-2"></i> 新規登録
+                <button onclick="switchTab('add')" class="tab-btn tab-active px-6 py-4 font-medium text-gray-700" data-tab="add">
+                    <i class="fas fa-plus-circle"></i>
+                    新規登録
                 </button>
-                <button onclick="switchTab('edit')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-transparent" data-tab="edit">
-                    <i class="fas fa-edit mr-2"></i> 編集・削除
+                <button onclick="switchTab('edit')" class="tab-btn px-6 py-4 font-medium text-gray-700" data-tab="edit">
+                    <i class="fas fa-edit"></i>
+                    編集・削除
                 </button>
-                <button onclick="switchTab('tools')" class="tab-btn px-6 py-4 font-medium text-gray-700 hover:text-red-600 border-b-2 border-transparent" data-tab="tools">
-                    <i class="fas fa-tools mr-2"></i> ツール
+                <button onclick="switchTab('tools')" class="tab-btn px-6 py-4 font-medium text-gray-700" data-tab="tools">
+                    <i class="fas fa-tools"></i>
+                    ツール
                 </button>
             </div>
         </div>
@@ -149,47 +152,82 @@
         <!-- 新規登録タブ -->
         <div id="addTab" class="tab-content bg-white rounded-xl shadow-lg p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-plus-circle text-red-500 mr-2"></i> 新しいAkyoを登録
+                <i class="fas fa-plus-circle admin-accent-text mr-2"></i> 新しいAkyoを登録
             </h2>
 
             <form onsubmit="handleAddAkyo(event)" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">ID（自動採番）</label>
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="nextIdDisplay"
-                                   class="flex-1 px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
-                                   disabled>
-                            <span class="text-sm text-gray-500">自動設定</span>
-                        </div>
+                        <input type="text" id="nextIdDisplay"
+                               class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
+                               disabled>
+                        <p class="mt-2 text-xs text-gray-500 leading-snug">
+                            画像IDの自動割り当てはローカルに保存された画像を優先的に参照し、未使用の番号（CSV未登録の画像も含む）から決定されます。
+                        </p>
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
-                        <input type="text" name="nickname"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                        <div class="flex items-center justify-between gap-2">
+                            <label class="block text-gray-700 text-sm font-medium">通称</label>
+                            <button type="button" id="checkNicknameDuplicateButton"
+                                    class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                                <i class="fas fa-search"></i>
+                                同じ通称が既に登録されているか確認
+                            </button>
+                        </div>
+                        <input type="text" name="nickname" id="addNicknameInput"
+                               class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                                placeholder="例: チョコミントAkyo">
+                        <p id="nicknameDuplicateStatus" class="mt-2 text-sm hidden" data-status-base-class="mt-2 text-sm" aria-live="polite"></p>
                     </div>
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
-                        <input type="text" name="avatarName" required
+                        <input type="text" name="avatarName" id="addAvatarNameInput" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                                placeholder="例: Akyo origin">
+                        <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                            <button type="button" id="checkAvatarDuplicateButton"
+                                    class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                                <i class="fas fa-search"></i>
+                                同じアバター名が既に登録されているか確認
+                            </button>
+                            <p id="avatarDuplicateStatus" class="text-sm hidden mt-1 sm:mt-0 sm:ml-2" data-status-base-class="text-sm mt-1 sm:mt-0 sm:ml-2" aria-live="polite"></p>
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-gray-700 text-sm font-medium mb-1">属性（カンマ区切り）</label>
-                        <input type="text" name="attribute" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                               placeholder="例: チョコミント類,ギミック">
+                        <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
+                        <div class="space-y-2">
+                            <button type="button"
+                                    class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
+                                    data-attribute-target="add">
+                                <i class="fas fa-tags"></i>
+                                属性を管理
+                            </button>
+                            <input type="hidden" name="attribute" id="addAttributeInput">
+                            <div class="border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
+                                <p id="addAttributePlaceholder" class="text-sm text-gray-500">
+                                    選択された属性がここに表示されます
+                                </p>
+                                <div id="addAttributeList"
+                                     class="hidden mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1"
+                                     role="list"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">作者</label>
-                        <input type="text" name="creator" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                               placeholder="例: ugai">
+                        <div class="relative" data-author-autocomplete>
+                            <input type="text" name="creator" id="addCreatorInput" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                                   placeholder="例: ugai" autocomplete="off">
+                            <div id="addCreatorSuggestions"
+                                 class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-30"
+                                 role="listbox" aria-label="既存の作者から選択" aria-hidden="true"></div>
+                        </div>
                     </div>
 
                     <div>
@@ -385,6 +423,78 @@
         </div>
     </div>
 
+    <!-- 属性管理モーダル -->
+    <div id="attributeModal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="attributeModalTitle">
+        <div class="absolute inset-0 bg-black/40" data-attribute-overlay></div>
+        <div class="relative z-10 flex min-h-full items-center justify-center px-4 py-8 sm:py-12">
+            <div class="w-full max-w-3xl">
+                <div class="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[calc(100vh-3rem)] sm:max-h-[calc(100vh-5rem)]">
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                        <h3 id="attributeModalTitle" class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-tags text-green-500"></i>
+                            属性を管理
+                        </h3>
+                        <button type="button" class="text-gray-500 hover:text-gray-700" data-attribute-close>
+                        <span class="sr-only">閉じる</span>
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="px-6 py-5 space-y-5 flex-1 overflow-y-auto">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="search" id="attributeSearchInput"
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                   placeholder="属性を検索">
+                        </div>
+                        <button type="button" id="attributeCreateStart"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-green-100 text-green-800 hover:bg-green-200 transition-colors">
+                            <i class="fas fa-plus-circle"></i>
+                            新しい属性を作成
+                        </button>
+                    </div>
+
+                    <div id="attributeCreateForm" class="hidden bg-green-50 border border-green-200 rounded-xl p-4 space-y-3">
+                        <div>
+                            <label for="attributeNewInput" class="block text-sm font-medium text-green-900 mb-1">新しい属性名</label>
+                            <input type="text" id="attributeNewInput"
+                                   class="w-full px-3 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                   placeholder="例: チョコミント類">
+                        </div>
+                        <div class="flex items-center justify-end gap-2">
+                            <button type="button" id="attributeCreateCancel"
+                                    class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">
+                                キャンセル
+                            </button>
+                            <button type="button" id="attributeCreateConfirm"
+                                    class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600">
+                                追加する
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-2xl">
+                        <div id="attributeListScroll" class="max-h-72 overflow-y-auto pr-1" tabindex="0">
+                            <div id="attributeListGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3"></div>
+                        </div>
+                        <p id="attributeEmptyMessage" class="hidden px-4 pb-4 text-sm text-gray-500">一致する属性がありません。</p>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+                    <button type="button" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100" data-attribute-close>
+                        キャンセル
+                    </button>
+                    <button type="button" id="attributeApplyButton"
+                            class="px-5 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold shadow hover:opacity-90 transition-opacity">
+                        選択を決定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/image-manifest-loader.js"></script>
     <script src="js/image-loader.js"></script>
     <script>
@@ -392,6 +502,7 @@
             if (window.loadAkyoManifest) { window.loadAkyoManifest().catch(() => {}); }
         });
     </script>
+    <script src="js/attribute-manager.js"></script>
     <script src="js/admin.js"></script>
 
     <script>
