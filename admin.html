@@ -199,27 +199,25 @@
 
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
-                        <div class="space-y-2">
-                            <button type="button"
-                                    class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
-                                    data-attribute-open
-                                    data-attribute-target="add"
-                                    data-target-input="attribute"
-                                    data-chips-target="addAttributeList"
-                                    data-placeholder-target="addAttributePlaceholder">
-                                <i class="fas fa-tags"></i>
-                                属性を選ぶ
-                            </button>
+                        <div class="flex flex-col sm:flex-row sm:items-start gap-3">
                             <input type="hidden" name="attribute" id="addAttributeInput">
-                            <div class="border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
-                                <p id="addAttributePlaceholder" class="text-sm text-gray-500" data-empty-text="選択された属性がここに表示されます">
-                                    選択された属性がここに表示されます
-                                </p>
-                                <div id="addAttributeList"
+                            <div class="flex-1 border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
+                                <p id="attributePlaceholderAdd" class="text-sm text-gray-500" data-empty-text="未選択">未選択</p>
+                                <div id="attributeChips-add"
                                      class="hidden mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1"
                                      role="list"></div>
                             </div>
+                            <button type="button"
+                                    class="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 text-sm"
+                                    data-attribute-open
+                                    data-attribute-target="add"
+                                    data-target-input="attribute"
+                                    data-chips-target="attributeChips-add"
+                                    data-placeholder-target="attributePlaceholderAdd">
+                                属性を選ぶ
+                            </button>
                         </div>
+                        <p class="text-xs text-gray-500 mt-1">※ 属性はポップアップからのみ追加/選択できます。</p>
                     </div>
 
                     <div>

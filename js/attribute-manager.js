@@ -201,11 +201,11 @@
 
         function ensureBaseFieldRegistered() {
             const hiddenInput = document.getElementById('addAttributeInput');
-            const badgeContainer = document.getElementById('addAttributeList');
-            const placeholder = document.getElementById('addAttributePlaceholder');
+            const badgeContainer = document.getElementById('attributeChips-add');
+            const placeholder = document.getElementById('attributePlaceholderAdd');
             const button = document.querySelector('[data-attribute-target="add"]');
 
-            if (!hiddenInput || !badgeContainer || !placeholder || !button) {
+            if (!hiddenInput || !badgeContainer || !button) {
                 return false;
             }
 
@@ -213,8 +213,10 @@
             if (existing &&
                 existing.hiddenInput === hiddenInput &&
                 existing.badgeContainer === badgeContainer &&
-                existing.placeholder === placeholder &&
                 existing.button === button) {
+                if (placeholder) {
+                    existing.placeholder = placeholder;
+                }
                 ensureFallbackSelection(existing.selected);
                 syncFieldValue('add');
                 return true;
