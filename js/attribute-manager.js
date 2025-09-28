@@ -43,6 +43,7 @@
             searchQuery: '',
             isInitialized: false,
             lastTriggerButton: null,
+            restoreScrollLock: null,
             dom: {
                 modal: null,
                 overlay: null,
@@ -361,6 +362,44 @@
             }
         }
 
+        function lockScrollToModal() {
+            if (typeof document === 'undefined') {
+                return () => {};
+            }
+
+            const body = document.body;
+            const root = document.documentElement;
+
+            const previous = {
+                body: body ? body.style.overflow : '',
+                root: root ? root.style.overflow : '',
+            };
+
+            if (root) {
+                root.style.overflow = 'hidden';
+            }
+            if (body) {
+                body.style.overflow = 'hidden';
+            }
+
+            return () => {
+                if (root) {
+                    if (previous.root) {
+                        root.style.overflow = previous.root;
+                    } else {
+                        root.style.removeProperty('overflow');
+                    }
+                }
+                if (body) {
+                    if (previous.body) {
+                        body.style.overflow = previous.body;
+                    } else {
+                        body.style.removeProperty('overflow');
+                    }
+                }
+            };
+        }
+
         function openModal(fieldId) {
             if (!state.isInitialized || !state.dom.modal) return;
             const field = state.fields.get(fieldId);
@@ -371,6 +410,14 @@
             ensureFallbackSelection(state.modalSelection);
             state.searchQuery = '';
             state.lastTriggerButton = field.button || null;
+            if (typeof state.restoreScrollLock === 'function') {
+                try {
+                    state.restoreScrollLock();
+                } catch (_) {
+                    // ignore
+                }
+            }
+            state.restoreScrollLock = lockScrollToModal();
 
             if (state.dom.searchInput) {
                 state.dom.searchInput.value = '';
@@ -391,6 +438,13 @@
             if (!state.dom.modal) return;
             state.dom.modal.classList.add('hidden');
             state.dom.modal.setAttribute('aria-hidden', 'true');
+            if (typeof state.restoreScrollLock === 'function') {
+                try {
+                    state.restoreScrollLock();
+                } finally {
+                    state.restoreScrollLock = null;
+                }
+            }
             state.activeFieldId = null;
             state.modalSelection = [];
             state.searchQuery = '';

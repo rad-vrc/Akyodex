@@ -10,6 +10,8 @@ let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 let hasBoundActionDelegation = false;
 
+const DATA_READY_EVENT_NAME = 'akyo:data-ready';
+
 const FINDER_PREFILL_VALUE = 'Akyo';
 const DEFAULT_ATTRIBUTE_NAME = '未分類';
 
@@ -540,11 +542,35 @@ function refreshDerivedCollections() {
     rebuildCreatorSuggestionSource();
 }
 
+function announceAkyoDataReady() {
+    try {
+        const detail = { records: Array.isArray(akyoData) ? akyoData.slice() : [] };
+        document.dispatchEvent(new CustomEvent(DATA_READY_EVENT_NAME, { detail }));
+    } catch (error) {
+        console.debug('Failed to dispatch data-ready event', error);
+    }
+}
+
 function normalizeForDuplicateComparison(value) {
     if (typeof value !== 'string') {
         return '';
     }
-    return value.trim().toLocaleLowerCase('ja');
+
+    let normalized = value;
+    if (typeof normalized.normalize === 'function') {
+        try {
+            normalized = normalized.normalize('NFKC');
+        } catch (_) {
+            // 一部ブラウザではnormalizeが未対応のためフォールバック
+        }
+    }
+
+    normalized = normalized.replace(/[\s\u3000]+/g, ' ').trim();
+    if (!normalized) {
+        return '';
+    }
+
+    return normalized.toLocaleLowerCase('ja');
 }
 
 function findDuplicateIdsByField(fieldName, value, { excludeId } = {}) {
@@ -609,6 +635,24 @@ function attachDuplicateChecker({ button, input, status, field, texts, excludeId
     }
 
     const { empty, success, duplicatePrefix } = texts || {};
+
+    const disabledClasses = ['opacity-50', 'cursor-not-allowed'];
+    const applyButtonReadyState = (ready) => {
+        if (!ready) {
+            button.disabled = true;
+            button.setAttribute('aria-disabled', 'true');
+            button.classList.add(...disabledClasses);
+        } else {
+            button.disabled = false;
+            button.removeAttribute('aria-disabled');
+            button.classList.remove(...disabledClasses);
+        }
+    };
+
+    applyButtonReadyState(isAkyoDataReady);
+    if (!isAkyoDataReady) {
+        document.addEventListener(DATA_READY_EVENT_NAME, () => applyButtonReadyState(true), { once: true });
+    }
 
     const runCheck = () => {
         const rawValue = input.value || '';
@@ -1308,6 +1352,7 @@ async function loadAkyoData() {
         }
 
         isAkyoDataReady = true;
+        announceAkyoDataReady();
     } catch (error) {
         console.error('データ読み込みエラー:', error);
         // CSVが見つからない場合、LocalStorageを確認
@@ -1363,6 +1408,7 @@ async function loadAkyoData() {
         }
 
         isAkyoDataReady = true;
+        announceAkyoDataReady();
     }
 }
 
