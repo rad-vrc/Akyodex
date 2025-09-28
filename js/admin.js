@@ -11,6 +11,522 @@ let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 let hasBoundActionDelegation = false;
 
 const FINDER_PREFILL_VALUE = 'Akyo';
+const DEFAULT_ATTRIBUTE_NAME = '未分類';
+
+const attributeManagerApi = window.attributeManager;
+if (!attributeManagerApi) {
+    throw new Error('attributeManager module failed to load. Please ensure js/attribute-manager.js is loaded before js/admin.js');
+}
+
+attributeManagerApi.configure({
+    notify: (message, type = 'info', options) => showNotification(message, type, options),
+    confirmDelete: (message) => window.confirm(message),
+    getCurrentRole: () => currentUserRole,
+    canDelete: (meta, role) => {
+        const name = typeof meta?.name === 'string' ? meta.name.trim() : '';
+        if (name === DEFAULT_ATTRIBUTE_NAME) {
+            return false;
+        }
+        return meta?.isSession ? true : role === 'owner';
+    },
+    onDelete: handleAttributeDeletion,
+    onAttributesChanged: () => {
+        // No-op for now; hook reserved for future analytics or persistence triggers.
+    },
+});
+
+async function persistImage(akyoId, dataUrl, { backupToLocalStorage = true } = {}) {
+    if (!akyoId) {
+        throw new Error('persistImage requires a target ID');
+    }
+    if (!dataUrl) {
+        throw new Error('persistImage requires image data');
+    }
+
+    if (!imageDataMap || typeof imageDataMap !== 'object') {
+        imageDataMap = {};
+    }
+
+    const hadExistingEntry = Object.prototype.hasOwnProperty.call(imageDataMap, akyoId);
+    const previousDataUrl = imageDataMap[akyoId];
+    imageDataMap[akyoId] = dataUrl;
+
+    const revertCache = () => {
+        if (hadExistingEntry) {
+            imageDataMap[akyoId] = previousDataUrl;
+        } else {
+            delete imageDataMap[akyoId];
+        }
+    };
+
+    let persistedToIndexedDb = false;
+    let indexedDbError = null;
+
+    try {
+        if (window.saveSingleImage) {
+            await window.saveSingleImage(akyoId, dataUrl);
+            persistedToIndexedDb = true;
+        } else if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
+            await window.storageManager.init();
+            await window.storageManager.saveImage(akyoId, dataUrl);
+            persistedToIndexedDb = true;
+        }
+    } catch (error) {
+        indexedDbError = error;
+        console.debug('persistImage: indexed storage failed', akyoId, error);
+    }
+
+    if (indexedDbError && !persistedToIndexedDb) {
+        revertCache();
+        throw indexedDbError;
+    }
+
+    if (backupToLocalStorage) {
+        try {
+            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+        } catch (error) {
+            if (error && error.name === 'QuotaExceededError' && !persistedToIndexedDb) {
+                revertCache();
+                throw error;
+            }
+            console.debug('persistImage: localStorage backup failed', akyoId, error);
+        }
+    }
+
+    return { persistedToIndexedDb };
+}
+
+async function removeImagePersistent(akyoId) {
+    if (!akyoId) {
+        return;
+    }
+
+    let removalError = null;
+    let localBackupWarning = null;
+
+    if (window.deleteSingleImage) {
+        try {
+            await window.deleteSingleImage(akyoId);
+        } catch (error) {
+            removalError = error;
+        }
+    }
+
+    if (removalError) {
+        throw removalError;
+    }
+
+    if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
+        try {
+            await window.storageManager.init();
+            await window.storageManager.deleteImage(akyoId);
+        } catch (error) {
+            console.debug('removeImagePersistent: indexed storage delete failed', akyoId, error);
+        }
+    }
+
+    if (imageDataMap && typeof imageDataMap === 'object') {
+        delete imageDataMap[akyoId];
+    }
+
+    try {
+        localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
+    } catch (error) {
+        if (error && error.name === 'QuotaExceededError') {
+            localBackupWarning = error;
+        } else {
+            console.debug('removeImagePersistent: localStorage update failed', akyoId, error);
+        }
+    }
+
+    return { localBackupWarning };
+}
+
+const authorSuggestionState = {
+    authors: [],
+    isBound: false,
+    isOpen: false,
+    lastFilter: '',
+    handleDocumentClick: null,
+    hasDelegatedEvents: false,
+    boundInput: null,
+};
+
+function rebuildCreatorSuggestionSource() {
+    const uniqueCreators = new Set();
+    if (Array.isArray(akyoData)) {
+        akyoData.forEach((akyo) => {
+            const value = typeof akyo?.creator === 'string' ? akyo.creator.trim() : '';
+            if (value) {
+                uniqueCreators.add(value);
+            }
+        });
+    }
+
+    const sorted = Array.from(uniqueCreators);
+    sorted.sort((a, b) => a.localeCompare(b, 'ja'));
+
+    authorSuggestionState.authors = sorted;
+
+    if (authorSuggestionState.isOpen) {
+        renderCreatorSuggestions(authorSuggestionState.lastFilter);
+    }
+}
+
+function bindCreatorSuggestionInput() {
+    if (authorSuggestionState.isBound) {
+        return;
+    }
+
+    const input = document.getElementById('addCreatorInput');
+    const panel = document.getElementById('addCreatorSuggestions');
+
+    if (!input || !panel) {
+        return;
+    }
+
+    authorSuggestionState.boundInput = input;
+
+    const handleInput = () => {
+        if (authorSuggestionState.isOpen) {
+            renderCreatorSuggestions(input.value || '');
+        } else {
+            showCreatorSuggestions();
+        }
+    };
+
+    input.addEventListener('focus', showCreatorSuggestions);
+    input.addEventListener('click', showCreatorSuggestions);
+    input.addEventListener('input', handleInput);
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            hideCreatorSuggestions();
+        } else if (event.key === 'ArrowDown') {
+            const firstOption = panel.querySelector('button');
+            if (firstOption) {
+                event.preventDefault();
+                showCreatorSuggestions();
+                window.requestAnimationFrame(() => firstOption.focus());
+            }
+        }
+    });
+    input.addEventListener('blur', () => {
+        window.requestAnimationFrame(() => {
+            const active = document.activeElement;
+            if (!panel.contains(active)) {
+                hideCreatorSuggestions();
+            }
+        });
+    });
+
+    if (!authorSuggestionState.hasDelegatedEvents) {
+        const handlePanelPointer = (event) => {
+            const option = event.target.closest('[data-author-option]');
+            if (!option) {
+                return;
+            }
+            const targetInput = authorSuggestionState.boundInput;
+            if (!targetInput) {
+                return;
+            }
+            event.preventDefault();
+            const value = option.dataset.authorOption || '';
+            targetInput.value = value;
+            hideCreatorSuggestions();
+            targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+            window.requestAnimationFrame(() => targetInput.focus());
+        };
+
+        const handlePanelKeydown = (event) => {
+            if (event.key === 'Escape') {
+                hideCreatorSuggestions();
+                window.requestAnimationFrame(() => input.focus());
+                return;
+            }
+
+            if (event.key !== 'Enter' && event.key !== ' ') {
+                return;
+            }
+
+            const option = event.target.closest('[data-author-option]');
+            if (!option) {
+                return;
+            }
+
+            event.preventDefault();
+            const targetInput = authorSuggestionState.boundInput;
+            if (!targetInput) {
+                return;
+            }
+
+            const value = option.dataset.authorOption || '';
+            targetInput.value = value;
+            hideCreatorSuggestions();
+            window.requestAnimationFrame(() => targetInput.focus());
+        };
+
+        panel.addEventListener('mousedown', handlePanelPointer);
+        panel.addEventListener('keydown', handlePanelKeydown);
+        authorSuggestionState.hasDelegatedEvents = true;
+    }
+
+    authorSuggestionState.handleDocumentClick = (event) => {
+        if (!authorSuggestionState.isOpen) {
+            return;
+        }
+        if (event.target === input || panel.contains(event.target)) {
+            return;
+        }
+        hideCreatorSuggestions();
+    };
+
+    document.addEventListener('mousedown', authorSuggestionState.handleDocumentClick);
+
+    authorSuggestionState.isBound = true;
+}
+
+function showCreatorSuggestions() {
+    const input = document.getElementById('addCreatorInput');
+    const panel = document.getElementById('addCreatorSuggestions');
+    if (!input || !panel) {
+        return;
+    }
+
+    renderCreatorSuggestions(input.value || '');
+
+    panel.classList.remove('hidden');
+    panel.setAttribute('aria-hidden', 'false');
+    authorSuggestionState.isOpen = true;
+}
+
+function hideCreatorSuggestions() {
+    const panel = document.getElementById('addCreatorSuggestions');
+    if (!panel) {
+        return;
+    }
+
+    panel.classList.add('hidden');
+    panel.setAttribute('aria-hidden', 'true');
+    authorSuggestionState.isOpen = false;
+}
+
+function renderCreatorSuggestions(filterText = '') {
+    const panel = document.getElementById('addCreatorSuggestions');
+    const input = document.getElementById('addCreatorInput');
+
+    if (!panel || !input) {
+        return;
+    }
+
+    panel.setAttribute('role', 'listbox');
+    authorSuggestionState.lastFilter = filterText;
+
+    const normalized = filterText.trim().toLocaleLowerCase('ja');
+    const allAuthors = authorSuggestionState.authors || [];
+    const matches = normalized
+        ? allAuthors.filter((author) => author.toLocaleLowerCase('ja').includes(normalized))
+        : allAuthors;
+
+    panel.textContent = '';
+    panel.scrollTop = 0;
+
+    if (allAuthors.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'px-3 py-2 text-sm text-gray-500';
+        empty.textContent = '登録済みの作者がまだありません';
+        panel.appendChild(empty);
+        return;
+    }
+
+    if (matches.length === 0) {
+        const noMatch = document.createElement('p');
+        noMatch.className = 'px-3 py-2 text-sm text-gray-500';
+        noMatch.textContent = '一致する作者が見つかりません';
+        panel.appendChild(noMatch);
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    matches.forEach((author) => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'w-full text-left px-3 py-2 text-sm hover:bg-green-100 focus:bg-green-100 focus:outline-none';
+        option.setAttribute('role', 'option');
+        option.dataset.authorOption = author;
+        option.textContent = author;
+        fragment.appendChild(option);
+    });
+
+    panel.appendChild(fragment);
+}
+
+async function handleAttributeDeletion({ name, meta }) {
+    const parsed = attributeManagerApi.parseAttributeString(name);
+    const normalized = parsed.length > 0 ? parsed[0] : '';
+    if (!normalized) {
+        return false;
+    }
+
+    if (normalized === DEFAULT_ATTRIBUTE_NAME) {
+        showNotification(`属性「${DEFAULT_ATTRIBUTE_NAME}」は削除できません`, 'error');
+        return false;
+    }
+
+    let csvUpdated = false;
+    const touchedRecords = [];
+
+    if (!meta?.isSession && Array.isArray(akyoData) && akyoData.length > 0) {
+        akyoData.forEach((akyo) => {
+            const attributeValue = typeof akyo?.attribute === 'string' ? akyo.attribute : '';
+            const attrs = attributeManagerApi.parseAttributeString(attributeValue);
+            if (!attrs.includes(normalized)) {
+                return;
+            }
+
+            const filtered = attrs.filter(attr => attr !== normalized);
+            if (filtered.length === 0) {
+                filtered.push(DEFAULT_ATTRIBUTE_NAME);
+            }
+            const updatedValue = filtered.join(',');
+            if (updatedValue !== attributeValue) {
+                touchedRecords.push({ akyo, original: attributeValue, updated: updatedValue });
+            }
+        });
+
+        if (touchedRecords.length > 0) {
+            touchedRecords.forEach(({ akyo, updated }) => {
+                akyo.attribute = updated;
+            });
+
+            try {
+                await updateCSVFile();
+                csvUpdated = true;
+            } catch (error) {
+                touchedRecords.forEach(({ akyo, original }) => {
+                    akyo.attribute = original;
+                });
+                console.error('Failed to persist attribute removal', error);
+                showNotification('属性の削除内容を保存できませんでした', 'error');
+                refreshDerivedCollections();
+                return false;
+            }
+        }
+    }
+
+    if (csvUpdated) {
+        try {
+            updateEditList();
+        } catch (_) {
+            // 編集リストが未初期化の場合は無視
+        }
+    }
+
+    refreshDerivedCollections();
+
+    return { message: `属性「${normalized}」を削除しました`, type: 'success' };
+}
+
+function refreshDerivedCollections() {
+    attributeManagerApi.rebuildFromAkyoData(akyoData);
+    rebuildCreatorSuggestionSource();
+}
+
+function normalizeForDuplicateComparison(value) {
+    if (typeof value !== 'string') {
+        return '';
+    }
+    return value.trim().toLocaleLowerCase('ja');
+}
+
+function findDuplicateIdsByField(fieldName, value, { excludeId } = {}) {
+    const target = normalizeForDuplicateComparison(value);
+    if (!target || !Array.isArray(akyoData)) {
+        return [];
+    }
+
+    return akyoData.reduce((matches, entry) => {
+        if (!entry || (excludeId && entry.id === excludeId)) {
+            return matches;
+        }
+
+        const candidate = normalizeForDuplicateComparison(entry[fieldName]);
+        if (candidate && candidate === target) {
+            matches.push(entry.id);
+        }
+        return matches;
+    }, []);
+}
+
+function formatAkyoIdLabel(id) {
+    const numeric = Number.parseInt(id, 10);
+    if (Number.isFinite(numeric)) {
+        return `#${String(numeric).padStart(3, '0')}`;
+    }
+    return `#${String(id)}`;
+}
+
+function setDuplicateStatus(element, { message, tone }) {
+    if (!element) {
+        return;
+    }
+
+    const baseClass = element.dataset.statusBaseClass ? element.dataset.statusBaseClass.trim() : '';
+    if (!message) {
+        const hiddenClass = baseClass ? `${baseClass} hidden` : 'hidden';
+        element.className = hiddenClass;
+        element.textContent = '';
+        return;
+    }
+
+    let toneClass = 'text-gray-600';
+    if (tone === 'error') {
+        toneClass = 'text-red-600';
+    } else if (tone === 'success') {
+        toneClass = 'text-green-600';
+    }
+
+    const className = baseClass ? `${baseClass} ${toneClass}` : toneClass;
+    element.className = className;
+    element.textContent = message;
+}
+
+function clearDuplicateStatus(element) {
+    setDuplicateStatus(element, { message: '', tone: 'neutral' });
+}
+
+function attachDuplicateChecker({ button, input, status, field, texts, excludeId }) {
+    if (!button || !input || !status) {
+        return;
+    }
+
+    const { empty, success, duplicatePrefix } = texts || {};
+
+    const runCheck = () => {
+        const rawValue = input.value || '';
+        if (!rawValue.trim()) {
+            setDuplicateStatus(status, { message: empty || '値を入力してください', tone: 'neutral' });
+            return;
+        }
+
+        const matches = findDuplicateIdsByField(field, rawValue, { excludeId });
+        if (matches.length === 0) {
+            setDuplicateStatus(status, { message: success || '重複は見つかりませんでした', tone: 'success' });
+            return;
+        }
+
+        const formatted = matches.map(formatAkyoIdLabel).join('、');
+        setDuplicateStatus(status, {
+            message: `${duplicatePrefix || '重複が見つかりました: '}${formatted}`,
+            tone: 'error',
+        });
+    };
+
+    button.addEventListener('click', runCheck);
+
+    const resetHandler = () => clearDuplicateStatus(status);
+    input.addEventListener('input', resetHandler);
+    input.addEventListener('change', resetHandler);
+}
 
 function getMaxAssignedAkyoId() {
     const akyoIds = Array.isArray(akyoData)
@@ -51,6 +567,11 @@ function escapeHtml(value) {
         '`': '&#96;',
     };
     return String(value).replace(/[&<>"'`]/g, (char) => escapeMap[char] || char);
+}
+
+function escapeCsvValue(value) {
+    const str = value === null || value === undefined ? '' : String(value);
+    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
 }
 
 function loadFavoritesArray() {
@@ -152,6 +673,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupEventListeners();
     setupDragDrop();
+    attributeManagerApi.init();
 
     // DOMの検査（欠落は警告表示）
     verifyRequiredDom();
@@ -195,6 +717,11 @@ function hasUnsavedWork() {
 // ESCで編集モーダルを閉じる
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
+        if (attributeManagerApi.isModalOpen()) {
+            event.preventDefault();
+            attributeManagerApi.closeModal();
+            return;
+        }
         const modal = document.getElementById('editModal');
         if (modal && !modal.classList.contains('hidden')) {
             closeEditModal();
@@ -244,6 +771,8 @@ function setupEventListeners() {
         loginForm.addEventListener('submit', handleLogin);
     }
 
+    bindCreatorSuggestionInput();
+
     // トリミングUIの有無を検出
     const useCustomCropper = !!document.getElementById('cropContainer');
 
@@ -271,6 +800,30 @@ function setupEventListeners() {
         // 初期表示で全件を表示（空文字検索）
         setTimeout(() => searchForEdit(), 0);
     }
+
+    attachDuplicateChecker({
+        button: document.getElementById('checkNicknameDuplicateButton'),
+        input: document.getElementById('addNicknameInput'),
+        status: document.getElementById('nicknameDuplicateStatus'),
+        field: 'nickname',
+        texts: {
+            empty: '通称を入力してください',
+            success: '重複している通称はありません',
+            duplicatePrefix: '重複している通称が見つかりました: ',
+        },
+    });
+
+    attachDuplicateChecker({
+        button: document.getElementById('checkAvatarDuplicateButton'),
+        input: document.getElementById('addAvatarNameInput'),
+        status: document.getElementById('avatarDuplicateStatus'),
+        field: 'avatarName',
+        texts: {
+            empty: 'アバター名を入力してください',
+            success: '重複しているアバター名はありません',
+            duplicatePrefix: '重複しているアバター名が見つかりました: ',
+        },
+    });
 
     if (!hasBoundActionDelegation) {
         document.addEventListener('click', handleAdminActionClick);
@@ -517,6 +1070,8 @@ async function loadAkyoData() {
 
         console.debug(`データ読み込み完了: Akyo ${akyoData.length}件, 画像 ${Object.keys(imageDataMap).length}件`);
 
+        refreshDerivedCollections();
+
         // 各関数の実行前に要素の存在を確認
         if (document.getElementById('editList')) {
             updateEditList();
@@ -567,6 +1122,8 @@ async function loadAkyoData() {
 
         console.debug('CSVなし、画像データのみで動作');
 
+        refreshDerivedCollections();
+
         // 各関数の実行前に要素の存在を確認
         if (document.getElementById('editList')) {
             updateEditList();
@@ -583,18 +1140,29 @@ async function loadAkyoData() {
 // CSV解析（main.jsと同じロジック）
 function parseCSV(csvText) {
     // CRLF正規化
-    csvText = String(csvText).replace(/\r\n/g, '\n');
+    csvText = String(csvText).replace(/\r\n?/g, '\n');
     const data = [];
     let inQuotes = false;
     let field = '';
     let record = [];
     let lineIndex = 0;
-    const pushField = () => { record.push(field.trim()); field = ''; };
+    const pushField = () => { record.push(field); field = ''; };
     const pushRecord = () => {
         if (record.length > 0) {
             // ヘッダ行はスキップ
             if (lineIndex > 0) {
-                const values = record;
+                const rawValues = record;
+                const values = rawValues.map((val, index) => {
+                    if (val === null || val === undefined) {
+                        return '';
+                    }
+                    const str = String(val);
+                    // 備考欄（index 5）はトリムせずそのまま保持
+                    if (index === 5) {
+                        return str;
+                    }
+                    return str.trim();
+                });
                 if (values[0] && /^\d{3}$/.test(values[0])) {
                     const akyo = {
                         id: values[0] || '',
@@ -606,18 +1174,19 @@ function parseCSV(csvText) {
                         creator: '',
                         avatarUrl: ''
                     };
+                    const attributeSource = values[4] && values[4].trim() ? values[4] : DEFAULT_ATTRIBUTE_NAME;
                     if (values.length === 8) {
-                        akyo.attribute = values[4] || '未分類';
+                        akyo.attribute = attributeManagerApi.serializeAttributes(attributeSource);
                         akyo.notes = values[5] || '';
                         akyo.creator = values[6] || '不明';
                         akyo.avatarUrl = values[7] || '';
                     } else if (values.length > 8) {
                         akyo.avatarUrl = values[values.length - 1] || '';
                         akyo.creator = values[values.length - 2] || '不明';
-                        akyo.attribute = values[4] || '未分類';
+                        akyo.attribute = attributeManagerApi.serializeAttributes(attributeSource);
                         akyo.notes = values.slice(5, values.length - 2).join(',');
                     } else {
-                        akyo.attribute = values[4] || '未分類';
+                        akyo.attribute = attributeManagerApi.serializeAttributes(attributeSource);
                         akyo.notes = values[5] || '';
                         akyo.creator = values[6] || '不明';
                         akyo.avatarUrl = values[7] || '';
@@ -660,8 +1229,7 @@ function switchTab(tabName) {
 
     // すべてのタブボタンのスタイルをリセット
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-red-500');
-        btn.classList.add('border-transparent');
+        btn.classList.remove('tab-active');
     });
 
     // 選択されたタブを表示
@@ -681,8 +1249,7 @@ function switchTab(tabName) {
 
     const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
     if (targetBtn) {
-        targetBtn.classList.remove('border-transparent');
-        targetBtn.classList.add('border-red-500');
+        targetBtn.classList.add('tab-active');
     }
 
     if (tabName === 'add') {
@@ -706,7 +1273,14 @@ window.switchTab = switchTab;
 async function handleAddAkyo(event) {
     event.preventDefault();
 
+    if (!attributeManagerApi.hasSelection('add')) {
+        showNotification('属性を1つ以上選択してください', 'error');
+        return;
+    }
+
     const formData = new FormData(event.target);
+    const rawAttribute = formData.get('attribute');
+    const normalizedAttribute = attributeManagerApi.serializeAttributes(rawAttribute);
 
     // ID自動採番（データ/画像の双方で最大値+1）
     const maxId = getMaxAssignedAkyoId();
@@ -717,7 +1291,7 @@ async function handleAddAkyo(event) {
         appearance: '',
         nickname: formData.get('nickname'),
         avatarName: formData.get('avatarName'),
-        attribute: formData.get('attribute'),
+        attribute: normalizedAttribute,
         notes: formData.get('notes'),
         creator: formData.get('creator'),
         avatarUrl: formData.get('avatarUrl')
@@ -732,51 +1306,40 @@ async function handleAddAkyo(event) {
 
     // CSV更新
     await updateCSVFile();
+    refreshDerivedCollections();
 
     let latestImageDataUrl = null;
 
-    // トリミングした画像を保存
+    const persistNewImage = async (dataUrl) => {
+        if (!dataUrl) {
+            return;
+        }
+        latestImageDataUrl = dataUrl;
+        try {
+            await persistImage(newAkyo.id, dataUrl);
+        } catch (error) {
+            console.error('Image save error:', error);
+            if (error && error.name === 'QuotaExceededError') {
+                showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+            } else {
+                showNotification(`画像の保存に失敗しました: ${error?.message || error}`, 'error');
+            }
+        }
+    };
+
     try {
         if (window.generateCroppedImage) {
             const croppedImage = await window.generateCroppedImage();
-            if (croppedImage) {
-                imageDataMap[newAkyo.id] = croppedImage;
-                latestImageDataUrl = croppedImage;
-
-                // IndexedDBに保存を試みる
-                try {
-                    if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
-                        await window.storageManager.init();
-                        await window.storageManager.saveImage(newAkyo.id, croppedImage);
-                    }
-                } catch (e) {
-                    console.debug('IndexedDB save failed, using localStorage');
-                }
-
-                // LocalStorageにも保存（バックアップ）
-                localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-            }
+            await persistNewImage(croppedImage);
         } else {
-            // フォールバック: 元の画像をそのまま保存
             const imagePreview = document.querySelector('#cropImage');
-            if (imagePreview && imagePreview.src && imagePreview.src !== window.location.href) {
-                imageDataMap[newAkyo.id] = imagePreview.src;
-                latestImageDataUrl = imagePreview.src;
-
-                try {
-                    if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
-                        await window.storageManager.init();
-                        await window.storageManager.saveImage(newAkyo.id, imagePreview.src);
-                    }
-                } catch (e) {
-                    console.debug('IndexedDB save failed, using localStorage');
-                }
-
-                localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-            }
+            const previewSrc = imagePreview && imagePreview.src && imagePreview.src !== window.location.href
+                ? imagePreview.src
+                : null;
+            await persistNewImage(previewSrc);
         }
     } catch (error) {
-        console.error('Image save error:', error);
+        console.error('Image processing error:', error);
     }
 
     // オンラインアップロード（存在すれば実行）
@@ -809,6 +1372,9 @@ async function handleAddAkyo(event) {
 
     // フォームリセット
     event.target.reset();
+    attributeManagerApi.resetField('add');
+    clearDuplicateStatus(document.getElementById('nicknameDuplicateStatus'));
+    clearDuplicateStatus(document.getElementById('avatarDuplicateStatus'));
     const imagePreview = document.getElementById('imagePreview');
     if (imagePreview) {
         imagePreview.classList.add('hidden');
@@ -1100,20 +1666,13 @@ async function syncPendingEditImage(akyoId) {
         return { hasPending: false };
     }
 
-    // まずはローカルストレージ系へ保存
-    imageDataMap[akyoId] = dataUrl;
     try {
-        if (window.saveSingleImage) {
-            await window.saveSingleImage(akyoId, dataUrl);
+        await persistImage(akyoId, dataUrl);
+    } catch (error) {
+        if (error && error.name === 'QuotaExceededError') {
+            throw new Error('ローカル保存に失敗しました: 容量不足です');
         }
-    } catch (e) {
-        throw new Error(`ローカル保存に失敗しました: ${e?.message || e}`);
-    }
-
-    try {
-        localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-    } catch (e) {
-        console.debug('Failed to persist pending edit image to localStorage', e);
+        throw new Error(`ローカル保存に失敗しました: ${error?.message || error}`);
     }
 
     const preview = document.getElementById(`editImagePreview-${akyoId}`);
@@ -1159,19 +1718,7 @@ async function syncPendingEditImage(akyoId) {
 async function removeImageForId(akyoId) {
     if (!confirm(`Akyo #${akyoId} の画像を削除しますか？`)) return;
     try {
-        if (window.deleteSingleImage) {
-            await window.deleteSingleImage(akyoId);
-        }
-        delete imageDataMap[akyoId];
-        try {
-            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-        } catch (e) {
-            if (e && e.name === 'QuotaExceededError') {
-                showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
-            } else {
-                console.debug('localStorage persist failed', e);
-            }
-        }
+        const { localBackupWarning } = await removeImagePersistent(akyoId);
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
         if (preview) {
             const id3 = String(akyoId).padStart(3, '0');
@@ -1180,8 +1727,11 @@ async function removeImageForId(akyoId) {
         }
         updateImageGallery();
         showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+        if (localBackupWarning) {
+            showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+        }
     } catch (e) {
-        showNotification('削除エラー: ' + e.message, 'error');
+        showNotification('削除エラー: ' + (e?.message || e), 'error');
     }
 }
 
@@ -1266,15 +1816,34 @@ function editAkyo(akyoId) {
     const safeDisplayId = escapeHtml(akyo.id);
     const safeNickname = escapeHtml(akyo.nickname || '');
     const safeAvatarName = escapeHtml(akyo.avatarName || '');
-    const safeAttribute = escapeHtml(akyo.attribute || '');
+    const attributeRawValue = akyo.attribute || '';
+    const safeAttribute = escapeHtml(attributeRawValue);
     const safeCreator = escapeHtml(akyo.creator || '');
     const safeAvatarUrl = escapeHtml(akyo.avatarUrl || '');
     const safeNotes = escapeHtml(akyo.notes || '');
     const previewSrc = imageDataMap[akyo.id] || (typeof getAkyoImageUrl === 'function' ? getAkyoImageUrl(id3) : '');
     const safePreviewSrc = escapeHtml(previewSrc || '');
 
+    const nicknameInputId = `editNickname-${safeAkyoId}`;
+    const nicknameStatusId = `nicknameStatus-${safeAkyoId}`;
+    const nicknameCheckButtonId = `nicknameCheck-${safeAkyoId}`;
+    const avatarInputId = `editAvatarName-${safeAkyoId}`;
+    const avatarStatusId = `avatarStatus-${safeAkyoId}`;
+    const avatarCheckButtonId = `avatarCheck-${safeAkyoId}`;
+    const attributeFieldId = `edit-${safeAkyoId}`;
+    const attributeHiddenId = `attributeInput-${safeAkyoId}`;
+    const attributeListId = `attributeList-${safeAkyoId}`;
+    const attributePlaceholderId = `attributePlaceholder-${safeAkyoId}`;
+    const attributeSelections = attributeManagerApi.parseAttributeString(attributeRawValue);
+    const attributeListClass = attributeSelections.length
+        ? 'mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1'
+        : 'hidden mt-2 flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-1';
+    const attributePlaceholderClass = attributeSelections.length
+        ? 'hidden text-sm text-gray-500'
+        : 'text-sm text-gray-500';
+
     content.innerHTML = `
-        <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')">
+        <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')" data-attribute-field-id="${attributeFieldId}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">ID（変更不可）</label>
@@ -1283,21 +1852,50 @@ function editAkyo(akyoId) {
                 </div>
 
                 <div>
-                    <label class="block text-gray-700 text-sm font-medium mb-1">通称</label>
-                    <input type="text" name="nickname" value="${safeNickname}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="flex items-center justify-between gap-2">
+                        <label class="block text-gray-700 text-sm font-medium">通称</label>
+                        <button type="button" id="${nicknameCheckButtonId}"
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-search"></i>
+                            同じ通称が既に登録されているか確認
+                        </button>
+                    </div>
+                    <input type="text" name="nickname" id="${nicknameInputId}" value="${safeNickname}"
+                           class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p id="${nicknameStatusId}" class="mt-2 text-sm hidden" data-status-base-class="mt-2 text-sm" aria-live="polite"></p>
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">アバター名</label>
-                    <input type="text" name="avatarName" value="${safeAvatarName}" required
+                    <input type="text" name="avatarName" id="${avatarInputId}" value="${safeAvatarName}" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                        <button type="button" id="${avatarCheckButtonId}"
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                            <i class="fas fa-search"></i>
+                            同じアバター名が既に登録されているか確認
+                        </button>
+                        <p id="${avatarStatusId}" class="text-sm hidden mt-1 sm:mt-0 sm:ml-2" data-status-base-class="text-sm mt-1 sm:mt-0 sm:ml-2" aria-live="polite"></p>
+                    </div>
                 </div>
 
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
-                    <input type="text" name="attribute" value="${safeAttribute}" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="space-y-2">
+                        <button type="button"
+                                class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
+                                data-attribute-target="${attributeFieldId}">
+                            <i class="fas fa-tags"></i>
+                            属性を管理
+                        </button>
+                        <input type="hidden" name="attribute" id="${attributeHiddenId}" value="${safeAttribute}">
+                        <div class="border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
+                            <p id="${attributePlaceholderId}" class="${attributePlaceholderClass}">
+                                選択された属性がここに表示されます
+                            </p>
+                            <div id="${attributeListId}" class="${attributeListClass}" role="list"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -1322,7 +1920,7 @@ function editAkyo(akyoId) {
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">画像</label>
                 <div class="flex items-center gap-3">
-                    <img id="editImagePreview-${safeAkyoId}" src="${safePreviewSrc}" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
+                    <img id="editImagePreview-${safeAkyoId}" src="${safePreviewSrc}" alt="Akyo #${safeDisplayId} の画像プレビュー" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
                     <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${safeAkyoId}')" class="text-sm" />
                     <button type="button" data-action="remove-edit-image" data-id="${safeAkyoId}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
                 </div>
@@ -1335,6 +1933,51 @@ function editAkyo(akyoId) {
         </form>
     `;
 
+    const attributeHiddenInput = content.querySelector(`#${attributeHiddenId}`);
+    const attributeBadgeContainer = content.querySelector(`#${attributeListId}`);
+    const attributePlaceholderEl = content.querySelector(`#${attributePlaceholderId}`);
+    const attributeButton = content.querySelector(`[data-attribute-target="${attributeFieldId}"]`);
+    attributeManagerApi.registerField(attributeFieldId, {
+        hiddenInput: attributeHiddenInput,
+        badgeContainer: attributeBadgeContainer,
+        placeholder: attributePlaceholderEl,
+        button: attributeButton,
+    }, { initialValue: attributeRawValue });
+    attributeManagerApi.setCurrentEditField(attributeFieldId);
+    attributeManagerApi.ensureFieldSync(attributeFieldId, attributeRawValue);
+
+    const nicknameCheckButton = content.querySelector(`#${nicknameCheckButtonId}`);
+    const nicknameInputEl = content.querySelector(`#${nicknameInputId}`);
+    const nicknameStatusEl = content.querySelector(`#${nicknameStatusId}`);
+    attachDuplicateChecker({
+        button: nicknameCheckButton,
+        input: nicknameInputEl,
+        status: nicknameStatusEl,
+        field: 'nickname',
+        texts: {
+            empty: '通称を入力してください',
+            success: '重複している通称はありません',
+            duplicatePrefix: '重複している通称が見つかりました: ',
+        },
+        excludeId: akyo.id,
+    });
+
+    const avatarCheckButton = content.querySelector(`#${avatarCheckButtonId}`);
+    const avatarInputEl = content.querySelector(`#${avatarInputId}`);
+    const avatarStatusEl = content.querySelector(`#${avatarStatusId}`);
+    attachDuplicateChecker({
+        button: avatarCheckButton,
+        input: avatarInputEl,
+        status: avatarStatusEl,
+        field: 'avatarName',
+        texts: {
+            empty: 'アバター名を入力してください',
+            success: '重複しているアバター名はありません',
+            duplicatePrefix: '重複しているアバター名が見つかりました: ',
+        },
+        excludeId: akyo.id,
+    });
+
     modal.classList.remove('hidden');
 }
 
@@ -1342,6 +1985,12 @@ function editAkyo(akyoId) {
 // Akyo更新処理
 async function handleUpdateAkyo(event, akyoId) {
     event.preventDefault();
+
+    const fieldId = event.target.getAttribute('data-attribute-field-id');
+    if (fieldId && !attributeManagerApi.hasSelection(fieldId)) {
+        showNotification('属性を1つ以上選択してください', 'error');
+        return;
+    }
 
     const formData = new FormData(event.target);
     const akyoIndex = akyoData.findIndex(a => a.id === akyoId);
@@ -1352,7 +2001,7 @@ async function handleUpdateAkyo(event, akyoId) {
         ...akyoData[akyoIndex],
         nickname: formData.get('nickname'),
         avatarName: formData.get('avatarName'),
-        attribute: formData.get('attribute'),
+        attribute: attributeManagerApi.serializeAttributes(formData.get('attribute')),
         notes: formData.get('notes'),
         creator: formData.get('creator'),
         avatarUrl: formData.get('avatarUrl')
@@ -1360,6 +2009,7 @@ async function handleUpdateAkyo(event, akyoId) {
 
     try {
         await updateCSVFile();
+        refreshDerivedCollections();
     } catch (e) {
         console.error('updateCSVFile failed', e);
         showNotification('更新内容の保存に失敗しました', 'error');
@@ -1469,6 +2119,7 @@ async function deleteAkyo(akyoId) {
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
     await updateCSVFile();
+    refreshDerivedCollections();
 
     showNotification(`Akyo #${akyoId} を削除し、後続のIDを詰めました`, 'success');
     updateEditList();
@@ -1483,6 +2134,7 @@ window.deleteAkyo = deleteAkyo;
 
 // 編集モーダルを閉じる
 function closeEditModal() {
+    attributeManagerApi.clearCurrentEditField();
     document.getElementById('editModal').classList.add('hidden');
 }
 
@@ -1491,26 +2143,18 @@ window.closeEditModal = closeEditModal;
 
 // CSV更新
 async function updateCSVFile() {
-    // CSVフォーマットに変換
-    const escapeCsv = (val) => {
-        const s = (val ?? '').toString();
-        const needsQuote = /[",\n]/.test(s);
-        const body = s.replace(/"/g, '""');
-        return needsQuote ? `"${body}"` : body;
-    };
-
     let csvContent = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
 
     akyoData.forEach(akyo => {
         const row = [
-            escapeCsv(akyo.id),
-            escapeCsv(akyo.appearance),
-            escapeCsv(akyo.nickname),
-            escapeCsv(akyo.avatarName),
-            escapeCsv(akyo.attribute),
-            escapeCsv(akyo.notes),
-            escapeCsv(akyo.creator),
-            escapeCsv(akyo.avatarUrl)
+            escapeCsvValue(akyo.id),
+            escapeCsvValue(akyo.appearance),
+            escapeCsvValue(akyo.nickname),
+            escapeCsvValue(akyo.avatarName),
+            escapeCsvValue(akyo.attribute),
+            escapeCsvValue(akyo.notes),
+            escapeCsvValue(akyo.creator),
+            escapeCsvValue(akyo.avatarUrl)
         ].join(',');
         csvContent += row + '\n';
     });
@@ -1543,7 +2187,8 @@ async function updateCSVFile() {
                         detail = await res.text();
                     }
                 } catch(_) {}
-                const msg = `GitHubへの反映に失敗しました (${res.status}) ${detail ? String(detail).slice(0, 200) : ''}`.trim();
+                const extra = detail ? ` ${String(detail).slice(0, 200)}` : '';
+                const msg = `GitHubへの反映に失敗しました (${res.status})${extra}。ローカル保存は完了しています。後で再度同期をお試しください。`;
                 console.error('commit-csv failed', res.status, detail || json);
                 showNotification(msg, 'error');
             } else {
@@ -1559,7 +2204,8 @@ async function updateCSVFile() {
     } catch (e) {
         console.error('commit-csv request error', e);
         const detail = (e && (e.message || e.toString && e.toString())) || '';
-        const msg = `GitHubへの反映通信でエラーが発生しました ${detail ? `- ${String(detail).slice(0, 200)}` : ''}`.trim();
+        const suffix = detail ? ` (${String(detail).slice(0, 200)})` : '';
+        const msg = `GitHubへの反映通信でエラーが発生しました${suffix}。ローカル保存は完了しています。ネットワークを確認のうえ再試行してください。`;
         showNotification(msg, 'error');
     }
 
@@ -1679,6 +2325,7 @@ async function uploadCSV() {
     akyoData = [...akyoData, ...window.pendingCSVData].sort((a, b) => a.id.localeCompare(b.id));
 
     await updateCSVFile();
+    refreshDerivedCollections();
     try {
         const ver = parseInt(localStorage.getItem('akyoDataVersion') || '0', 10) + 1;
         localStorage.setItem('akyoDataVersion', String(ver));
@@ -1748,9 +2395,11 @@ function handleBulkImages(files) {
             const safeSuggestedId = escapeHtml(suggestedId);
             const safeFileName = escapeHtml(currentFile.name || '');
             const safeUniqueId = escapeHtml(uniqueId);
+            const previewAltText = currentFile.name ? `プレビュー: ${currentFile.name}` : '画像プレビュー';
+            const safePreviewAlt = escapeHtml(previewAltText);
 
             div.innerHTML = `
-                <img src="${safeImageData}" class="w-12 h-12 object-cover rounded">
+                <img src="${safeImageData}" alt="${safePreviewAlt}" class="w-12 h-12 object-cover rounded">
                 <input type="text" placeholder="AkyoID" value="${safeSuggestedId}"
                        class="px-2 py-1 border rounded w-20 mapping-id-input"
                        inputmode="numeric" pattern="\\d{3}" maxlength="3"
@@ -1842,26 +2491,7 @@ async function saveImageMapping(inputId) {
     }
 
     try {
-        // ストレージアダプターを使用して保存（IndexedDB優先）
-        if (!imageDataMap) imageDataMap = {};
-        if (window.saveSingleImage) {
-            await window.saveSingleImage(akyoId, imageData);
-            imageDataMap[akyoId] = imageData;
-            try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
-        } else {
-            // フォールバック: 従来のLocalStorage保存
-            imageDataMap[akyoId] = imageData;
-            try {
-                localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-            } catch (e) {
-                if (e && e.name === 'QuotaExceededError') {
-                    delete imageDataMap[akyoId];
-                    showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
-                    return;
-                }
-                throw e;
-            }
-        }
+        await persistImage(akyoId, imageData);
 
         console.debug(`Image saved for ID ${akyoId}`);
 
@@ -1878,10 +2508,10 @@ async function saveImageMapping(inputId) {
 
     } catch (error) {
         console.error('Save error:', error);
-        if (error.name === 'QuotaExceededError') {
+        if (error && error.name === 'QuotaExceededError') {
             showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
         } else {
-            showNotification('保存エラー: ' + error.message, 'error');
+            showNotification('保存エラー: ' + (error?.message || error), 'error');
         }
     }
 }
@@ -2024,16 +2654,8 @@ async function saveAllMappings() {
             continue;
         }
 
-        // ストレージアダプターを使用して保存
         try {
-            if (window.saveSingleImage) {
-                await window.saveSingleImage(akyoId, imageData);
-                imageDataMap[akyoId] = imageData;
-                try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
-            } else {
-                // フォールバック
-                imageDataMap[akyoId] = imageData;
-            }
+            await persistImage(akyoId, imageData);
             savedCount++;
             console.debug(`保存: ${akyoId}`);
 
@@ -2045,20 +2667,12 @@ async function saveAllMappings() {
             }
         } catch (error) {
             errorCount++;
-            console.error(`保存エラー ${akyoId}:`, error);
-        }
-    }
-
-    // フォールバック: LocalStorageに一括保存（アダプターがない場合）
-    if (!window.saveSingleImage && savedCount > 0) {
-        try {
-            localStorage.setItem('akyoImages', JSON.stringify(imageDataMap));
-            console.debug(`LocalStorageに保存: ${savedCount}件`);
-        } catch (error) {
-            if (error.name === 'QuotaExceededError') {
+            if (error && error.name === 'QuotaExceededError') {
                 showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
                 return;
             }
+            console.error(`保存エラー ${akyoId}:`, error);
+            showNotification(`保存エラー: ${akyoId} - ${error?.message || error}`, 'error');
         }
     }
 
@@ -2130,9 +2744,13 @@ function updateImageGallery() {
         const safeAkyoId = escapeHtml(akyoId);
         const safeImageData = escapeHtml(imageData || '');
         const safeLabel = escapeHtml(akyo ? (akyo.nickname || akyo.avatarName || '') : '未登録');
+        const altLabel = akyo && (akyo.nickname || akyo.avatarName)
+            ? `Akyo #${akyoId} ${akyo.nickname || akyo.avatarName}`
+            : `Akyo #${akyoId} の画像`;
+        const safeAlt = escapeHtml(altLabel.trim());
 
         div.innerHTML = `
-            <img src="${safeImageData}" class="w-full h-24 object-cover rounded-lg">
+            <img src="${safeImageData}" alt="${safeAlt}" class="w-full h-24 object-cover rounded-lg">
             <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                 <div class="text-white text-center">
                     <div class="font-bold">#${safeAkyoId}</div>
@@ -2155,13 +2773,12 @@ function updateImageGallery() {
 async function removeImage(akyoId) {
     if (!confirm(`Akyo #${akyoId} の画像を削除しますか？`)) return;
     try {
-        if (window.deleteSingleImage) {
-            await window.deleteSingleImage(akyoId);
-        }
-        delete imageDataMap[akyoId];
-        try { localStorage.setItem('akyoImages', JSON.stringify(imageDataMap)); } catch (_) {}
+        const { localBackupWarning } = await removeImagePersistent(akyoId);
         updateImageGallery();
         showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+        if (localBackupWarning) {
+            showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+        }
     } catch (e) {
         showNotification('削除エラー: ' + (e?.message || e), 'error');
     }
@@ -2342,6 +2959,7 @@ async function renumberAllIds() {
     localStorage.setItem('akyoFavorites', JSON.stringify(favorites));
 
     await updateCSVFile();
+    refreshDerivedCollections();
 
     showNotification('すべてのIDを再採番しました', 'success');
     updateEditList();
@@ -2354,24 +2972,19 @@ window.renumberAllIds = renumberAllIds;
 
 // CSVエクスポート機能
 function exportCSV() {
-    const csvEscape = (value) => {
-        const str = value === null || value === undefined ? '' : String(value);
-        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-    };
-
     // CSVフォーマットに変換
     let csvContent = 'ID,見た目,通称,アバター名,属性（モチーフが基準）,備考,作者（敬称略）,アバターURL\n';
 
     akyoData.forEach(akyo => {
         const row = [
-            csvEscape(akyo.id),
-            csvEscape(akyo.appearance),
-            csvEscape(akyo.nickname),
-            csvEscape(akyo.avatarName),
-            csvEscape(akyo.attribute),
-            csvEscape(akyo.notes),
-            csvEscape(akyo.creator),
-            csvEscape(akyo.avatarUrl)
+            escapeCsvValue(akyo.id),
+            escapeCsvValue(akyo.appearance),
+            escapeCsvValue(akyo.nickname),
+            escapeCsvValue(akyo.avatarName),
+            escapeCsvValue(akyo.attribute),
+            escapeCsvValue(akyo.notes),
+            escapeCsvValue(akyo.creator),
+            escapeCsvValue(akyo.avatarUrl)
         ].join(',');
         csvContent += row + '\n';
     });

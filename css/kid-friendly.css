@@ -22,6 +22,20 @@
     /* カードの影 */
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
     --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
+
+    /* タブアクセント */
+    --tab-accent-color: var(--primary-pink);
+    --tab-accent-text: #e14783;
+
+    /* 属性モーダル */
+    --attribute-accent: var(--primary-green);
+    --attribute-accent-strong: #2f855a;
+    --attribute-accent-soft: rgba(102, 217, 165, 0.18);
+    --attribute-border: rgba(102, 217, 165, 0.45);
+    --attribute-border-soft: rgba(102, 217, 165, 0.28);
+    --attribute-shadow: rgba(102, 217, 165, 0.3);
+    --attribute-chip-bg: rgba(102, 217, 165, 0.18);
+    --attribute-chip-border: rgba(102, 217, 165, 0.35);
 }
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
@@ -150,6 +164,89 @@ button, .btn {
     transition: all 0.3s ease !important;
     text-transform: none !important;
     letter-spacing: 0 !important;
+}
+
+.attribute-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: rgba(102, 178, 255, 0.2);
+    color: #3451a1;
+    box-shadow: 0 6px 12px rgba(102, 178, 255, 0.2);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.tab-btn {
+    border-bottom-width: 2px !important;
+    border-color: transparent !important;
+    color: var(--text-secondary) !important;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: var(--tab-accent-text) !important;
+}
+
+.tab-btn.tab-active {
+    border-color: var(--tab-accent-color) !important;
+    color: var(--tab-accent-text) !important;
+    font-weight: 800 !important;
+}
+
+.admin-accent-text {
+    color: var(--primary-pink) !important;
+}
+
+.attribute-option {
+    border: 1px solid var(--attribute-border-soft);
+    background: #ffffff;
+}
+
+.attribute-option--inactive:hover {
+    border-color: var(--attribute-border);
+    background: var(--attribute-accent-soft);
+}
+
+.attribute-option--active {
+    border-color: var(--attribute-border);
+    background: var(--attribute-accent-soft);
+}
+
+.attribute-option__indicator {
+    border: 1px solid transparent;
+    color: transparent;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.attribute-option__indicator--inactive {
+    border-color: #d1d5db;
+}
+
+.attribute-option__indicator--active {
+    background: var(--attribute-accent);
+    color: #ffffff;
+    box-shadow: 0 6px 16px var(--attribute-shadow);
+}
+
+.attribute-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: var(--attribute-chip-bg);
+    color: var(--attribute-accent-strong);
+    border: 1px solid var(--attribute-chip-border);
+}
+
+.attribute-chip--session {
+    text-transform: uppercase;
 }
 
 /* プライマリボタン */
