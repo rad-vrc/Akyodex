@@ -70,6 +70,61 @@ function ensureAttributeManager(options = {}) {
 // Configure immediately so parsing helpers are ready even before DOMContentLoaded
 ensureAttributeManager();
 
+function parseAttributesForDisplay(value) {
+    const manager = attributeManagerApi || ensureAttributeManager();
+    if (manager && typeof manager.parseAttributeString === 'function') {
+        try {
+            return manager.parseAttributeString(value);
+        } catch (error) {
+            console.debug('parseAttributesForDisplay failed', error);
+        }
+    }
+
+    if (value === undefined || value === null) {
+        return [];
+    }
+
+    return String(value)
+        .split(/[,、\s]+/)
+        .map(token => token.trim())
+        .filter(Boolean);
+}
+
+function renderAttributeChipsHtml(value) {
+    const tokens = Array.isArray(value) ? value : parseAttributesForDisplay(value);
+    if (!tokens.length) {
+        return '<span class="text-gray-400">未選択</span>';
+    }
+    return tokens
+        .map(token => `<span class="attribute-badge inline-flex items-center gap-1 text-xs font-semibold shadow-sm">${escapeHtml(token)}</span>`)
+        .join(' ');
+}
+
+function updateAttributeFieldElements({ placeholderEl, listEl, value }) {
+    const tokens = parseAttributesForDisplay(value);
+
+    if (placeholderEl) {
+        if (tokens.length > 0) {
+            placeholderEl.classList.add('hidden');
+        } else {
+            placeholderEl.classList.remove('hidden');
+            if (placeholderEl.dataset && placeholderEl.dataset.emptyText) {
+                placeholderEl.textContent = placeholderEl.dataset.emptyText;
+            }
+        }
+    }
+
+    if (listEl) {
+        if (tokens.length === 0) {
+            listEl.innerHTML = '';
+            listEl.classList.add('hidden');
+        } else {
+            listEl.innerHTML = renderAttributeChipsHtml(tokens);
+            listEl.classList.remove('hidden');
+        }
+    }
+}
+
 function setLocalStorageSafe(key, value, { onQuota } = {}) {
     try {
         localStorage.setItem(key, value);
@@ -970,23 +1025,74 @@ function handleAdminActionClick(event) {
 }
 
 function handleAttributeLauncherFallback(event) {
-    const button = event.target.closest('[data-attribute-target]');
+    const button = event.target.closest('[data-attribute-open]');
     if (!button) {
         return;
     }
 
-    if (button.dataset && button.dataset.attributeBound === '1') {
-        return;
-    }
+    event.preventDefault();
 
-    const fieldId = button.getAttribute('data-attribute-target') || 'add';
     const manager = ensureAttributeManager({ requireModal: true, ensureBaseField: true });
     if (!manager) {
         showNotification('属性管理モジュールを初期化できませんでした', 'error');
         return;
     }
 
-    manager.openModal(fieldId);
+    const form = button.closest('form');
+    const inputName = button.dataset.targetInput || 'attribute';
+    const hiddenInput = form ? form.querySelector(`input[name="${inputName}"]`) : null;
+    if (!hiddenInput) {
+        showNotification('属性入力欄が見つかりません', 'error');
+        return;
+    }
+
+    const chipsId = button.dataset.chipsTarget;
+    const placeholderId = button.dataset.placeholderTarget;
+    const chipsEl = chipsId ? document.getElementById(chipsId) : null;
+    const placeholderEl = placeholderId ? document.getElementById(placeholderId) : null;
+    const fieldId = button.dataset.attributeTarget || button.dataset.attributeFieldId || (form ? form.getAttribute('data-attribute-field-id') : null);
+
+    const updateVisualState = (value) => {
+        if (fieldId && typeof manager.ensureFieldSync === 'function') {
+            manager.ensureFieldSync(fieldId, value);
+        } else {
+            updateAttributeFieldElements({ placeholderEl, listEl: chipsEl, value });
+        }
+    };
+
+    const initialValue = hiddenInput.value || '';
+
+    if (typeof manager.open === 'function') {
+        manager.open({
+            initial: initialValue,
+            onApply: (finalValue) => {
+                const normalized = typeof finalValue === 'string'
+                    ? finalValue
+                    : Array.isArray(finalValue)
+                        ? finalValue.join(',')
+                        : '';
+                hiddenInput.value = normalized;
+                hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+                hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                updateVisualState(normalized);
+            },
+            onCancel: () => {},
+            triggerButton: button,
+            fieldId,
+        });
+        return;
+    }
+
+    if (fieldId && typeof manager.openModal === 'function') {
+        if (typeof manager.ensureFieldSync === 'function') {
+            manager.ensureFieldSync(fieldId, initialValue);
+        }
+        manager.openModal(fieldId);
+        return;
+    }
+
+    updateAttributeFieldElements({ placeholderEl, listEl: chipsEl, value: initialValue });
+    showNotification('属性管理を開けませんでした', 'error');
 }
 
 function bindAttributeLauncherFallback() {
@@ -2141,6 +2247,9 @@ function editAkyo(akyoId) {
     const attributePlaceholderClass = attributeSelections.length
         ? 'hidden text-sm text-gray-500'
         : 'text-sm text-gray-500';
+    const attributeListInitialHtml = attributeSelections
+        .map(token => `<span class="attribute-badge inline-flex items-center gap-1 text-xs font-semibold shadow-sm">${escapeHtml(token)}</span>`)
+        .join(' ');
 
     content.innerHTML = `
         <form onsubmit="handleUpdateAkyo(event, '${safeAkyoId}')" data-attribute-field-id="${attributeFieldId}">
@@ -2182,19 +2291,26 @@ function editAkyo(akyoId) {
                 <div>
                     <label class="block text-gray-700 text-sm font-medium mb-1">属性</label>
                     <div class="space-y-2">
-                        <button type="button"
-                                class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
-                                data-attribute-target="${attributeFieldId}">
-                            <i class="fas fa-tags"></i>
-                            属性を管理
-                        </button>
                         <input type="hidden" name="attribute" id="${attributeHiddenId}" value="${safeAttribute}">
-                        <div class="border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
-                            <p id="${attributePlaceholderId}" class="${attributePlaceholderClass}">
-                                選択された属性がここに表示されます
-                            </p>
-                            <div id="${attributeListId}" class="${attributeListClass}" role="list"></div>
+                        <div class="flex flex-col sm:flex-row sm:items-start gap-3">
+                            <div class="flex-1 border border-dashed border-green-200 rounded-lg bg-white/60 p-3">
+                                <p id="${attributePlaceholderId}" class="${attributePlaceholderClass}" data-empty-text="未選択">
+                                    選択された属性がここに表示されます
+                                </p>
+                                <div id="${attributeListId}" class="${attributeListClass}" role="list">${attributeListInitialHtml}</div>
+                            </div>
+                            <button type="button"
+                                    class="inline-flex items-center justify-center gap-2 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm"
+                                    data-attribute-open
+                                    data-attribute-target="${attributeFieldId}"
+                                    data-target-input="attribute"
+                                    data-chips-target="${attributeListId}"
+                                    data-placeholder-target="${attributePlaceholderId}">
+                                <i class="fas fa-tags"></i>
+                                属性を選ぶ
+                            </button>
                         </div>
+                        <p class="text-xs text-gray-500 mt-1">※ 属性はポップアップからのみ追加/選択できます（フォームでの手入力は不可）。</p>
                     </div>
                 </div>
 

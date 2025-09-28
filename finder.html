@@ -446,13 +446,17 @@
                         <div class="space-y-2">
                             <button type="button"
                                     class="w-full flex items-center justify-center gap-2 px-3 py-2 finder-chip-button rounded-lg transition-colors"
-                                    data-attribute-target="add">
+                                    data-attribute-open
+                                    data-attribute-target="add"
+                                    data-target-input="attribute"
+                                    data-chips-target="addAttributeList"
+                                    data-placeholder-target="addAttributePlaceholder">
                                 <i class="fas fa-tags"></i>
-                                属性を管理
+                                属性を選ぶ
                             </button>
                             <input type="hidden" name="attribute" id="addAttributeInput">
                             <div class="finder-badge-container rounded-lg p-3">
-                                <p id="addAttributePlaceholder" class="text-sm text-gray-500">
+                                <p id="addAttributePlaceholder" class="text-sm text-gray-500" data-empty-text="選択された属性がここに表示されます">
                                     選択された属性がここに表示されます
                                 </p>
                                 <div id="addAttributeList"

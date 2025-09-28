@@ -307,7 +307,7 @@
         }
 
         function registerField(fieldId, elements, { initialValue } = {}) {
-            if (!elements || !elements.hiddenInput || !elements.badgeContainer || !elements.placeholder) {
+            if (!elements || !elements.hiddenInput || !elements.badgeContainer) {
                 return;
             }
 
@@ -318,27 +318,22 @@
                 id,
                 hiddenInput: elements.hiddenInput,
                 badgeContainer: elements.badgeContainer,
-                placeholder: elements.placeholder,
+                placeholder: elements.placeholder || null,
                 button: elements.button || null,
-                buttonHandler: null,
                 selected: [],
+                isEphemeral: false,
+                onApplyCallback: null,
+                onCancelCallback: null,
+                wasApplied: false,
             };
 
             const initial = initialValue !== undefined ? initialValue : elements.hiddenInput.value;
             field.selected = parseAttributeString(initial);
             ensureFallbackSelection(field.selected);
 
-            if (field.button) {
-                if (field.buttonHandler) {
-                    field.button.removeEventListener('click', field.buttonHandler);
-                }
-                field.buttonHandler = () => openModal(id);
-                field.button.addEventListener('click', field.buttonHandler);
-                try {
-                    field.button.dataset.attributeBound = '1';
-                } catch (_) {
-                    // dataset assignment may fail in legacy browsers; safe to ignore
-                }
+            if (field.button && field.button.dataset) {
+                field.button.dataset.attributeTarget = id;
+                field.button.dataset.attributeBound = '1';
             }
 
             state.fields.set(id, field);
@@ -349,11 +344,9 @@
             const field = state.fields.get(fieldId);
             if (!field) return;
 
-            if (field.button && field.buttonHandler) {
-                field.button.removeEventListener('click', field.buttonHandler);
-                if (field.button.dataset) {
-                    delete field.button.dataset.attributeBound;
-                }
+            if (field.button && field.button.dataset) {
+                delete field.button.dataset.attributeBound;
+                delete field.button.dataset.attributeTarget;
             }
 
             state.fields.delete(fieldId);
@@ -410,6 +403,7 @@
             ensureFallbackSelection(state.modalSelection);
             state.searchQuery = '';
             state.lastTriggerButton = field.button || null;
+            field.wasApplied = false;
             if (typeof state.restoreScrollLock === 'function') {
                 try {
                     state.restoreScrollLock();
@@ -436,6 +430,9 @@
 
         function closeModal() {
             if (!state.dom.modal) return;
+            const activeFieldId = state.activeFieldId;
+            const activeField = activeFieldId ? state.fields.get(activeFieldId) : null;
+
             state.dom.modal.classList.add('hidden');
             state.dom.modal.setAttribute('aria-hidden', 'true');
             if (typeof state.restoreScrollLock === 'function') {
@@ -460,6 +457,23 @@
                         button.focus();
                     }
                 }, 0);
+            }
+
+            if (activeField) {
+                try {
+                    if (!activeField.wasApplied && typeof activeField.onCancelCallback === 'function') {
+                        activeField.onCancelCallback();
+                    }
+                } catch (error) {
+                    console.debug('[attributeManager] cancel callback failed', error);
+                } finally {
+                    activeField.onCancelCallback = null;
+                    activeField.onApplyCallback = null;
+                }
+
+                if (activeField.isEphemeral) {
+                    state.fields.delete(activeField.id);
+                }
             }
         }
 
@@ -665,6 +679,18 @@
             ensureFallbackSelection(state.modalSelection);
             field.selected = state.modalSelection.slice();
             syncFieldValue(state.activeFieldId);
+            field.wasApplied = true;
+
+            if (typeof field.onApplyCallback === 'function') {
+                try {
+                    field.onApplyCallback(field.hiddenInput.value, { selection: field.selected.slice() });
+                } catch (error) {
+                    console.debug('[attributeManager] apply callback failed', error);
+                }
+            }
+
+            field.onApplyCallback = null;
+            field.onCancelCallback = null;
             closeModal();
         }
 
@@ -886,6 +912,70 @@
             }
         }
 
+        function open(options) {
+            if (!options) {
+                return false;
+            }
+
+            if (typeof options === 'string') {
+                openModal(options);
+                return true;
+            }
+
+            if (typeof options !== 'object') {
+                return false;
+            }
+
+            const triggerButton = options.triggerButton || options.trigger || null;
+            const fieldId = options.fieldId ? String(options.fieldId) : null;
+            const onApply = typeof options.onApply === 'function' ? options.onApply : null;
+            const onCancel = typeof options.onCancel === 'function' ? options.onCancel : null;
+            const initialValue = options.initial !== undefined ? options.initial : '';
+
+            if (fieldId && state.fields.has(fieldId)) {
+                const field = state.fields.get(fieldId);
+                if (triggerButton) {
+                    field.button = triggerButton;
+                }
+                field.selected = parseAttributeString(initialValue);
+                ensureFallbackSelection(field.selected);
+                field.onApplyCallback = onApply;
+                field.onCancelCallback = onCancel;
+                field.wasApplied = false;
+                syncFieldValue(fieldId);
+                openModal(fieldId);
+                return true;
+            }
+
+            const tempId = `direct-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.value = serializeAttributes(initialValue);
+            const badgeContainer = document.createElement('div');
+            const placeholder = document.createElement('div');
+
+            const selection = parseAttributeString(initialValue);
+            ensureFallbackSelection(selection);
+
+            const field = {
+                id: tempId,
+                hiddenInput,
+                badgeContainer,
+                placeholder,
+                button: triggerButton || null,
+                selected: selection,
+                isEphemeral: true,
+                onApplyCallback: onApply,
+                onCancelCallback: onCancel,
+                wasApplied: false,
+            };
+
+            state.fields.set(tempId, field);
+            syncFieldValue(tempId);
+            openModal(tempId);
+            return true;
+        }
+
         const api = {
             configure,
             init,
@@ -901,6 +991,7 @@
             isModalOpen,
             closeModal,
             openModal,
+            open,
             ensureBaseFieldRegistered,
             parseAttributeString,
             serializeAttributes,
@@ -919,5 +1010,13 @@
     } catch (error) {
         console.warn('[attributeManager] Unable to define read-only global, falling back to direct assignment', error);
         global.attributeManager = manager;
+    }
+
+    try {
+        if (!Object.prototype.hasOwnProperty.call(global, 'AttributeManager')) {
+            Object.defineProperty(global, 'AttributeManager', { value: manager, configurable: false, writable: false });
+        }
+    } catch (_) {
+        global.AttributeManager = manager;
     }
 })(typeof window !== 'undefined' ? window : globalThis);
