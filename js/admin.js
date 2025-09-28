@@ -2155,7 +2155,7 @@ function editAkyo(akyoId) {
                     <div class="flex items-center justify-between gap-2">
                         <label class="block text-gray-700 text-sm font-medium">通称</label>
                         <button type="button" id="${nicknameCheckButtonId}"
-                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-colors duplicate-check-button">
                             <i class="fas fa-search"></i>
                             同じ通称が既に登録されているか確認
                         </button>
@@ -2171,7 +2171,7 @@ function editAkyo(akyoId) {
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
                         <button type="button" id="${avatarCheckButtonId}"
-                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-colors duplicate-check-button">
                             <i class="fas fa-search"></i>
                             同じアバター名が既に登録されているか確認
                         </button>
