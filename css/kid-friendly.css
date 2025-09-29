@@ -25,7 +25,7 @@
 
     /* タブアクセント */
     --tab-accent-color: var(--primary-pink);
-    --tab-accent-text: #e14783;
+    --tab-accent-text: var(--primary-pink);
 
     /* 属性モーダル */
     --attribute-accent: var(--primary-green);
@@ -194,6 +194,17 @@ button, .btn {
     border-color: var(--tab-accent-color) !important;
     color: var(--tab-accent-text) !important;
     font-weight: 800 !important;
+}
+.tab-btn[data-tab="edit"]:hover,
+.tab-btn[data-tab="edit"].tab-active {
+    border-color: var(--primary-blue) !important;
+    color: var(--primary-blue) !important;
+}
+
+.tab-btn[data-tab="tools"]:hover,
+.tab-btn[data-tab="tools"].tab-active {
+    border-color: var(--primary-yellow) !important;
+    color: var(--primary-yellow) !important;
 }
 
 .admin-accent-text {
