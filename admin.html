@@ -447,6 +447,56 @@
                 </div>
                 <div id="editModalContent" class="p-6">
                     <!-- 編集フォーム -->
+                    <!-- 画像アップロード（編集用） -->
+<div class="mt-6">
+    <label class="block text-gray-700 text-sm font-medium mb-1">画像（編集）</label>
+
+
+    <!-- ドロップゾーン -->
+    <div id="editImageDropZone" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+    <p class="text-gray-600">画像をドラッグ&ドロップ または</p>
+    <input type="file" id="editImageInput" accept=".webp,.png,.jpg,.jpeg" class="hidden">
+    <button type="button" onclick="document.getElementById('editImageInput').click()"
+    class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+    ファイルを選択
+    </button>
+    <p class="text-xs text-gray-500 mt-2">推奨: 300×200px / .webp .png .jpg .jpeg</p>
+    </div>
+
+
+    <!-- プレビュー＆トリミング（編集用） -->
+    <div id="editImagePreview" class="mt-4 hidden">
+    <div class="bg-gray-100 rounded-lg p-4">
+    <div class="mb-3 text-sm text-gray-600">
+    <i class="fas fa-info-circle mr-1"></i>
+    ドラッグで位置調整、ホイールで拡大縮小できます（編集用）
+    </div>
+
+
+    <!-- トリミングコンテナ（編集用） -->
+    <div id="editCropContainer" class="relative w-full" style="aspect-ratio: 3/2; overflow: hidden; border: 2px solid #4f46e5; border-radius: 8px;">
+    <img id="editCropImage" src="" alt="Crop preview (edit)" style="position: absolute; cursor: move; transform-origin: top left;">
+    </div>
+
+
+    <div class="flex justify-center gap-2 mt-3">
+    <button type="button" onclick="resetEditImagePosition()"
+    class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
+    <i class="fas fa-redo mr-1"></i> リセット
+    </button>
+    <button type="button" onclick="zoomEditImage(1.1)"
+    class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+    <i class="fas fa-search-plus mr-1"></i> 拡大
+    </button>
+    <button type="button" onclick="zoomEditImage(0.9)"
+    class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+    <i class="fas fa-search-minus mr-1"></i> 縮小
+    </button>
+    </div>
+    </div>
+    </div>
+    </div>
                 </div>
             </div>
         </div>
