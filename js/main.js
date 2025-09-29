@@ -438,8 +438,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
     });
 
+    const manifestPromise = (async () => {
+        if (typeof window.loadAkyoManifest !== 'function') {
+            return true;
+        }
+        try {
+            await window.loadAkyoManifest();
+            return true;
+        } catch (error) {
+            console.error('画像マニフェストの読み込みに失敗しました:', error);
+            throw error;
+        }
+    })();
+
     // 非同期でデータ読み込み（部分成功を許容）
     Promise.allSettled([
+        manifestPromise,
         // 旧データクリア（非ブロッキング）
         (async () => {
             try {
@@ -469,7 +483,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast('一部の読み込みに失敗しました。ページを更新するか再試行してください。', 'warning', () => location.reload());
         }
         // CSV失敗時はapplyFiltersを走らせない
-        const csvOk = results[2] && results[2].status === 'fulfilled';
+        const csvResult = results[3] || results[2];
+        const csvOk = csvResult && csvResult.status === 'fulfilled';
         if (hasSuccess && csvOk) {
             applyFilters();
             // deeplink対応: ?id=NNN で詳細を開く＋canonical更新
