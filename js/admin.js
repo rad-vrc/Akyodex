@@ -1804,16 +1804,10 @@ async function deleteRemoteImage(id) {
       if (query) url.searchParams.set('id', id3);
       const res = await fetch(url.toString(), {
         method,
-        headers: {
-          ...authHeader,
-          ...(json ? { 'content-type': 'application/json' } : {}),
-        },
+        headers: { ...authHeader, ...(json ? { 'content-type': 'application/json' } : {}) },
         body: json ? JSON.stringify({ id: id3 }) : undefined,
       });
-
-      let payload = null;
-      try { payload = await res.clone().json(); } catch (_) {}
-
+      let payload = null; try { payload = await res.clone().json(); } catch (_) {}
       if (!res.ok || (payload && payload.ok === false)) {
         throw new Error((payload && payload.error) || `HTTP ${res.status}`);
       }
@@ -1831,14 +1825,16 @@ async function deleteRemoteImage(id) {
       }
     }
 
-    // --- 成功時の後処理（ここを追加） ---
-    markRemoteDeleted(id3);
-    if (window.akyoImageManifestMap) delete window.akyoImageManifestMap[id3];
-    // ついでにアセットバージョン更新（画像URLのキャッシュバスターに使っているなら）
+    // --- 成功時の後処理（ここが重要） ---
+    markRemoteDeleted(id3);                 // 再読み込み後もR2/GHを使わないためのフラグ
+    if (window.akyoImageManifestMap) {
+      delete window.akyoImageManifestMap[id3]; // その場でも参照されないよう即時除去
+    }
     try { setLocalStorageSafe('akyoAssetsVersion', String(Date.now())); } catch (_) {}
 
     return true;
   }
+
 
   // グローバル公開
   window.prepareWebpFileForUpload = prepareWebpFileForUpload;
@@ -1937,46 +1933,36 @@ async function syncPendingEditImage(akyoId) {
 // 編集用 画像削除（両ストレージ）
 async function removeImageForId(akyoId) {
     if (!confirm(`Akyo #${akyoId} の画像を削除しますか？`)) return;
-      try {
-              // ローカル/IndexedDB と リモート(R2 or GH) を並列実行
-              const [remoteRes, localRes] = await Promise.allSettled([
-                adminSessionToken ? deleteRemoteImage(akyoId) : Promise.resolve(true),
-                removeImagePersistent(akyoId),
-               ]);
-
-              const localBackupWarning = (localRes.status === 'fulfilled' ? localRes.value.localBackupWarning : null);
-
-              // マニフェストもクリア（R2 URLの再利用を防ぐ）
-              if (window.akyoImageManifestMap) delete window.akyoImageManifestMap[akyoId];
-        // まずリモートも削除（存在しなくてもOK）
     try {
-          await deleteRemoteImage(akyoId);
-        } catch (e) {
-          console.debug('remote delete failed (non-fatal):', e);
-        }
+      // ローカル（IndexedDB + localStorage + メモリ）を削除
+      const { localBackupWarning } = await removeImagePersistent(akyoId);
 
-        // トゥームストーンを立ててフォールバック抑止
-        markRemoteDeleted(akyoId);
-        // キャッシュバスター更新
-        setLocalStorageSafe('akyoAssetsVersion', String(Date.now()));
+      // 公開側(R2/GH)も削除（成功すると markRemoteDeleted が立つ）
+      try {
+        await deleteRemoteImage(akyoId);
+        showNotification(`公開画像も削除しました (#${akyoId})`, 'success');
+      } catch (e) {
+        showNotification(`公開画像の削除に失敗しました: ${e?.message || e}`, 'error');
+      }
 
-        // プレビューを消す
-        const preview = document.getElementById(`editImagePreview-${akyoId}`);
-        if (preview) { preview.src = ''; preview.style.display = 'none'; }
+      // プレビューは getAkyoImageUrl() 再評価で貼り替え（VRChatへフォールバックする）
+      const preview = document.getElementById(`editImagePreview-${akyoId}`);
+      if (preview) {
+        preview.src = window.getAkyoImageUrl(akyoId, { size: 512 });
+        preview.style.display = '';
+        // 念のため onerror で非表示
+        preview.onerror = function () { this.style.display = 'none'; };
+      }
 
-        updateImageGallery();
-        showNotification(`Akyo #${akyoId} の画像を完全削除しました`, 'success');
-        if (localBackupWarning) {
-          showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
-        }
-        // リモート失敗だけ通知（ローカルは成功している前提）
-      if (remoteRes.status === 'rejected') {
-        showNotification(`公開画像の削除に失敗しました: ${remoteRes.reason?.message || remoteRes.reason}`, 'warning');
+      updateImageGallery();
+      if (localBackupWarning) {
+        showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
       }
     } catch (e) {
-        showNotification('削除エラー: ' + (e?.message || e), 'error');
+      showNotification('削除エラー: ' + (e?.message || e), 'error');
     }
-}
+  }
+
 
 // グローバル公開
 window.handleEditImageSelect = handleEditImageSelect;
@@ -3282,13 +3268,17 @@ function debounce(func, wait) {
     };
 }
 
+// 削除済みIDの読み込みは DOMContentLoaded で済んでいる前提
+// ※ 念のため最初の定義群の後ろで定義してください（attributeManagerよりは下でOK）
+
 window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
     const id = String(idLike).padStart(3, '0');
+    const ver = localStorage.getItem('akyoAssetsVersion') || '';
 
-    // 0) ローカルがあれば最優先
+    // 0) ローカル最優先（DataURL or Blob URL）
     if (imageDataMap && imageDataMap[id]) return imageDataMap[id];
 
-    // 1) 以前に「公開側を削除」したIDは R2/GH をスキップして VRChat へ直行
+    // 1) 公開側を削除したIDは R2/GH をスキップして VRChat へ直行
     if (deletedRemoteIds && deletedRemoteIds.has(id)) {
       const rec = Array.isArray(akyoData) ? akyoData.find(a => a.id === id) : null;
       const avatar = rec?.avatarUrl || '';
@@ -3297,16 +3287,19 @@ window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
         const u = new URL('/api/vrc-avatar-image', location.origin);
         u.searchParams.set('avtr', m[0]);
         u.searchParams.set('w', String(size));
+        if (ver) u.searchParams.set('v', ver);
         return u.toString();
       }
-      // ない場合は静的
-      const ver = localStorage.getItem('akyoAssetsVersion') || '';
+      // VRChat情報が無い場合は静的にフォールバック
       return `images/${id}.webp${ver ? `?v=${ver}` : ''}`;
     }
 
-    // 2) R2/GH マニフェスト
+    // 2) R2/GH マニフェスト（※削除済みにしていないIDのみ）
     if (window.akyoImageManifestMap && window.akyoImageManifestMap[id]) {
-      return window.akyoImageManifestMap[id];
+      // CDNキャッシュ対策にバスターを付ける（クエリが既に付いていたら &v= を追記）
+      const base = window.akyoImageManifestMap[id];
+      const sep = base.includes('?') ? '&' : '?';
+      return `${base}${ver ? `${sep}v=${ver}` : ''}`;
     }
 
     // 3) VRChat フォールバック
@@ -3317,13 +3310,14 @@ window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
       const u = new URL('/api/vrc-avatar-image', location.origin);
       u.searchParams.set('avtr', m[0]);
       u.searchParams.set('w', String(size));
+      if (ver) u.searchParams.set('v', ver);
       return u.toString();
     }
 
-    // 4) 最後のフォールバック（静的、キャッシュバスター付き）
-    const ver = localStorage.getItem('akyoAssetsVersion') || '';
+    // 4) 最後のフォールバック（静的）
     return `images/${id}.webp${ver ? `?v=${ver}` : ''}`;
   };
+
 
 
 
