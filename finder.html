@@ -289,6 +289,27 @@
         .finder-modal-footer {
             background: rgba(254, 242, 242, 0.9);
         }
+/* 属性管理モーダルをPC版同様の"緑"に統一する（finder.html） */
+#attributeModal {
+  /* アクセント色（PC版のグリーン系に合わせる） */
+  --finder-accent: #22c55e;          /* green-500 */
+  --finder-accent-strong: #16a34a;   /* green-600 */
+  --finder-accent-secondary: #10b981;/* emerald-500 */
+  --finder-accent-soft: #f0fdf4;     /* green-50 */
+  --finder-accent-soft-border: #bbf7d0; /* green-200 */
+  --finder-divider: #dcfce7;         /* green-100 */
+}
+
+/* モーダルの背景トーン（赤→緑） */
+#attributeModal .finder-modal-header {
+  /* 既定は黄〜赤のグラデ。ここを緑トーンに差し替え */
+  background: linear-gradient(135deg, rgba(240,253,244,0.95), rgba(236,253,245,0.95));
+}
+
+/* フッターの薄背景も緑トーンへ */
+#attributeModal .finder-modal-footer {
+  background: rgba(240,253,244,0.9);
+}
 
         .finder-chip-button {
             display: inline-flex;
