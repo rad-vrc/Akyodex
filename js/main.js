@@ -260,19 +260,33 @@ function displayAttributeName(attr) {
     return attr === '未分類' ? '未分類(まだ追加されてないよ！もう少し待っててね！)' : attr;
 }
 
+function appendVersionQuery(url, versionValue) {
+    if (!url) return '';
+    if (!versionValue) return String(url);
+    const str = String(url);
+    if (/[?&]v=/.test(str)) return str;
+    return `${str}${str.includes('?') ? '&' : '?'}v=${encodeURIComponent(versionValue)}`;
+}
+
 function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
     const id3 = String(akyoId).padStart(3, '0');
+    const versionValue = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
 
-    // 1) ローカル最優先（IndexedDB / localStorage）
-    const local = sanitizeImageSource(imageDataMap[id3]);
-    if (local) return local;
+    // 1) R2/GH マニフェスト（削除印が付いていたら使わない）
+    const manifestMap = manifestRef();
+    const manifestEntry = manifestMap[id3];
+    if (manifestEntry && !deletedRemoteIds.has(id3)) {
+      return appendVersionQuery(manifestEntry, versionValue);
+    }
 
-    // 2) R2/GH マニフェスト（削除印が付いていたら使わない）
-    const mf = manifestRef()[id3];
-    if (mf && !deletedRemoteIds.has(id3)) {
-      const v = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
-      // 重複 ? を避けてキャッシュバスター付与
-      return mf + (mf.includes('?') ? '' : (v ? `?v=${encodeURIComponent(v)}` : ''));
+    // 2) R2 直URL フォールバック（マニフェストに存在しない場合）
+    if (!deletedRemoteIds.has(id3)) {
+      try {
+        const r2Base = (typeof window !== 'undefined' && window.PUBLIC_R2_BASE) || 'https://images.akyodex.com';
+        if (r2Base) {
+          return appendVersionQuery(`${r2Base}/${id3}.webp`, versionValue);
+        }
+      } catch (_) {}
     }
 
     // 3) VRChat プロキシ（CSVの avatarUrl に avtr_... があれば）
@@ -283,14 +297,16 @@ function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
       const u = new URL('/api/vrc-avatar-image', location.origin);
       u.searchParams.set('avtr', m[0]);
       u.searchParams.set('w', String(size));
-      const v = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
-      if (v) u.searchParams.set('v', v);
+      if (versionValue) u.searchParams.set('v', versionValue);
       return u.toString();
     }
 
-    // 4) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
-    const v = localStorage.getItem('akyoAssetsVersion') || '';
-    return `images/${id3}.webp${v ? `?v=${encodeURIComponent(v)}` : ''}`;
+    // 4) ユーザーのローカル保存（IndexedDB / localStorage）
+    const local = sanitizeImageSource(imageDataMap[id3]);
+    if (local) return local;
+
+    // 5) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
+    return appendVersionQuery(`images/${id3}.webp`, versionValue);
   }
 
 
