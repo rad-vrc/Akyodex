@@ -25,13 +25,24 @@ async function resolveStoredImageUrl(id, env) {
   if (kv) {
     try {
       const record = await kv.get(`akyo:${id}`, "json");
+      if (!record) {
+        console.info(`[vrc-avatar-image] No KV entry for id ${id}`);
+        return null;
+      }
       if (record?.url) return String(record.url);
-    } catch (_) {
-      // ignore KV errors and fall back to static base
+      const key = record?.key ? String(record.key) : "";
+      if (key) {
+        const base = normalizeBaseUrl(env?.PUBLIC_R2_BASE) || FALLBACK_R2_BASE;
+        if (base) return `${base}/${key}`;
+      }
+      console.warn(`[vrc-avatar-image] KV entry missing url for id ${id}`);
+    } catch (error) {
+      console.warn(`[vrc-avatar-image] KV lookup failed for id ${id}`, error);
     }
+  } else {
+    console.warn(`[vrc-avatar-image] KV binding missing; cannot resolve id ${id}`);
   }
-  const base = normalizeBaseUrl(env?.PUBLIC_R2_BASE) || FALLBACK_R2_BASE;
-  return base ? `${base}/${id}.webp` : null;
+  return null;
 }
 
 function sanitizeAvtr(avtr) {
@@ -51,8 +62,9 @@ export async function onRequestGet({ request, env }) {
   if (!avtrId) return new Response("Bad Request", { status: 400 });
 
   const akyoId = AVATAR_ID_BY_AVTR[avtrId.toLowerCase()];
+  let storedUrl = null;
   if (akyoId) {
-    const storedUrl = await resolveStoredImageUrl(akyoId, env);
+    storedUrl = await resolveStoredImageUrl(akyoId, env);
     if (storedUrl) {
       const finalUrl = appendVersionParam(storedUrl, version);
       return Response.redirect(finalUrl, 302);
@@ -66,12 +78,9 @@ export async function onRequestGet({ request, env }) {
   });
 
   if (!res.ok) {
-    if (akyoId) {
-      const fallbackUrl = await resolveStoredImageUrl(akyoId, env);
-      if (fallbackUrl) {
-        const finalUrl = appendVersionParam(fallbackUrl, version);
-        return Response.redirect(finalUrl, 302);
-      }
+    if (storedUrl) {
+      const finalUrl = appendVersionParam(storedUrl, version);
+      return Response.redirect(finalUrl, 302);
     }
     return new Response("Upstream error", { status: 502 });
   }
@@ -88,12 +97,9 @@ export async function onRequestGet({ request, env }) {
   }
 
   if (!img) {
-    if (akyoId) {
-      const fallbackUrl = await resolveStoredImageUrl(akyoId, env);
-      if (fallbackUrl) {
-        const finalUrl = appendVersionParam(fallbackUrl, version);
-        return Response.redirect(finalUrl, 302);
-      }
+    if (storedUrl) {
+      const finalUrl = appendVersionParam(storedUrl, version);
+      return Response.redirect(finalUrl, 302);
     }
     return new Response("Image not found", { status: 404 });
   }
