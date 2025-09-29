@@ -256,7 +256,7 @@ Akyoずかんに関するご意見・ご要望は、プロジェクト管理者�
 - 画像: IndexedDB 'images'（フォールバック localStorage.AkyoImages）
 - 認証: sessionStorage.AkyoAdminAuth
 
-**Akyoずかん** - すべてのAkyoファンのために 💜
+**Akyoずかん** - すべてのAkyoファンのために
 
 ## Akyodex 公開手順・完全版（Cloudflare Pages＋Functions＋R2＋KV）
 
