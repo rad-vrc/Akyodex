@@ -3275,6 +3275,24 @@ function debounce(func, wait) {
 // 削除済みIDの読み込みは DOMContentLoaded で済んでいる前提
 // ※ 念のため最初の定義群の後ろで定義してください（attributeManagerよりは下でOK）
 
+let adminCachedPublicR2Base = null;
+function resolveAdminPublicR2Base() {
+  if (adminCachedPublicR2Base !== null) return adminCachedPublicR2Base;
+  let base = '';
+  try {
+    if (typeof window !== 'undefined' && window.PUBLIC_R2_BASE) {
+      base = String(window.PUBLIC_R2_BASE || '');
+    }
+  } catch (_) {
+    base = '';
+  }
+  if (base) {
+    base = base.replace(/\/+$/, '');
+  }
+  adminCachedPublicR2Base = base;
+  return adminCachedPublicR2Base;
+}
+
 window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
     const id = String(idLike).padStart(3, '0');
     const ver = localStorage.getItem('akyoAssetsVersion') || '';
@@ -3299,13 +3317,19 @@ window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
       return `${base}${ver ? `${sep}v=${ver}` : ''}`;
     }
 
-    // 2) VRChat フォールバック（削除済みIDも含めて利用）
+    // 2) R2 直リンク（公開CDN）
+    const r2Base = resolveAdminPublicR2Base();
+    if (r2Base) {
+      return `${r2Base}/${id}.webp${ver ? `?v=${ver}` : ''}`;
+    }
+
+    // 3) VRChat フォールバック（削除済みIDも含めて利用）
     if (typeof window.getAkyoVrchatFallbackUrl === 'function') {
       const vrchatUrl = window.getAkyoVrchatFallbackUrl(id, { size });
       if (vrchatUrl) return vrchatUrl;
     }
 
-    // 3) 最後のフォールバック（静的）
+    // 4) 最後のフォールバック（静的）
     return `images/${id}.webp${ver ? `?v=${ver}` : ''}`;
   };
 
