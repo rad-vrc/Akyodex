@@ -9,6 +9,32 @@ let akyoData = [];
 let imageDataMap = {}; // AkyoIDと画像の紐付け
 let adminSessionToken = null; // 認証ワードはメモリ内にのみ保持
 let hasBoundActionDelegation = false;
+// ==== 先頭のグローバル変数群の近くに追記 ====
+let deletedRemoteIds = new Set();
+
+function loadDeletedRemoteIds() {
+  try {
+    const raw = localStorage.getItem('akyo:deletedRemoteIds');
+    const arr = raw ? JSON.parse(raw) : [];
+    deletedRemoteIds = new Set(Array.isArray(arr) ? arr : []);
+  } catch (_) {
+    deletedRemoteIds = new Set();
+  }
+}
+function saveDeletedRemoteIds() {
+  setLocalStorageSafe('akyo:deletedRemoteIds', JSON.stringify(Array.from(deletedRemoteIds)));
+}
+function markRemoteDeleted(id) {
+  const id3 = String(id).padStart(3, '0');
+  deletedRemoteIds.add(id3); saveDeletedRemoteIds();
+}
+function clearRemoteDeletedMark(id) {
+  const id3 = String(id).padStart(3, '0');
+  if (deletedRemoteIds.delete(id3)) saveDeletedRemoteIds();
+}
+
+// DOMContentLoaded でロード
+document.addEventListener('DOMContentLoaded', loadDeletedRemoteIds);
 
 const FINDER_PREFILL_VALUE = 'Akyo';
 const DEFAULT_ATTRIBUTE_NAME = '未分類';
@@ -160,6 +186,8 @@ async function persistImage(akyoId, dataUrl, { backupToLocalStorage = true } = {
             console.debug('persistImage: localStorage backup failed', akyoId, error);
         }
     }
+    // 新規保存できたので削除印を解除
+    try { clearRemoteDeletedMark(akyoId); } catch (_) {}
 
     return { persistedToIndexedDb };
 }
@@ -1762,9 +1790,31 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword, dat
     return json;
 }
 
-// グローバル公開
-window.prepareWebpFileForUpload = prepareWebpFileForUpload;
-window.uploadAkyoOnline = uploadAkyoOnline;
+// 🎯 ここに追記
+async function deleteRemoteImage(id) {
+    if (!adminSessionToken) throw new Error('認証が必要です');
+
+    const id3 = String(id).padStart(3, '0');
+    const endpoint = window.__USE_GH_UPLOAD__ ? '/api/gh-delete' : '/api/delete-image';
+
+    const url = new URL(endpoint, location.origin);
+    url.searchParams.set('id', id3);
+
+    const res = await fetch(url.toString(), {
+      method: 'POST',
+      headers: { authorization: `Bearer ${adminSessionToken}` },
+    });
+    let json = null; try { json = await res.clone().json(); } catch (_) {}
+    if (!res.ok || (json && json.ok === false)) {
+      throw new Error((json && json.error) || `HTTP ${res.status}`);
+    }
+    return true;
+  }
+
+  // グローバル公開（既存の公開行と並べる）
+  window.prepareWebpFileForUpload = prepareWebpFileForUpload;
+  window.uploadAkyoOnline = uploadAkyoOnline;
+  window.deleteRemoteImage = deleteRemoteImage; // ←追加
 
 // フォームから直接オンライン登録（パスワード欄＋既存入力値を使用）
 // 画像選択処理
@@ -1857,19 +1907,42 @@ async function syncPendingEditImage(akyoId) {
 // 編集用 画像削除（両ストレージ）
 async function removeImageForId(akyoId) {
     if (!confirm(`Akyo #${akyoId} の画像を削除しますか？`)) return;
+      try {
+              // ローカル/IndexedDB と リモート(R2 or GH) を並列実行
+              const [remoteRes, localRes] = await Promise.allSettled([
+                adminSessionToken ? deleteRemoteImage(akyoId) : Promise.resolve(true),
+                removeImagePersistent(akyoId),
+               ]);
+
+              const localBackupWarning = (localRes.status === 'fulfilled' ? localRes.value.localBackupWarning : null);
+
+              // マニフェストもクリア（R2 URLの再利用を防ぐ）
+              if (window.akyoImageManifestMap) delete window.akyoImageManifestMap[akyoId];
+        // まずリモートも削除（存在しなくてもOK）
     try {
-        const { localBackupWarning } = await removeImagePersistent(akyoId);
+          await deleteRemoteImage(akyoId);
+        } catch (e) {
+          console.debug('remote delete failed (non-fatal):', e);
+        }
+
+        // トゥームストーンを立ててフォールバック抑止
+        markRemoteDeleted(akyoId);
+        // キャッシュバスター更新
+        setLocalStorageSafe('akyoAssetsVersion', String(Date.now()));
+
+        // プレビューを消す
         const preview = document.getElementById(`editImagePreview-${akyoId}`);
-        if (preview) {
-            const id3 = String(akyoId).padStart(3, '0');
-            preview.src = (typeof getAkyoImageUrl==='function' ? getAkyoImageUrl(id3) : `images/${id3}.webp`);
-            preview.onerror = function(){ this.style.display='none'; };
-        }
+        if (preview) { preview.src = ''; preview.style.display = 'none'; }
+
         updateImageGallery();
-        showNotification(`Akyo #${akyoId} の画像を削除しました`, 'success');
+        showNotification(`Akyo #${akyoId} の画像を完全削除しました`, 'success');
         if (localBackupWarning) {
-            showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
+          showNotification('容量不足！migrate-storage.htmlでIndexedDBへ移行してください', 'error');
         }
+        // リモート失敗だけ通知（ローカルは成功している前提）
+      if (remoteRes.status === 'rejected') {
+        showNotification(`公開画像の削除に失敗しました: ${remoteRes.reason?.message || remoteRes.reason}`, 'warning');
+      }
     } catch (e) {
         showNotification('削除エラー: ' + (e?.message || e), 'error');
     }
@@ -3201,9 +3274,11 @@ window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
       return u.toString();
     }
 
-    // 4) 最後のフォールバック
-    return `images/${id}.webp`;
+    // 4) 最後のフォールバック（静的） ※ここは1つだけにする
+    const ver = localStorage.getItem('akyoAssetsVersion') || '';
+    return `images/${id}.webp${ver ? `?v=${ver}` : ''}`;
   };
+
 
 
 console.debug('admin.js loaded successfully');
