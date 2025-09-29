@@ -6,6 +6,15 @@
 // 形式3: ["001オリジン.png", ...]
 let akyoImageManifestMap = {};
 const PUBLIC_R2_BASE = 'https://images.akyodex.com';
+const VRCHAT_PROXY_ENDPOINT = '/api/vrc-avatar-image';
+
+function getAssetsVersionValue() {
+    try {
+        return localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
+    } catch (_) {
+        return '';
+    }
+}
 
 function extractImageEntryInfo(rawValue, explicitId) {
     const value = String(rawValue || '');
@@ -110,12 +119,61 @@ async function loadImagesManifest() {
 }
 
 function getAssetsVersionSuffix() {
-    try {
-        const v = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1';
-        return `?v=${encodeURIComponent(v)}`;
-    } catch (_) {
-        return '';
+    const v = getAssetsVersionValue();
+    return v ? `?v=${encodeURIComponent(v)}` : '';
+}
+
+function findAkyoRecord(akyoId) {
+    if (typeof window === 'undefined') return null;
+    const id3 = String(akyoId || '').padStart(3, '0');
+
+    if (!window.__akyoRecordCache) {
+        Object.defineProperty(window, '__akyoRecordCache', {
+            value: {},
+            enumerable: false,
+            configurable: true,
+            writable: true,
+        });
     }
+
+    const cache = window.__akyoRecordCache;
+    if (Object.prototype.hasOwnProperty.call(cache, id3)) {
+        return cache[id3];
+    }
+
+    const candidates = [
+        window.publicAkyoList,
+        window.adminAkyoRecords,
+        window.akyoData,
+    ];
+
+    for (const source of candidates) {
+        if (Array.isArray(source)) {
+            const hit = source.find(entry => String(entry?.id || '').padStart(3, '0') === id3);
+            if (hit) {
+                cache[id3] = hit;
+                return hit;
+            }
+        }
+    }
+
+    cache[id3] = null;
+    return null;
+}
+
+function extractAvatarIdFromRecord(record) {
+    if (!record) return null;
+    const avatarUrl = record.avatarUrl || record.avatarURL || '';
+    const match = String(avatarUrl).match(/avtr_[A-Za-z0-9-]+/);
+    return match ? match[0] : null;
+}
+
+function buildVrchatProxyUrl(avtrId, size, version) {
+    const params = new URLSearchParams();
+    params.set('avtr', avtrId);
+    params.set('w', String(size));
+    if (version) params.set('v', version);
+    return `${VRCHAT_PROXY_ENDPOINT}?${params.toString()}`;
 }
 
 // 画像の遅延読み込み設定
@@ -143,13 +201,20 @@ function setupLazyLoading() {
 }
 
 // 画像URLを取得
-function getAkyoImageUrl(akyoId) {
+function getAkyoImageUrl(akyoIdLike, options = {}) {
+    const akyoId = String(akyoIdLike || '').padStart(3, '0');
+    const size = Math.max(32, Math.min(4096, parseInt(options.size || '512', 10) || 512));
+    const versionValue = getAssetsVersionValue();
+    const versionSuffix = versionValue ? `?v=${encodeURIComponent(versionValue)}` : '';
+
     // まずwindowにロードされたマニフェストを優先
     try {
         if (typeof window !== 'undefined' && window.akyoImageManifestMap && window.akyoImageManifestMap[akyoId]) {
             const v = window.akyoImageManifestMap[akyoId];
-            if (typeof v === 'string' && /^https?:\/\//.test(v)) return v;
-            return `images/${v}${getAssetsVersionSuffix()}`;
+            if (typeof v === 'string' && /^https?:\/\//.test(v)) {
+                return versionValue && !/[?&]v=/.test(v) ? `${v}${v.includes('?') ? '&' : '?'}v=${encodeURIComponent(versionValue)}` : v;
+            }
+            return `images/${v}${versionSuffix}`;
         }
     } catch (_) {}
     // マニフェストから探す
@@ -157,37 +222,55 @@ function getAkyoImageUrl(akyoId) {
         const val = akyoImageManifestMap[akyoId];
         if (typeof val === 'string') {
             // 1) フルURL
-            if (/^https?:\/\//.test(val)) return val;
+            if (/^https?:\/\//.test(val)) {
+                return versionValue && !/[?&]v=/.test(val) ? `${val}${val.includes('?') ? '&' : '?'}v=${encodeURIComponent(versionValue)}` : val;
+            }
             // 2) 先頭がスラッシュ、または既に images/ を含む相対パス
             if (val.startsWith('/') || val.startsWith('images/')) {
-                return `${val}${getAssetsVersionSuffix()}`;
+                return `${val}${versionSuffix}`;
             }
             // 3) 純粋なファイル名
-            return `images/${val}${getAssetsVersionSuffix()}`;
+            return `images/${val}${versionSuffix}`;
         }
     }
 
-    // R2直URL（強制フォールバック）
+    // 次にローカルストレージから探す
     try {
-        if (PUBLIC_R2_BASE) {
-            return `${PUBLIC_R2_BASE}/${akyoId}.webp${getAssetsVersionSuffix()}`;
+        const savedImages = localStorage.getItem('akyoImages');
+        if (savedImages) {
+            const imageDataMap = JSON.parse(savedImages);
+            if (imageDataMap[akyoId]) {
+                return imageDataMap[akyoId];
+            }
         }
     } catch (_) {}
 
-    // 次にローカルストレージから探す
-    const savedImages = localStorage.getItem('akyoImages');
-    if (savedImages) {
-        const imageDataMap = JSON.parse(savedImages);
-        if (imageDataMap[akyoId]) {
-            return imageDataMap[akyoId];
+    // VRChat直リンクにフォールバック
+    try {
+        const record = findAkyoRecord(akyoId);
+        const avtrId = extractAvatarIdFromRecord(record);
+        if (avtrId) {
+            return buildVrchatProxyUrl(avtrId, size, versionValue);
         }
-    }
+    } catch (_) {}
+
+    // R2直URL（最後の手段）
+    try {
+        if (PUBLIC_R2_BASE) {
+            return `${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`;
+        }
+    } catch (_) {}
 
     // 最後のフォールバック: デプロイ先の静的フォルダ images/{id}.webp
-    return `images/${akyoId}.webp${getAssetsVersionSuffix()}`;
+    return `images/${akyoId}.webp${versionSuffix}`;
 }
 
 // エクスポート
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { setupLazyLoading, getAkyoImageUrl, loadImagesManifest };
+}
+
+if (typeof window !== 'undefined') {
+    window.loadImagesManifest = loadImagesManifest;
+    window.getAkyoImageUrl = getAkyoImageUrl;
 }
