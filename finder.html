@@ -320,7 +320,14 @@
         }
 
         body.finder-body #addCreatorSuggestions {
+          
+            overflow-y: auto;
             overflow-x: hidden;
+        }
+
+        body.finder-body #addCreatorSuggestions::-webkit-scrollbar:horizontal {
+            height: 0;
+            display: none;
         }
 
         .finder-ghost-btn:hover {
