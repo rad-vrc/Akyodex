@@ -810,6 +810,234 @@
             });
         };
     </script>
+<!-- ▼ 編集モーダル用スクリプト：完全版（そのままコピペ） ▼ -->
+<script>
+    // ====== 編集モーダル：画像D&D＋トリミング（新規側と変数名を分離） ======
+    let editImageScale = 1;
+    let editImageX = 0;
+    let editImageY = 0;
+    let editIsDragging = false;
+    let editDragStartX = 0;
+    let editDragStartY = 0;
+    let originalEditImageSrc = null;
+
+    function updateEditImageTransform() {
+      const img = document.getElementById('editCropImage');
+      if (img) {
+        img.style.transform = `translate(${editImageX}px, ${editImageY}px) scale(${editImageScale})`;
+      }
+    }
+
+    function resetEditImagePosition() {
+      editImageScale = 1;
+      const container = document.getElementById('editCropContainer');
+      const img = document.getElementById('editCropImage');
+      if (container && img) {
+        const cw = container.offsetWidth;
+        const ch = container.offsetHeight;
+        const iw = img.offsetWidth;
+        const ih = img.offsetHeight;
+        editImageX = (cw - iw) / 2;
+        editImageY = (ch - ih) / 2;
+      } else {
+        editImageX = 0;
+        editImageY = 0;
+      }
+      updateEditImageTransform();
+    }
+
+    function zoomEditImage(factor) {
+      editImageScale *= factor;
+      editImageScale = Math.max(0.5, Math.min(3, editImageScale));
+      updateEditImageTransform();
+    }
+
+    function initEditCropping() {
+      const container = document.getElementById('editCropContainer');
+      const img = document.getElementById('editCropImage');
+      if (!container || !img) return;
+
+      // Wheel zoom
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = Math.sign(e.deltaY);
+        zoomEditImage(delta < 0 ? 1.1 : 0.9);
+      });
+
+      // Mouse drag
+      img.addEventListener('mousedown', (e) => {
+        editIsDragging = true;
+        editDragStartX = e.clientX - editImageX;
+        editDragStartY = e.clientY - editImageY;
+      });
+      document.addEventListener('mousemove', (e) => {
+        if (editIsDragging) {
+          editImageX = e.clientX - editDragStartX;
+          editImageY = e.clientY - editDragStartY;
+          updateEditImageTransform();
+        }
+      });
+      document.addEventListener('mouseup', () => { editIsDragging = false; });
+
+      // Touch drag
+      img.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          editIsDragging = true;
+          editDragStartX = e.touches[0].clientX - editImageX;
+          editDragStartY = e.touches[0].clientY - editImageY;
+        }
+      });
+      document.addEventListener('touchmove', (e) => {
+        if (editIsDragging && e.touches.length === 1) {
+          editImageX = e.touches[0].clientX - editDragStartX;
+          editImageY = e.touches[0].clientY - editDragStartY;
+          updateEditImageTransform();
+        }
+      });
+      document.addEventListener('touchend', () => { editIsDragging = false; });
+    }
+
+    function handleEditImageSelectWithCrop(event) {
+      const file = event.target.files && event.target.files[0];
+      if (file && file.type && file.type.startsWith('image/')) {
+        handleEditImageFileWithCrop(file);
+      }
+    }
+
+    function handleEditImageFileWithCrop(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imgSrc = e.target.result;
+        originalEditImageSrc = imgSrc;
+
+        const preview = document.getElementById('editImagePreview');
+        if (preview) preview.classList.remove('hidden');
+
+        const cropImg = document.getElementById('editCropImage');
+        if (!cropImg) return;
+
+        cropImg.onload = () => {
+          const container = document.getElementById('editCropContainer');
+          if (!container) return;
+
+          // アスペクト比3:2で全面を覆うようにリサイズ
+          const cw = container.offsetWidth;
+          const ch = container.offsetHeight;
+          const iw = cropImg.naturalWidth;
+          const ih = cropImg.naturalHeight;
+          const containerAspect = cw / ch;
+          const imageAspect = iw / ih;
+          let drawW, drawH;
+          if (imageAspect > containerAspect) {
+            drawH = ch;
+            drawW = ch * imageAspect;
+          } else {
+            drawW = cw;
+            drawH = cw / imageAspect;
+          }
+          cropImg.style.width = `${drawW}px`;
+          cropImg.style.height = `${drawH}px`;
+
+          resetEditImagePosition();
+          initEditCropping();
+        };
+        cropImg.src = imgSrc;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 編集用のトリミング済み画像（300x200）をBase64で返す
+    window.generateEditCroppedImage = function () {
+      return new Promise((resolve) => {
+        const container = document.getElementById('editCropContainer');
+        const imgEl = document.getElementById('editCropImage');
+        if (!container || !imgEl || !imgEl.src || imgEl.src === window.location.href) {
+          resolve(null);
+          return;
+        }
+
+        const canvasW = 300;
+        const canvasH = 200;
+        const canvas = document.createElement('canvas');
+        canvas.width = canvasW;
+        canvas.height = canvasH;
+        const ctx = canvas.getContext('2d');
+
+        const image = new Image();
+        image.onload = () => {
+          const cw = container.offsetWidth;
+          const ch = container.offsetHeight;
+          const iw = image.naturalWidth;
+          const ih = image.naturalHeight;
+
+          // 表示上の拡大率と平行移動をもとに、ソースの描画領域を逆算
+          const containerAspect = cw / ch;
+          const imageAspect = iw / ih;
+          let drawW, drawH;
+          if (imageAspect > containerAspect) {
+            drawH = ch;
+            drawW = ch * imageAspect;
+          } else {
+            drawW = cw;
+            drawH = cw / imageAspect;
+          }
+
+          // 表示ピクセル→元画像ピクセルへの変換係数
+          const scaleFactorW = iw / drawW;
+          const scaleFactorH = ih / drawH;
+
+          // 現在の変換（translate+scale）を考慮
+          const sx = Math.max(0, (-editImageX) * scaleFactorW / editImageScale);
+          const sy = Math.max(0, (-editImageY) * scaleFactorH / editImageScale);
+          const sw = Math.min(iw - sx, (cw * scaleFactorW) / editImageScale);
+          const sh = Math.min(ih - sy, (ch * scaleFactorH) / editImageScale);
+
+          // 背景を白にして描画
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvasW, canvasH);
+          ctx.drawImage(image, sx, sy, sw, sh, 0, 0, canvasW, canvasH);
+
+          canvas.toBlob((blob) => {
+            const r = new FileReader();
+            r.onloadend = () => resolve(r.result);
+            r.readAsDataURL(blob);
+          }, 'image/jpeg', 0.9);
+        };
+        image.crossOrigin = 'anonymous';
+        image.src = originalEditImageSrc || imgEl.src;
+      });
+    };
+
+    // 初期化（重複防止付き）
+    (function initEditDnDOnce() {
+      if (window.__editDnDInited) return;
+      window.__editDnDInited = true;
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('editImageInput');
+        if (input) input.addEventListener('change', handleEditImageSelectWithCrop);
+
+        const dz = document.getElementById('editImageDropZone');
+        if (dz) {
+          ['dragenter', 'dragover'].forEach(type => dz.addEventListener(type, (e) => {
+            e.preventDefault();
+            dz.classList.add('dragover');
+          }));
+          ['dragleave', 'dragend', 'drop'].forEach(type => dz.addEventListener(type, (e) => {
+            e.preventDefault();
+            dz.classList.remove('dragover');
+          }));
+          dz.addEventListener('drop', (e) => {
+            const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+            if (f && f.type && f.type.startsWith('image/')) {
+              handleEditImageFileWithCrop(f);
+            }
+          });
+        }
+      });
+    })();
+    </script>
+    <!-- ▲ 編集モーダル用スクリプト：完全版（ここまで） ▲ -->
 
     <!-- フォールバックスクリプトは重複と競合回避のため削除（admin.js 実装を使用） -->
 </body>
