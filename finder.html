@@ -319,6 +319,16 @@
             font-weight: 600;
         }
 
+        body.finder-body #addCreatorSuggestions {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        body.finder-body #addCreatorSuggestions::-webkit-scrollbar:horizontal {
+            height: 0;
+            display: none;
+        }
+
         .finder-ghost-btn:hover {
             background: rgba(249, 115, 22, 0.08);
         }
