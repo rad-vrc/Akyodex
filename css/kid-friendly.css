@@ -203,8 +203,8 @@ button, .btn {
 
 .tab-btn[data-tab="tools"]:hover,
 .tab-btn[data-tab="tools"].tab-active {
-    border-color: var(--primary-yellow) !important;
-    color: var(--primary-yellow) !important;
+    border-color: var(--primary-orange) !important;
+    color: var(--primary-orange) !important;
 }
 
 .admin-accent-text {
