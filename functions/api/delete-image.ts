@@ -56,6 +56,7 @@ async function handleDelete(ctx: PagesFunctionContext, idRaw: unknown) {
 
     // 新形式 images/{id}_... をまとめて削除
     let cursor: string | undefined = undefined;
+
     do {
       const listResult = await bucket.list({ prefix: `images/${id}`, cursor });
       for (const obj of listResult?.objects ?? []) {
