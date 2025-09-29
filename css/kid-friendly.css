@@ -24,8 +24,8 @@
     --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
 
     /* タブアクセント */
-    --tab-accent-color: var(--primary-pink);
-    --tab-accent-text: #e14783;
+    --tab-accent-color: #3b82f6;
+    --tab-accent-text: #3b82f6;
 
     /* 属性モーダル */
     --attribute-accent: var(--primary-green);
@@ -457,6 +457,16 @@ select:focus {
     padding: 20px !important;
     border-radius: 26px 26px 0 0 !important;
 }
+#editModal .sticky {
+    background: #ffffff !important;
+    border-bottom: 1px solid rgba(209, 213, 219, 0.6) !important;
+    box-shadow: none !important;
+}
+
+#editModal .sticky::before {
+    content: none !important;
+}
+
 #editModal h2 {
     background: none !important;
     color: var(--text-primary) !important;
