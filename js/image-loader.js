@@ -254,22 +254,19 @@ function getAkyoImageUrl(akyoIdLike, options = {}) {
     const manifestUrl = tryGetManifestUrl(akyoImageManifestMap, akyoId, versionValue, versionSuffix);
     if (manifestUrl) return manifestUrl;
 
+
     // 3) VRChat 直リンク
     const vrchatUrl = resolveVrchatThumbnailUrl(akyoId, size, versionValue);
     if (vrchatUrl) return vrchatUrl;
 
     // 4) ユーザーのローカル保存データ
     try {
-        const savedImages = localStorage.getItem('akyoImages');
-        if (savedImages) {
-            const imageDataMap = JSON.parse(savedImages);
-            if (imageDataMap[akyoId]) {
-                return imageDataMap[akyoId];
-            }
+        if (PUBLIC_R2_BASE) {
+            return `${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`;
         }
     } catch (_) {}
 
-    // 5) 最終フォールバック
+
     return `images/${akyoId}.webp${versionSuffix}`;
 }
 
