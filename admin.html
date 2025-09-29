@@ -61,6 +61,16 @@
             overflow-x: hidden;
         }
 
+        body:not(.finder-body) #addCreatorSuggestions {
+            background-color: #fff;
+            border: 1px solid rgba(209, 213, 219, 0.9);
+            box-shadow: 0 12px 25px rgba(15, 23, 42, 0.12);
+        }
+
+        body:not(.finder-body) #addCreatorSuggestions::before {
+            content: none;
+        }
+
         #addCreatorSuggestions::-webkit-scrollbar:horizontal {
             height: 0;
             display: none;
