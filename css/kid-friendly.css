@@ -24,8 +24,8 @@
     --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
 
     /* タブアクセント */
-    --tab-accent-color: #3b82f6;
-    --tab-accent-text: #3b82f6;
+    --tab-accent-color: var(--primary-pink);
+    --tab-accent-text: #e14783;
 
     /* 属性モーダル */
     --attribute-accent: var(--primary-green);
