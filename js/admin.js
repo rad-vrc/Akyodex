@@ -3282,23 +3282,16 @@ window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
     // 0) ローカル最優先（DataURL or Blob URL）
     if (imageDataMap && imageDataMap[id]) return imageDataMap[id];
 
-    // 1) 公開側を削除したIDは R2/GH をスキップして VRChat へ直行
+    // 0) 公開側で削除したIDはVRChatへフォールバック
     if (deletedRemoteIds && deletedRemoteIds.has(id)) {
-      const rec = Array.isArray(akyoData) ? akyoData.find(a => a.id === id) : null;
-      const avatar = rec?.avatarUrl || '';
-      const m = avatar.match(/avtr_[A-Za-z0-9-]+/);
-      if (m) {
-        const u = new URL('/api/vrc-avatar-image', location.origin);
-        u.searchParams.set('avtr', m[0]);
-        u.searchParams.set('w', String(size));
-        if (ver) u.searchParams.set('v', ver);
-        return u.toString();
+      if (typeof window.getAkyoVrchatFallbackUrl === 'function') {
+        const vrchatDeleted = window.getAkyoVrchatFallbackUrl(id, { size });
+        if (vrchatDeleted) return vrchatDeleted;
       }
-      // VRChat情報が無い場合は静的にフォールバック
       return `images/${id}.webp${ver ? `?v=${ver}` : ''}`;
     }
 
-    // 2) R2/GH マニフェスト（※削除済みにしていないIDのみ）
+    // 1) R2/GH マニフェスト（※削除済みにしていないIDのみ）
     if (window.akyoImageManifestMap && window.akyoImageManifestMap[id]) {
       // CDNキャッシュ対策にバスターを付ける（クエリが既に付いていたら &v= を追記）
       const base = window.akyoImageManifestMap[id];
@@ -3306,19 +3299,13 @@ window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
       return `${base}${ver ? `${sep}v=${ver}` : ''}`;
     }
 
-    // 3) VRChat フォールバック
-    const rec = Array.isArray(akyoData) ? akyoData.find(a => a.id === id) : null;
-    const avatar = rec?.avatarUrl || '';
-    const m = avatar.match(/avtr_[A-Za-z0-9-]+/);
-    if (m) {
-      const u = new URL('/api/vrc-avatar-image', location.origin);
-      u.searchParams.set('avtr', m[0]);
-      u.searchParams.set('w', String(size));
-      if (ver) u.searchParams.set('v', ver);
-      return u.toString();
+    // 2) VRChat フォールバック（削除済みIDも含めて利用）
+    if (typeof window.getAkyoVrchatFallbackUrl === 'function') {
+      const vrchatUrl = window.getAkyoVrchatFallbackUrl(id, { size });
+      if (vrchatUrl) return vrchatUrl;
     }
 
-    // 4) 最後のフォールバック（静的）
+    // 3) 最後のフォールバック（静的）
     return `images/${id}.webp${ver ? `?v=${ver}` : ''}`;
   };
 

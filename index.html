@@ -589,6 +589,18 @@
             // 画像エラーハンドラ（PNG→JPG→プレースホルダー）
             function handleImageError(img, id, color, mode) {
                 if (!img || !id) return;
+
+                const triedVrchat = img.dataset.triedVrchat === '1';
+                if (!triedVrchat && typeof window.getAkyoVrchatFallbackUrl === 'function') {
+                    const fallbackSize = mode === 'modal' ? 1024 : 512;
+                    const vrchatUrl = window.getAkyoVrchatFallbackUrl(id, { size: fallbackSize });
+                    if (vrchatUrl && img.src !== vrchatUrl) {
+                        img.dataset.triedVrchat = '1';
+                        img.src = vrchatUrl;
+                        return;
+                    }
+                }
+
                 const triedJpg = img.dataset.triedJpg === '1';
                 if (!triedJpg) {
                     img.dataset.triedJpg = '1';

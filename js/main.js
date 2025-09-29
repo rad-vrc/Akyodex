@@ -279,33 +279,22 @@ function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
       return appendVersionQuery(manifestEntry, versionValue);
     }
 
-    // 2) R2 直URL フォールバック（マニフェストに存在しない場合）
-    if (!deletedRemoteIds.has(id3)) {
-      try {
-        const r2Base = (typeof window !== 'undefined' && window.PUBLIC_R2_BASE) || 'https://images.akyodex.com';
-        if (r2Base) {
-          return appendVersionQuery(`${r2Base}/${id3}.webp`, versionValue);
+    // 2) VRChat 直リンク（CSVの avatarUrl に avtr_... があれば）
+    try {
+      if (typeof window !== 'undefined' && typeof window.getAkyoVrchatFallbackUrl === 'function') {
+        const fallback = window.getAkyoVrchatFallbackUrl(id3, { size });
+        if (fallback) {
+          return appendVersionQuery(fallback, versionValue);
         }
-      } catch (_) {}
-    }
+      }
+    } catch (_) {}
 
-    // 3) VRChat プロキシ（CSVの avatarUrl に avtr_... があれば）
-    const rec = Array.isArray(akyoData) ? akyoData.find(a => a.id === id3) : null;
-    const avatarUrl = rec?.avatarUrl || '';
-    const m = String(avatarUrl).match(/avtr_[A-Za-z0-9-]+/);
-    if (m) {
-      const u = new URL('/api/vrc-avatar-image', location.origin);
-      u.searchParams.set('avtr', m[0]);
-      u.searchParams.set('w', String(size));
-      if (versionValue) u.searchParams.set('v', versionValue);
-      return u.toString();
-    }
-
-    // 4) ユーザーのローカル保存（IndexedDB / localStorage）
+    // 3) ユーザーのローカル保存（IndexedDB / localStorage）
     const local = sanitizeImageSource(imageDataMap[id3]);
     if (local) return local;
 
-    // 5) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
+    // 4) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
+
     return appendVersionQuery(`images/${id3}.webp`, versionValue);
   }
 

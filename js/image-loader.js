@@ -6,7 +6,7 @@
 // 形式3: ["001オリジン.png", ...]
 let akyoImageManifestMap = {};
 const PUBLIC_R2_BASE = 'https://images.akyodex.com';
-const VRCHAT_PROXY_ENDPOINT = '/api/vrc-avatar-image';
+const VRCHAT_THUMBNAIL_BASE = 'https://api.vrchat.cloud/api/1/avatars';
 
 function getAssetsVersionValue() {
     try {
@@ -168,12 +168,25 @@ function extractAvatarIdFromRecord(record) {
     return match ? match[0] : null;
 }
 
-function buildVrchatProxyUrl(avtrId, size, version) {
-    const params = new URLSearchParams();
-    params.set('avtr', avtrId);
-    params.set('w', String(size));
-    if (version) params.set('v', version);
-    return `${VRCHAT_PROXY_ENDPOINT}?${params.toString()}`;
+function buildVrchatDirectUrl(avtrId, size, version) {
+    if (!avtrId) return null;
+    const url = new URL(`${VRCHAT_THUMBNAIL_BASE}/${avtrId}/thumbnailimage`);
+    url.searchParams.set('size', String(size));
+    if (version) {
+        url.searchParams.set('v', version);
+    }
+    return url.toString();
+}
+
+function resolveVrchatThumbnailUrl(akyoId, size, versionValue) {
+    try {
+        const record = findAkyoRecord(akyoId);
+        const avtrId = extractAvatarIdFromRecord(record);
+        if (!avtrId) return null;
+        return buildVrchatDirectUrl(avtrId, size, versionValue);
+    } catch (_) {
+        return null;
+    }
 }
 
 // 画像の遅延読み込み設定
@@ -241,34 +254,19 @@ function getAkyoImageUrl(akyoIdLike, options = {}) {
     const manifestUrl = tryGetManifestUrl(akyoImageManifestMap, akyoId, versionValue, versionSuffix);
     if (manifestUrl) return manifestUrl;
 
-    // 3) R2 直リンク（マニフェスト未登録時のフォールバック）
+
+    // 3) VRChat 直リンク
+    const vrchatUrl = resolveVrchatThumbnailUrl(akyoId, size, versionValue);
+    if (vrchatUrl) return vrchatUrl;
+
+    // 4) ユーザーのローカル保存データ
     try {
         if (PUBLIC_R2_BASE) {
             return `${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`;
         }
     } catch (_) {}
 
-    // 4) VRChat プロキシ
-    try {
-        const record = findAkyoRecord(akyoId);
-        const avtrId = extractAvatarIdFromRecord(record);
-        if (avtrId) {
-            return buildVrchatProxyUrl(avtrId, size, versionValue);
-        }
-    } catch (_) {}
 
-    // 5) ユーザーのローカル保存データ
-    try {
-        const savedImages = localStorage.getItem('akyoImages');
-        if (savedImages) {
-            const imageDataMap = JSON.parse(savedImages);
-            if (imageDataMap[akyoId]) {
-                return imageDataMap[akyoId];
-            }
-        }
-    } catch (_) {}
-
-    // 6) 最終フォールバック
     return `images/${akyoId}.webp${versionSuffix}`;
 }
 
@@ -283,4 +281,10 @@ if (typeof window !== 'undefined') {
     }
     window.loadImagesManifest = loadImagesManifest;
     window.getAkyoImageUrl = getAkyoImageUrl;
+    window.getAkyoVrchatFallbackUrl = function getAkyoVrchatFallbackUrl(idLike, options = {}) {
+        const akyoId = String(idLike || '').padStart(3, '0');
+        const size = Math.max(32, Math.min(4096, parseInt(options.size || '512', 10) || 512));
+        const versionValue = getAssetsVersionValue();
+        return resolveVrchatThumbnailUrl(akyoId, size, versionValue);
+    };
 }
