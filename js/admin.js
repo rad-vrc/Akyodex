@@ -13,26 +13,30 @@ let hasBoundActionDelegation = false;
 let deletedRemoteIds = new Set();
 
 function loadDeletedRemoteIds() {
-  try {
-    const raw = localStorage.getItem('akyo:deletedRemoteIds');
-    const arr = raw ? JSON.parse(raw) : [];
-    deletedRemoteIds = new Set(Array.isArray(arr) ? arr : []);
-  } catch (_) {
-    deletedRemoteIds = new Set();
+    try {
+      const raw = localStorage.getItem('akyo:deletedRemoteIds');
+      const arr = raw ? JSON.parse(raw) : [];
+      deletedRemoteIds = new Set(Array.isArray(arr) ? arr : []);
+    } catch (_) {
+      deletedRemoteIds = new Set();
+    }
   }
-}
-function saveDeletedRemoteIds() {
-  setLocalStorageSafe('akyo:deletedRemoteIds', JSON.stringify(Array.from(deletedRemoteIds)));
-}
-function markRemoteDeleted(id) {
-  const id3 = String(id).padStart(3, '0');
-  deletedRemoteIds.add(id3); saveDeletedRemoteIds();
-}
-function clearRemoteDeletedMark(id) {
-  const id3 = String(id).padStart(3, '0');
-  if (deletedRemoteIds.delete(id3)) saveDeletedRemoteIds();
-}
-
+  function saveDeletedRemoteIds() {
+    try { localStorage.setItem('akyo:deletedRemoteIds', JSON.stringify(Array.from(deletedRemoteIds))); } catch (_){}
+  }
+  function markRemoteDeleted(id) {
+    const id3 = String(id).padStart(3, '0');
+    deletedRemoteIds.add(id3);
+    saveDeletedRemoteIds();
+  }
+  function clearRemoteDeletedMark(id) {
+    const id3 = String(id).padStart(3, '0');
+    if (deletedRemoteIds.delete(id3)) saveDeletedRemoteIds();
+  }
+try { loadDeletedRemoteIds(); } catch (_){}
+window.addEventListener('storage', (e) => {
+  if (e.key === 'akyo:deletedRemoteIds') loadDeletedRemoteIds();
+});
 // DOMContentLoaded でロード
 document.addEventListener('DOMContentLoaded', loadDeletedRemoteIds);
 
