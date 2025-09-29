@@ -1791,25 +1791,48 @@ async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword, dat
 }
 
 // 🎯 ここに追記
+// admin.js（共通関数群の近く）
 async function deleteRemoteImage(id) {
     if (!adminSessionToken) throw new Error('認証が必要です');
 
     const id3 = String(id).padStart(3, '0');
     const endpoint = window.__USE_GH_UPLOAD__ ? '/api/gh-delete' : '/api/delete-image';
+    const authHeader = { authorization: `Bearer ${adminSessionToken}` };
 
-    const url = new URL(endpoint, location.origin);
-    url.searchParams.set('id', id3);
+    const attempt = async ({ method, json, query }) => {
+      const url = new URL(endpoint, location.origin);
+      if (query) url.searchParams.set('id', id3);
+      const res = await fetch(url.toString(), {
+        method,
+        headers: {
+          ...authHeader,
+          ...(json ? { 'content-type': 'application/json' } : {}),
+        },
+        body: json ? JSON.stringify({ id: id3 }) : undefined,
+      });
+      let payload = null; try { payload = await res.clone().json(); } catch (_) {}
+      if (!res.ok || (payload && payload.ok === false)) {
+        throw new Error((payload && payload.error) || `HTTP ${res.status}`);
+      }
+      return true;
+    };
 
-    const res = await fetch(url.toString(), {
-      method: 'POST',
-      headers: { authorization: `Bearer ${adminSessionToken}` },
-    });
-    let json = null; try { json = await res.clone().json(); } catch (_) {}
-    if (!res.ok || (json && json.ok === false)) {
-      throw new Error((json && json.error) || `HTTP ${res.status}`);
+    try {
+      // 1) DELETE /api/... ?id=xxx
+      return await attempt({ method: 'DELETE', query: true });
+    } catch (e1) {
+      // 405/404 はメソッド違いの可能性が高いので POST にフォールバック
+      if (!/405|404/.test(String(e1))) throw e1;
+      try {
+        // 2) POST JSON {id: "..."}
+        return await attempt({ method: 'POST', json: true });
+      } catch (e2) {
+        // 3) POST /api/... ?id=xxx
+        return await attempt({ method: 'POST', query: true });
+      }
     }
-    return true;
   }
+
 
   // グローバル公開（既存の公開行と並べる）
   window.prepareWebpFileForUpload = prepareWebpFileForUpload;
