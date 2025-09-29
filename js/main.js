@@ -84,6 +84,24 @@ window.addEventListener('storage', (e) => {
 // （functions が window.akyoImageManifestMap を用意している前提）
 const manifestRef = () => (window.akyoImageManifestMap || {});
 
+let cachedPublicR2Base = null;
+function resolvePublicR2Base() {
+    if (cachedPublicR2Base !== null) return cachedPublicR2Base;
+    let base = '';
+    try {
+        if (typeof window !== 'undefined' && window.PUBLIC_R2_BASE) {
+            base = String(window.PUBLIC_R2_BASE || '');
+        }
+    } catch (_) {
+        base = '';
+    }
+    if (base) {
+        base = base.replace(/\/+$/, '');
+    }
+    cachedPublicR2Base = base;
+    return cachedPublicR2Base;
+}
+
 let profileIconCache = { resolved: false, url: null };
 const gridCardCache = new Map();
 const listRowCache = new Map();
@@ -279,7 +297,15 @@ function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
       return appendVersionQuery(manifestEntry, versionValue);
     }
 
-    // 2) VRChat 直リンク（CSVの avatarUrl に avtr_... があれば）
+    // 2) R2 直リンク（公開CDN）
+    if (!deletedRemoteIds.has(id3)) {
+        const r2Base = resolvePublicR2Base();
+        if (r2Base) {
+            return appendVersionQuery(`${r2Base}/${id3}.webp`, versionValue);
+        }
+    }
+
+    // 3) VRChat 直リンク（CSVの avatarUrl に avtr_... があれば）
     try {
       if (typeof window !== 'undefined' && typeof window.getAkyoVrchatFallbackUrl === 'function') {
         const fallback = window.getAkyoVrchatFallbackUrl(id3, { size });
@@ -289,11 +315,11 @@ function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
       }
     } catch (_) {}
 
-    // 3) ユーザーのローカル保存（IndexedDB / localStorage）
+    // 4) ユーザーのローカル保存（IndexedDB / localStorage）
     const local = sanitizeImageSource(imageDataMap[id3]);
     if (local) return local;
 
-    // 4) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
+    // 5) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
 
     return appendVersionQuery(`images/${id3}.webp`, versionValue);
   }
