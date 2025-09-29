@@ -63,6 +63,27 @@ let randomMode = false;        // ランダム表示（現在の絞り込みか�
 let sortOrder = 'asc';         // 昇順/降順の切り替え
 let currentSearchTerms = [];
 let imageDataMap = {}; // 画像データの格納
+// --- remote削除印（R2/GHを消したID）を localStorage から読む ---
+let deletedRemoteIds = new Set();
+function loadDeletedRemoteIds() {
+  try {
+    const raw = localStorage.getItem('akyo:deletedRemoteIds');
+    const arr = raw ? JSON.parse(raw) : [];
+    deletedRemoteIds = new Set(Array.isArray(arr) ? arr : []);
+  } catch (_) {
+    deletedRemoteIds = new Set();
+  }
+}
+// 初期ロード & 他タブ同期
+try { loadDeletedRemoteIds(); } catch (_) {}
+window.addEventListener('storage', (e) => {
+  if (e.key === 'akyo:deletedRemoteIds') loadDeletedRemoteIds();
+});
+
+// 画像マニフェスト（R2/GHの公開URL）も見にいく
+// （functions が window.akyoImageManifestMap を用意している前提）
+const manifestRef = () => (window.akyoImageManifestMap || {});
+
 let profileIconCache = { resolved: false, url: null };
 const gridCardCache = new Map();
 const listRowCache = new Map();
@@ -239,21 +260,39 @@ function displayAttributeName(attr) {
     return attr === '未分類' ? '未分類(まだ追加されてないよ！もう少し待っててね！)' : attr;
 }
 
-function resolveAkyoImageUrl(akyoId) {
-    const storedImage = sanitizeImageSource(imageDataMap[akyoId]);
-    if (storedImage) {
-        return storedImage;
+function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
+    const id3 = String(akyoId).padStart(3, '0');
+
+    // 1) ローカル最優先（IndexedDB / localStorage）
+    const local = sanitizeImageSource(imageDataMap[id3]);
+    if (local) return local;
+
+    // 2) R2/GH マニフェスト（削除印が付いていたら使わない）
+    const mf = manifestRef()[id3];
+    if (mf && !deletedRemoteIds.has(id3)) {
+      const v = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
+      // 重複 ? を避けてキャッシュバスター付与
+      return mf + (mf.includes('?') ? '' : (v ? `?v=${encodeURIComponent(v)}` : ''));
     }
 
-    if (typeof getAkyoImageUrl === 'function') {
-        const fallback = sanitizeImageSource(getAkyoImageUrl(akyoId));
-        if (fallback) {
-            return fallback;
-        }
+    // 3) VRChat プロキシ（CSVの avatarUrl に avtr_... があれば）
+    const rec = Array.isArray(akyoData) ? akyoData.find(a => a.id === id3) : null;
+    const avatarUrl = rec?.avatarUrl || '';
+    const m = String(avatarUrl).match(/avtr_[A-Za-z0-9-]+/);
+    if (m) {
+      const u = new URL('/api/vrc-avatar-image', location.origin);
+      u.searchParams.set('avtr', m[0]);
+      u.searchParams.set('w', String(size));
+      const v = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
+      if (v) u.searchParams.set('v', v);
+      return u.toString();
     }
 
-    return '';
-}
+    // 4) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
+    const v = localStorage.getItem('akyoAssetsVersion') || '';
+    return `images/${id3}.webp${v ? `?v=${encodeURIComponent(v)}` : ''}`;
+  }
+
 
 async function resolveProfileIcon() {
     if (profileIconCache.resolved) {
