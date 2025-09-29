@@ -201,40 +201,63 @@ function setupLazyLoading() {
 }
 
 // 画像URLを取得
+function appendVersionIfNeeded(url, versionValue) {
+    if (!url || !versionValue) return url;
+    if (/[?&]v=/.test(url)) return url;
+    return `${url}${url.includes('?') ? '&' : '?'}v=${encodeURIComponent(versionValue)}`;
+}
+
+function tryGetManifestUrl(manifest, akyoId, versionValue, versionSuffix) {
+    const value = manifest && manifest[akyoId];
+    if (typeof value !== 'string') return null;
+
+    if (/^https?:\/\//.test(value)) {
+        return appendVersionIfNeeded(value, versionValue);
+    }
+
+    if (value.startsWith('/') || value.startsWith('images/')) {
+        return appendVersionIfNeeded(value, versionValue) || `${value}${versionSuffix}`;
+    }
+
+    const relative = `images/${value}`;
+    return appendVersionIfNeeded(relative, versionValue) || `${relative}${versionSuffix}`;
+}
+
 function getAkyoImageUrl(akyoIdLike, options = {}) {
     const akyoId = String(akyoIdLike || '').padStart(3, '0');
     const size = Math.max(32, Math.min(4096, parseInt(options.size || '512', 10) || 512));
     const versionValue = getAssetsVersionValue();
     const versionSuffix = versionValue ? `?v=${encodeURIComponent(versionValue)}` : '';
 
-    // まずwindowにロードされたマニフェストを優先
+    // 1) マニフェスト（window側が優先）
     try {
-        if (typeof window !== 'undefined' && window.akyoImageManifestMap && window.akyoImageManifestMap[akyoId]) {
-            const v = window.akyoImageManifestMap[akyoId];
-            if (typeof v === 'string' && /^https?:\/\//.test(v)) {
-                return versionValue && !/[?&]v=/.test(v) ? `${v}${v.includes('?') ? '&' : '?'}v=${encodeURIComponent(versionValue)}` : v;
-            }
-            return `images/${v}${versionSuffix}`;
+        if (typeof window !== 'undefined' && window.akyoImageManifestMap) {
+            const manifestUrl = tryGetManifestUrl(window.akyoImageManifestMap, akyoId, versionValue, versionSuffix);
+            if (manifestUrl) return manifestUrl;
         }
     } catch (_) {}
-    // マニフェストから探す
-    if (akyoImageManifestMap && akyoImageManifestMap[akyoId]) {
-        const val = akyoImageManifestMap[akyoId];
-        if (typeof val === 'string') {
-            // 1) フルURL
-            if (/^https?:\/\//.test(val)) {
-                return versionValue && !/[?&]v=/.test(val) ? `${val}${val.includes('?') ? '&' : '?'}v=${encodeURIComponent(versionValue)}` : val;
-            }
-            // 2) 先頭がスラッシュ、または既に images/ を含む相対パス
-            if (val.startsWith('/') || val.startsWith('images/')) {
-                return `${val}${versionSuffix}`;
-            }
-            // 3) 純粋なファイル名
-            return `images/${val}${versionSuffix}`;
-        }
-    }
 
-    // 次にローカルストレージから探す
+    // 2) ローカルコピーのマニフェスト
+    const manifestUrl = tryGetManifestUrl(akyoImageManifestMap, akyoId, versionValue, versionSuffix);
+    if (manifestUrl) return manifestUrl;
+
+    // 3) R2 直リンク（マニフェスト未登録時のフォールバック）
+    try {
+        if (PUBLIC_R2_BASE) {
+            return `${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`;
+        }
+    } catch (_) {}
+
+    // 4) VRChat プロキシ
+    try {
+        const record = findAkyoRecord(akyoId);
+        const avtrId = extractAvatarIdFromRecord(record);
+        if (avtrId) {
+            return buildVrchatProxyUrl(avtrId, size, versionValue);
+        }
+    } catch (_) {}
+
+    // 5) ユーザーのローカル保存データ
     try {
         const savedImages = localStorage.getItem('akyoImages');
         if (savedImages) {
@@ -245,23 +268,7 @@ function getAkyoImageUrl(akyoIdLike, options = {}) {
         }
     } catch (_) {}
 
-    // VRChat直リンクにフォールバック
-    try {
-        const record = findAkyoRecord(akyoId);
-        const avtrId = extractAvatarIdFromRecord(record);
-        if (avtrId) {
-            return buildVrchatProxyUrl(avtrId, size, versionValue);
-        }
-    } catch (_) {}
-
-    // R2直URL（最後の手段）
-    try {
-        if (PUBLIC_R2_BASE) {
-            return `${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`;
-        }
-    } catch (_) {}
-
-    // 最後のフォールバック: デプロイ先の静的フォルダ images/{id}.webp
+    // 6) 最終フォールバック
     return `images/${akyoId}.webp${versionSuffix}`;
 }
 
@@ -271,6 +278,9 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 if (typeof window !== 'undefined') {
+    if (typeof window.PUBLIC_R2_BASE === 'undefined') {
+        window.PUBLIC_R2_BASE = PUBLIC_R2_BASE;
+    }
     window.loadImagesManifest = loadImagesManifest;
     window.getAkyoImageUrl = getAkyoImageUrl;
 }
