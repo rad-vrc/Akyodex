@@ -457,7 +457,14 @@ select:focus {
     padding: 20px !important;
     border-radius: 26px 26px 0 0 !important;
 }
-
+#editModal h2 {
+    background: none !important;
+    color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-background-clip: border-box !important;
+    animation: none !important;
+    text-shadow: none !important;
+}
 #modalTitle {
     font-size: 28px !important;
     font-weight: 900 !important;
