@@ -2113,43 +2113,52 @@ function updateImageGallery() {
     if (!gallery) return;
     gallery.innerHTML = '';
 
-    // 画像数を更新
-    if (imageCount) {
-        imageCount.textContent = Object.keys(imageDataMap).length;
-    }
+    // カウントは従来どおり「ローカル保存分」の枚数のままにする
+    if (imageCount) imageCount.textContent = Object.keys(imageDataMap).length;
 
-    // IDでソート
-    const sortedEntries = Object.entries(imageDataMap).sort((a, b) => a[0].localeCompare(b[0]));
+    const ids = Array.isArray(akyoData) ? akyoData.map(a => a.id).sort((a,b)=>a.localeCompare(b)) : [];
+    ids.forEach((akyoId) => {
+      const akyo = akyoData.find(a => a.id === akyoId);
+      const isLocal = !!(imageDataMap && imageDataMap[akyoId]);
 
-    sortedEntries.forEach(([akyoId, imageData]) => {
-        const akyo = akyoData.find(a => a.id === akyoId);
-        const div = document.createElement('div');
-        div.className = 'relative group';
-        div.tabIndex = 0;
+      const src =
+        (imageDataMap && imageDataMap[akyoId]) ||
+        (window.akyoImageManifestMap && window.akyoImageManifestMap[akyoId]) ||
+        (typeof getAkyoImageUrl === 'function' ? getAkyoImageUrl(akyoId) : `images/${akyoId}.webp`);
 
-        const safeAkyoId = escapeHtml(akyoId);
-        const safeImageData = escapeHtml(imageData || '');
-        const safeLabel = escapeHtml(akyo ? (akyo.nickname || akyo.avatarName || '') : '未登録');
+      const div = document.createElement('div');
+      div.className = 'relative group';
+      div.tabIndex = 0;
 
-        div.innerHTML = `
-            <img src="${safeImageData}" class="w-full h-24 object-cover rounded-lg">
-            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                <div class="text-white text-center">
-                    <div class="font-bold">#${safeAkyoId}</div>
-                    <div class="text-xs">${safeLabel}</div>
-                </div>
-            </div>
-            ${currentUserRole === 'owner' ? `
-            <button type="button" data-action="remove-image" data-id="${safeAkyoId}"
-                    class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-                <i class="fas fa-times text-xs"></i>
-            </button>
-            ` : ''}
-        `;
+      const safeId = escapeHtml(akyoId);
+      const safeSrc = escapeHtml(src || '');
+      const safeLabel = escapeHtml(akyo ? (akyo.nickname || akyo.avatarName || '') : '未登録');
+      const alt = akyo && (akyo.nickname || akyo.avatarName)
+        ? `Akyo #${akyoId} ${akyo.nickname || akyo.avatarName}`
+        : `Akyo #${akyoId} の画像`;
+      const safeAlt = escapeHtml(alt);
 
-        gallery.appendChild(div);
+      div.innerHTML = `
+        <img src="${safeSrc}" alt="${safeAlt}" class="w-full h-24 object-cover rounded-lg" onerror="this.style.display='none'">
+        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+          <div class="text-white text-center">
+            <div class="font-bold">#${safeId}</div>
+            <div class="text-xs">${safeLabel}</div>
+          </div>
+        </div>
+        ${
+          (isLocal && currentUserRole === 'owner')
+            ? `<button type="button" data-action="remove-image" data-id="${safeId}"
+                 class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+                 <i class="fas fa-times text-xs"></i>
+               </button>`
+            : ''
+        }
+      `;
+      gallery.appendChild(div);
     });
-}
+  }
+
 
 // 画像削除（IndexedDB/Local双方）
 async function removeImage(akyoId) {
@@ -2411,5 +2420,32 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+window.getAkyoImageUrl = function getAkyoImageUrl(idLike, { size = 512 } = {}) {
+    const id = String(idLike).padStart(3, '0');
+
+    // 1) ローカル最優先
+    if (imageDataMap && imageDataMap[id]) return imageDataMap[id];
+
+    // 2) R2（アップロード後に設定される公開URLのマニフェスト）
+    if (window.akyoImageManifestMap && window.akyoImageManifestMap[id]) {
+      return window.akyoImageManifestMap[id];
+    }
+
+    // 3) avatarUrl → avtr_xxx を拾って VRChat 参照
+    const rec = Array.isArray(akyoData) ? akyoData.find(a => a.id === id) : null;
+    const avatar = rec?.avatarUrl || '';
+    const m = avatar.match(/avtr_[A-Za-z0-9-]+/);
+    if (m) {
+      const u = new URL('/api/vrc-avatar-image', location.origin);
+      u.searchParams.set('avtr', m[0]);
+      u.searchParams.set('w', String(size));
+      return u.toString();
+    }
+
+    // 4) 最後のフォールバック
+    return `images/${id}.webp`;
+  };
+
 
 console.debug('admin.js loaded successfully');
