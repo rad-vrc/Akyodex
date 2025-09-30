@@ -1010,8 +1010,10 @@ async function loadAkyoData() {
         const csvPath = getCurrentCsvPath();
         let csvText;
         let loadedFromNetwork = false;
+        let usedJapaneseFallback = false; // 👈 追加
 
         if (currentLanguage === 'ja') {
+            // 日本語版の読み込み（既存のまま）
             try {
                 const response = await fetch(`/api/csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
                 if (!response.ok) throw new Error(`api/csv failed: ${response.status}`);
@@ -1046,34 +1048,117 @@ async function loadAkyoData() {
                 }
             }
         } else {
+            // 👇 他言語版の読み込み（フォールバック機能を追加）
             try {
                 const fallback = await fetch(`${csvPath}?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                if (!fallback.ok) throw new Error(`fallback csv failed: ${fallback.status}`);
+                if (!fallback.ok) throw new Error(`${currentLanguage} csv failed: ${fallback.status}`);
                 csvText = await fallback.text();
                 loadedFromNetwork = true;
-            } catch (_) {
-                const updatedCSV = safeGetLocalStorage(storageKey);
-                if (updatedCSV) {
-                    console.debug('ネットワーク失敗のためLocalStorageから読み込み');
-                    csvText = updatedCSV;
-                } else {
-                    throw new Error('CSV取得に失敗しました（ネットワーク/ローカル保存なし）');
+            } catch (langError) {
+                console.warn(`${currentLanguage}版CSVの取得に失敗:`, langError);
+
+                // 👇 日本語版へフォールバック
+                try {
+                    console.debug(`日本語版にフォールバックします...`);
+                    const jaPath = 'data/akyo-data.csv';
+                    const jaResponse = await fetch(`${jaPath}?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+
+                    if (!jaResponse.ok) {
+                        throw new Error(`Japanese fallback failed: ${jaResponse.status}`);
+                    }
+
+                    csvText = await jaResponse.text();
+                    loadedFromNetwork = true;
+                    usedJapaneseFallback = true;
+                    console.debug(`日本語版フォールバック成功`);
+
+                } catch (jaError) {
+                    console.warn('日本語版フォールバックも失敗:', jaError);
+
+                    // 👇 最終手段: LocalStorage
+                    const updatedCSV = safeGetLocalStorage(storageKey);
+                    if (updatedCSV) {
+                        console.debug('ネットワーク失敗のためLocalStorageから読み込み');
+                        csvText = updatedCSV;
+                    } else {
+                        // 👇 LocalStorageにもない場合は日本語版のLocalStorageを試す
+                        const jaStorageKey = 'akyoDataCSV'; // 日本語版のキー
+                        const jaUpdatedCSV = safeGetLocalStorage(jaStorageKey);
+                        if (jaUpdatedCSV) {
+                            console.debug('日本語版LocalStorageから読み込み');
+                            csvText = jaUpdatedCSV;
+                            usedJapaneseFallback = true;
+                        } else {
+                            throw new Error('CSV取得に失敗しました（ネットワーク/ローカル保存なし）');
+                        }
+                    }
                 }
             }
         }
 
+        // 👇 ネットワークから取得した場合のみLocalStorageに保存
         if (loadedFromNetwork && typeof csvText === 'string' && currentLanguage !== 'ja') {
             safeSetLocalStorage(storageKey, csvText);
         }
 
         console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
 
+        // 👇 フォールバック使用時の通知（オプション）
+        if (usedJapaneseFallback) {
+            console.debug(`${currentLanguage}版が未完成のため、日本語版を表示しています`);
+            // 必要に応じてユーザーに通知
+            // showToast(`${currentLanguage}版の翻訳が未完成のため、一部日本語で表示されます`, 'info');
+        }
+
         // 速報対処: 行ごとの引用符不整合を自動修復（奇数個の行末に閉じ"を補う）
         csvText = sanitizeCsvText(csvText);
 
         // CSV解析
         akyoData = parseCSV(csvText);
-    window.publicAkyoList = akyoData;
+        // 行単位のマージ処理（他言語版の場合のみ）
+        if (currentLanguage !== 'ja' && !usedJapaneseFallback) {
+            try {
+                console.debug('日本語版とのマージ処理を開始...');
+
+                // 日本語版を取得
+                const jaResponse = await fetch(`/api/csv?lang=ja&v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+
+                if (jaResponse.ok) {
+                    const jaText = await jaResponse.text();
+                    const sanitizedJaText = sanitizeCsvText(jaText);
+                    const jaData = parseCSV(sanitizedJaText);
+
+                    // 現在の言語版に存在するIDのセットを作成
+                    const currentIds = new Set(akyoData.map(a => a.id));
+
+                    // 日本語版にあって現在言語版にないエントリを抽出
+                    const missingEntries = jaData.filter(a => !currentIds.has(a.id));
+
+                    if (missingEntries.length > 0) {
+                        console.debug(`日本語版から${missingEntries.length}件のデータを補完:`,
+                                     missingEntries.map(a => a.id).join(', '));
+
+                        // マージしてIDでソート
+                        akyoData = [...akyoData, ...missingEntries].sort((a, b) => {
+                            const aNum = parseInt(a.id, 10);
+                            const bNum = parseInt(b.id, 10);
+                            return aNum - bNum;
+                        });
+
+                        // 補完があったことを通知（オプション）
+                        showToast(`${missingEntries.length}件のデータを日本語版から補完しました`, 'info');
+                    } else {
+                        console.debug('日本語版からの補完は不要です（全データが翻訳済み）');
+                    }
+                } else {
+                    console.warn('日本語版の取得に失敗しましたが、処理を続行します');
+                }
+            } catch (mergeError) {
+                console.warn('日本語版とのマージ処理に失敗:', mergeError);
+                // マージ失敗してもメイン処理は続行
+            }
+        }
+        window.publicAkyoList = akyoData;
         gridCardCache.clear();
         listRowCache.clear();
 
@@ -1082,10 +1167,10 @@ async function loadAkyoData() {
         }
 
         filteredData = [...akyoData];
-(
-  (typeof window !== 'undefined' && typeof window.buildSearchIndex === 'function') ? window.buildSearchIndex :
-  (typeof buildSearchIndex === 'function') ? buildSearchIndex : null
-)?.();
+        (
+          (typeof window !== 'undefined' && typeof window.buildSearchIndex === 'function') ? window.buildSearchIndex :
+          (typeof buildSearchIndex === 'function') ? buildSearchIndex : null
+        )?.();
 
 
         console.debug(`${akyoData.length}種類のAKyoを読み込みました`);
