@@ -23,20 +23,152 @@ const LANGUAGE_CONFIG = {
         htmlLang: 'ja',
         csvPath: 'data/akyo-data.csv',
         logoPath: '/images/logo.webp',
+        logoAlt: 'Akyoずかん',
         title: 'Akyoずかん-VRChatアバター Akyo図鑑- | Akyodex-VRChat Avatar Akyo Index',
         description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+        ogTitle: 'Akyoずかん-VRChatアバター Akyo図鑑-',
+        ogDescription: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+        ogLocale: 'ja_JP',
+        twitterTitle: 'Akyoずかん-VRChatアバター Akyo図鑑-',
+        twitterDescription: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+        twitterImageAlt: 'Akyoずかん ロゴ',
         toggleLabel: 'English',
-        toggleAria: '英語版ホームページに切り替える'
+        toggleAria: '英語版ホームページに切り替える',
+        adminButtonTitle: 'ファインダーモード',
+        strings: {
+            searchPlaceholder: 'Akyoを検索... (名前、ID、属性など)',
+            attributePlaceholder: 'すべての属性',
+            creatorPlaceholder: 'すべての作者',
+            quickFilters: {
+                sortAsc: '昇順',
+                sortDesc: '降順',
+                random: 'ランダム表示',
+                favorites: 'お気に入りのみ'
+            },
+            stats: {
+                totalPrefix: '全',
+                totalSuffix: '種',
+                displayPrefix: '表示中:',
+                displaySuffix: '',
+                favoritesPrefix: 'お気に入り:',
+                favoritesSuffix: ''
+            },
+            loadingMessage: 'Akyoデータを読み込んでいます...',
+            noDataMessage: '該当するAkyoが見つかりませんでした',
+            listHeaders: {
+                number: 'No.',
+                appearance: '見た目',
+                name: '名前',
+                attribute: '属性',
+                creator: '作者',
+                actions: 'アクション'
+            },
+            viewToggle: {
+                gridAria: 'グリッド表示',
+                listAria: 'リスト表示'
+            },
+            card: {
+                detailButton: 'くわしく見る',
+                avatarLabel: 'アバター名:',
+                creatorLabel: '作者:'
+            },
+            favorites: {
+                add: 'お気に入りに追加',
+                remove: 'お気に入りから削除'
+            },
+            detailModal: {
+                sectionName: 'なまえ',
+                sectionAvatar: 'アバター名',
+                sectionAttributes: 'ぞくせい',
+                sectionCreator: 'つくったひと',
+                extraInfoHeading: 'おまけ情報',
+                vrchatUrlHeading: 'VRChat アバターURL',
+                openInVrchat: 'VRChatで見る',
+                noImage: '画像がまだないよ！'
+            },
+            messages: {
+                reloadFailed: '最新データの取得に失敗しました。再試行してください。',
+                partialLoadFailed: '一部の読み込みに失敗しました。ページを更新するか再試行してください。',
+                initFailed: '初期化に失敗しました。再読み込みしますか？',
+                retry: '再試行'
+            }
+        }
     },
     en: {
         code: 'en',
         htmlLang: 'en',
         csvPath: 'data/akyo-data-US.csv',
         logoPath: '/images/logo-US.webp',
+        logoAlt: 'Akyodex',
         title: 'Akyodex - VRChat Avatar Akyo Index',
         description: 'Browse more than 500 mysterious Akyo avatars from VRChat. Search by name, creator, or attributes and join the community of Akyo finders!',
+        ogTitle: 'Akyodex - VRChat Avatar Akyo Index',
+        ogDescription: 'Browse more than 500 mysterious Akyo avatars from VRChat. Search by name, creator, or attributes and join the community of Akyo finders!',
+        ogLocale: 'en_US',
+        twitterTitle: 'Akyodex - VRChat Avatar Akyo Index',
+        twitterDescription: 'Browse more than 500 mysterious Akyo avatars from VRChat. Search by name, creator, or attributes and join the community of Akyo finders!',
+        twitterImageAlt: 'Akyodex logo',
         toggleLabel: '日本語',
-        toggleAria: '日本語版ホームページに切り替える'
+        toggleAria: '日本語版ホームページに切り替える',
+        adminButtonTitle: 'Finder mode',
+        strings: {
+            searchPlaceholder: 'Search Akyo... (name, ID, attributes)',
+            attributePlaceholder: 'All attributes',
+            creatorPlaceholder: 'All creators',
+            quickFilters: {
+                sortAsc: 'Sort ascending',
+                sortDesc: 'Sort descending',
+                random: 'Randomize',
+                favorites: 'Favorites only'
+            },
+            stats: {
+                totalPrefix: 'Total',
+                totalSuffix: 'Akyo',
+                displayPrefix: 'Showing:',
+                displaySuffix: '',
+                favoritesPrefix: 'Favorites:',
+                favoritesSuffix: ''
+            },
+            loadingMessage: 'Loading Akyo data...',
+            noDataMessage: 'No Akyo entries found',
+            listHeaders: {
+                number: 'No.',
+                appearance: 'Appearance',
+                name: 'Name',
+                attribute: 'Attributes',
+                creator: 'Creator',
+                actions: 'Actions'
+            },
+            viewToggle: {
+                gridAria: 'Grid view',
+                listAria: 'List view'
+            },
+            card: {
+                detailButton: 'View details',
+                avatarLabel: 'Avatar name:',
+                creatorLabel: 'Creator:'
+            },
+            favorites: {
+                add: 'Add to favorites',
+                remove: 'Remove from favorites'
+            },
+            detailModal: {
+                sectionName: 'Name',
+                sectionAvatar: 'Avatar name',
+                sectionAttributes: 'Attributes',
+                sectionCreator: 'Creator',
+                extraInfoHeading: 'Extra info',
+                vrchatUrlHeading: 'VRChat avatar URL',
+                openInVrchat: 'Open in VRChat',
+                noImage: 'No image yet!'
+            },
+            messages: {
+                reloadFailed: 'Failed to fetch the latest data. Please try again.',
+                partialLoadFailed: 'Some content failed to load. Refresh the page or try again.',
+                initFailed: 'Initialization failed. Reload the page?',
+                retry: 'Retry'
+            }
+        }
     }
 };
 
@@ -92,9 +224,15 @@ let currentLanguage = detectInitialLanguage();
 window.akyoCurrentLanguage = currentLanguage;
 updateDocumentLanguageAttributes();
 updatePreferredLogoPath();
+updateStaticTextContent();
 
 function getLanguageConfig(lang = currentLanguage) {
     return LANGUAGE_CONFIG[lang] || LANGUAGE_CONFIG.ja;
+}
+
+function getLanguageStrings(lang = currentLanguage) {
+    const config = getLanguageConfig(lang);
+    return config?.strings || LANGUAGE_CONFIG.ja.strings;
 }
 
 function getCsvStorageKeyForLanguage(lang) {
@@ -117,6 +255,19 @@ function getCurrentLogoPath() {
     return getLanguageConfig().logoPath;
 }
 
+function buildDetailButtonMarkup(label) {
+    return `
+                <span class="relative z-10 flex items-center justify-center whitespace-nowrap">
+                    <span class="text-2xl mr-2 hidden sm:inline animate-bounce">🌟</span>
+                    <span class="inline-flex items-center">
+                        <span>${label}</span>
+                    </span>
+                    <span class="text-2xl ml-2 hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
+    `;
+}
+
 function updateDocumentLanguageAttributes(lang = currentLanguage) {
     const config = getLanguageConfig(lang);
     try {
@@ -132,6 +283,30 @@ function updateDocumentLanguageAttributes(lang = currentLanguage) {
                 meta.setAttribute('content', config.description);
             }
         }
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) {
+            ogTitle.setAttribute('content', config.ogTitle || config.title || '');
+        }
+        const ogDescription = document.querySelector('meta[property="og:description"]');
+        if (ogDescription) {
+            ogDescription.setAttribute('content', config.ogDescription || config.description || '');
+        }
+        const ogLocale = document.querySelector('meta[property="og:locale"]');
+        if (ogLocale) {
+            ogLocale.setAttribute('content', config.ogLocale || lang);
+        }
+        const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+        if (twitterTitle) {
+            twitterTitle.setAttribute('content', config.twitterTitle || config.title || '');
+        }
+        const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+        if (twitterDescription) {
+            twitterDescription.setAttribute('content', config.twitterDescription || config.description || '');
+        }
+        const twitterImageAlt = document.querySelector('meta[name="twitter:image:alt"]');
+        if (twitterImageAlt) {
+            twitterImageAlt.setAttribute('content', config.twitterImageAlt || (config.logoAlt || ''));
+        }
     } catch (error) {
         console.warn('Failed to update document language attributes:', error);
     }
@@ -146,9 +321,104 @@ function updateLanguageToggleButton() {
     button.title = config.toggleAria;
 }
 
+function updateStaticTextContent(lang = currentLanguage) {
+    const strings = getLanguageStrings(lang);
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.setAttribute('placeholder', strings.searchPlaceholder);
+    }
+
+    const attributeFilter = document.getElementById('attributeFilter');
+    if (attributeFilter) {
+        const placeholderOption = attributeFilter.querySelector('option[value=""]');
+        if (placeholderOption) {
+            placeholderOption.textContent = strings.attributePlaceholder;
+        }
+    }
+
+    const creatorFilter = document.getElementById('creatorFilter');
+    if (creatorFilter) {
+        const placeholderOption = creatorFilter.querySelector('option[value=""]');
+        if (placeholderOption) {
+            placeholderOption.textContent = strings.creatorPlaceholder;
+        }
+    }
+
+    const totalPrefix = document.getElementById('totalLabelPrefix');
+    if (totalPrefix) {
+        totalPrefix.textContent = strings.stats.totalPrefix ?? '';
+    }
+    const totalSuffix = document.getElementById('totalLabelSuffix');
+    if (totalSuffix) {
+        totalSuffix.textContent = strings.stats.totalSuffix ?? '';
+    }
+
+    const displayPrefix = document.getElementById('displayLabelPrefix');
+    if (displayPrefix) {
+        displayPrefix.textContent = strings.stats.displayPrefix ?? '';
+    }
+    const displaySuffix = document.getElementById('displayLabelSuffix');
+    if (displaySuffix) {
+        displaySuffix.textContent = strings.stats.displaySuffix ?? '';
+    }
+
+    const favoritePrefix = document.getElementById('favoriteLabelPrefix');
+    if (favoritePrefix) {
+        favoritePrefix.textContent = strings.stats.favoritesPrefix ?? '';
+    }
+    const favoriteSuffix = document.getElementById('favoriteLabelSuffix');
+    if (favoriteSuffix) {
+        favoriteSuffix.textContent = strings.stats.favoritesSuffix ?? '';
+    }
+
+    const loadingMessage = document.getElementById('loadingMessage');
+    if (loadingMessage) {
+        loadingMessage.textContent = strings.loadingMessage;
+    }
+
+    const noDataMessage = document.getElementById('noDataMessage');
+    if (noDataMessage) {
+        noDataMessage.textContent = strings.noDataMessage;
+    }
+
+    const headerNumber = document.getElementById('listHeaderNumber');
+    if (headerNumber) headerNumber.textContent = strings.listHeaders.number;
+    const headerAppearance = document.getElementById('listHeaderAppearance');
+    if (headerAppearance) headerAppearance.textContent = strings.listHeaders.appearance;
+    const headerName = document.getElementById('listHeaderName');
+    if (headerName) headerName.textContent = strings.listHeaders.name;
+    const headerAttribute = document.getElementById('listHeaderAttribute');
+    if (headerAttribute) headerAttribute.textContent = strings.listHeaders.attribute;
+    const headerCreator = document.getElementById('listHeaderCreator');
+    if (headerCreator) headerCreator.textContent = strings.listHeaders.creator;
+    const headerActions = document.getElementById('listHeaderActions');
+    if (headerActions) headerActions.textContent = strings.listHeaders.actions;
+
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    if (gridViewBtn) {
+        gridViewBtn.setAttribute('aria-label', strings.viewToggle.gridAria);
+        gridViewBtn.title = strings.viewToggle.gridAria;
+    }
+
+    const listViewBtn = document.getElementById('listViewBtn');
+    if (listViewBtn) {
+        listViewBtn.setAttribute('aria-label', strings.viewToggle.listAria);
+        listViewBtn.title = strings.viewToggle.listAria;
+    }
+
+    const adminBtn = document.getElementById('adminShortcutBtn');
+    if (adminBtn) {
+        adminBtn.title = getLanguageConfig(lang).adminButtonTitle;
+        adminBtn.setAttribute('aria-label', getLanguageConfig(lang).adminButtonTitle);
+    }
+}
+
 function updatePreferredLogoPath() {
+    const config = getLanguageConfig();
     const logoPath = getCurrentLogoPath();
+    const logoAlt = config.logoAlt || (config.code === 'en' ? 'Akyodex' : 'Akyoずかん');
     window.akyoPreferredLogoPath = logoPath;
+    window.akyoPreferredLogoAlt = logoAlt;
     const preload = document.getElementById('logoPreload');
     if (preload) {
         preload.href = logoPath;
@@ -158,7 +428,7 @@ function updatePreferredLogoPath() {
         const img = headerLogoEl.querySelector('img');
         if (img) {
             img.src = logoPath;
-            img.alt = getLanguageConfig().code === 'en' ? 'Akyodex' : 'Akyoずかん';
+            img.alt = logoAlt;
         }
     }
 }
@@ -171,6 +441,8 @@ async function setLanguage(lang) {
     updateDocumentLanguageAttributes(lang);
     updateLanguageToggleButton();
     updatePreferredLogoPath();
+    updateStaticTextContent(lang);
+    updateQuickFilterStyles();
 
     const loadingContainer = document.getElementById('loadingContainer');
     const gridView = document.getElementById('gridView');
@@ -638,7 +910,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadAkyoData()
             .then(applyFilters)
             .catch(() => {
-                showToast('最新データの取得に失敗しました。再試行してください。', 'warning', () => {
+                const messages = getLanguageStrings().messages;
+                showToast(messages.reloadFailed, 'warning', () => {
                     loadAkyoData().then(applyFilters).catch(() => {});
                 });
             });
@@ -685,8 +958,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     ]).then((results) => {
         const hasSuccess = results.some(r => r.status === 'fulfilled');
         const failures = results.filter(r => r.status === 'rejected').length;
+        const messages = getLanguageStrings().messages;
         if (failures > 0) {
-            showToast('一部の読み込みに失敗しました。ページを更新するか再試行してください。', 'warning', () => location.reload());
+            showToast(messages.partialLoadFailed, 'warning', () => location.reload());
         }
         // CSV失敗時はapplyFiltersを走らせない
         const csvResult = results[3] || results[2];
@@ -706,7 +980,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch(_) {}
         } else {
             // 詳細なエラーパネル（loadAkyoDataのcatchで描画済み）を保持するため、ここではトーストのみ表示
-            showToast('初期化に失敗しました。再読み込みしますか？', 'error', () => location.reload());
+            showToast(messages.initFailed, 'error', () => location.reload());
         }
     });
 
@@ -968,7 +1242,8 @@ function createAttributeFilter() {
     });
 
     const select = document.getElementById('attributeFilter');
-    populateSelect(select, Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).map(v => ({ value: v, label: displayAttributeName(v) })), 'すべての属性');
+    const strings = getLanguageStrings();
+    populateSelect(select, Array.from(attributeSet).sort((a,b)=>a.localeCompare(b,'ja')).map(v => ({ value: v, label: displayAttributeName(v) })), strings.attributePlaceholder);
 }
 
 function createCreatorFilter() {
@@ -980,8 +1255,9 @@ function createCreatorFilter() {
     const select = document.getElementById('creatorFilter');
     if (!select) return;
 
+    const strings = getLanguageStrings();
     const options = Array.from(creatorSet).sort((a,b)=>a.localeCompare(b,'ja')).map(v => ({ value: v, label: v }));
-    populateSelect(select, options, 'すべての作者');
+    populateSelect(select, options, strings.creatorPlaceholder);
 }
 
 // イベントリスナーの設定
@@ -1053,9 +1329,12 @@ function setupEventListeners() {
     floatingContainer.appendChild(languageBtn);
 
     const adminBtn = document.createElement('button');
+    adminBtn.id = 'adminShortcutBtn';
     adminBtn.className = 'bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300';
     adminBtn.innerHTML = '<i class="fas fa-cog"></i>';
-    adminBtn.title = 'ファインダーモード';
+    const adminTitle = getLanguageConfig().adminButtonTitle;
+    adminBtn.title = adminTitle;
+    adminBtn.setAttribute('aria-label', adminTitle);
     adminBtn.addEventListener('click', () => {
         window.location.href = 'admin.html';
     });
@@ -1063,6 +1342,7 @@ function setupEventListeners() {
 
     document.body.appendChild(floatingContainer);
     updateLanguageToggleButton();
+    updateStaticTextContent();
 
     // モーダルクローズ
     const closeModalBtn = document.getElementById('closeModal');
@@ -1235,14 +1515,15 @@ function updateQuickFilterStyles() {
     const sortBtn = document.getElementById('sortToggleBtn');
     const randomBtn = document.getElementById('randomToggleBtn');
     const favoriteBtn = document.getElementById('favoritesToggleBtn');
+    const strings = getLanguageStrings();
 
     if (sortBtn) {
         if (sortOrder === 'asc') {
             sortBtn.className = 'attribute-badge quick-filter-badge bg-green-200 text-green-800 hover:bg-green-300 transition-colors';
-            sortBtn.innerHTML = '<i class="fas fa-arrow-up-1-9"></i> 昇順';
+            sortBtn.innerHTML = `<i class="fas fa-arrow-up-1-9"></i> ${strings.quickFilters.sortAsc}`;
         } else {
             sortBtn.className = 'attribute-badge quick-filter-badge bg-blue-200 text-blue-800 hover:bg-blue-300 transition-colors';
-            sortBtn.innerHTML = '<i class="fas fa-arrow-down-9-1"></i> 降順';
+            sortBtn.innerHTML = `<i class="fas fa-arrow-down-9-1"></i> ${strings.quickFilters.sortDesc}`;
         }
     }
 
@@ -1250,14 +1531,14 @@ function updateQuickFilterStyles() {
         randomBtn.className = randomMode
             ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
             : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-        randomBtn.innerHTML = '<i class="fas fa-dice"></i> ランダム表示';
+        randomBtn.innerHTML = `<i class="fas fa-dice"></i> ${strings.quickFilters.random}`;
     }
 
     if (favoriteBtn) {
         favoriteBtn.className = favoritesOnlyMode
             ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
             : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-        favoriteBtn.innerHTML = '<i class="fas fa-star"></i> お気に入りのみ';
+        favoriteBtn.innerHTML = `<i class="fas fa-star"></i> ${strings.quickFilters.favorites}`;
     }
 }
 
@@ -1351,6 +1632,9 @@ function renderGridView() {
 }
 
 function createAkyoCard(state) {
+    const strings = getLanguageStrings();
+    const cardStrings = strings.card;
+    const favoriteStrings = strings.favorites;
     const card = document.createElement('div');
     card.className = 'akyo-card bg-white rounded-xl shadow-lg overflow-hidden';
     card.dataset.akyoId = state.id;
@@ -1367,6 +1651,8 @@ function createAkyoCard(state) {
     const favoriteIcon = document.createElement('i');
     favoriteIcon.dataset.favoriteIcon = 'grid';
     favoriteButton.appendChild(favoriteIcon);
+    favoriteButton.setAttribute('aria-label', favoriteStrings.add);
+    favoriteButton.title = favoriteStrings.add;
     mediaWrapper.appendChild(favoriteButton);
 
     card.appendChild(mediaWrapper);
@@ -1395,32 +1681,30 @@ function createAkyoCard(state) {
 
     const detailButton = document.createElement('button');
     detailButton.className = 'detail-button w-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white py-3 rounded-2xl hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-bold text-lg shadow-lg hover:shadow-xl relative overflow-hidden';
-    detailButton.innerHTML = `
-                <span class="relative z-10 flex items-center justify-center whitespace-nowrap">
-                    <span class="text-2xl mr-2 hidden sm:inline animate-bounce">🌟</span>
-                    <span class="inline-flex items-center">
-                        <span>くわしく見る</span>
-                    </span>
-                    <span class="text-2xl ml-2 hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
-                </span>
-                <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
-    `;
+    detailButton.innerHTML = buildDetailButtonMarkup(cardStrings.detailButton);
+    detailButton.setAttribute('aria-label', cardStrings.detailButton);
+    detailButton.title = cardStrings.detailButton;
     detailButton.addEventListener('click', () => showDetail(state.id));
     content.appendChild(detailButton);
 
     card.appendChild(content);
 
     updateAkyoCard(card, state);
+    card.dataset.akyoLanguage = currentLanguage;
 
     return card;
 }
 
 function updateAkyoCard(card, state) {
-    if (card.dataset.akyoSignature === state.signature) {
+    const strings = getLanguageStrings();
+    const cardStrings = strings.card;
+    const favoriteStrings = strings.favorites;
+    if (card.dataset.akyoSignature === state.signature && card.dataset.akyoLanguage === currentLanguage) {
         return;
     }
 
     card.dataset.akyoSignature = state.signature;
+    card.dataset.akyoLanguage = currentLanguage;
     card.dataset.akyoId = state.id;
 
     const idLabel = card.querySelector('.akyo-id-label');
@@ -1449,9 +1733,10 @@ function updateAkyoCard(card, state) {
 
     const creator = card.querySelector('.akyo-creator');
     if (creator) {
-        let creatorText = `作者: ${state.creator}`;
+        const creatorName = state.creator || '';
+        let creatorText = `${cardStrings.creatorLabel} ${creatorName}`;
         if (state.avatarName && state.avatarName !== state.displayName) {
-            creatorText = `アバター名: ${state.avatarName}\n${creatorText}`;
+            creatorText = `${cardStrings.avatarLabel} ${state.avatarName}\n${creatorText}`;
         }
         creator.textContent = creatorText;
     }
@@ -1459,6 +1744,19 @@ function updateAkyoCard(card, state) {
     const favoriteIcon = card.querySelector('[data-favorite-icon="grid"]');
     if (favoriteIcon) {
         favoriteIcon.className = `fas fa-heart ${state.isFavorite ? 'text-red-500' : 'text-gray-300'}`;
+        const favoriteButton = favoriteIcon.closest('button');
+        if (favoriteButton) {
+            const label = state.isFavorite ? favoriteStrings.remove : favoriteStrings.add;
+            favoriteButton.setAttribute('aria-label', label);
+            favoriteButton.title = label;
+        }
+    }
+
+    const detailButton = card.querySelector('.detail-button');
+    if (detailButton) {
+        detailButton.innerHTML = buildDetailButtonMarkup(cardStrings.detailButton);
+        detailButton.setAttribute('aria-label', cardStrings.detailButton);
+        detailButton.title = cardStrings.detailButton;
     }
 
     const mediaContent = card.querySelector('.akyo-media-content');
@@ -1513,6 +1811,8 @@ function renderListView() {
 function createListRow(state) {
         const row = document.createElement('tr');
         row.className = 'border-b hover:bg-gray-50 transition-colors';
+    const strings = getLanguageStrings();
+    const favoriteStrings = strings.favorites;
     row.dataset.akyoId = state.id;
 
     const idCell = document.createElement('td');
@@ -1556,6 +1856,8 @@ function createListRow(state) {
     const favoriteIcon = document.createElement('i');
     favoriteIcon.dataset.favoriteIcon = 'list';
     favoriteButton.appendChild(favoriteIcon);
+    favoriteButton.setAttribute('aria-label', favoriteStrings.add);
+    favoriteButton.title = favoriteStrings.add;
     actionCell.appendChild(favoriteButton);
 
     const detailButton = document.createElement('button');
@@ -1564,21 +1866,26 @@ function createListRow(state) {
     const detailIcon = document.createElement('i');
     detailIcon.className = 'fas fa-info-circle text-blue-500';
     detailButton.appendChild(detailIcon);
+    detailButton.setAttribute('aria-label', strings.card.detailButton);
+    detailButton.title = strings.card.detailButton;
     actionCell.appendChild(detailButton);
 
     row.appendChild(actionCell);
 
     updateListRow(row, state);
 
+    row.dataset.akyoLanguage = currentLanguage;
+
     return row;
 }
 
 function updateListRow(row, state) {
-    if (row.dataset.akyoSignature === state.signature) {
+    if (row.dataset.akyoSignature === state.signature && row.dataset.akyoLanguage === currentLanguage) {
         return;
     }
 
     row.dataset.akyoSignature = state.signature;
+    row.dataset.akyoLanguage = currentLanguage;
     row.dataset.akyoId = state.id;
 
     const idCell = row.querySelector('.akyo-list-id');
@@ -1643,6 +1950,13 @@ function updateListRow(row, state) {
     const favoriteIcon = row.querySelector('[data-favorite-icon="list"]');
     if (favoriteIcon) {
         favoriteIcon.className = `fas fa-heart ${state.isFavorite ? 'text-red-500' : 'text-gray-300'}`;
+        const favoriteButton = favoriteIcon.closest('button');
+        if (favoriteButton) {
+            const favoriteStrings = getLanguageStrings().favorites;
+            const label = state.isFavorite ? favoriteStrings.remove : favoriteStrings.add;
+            favoriteButton.setAttribute('aria-label', label);
+            favoriteButton.title = label;
+        }
     }
 }
 
@@ -1651,6 +1965,9 @@ async function showDetail(akyoId) {
     const akyo = akyoData.find(a => a.id === akyoId);
     if (!akyo) return;
 
+    const strings = getLanguageStrings();
+    const modalStrings = strings.detailModal;
+    const favoriteStrings = strings.favorites;
     const modal = document.getElementById('detailModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalContent = document.getElementById('modalContent');
@@ -1720,7 +2037,7 @@ async function showDetail(akyoId) {
         placeholder.appendChild(placeholderTitle);
         const placeholderText = document.createElement('p');
         placeholderText.className = 'text-white text-lg mt-2';
-        placeholderText.textContent = '画像がまだないよ！';
+        placeholderText.textContent = modalStrings.noImage;
         placeholder.appendChild(placeholderText);
         container.appendChild(placeholder);
     }
@@ -1732,7 +2049,7 @@ async function showDetail(akyoId) {
     nameCard.className = 'bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4';
     nameCard.innerHTML = `
                     <h3 class="text-sm font-bold text-purple-600 mb-2">
-                        <i class="fas fa-tag mr-1"></i>なまえ
+                        <i class="fas fa-tag mr-1"></i>${modalStrings.sectionName}
                     </h3>
     `;
     const nameValue = document.createElement('p');
@@ -1745,7 +2062,7 @@ async function showDetail(akyoId) {
     avatarCard.className = 'bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4';
     avatarCard.innerHTML = `
                     <h3 class="text-sm font-bold text-blue-600 mb-2">
-                        <i class="fas fa-user-astronaut mr-1"></i>アバター名
+                        <i class="fas fa-user-astronaut mr-1"></i>${modalStrings.sectionAvatar}
                     </h3>
     `;
     const avatarValue = document.createElement('p');
@@ -1758,7 +2075,7 @@ async function showDetail(akyoId) {
     attributeCard.className = 'bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4';
     attributeCard.innerHTML = `
                     <h3 class="text-sm font-bold text-orange-600 mb-2">
-                        <i class="fas fa-sparkles mr-1"></i>ぞくせい
+                        <i class="fas fa-sparkles mr-1"></i>${modalStrings.sectionAttributes}
                     </h3>
     `;
     const attributeContainer = document.createElement('div');
@@ -1778,7 +2095,7 @@ async function showDetail(akyoId) {
     creatorCard.className = 'bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4';
     creatorCard.innerHTML = `
                     <h3 class="text-sm font-bold text-green-600 mb-2">
-                        <i class="fas fa-palette mr-1"></i>つくったひと
+                        <i class="fas fa-palette mr-1"></i>${modalStrings.sectionCreator}
                     </h3>
     `;
     const creatorValue = document.createElement('p');
@@ -1793,7 +2110,7 @@ async function showDetail(akyoId) {
         const urlSection = document.createElement('div');
         const urlTitle = document.createElement('h3');
         urlTitle.className = 'text-sm font-semibold text-gray-500 mb-2';
-        urlTitle.textContent = 'VRChat アバターURL';
+        urlTitle.textContent = modalStrings.vrchatUrlHeading;
         const urlWrapper = document.createElement('div');
         urlWrapper.className = 'bg-blue-50 rounded-lg p-4';
         const urlLink = document.createElement('a');
@@ -1816,7 +2133,7 @@ async function showDetail(akyoId) {
         notesSection.className = 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5';
         notesSection.innerHTML = `
                 <h3 class="text-lg font-bold text-purple-600 mb-3">
-                    <i class="fas fa-gift mr-2"></i>おまけ情報
+                    <i class="fas fa-gift mr-2"></i>${modalStrings.extraInfoHeading}
                 </h3>
         `;
         const notesWrapper = document.createElement('div');
@@ -1841,7 +2158,10 @@ async function showDetail(akyoId) {
     const favoriteIcon = document.createElement('i');
     favoriteIcon.className = 'fas fa-heart mr-2';
     favoriteButton.appendChild(favoriteIcon);
-    favoriteButton.appendChild(document.createTextNode(akyo.isFavorite ? 'お気に入りから削除' : 'お気に入りに追加'));
+    const favoriteActionLabel = akyo.isFavorite ? favoriteStrings.remove : favoriteStrings.add;
+    favoriteButton.appendChild(document.createTextNode(favoriteActionLabel));
+    favoriteButton.setAttribute('aria-label', favoriteActionLabel);
+    favoriteButton.title = favoriteActionLabel;
     actionContainer.appendChild(favoriteButton);
 
     if (sanitizedAvatarUrl) {
@@ -1851,7 +2171,9 @@ async function showDetail(akyoId) {
         const openIcon = document.createElement('i');
         openIcon.className = 'fas fa-external-link-alt mr-2';
         openButton.appendChild(openIcon);
-        openButton.appendChild(document.createTextNode('VRChatで見る'));
+        openButton.appendChild(document.createTextNode(modalStrings.openInVrchat));
+        openButton.setAttribute('aria-label', modalStrings.openInVrchat);
+        openButton.title = modalStrings.openInVrchat;
         actionContainer.appendChild(openButton);
     }
 
@@ -2011,7 +2333,7 @@ function showToast(message, type = 'info', retryHandler) {
     if (typeof retryHandler === 'function') {
         const btn = document.createElement('button');
         btn.className = 'ml-2 px-3 py-1 bg-white text-gray-800 rounded';
-        btn.textContent = '再試行';
+        btn.textContent = getLanguageStrings().messages.retry;
         btn.onclick = () => { try { retryHandler(); } finally { document.body.removeChild(toast); } };
         toast.appendChild(btn);
     }
