@@ -996,10 +996,24 @@ function setupDragDrop() {
             typeof window.handleImageFileWithCrop === 'function';
 
         if (imageInput) {
-            imageDropZone.addEventListener('click', () => imageInput.click());
+            imageDropZone.addEventListener('click', (e) => {
+                // トリミングプレビューエリア内のクリックは無視
+                const imagePreview = document.getElementById('imagePreview');
+                if (imagePreview && !imagePreview.classList.contains('hidden')) {
+                    if (e.target.closest('#imagePreview')) {
+                        return; // プレビュー内のクリックは何もしない
+                    }
+                }
+                imageInput.click();
+            });
             imageDropZone.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault();
+                    // トリミングプレビューエリアがアクティブな時はキーボード操作も無視
+                    const imagePreview = document.getElementById('imagePreview');
+                    if (imagePreview && !imagePreview.classList.contains('hidden')) {
+                        return;
+                    }
                     imageInput.click();
                 }
             });
