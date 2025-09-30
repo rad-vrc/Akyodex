@@ -6,7 +6,6 @@
 // 形式3: ["001オリジン.png", ...]
 let akyoImageManifestMap = {};
 const PUBLIC_R2_BASE = 'https://images.akyodex.com';
-const VRCHAT_THUMBNAIL_BASE = 'https://api.vrchat.cloud/api/1/avatars';
 
 function getAssetsVersionValue() {
     try {
@@ -170,12 +169,14 @@ function extractAvatarIdFromRecord(record) {
 
 function buildVrchatDirectUrl(avtrId, size, version) {
     if (!avtrId) return null;
-    const url = new URL(`${VRCHAT_THUMBNAIL_BASE}/${avtrId}/thumbnailimage`);
-    url.searchParams.set('size', String(size));
+    const params = new URLSearchParams({
+        avtr: avtrId,
+        w: String(size),
+    });
     if (version) {
-        url.searchParams.set('v', version);
+        params.set('v', version);
     }
-    return url.toString();
+    return `/api/vrc-avatar-image?${params.toString()}`;
 }
 
 function resolveVrchatThumbnailUrl(akyoId, size, versionValue) {
