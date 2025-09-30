@@ -587,7 +587,8 @@
             }
 
             // 画像エラーハンドラ（PNG→JPG→プレースホルダー）
-            function handleImageError(img, id, color, mode) {
+            // グローバルスコープに公開して js/main.js から使用可能にする
+            window.handleImageError = function handleImageError(img, id, color, mode) {
                 if (!img || !id) return;
 
                 const triedVrchat = img.dataset.triedVrchat === '1';
@@ -613,7 +614,7 @@
                     : `<div class="akyo-image-placeholder h-48" style="background: ${color}"><span class="text-4xl">${id}</span></div>`;
                 const parent = img.parentElement;
                 if (parent) parent.innerHTML = placeholder;
-            }
+            };
         })();
     </script>
 
