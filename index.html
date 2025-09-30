@@ -83,7 +83,7 @@
     <!-- 画像最適化: R2 事前接続＆ロゴのプリロード -->
     <link rel="dns-prefetch" href="https://images.akyodex.com">
     <link rel="preconnect" href="https://images.akyodex.com" crossorigin>
-    <link rel="preload" as="image" href="/images/logo.webp" id="logoPreload">
+    <link rel="preload" as="image" href="/images/logo.webp">
 
     <!-- Custom Styles -->
     <style>
@@ -350,13 +350,13 @@
                     <!-- クイックフィルター（検索ボックス直下に移動） -->
                     <div class="mt-2 flex flex-wrap gap-2 items-center" id="quickFilters">
                         <button id="sortToggleBtn" class="attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
-                            <i class="fas fa-arrow-up-1-9"></i> 昇順
+                            <i class="fas fa-arrow-up-1-9"></i> <span id="sortToggleLabel">昇順</span>
                         </button>
                         <button id="randomToggleBtn" class="attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
-                            <i class="fas fa-dice"></i> ランダム表示
+                            <i class="fas fa-dice"></i> <span id="randomToggleLabel">ランダム表示</span>
                         </button>
                         <button id="favoritesToggleBtn" class="attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
-                            <i class="fas fa-star"></i> お気に入りのみ
+                            <i class="fas fa-star"></i> <span id="favoritesToggleLabel">お気に入りのみ</span>
                         </button>
                     </div>
                 </div>
@@ -397,7 +397,7 @@
                 <table class="w-full">
                     <thead class="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                         <tr>
-                            <th class="px-4 py-3 text-left" id="tableHeaderNo">No.</th>
+                            <th class="px-4 py-3 text-left">No.</th>
                             <th class="px-4 py-3 text-left" id="tableHeaderAppearance">見た目</th>
                             <th class="px-4 py-3 text-left" id="tableHeaderName">名前</th>
                             <th class="px-4 py-3 text-left" id="tableHeaderAttribute">属性</th>
@@ -472,77 +472,54 @@
                 console.warn('Secret mode utilities were not initialised correctly.');
             }
 
-            const languageApi = () => window.akyoLanguageApi || null;
-            const getLanguageConfig = () => {
-                const api = languageApi();
-                if (api && typeof api.getConfig === 'function') {
-                    try { return api.getConfig(); } catch (_) { return null; }
-                }
-                return null;
-            };
-            const getText = (key, fallback) => {
-                const api = languageApi();
-                if (api && typeof api.getText === 'function') {
-                    try {
-                        const value = api.getText(key);
-                        if (value !== undefined && value !== null) {
-                            return value;
-                        }
-                    } catch (_) {}
-                }
-                return fallback !== undefined ? fallback : key;
-            };
-            function updateLogoPreloadHref() {
-                const link = document.getElementById('logoPreload');
-                if (!link) return;
-                const config = getLanguageConfig();
-                const href = config?.logoPath || '/images/logo.webp';
-                link.setAttribute('href', href);
-            }
-            function withVersion(url, version) {
-                if (!url || !version) return url;
-                const separator = url.includes('?') ? '&' : '?';
-                return `${url}${separator}v=${encodeURIComponent(version)}`;
-            }
-
             let headerLogoLoaded = false;
 
             // ヘッダーロゴを読み込み
-            async function loadHeaderLogo(force = false) {
-                if (headerLogoLoaded && !force) return;
+            async function loadHeaderLogo() {
+                if (headerLogoLoaded) return;
                 headerLogoLoaded = true;
-                updateLogoPreloadHref();
                 try {
                     let headerLogoUrl = null;
-                    const versionCandidates = [
-                        'akyoAssetsVersion',
-                        'akyoAssetsVersion_en',
-                        'akyoDataVersion',
-                        'akyoDataVersion_en'
-                    ];
-                    let ver = '1';
-                    for (const key of versionCandidates) {
-                        const value = localStorage.getItem(key);
-                        if (value) { ver = value; break; }
-                    }
-                    const config = getLanguageConfig();
-                    const staticCandidates = [];
-                    if (config?.logoPath) staticCandidates.push(config.logoPath);
-                    staticCandidates.push('/images/logo.webp', '/images/logo.png', '/images/logo.jpg');
 
-                    for (const candidate of staticCandidates) {
-                        try {
-                            const versioned = withVersion(candidate, ver);
-                            const response = await fetch(versioned, { cache: 'no-cache' });
+                    try {
+                        const langSuffix = (window.akyoCurrentLanguage && window.akyoCurrentLanguage !== 'ja')
+                            ? `_${window.akyoCurrentLanguage}`
+                            : '';
+                        const versionCandidates = [
+                            `akyoAssetsVersion${langSuffix}`,
+                            `akyoDataVersion${langSuffix}`,
+                            'akyoAssetsVersion',
+                            'akyoDataVersion'
+                        ];
+                        let ver = '1';
+                        for (const key of versionCandidates) {
+                            try {
+                                const value = localStorage.getItem(key);
+                                if (value) {
+                                    ver = value;
+                                    break;
+                                }
+                            } catch (_) {}
+                        }
+
+                        const preferredLogo = window.akyoPreferredLogoPath || '/images/logo.webp';
+                        const candidates = [preferredLogo, '/images/logo.webp', '/images/logo.png', '/images/logo.jpg'];
+                        const seen = new Set();
+                        for (const candidate of candidates) {
+                            if (!candidate || seen.has(candidate)) continue;
+                            seen.add(candidate);
+                            const url = candidate.includes('?')
+                                ? `${candidate}&v=${encodeURIComponent(ver)}`
+                                : `${candidate}?v=${encodeURIComponent(ver)}`;
+                            const response = await fetch(url, { cache: 'no-cache' });
                             if (response.ok) {
-                                headerLogoUrl = versioned;
+                                headerLogoUrl = url;
                                 break;
                             }
-                        } catch (_) {}
-                    }
+                        }
+                    } catch (_) {}
 
-                    // 既定が無い場合はIndexedDBから読み込みを試行
-                    if (!headerLogoUrl && window.storageManager && window.storageManager.isIndexedDBAvailable) {
+                    if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
                         try {
                             await window.storageManager.init();
                             headerLogoUrl = await window.storageManager.getImage('headerLogo');
@@ -551,14 +528,12 @@
                         }
                     }
 
-                    // IndexedDB/既定から読み込めなかった場合、localStorageを試行
                     if (!headerLogoUrl) {
                         headerLogoUrl = localStorage.getItem('akyoHeaderLogo');
                     }
 
-                    // ロゴが存在する場合は表示（クリック可能にする）
                     const headerLogoEl = document.getElementById('headerLogo');
-                    if (headerLogoUrl && headerLogoEl) {
+                    if (headerLogoEl) {
                         const currentHost = window.location.hostname;
                         let homeUrl = '/';
 
@@ -570,37 +545,17 @@
                             homeUrl = '/';
                         }
 
-                        const altText = getText('headerLogoAlt', 'Akyoずかん');
+                        const logoAlt = typeof window.getLocalizedText === 'function'
+                            ? window.getLocalizedText('headerLogoAlt')
+                            : 'Akyoずかん';
+
+                        const fallbackLogo = window.akyoPreferredLogoPath || '/images/logo.webp';
+                        const logoSrc = headerLogoUrl || fallbackLogo;
+
                         headerLogoEl.innerHTML = `
                             <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                                <img src="${headerLogoUrl}"
-                                     alt="${altText}"
-                                     class="h-full w-auto hover:opacity-90 transition-opacity"
-                                     style="object-fit: contain; max-width: 420px; cursor: pointer;">
-                            </a>
-                        `;
-                        const logoLink = headerLogoEl.querySelector('a');
-                        if (setupSecretModeNavigation && logoLink) {
-                            setupSecretModeNavigation(logoLink, homeUrl);
-                        }
-                    } else if (headerLogoEl) {
-                        const currentHost = window.location.hostname;
-                        let homeUrl = '/';
-
-                        if (currentHost.includes('akyodex.com')) {
-                            homeUrl = 'https://akyodex.com';
-                        } else if (currentHost.includes('netlify')) {
-                            homeUrl = '/';
-                        } else if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-                            homeUrl = '/';
-                        }
-
-                        const fallbackLogo = config?.logoPath || '/images/logo.webp';
-                        const altText = getText('headerLogoAlt', 'Akyoずかん');
-                        headerLogoEl.innerHTML = `
-                            <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                                <img src="${fallbackLogo}" onerror="this.onerror=null; this.style.display='none'" fetchpriority="high" decoding="async"
-                                     alt="${altText}" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
+                                <img src="${logoSrc}" onerror="this.onerror=null; this.style.display='none'" fetchpriority="high" decoding="async"
+                                     alt="${logoAlt}" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
                             </a>
                         `;
                         const logoLink = headerLogoEl.querySelector('a');
@@ -614,18 +569,10 @@
 
                 }
             }
-
-            document.addEventListener('akyoLanguageChanged', () => {
-                headerLogoLoaded = false;
-                updateLogoPreloadHref();
-                loadHeaderLogo(true);
-            });
-
             // ページ読み込み時に実行
             async function bootstrapImages() {
                 try { if (window.loadImagesManifest) { await window.loadImagesManifest(); } } catch (e) {}
                 try { if (window.loadAkyoManifest) { await window.loadAkyoManifest(); } } catch (e) {}
-                updateLogoPreloadHref();
                 loadHeaderLogo();
                 // R2未設定時のGitHubアップロード切替
                 try {
@@ -676,9 +623,8 @@
                     return;
                 }
                 // プレースホルダーへ
-                const placeholderMessage = getText('placeholderImage', '画像がまだないよ！');
                 const placeholder = mode === 'modal'
-                    ? `<div class="akyo-image-placeholder h-64 rounded-3xl shadow-lg" style="background: linear-gradient(135deg, ${color}, ${color}66)"><span class="text-6xl">${id}</span><p class="text-white text-lg mt-2">${placeholderMessage}</p></div>`
+                    ? `<div class="akyo-image-placeholder h-64 rounded-3xl shadow-lg" style="background: linear-gradient(135deg, ${color}, ${color}66)"><span class="text-6xl">${id}</span><p class="text-white text-lg mt-2">${typeof window.getLocalizedText === 'function' ? window.getLocalizedText('placeholderImage') : '画像がまだないよ！'}</p></div>`
                     : `<div class="akyo-image-placeholder h-48" style="background: ${color}"><span class="text-4xl">${id}</span></div>`;
                 const parent = img.parentElement;
                 if (parent) parent.innerHTML = placeholder;

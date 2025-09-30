@@ -1,12 +1,12 @@
-const LANGUAGE_PREFERENCE_KEY = 'akyoLanguagePreference';
+const LANGUAGE_STORAGE_KEY = 'akyoLanguagePreference';
 const LANGUAGE_CONFIG = Object.freeze({
     ja: {
         code: 'ja',
         htmlLang: 'ja',
         csvPath: 'data/akyo-data.csv',
         logoPath: '/images/logo.webp',
-        languageToggleLabel: 'English',
-        languageToggleAria: '英語版ホームページに切り替える',
+        toggleLabel: 'English',
+        toggleAria: '英語版ホームページに切り替える',
         texts: {
             pageTitle: 'Akyoずかん-VRChatアバター Akyo図鑑- | Akyodex-VRChat Avatar Akyo Index',
             metaDescription: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
@@ -20,21 +20,16 @@ const LANGUAGE_CONFIG = Object.freeze({
             selectPlaceholder: '選択してください',
             loadingMessage: 'Akyoデータを読み込んでいます...',
             noDataMessage: '該当するAkyoが見つかりませんでした',
-            tableHeaderAppearance: '見た目',
-            tableHeaderName: '名前',
-            tableHeaderAttribute: '属性',
-            tableHeaderCreator: '作者',
-            tableHeaderAction: 'アクション',
             statsTotalPrefix: '全',
             statsTotalSuffix: '種',
             statsVisiblePrefix: '表示中:',
             statsFavoritesPrefix: 'お気に入り:',
+            listHeaderAppearance: '見た目',
+            listHeaderName: '名前',
+            listHeaderAttribute: '属性',
+            listHeaderCreator: '作者',
+            listHeaderAction: 'アクション',
             modalTitle: 'Akyoじょうほう',
-            initFailure: '初期化に失敗しました。再読み込みしますか？',
-            partialFailure: '一部の読み込みに失敗しました。ページを更新するか再試行してください。',
-            latestDataFailure: '最新データの取得に失敗しました。再試行してください。',
-            csvNetworkFailure: 'CSV取得に失敗しました（ネットワーク/ローカル保存なし）',
-            csvEmpty: 'CSVデータが空です',
             detailButton: 'くわしく見る',
             creatorPrefix: '作者: ',
             avatarNamePrefix: 'アバター名: ',
@@ -49,10 +44,18 @@ const LANGUAGE_CONFIG = Object.freeze({
             modalAvatarUrl: 'VRChat アバターURL',
             extraInfo: 'おまけ情報',
             retry: '再試行',
-            headerLogoAlt: 'Akyoずかん',
-            adminButtonTitle: 'ファインダーモード',
             loadingErrorTitle: 'データの読み込みに失敗しました',
-            uncategorized: '未分類(まだ追加されてないよ！もう少し待っててね！)'
+            initFailure: '初期化に失敗しました。再読み込みしますか？',
+            partialFailure: '一部の読み込みに失敗しました。ページを更新するか再試行してください。',
+            latestDataFailure: '最新データの取得に失敗しました。再試行してください。',
+            csvNetworkFailure: 'CSV取得に失敗しました（ネットワーク/ローカル保存なし）',
+            csvEmpty: 'CSVデータが空です',
+            modalDetailsTitle: 'Akyoじょうほう',
+            headerLogoAlt: 'Akyoずかん',
+            statsAltTotal: '全体のAkyo数',
+            adminButtonTitle: 'ファインダーモード',
+            uncategorized: '未分類(まだ追加されてないよ！もう少し待っててね！)',
+            unknownCreator: '不明'
         }
     },
     en: {
@@ -60,8 +63,8 @@ const LANGUAGE_CONFIG = Object.freeze({
         htmlLang: 'en',
         csvPath: 'data/akyo-data-US.csv',
         logoPath: '/images/logo-US.webp',
-        languageToggleLabel: '日本語',
-        languageToggleAria: 'Switch to the Japanese homepage',
+        toggleLabel: '日本語',
+        toggleAria: 'Switch to the Japanese homepage',
         texts: {
             pageTitle: 'Akyodex - VRChat Avatar Akyo Index',
             metaDescription: 'Browse more than 500 mysterious Akyo avatars from VRChat. Search by name, creator, or attributes and join the community of Akyo finders!',
@@ -75,21 +78,16 @@ const LANGUAGE_CONFIG = Object.freeze({
             selectPlaceholder: 'Please choose',
             loadingMessage: 'Loading Akyo data...',
             noDataMessage: 'No Akyo match your filters',
-            tableHeaderAppearance: 'Preview',
-            tableHeaderName: 'Name',
-            tableHeaderAttribute: 'Attributes',
-            tableHeaderCreator: 'Creator',
-            tableHeaderAction: 'Actions',
             statsTotalPrefix: 'Total',
             statsTotalSuffix: '',
             statsVisiblePrefix: 'Visible:',
             statsFavoritesPrefix: 'Favorites:',
+            listHeaderAppearance: 'Preview',
+            listHeaderName: 'Name',
+            listHeaderAttribute: 'Attributes',
+            listHeaderCreator: 'Creator',
+            listHeaderAction: 'Actions',
             modalTitle: 'Akyo details',
-            initFailure: 'Initialization failed. Reload?',
-            partialFailure: 'Some resources failed to load. Please refresh or retry.',
-            latestDataFailure: 'Failed to fetch the latest data. Please try again.',
-            csvNetworkFailure: 'Failed to retrieve CSV data (network/local storage unavailable)',
-            csvEmpty: 'CSV data is empty',
             detailButton: 'View details',
             creatorPrefix: 'Creator: ',
             avatarNamePrefix: 'Avatar name: ',
@@ -104,221 +102,205 @@ const LANGUAGE_CONFIG = Object.freeze({
             modalAvatarUrl: 'VRChat avatar URL',
             extraInfo: 'Extra info',
             retry: 'Retry',
-            headerLogoAlt: 'Akyodex',
-            adminButtonTitle: 'Finder mode',
             loadingErrorTitle: 'Failed to load data',
-            uncategorized: 'Uncategorized (coming soon!)'
+            initFailure: 'Initialization failed. Reload?',
+            partialFailure: 'Some resources failed to load. Refresh or try again.',
+            latestDataFailure: 'Failed to fetch the latest data. Please try again.',
+            csvNetworkFailure: 'Failed to retrieve CSV data (network/local storage unavailable)',
+            csvEmpty: 'CSV data is empty',
+            modalDetailsTitle: 'Akyo details',
+            headerLogoAlt: 'Akyodex',
+            statsAltTotal: 'Total Akyo count',
+            adminButtonTitle: 'Finder mode',
+            uncategorized: 'Uncategorized (coming soon!)',
+            unknownCreator: 'Unknown'
         }
     }
 });
 
-function getLanguageFromQuery() {
+function safeGetLocalStorage(key) {
     try {
-        const params = new URLSearchParams(window.location.search);
-        const lang = params.get('lang');
-        if (lang && LANGUAGE_CONFIG[lang]) return lang;
-    } catch (_) {}
-    return null;
+        return localStorage.getItem(key);
+    } catch (_) {
+        return null;
+    }
 }
 
-function detectPreferredLanguage() {
+function safeSetLocalStorage(key, value) {
     try {
-        const languages = navigator.languages || [navigator.language];
+        localStorage.setItem(key, value);
+    } catch (_) {}
+}
+
+function detectInitialLanguage() {
+    let queryLang = null;
+    try {
+        const params = new URLSearchParams(window.location.search);
+        queryLang = params.get('lang');
+    } catch (_) {}
+
+    if (queryLang && LANGUAGE_CONFIG[queryLang]) {
+        safeSetLocalStorage(LANGUAGE_STORAGE_KEY, queryLang);
+        return queryLang;
+    }
+
+    const stored = safeGetLocalStorage(LANGUAGE_STORAGE_KEY);
+    if (stored && LANGUAGE_CONFIG[stored]) {
+        return stored;
+    }
+
+    try {
+        const languages = navigator.languages || (navigator.language ? [navigator.language] : []);
         if (Array.isArray(languages)) {
-            if (languages.some((lang) => typeof lang === 'string' && lang.toLowerCase().startsWith('en-us'))) {
+            const hasUsEnglish = languages.some((lang) => typeof lang === 'string' && lang.toLowerCase().startsWith('en-us'));
+            if (hasUsEnglish) {
                 return 'en';
             }
         }
+    } catch (_) {}
+
+    try {
         const tz = Intl?.DateTimeFormat?.().resolvedOptions?.().timeZone;
         if (tz && typeof tz === 'string' && tz.toLowerCase().startsWith('america/')) {
             return 'en';
         }
     } catch (_) {}
+
     return 'ja';
 }
 
-function readStoredLanguage() {
-    try {
-        const stored = localStorage.getItem(LANGUAGE_PREFERENCE_KEY);
-        if (stored && LANGUAGE_CONFIG[stored]) {
-            return stored;
-        }
-    } catch (_) {}
-    return null;
-}
-
-function writeStoredLanguage(lang) {
-    try {
-        localStorage.setItem(LANGUAGE_PREFERENCE_KEY, lang);
-    } catch (_) {}
-}
-
-let currentLanguage = (() => {
-    const queryLang = getLanguageFromQuery();
-    if (queryLang) {
-        writeStoredLanguage(queryLang);
-        return queryLang;
-    }
-    const stored = readStoredLanguage();
-    if (stored) {
-        return stored;
-    }
-    const detected = detectPreferredLanguage();
-    writeStoredLanguage(detected);
-    return detected;
-})();
+let currentLanguage = detectInitialLanguage();
+window.akyoCurrentLanguage = currentLanguage;
 
 function getLanguageConfig(lang = currentLanguage) {
     return LANGUAGE_CONFIG[lang] || LANGUAGE_CONFIG.ja;
 }
 
-function t(key) {
-    const config = getLanguageConfig();
-    const fallbackConfig = LANGUAGE_CONFIG.ja;
+function getLocalizedText(key, lang = currentLanguage) {
+    const config = getLanguageConfig(lang);
+    const fallback = LANGUAGE_CONFIG.ja;
     const value = config?.texts?.[key];
     if (value !== undefined) return value;
-    const fallback = fallbackConfig?.texts?.[key];
-    return fallback !== undefined ? fallback : key;
+    return fallback?.texts?.[key] ?? key;
 }
 
-function applyDocumentLanguageAttributes() {
+try { window.getLocalizedText = getLocalizedText; } catch (_) {}
+
+function applyDocumentLanguageAttributes(lang = currentLanguage) {
     try {
-        const lang = getLanguageConfig().htmlLang || 'ja';
+        const config = getLanguageConfig(lang);
         if (document?.documentElement) {
-            document.documentElement.lang = lang;
+            document.documentElement.lang = config.htmlLang || 'ja';
         }
-    } catch (_) {}
+        const titleText = getLocalizedText('pageTitle', lang);
+        if (titleText) {
+            document.title = titleText;
+        }
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.setAttribute('content', getLocalizedText('metaDescription', lang));
+        }
+    } catch (error) {
+        console.warn('Failed to apply language attributes', error);
+    }
 }
 
-applyDocumentLanguageAttributes();
+applyDocumentLanguageAttributes(currentLanguage);
+
+function getLanguageAwareStorageKey(baseKey, lang = currentLanguage) {
+    if (!baseKey) return baseKey;
+    return lang === 'ja' ? baseKey : `${baseKey}_${lang}`;
+}
 
 let languageToggleButton = null;
-let adminButtonElement = null;
-let isLanguageSwitching = false;
 
-function getLanguageStorageKey(base, lang = currentLanguage) {
-    return lang === 'ja' ? base : `${base}_${lang}`;
-}
-
-function updateLanguageToggleButton() {
-    const config = getLanguageConfig();
-    if (languageToggleButton) {
-        languageToggleButton.textContent = config.languageToggleLabel;
-        languageToggleButton.setAttribute('aria-label', config.languageToggleAria);
-        languageToggleButton.setAttribute('title', config.languageToggleAria);
-    }
-    if (adminButtonElement) {
-        const title = t('adminButtonTitle');
-        adminButtonElement.title = title;
-        adminButtonElement.setAttribute('aria-label', title);
+function setElementText(id, text) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.textContent = text;
     }
 }
 
-function applyLanguageTexts() {
-    if (typeof document === 'undefined') return;
-    try {
-        document.title = t('pageTitle');
-    } catch (_) {}
-
-    const config = getLanguageConfig();
-    const description = t('metaDescription');
-    const seoTargets = [
-        ['meta[name="description"]', description],
-        ['meta[property="og:description"]', description],
-        ['meta[name="twitter:description"]', description],
-        ['meta[property="og:title"]', t('pageTitle')],
-        ['meta[name="twitter:title"]', t('pageTitle')]
-    ];
-    seoTargets.forEach(([selector, value]) => {
-        const el = document.querySelector(selector);
-        if (el && typeof value === 'string') {
-            el.setAttribute('content', value);
-        }
-    });
-    const ogLocale = document.querySelector('meta[property="og:locale"]');
-    if (ogLocale) {
-        ogLocale.setAttribute('content', config.htmlLang === 'en' ? 'en_US' : 'ja_JP');
-    }
+function applyLanguageToStaticElements(lang = currentLanguage) {
+    setElementText('totalCountLabelPrefix', getLocalizedText('statsTotalPrefix', lang));
+    setElementText('totalCountLabelSuffix', getLocalizedText('statsTotalSuffix', lang));
+    setElementText('displayCountLabelPrefix', getLocalizedText('statsVisiblePrefix', lang));
+    setElementText('favoriteCountLabelPrefix', getLocalizedText('statsFavoritesPrefix', lang));
+    setElementText('loadingMessage', getLocalizedText('loadingMessage', lang));
+    setElementText('noDataMessage', getLocalizedText('noDataMessage', lang));
+    setElementText('tableHeaderAppearance', getLocalizedText('listHeaderAppearance', lang));
+    setElementText('tableHeaderName', getLocalizedText('listHeaderName', lang));
+    setElementText('tableHeaderAttribute', getLocalizedText('listHeaderAttribute', lang));
+    setElementText('tableHeaderCreator', getLocalizedText('listHeaderCreator', lang));
+    setElementText('tableHeaderAction', getLocalizedText('listHeaderAction', lang));
+    setElementText('modalTitle', getLocalizedText('modalTitle', lang));
 
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
-        searchInput.placeholder = t('searchPlaceholder');
+        searchInput.placeholder = getLocalizedText('searchPlaceholder', lang);
     }
 
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el && value !== undefined && value !== null) {
-            el.textContent = value;
-        }
-    };
+    const attributeFilter = document.getElementById('attributeFilter');
+    if (attributeFilter?.options?.length) {
+        attributeFilter.options[0].textContent = getLocalizedText('attributeFilterPlaceholder', lang);
+    }
 
-    setText('totalCountLabelPrefix', t('statsTotalPrefix'));
-    setText('totalCountLabelSuffix', t('statsTotalSuffix'));
-    setText('displayCountLabelPrefix', t('statsVisiblePrefix'));
-    setText('favoriteCountLabelPrefix', t('statsFavoritesPrefix'));
-    setText('loadingMessage', t('loadingMessage'));
-    setText('noDataMessage', t('noDataMessage'));
-    setText('tableHeaderAppearance', t('tableHeaderAppearance'));
-    setText('tableHeaderName', t('tableHeaderName'));
-    setText('tableHeaderAttribute', t('tableHeaderAttribute'));
-    setText('tableHeaderCreator', t('tableHeaderCreator'));
-    setText('tableHeaderAction', t('tableHeaderAction'));
-    setText('modalTitle', t('modalTitle'));
-
-    updateLanguageToggleButton();
-    updateQuickFilterStyles();
+    const creatorFilter = document.getElementById('creatorFilter');
+    if (creatorFilter?.options?.length) {
+        creatorFilter.options[0].textContent = getLocalizedText('creatorFilterPlaceholder', lang);
+    }
 }
 
-async function setLanguage(lang, options = {}) {
-    const { reloadData = true, force = false } = options;
-    const target = LANGUAGE_CONFIG[lang] ? lang : 'ja';
-    if (!force && target === currentLanguage && !reloadData) {
-        applyLanguageTexts();
-        return;
-    }
-    if (isLanguageSwitching) {
-        return;
-    }
-    isLanguageSwitching = true;
-    currentLanguage = target;
-    writeStoredLanguage(target);
-    applyDocumentLanguageAttributes();
-    applyLanguageTexts();
+function updateLanguageToggleButton() {
+    if (!languageToggleButton) return;
+    const config = getLanguageConfig();
+    languageToggleButton.innerHTML = `<i class="fas fa-language mr-2"></i>${escapeHTML(config.toggleLabel)}`;
+    languageToggleButton.setAttribute('aria-label', config.toggleAria);
+    languageToggleButton.title = config.toggleAria;
+}
 
-    const eventDetail = { lang: target };
-    document.dispatchEvent(new CustomEvent('akyoLanguageChanged', { detail: eventDetail }));
-
-    if (!reloadData) {
-        isLanguageSwitching = false;
-        return;
+function updateLanguageAwareLogo() {
+    try {
+        const preload = document.getElementById('logoPreload');
+        if (preload) {
+            preload.href = getLanguageConfig().logoPath;
+        }
+    } catch (error) {
+        console.warn('Failed to update logo preload', error);
     }
+    window.akyoPreferredLogoPath = getLanguageConfig().logoPath;
+}
+
+async function changeLanguage(lang) {
+    if (!LANGUAGE_CONFIG[lang]) return;
+    if (lang === currentLanguage) return;
+    currentLanguage = lang;
+    window.akyoCurrentLanguage = lang;
+    safeSetLocalStorage(LANGUAGE_STORAGE_KEY, lang);
+    applyDocumentLanguageAttributes(lang);
+    applyLanguageToStaticElements(lang);
+    updateLanguageToggleButton();
+    updateLanguageAwareLogo();
+    updateQuickFilterStyles();
 
     const loadingContainer = document.getElementById('loadingContainer');
+    const gridView = document.getElementById('gridView');
+    const listView = document.getElementById('listView');
+    const noData = document.getElementById('noDataContainer');
+
     if (loadingContainer) {
-        loadingContainer.innerHTML = `
-            <div class="loading-spinner mb-4"></div>
-            <p class="text-gray-600" id="loadingMessage">${t('loadingMessage')}</p>
-        `;
         loadingContainer.classList.remove('hidden');
     }
-    document.getElementById('gridView')?.classList.add('hidden');
-    document.getElementById('listView')?.classList.add('hidden');
+    if (gridView) gridView.classList.add('hidden');
+    if (listView) listView.classList.add('hidden');
+    if (noData) noData.classList.add('hidden');
 
     try {
         await loadAkyoData();
         applyFilters();
-    } finally {
-        isLanguageSwitching = false;
+    } catch (error) {
+        console.error('Failed to reload data for language change', error);
     }
-}
-
-if (typeof window !== 'undefined') {
-    window.akyoLanguageApi = {
-        getLanguage: () => currentLanguage,
-        getConfig: () => getLanguageConfig(),
-        getText: (key) => t(key),
-        setLanguage
-    };
 }
 
 // 選択要素を汎用的に構築するヘルパー
@@ -327,7 +309,7 @@ function populateSelect(selectElement, options, placeholderLabel){
     selectElement.innerHTML = '';
     const def = document.createElement('option');
     def.value = '';
-    def.textContent = placeholderLabel || t('selectPlaceholder');
+    def.textContent = placeholderLabel || getLocalizedText('selectPlaceholder');
     selectElement.appendChild(def);
     (options || []).forEach(({value, label}) => {
         const opt = document.createElement('option');
@@ -598,10 +580,8 @@ function extractCreators(creatorString) {
 // 表示用の属性名変換
 function displayAttributeName(attr) {
     if (!attr) return '';
-    const normalized = String(attr).trim();
-    if (!normalized) return '';
-    if (normalized === '未分類' || normalized.toLowerCase() === 'uncategorized') {
-        return t('uncategorized');
+    if (attr === '未分類') {
+        return getLocalizedText('uncategorized');
     }
     return attr;
 }
@@ -616,7 +596,10 @@ function appendVersionQuery(url, versionValue) {
 
 function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
     const id3 = String(akyoId).padStart(3, '0');
-    const versionValue = localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
+    const versionValue =
+        safeGetLocalStorage(getLanguageAwareStorageKey('akyoAssetsVersion')) ||
+        safeGetLocalStorage(getLanguageAwareStorageKey('akyoDataVersion')) ||
+        '';
 
     // 1) R2/GH マニフェスト（削除印が付いていたら使わない）
     const manifestMap = manifestRef();
@@ -769,20 +752,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
-    applyLanguageTexts();
+
+    applyLanguageToStaticElements();
+    updateLanguageAwareLogo();
+    updateLanguageToggleButton();
 
     // 初期表示を先に実行（ローディング表示など）
     document.getElementById('noDataContainer').classList.remove('hidden');
 
     // LocalStorageのCSV更新を別タブから検知して自動反映
     window.addEventListener('storage', (e) => {
-        const relevantKeys = new Set([
-            'akyoDataCSV',
-            'akyoDataVersion',
-            getLanguageStorageKey('akyoDataCSV'),
-            getLanguageStorageKey('akyoDataVersion')
-        ]);
-        if (relevantKeys.has(e.key)) {
+        const csvKey = getLanguageAwareStorageKey('akyoDataCSV');
+        const versionKey = getLanguageAwareStorageKey('akyoDataVersion');
+        if (e.key === csvKey || e.key === versionKey) {
             console.debug('Data changed in another tab. Reloading data...');
             loadAkyoData().then(applyFilters).catch(err => console.error(err));
         }
@@ -793,7 +775,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadAkyoData()
             .then(applyFilters)
             .catch(() => {
-                showToast(t('latestDataFailure'), 'warning', () => {
+                showToast(getLocalizedText('latestDataFailure'), 'warning', () => {
                     loadAkyoData().then(applyFilters).catch(() => {});
                 });
             });
@@ -841,7 +823,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const hasSuccess = results.some(r => r.status === 'fulfilled');
         const failures = results.filter(r => r.status === 'rejected').length;
         if (failures > 0) {
-            showToast(t('partialFailure'), 'warning', () => location.reload());
+            showToast(getLocalizedText('partialFailure'), 'warning', () => location.reload());
         }
         // CSV失敗時はapplyFiltersを走らせない
         const csvResult = results[3] || results[2];
@@ -861,7 +843,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch(_) {}
         } else {
             // 詳細なエラーパネル（loadAkyoDataのcatchで描画済み）を保持するため、ここではトーストのみ表示
-            showToast(t('initFailure'), 'error', () => location.reload());
+            showToast(getLocalizedText('initFailure'), 'error', () => location.reload());
         }
     });
 
@@ -885,21 +867,21 @@ async function loadAkyoData() {
     try {
         console.debug('CSVデータを読み込み中...');
 
-        const lang = currentLanguage;
-        const config = getLanguageConfig(lang);
-        const csvStorageKey = getLanguageStorageKey('akyoDataCSV', lang);
-        const versionKey = getLanguageStorageKey('akyoDataVersion', lang);
-        const assetsVersionKey = getLanguageStorageKey('akyoAssetsVersion', lang);
-        let csvText;
+        // ネットワーク優先（バージョン付与＋no-cache）。失敗時のみローカルにフォールバック
+        const config = getLanguageConfig();
+        const dataVersionKey = getLanguageAwareStorageKey('akyoDataVersion');
+        const assetsVersionKey = getLanguageAwareStorageKey('akyoAssetsVersion');
+        const csvStorageKey = getLanguageAwareStorageKey('akyoDataCSV');
+        const versionSeed =
+            safeGetLocalStorage(dataVersionKey) ||
+            safeGetLocalStorage(assetsVersionKey) ||
+            String(Date.now());
 
-        if (lang === 'ja') {
-            const ver = localStorage.getItem(versionKey)
-                || localStorage.getItem(assetsVersionKey)
-                || localStorage.getItem('akyoAssetsVersion')
-                || localStorage.getItem('akyoDataVersion')
-                || String(Date.now());
+        let csvText;
+        const needsApi = currentLanguage === 'ja';
+        if (needsApi) {
             try {
-                const response = await fetch(`/api/csv?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                const response = await fetch(`/api/csv?v=${encodeURIComponent(versionSeed)}`, { cache: 'no-cache' });
                 if (!response.ok) throw new Error(`api/csv failed: ${response.status}`);
                 const headerRowCount = response.headers.get('x-akyo-row-count');
                 if (headerRowCount) {
@@ -907,53 +889,26 @@ async function loadAkyoData() {
                     console.debug('server row count header:', serverCsvRowCount);
                 }
                 csvText = await response.text();
-                try {
-                    localStorage.setItem(versionKey, ver);
-                } catch (_) {}
-                try {
-                    if (localStorage.getItem(csvStorageKey)) {
-                        localStorage.removeItem(csvStorageKey);
-                    }
-                } catch (_) {}
-            } catch (_) {
-                try {
-                    const fallback = await fetch(`${config.csvPath}?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                    if (!fallback.ok) throw new Error(`fallback csv failed: ${fallback.status}`);
-                    csvText = await fallback.text();
-                    try {
-                        localStorage.setItem(versionKey, ver);
-                    } catch (_) {}
-                } catch (error) {
-                    const updatedCSV = localStorage.getItem(csvStorageKey);
-                    if (updatedCSV) {
-                        console.debug('ネットワーク失敗のためLocalStorageから読み込み');
-                        csvText = updatedCSV;
-                    } else {
-                        throw new Error(t('csvNetworkFailure'));
-                    }
-                }
+                try { localStorage.removeItem(csvStorageKey); } catch (_) {}
+            } catch (apiError) {
+                console.debug('Primary CSV fetch failed, falling back to static file.', apiError);
             }
-        } else {
-            let ver = localStorage.getItem(versionKey);
-            if (!ver) {
-                ver = String(Date.now());
-            }
+        }
+
+        if (!csvText) {
             try {
-                const response = await fetch(`${config.csvPath}?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                if (!response.ok) throw new Error(`fallback csv failed: ${response.status}`);
-                csvText = await response.text();
-                try { localStorage.setItem(csvStorageKey, csvText); } catch (_) {}
-                try { localStorage.setItem(versionKey, ver); } catch (_) {}
-            } catch (error) {
-                const cached = localStorage.getItem(csvStorageKey);
-                if (cached) {
-                    console.debug('Using cached CSV for language', lang);
-                    csvText = cached;
+                const fallback = await fetch(`${config.csvPath}?v=${encodeURIComponent(versionSeed)}`, { cache: 'no-cache' });
+                if (!fallback.ok) throw new Error(`fallback csv failed: ${fallback.status}`);
+                csvText = await fallback.text();
+            } catch (fallbackError) {
+                const updatedCSV = safeGetLocalStorage(csvStorageKey);
+                if (updatedCSV) {
+                    console.debug('ネットワーク失敗のためLocalStorageから読み込み');
+                    csvText = updatedCSV;
                 } else {
-                    throw new Error(t('csvNetworkFailure'));
+                    throw new Error(getLocalizedText('csvNetworkFailure'));
                 }
             }
-            serverCsvRowCount = 0;
         }
 
         console.debug('CSVデータ取得完了:', csvText.length, 'bytes');
@@ -968,7 +923,7 @@ async function loadAkyoData() {
         listRowCache.clear();
 
         if (!akyoData || akyoData.length === 0) {
-            throw new Error(t('csvEmpty'));
+            throw new Error(getLocalizedText('csvEmpty'));
         }
 
         filteredData = [...akyoData];
@@ -1006,7 +961,7 @@ async function loadAkyoData() {
             loadingContainer.innerHTML = `
                 <div class="text-red-600 text-center">
                     <i class="fas fa-exclamation-triangle text-6xl mb-4"></i>
-                    <p class="text-xl font-bold">${t('loadingErrorTitle')}</p>
+                    <p class="text-xl font-bold">${getLocalizedText('loadingErrorTitle')}</p>
                     <p class="text-sm mt-2">${error.message}</p>
                 </div>
             `;
@@ -1066,9 +1021,6 @@ function parseCSV(csvText) {
     if (rows.length) rows.shift();
 
     const data = [];
-    const currentConfig = getLanguageConfig();
-    const fallbackAttribute = currentConfig.code === 'ja' ? '未分類' : 'Uncategorized';
-    const fallbackCreator = currentConfig.code === 'ja' ? '不明' : 'Unknown';
 
     rows.forEach(values => {
         if (!values || values.length === 0 || values.every(value => !value || value.trim() === '')) {
@@ -1092,20 +1044,20 @@ function parseCSV(csvText) {
             let avatarUrl = '';
 
             if (normalized.length === 8) {
-                attribute = normalized[4] || fallbackAttribute;
+                attribute = normalized[4] || '未分類';
                 notes = normalized[5] || '';
-                creator = normalized[6] || fallbackCreator;
+                creator = normalized[6] || '不明';
                 avatarUrl = normalized[7] || '';
             } else if (normalized.length > 8) {
                 avatarUrl = normalized[normalized.length - 1] || '';
-                creator = normalized[normalized.length - 2] || fallbackCreator;
-                attribute = normalized[4] || fallbackAttribute;
+                creator = normalized[normalized.length - 2] || '不明';
+                attribute = normalized[4] || '未分類';
                 notes = normalized.slice(5, normalized.length - 2).join(',');
             } else {
                 // 不足列は空で埋める（行崩れの暫定救済）
-                attribute = normalized[4] || fallbackAttribute;
+                attribute = normalized[4] || '未分類';
                 notes = normalized[5] || '';
-                creator = normalized[6] || fallbackCreator;
+                creator = normalized[6] || '不明';
                 avatarUrl = normalized[7] || '';
             }
 
@@ -1135,8 +1087,14 @@ function createAttributeFilter() {
     });
 
     const select = document.getElementById('attributeFilter');
-    const sorted = Array.from(attributeSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-    populateSelect(select, sorted.map(v => ({ value: v, label: displayAttributeName(v) })), t('attributeFilterPlaceholder'));
+    const locale = getLanguageConfig().code || 'ja';
+    populateSelect(
+        select,
+        Array.from(attributeSet)
+            .sort((a, b) => a.localeCompare(b, locale))
+            .map(v => ({ value: v, label: displayAttributeName(v) })),
+        getLocalizedText('attributeFilterPlaceholder')
+    );
 }
 
 function createCreatorFilter() {
@@ -1148,8 +1106,9 @@ function createCreatorFilter() {
     const select = document.getElementById('creatorFilter');
     if (!select) return;
 
-    const options = Array.from(creatorSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })).map(v => ({ value: v, label: v }));
-    populateSelect(select, options, t('creatorFilterPlaceholder'));
+    const locale = getLanguageConfig().code || 'ja';
+    const options = Array.from(creatorSet).sort((a,b)=>a.localeCompare(b,locale)).map(v => ({ value: v, label: v }));
+    populateSelect(select, options, getLocalizedText('creatorFilterPlaceholder'));
 }
 
 // イベントリスナーの設定
@@ -1203,31 +1162,30 @@ function setupEventListeners() {
 
     updateQuickFilterStyles();
 
-    // 言語切り替えと管理者ボタンの追加
-    const controlsWrapper = document.createElement('div');
-    controlsWrapper.className = 'fixed bottom-4 right-4 flex flex-col items-center gap-2 z-50';
+    // 管理者ボタンと言語切り替えボタンを追加
+    const floatingContainer = document.createElement('div');
+    floatingContainer.className = 'fixed bottom-4 right-4 flex flex-col gap-3 items-end z-50';
 
-    const langBtn = document.createElement('button');
-    langBtn.id = 'languageToggleBtn';
-    langBtn.className = 'px-4 py-2 rounded-full shadow-lg bg-white/90 text-gray-800 font-semibold hover:bg-white transition-colors';
-    langBtn.addEventListener('click', () => {
+    languageToggleButton = document.createElement('button');
+    languageToggleButton.id = 'languageToggleButton';
+    languageToggleButton.className = 'bg-white text-gray-800 px-4 py-2 rounded-full shadow-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-400 transition flex items-center';
+    languageToggleButton.addEventListener('click', () => {
         const nextLang = currentLanguage === 'ja' ? 'en' : 'ja';
-        setLanguage(nextLang).catch((error) => console.error('Failed to switch language:', error));
+        changeLanguage(nextLang).catch((error) => console.error('Language switch failed', error));
     });
-    controlsWrapper.appendChild(langBtn);
-    languageToggleButton = langBtn;
+    floatingContainer.appendChild(languageToggleButton);
 
     const adminBtn = document.createElement('button');
-    adminBtn.className = 'bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors';
+    adminBtn.className = 'bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-orange-400';
     adminBtn.innerHTML = '<i class="fas fa-cog"></i>';
+    adminBtn.title = getLocalizedText('adminButtonTitle');
+    adminBtn.setAttribute('aria-label', getLocalizedText('adminButtonTitle'));
     adminBtn.addEventListener('click', () => {
         window.location.href = 'admin.html';
     });
-    controlsWrapper.appendChild(adminBtn);
-    adminButtonElement = adminBtn;
+    floatingContainer.appendChild(adminBtn);
 
-    document.body.appendChild(controlsWrapper);
-    updateLanguageToggleButton();
+    document.body.appendChild(floatingContainer);
 
     // モーダルクローズ
     const closeModalBtn = document.getElementById('closeModal');
@@ -1404,10 +1362,10 @@ function updateQuickFilterStyles() {
     if (sortBtn) {
         if (sortOrder === 'asc') {
             sortBtn.className = 'attribute-badge quick-filter-badge bg-green-200 text-green-800 hover:bg-green-300 transition-colors';
-            sortBtn.innerHTML = `<i class="fas fa-arrow-up-1-9"></i> ${t('sortAscending')}`;
+            sortBtn.innerHTML = `<i class="fas fa-arrow-up-1-9"></i> ${escapeHTML(getLocalizedText('sortAscending'))}`;
         } else {
             sortBtn.className = 'attribute-badge quick-filter-badge bg-blue-200 text-blue-800 hover:bg-blue-300 transition-colors';
-            sortBtn.innerHTML = `<i class="fas fa-arrow-down-9-1"></i> ${t('sortDescending')}`;
+            sortBtn.innerHTML = `<i class="fas fa-arrow-down-9-1"></i> ${escapeHTML(getLocalizedText('sortDescending'))}`;
         }
     }
 
@@ -1415,14 +1373,14 @@ function updateQuickFilterStyles() {
         randomBtn.className = randomMode
             ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
             : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-        randomBtn.innerHTML = `<i class="fas fa-dice"></i> ${t('randomToggle')}`;
+        randomBtn.innerHTML = `<i class="fas fa-dice"></i> ${escapeHTML(getLocalizedText('randomToggle'))}`;
     }
 
     if (favoriteBtn) {
         favoriteBtn.className = favoritesOnlyMode
             ? 'attribute-badge quick-filter-badge bg-yellow-200 text-yellow-800 hover:bg-yellow-300 transition-colors'
             : 'attribute-badge quick-filter-badge bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors';
-        favoriteBtn.innerHTML = `<i class="fas fa-star"></i> ${t('favoritesToggle')}`;
+        favoriteBtn.innerHTML = `<i class="fas fa-star"></i> ${escapeHTML(getLocalizedText('favoritesToggle'))}`;
     }
 }
 
@@ -1564,7 +1522,7 @@ function createAkyoCard(state) {
                 <span class="relative z-10 flex items-center justify-center whitespace-nowrap">
                     <span class="text-2xl mr-2 hidden sm:inline animate-bounce">🌟</span>
                     <span class="inline-flex items-center">
-                        <span>${t('detailButton')}</span>
+                        <span>${escapeHTML(getLocalizedText('detailButton'))}</span>
                     </span>
                     <span class="text-2xl ml-2 hidden sm:inline animate-bounce" style="animation-delay: 0.2s">🌟</span>
                 </span>
@@ -1614,9 +1572,12 @@ function updateAkyoCard(card, state) {
 
     const creator = card.querySelector('.akyo-creator');
     if (creator) {
-        let creatorText = `${t('creatorPrefix')}${state.creator}`;
+        let creatorName = state.creator && state.creator !== '不明'
+            ? state.creator
+            : getLocalizedText('unknownCreator');
+        let creatorText = `${getLocalizedText('creatorPrefix')}${creatorName}`;
         if (state.avatarName && state.avatarName !== state.displayName) {
-            creatorText = `${t('avatarNamePrefix')}${state.avatarName}\n${creatorText}`;
+            creatorText = `${getLocalizedText('avatarNamePrefix')}${state.avatarName}\n${creatorText}`;
         }
         creator.textContent = creatorText;
     }
@@ -1802,7 +1763,10 @@ function updateListRow(row, state) {
 
     const creatorCell = row.querySelector('.akyo-list-creator');
     if (creatorCell) {
-        creatorCell.textContent = state.creator;
+        const creatorName = state.creator && state.creator !== '不明'
+            ? state.creator
+            : getLocalizedText('unknownCreator');
+        creatorCell.textContent = creatorName;
     }
 
     const favoriteIcon = row.querySelector('[data-favorite-icon="list"]');
@@ -1885,7 +1849,7 @@ async function showDetail(akyoId) {
         placeholder.appendChild(placeholderTitle);
         const placeholderText = document.createElement('p');
         placeholderText.className = 'text-white text-lg mt-2';
-        placeholderText.textContent = t('placeholderImage');
+        placeholderText.textContent = getLocalizedText('placeholderImage');
         placeholder.appendChild(placeholderText);
         container.appendChild(placeholder);
     }
@@ -1897,7 +1861,7 @@ async function showDetail(akyoId) {
     nameCard.className = 'bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4';
     nameCard.innerHTML = `
                     <h3 class="text-sm font-bold text-purple-600 mb-2">
-                        <i class="fas fa-tag mr-1"></i>${t('nameLabel')}
+                        <i class="fas fa-tag mr-1"></i>${escapeHTML(getLocalizedText('nameLabel'))}
                     </h3>
     `;
     const nameValue = document.createElement('p');
@@ -1910,7 +1874,7 @@ async function showDetail(akyoId) {
     avatarCard.className = 'bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4';
     avatarCard.innerHTML = `
                     <h3 class="text-sm font-bold text-blue-600 mb-2">
-                        <i class="fas fa-user-astronaut mr-1"></i>${t('avatarNameLabel')}
+                        <i class="fas fa-user-astronaut mr-1"></i>${escapeHTML(getLocalizedText('avatarNameLabel'))}
                     </h3>
     `;
     const avatarValue = document.createElement('p');
@@ -1923,7 +1887,7 @@ async function showDetail(akyoId) {
     attributeCard.className = 'bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4';
     attributeCard.innerHTML = `
                     <h3 class="text-sm font-bold text-orange-600 mb-2">
-                        <i class="fas fa-sparkles mr-1"></i>${t('attributeLabel')}
+                        <i class="fas fa-sparkles mr-1"></i>${escapeHTML(getLocalizedText('attributeLabel'))}
                     </h3>
     `;
     const attributeContainer = document.createElement('div');
@@ -1943,12 +1907,15 @@ async function showDetail(akyoId) {
     creatorCard.className = 'bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4';
     creatorCard.innerHTML = `
                     <h3 class="text-sm font-bold text-green-600 mb-2">
-                        <i class="fas fa-palette mr-1"></i>${t('creatorLabel')}
+                        <i class="fas fa-palette mr-1"></i>${escapeHTML(getLocalizedText('creatorLabel'))}
                     </h3>
     `;
     const creatorValue = document.createElement('p');
     creatorValue.className = 'text-xl font-black';
-    creatorValue.textContent = akyo.creator || '';
+    const creatorLabel = akyo.creator && akyo.creator !== '不明'
+        ? akyo.creator
+        : getLocalizedText('unknownCreator');
+    creatorValue.textContent = creatorLabel;
     creatorCard.appendChild(creatorValue);
     infoGrid.appendChild(creatorCard);
 
@@ -1958,7 +1925,7 @@ async function showDetail(akyoId) {
         const urlSection = document.createElement('div');
         const urlTitle = document.createElement('h3');
         urlTitle.className = 'text-sm font-semibold text-gray-500 mb-2';
-        urlTitle.textContent = t('modalAvatarUrl');
+        urlTitle.textContent = getLocalizedText('modalAvatarUrl');
         const urlWrapper = document.createElement('div');
         urlWrapper.className = 'bg-blue-50 rounded-lg p-4';
         const urlLink = document.createElement('a');
@@ -1981,7 +1948,7 @@ async function showDetail(akyoId) {
         notesSection.className = 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5';
         notesSection.innerHTML = `
                 <h3 class="text-lg font-bold text-purple-600 mb-3">
-                    <i class="fas fa-gift mr-2"></i>${t('extraInfo')}
+                    <i class="fas fa-gift mr-2"></i>${escapeHTML(getLocalizedText('extraInfo'))}
                 </h3>
         `;
         const notesWrapper = document.createElement('div');
@@ -2006,7 +1973,11 @@ async function showDetail(akyoId) {
     const favoriteIcon = document.createElement('i');
     favoriteIcon.className = 'fas fa-heart mr-2';
     favoriteButton.appendChild(favoriteIcon);
-    favoriteButton.appendChild(document.createTextNode(akyo.isFavorite ? t('favoriteButtonRemove') : t('favoriteButtonAdd')));
+    favoriteButton.appendChild(document.createTextNode(
+        akyo.isFavorite
+            ? getLocalizedText('favoriteButtonRemove')
+            : getLocalizedText('favoriteButtonAdd')
+    ));
     actionContainer.appendChild(favoriteButton);
 
     if (sanitizedAvatarUrl) {
@@ -2016,7 +1987,7 @@ async function showDetail(akyoId) {
         const openIcon = document.createElement('i');
         openIcon.className = 'fas fa-external-link-alt mr-2';
         openButton.appendChild(openIcon);
-        openButton.appendChild(document.createTextNode(t('vrchatButton')));
+        openButton.appendChild(document.createTextNode(getLocalizedText('vrchatButton')));
         actionContainer.appendChild(openButton);
     }
 
@@ -2105,51 +2076,28 @@ function updateStatistics() {
 function getAttributeColor(attribute) {
     const colorMap = {
         'チョコミント': '#00bfa5',
-        'Choco Mint': '#00bfa5',
         '動物': '#ff6f61',
-        'Animal': '#ff6f61',
         'きつね': '#ff9800',
-        'Fox': '#ff9800',
         'おばけ': '#9c27b0',
-        'Ghost': '#9c27b0',
         '人類': '#2196f3',
-        'Human': '#2196f3',
         'ギミック': '#4caf50',
-        'Gimmick': '#4caf50',
         '特殊': '#e91e63',
-        'Special': '#e91e63',
         'ネコ': '#795548',
-        'Cat': '#795548',
         'イヌ': '#607d8b',
-        'Dog': '#607d8b',
         'うさぎ': '#ff4081',
-        'Rabbit': '#ff4081',
         'ドラゴン': '#673ab7',
-        'Dragon': '#673ab7',
         'ロボット': '#757575',
-        'Robot': '#757575',
         '食べ物': '#ffc107',
-        'Food': '#ffc107',
         '植物': '#8bc34a',
-        'Plant': '#8bc34a',
         '宇宙': '#3f51b5',
-        'Space': '#3f51b5',
         '和風': '#d32f2f',
-        'Japanese Style': '#d32f2f',
         '洋風': '#1976d2',
-        'Western Style': '#1976d2',
         'ファンタジー': '#ab47bc',
-        'Fantasy': '#ab47bc',
         'SF': '#00acc1',
-        'Sci-Fi': '#00acc1',
         'ホラー': '#424242',
-        'Horror': '#424242',
         'かわいい': '#ec407a',
-        'Cute': '#ec407a',
         'クール': '#5c6bc0',
-        'Cool': '#5c6bc0',
-        'シンプル': '#78909c',
-        'Simple': '#78909c'
+        'シンプル': '#78909c'
     };
 
     // 最初にマッチする属性の色を返す
@@ -2199,7 +2147,7 @@ function showToast(message, type = 'info', retryHandler) {
     if (typeof retryHandler === 'function') {
         const btn = document.createElement('button');
         btn.className = 'ml-2 px-3 py-1 bg-white text-gray-800 rounded';
-        btn.textContent = t('retry');
+        btn.textContent = getLocalizedText('retry');
         btn.onclick = () => { try { retryHandler(); } finally { document.body.removeChild(toast); } };
         toast.appendChild(btn);
     }
