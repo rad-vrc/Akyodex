@@ -43,6 +43,17 @@ document.addEventListener('DOMContentLoaded', loadDeletedRemoteIds);
 const FINDER_PREFILL_VALUE = 'Akyo';
 const DEFAULT_ATTRIBUTE_NAME = '未分類';
 
+// 編集モーダル用のクロップ変数
+let editImageX = 0;
+let editImageY = 0;
+let editImageScale = 1;
+let editIsDragging = false;
+let editDragStartX = 0;
+let editDragStartY = 0;
+let editOriginalImageSrc = null;
+let editRecentlyDragged = false;
+let editCurrentAkyoId = null;
+
 const attributeManagerApi = window.attributeManager;
 if (!attributeManagerApi) {
     throw new Error('attributeManager module failed to load. Please ensure js/attribute-manager.js is loaded before js/admin.js');
@@ -1076,6 +1087,282 @@ function setupDropZone(element, dropHandler) {
         dropHandler(e);
     });
 }
+
+// ==== 編集モーダル用クロップ機能 ====
+
+// 編集モーダル用画像位置のリセット
+function resetEditImagePosition() {
+    editImageScale = 1;
+    const container = document.getElementById('editCropContainer');
+    const img = document.getElementById('editCropImage');
+    if (container && img) {
+        const cw = container.offsetWidth;
+        const ch = container.offsetHeight;
+        const iw = img.offsetWidth;
+        const ih = img.offsetHeight;
+        editImageX = (cw - iw) / 2;
+        editImageY = (ch - ih) / 2;
+    } else {
+        editImageX = 0;
+        editImageY = 0;
+    }
+    updateEditImageTransform();
+}
+
+// 編集モーダル用ズーム
+function zoomEditImage(factor) {
+    editImageScale *= factor;
+    editImageScale = Math.max(0.1, Math.min(5, editImageScale));
+    updateEditImageTransform();
+}
+
+// 編集モーダル用画像の変形を更新
+function updateEditImageTransform() {
+    const img = document.getElementById('editCropImage');
+    if (img) {
+        img.style.transform = `translate(${editImageX}px, ${editImageY}px) scale(${editImageScale})`;
+    }
+}
+
+// 編集モーダル用トリミング機能の初期化
+function initEditCropping() {
+    const container = document.getElementById('editCropContainer');
+    const img = document.getElementById('editCropImage');
+
+    if (!container || !img) return;
+
+    // マウスホイールでズーム
+    const wheelHandler = (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        zoomEditImage(delta);
+    };
+    container.removeEventListener('wheel', wheelHandler);
+    container.addEventListener('wheel', wheelHandler);
+
+    // ドラッグ開始（マウス）
+    const mouseDownHandler = (e) => {
+        if (e.target.id === 'editCropImage') {
+            editIsDragging = true;
+            editDragStartX = e.clientX - editImageX;
+            editDragStartY = e.clientY - editImageY;
+            img.style.cursor = 'grabbing';
+        }
+    };
+    img.removeEventListener('mousedown', mouseDownHandler);
+    img.addEventListener('mousedown', mouseDownHandler);
+
+    // ドラッグ中（マウス）
+    const mouseMoveHandler = (e) => {
+        if (!editIsDragging) return;
+        editImageX = e.clientX - editDragStartX;
+        editImageY = e.clientY - editDragStartY;
+        updateEditImageTransform();
+    };
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mousemove', mouseMoveHandler);
+
+    // ドラッグ終了（マウス）
+    const mouseUpHandler = () => {
+        if (editIsDragging) {
+            editIsDragging = false;
+            editRecentlyDragged = true;
+            setTimeout(() => { editRecentlyDragged = false; }, 150);
+            const img = document.getElementById('editCropImage');
+            if (img) img.style.cursor = 'move';
+        }
+    };
+    document.removeEventListener('mouseup', mouseUpHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+
+    // タッチイベント（モバイル対応）
+    const touchStartHandler = (e) => {
+        if (e.target.id === 'editCropImage' && e.touches.length === 1) {
+            editIsDragging = true;
+            const touch = e.touches[0];
+            editDragStartX = touch.clientX - editImageX;
+            editDragStartY = touch.clientY - editImageY;
+        }
+    };
+    img.removeEventListener('touchstart', touchStartHandler);
+    img.addEventListener('touchstart', touchStartHandler);
+
+    const touchMoveHandler = (e) => {
+        if (!editIsDragging || e.touches.length !== 1) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        editImageX = touch.clientX - editDragStartX;
+        editImageY = touch.clientY - editDragStartY;
+        updateEditImageTransform();
+    };
+    document.removeEventListener('touchmove', touchMoveHandler);
+    document.addEventListener('touchmove', touchMoveHandler);
+
+    const touchEndHandler = () => {
+        if (editIsDragging) {
+            editIsDragging = false;
+            editRecentlyDragged = true;
+            setTimeout(() => { editRecentlyDragged = false; }, 150);
+        }
+    };
+    document.removeEventListener('touchend', touchEndHandler);
+    document.addEventListener('touchend', touchEndHandler);
+}
+
+// 編集モーダル用画像ファイル処理（トリミング付き）
+function handleEditImageFileWithCrop(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const imgSrc = e.target.result;
+        editOriginalImageSrc = imgSrc;
+
+        // プレビューを表示
+        const preview = document.getElementById('editImagePreview');
+        if (preview) preview.classList.remove('hidden');
+
+        const cropImg = document.getElementById('editCropImage');
+        if (!cropImg) return;
+
+        cropImg.src = imgSrc;
+
+        // 画像サイズを調整
+        cropImg.onload = () => {
+            const container = document.getElementById('editCropContainer');
+            if (!container) return;
+
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+            const imgAspect = cropImg.naturalWidth / cropImg.naturalHeight;
+            const containerAspect = containerWidth / containerHeight;
+
+            // 初期スケール設定
+            editImageScale = 1;
+            if (imgAspect > containerAspect) {
+                cropImg.style.height = containerHeight + 'px';
+                cropImg.style.width = 'auto';
+            } else {
+                cropImg.style.width = containerWidth + 'px';
+                cropImg.style.height = 'auto';
+            }
+
+            // 中央配置
+            const imgWidth = cropImg.offsetWidth;
+            const imgHeight = cropImg.offsetHeight;
+            editImageX = (containerWidth - imgWidth) / 2;
+            editImageY = (containerHeight - imgHeight) / 2;
+
+            resetEditImagePosition();
+            initEditCropping();
+        };
+    };
+    reader.readAsDataURL(file);
+}
+
+// 編集モーダル用トリミング画像生成
+function generateEditCroppedImage() {
+    return new Promise((resolve) => {
+        const container = document.getElementById('editCropContainer');
+        const imgEl = document.getElementById('editCropImage');
+        if (!container || !imgEl || !imgEl.src || imgEl.src === window.location.href) {
+            resolve(null);
+            return;
+        }
+
+        const canvasW = 300;
+        const canvasH = 200;
+        const canvas = document.createElement('canvas');
+        canvas.width = canvasW;
+        canvas.height = canvasH;
+        const ctx = canvas.getContext('2d');
+
+        const image = new Image();
+        image.onload = () => {
+            const cw = container.offsetWidth;
+            const ch = container.offsetHeight;
+            const iw = image.naturalWidth;
+            const ih = image.naturalHeight;
+            const containerAspect = cw / ch;
+            const imageAspect = iw / ih;
+
+            const baseScale = imageAspect > containerAspect ? (ch / ih) : (cw / iw);
+            const totalScale = baseScale * editImageScale;
+
+            const sx = Math.max(0, (-editImageX) / totalScale);
+            const sy = Math.max(0, (-editImageY) / totalScale);
+            const sw = Math.min(iw - sx, cw / totalScale);
+            const sh = Math.min(ih - sy, ch / totalScale);
+
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvasW, canvasH);
+            ctx.drawImage(image, sx, sy, sw, sh, 0, 0, canvasW, canvasH);
+
+            canvas.toBlob((blob) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            }, 'image/webp', 0.9);
+        };
+        image.src = editOriginalImageSrc || imgEl.src;
+    });
+}
+
+// 編集モーダル用ドロップゾーン設定
+function setupEditDragDrop() {
+    const dropZone = document.getElementById('editImageDropZone');
+    const fileInput = document.getElementById('editImageInput');
+
+    if (!dropZone || !fileInput) return;
+
+    // クリックでファイル選択
+    dropZone.addEventListener('click', (e) => {
+        // ドラッグ直後のクリックは無視
+        if (editRecentlyDragged) return;
+
+        // プレビュー内のクリックは無視
+        const preview = document.getElementById('editImagePreview');
+        if (preview && !preview.classList.contains('hidden')) {
+            if (e.target.closest('#editImagePreview')) {
+                return;
+            }
+        }
+        fileInput.click();
+    });
+
+    // ファイル選択
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            handleEditImageFileWithCrop(file);
+        }
+    });
+
+    // ドラッグ&ドロップ
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer?.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            handleEditImageFileWithCrop(file);
+        }
+    });
+}
+
+// グローバル公開（window経由で admin.html から呼び出し可能に）
+window.resetEditImagePosition = resetEditImagePosition;
+window.zoomEditImage = zoomEditImage;
+window.handleEditImageFileWithCrop = handleEditImageFileWithCrop;
+window.generateEditCroppedImage = generateEditCroppedImage;
 
 // ログイン処理
 async function handleLogin(event) {
@@ -2188,12 +2475,51 @@ function editAkyo(akyoId) {
 
             <div class="mt-4">
                 <label class="block text-gray-700 text-sm font-medium mb-1">画像</label>
-                <div class="flex items-center gap-3">
-                    <img id="editImagePreview-${safeAkyoId}" src="${safePreviewSrc}" alt="Akyo #${safeDisplayId} の画像プレビュー" class="w-32 h-24 object-cover rounded border" onerror="this.style.display='none'" />
-                    <input type="file" accept=".webp,.png,.jpg,.jpeg" onchange="handleEditImageSelect(event, '${safeAkyoId}')" class="text-sm" />
-                    <button type="button" data-action="remove-edit-image" data-id="${safeAkyoId}" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">画像を削除</button>
+
+                <!-- ドロップゾーン（編集用） -->
+                <div id="editImageDropZone" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-600">画像をドラッグ&ドロップ または</p>
+                    <input type="file" id="editImageInput" accept=".webp,.png,.jpg,.jpeg" class="hidden">
+                    <button type="button" onclick="document.getElementById('editImageInput').click()"
+                            class="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                        ファイルを選択
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">推奨: 300×200px / .webp .png .jpg .jpeg</p>
+
+                    <!-- プレビュー＆トリミング（編集用） -->
+                    <div id="editImagePreview" class="mt-4 hidden">
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <div class="mb-3 text-sm text-gray-600">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                ドラッグで位置調整、スクロールで拡大縮小できます
+                            </div>
+
+                            <!-- トリミングコンテナ（編集用） -->
+                            <div id="editCropContainer" class="relative mx-auto mb-4" style="width: 300px; height: 200px; overflow: hidden; border: 2px solid #4f46e5; border-radius: 8px;">
+                                <img id="editCropImage" src="" alt="Crop preview (edit)"
+                                     style="position: absolute; cursor: move; transform-origin: center;">
+                            </div>
+
+                            <!-- コントロールボタン -->
+                            <div class="flex justify-center gap-2">
+                                <button type="button" onclick="resetEditImagePosition()"
+                                        class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
+                                    <i class="fas fa-redo mr-1"></i> リセット
+                                </button>
+                                <button type="button" onclick="zoomEditImage(1.1)"
+                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                                    <i class="fas fa-search-plus mr-1"></i> 拡大
+                                </button>
+                                <button type="button" onclick="zoomEditImage(0.9)"
+                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                                    <i class="fas fa-search-minus mr-1"></i> 縮小
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-xs text-gray-500 mt-1">「更新する」を押すと画像も公開環境へ反映されます。</p>
+                <p class="text-xs text-gray-500 mt-2">「更新する」を押すと画像も公開環境へ反映されます。</p>
             </div>
 
             <button type="submit" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:opacity-90">
@@ -2247,6 +2573,9 @@ function editAkyo(akyoId) {
         excludeId: akyo.id,
     });
 
+    // 編集モーダル用ドラッグ&ドロップ設定
+    setupEditDragDrop();
+
     modal.classList.remove('hidden');
 }
 
@@ -2283,6 +2612,18 @@ async function handleUpdateAkyo(event, akyoId) {
         console.error('updateCSVFile failed', e);
         showNotification('更新内容の保存に失敗しました', 'error');
         return;
+    }
+
+    // クロップされた画像を生成して保存
+    try {
+        const croppedImageDataUrl = await generateEditCroppedImage();
+        if (croppedImageDataUrl) {
+            window.__pendingEditImages = window.__pendingEditImages || {};
+            window.__pendingEditImages[akyoId] = croppedImageDataUrl;
+        }
+    } catch (e) {
+        console.error('generateEditCroppedImage failed', e);
+        // クロップ失敗は致命的ではないので続行
     }
 
     let messageSuffix = '';
