@@ -2,6 +2,7 @@
 images/**
 !images/logo.webp
 !images/logo-US.webp
+!images/akyogallery.webp
 !images/logo-200.png
 !images/profileIcon.png
 !images/miniakyo.webp
