@@ -255,19 +255,18 @@ function getAkyoImageUrl(akyoIdLike, options = {}) {
     const manifestUrl = tryGetManifestUrl(akyoImageManifestMap, akyoId, versionValue, versionSuffix);
     if (manifestUrl) return manifestUrl;
 
-
-    // 3) VRChat 直リンク
-    const vrchatUrl = resolveVrchatThumbnailUrl(akyoId, size, versionValue);
-    if (vrchatUrl) return vrchatUrl;
-
-    // 4) ユーザーのローカル保存データ
+    // 3) R2 直リンク（公開CDN）- ユーザーがアップロードした画像を優先
     try {
         if (PUBLIC_R2_BASE) {
             return `${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`;
         }
     } catch (_) {}
 
+    // 4) VRChat フォールバック（アバターURL）
+    const vrchatUrl = resolveVrchatThumbnailUrl(akyoId, size, versionValue);
+    if (vrchatUrl) return vrchatUrl;
 
+    // 5) 静的フォールバック
     return `/images/${akyoId}.webp${versionSuffix}`;
 }
 
