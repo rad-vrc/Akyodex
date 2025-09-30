@@ -145,17 +145,26 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     // 画像URL抽出（優先順位順）
     let img = "";
 
-    // 1. OGP画像（og:image）
-    const og = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+    // 1. OGP画像（og:image） - property または name 属性をサポート
+    const og = html.match(/<meta[^>]+(?:property|name)=["']og:image["'][^>]+content=["']([^"']+)["']/i);
     if (og?.[1]) {
       img = og[1];
     }
 
-    // 2. VRChat API URL (api.vrchat.cloud/api/1/image/file_xxx/1/xxx)
+    // 2. VRChat API URL (api.vrchat.cloud/api/1/file/file_xxx/1/file または /api/1/image/...)
     if (!img) {
-      const apiMatch = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/(\d+)/i);
-      if (apiMatch) {
-        img = apiMatch[0];
+      // /api/1/file/file_xxx/1/file パターン
+      const fileMatch = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/(\d+)\/file/i);
+      if (fileMatch) {
+        const fileId = fileMatch[1];
+        // /api/1/image/ 形式に変換してサイズ指定可能にする
+        img = `https://api.vrchat.cloud/api/1/image/${fileId}/1/${size}`;
+      } else {
+        // /api/1/image/file_xxx/1/xxx パターン
+        const apiMatch = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/(\d+)/i);
+        if (apiMatch) {
+          img = apiMatch[0];
+        }
       }
     }
 
