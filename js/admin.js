@@ -2154,13 +2154,22 @@ function editAkyo(akyoId) {
                 <div>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1">
                         <label class="text-gray-700 text-sm font-medium">VRChat URL</label>
-                        <button type="button" class="fetch-image-from-vrchat-btn px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center sm:w-auto w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                                title="VRChat URLから画像を自動取得">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                            </svg>
-                            <span>URLから画像を取得</span>
-                        </button>
+                        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <button type="button" class="fetch-name-from-vrchat-btn px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                    title="VRChat URLからアバター名を自動取得">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                </svg>
+                                <span>URLからアバター名を取得</span>
+                            </button>
+                            <button type="button" class="fetch-image-from-vrchat-btn px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                    title="VRChat URLから画像を自動取得">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                <span>URLから画像を取得</span>
+                            </button>
+                        </div>
                     </div>
                     <input type="url" name="avatarUrl" class="edit-avatar-url-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="${safeAvatarUrl}">
                 </div>
