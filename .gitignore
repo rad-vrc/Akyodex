@@ -1,6 +1,7 @@
 # Images: keep only brand/dev essentials
 images/**
 !images/logo.webp
+!images/logo-US.webp
 !images/logo-200.png
 !images/profileIcon.png
 !images/miniakyo.webp
