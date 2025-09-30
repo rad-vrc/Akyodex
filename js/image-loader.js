@@ -233,7 +233,7 @@ function tryGetManifestUrl(manifest, akyoId, versionValue, versionSuffix) {
         return appendVersionIfNeeded(value, versionValue) || `${value}${versionSuffix}`;
     }
 
-    const relative = `images/${value}`;
+    const relative = `/images/${value}`;
     return appendVersionIfNeeded(relative, versionValue) || `${relative}${versionSuffix}`;
 }
 
@@ -268,7 +268,7 @@ function getAkyoImageUrl(akyoIdLike, options = {}) {
     } catch (_) {}
 
 
-    return `images/${akyoId}.webp${versionSuffix}`;
+    return `/images/${akyoId}.webp${versionSuffix}`;
 }
 
 // エクスポート

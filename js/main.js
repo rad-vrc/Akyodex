@@ -321,7 +321,7 @@ function resolveAkyoImageUrl(akyoId, { size = 512 } = {}) {
 
     // 5) 静的フォールバック（存在しない場合は <img onerror> 側でプレースホルダ）
 
-    return appendVersionQuery(`images/${id3}.webp`, versionValue);
+    return appendVersionQuery(`/images/${id3}.webp`, versionValue);
   }
 
 

@@ -605,7 +605,7 @@
                 const triedJpg = img.dataset.triedJpg === '1';
                 if (!triedJpg) {
                     img.dataset.triedJpg = '1';
-                    img.src = `images/${id}.jpg`;
+                    img.src = `/images/${id}.jpg`;
                     return;
                 }
                 // プレースホルダーへ

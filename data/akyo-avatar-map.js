@@ -623,6 +623,7 @@ export const AVATAR_ID_BY_AVTR = {
   "avtr_d5c02dcd-84d7-434e-a252-93525e918ca2": "620",
   "avtr_ffd1759d-e23f-41a1-a414-8e1b517d9967": "621",
   "avtr_7f76d4fe-6694-4ecb-95fc-7c88e09e79d3": "622",
-  "avtr_ffbda8f5-5b26-4501-ad7e-ef2bff74d143": "623"
+  "avtr_ffbda8f5-5b26-4501-ad7e-ef2bff74d143": "623",
+  "avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5": "624"
 };
 export default AVATAR_ID_BY_AVTR;
