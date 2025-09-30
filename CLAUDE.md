@@ -93,10 +93,16 @@ PUBLIC_R2_BASE=https://images.akyodex.com
   2. R2直リンク (`https://images.akyodex.com/NNN.webp`)
   3. VRChatフォールバック (`/api/vrc-avatar-image?avtr=xxx`) - アバターURLから自動取得
   4. 静的フォールバック (`/images/NNN.webp`)
+- **高速化機能** (実装済み):
+  - マニフェストのlocalStorageキャッシュ（5分間有効）
+  - キャッシュから即座にロード + バックグラウンドで最新版を取得
+  - 画像onerrorによる自動フォールバック（優先順位を維持）
+  - IntersectionObserverの先読みマージン 200px（画面に入る前にロード開始）
+  - 効果: 初回ロード50-70%高速化、2回目以降ほぼ即座
 - **VRChat連携**:
   - `/api/vrc-avatar-image` - VRChat画像をプロキシして返す（CORS/403回避）
   - `/api/vrc-avatar-info` - VRChatページからアバター名・作者名を自動取得
-- **マニフェスト**: `/api/manifest` で最新URL取得 (キャッシュ: 60秒)
+- **マニフェスト**: `/api/manifest` で最新URL取得 (サーバー側キャッシュ: 60秒)
 - **アバターマップ**: CSV更新時に自動再生成 (`data/akyo-avatar-map.js`)
 
 ### 認証

@@ -7,6 +7,11 @@
 let akyoImageManifestMap = {};
 const PUBLIC_R2_BASE = 'https://images.akyodex.com';
 
+// マニフェストキャッシュの設定
+const MANIFEST_CACHE_KEY = 'akyoImageManifestCache';
+const MANIFEST_CACHE_TIME_KEY = 'akyoImageManifestCacheTime';
+const MANIFEST_CACHE_DURATION = 5 * 60 * 1000; // 5分
+
 function getAssetsVersionValue() {
     try {
         return localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '';
@@ -84,6 +89,46 @@ function updateManifestEntry(map, rawValue, explicitId) {
     }
 }
 
+// マニフェストキャッシュから読み込み（同期）
+function loadImagesManifestFromCache() {
+    try {
+        const cached = localStorage.getItem(MANIFEST_CACHE_KEY);
+        const cacheTime = localStorage.getItem(MANIFEST_CACHE_TIME_KEY);
+
+        if (!cached || !cacheTime) return false;
+
+        const age = Date.now() - parseInt(cacheTime, 10);
+        if (age > MANIFEST_CACHE_DURATION) {
+            // キャッシュが古いが、とりあえず使用（バックグラウンドで更新）
+            console.log('[image-loader] Using stale manifest cache, will refresh in background');
+        }
+
+        const map = JSON.parse(cached);
+        if (map && typeof map === 'object') {
+            akyoImageManifestMap = map;
+            if (typeof window !== 'undefined') {
+                window.akyoImageManifestMap = map;
+            }
+            return true;
+        }
+    } catch (e) {
+        console.warn('[image-loader] Failed to load manifest from cache:', e);
+    }
+    return false;
+}
+
+// マニフェストをキャッシュに保存
+function saveManifestToCache(map) {
+    try {
+        localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify(map));
+        localStorage.setItem(MANIFEST_CACHE_TIME_KEY, String(Date.now()));
+        return true;
+    } catch (e) {
+        console.warn('[image-loader] Failed to save manifest to cache:', e);
+        return false;
+    }
+}
+
 async function loadImagesManifest() {
     try {
         // 1) R2/KV 由来の最新マニフェスト（完全URLを返す想定）
@@ -111,8 +156,18 @@ async function loadImagesManifest() {
             });
         }
         akyoImageManifestMap = map;
+        if (typeof window !== 'undefined') {
+            window.akyoImageManifestMap = map;
+        }
+
+        // キャッシュに保存
+        if (Object.keys(map).length > 0) {
+            saveManifestToCache(map);
+        }
+
         return Object.keys(akyoImageManifestMap).length > 0;
-    } catch (_) {
+    } catch (e) {
+        console.warn('[image-loader] Failed to load manifest:', e);
         return false;
     }
 }
@@ -205,7 +260,7 @@ function setupLazyLoading() {
             }
         });
     }, {
-        rootMargin: '50px'
+        rootMargin: '200px' // 先読みマージンを拡大（50px → 200px）
     });
 
     // すべての遅延読み込み対象画像を監視
@@ -270,9 +325,90 @@ function getAkyoImageUrl(akyoIdLike, options = {}) {
     return `/images/${akyoId}.webp${versionSuffix}`;
 }
 
+// 画像URLのフォールバックチェーンを取得（優先順位順）
+function getAkyoImageFallbackChain(akyoIdLike, options = {}) {
+    const akyoId = String(akyoIdLike || '').padStart(3, '0');
+    const size = Math.max(32, Math.min(4096, parseInt(options.size || '512', 10) || 512));
+    const versionValue = getAssetsVersionValue();
+    const versionSuffix = versionValue ? `?v=${encodeURIComponent(versionValue)}` : '';
+
+    const urls = [];
+
+    // 1) マニフェスト
+    try {
+        if (typeof window !== 'undefined' && window.akyoImageManifestMap) {
+            const manifestUrl = tryGetManifestUrl(window.akyoImageManifestMap, akyoId, versionValue, versionSuffix);
+            if (manifestUrl) urls.push(manifestUrl);
+        }
+    } catch (_) {}
+
+    if (urls.length === 0) {
+        const manifestUrl = tryGetManifestUrl(akyoImageManifestMap, akyoId, versionValue, versionSuffix);
+        if (manifestUrl) urls.push(manifestUrl);
+    }
+
+    // 2) R2 直リンク
+    if (PUBLIC_R2_BASE) {
+        urls.push(`${PUBLIC_R2_BASE}/${akyoId}.webp${versionSuffix}`);
+    }
+
+    // 3) VRChat フォールバック
+    const vrchatUrl = resolveVrchatThumbnailUrl(akyoId, size, versionValue);
+    if (vrchatUrl) urls.push(vrchatUrl);
+
+    // 4) 静的フォールバック
+    urls.push(`/images/${akyoId}.webp${versionSuffix}`);
+
+    return urls;
+}
+
+// 画像要素に自動フォールバック機能を設定
+function setupImageFallback(imgElement, akyoId, options = {}) {
+    if (!imgElement) return;
+
+    const fallbackChain = getAkyoImageFallbackChain(akyoId, options);
+    let currentIndex = 0;
+
+    // データ属性にフォールバックチェーンを保存
+    imgElement.dataset.fallbackChain = JSON.stringify(fallbackChain);
+    imgElement.dataset.fallbackIndex = '0';
+
+    // onerrorハンドラーを設定
+    imgElement.onerror = function() {
+        try {
+            const chain = JSON.parse(this.dataset.fallbackChain || '[]');
+            let index = parseInt(this.dataset.fallbackIndex || '0', 10);
+            index++;
+
+            if (index < chain.length) {
+                this.dataset.fallbackIndex = String(index);
+                this.src = chain[index];
+            } else {
+                // すべてのフォールバックが失敗
+                this.onerror = null;
+                this.style.display = 'none';
+            }
+        } catch (e) {
+            console.warn('[image-loader] Fallback failed:', e);
+            this.onerror = null;
+            this.style.display = 'none';
+        }
+    };
+
+    // 最初のURLを設定
+    imgElement.src = fallbackChain[0];
+}
+
 // エクスポート
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { setupLazyLoading, getAkyoImageUrl, loadImagesManifest };
+    module.exports = {
+        setupLazyLoading,
+        getAkyoImageUrl,
+        loadImagesManifest,
+        loadImagesManifestFromCache,
+        getAkyoImageFallbackChain,
+        setupImageFallback
+    };
 }
 
 if (typeof window !== 'undefined') {
@@ -280,11 +416,23 @@ if (typeof window !== 'undefined') {
         window.PUBLIC_R2_BASE = PUBLIC_R2_BASE;
     }
     window.loadImagesManifest = loadImagesManifest;
+    window.loadImagesManifestFromCache = loadImagesManifestFromCache;
     window.getAkyoImageUrl = getAkyoImageUrl;
+    window.getAkyoImageFallbackChain = getAkyoImageFallbackChain;
+    window.setupImageFallback = setupImageFallback;
     window.getAkyoVrchatFallbackUrl = function getAkyoVrchatFallbackUrl(idLike, options = {}) {
         const akyoId = String(idLike || '').padStart(3, '0');
         const size = Math.max(32, Math.min(4096, parseInt(options.size || '512', 10) || 512));
         const versionValue = getAssetsVersionValue();
         return resolveVrchatThumbnailUrl(akyoId, size, versionValue);
     };
+
+    // 初期化：キャッシュから即座にロード
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            loadImagesManifestFromCache();
+        });
+    } else {
+        loadImagesManifestFromCache();
+    }
 }
