@@ -616,6 +616,7 @@
         let dragStartX = 0;
         let dragStartY = 0;
         let originalImageSrc = null;
+        let recentlyDragged = false;
 
         // 画像位置のリセット（中央に戻す）
         function resetImagePosition() {
@@ -684,9 +685,13 @@
 
             // ドラッグ終了
             document.addEventListener('mouseup', () => {
-                isDragging = false;
-                const img = document.getElementById('cropImage');
-                if (img) img.style.cursor = 'move';
+                if (isDragging) {
+                    isDragging = false;
+                    recentlyDragged = true;
+                    setTimeout(() => { recentlyDragged = false; }, 150);
+                    const img = document.getElementById('cropImage');
+                    if (img) img.style.cursor = 'move';
+                }
             });
 
             // タッチイベント（モバイル対応）
@@ -707,7 +712,11 @@
             });
 
             document.addEventListener('touchend', () => {
-                isDragging = false;
+                if (isDragging) {
+                    isDragging = false;
+                    recentlyDragged = true;
+                    setTimeout(() => { recentlyDragged = false; }, 150);
+                }
             });
         }
 

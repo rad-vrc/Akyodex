@@ -997,6 +997,11 @@ function setupDragDrop() {
 
         if (imageInput) {
             imageDropZone.addEventListener('click', (e) => {
+                // ドラッグ直後のクリックは無視（ドラッグ終了時にファイル選択が開くのを防ぐ）
+                if (window.recentlyDragged) {
+                    return;
+                }
+
                 // トリミングプレビューエリア内のクリックは無視
                 const imagePreview = document.getElementById('imagePreview');
                 if (imagePreview && !imagePreview.classList.contains('hidden')) {
