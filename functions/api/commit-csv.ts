@@ -247,48 +247,86 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       }
     }
 
-    function parseCsvLineToFields(line: string): string[] {
-      // レコード全体（改行を含む場合あり）から値配列へ
-      const fields: string[] = [];
-      if (!line) return fields;
-      if (line.charCodeAt(0) === 0xFEFF) line = line.slice(1);
-      let i = 0;
-      const n = line.length;
-      while (i < n) {
-        let field = "";
-        let inQ = false;
-        if (line[i] === '"') { inQ = true; i++; }
-        while (i < n) {
-          const ch = line[i];
-          if (ch === '"') {
-            const next = line[i + 1];
-            if (inQ && next === '"') { field += '"'; i += 2; continue; }
-            if (inQ) { i++; inQ = false; continue; }
-          }
-          if (!inQ && ch === ',') { i++; break; }
-          field += ch; i++;
-        }
-        fields.push(field);
-        // カンマが無く終了した場合は次ループでbreakされる
-      }
-      return fields;
+    // parseRFC4180CsvLine 関数の定義（上の方に追加）
+function parseRFC4180CsvLine(line: string): string[] {
+  const fields: string[] = [];
+  if (!line) return fields;
+
+  let str = line;
+  if (str.charCodeAt(0) === 0xFEFF) {
+    str = str.slice(1);
+  }
+
+  let i = 0;
+  const n = str.length;
+
+  while (i < n) {
+    let field = "";
+
+    while (i < n && (str[i] === ' ' || str[i] === '\t')) {
+      i++;
     }
 
-    function parseCsvToRows(text: string): { header?: string; rows: Array<{ id: string; raw: string; fields: string[] }> } {
-      const records = splitCsvRecordsPreserveQuotes(text);
-      const out: Array<{ id: string; raw: string; fields: string[] }> = [];
-      let header: string | undefined;
-      for (let idx = 0; idx < records.length; idx++) {
-        const rec = records[idx];
-        if (rec == null || rec === "") continue;
-        if (!header && isHeader(rec)) { header = rec; continue; }
-        const id = (parseFirstField(rec) || '').trim();
-        if (!id || !/^\d{3}$/.test(id)) continue;
-        const fields = parseCsvLineToFields(rec);
-        out.push({ id, raw: rec, fields });
+    if (i >= n) break;
+
+    if (str[i] === '"') {
+      i++;
+
+      while (i < n) {
+        if (str[i] === '"') {
+          if (i + 1 < n && str[i + 1] === '"') {
+            field += '"';
+            i += 2;
+          } else {
+            i++;
+            break;
+          }
+        } else {
+          field += str[i];
+          i++;
+        }
       }
-      return { header, rows: out };
+
+      while (i < n && str[i] !== ',') {
+        i++;
+      }
+    } else {
+      while (i < n && str[i] !== ',') {
+        field += str[i];
+        i++;
+      }
+      field = field.trimEnd();
     }
+
+    fields.push(field);
+
+    if (i < n && str[i] === ',') {
+      i++;
+    }
+  }
+
+  return fields;
+}
+
+// ... 他の関数 ...
+
+
+
+function parseCsvToRows(text: string): { header?: string; rows: Array<{ id: string; raw: string; fields: string[] }> } {
+  const records = splitCsvRecordsPreserveQuotes(text);
+  const out: Array<{ id: string; raw: string; fields: string[] }> = [];
+  let header: string | undefined;
+  for (let idx = 0; idx < records.length; idx++) {
+    const rec = records[idx];
+    if (rec == null || rec === "") continue;
+    if (!header && isHeader(rec)) { header = rec; continue; }
+    const id = (parseFirstField(rec) || '').trim();
+    if (!id || !/^\d{3}$/.test(id)) continue;
+    const fields = parseRFC4180CsvLine(rec); // ← ここを parseCsvLineToFields から変更
+    out.push({ id, raw: rec, fields });
+  }
+  return { header, rows: out };
+}
 
     function parseCsvToMap(text: string): Map<string, { raw: string; fields: string[] }> {
       const { rows } = parseCsvToRows(text);
