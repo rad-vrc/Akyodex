@@ -56,7 +56,14 @@ Akyoずかんは、500種類以上存在する「Akyo」というなぞの生き
 8. **管理者機能**
    - 2階層認証システム（オーナー/管理者）
    - Akyoデータの追加・編集・削除
+   - **ドラッグ&ドロップ + クロップUI** (新規登録・編集両対応)
+     - 画像位置調整・ズーム機能
+     - PC/スマホ両対応（タッチイベント対応）
+   - **VRChat連携機能**
+     - URLから画像を自動取得
+     - URLからアバター名を自動取得
    - CSVインポート（ツールタブに統合）
+   - CSV更新時のアバターマップ自動更新
    - 自動ID割り当て機能
    - ID自動圧縮・再採番機能
 
@@ -166,10 +173,22 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 ├── HOSTING-GUIDE.md    # ホスティングガイド 🆕
 ├── js/
 │   ├── main.js        # 図鑑ページ用JavaScript
-│   ├── admin.js       # 管理者ページ用JavaScript
-│   ├── image-loader.js # 画像読み込み用JavaScript
+│   ├── admin.js       # 管理者ページ用JavaScript (クロップ機能含む)
+│   ├── image-loader.js # 画像読み込み用JavaScript (VRChatフォールバック対応)
 │   ├── storage-manager.js # IndexedDB管理
-│   └── storage-adapter.js # ストレージ互換レイヤー
+│   ├── storage-adapter.js # ストレージ互換レイヤー
+│   ├── attribute-manager.js # 属性管理API
+│   └── mini-akyo-bg.js # 背景アニメーション
+├── functions/
+│   ├── _utils.ts      # 共通ユーティリティ
+│   └── api/
+│       ├── csv.ts     # CSV取得
+│       ├── commit-csv.ts # CSV更新 + アバターマップ自動更新
+│       ├── upload.ts  # 画像アップロード (R2)
+│       ├── manifest.ts # 画像マニフェスト取得
+│       ├── vrc-avatar-image.ts # VRChat画像プロキシ (CORS/403回避)
+│       ├── vrc-avatar-info.ts # VRChatアバター名取得
+│       └── ... (その他のAPI)
 ├── css/
 │   └── kid-friendly.css # 子ども向けデザインCSS
 ├── data/
@@ -213,9 +232,11 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 ## 開発メモ
 
 - CSVの永続化は localStorage.AkyoDataCSV。未設定時は data/Akyo-data.csv をフェッチ
-- 画像はIndexedDB優先で保存し、フォールバックにlocalStorage.AkyoImages
+- 画像取得優先順位: マニフェスト → R2直リンク → VRChatフォールバック → 静的ファイル
+- VRChat連携: `/api/vrc-avatar-image`でCORS/403を回避、`/api/vrc-avatar-info`でメタデータ取得
 - 自動ID割り当ては001-020を優先的に使用
 - ID削除時は自動で後続IDを詰める（お気に入り・画像のIDマップも更新）
+- CSV更新時にアバターマップ (`data/akyo-avatar-map.js`) を自動再生成
 
 ## 次の開発推奨事項
 
@@ -223,12 +244,11 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
    - 複数条件のAND/OR検索
    - 検索履歴の保存
    - サジェスト機能の実装
-   - 編集モードにもAkyoの並び替え・ソート機能を追加
 
 2. **パフォーマンス最適化**
    - 仮想スクロールの実装
-   - 画像の遅延読み込み
-   - WebP形式での画像保存
+   - 画像の遅延読み込み（一部実装済み）
+   - サムネイル生成機能（現在は300×200固定）
 
 3. **ユーザー体験の向上**
    - PWA化によるオフライン対応
@@ -237,9 +257,15 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
    - ゲーミフィケーション要素（バッジ、実績など）
 
 4. **管理機能の拡充**
-   - 画像の一括エクスポート/インポート（別ツールとして再設計する場合は要検討）
+   - VRChat一括インポート機能（複数URLから一括取得）
+   - 画像の一括エクスポート/インポート
    - バックアップ・リストア機能
    - 変更履歴の記録
+
+5. **VRChat連携の強化**
+   - アバター更新検知（VRChatで画像が変わった場合の通知）
+   - 作者情報の自動取得・更新
+   - VRChatプロフィールページへのリンク追加
 
 ## 📧 お問い合わせ
 

@@ -67,13 +67,15 @@ PUBLIC_R2_BASE=https://images.akyodex.com
 
 ### Pages Functions (functions/*.ts)
 - `functions/api/csv.ts` - CSV取得 (GET)
-- `functions/api/commit-csv.ts` - CSV更新コミット (POST, 認証必須)
+- `functions/api/commit-csv.ts` - CSV更新コミット (POST, 認証必須) + アバターマップ自動更新
 - `functions/api/upload.ts` - 画像アップロード → R2 (POST, 認証必須)
 - `functions/api/gh-upload.ts` - GitHub直接アップロード (POST, 認証必須)
 - `functions/api/delete-image.ts` - 画像削除 (DELETE, オーナーのみ)
 - `functions/api/manifest.ts` - 画像マニフェスト取得 (GET)
 - `functions/api/scan.ts` - R2バケットスキャン (GET, 認証必須)
 - `functions/api/whoami.ts` - 認証確認 (GET)
+- `functions/api/vrc-avatar-image.ts` - VRChat画像プロキシ (GET) - CORS/403回避
+- `functions/api/vrc-avatar-info.ts` - VRChatアバター名取得 (GET) - og:titleから抽出
 - `functions/_utils.ts` - 共通ユーティリティ (CORS, 認証, レート制限)
 
 ## 重要な設計原則
@@ -86,8 +88,16 @@ PUBLIC_R2_BASE=https://images.akyodex.com
 
 ### 画像管理
 - **命名規則**: `images/NNN.webp` (3桁ID固定)
-- **フォールバック**: R2 → IndexedDB → LocalStorage → `/images/NNN.webp`
+- **画像取得優先順位**:
+  1. `/api/manifest` からマニフェスト取得 (R2/KV由来)
+  2. R2直リンク (`https://images.akyodex.com/NNN.webp`)
+  3. VRChatフォールバック (`/api/vrc-avatar-image?avtr=xxx`) - アバターURLから自動取得
+  4. 静的フォールバック (`/images/NNN.webp`)
+- **VRChat連携**:
+  - `/api/vrc-avatar-image` - VRChat画像をプロキシして返す（CORS/403回避）
+  - `/api/vrc-avatar-info` - VRChatページからアバター名・作者名を自動取得
 - **マニフェスト**: `/api/manifest` で最新URL取得 (キャッシュ: 60秒)
+- **アバターマップ**: CSV更新時に自動再生成 (`data/akyo-avatar-map.js`)
 
 ### 認証
 - **オーナー権限** (`RadAkyo`): 全機能 (削除含む)
@@ -123,6 +133,14 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 
 ### 画像アップロード
 - **推奨形式**: WebP (サイズ最適化済み)
+- **アップロード方法**:
+  - 新規登録画面: ドラッグ&ドロップ + クロップUI (300×200px)
+  - 編集画面: 新規登録画面と同じクロップUI
+  - VRChatボタン: URLから画像を自動取得してクロップUI表示
+- **クロップ機能**:
+  - ドラッグで位置調整、マウスホイール/ピンチでズーム
+  - PC/スマホ両対応（タッチイベント対応）
+  - ドラッグ直後のクリック防止機能
 - **サムネイル**: 未実装 (将来対応予定)
 - **容量制限**: R2無料枠 10GB/月, KV 1GB
 
@@ -135,9 +153,21 @@ ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
 
 ### 新しいAkyoを追加
 1. `admin.html` → 新規登録タブ
-2. フォーム入力 (ID自動割当)
-3. 画像選択 → アップロード
-4. CSV自動更新 (GitHub API経由)
+2. VRChat URLを入力（オプション）
+   - 「URLからアバター名を取得」ボタンでアバター名を自動入力
+   - 「URLから画像を取得」ボタンで画像を自動取得＆クロップUI表示
+3. 残りのフォーム入力 (ID自動割当)
+4. 画像をドラッグ&ドロップまたはVRChatボタンで取得
+5. クロップUIで位置調整・ズーム
+6. CSV自動更新 (GitHub API経由) + アバターマップ自動再生成
+
+### 既存のAkyoを編集
+1. `admin.html` → 編集・削除タブ
+2. 編集ボタンをクリック
+3. 編集モーダルで情報を更新
+   - VRChatボタンで画像/名前の自動取得も可能
+   - 新規登録画面と同じクロップUIで画像編集
+4. 「更新する」ボタンで保存 + 画像も自動アップロード
 
 ### IDを再採番
 1. `admin.html` → ツールタブ → ID自動圧縮
