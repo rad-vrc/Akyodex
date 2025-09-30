@@ -83,7 +83,7 @@
     <!-- 画像最適化: R2 事前接続＆ロゴのプリロード -->
     <link rel="dns-prefetch" href="https://images.akyodex.com">
     <link rel="preconnect" href="https://images.akyodex.com" crossorigin>
-    <link rel="preload" as="image" href="/images/logo.webp">
+    <link id="logoPreload" rel="preload" as="image" href="/images/logo.webp">
 
     <!-- Custom Styles -->
     <style>
@@ -298,9 +298,24 @@
                 <div class="flex items-center gap-4">
                     <!-- 統計情報 -->
                     <div class="hidden md:flex items-center gap-6 md:text-lg lg:text-xl text-gray-700">
-                        <span><i class="fas fa-layer-group"></i> 全<span id="totalCount">0</span>種</span>
-                        <span><i class="fas fa-eye"></i> 表示中: <span id="displayCount">0</span></span>
-                        <span><i class="fas fa-heart"></i> お気に入り: <span id="favoriteCount">0</span></span>
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-layer-group"></i>
+                            <span id="totalLabelPrefix">全</span>
+                            <span id="totalCount">0</span>
+                            <span id="totalLabelSuffix">種</span>
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-eye"></i>
+                            <span id="displayLabelPrefix">表示中:</span>
+                            <span id="displayCount">0</span>
+                            <span id="displayLabelSuffix"></span>
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-heart"></i>
+                            <span id="favoriteLabelPrefix">お気に入り:</span>
+                            <span id="favoriteCount">0</span>
+                            <span id="favoriteLabelSuffix"></span>
+                        </span>
                     </div>
 
                     <!-- ビュー切り替え -->
@@ -368,7 +383,7 @@
         <!-- ローディング表示 -->
         <div id="loadingContainer" class="flex flex-col items-center justify-center py-20">
             <div class="loading-spinner mb-4"></div>
-            <p class="text-gray-600">Akyoデータを読み込んでいます...</p>
+            <p id="loadingMessage" class="text-gray-600">Akyoデータを読み込んでいます...</p>
         </div>
 
         <!-- グリッドビュー -->
@@ -384,12 +399,12 @@
                 <table class="w-full">
                     <thead class="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                         <tr>
-                            <th class="px-4 py-3 text-left">No.</th>
-                            <th class="px-4 py-3 text-left">見た目</th>
-                            <th class="px-4 py-3 text-left">名前</th>
-                            <th class="px-4 py-3 text-left">属性</th>
-                            <th class="px-4 py-3 text-left">作者</th>
-                            <th class="px-4 py-3 text-center">アクション</th>
+                            <th id="listHeaderNumber" class="px-4 py-3 text-left">No.</th>
+                            <th id="listHeaderAppearance" class="px-4 py-3 text-left">見た目</th>
+                            <th id="listHeaderName" class="px-4 py-3 text-left">名前</th>
+                            <th id="listHeaderAttribute" class="px-4 py-3 text-left">属性</th>
+                            <th id="listHeaderCreator" class="px-4 py-3 text-left">作者</th>
+                            <th id="listHeaderActions" class="px-4 py-3 text-center">アクション</th>
                         </tr>
                     </thead>
                     <tbody id="akyoList">
@@ -402,7 +417,7 @@
         <!-- データなし表示 -->
         <div id="noDataContainer" class="hidden text-center py-20">
             <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-            <p class="text-gray-600 text-lg">該当するAkyoが見つかりませんでした</p>
+            <p id="noDataMessage" class="text-gray-600 text-lg">該当するAkyoが見つかりませんでした</p>
         </div>
     </main>
 
@@ -467,22 +482,30 @@
                 headerLogoLoaded = true;
                 try {
                     let headerLogoUrl = null;
+                    const preferredLogo = window.akyoPreferredLogoPath || '/images/logo.webp';
+                    const currentLanguage = window.akyoCurrentLanguage || 'ja';
+
+                    if (preferredLogo && currentLanguage !== 'ja') {
+                        headerLogoUrl = preferredLogo;
+                    }
 
                     // まずフォルダ（images/）からの既定ロゴを試す（GETで存在確認）
-                    try {
-                        const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
-                        // webp → png → jpg の順に確認
-                        const respWebp = await fetch(`/images/logo.webp?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                        if (respWebp.ok) headerLogoUrl = `/images/logo.webp?v=${encodeURIComponent(ver)}`;
-                        else {
-                            const respPng = await fetch(`/images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                            if (respPng.ok) headerLogoUrl = `/images/logo.png?v=${encodeURIComponent(ver)}`;
+                    if (!headerLogoUrl) {
+                        try {
+                            const ver = (localStorage.getItem('akyoAssetsVersion') || localStorage.getItem('akyoDataVersion') || '1');
+                            // webp → png → jpg の順に確認
+                            const respWebp = await fetch(`/images/logo.webp?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                            if (respWebp.ok) headerLogoUrl = `/images/logo.webp?v=${encodeURIComponent(ver)}`;
                             else {
-                                const respJpg = await fetch(`/images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
-                                if (respJpg.ok) headerLogoUrl = `/images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                                const respPng = await fetch(`/images/logo.png?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                                if (respPng.ok) headerLogoUrl = `/images/logo.png?v=${encodeURIComponent(ver)}`;
+                                else {
+                                    const respJpg = await fetch(`/images/logo.jpg?v=${encodeURIComponent(ver)}`, { cache: 'no-cache' });
+                                    if (respJpg.ok) headerLogoUrl = `/images/logo.jpg?v=${encodeURIComponent(ver)}`;
+                                }
                             }
-                        }
-                    } catch (_) {}
+                        } catch (_) {}
+                    }
 
                     // 既定が無い場合はIndexedDBから読み込みを試行
                     if (window.storageManager && window.storageManager.isIndexedDBAvailable) {
@@ -515,10 +538,11 @@
                             homeUrl = '/';  // ローカル環境ではルートに戻る
                         }
 
+                        const logoAlt = window.akyoPreferredLogoAlt || (currentLanguage === 'en' ? 'Akyodex' : 'Akyoずかん');
                         headerLogoEl.innerHTML = `
                             <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
                                 <img src="${headerLogoUrl}"
-                                     alt="Akyoずかん"
+                                     alt="${logoAlt}"
                                      class="h-full w-auto hover:opacity-90 transition-opacity"
                                      style="object-fit: contain; max-width: 420px; cursor: pointer;">
                             </a>
@@ -540,10 +564,12 @@
                             homeUrl = '/';
                         }
 
+                        const fallbackLogo = preferredLogo || '/images/logo.webp';
+                        const logoAlt = window.akyoPreferredLogoAlt || (currentLanguage === 'en' ? 'Akyodex' : 'Akyoずかん');
                         headerLogoEl.innerHTML = `
                             <a href="${homeUrl}" class="flex items-center no-underline h-12 md:h-16" style="text-decoration: none;">
-                                <img src="/images/logo.webp" onerror="this.onerror=null; this.style.display='none'" fetchpriority="high" decoding="async"
-                                     alt="Akyoずかん" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
+                                <img src="${fallbackLogo}" onerror="this.onerror=null; this.style.display='none'" fetchpriority="high" decoding="async"
+                                     alt="${logoAlt}" class="h-full w-auto hover:opacity-90 transition-opacity" style="object-fit: contain; max-width: 420px; cursor: pointer;">
                             </a>
                         `;
                         const logoLink = headerLogoEl.querySelector('a');
