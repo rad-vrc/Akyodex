@@ -123,6 +123,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     // VRChatページからOGP画像を取得
     const pageUrl = `https://vrchat.com/home/avatar/${avtrId}`;
     const res = await fetch(pageUrl, {
+      // @ts-ignore - Cloudflare Workers の cf プロパティ
       cf: { cacheEverything: true, cacheTtl: 21600 },
       headers: { "User-Agent": "AkyoZukan/1.0" },
     });
