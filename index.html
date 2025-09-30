@@ -459,9 +459,12 @@
                 console.warn('Secret mode utilities were not initialised correctly.');
             }
 
+            let headerLogoLoaded = false;
 
             // ヘッダーロゴを読み込み
             async function loadHeaderLogo() {
+                if (headerLogoLoaded) return;
+                headerLogoLoaded = true;
                 try {
                     let headerLogoUrl = null;
 
