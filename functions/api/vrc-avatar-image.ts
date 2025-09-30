@@ -182,7 +182,33 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       // 画像が見つからない場合、KV画像にフォールバック
       if (storedUrl) {
         const finalUrl = appendVersionParam(storedUrl, version);
-        return Response.redirect(finalUrl, 302);
+        try {
+          const imageResponse = await fetch(finalUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+              'Accept': 'image/webp,image/png,image/*,*/*'
+            },
+            // @ts-ignore - Cloudflare Workers の cf プロパティ
+            cf: {
+              cacheEverything: true,
+              cacheTtl: 3600
+            }
+          });
+
+          if (imageResponse.ok) {
+            return new Response(imageResponse.body, {
+              status: 200,
+              headers: {
+                'Content-Type': imageResponse.headers.get('Content-Type') || 'image/webp',
+                'Cache-Control': 'public, max-age=3600',
+                ...corsHeaders(request.headers.get("origin") ?? undefined)
+              }
+            });
+          }
+        } catch (_) {
+          // フォールバック: 302リダイレクト
+          return Response.redirect(finalUrl, 302);
+        }
       }
       return new Response("Image not found in VRChat page", {
         status: 404,
@@ -197,7 +223,39 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
     const finalUrl = appendVersionParam(img, version);
 
-    return Response.redirect(finalUrl, 302);
+    // 画像をプロキシして返す（302リダイレクトではなく、実際の画像データを返す）
+    // これにより、VRChat APIへの直接アクセスによるCORS/403エラーを回避
+    try {
+      const imageResponse = await fetch(finalUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Accept': 'image/webp,image/png,image/*,*/*'
+        },
+        // @ts-ignore - Cloudflare Workers の cf プロパティ
+        cf: {
+          cacheEverything: true,
+          cacheTtl: 3600 // 1時間キャッシュ
+        }
+      });
+
+      if (!imageResponse.ok) {
+        throw new Error(`Failed to fetch image: ${imageResponse.status}`);
+      }
+
+      // 画像データをそのまま返す
+      return new Response(imageResponse.body, {
+        status: 200,
+        headers: {
+          'Content-Type': imageResponse.headers.get('Content-Type') || 'image/webp',
+          'Cache-Control': 'public, max-age=3600',
+          ...corsHeaders(request.headers.get("origin") ?? undefined)
+        }
+      });
+    } catch (fetchError: any) {
+      console.error("[vrc-avatar-image] Failed to fetch image:", fetchError);
+      // フォールバック: 302リダイレクトを試す
+      return Response.redirect(finalUrl, 302);
+    }
   } catch (error: any) {
     console.error("[vrc-avatar-image] Unexpected error:", error);
     return new Response(`Internal error: ${error?.message || "Unknown"}`, {
