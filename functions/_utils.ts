@@ -1,3 +1,8 @@
+// functions/_utils.ts
+
+// 型定義をインポート
+export type { PagesFunction } from './types';
+
 export function okJSON(data: unknown, init: ResponseInit = {}) {
   return new Response(JSON.stringify(data), {
     headers: {
@@ -17,6 +22,8 @@ const ALLOWED_ORIGINS = new Set([
   "https://akyodex.com",
   "https://www.akyodex.com",
   "https://akyodex.pages.dev",
+  "https://gallery.akyodex.com",  // ← 追加
+  "https://akyogallery.pages.dev", // ← 追加
 ]);
 
 export function corsHeaders(origin?: string) {
@@ -106,5 +113,3 @@ export async function enforceRateLimit(
 
   await kv.put(key, String(current + 1), { expirationTtl: windowSeconds });
 }
-
-

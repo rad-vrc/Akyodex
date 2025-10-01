@@ -639,7 +639,7 @@ npx wrangler pages deploy dist --project-name akyodex-site
 - [ ] `npx wrangler pages deploy . --project-name akyodex-site` を実行し公開
 - [ ] `/api/manifest` が正しいJSONを返し、トップページで画像が見える
 - [ ] `admin.html` からのアップロードが反映される
-- [ ] 画像はR2へ集約。ローカルは `images/logo.webp`, `images/logo-200.png`, `images/profileIcon.png`, `images/miniakyo.webp` のみ
+- [ ] 画像はR2へ集約。ローカルは `images/logo.webp`, `images/logo-200.png`, `images/profileIcon.png`, `images/miniakyo.webp`, `images/akyogallery.webp` のみ
 
 ### 画像移行メモ
 
