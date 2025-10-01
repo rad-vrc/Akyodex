@@ -1,4 +1,4 @@
-const PRECACHE = 'akyo-precache-v8';
+const PRECACHE = 'akyo-precache-v9';
 const CSS_VERSION = '20250927';
 const THEME_BACKGROUND = './images/akyo-bg.webp';
 let precacheUrlList = null;
