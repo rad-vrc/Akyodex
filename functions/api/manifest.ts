@@ -7,15 +7,18 @@ type PagesFunction = (context: {
   [key: string]: any;
 }) => Promise<Response> | Response;
 
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-};
+export const onRequestOptions: PagesFunction = async ({ request }) =>
+  new Response(null, {
+    headers: corsHeaders(request.headers.get("origin") ?? undefined),
+  });
 
 export const onRequestGet: PagesFunction = async ({ request, env }) => {
   try {
     const list = await (env as any).AKYO_KV.list({ prefix: "akyo:" });
     const out: Record<string, string> = {};
-    const values = await Promise.all(list.keys.map((k: any) => (env as any).AKYO_KV.get(k.name, "json")));
+    const values = await Promise.all(
+      list.keys.map((k: any) => (env as any).AKYO_KV.get(k.name, "json"))
+    );
     for (const v of values) {
       if (v?.id && v?.url) out[v.id] = v.url;
     }
@@ -29,5 +32,3 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     return errJSON(500, e?.message || "manifest failed");
   }
 };
-
-

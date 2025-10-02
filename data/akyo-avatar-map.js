@@ -625,6 +625,6 @@ export const AVATAR_ID_BY_AVTR = {
   "avtr_7f76d4fe-6694-4ecb-95fc-7c88e09e79d3": "622",
   "avtr_ffbda8f5-5b26-4501-ad7e-ef2bff74d143": "623",
   "avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5": "624",
-  "avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408": "625"
+  "avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408": "625",
 };
 export default AVATAR_ID_BY_AVTR;

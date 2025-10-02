@@ -1,4 +1,10 @@
-import { corsHeaders, enforceRateLimit, errJSON, okJSON, requireAuth } from "../_utils";
+import {
+  corsHeaders,
+  enforceRateLimit,
+  errJSON,
+  okJSON,
+  requireAuth,
+} from "../_utils";
 
 // Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
 type PagesFunction = (context: {
@@ -23,18 +29,23 @@ function pickBetter(a: Choice | undefined, b: Choice): Choice {
   return b.key.length < a.key.length ? b : a;
 }
 
-function extractIdAndScore(key: string): { id: string | null; dirScore: number; posScore: number } {
+function extractIdAndScore(key: string): {
+  id: string | null;
+  dirScore: number;
+  posScore: number;
+} {
   const base = key.split("/").pop() || key;
   const m = base.match(/(\d{3})/);
   const id = m ? m[1] : null;
   const dirScore = key.startsWith("images/") ? 1 : 0;
-  const posScore = base.startsWith(id || "_") ? 2 : (m ? 1 : 0);
+  const posScore = base.startsWith(id || "_") ? 2 : m ? 1 : 0;
   return { id, dirScore, posScore };
 }
 
-export const onRequestOptions = async ({ request }: any) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-};
+export const onRequestOptions = async ({ request }: any) =>
+  new Response(null, {
+    headers: corsHeaders(request.headers.get("origin") ?? undefined),
+  });
 
 // 管理者専用: R2を走査して 3桁ID => 実キー をKVへ再構築
 export const onRequestPost = async ({ request, env }: any) => {
@@ -51,22 +62,28 @@ export const onRequestPost = async ({ request, env }: any) => {
     const kv = (env as any).AKYO_KV;
     const base = (env as any).PUBLIC_R2_BASE as string; // 例: https://images.akyodex.com
 
-    const extScore = (ext: string) => (ext === "webp" ? 3 : ext === "png" ? 2 : /jpe?g/i.test(ext) ? 1 : 0);
+    const extScore = (ext: string) =>
+      ext === "webp" ? 3 : ext === "png" ? 2 : /jpe?g/i.test(ext) ? 1 : 0;
 
     const best: Record<string, Choice> = {};
 
-    let cursor: string | undefined = undefined;
+    let cursor: string | undefined;
     do {
       const list = await bucket.list({ prefix: "", cursor, limit: 1000 });
       cursor = list.cursor;
       for (const obj of list.objects) {
         const key = obj.key;
         const m = key.match(/\.([A-Za-z0-9]+)$/);
-        const ext = (m ? m[1].toLowerCase() : "");
+        const ext = m ? m[1].toLowerCase() : "";
         if (!/(webp|png|jpg|jpeg)$/i.test(ext)) continue;
         const { id, dirScore, posScore } = extractIdAndScore(key);
         if (!id) continue;
-        const cand: Choice = { key, extScore: extScore(ext), dirScore, posScore };
+        const cand: Choice = {
+          key,
+          extScore: extScore(ext),
+          dirScore,
+          posScore,
+        };
         best[id] = pickBetter(best[id], cand);
       }
     } while (cursor);
@@ -77,7 +94,16 @@ export const onRequestPost = async ({ request, env }: any) => {
     for (const [id, choice] of Object.entries(best)) {
       const url = `${base}/${choice.key}`;
       map[id] = url;
-      await kv.put(`akyo:${id}`, JSON.stringify({ id, key: choice.key, url, updatedAt: now, source: "scan" }));
+      await kv.put(
+        `akyo:${id}`,
+        JSON.stringify({
+          id,
+          key: choice.key,
+          url,
+          updatedAt: now,
+          source: "scan",
+        })
+      );
       updated++;
     }
 
@@ -90,5 +116,3 @@ export const onRequestPost = async ({ request, env }: any) => {
     return errJSON(500, e?.message || "scan failed");
   }
 };
-
-

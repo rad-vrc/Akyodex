@@ -1,11 +1,11 @@
 import {
-    corsHeaders,
-    enforceRateLimit,
-    errJSON,
-    okJSON,
-    requireAuth,
-    sanitizeFileName,
-    threeDigits,
+  corsHeaders,
+  enforceRateLimit,
+  errJSON,
+  okJSON,
+  requireAuth,
+  sanitizeFileName,
+  threeDigits,
 } from "../_utils";
 
 const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg"]);
@@ -26,7 +26,7 @@ interface GithubCommitResponse {
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   const bytes = new Uint8Array(buffer);
-  const chunkSize = 0x8000;
+  const chunkSize = 0x80_00;
   let binary = "";
   for (let i = 0; i < bytes.length; i += chunkSize) {
     const chunk = bytes.subarray(i, i + chunkSize);
@@ -39,11 +39,15 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-async function githubFetch(path: string, token: string, init: RequestInit = {}): Promise<Response> {
+async function githubFetch(
+  path: string,
+  token: string,
+  init: RequestInit = {}
+): Promise<Response> {
   const url = `https://api.github.com${path}`;
   const headers = {
-    "authorization": `Bearer ${token}`,
-    "accept": "application/vnd.github+json",
+    authorization: `Bearer ${token}`,
+    accept: "application/vnd.github+json",
     "content-type": "application/json; charset=utf-8",
     "user-agent": "Akyodex-Worker/1.0",
     "x-github-api-version": "2022-11-28",
@@ -52,9 +56,10 @@ async function githubFetch(path: string, token: string, init: RequestInit = {}):
   return fetch(url, { ...init, headers });
 }
 
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-};
+export const onRequestOptions: PagesFunction = async ({ request }) =>
+  new Response(null, {
+    headers: corsHeaders(request.headers.get("origin") ?? undefined),
+  });
 
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
   try {
@@ -67,10 +72,15 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     });
 
     const token = (env as any).GITHUB_TOKEN as string;
-    const owner = ((env as any).GITHUB_REPO_OWNER as string) || ((env as any).REPO_OWNER as string);
-    const repo = ((env as any).GITHUB_REPO_NAME as string) || ((env as any).REPO_NAME as string);
+    const owner =
+      ((env as any).GITHUB_REPO_OWNER as string) ||
+      ((env as any).REPO_OWNER as string);
+    const repo =
+      ((env as any).GITHUB_REPO_NAME as string) ||
+      ((env as any).REPO_NAME as string);
     const branch = ((env as any).GITHUB_BRANCH as string) || "main";
-    if (!token || !owner || !repo) return errJSON(500, "GitHub settings missing");
+    if (!(token && owner && repo))
+      return errJSON(500, "GitHub settings missing");
 
     const form = await request.formData();
     const idRaw = String(form.get("id") ?? "");
@@ -88,12 +98,16 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
       return errJSON(415, "unsupported file extension");
     }
 
-    const mime = (file as any).type ? String((file as any).type).toLowerCase() : "";
+    const mime = (file as any).type
+      ? String((file as any).type).toLowerCase()
+      : "";
     if (mime && !ALLOWED_MIME_TYPES.has(mime)) {
       return errJSON(415, "unsupported mime type");
     }
 
-    const maxSize = Number((env as any).MAX_UPLOAD_SIZE_BYTES ?? DEFAULT_MAX_SIZE);
+    const maxSize = Number(
+      (env as any).MAX_UPLOAD_SIZE_BYTES ?? DEFAULT_MAX_SIZE
+    );
     if (Number.isFinite(maxSize) && file.size > maxSize) {
       return errJSON(413, "file too large");
     }
@@ -105,55 +119,76 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     // GitHubへファイルをPUT
     const arrayBuffer = await file.arrayBuffer();
     const base64Content = arrayBufferToBase64(arrayBuffer);
-    const putFileRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(key)}`, token, {
-      method: "PUT",
-      body: JSON.stringify({
-        message: `chore: add image ${key}`,
-        content: base64Content,
-        branch,
-      }),
-    });
+    const putFileRes = await githubFetch(
+      `/repos/${owner}/${repo}/contents/${encodeURIComponent(key)}`,
+      token,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          message: `chore: add image ${key}`,
+          content: base64Content,
+          branch,
+        }),
+      }
+    );
     if (!putFileRes.ok) {
       const txt = await putFileRes.text();
       return errJSON(500, `github upload failed: ${putFileRes.status} ${txt}`);
     }
 
     // manifest.json 更新（存在しなければ新規作成）
-    const manifestPath = `images/manifest.json`;
+    const manifestPath = "images/manifest.json";
     let manifestSha: string | undefined;
     let manifest: any = { map: {} };
-    const getManRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(manifestPath)}?ref=${encodeURIComponent(branch)}`, token);
+    const getManRes = await githubFetch(
+      `/repos/${owner}/${repo}/contents/${encodeURIComponent(manifestPath)}?ref=${encodeURIComponent(branch)}`,
+      token
+    );
     if (getManRes.ok) {
       const json = await getManRes.json();
       manifestSha = json.sha;
       const content = atob(json.content.replace(/\n/g, ""));
-      try { manifest = JSON.parse(content) || { map: {} }; } catch (_) { manifest = { map: {} }; }
+      try {
+        manifest = JSON.parse(content) || { map: {} };
+      } catch (_) {
+        manifest = { map: {} };
+      }
     }
 
     // mapにフル/相対パスを格納（相対: images/...）
     if (!manifest.map || typeof manifest.map !== "object") manifest.map = {};
     manifest.map[id] = key; // 例: images/001_foo.jpg
 
-    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2))));
-    const putManRes = await githubFetch(`/repos/${owner}/${repo}/contents/${encodeURIComponent(manifestPath)}`, token, {
-      method: "PUT",
-      body: JSON.stringify({
-        message: `chore: update manifest for ${id}`,
-        content: newContent,
-        branch,
-        sha: manifestSha,
-      }),
-    });
+    const newContent = btoa(
+      unescape(encodeURIComponent(JSON.stringify(manifest, null, 2)))
+    );
+    const putManRes = await githubFetch(
+      `/repos/${owner}/${repo}/contents/${encodeURIComponent(manifestPath)}`,
+      token,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          message: `chore: update manifest for ${id}`,
+          content: newContent,
+          branch,
+          sha: manifestSha,
+        }),
+      }
+    );
     if (!putManRes.ok) {
       const txt = await putManRes.text();
-      return errJSON(500, `github manifest update failed: ${putManRes.status} ${txt}`);
+      return errJSON(
+        500,
+        `github manifest update failed: ${putManRes.status} ${txt}`
+      );
     }
 
-    return okJSON({ ok: true, id, key, manifestUpdated: true }, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+    return okJSON(
+      { ok: true, id, key, manifestUpdated: true },
+      { headers: corsHeaders(request.headers.get("origin") ?? undefined) }
+    );
   } catch (e: any) {
     if (e instanceof Response) return e;
     return errJSON(500, e?.message || "gh-upload failed");
   }
 };
-
-

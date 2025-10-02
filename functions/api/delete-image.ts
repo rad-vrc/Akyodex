@@ -19,7 +19,9 @@ type PagesFunctionContext = {
   [key: string]: unknown;
 };
 
-type PagesFunction = (ctx: PagesFunctionContext) => Promise<Response> | Response;
+type PagesFunction = (
+  ctx: PagesFunctionContext
+) => Promise<Response> | Response;
 
 export const onRequestDelete: PagesFunction = async (ctx) => {
   const url = new URL(ctx.request.url);
@@ -55,7 +57,7 @@ async function handleDelete(ctx: PagesFunctionContext, idRaw: unknown) {
     } catch (_) {}
 
     // 新形式 images/{id}_... をまとめて削除
-    let cursor: string | undefined = undefined;
+    let cursor: string | undefined;
 
     do {
       const listResult = await bucket.list({ prefix: `images/${id}`, cursor });

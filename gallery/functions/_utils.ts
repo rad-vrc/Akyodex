@@ -1,6 +1,6 @@
 // gallery/functions/_utils.ts
 
-export type { PagesFunction } from './types';
+export type { PagesFunction } from "./types";
 
 export function okJSON(data: unknown, init: ResponseInit = {}) {
   return new Response(JSON.stringify(data), {
@@ -40,12 +40,15 @@ export function corsHeaders(origin?: string) {
   return headers;
 }
 
-export function requireAuth(request: Request, env: { ADMIN_PASSWORD_OWNER: string; ADMIN_PASSWORD_ADMIN?: string }) {
+export function requireAuth(
+  request: Request,
+  env: { ADMIN_PASSWORD_OWNER: string; ADMIN_PASSWORD_ADMIN?: string }
+) {
   const h = request.headers.get("authorization") ?? "";
   const token = h.startsWith("Bearer ") ? h.slice(7) : "";
   if (!token) throw new Response("Unauthorized", { status: 401 });
   if (token === env.ADMIN_PASSWORD_OWNER) return "owner" as const;
-  if (env.ADMIN_PASSWORD_ADMIN && token === env.ADMIN_PASSWORD_ADMIN) return "admin" as const;
+  if (env.ADMIN_PASSWORD_ADMIN && token === env.ADMIN_PASSWORD_ADMIN)
+    return "admin" as const;
   throw new Response("Unauthorized", { status: 401 });
 }
-

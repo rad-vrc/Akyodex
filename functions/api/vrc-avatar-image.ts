@@ -11,20 +11,27 @@ type PagesFunction<Env = any> = (context: {
 }) => Promise<Response> | Response;
 
 // KVNamespace 型定義
-interface KVNamespace {
-  get<T = string>(key: string, type?: "text" | "json" | "arrayBuffer" | "stream"): Promise<T | null>;
-  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: any): Promise<void>;
+interface KvNamespace {
+  get<T = string>(
+    key: string,
+    type?: "text" | "json" | "arrayBuffer" | "stream"
+  ): Promise<T | null>;
+  put(
+    key: string,
+    value: string | ArrayBuffer | ReadableStream,
+    options?: any
+  ): Promise<void>;
   delete(key: string): Promise<void>;
   list(options?: any): Promise<any>;
 }
 
 // 環境変数型定義
 interface Env {
-  AKYO_KV: KVNamespace;
+  AKYO_KV: KvNamespace;
   PUBLIC_R2_BASE: string;
 }
 
-interface KVRecord {
+interface KvRecord {
   id?: string;
   url?: string;
   key?: string;
@@ -50,12 +57,15 @@ function appendVersionParam(url: string, version: string): string {
   return `${base}${sep}v=${encodeURIComponent(version)}${hash}`;
 }
 
-async function resolveStoredImageUrl(id: string, env: Env): Promise<string | null> {
+async function resolveStoredImageUrl(
+  id: string,
+  env: Env
+): Promise<string | null> {
   if (!id) return null;
   const kv = env?.AKYO_KV;
   if (kv) {
     try {
-      const record = await kv.get<KVRecord>(`akyo:${id}`, "json");
+      const record = await kv.get<KvRecord>(`akyo:${id}`, "json");
       if (!record) {
         console.info(`[vrc-avatar-image] No KV entry for id ${id}`);
         return null;
@@ -71,7 +81,9 @@ async function resolveStoredImageUrl(id: string, env: Env): Promise<string | nul
       console.warn(`[vrc-avatar-image] KV lookup failed for id ${id}`, error);
     }
   } else {
-    console.warn(`[vrc-avatar-image] KV binding missing; cannot resolve id ${id}`);
+    console.warn(
+      `[vrc-avatar-image] KV binding missing; cannot resolve id ${id}`
+    );
   }
   return null;
 }
@@ -82,18 +94,17 @@ function sanitizeAvtr(avtr: string | null): string | null {
   return match ? match[0] : null;
 }
 
-export const onRequestOptions: PagesFunction<Env> = async ({ request }) => {
-  return new Response(null, {
+export const onRequestOptions: PagesFunction<Env> = async ({ request }) =>
+  new Response(null, {
     status: 204,
     headers: corsHeaders(request.headers.get("origin") ?? undefined),
   });
-};
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   try {
     const { searchParams } = new URL(request.url);
     const avtrRaw = searchParams.get("avtr") || "";
-    let size = parseInt(searchParams.get("w") || "512", 10);
+    let size = Number.parseInt(searchParams.get("w") || "512", 10);
     const version = searchParams.get("v") || "";
 
     // サイズの正規化
@@ -123,8 +134,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     // VRChatページからOGP画像を取得
     const pageUrl = `https://vrchat.com/home/avatar/${avtrId}`;
     const res = await fetch(pageUrl, {
-      // @ts-ignore - Cloudflare Workers の cf プロパティ
-      cf: { cacheEverything: true, cacheTtl: 21600 },
+      // @ts-expect-error - Cloudflare Workers の cf プロパティ
+      cf: { cacheEverything: true, cacheTtl: 21_600 },
       headers: { "User-Agent": "AkyoZukan/1.0" },
     });
 
@@ -146,7 +157,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     let img = "";
 
     // 1. OGP画像（og:image） - property または name 属性をサポート
-    const og = html.match(/<meta[^>]+(?:property|name)=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+    const og = html.match(
+      /<meta[^>]+(?:property|name)=["']og:image["'][^>]+content=["']([^"']+)["']/i
+    );
     if (og?.[1]) {
       img = og[1];
     }
@@ -154,14 +167,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     // 2. VRChat API URL (api.vrchat.cloud/api/1/file/file_xxx/1/file または /api/1/image/...)
     if (!img) {
       // /api/1/file/file_xxx/1/file パターン
-      const fileMatch = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/(\d+)\/file/i);
+      const fileMatch = html.match(
+        /https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/(\d+)\/file/i
+      );
       if (fileMatch) {
         const fileId = fileMatch[1];
         // /api/1/image/ 形式に変換してサイズ指定可能にする
         img = `https://api.vrchat.cloud/api/1/image/${fileId}/1/${size}`;
       } else {
         // /api/1/image/file_xxx/1/xxx パターン
-        const apiMatch = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/(\d+)/i);
+        const apiMatch = html.match(
+          /https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/(\d+)/i
+        );
         if (apiMatch) {
           img = apiMatch[0];
         }
@@ -170,7 +187,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
     // 3. VRChat Files URL (files.vrchat.cloud/thumbnails/file_xxx...thumbnail-xxx.png)
     if (!img) {
-      const filesMatch = html.match(/https?:\/\/files\.vrchat\.cloud\/thumbnails\/(file_[A-Za-z0-9-]+)[^"'\s]+\.thumbnail-\d+\.(png|jpg|webp)/i);
+      const filesMatch = html.match(
+        /https?:\/\/files\.vrchat\.cloud\/thumbnails\/(file_[A-Za-z0-9-]+)[^"'\s]+\.thumbnail-\d+\.(png|jpg|webp)/i
+      );
       if (filesMatch) {
         // 署名付きURLから file ID を抽出して、安定した API URL に変換
         const fileId = filesMatch[1];
@@ -185,24 +204,26 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         try {
           const imageResponse = await fetch(finalUrl, {
             headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-              'Accept': 'image/webp,image/png,image/*,*/*'
+              "User-Agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+              Accept: "image/webp,image/png,image/*,*/*",
             },
-            // @ts-ignore - Cloudflare Workers の cf プロパティ
+            // @ts-expect-error - Cloudflare Workers の cf プロパティ
             cf: {
               cacheEverything: true,
-              cacheTtl: 3600
-            }
+              cacheTtl: 3600,
+            },
           });
 
           if (imageResponse.ok) {
             return new Response(imageResponse.body, {
               status: 200,
               headers: {
-                'Content-Type': imageResponse.headers.get('Content-Type') || 'image/webp',
-                'Cache-Control': 'public, max-age=3600',
-                ...corsHeaders(request.headers.get("origin") ?? undefined)
-              }
+                "Content-Type":
+                  imageResponse.headers.get("Content-Type") || "image/webp",
+                "Cache-Control": "public, max-age=3600",
+                ...corsHeaders(request.headers.get("origin") ?? undefined),
+              },
             });
           }
         } catch (_) {
@@ -217,7 +238,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
 
     // サイズパラメータの調整（API URLの場合のみ）
-    if (img.includes('api.vrchat.cloud')) {
+    if (img.includes("api.vrchat.cloud")) {
       img = img.replace(/\/(\d+)(?:\?.*)?$/, `/${size}`);
     }
 
@@ -228,14 +249,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     try {
       const imageResponse = await fetch(finalUrl, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Accept': 'image/webp,image/png,image/*,*/*'
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          Accept: "image/webp,image/png,image/*,*/*",
         },
-        // @ts-ignore - Cloudflare Workers の cf プロパティ
+        // @ts-expect-error - Cloudflare Workers の cf プロパティ
         cf: {
           cacheEverything: true,
-          cacheTtl: 3600 // 1時間キャッシュ
-        }
+          cacheTtl: 3600, // 1時間キャッシュ
+        },
       });
 
       if (!imageResponse.ok) {
@@ -246,10 +268,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       return new Response(imageResponse.body, {
         status: 200,
         headers: {
-          'Content-Type': imageResponse.headers.get('Content-Type') || 'image/webp',
-          'Cache-Control': 'public, max-age=3600',
-          ...corsHeaders(request.headers.get("origin") ?? undefined)
-        }
+          "Content-Type":
+            imageResponse.headers.get("Content-Type") || "image/webp",
+          "Cache-Control": "public, max-age=3600",
+          ...corsHeaders(request.headers.get("origin") ?? undefined),
+        },
       });
     } catch (fetchError: any) {
       console.error("[vrc-avatar-image] Failed to fetch image:", fetchError);
