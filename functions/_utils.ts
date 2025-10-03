@@ -1,7 +1,7 @@
 // functions/_utils.ts
 
 // 型定義をインポート
-export type { PagesFunction } from './types';
+export type { PagesFunction } from "./types";
 
 export function okJSON(data: unknown, init: ResponseInit = {}) {
   return new Response(JSON.stringify(data), {
@@ -22,7 +22,7 @@ const ALLOWED_ORIGINS = new Set([
   "https://akyodex.com",
   "https://www.akyodex.com",
   "https://akyodex.pages.dev",
-  "https://gallery.akyodex.com",  // ← 追加
+  "https://gallery.akyodex.com", // ← 追加
   "https://akyogallery.pages.dev", // ← 追加
 ]);
 
@@ -41,7 +41,10 @@ export function corsHeaders(origin?: string) {
   return headers;
 }
 
-export function requireAuth(request: Request, env: { ADMIN_PASSWORD_OWNER: string; ADMIN_PASSWORD_ADMIN: string }) {
+export function requireAuth(
+  request: Request,
+  env: { ADMIN_PASSWORD_OWNER: string; ADMIN_PASSWORD_ADMIN: string }
+) {
   const h = request.headers.get("authorization") ?? "";
   const token = h.startsWith("Bearer ") ? h.slice(7) : "";
   if (!token) throw new Response("Unauthorized", { status: 401 });
@@ -96,8 +99,12 @@ export async function enforceRateLimit(
   env: Record<string, unknown>,
   options: RateLimitOptions = {}
 ) {
-  const kv = (options.kv || (env as any).RATE_LIMIT_KV || (env as any).AKYO_KV) as SimpleKV | undefined;
-  if (!kv || typeof kv.get !== "function" || typeof kv.put !== "function") return;
+  const kv =
+    options.kv ??
+    (env.RATE_LIMIT_KV as SimpleKV | undefined) ??
+    (env.AKYO_KV as SimpleKV | undefined);
+  if (!kv || typeof kv.get !== "function" || typeof kv.put !== "function")
+    return;
 
   const limit = options.limit ?? 20;
   const windowSeconds = options.windowSeconds ?? 60;

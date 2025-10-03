@@ -8,19 +8,26 @@ import {
   threeDigits,
 } from "../_utils";
 
-const ALLOWED_MIME_TYPES = new Set(["image/webp", "image/png", "image/jpeg", "image/jpg"]);
+const ALLOWED_MIME_TYPES = new Set([
+  "image/webp",
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+]);
 const ALLOWED_EXTENSIONS = new Set([".webp", ".png", ".jpg", ".jpeg"]);
 const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 // Cloudflare Pages Functions 用の型定義（TypeScript エラーを解消）
 type PagesFunction = (context: {
   request: Request;
-  env?: Record<string, any>;
-  [key: string]: any;
+  env?: Record<string, unknown>;
+  [key: string]: unknown;
 }) => Promise<Response> | Response;
 
 export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
+  return new Response(null, {
+    headers: corsHeaders(request.headers.get("origin") ?? undefined),
+  });
 };
 
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
@@ -45,7 +52,9 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
 
     const { safeName, mime, body, size } = parsed;
 
-    const maxSize = Number((env as any).MAX_UPLOAD_SIZE_BYTES ?? DEFAULT_MAX_SIZE);
+    const maxSize = Number(
+      (env as any).MAX_UPLOAD_SIZE_BYTES ?? DEFAULT_MAX_SIZE
+    );
     if (Number.isFinite(maxSize) && size > maxSize) {
       return errJSON(413, "file too large");
     }
@@ -70,7 +79,17 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     const now = new Date().toISOString();
     const updater = role; // ロールのみ記録（必要ならIP/UAも）
 
-    const data = { id, name, type, desc, key, url, updatedAt: now, updater, version };
+    const data = {
+      id,
+      name,
+      type,
+      desc,
+      key,
+      url,
+      updatedAt: now,
+      updater,
+      version,
+    };
     await (env as any).AKYO_KV.put(`akyo:${id}`, JSON.stringify(data));
 
     return okJSON(
@@ -157,7 +176,9 @@ function mimeToExtension(mime: string) {
   return ".webp";
 }
 
-function parseDataUrl(dataUrl: string): { mime: string; bytes: Uint8Array } | null {
+function parseDataUrl(
+  dataUrl: string
+): { mime: string; bytes: Uint8Array } | null {
   const match = /^data:([^;,]+)?(;base64)?,(.*)$/i.exec(dataUrl);
   if (!match) return null;
   const mime = (match[1] || "image/webp").toLowerCase();
