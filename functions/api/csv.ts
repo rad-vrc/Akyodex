@@ -1,18 +1,26 @@
 import { corsHeaders, errJSON } from "../_utils";
 
-type PagesFunction = (context: { request: Request; env?: Record<string, any> }) => Promise<Response> | Response;
+type PagesFunction = (context: {
+  request: Request;
+  env?: Record<string, any>;
+}) => Promise<Response> | Response;
 
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-};
+export const onRequestOptions: PagesFunction = async ({ request }) =>
+  new Response(null, {
+    headers: corsHeaders(request.headers.get("origin") ?? undefined),
+  });
 
 export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const origin = request.headers.get("origin") ?? undefined;
   try {
-    const owner = ((env as any).GITHUB_REPO_OWNER as string) || ((env as any).REPO_OWNER as string);
-    const repo = ((env as any).GITHUB_REPO_NAME as string) || ((env as any).REPO_NAME as string);
+    const owner =
+      ((env as any).GITHUB_REPO_OWNER as string) ||
+      ((env as any).REPO_OWNER as string);
+    const repo =
+      ((env as any).GITHUB_REPO_NAME as string) ||
+      ((env as any).REPO_NAME as string);
     const branch = ((env as any).GITHUB_BRANCH as string) || "main";
-    if (!owner || !repo) return errJSON(500, "GitHub settings missing");
+    if (!(owner && repo)) return errJSON(500, "GitHub settings missing");
 
     // 👇 クエリパラメータから言語とバージョンを取得
     const reqUrl = new URL(request.url);
@@ -20,7 +28,8 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     const bust = reqUrl.searchParams.get("v") || String(Date.now());
 
     // 👇 言語別CSVファイル名を決定
-    const csvFileName = lang === 'ja' ? 'akyo-data.csv' : `akyo-data-${lang}.csv`;
+    const csvFileName =
+      lang === "ja" ? "akyo-data.csv" : `akyo-data-${lang}.csv`;
     let url = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/data/${csvFileName}?bust=${encodeURIComponent(bust)}`;
     let usedFallback = false;
 
@@ -32,8 +41,10 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     } as RequestInit);
 
     // 👇 言語別CSVが見つからない場合は日本語版にフォールバック
-    if (!upstream.ok && lang !== 'ja') {
-      console.log(`${lang} CSV not found (${upstream.status}), falling back to Japanese`);
+    if (!upstream.ok && lang !== "ja") {
+      console.log(
+        `${lang} CSV not found (${upstream.status}), falling back to Japanese`
+      );
       usedFallback = true;
       url = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/data/akyo-data.csv?bust=${encodeURIComponent(bust)}`;
 

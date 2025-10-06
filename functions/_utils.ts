@@ -65,7 +65,7 @@ export function sanitizeFileName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9._-]+/g, "_");
 }
 
-type SimpleKV = {
+type SimpleKv = {
   get(key: string): Promise<string | null>;
   put(
     key: string,
@@ -81,7 +81,7 @@ type RateLimitOptions = {
   limit?: number;
   windowSeconds?: number;
   identifier?: string;
-  kv?: SimpleKV;
+  kv?: SimpleKv;
 };
 
 function getClientIdentifier(request: Request) {
@@ -99,10 +99,11 @@ export async function enforceRateLimit(
   env: Record<string, unknown>,
   options: RateLimitOptions = {}
 ) {
-  const kv =
-    options.kv ??
-    (env.RATE_LIMIT_KV as SimpleKV | undefined) ??
-    (env.AKYO_KV as SimpleKV | undefined);
+
+  const kv = (options.kv ||
+    (env as any).RATE_LIMIT_KV ||
+    (env as any).AKYO_KV) as SimpleKv | undefined;
+
   if (!kv || typeof kv.get !== "function" || typeof kv.put !== "function")
     return;
 

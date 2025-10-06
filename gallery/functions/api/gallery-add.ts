@@ -1,10 +1,11 @@
 // gallery/functions/api/gallery-add.ts
-import { okJSON, errJSON, corsHeaders, requireAuth } from '../_utils';
-import type { PagesFunction } from '../types';
+import { corsHeaders, errJSON, okJSON, requireAuth } from "../_utils";
+import type { PagesFunction } from "../types";
 
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get('origin') ?? undefined) });
-};
+export const onRequestOptions: PagesFunction = async ({ request }) =>
+  new Response(null, {
+    headers: corsHeaders(request.headers.get("origin") ?? undefined),
+  });
 
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
   try {
@@ -17,16 +18,19 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     await (env as any).AKYO_KV.put(`gallery:item:${id}`, JSON.stringify(item));
 
     // インデックス更新
-    const index = await (env as any).AKYO_KV.get('gallery:index', 'json') || [];
+    const index =
+      (await (env as any).AKYO_KV.get("gallery:index", "json")) || [];
     index.unshift(id);
-    await (env as any).AKYO_KV.put('gallery:index', JSON.stringify(index));
+    await (env as any).AKYO_KV.put("gallery:index", JSON.stringify(index));
 
-    return okJSON({ ok: true, id }, {
-      headers: corsHeaders(request.headers.get('origin') ?? undefined)
-    });
+    return okJSON(
+      { ok: true, id },
+      {
+        headers: corsHeaders(request.headers.get("origin") ?? undefined),
+      }
+    );
   } catch (e: any) {
     if (e instanceof Response) return e;
-    return errJSON(500, e?.message || 'gallery add failed');
+    return errJSON(500, e?.message || "gallery add failed");
   }
 };
-

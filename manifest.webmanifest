@@ -9,10 +9,35 @@
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "icons": [
-    { "src": "/images/apple-touch-icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
-    { "src": "/images/akyodexIcon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/images/akyodexIcon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/images/akyodexIcon-16.png", "sizes": "16x16", "type": "image/png", "purpose": "any" },
-    { "src": "/images/akyodexIcon-32.png", "sizes": "32x32", "type": "image/png", "purpose": "any" }
+    {
+      "src": "/images/apple-touch-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/akyodexIcon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/akyodexIcon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/akyodexIcon-16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/akyodexIcon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }

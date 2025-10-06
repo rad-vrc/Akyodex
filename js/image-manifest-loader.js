@@ -4,8 +4,8 @@
 // - 候補にバージョン(例: 001_zzzz.webp, 001-2024a.webp)があれば “より新しい” ものを採用
 // - 配列要素がフルURLでもファイル名でもOK（末尾のファイル名から抽出）
 
-(function () {
-  const ENTRY_PATTERN = /^(\d{3})(?:[_-]([0-9a-z-]+))?/i;
+(() => {
+  const EntryPattern = /^(\d{3})(?:[_-]([0-9a-z-]+))?/i;
 
   function normalizeVersionToken(token) {
     return String(token || "").toLowerCase();
@@ -13,7 +13,7 @@
 
   function parseVersionScore(token) {
     if (!token) return null;
-    const value = parseInt(token, 36);
+    const value = Number.parseInt(token, 36);
     if (!Number.isNaN(value)) return value;
     return null;
   }
@@ -60,7 +60,7 @@
     const filename = (withoutQuery.split("/").pop() || "").trim();
 
     // ファイル名から ID / バージョンを抽出
-    const match = filename.match(ENTRY_PATTERN);
+    const match = filename.match(EntryPattern);
     if (!match) return null;
 
     const [, id, versionToken] = match;
@@ -105,7 +105,7 @@
 
     // 既存 or 候補のどちらかがパース不能なら、情報量の多い（=パースできた）方を優先
     const currentInfo = extractImageEntryInfo(currentValue);
-    if (!candidateInfo && !currentInfo) {
+    if (!(candidateInfo || currentInfo)) {
       // どちらも判定できない場合は上書きしない
       return;
     }
@@ -118,7 +118,9 @@
     }
 
     // どちらも判定できる → バージョン比較で新しければ採用
-    if (compareVersions(candidateInfo.versionToken, currentInfo.versionToken) > 0) {
+    if (
+      compareVersions(candidateInfo.versionToken, currentInfo.versionToken) > 0
+    ) {
       map[candidateId] = candidateValue;
     }
   }
@@ -156,10 +158,10 @@
       }
 
       // プレーンマップの可能性に対応（予約キーは除外）
-      const RESERVED_KEYS = new Set(["files", "map", "version", "v"]);
+      const ReservedKeys = new Set(["files", "map", "version", "v"]);
       const plainEntries = {};
       Object.keys(manifest).forEach((key) => {
-        if (!RESERVED_KEYS.has(key)) {
+        if (!ReservedKeys.has(key)) {
           plainEntries[key] = manifest[key];
         }
       });
@@ -202,7 +204,8 @@
       // バージョン連携（安定化）
       try {
         const current = localStorage.getItem("akyoAssetsVersion");
-        const manifestVer = (manifest && (manifest.version || manifest.v)) || "";
+        const manifestVer =
+          (manifest && (manifest.version || manifest.v)) || "";
         // 1) マニフェストに version があれば採用
         // 2) 無ければ既存値を維持
         // 3) それも無ければ '1'

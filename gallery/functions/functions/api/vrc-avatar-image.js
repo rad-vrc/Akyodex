@@ -40,7 +40,9 @@ async function resolveStoredImageUrl(id, env) {
       console.warn(`[vrc-avatar-image] KV lookup failed for id ${id}`, error);
     }
   } else {
-    console.warn(`[vrc-avatar-image] KV binding missing; cannot resolve id ${id}`);
+    console.warn(
+      `[vrc-avatar-image] KV binding missing; cannot resolve id ${id}`
+    );
   }
   return null;
 }
@@ -53,8 +55,8 @@ function sanitizeAvtr(avtr) {
 
 export async function onRequestGet({ request, env }) {
   const { searchParams } = new URL(request.url);
-  let avtr = searchParams.get("avtr") || "";
-  let size = parseInt(searchParams.get("w") || "512", 10);
+  const avtr = searchParams.get("avtr") || "";
+  let size = Number.parseInt(searchParams.get("w") || "512", 10);
   const version = searchParams.get("v") || "";
   size = Math.max(32, Math.min(4096, Number.isFinite(size) ? size : 512));
 
@@ -73,7 +75,7 @@ export async function onRequestGet({ request, env }) {
 
   const pageUrl = `https://vrchat.com/home/avatar/${avtrId}`;
   const res = await fetch(pageUrl, {
-    cf: { cacheEverything: true, cacheTtl: 21600 },
+    cf: { cacheEverything: true, cacheTtl: 21_600 },
     headers: { "User-Agent": "AkyoZukan/1.0" },
   });
 
@@ -88,11 +90,15 @@ export async function onRequestGet({ request, env }) {
   const html = await res.text();
 
   let img = "";
-  const og = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+  const og = html.match(
+    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i
+  );
   if (og?.[1]) img = og[1];
 
   if (!img) {
-    const hit = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/(\d+)/i);
+    const hit = html.match(
+      /https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/(\d+)/i
+    );
     if (hit) img = hit[0];
   }
 

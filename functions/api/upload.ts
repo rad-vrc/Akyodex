@@ -24,11 +24,11 @@ type PagesFunction = (context: {
   [key: string]: unknown;
 }) => Promise<Response> | Response;
 
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, {
+export const onRequestOptions: PagesFunction = async ({ request }) =>
+  new Response(null, {
     headers: corsHeaders(request.headers.get("origin") ?? undefined),
   });
-};
+
 
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
   try {

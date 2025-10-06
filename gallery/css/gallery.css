@@ -1,124 +1,127 @@
 /* AkyoGallery カスタムスタイル */
 
 :root {
-    --bg-primary: #000000;
-    --bg-secondary: #0a0a0a;
-    --bg-tertiary: #1a1a1a;
-    --text-primary: #ffffff;
-    --text-secondary: #9ca3af;
-    --border: #2a2a2a;
-    --accent-blue: #3b82f6;
-    --accent-purple: #8b5cf6;
-  }
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --border: #2a2a2a;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+}
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-  }
+body {
+  font-family:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
 
-  /* スクロールバー */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+/* スクロールバー */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  ::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-  }
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 4px;
-  }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a3a;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
 
-  /* 画像カード */
-  .gallery-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-  }
+/* 画像カード */
+.gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+}
 
-  .gallery-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-  }
+.gallery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
 
-  .gallery-card img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.3s ease;
-  }
+.gallery-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
 
-  .gallery-card:hover img {
-    transform: scale(1.05);
-  }
+.gallery-card:hover img {
+  transform: scale(1.05);
+}
 
-  .gallery-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 1rem;
-  }
+.gallery-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+}
 
-  .gallery-card:hover .gallery-card-overlay {
-    opacity: 1;
-  }
+.gallery-card:hover .gallery-card-overlay {
+  opacity: 1;
+}
 
-  .gallery-card-author {
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-  }
+.gallery-card-author {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
 
-  .gallery-card-link {
-    font-size: 0.75rem;
-    color: var(--accent-blue);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
+.gallery-card-link {
+  font-size: 0.75rem;
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
 
-  .gallery-card-link:hover {
-    color: #60a5fa;
-    text-decoration: underline;
-  }
+.gallery-card-link:hover {
+  color: #60a5fa;
+  text-decoration: underline;
+}
 
-  /* X埋め込みウィジェットのスタイル調整 */
-  .twitter-timeline {
-    border-radius: 8px !important;
-  }
+/* X埋め込みウィジェットのスタイル調整 */
+.twitter-timeline {
+  border-radius: 8px !important;
+}
 
-  /* レスポンシブ */
-  @media (max-width: 768px) {
-    #galleryGrid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-    }
+/* レスポンシブ */
+@media (max-width: 768px) {
+  #galleryGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
+}
 
-  @media (max-width: 480px) {
-    #galleryGrid {
-      grid-template-columns: 1fr;
-    }
+@media (max-width: 480px) {
+  #galleryGrid {
+    grid-template-columns: 1fr;
   }
+}

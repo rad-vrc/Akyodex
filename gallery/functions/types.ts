@@ -7,4 +7,3 @@ export type PagesFunction<Env = unknown> = (context: {
   next: () => Promise<Response>;
   data: Record<string, unknown>;
 }) => Response | Promise<Response>;
-

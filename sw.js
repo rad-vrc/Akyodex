@@ -1,6 +1,6 @@
-const PRECACHE = 'akyo-precache-v9';
-const CSS_VERSION = '20250927';
-const THEME_BACKGROUND = './images/akyo-bg.webp';
+const PRECACHE = "akyo-precache-v9";
+const CSS_VERSION = "20250927";
+const THEME_BACKGROUND = "./images/akyo-bg.webp";
 let precacheUrlList = null;
 let precacheUrlSet = null;
 
@@ -13,8 +13,8 @@ function buildPrecacheUrls() {
 
   const currentCssAssets = CSS_VERSION
     ? [`./css/kid-friendly.css?v=${CSS_VERSION}`]
-    : ['./css/kid-friendly.css'];
-  const legacyCssAssets = CSS_VERSION ? ['./css/kid-friendly.css'] : [];
+    : ["./css/kid-friendly.css"];
+  const legacyCssAssets = CSS_VERSION ? ["./css/kid-friendly.css"] : [];
 
   const currentBackgroundAssets = CSS_VERSION
     ? [`${THEME_BACKGROUND}?v=${CSS_VERSION}`]
@@ -22,18 +22,18 @@ function buildPrecacheUrls() {
   const legacyBackgroundAssets = CSS_VERSION ? [THEME_BACKGROUND] : [];
 
   const coreAssets = [
-    './',
-    './index.html',
-    './admin.html',
-    './logo-upload.html',
+    "./",
+    "./index.html",
+    "./admin.html",
+    "./logo-upload.html",
     ...currentCssAssets,
-    './js/storage-manager.js',
-    './js/storage-adapter.js',
-    './js/image-manifest-loader.js',
-    './js/image-loader.js',
-    './js/main.js',
-    './js/admin.js',
-    './images/logo.webp',
+    "./js/storage-manager.js",
+    "./js/storage-adapter.js",
+    "./js/image-manifest-loader.js",
+    "./js/image-loader.js",
+    "./js/main.js",
+    "./js/admin.js",
+    "./images/logo.webp",
     ...currentBackgroundAssets,
   ];
 
@@ -59,7 +59,7 @@ function getPrecacheUrlSet() {
   return precacheUrlSet;
 }
 
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(PRECACHE);
@@ -67,10 +67,10 @@ self.addEventListener('install', (event) => {
 
       await Promise.all(
         urls.map(async (url) => {
-          const request = new Request(url, { cache: 'reload' });
+          const request = new Request(url, { cache: "reload" });
           const response = await fetch(request);
 
-          if (!response || !response.ok) {
+          if (!(response && response.ok)) {
             throw new Error(`Failed to precache: ${url}`);
           }
 
@@ -83,14 +83,16 @@ self.addEventListener('install', (event) => {
   );
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => key.startsWith('akyo-precache-') && key !== PRECACHE)
+            .filter(
+              (key) => key.startsWith("akyo-precache-") && key !== PRECACHE
+            )
             .map((key) => caches.delete(key))
         )
       )
@@ -98,109 +100,125 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   const req = event.request;
-  if (req.method !== 'GET') return;
+  if (req.method !== "GET") return;
 
   const url = new URL(req.url);
   // クロスオリジン（R2等）はSWで触らない
   if (url.origin !== self.location.origin) return;
 
-  const accept = req.headers.get('accept') || '';
+  const accept = req.headers.get("accept") || "";
 
   // 1) HTMLはネットワーク優先＋必ずフォールバックを返す
-  if (req.mode === 'navigate' || accept.includes('text/html')) {
-    const wantsFreshNavigation = url.searchParams.has('_akyoFresh');
-    event.respondWith((async () => {
-      try {
-        // 直取り（最新を優先）。_akyoFresh付きはHTTPキャッシュも迂回
-        const requestForNavigation = wantsFreshNavigation
-          ? new Request(req, { cache: 'reload' })
-          : req;
-        return await fetch(requestForNavigation);
-      } catch (_) {
-        // キャッシュ→index.htmlの順に保険
-        const cache = await caches.open(PRECACHE);
-        const scope = getScope();
-        const cached = (await cache.match(req))
-          || (await cache.match(new URL('./index.html', scope).toString()))
-          || (await cache.match(new URL('./', scope).toString()));
-        if (cached) return cached;
-        // どうしても無い場合は空HTMLを返して ERR_FAILED を回避
-        return new Response('<!doctype html><title>offline</title>', {
-          headers: { 'content-type': 'text/html; charset=utf-8' },
-          status: 200,
-        });
-      }
-    })());
+  if (req.mode === "navigate" || accept.includes("text/html")) {
+    const wantsFreshNavigation = url.searchParams.has("_akyoFresh");
+    event.respondWith(
+      (async () => {
+        try {
+          // 直取り（最新を優先）。_akyoFresh付きはHTTPキャッシュも迂回
+          const requestForNavigation = wantsFreshNavigation
+            ? new Request(req, { cache: "reload" })
+            : req;
+          return await fetch(requestForNavigation);
+        } catch (_) {
+          // キャッシュ→index.htmlの順に保険
+          const cache = await caches.open(PRECACHE);
+          const scope = getScope();
+          const cached =
+            (await cache.match(req)) ||
+            (await cache.match(new URL("./index.html", scope).toString())) ||
+            (await cache.match(new URL("./", scope).toString()));
+          if (cached) return cached;
+          // どうしても無い場合は空HTMLを返して ERR_FAILED を回避
+          return new Response("<!doctype html><title>offline</title>", {
+            headers: { "content-type": "text/html; charset=utf-8" },
+            status: 200,
+          });
+        }
+      })()
+    );
     return;
   }
 
   // 1.5) 画像マニフェストは常に最新を優先（SWキャッシュに阻害されないよう特別扱い）
-  if (url.pathname === '/images/manifest.json') {
-    event.respondWith((async () => {
-      const cache = await caches.open(PRECACHE);
-      try {
-        const fresh = await fetch(req);
-        if (fresh && fresh.ok) await cache.put(req, fresh.clone());
-        return fresh;
-      } catch (_) {
-        const cached = await cache.match(req);
-        return cached || new Response(JSON.stringify({ map: {}, version: Date.now() }), {
-          headers: { 'content-type': 'application/json' },
-          status: 200,
-        });
-      }
-    })());
+  if (url.pathname === "/images/manifest.json") {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(PRECACHE);
+        try {
+          const fresh = await fetch(req);
+          if (fresh && fresh.ok) await cache.put(req, fresh.clone());
+          return fresh;
+        } catch (_) {
+          const cached = await cache.match(req);
+          return (
+            cached ||
+            new Response(JSON.stringify({ map: {}, version: Date.now() }), {
+              headers: { "content-type": "application/json" },
+              status: 200,
+            })
+          );
+        }
+      })()
+    );
     return;
   }
 
   // 1.6) CSVは常にネットワーク優先（最新版を即時反映）
-  if (url.pathname === '/data/akyo-data.csv' || url.pathname === '/api/csv') {
-    event.respondWith((async () => {
-      const cache = await caches.open(PRECACHE);
-      try {
-        const fresh = await fetch(new Request(req, { cache: 'no-cache' }));
-        if (fresh && fresh.ok) await cache.put(req, fresh.clone());
-        return fresh;
-      } catch (_) {
-        const cached = await cache.match(req);
-        return cached || new Response('', { status: 204 });
-      }
-    })());
+  if (url.pathname === "/data/akyo-data.csv" || url.pathname === "/api/csv") {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(PRECACHE);
+        try {
+          const fresh = await fetch(new Request(req, { cache: "no-cache" }));
+          if (fresh && fresh.ok) await cache.put(req, fresh.clone());
+          return fresh;
+        } catch (_) {
+          const cached = await cache.match(req);
+          return cached || new Response("", { status: 204 });
+        }
+      })()
+    );
     return;
   }
 
   // 2) APIはネットワーク優先（キャッシュしない）
-  if (url.pathname.startsWith('/api/')) {
+  if (url.pathname.startsWith("/api/")) {
     event.respondWith(
-      fetch(req).catch(() => new Response(JSON.stringify({ error: 'offline' }), {
-        headers: { 'content-type': 'application/json' },
-        status: 503,
-      }))
+      fetch(req).catch(
+        () =>
+          new Response(JSON.stringify({ error: "offline" }), {
+            headers: { "content-type": "application/json" },
+            status: 503,
+          })
+      )
     );
     return;
   }
 
   // 3) 画像/CSS/JS等はキャッシュ優先＋ネットワーク、最後にフォールバック
-  event.respondWith((async () => {
-    const cache = await caches.open(PRECACHE);
-    const hit = await cache.match(req);
-    if (hit) {
-      event.waitUntil(updateCache(cache, req));
-      return hit;
-    }
-    try {
-      const net = await fetch(req);
-      if (net && net.ok) await cache.put(req, net.clone());
-      return net;
-    } catch (_) {
-      const scope = getScope();
-      const fallback = (await cache.match(new URL('./index.html', scope).toString()))
-        || (await cache.match(new URL('./', scope).toString()));
-      return fallback || new Response('', { status: 204 });
-    }
-  })());
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(PRECACHE);
+      const hit = await cache.match(req);
+      if (hit) {
+        event.waitUntil(updateCache(cache, req));
+        return hit;
+      }
+      try {
+        const net = await fetch(req);
+        if (net && net.ok) await cache.put(req, net.clone());
+        return net;
+      } catch (_) {
+        const scope = getScope();
+        const fallback =
+          (await cache.match(new URL("./index.html", scope).toString())) ||
+          (await cache.match(new URL("./", scope).toString()));
+        return fallback || new Response("", { status: 204 });
+      }
+    })()
+  );
 });
 
 function handleNavigationRequest(event) {
@@ -225,8 +243,8 @@ function handleNavigationRequest(event) {
       } catch (error) {
         const scope = getScope();
         const fallbacks = [
-          new URL('./index.html', scope).toString(),
-          new URL('./', scope).toString(),
+          new URL("./index.html", scope).toString(),
+          new URL("./", scope).toString(),
         ];
 
         for (const fallback of fallbacks) {
@@ -271,7 +289,7 @@ function respondWithCacheFirst(event) {
 
 async function updateCache(cache, request) {
   try {
-    const reloadableRequest = new Request(request, { cache: 'reload' });
+    const reloadableRequest = new Request(request, { cache: "reload" });
     const response = await fetch(reloadableRequest);
     if (response && response.ok) {
       await cache.put(request, response.clone());
