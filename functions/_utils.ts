@@ -99,9 +99,11 @@ export async function enforceRateLimit(
   env: Record<string, unknown>,
   options: RateLimitOptions = {}
 ) {
+
   const kv = (options.kv ||
     (env as any).RATE_LIMIT_KV ||
     (env as any).AKYO_KV) as SimpleKv | undefined;
+
   if (!kv || typeof kv.get !== "function" || typeof kv.put !== "function")
     return;
 
