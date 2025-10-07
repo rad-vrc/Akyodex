@@ -255,6 +255,7 @@ function stabilizeDifyChatWidget() {
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
 
+
     let windowShouldStayOpen = false;
     let pendingUserToggle = false;
 
@@ -341,6 +342,7 @@ function stabilizeDifyChatWidget() {
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
 
+
                 windowShouldStayOpen = isElementVisible(windowEl);
 
                 pendingUserToggle = false;
@@ -355,6 +357,7 @@ function stabilizeDifyChatWidget() {
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
 
+
                 windowShouldStayOpen = isElementVisible(windowEl);
                 pendingUserToggle = false;
                 syncWidgetStyles();
@@ -363,6 +366,7 @@ function stabilizeDifyChatWidget() {
     }, true);
 
     window.addEventListener('scroll', () => {
+
 
         if (!windowShouldStayOpen) return;
         syncWidgetStyles();
