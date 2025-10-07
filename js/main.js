@@ -254,8 +254,11 @@ function stabilizeDifyChatWidget() {
 
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
+
+
+    let windowShouldStayOpen = false;
     let pendingUserToggle = false;
-    let userPinnedWindow = false;
+
 
     const isElementVisible = (element) => {
         if (!element) return false;
@@ -266,6 +269,7 @@ function stabilizeDifyChatWidget() {
         const opacity = parseFloat(style.opacity || '1');
         return !Number.isNaN(opacity) && opacity > 0.05;
     };
+
 
     const syncWidgetStyles = () => {
         const bubbleEl = document.querySelector(bubbleSelector);
@@ -292,20 +296,24 @@ function stabilizeDifyChatWidget() {
             windowEl.style.removeProperty('left');
             windowEl.style.setProperty('pointer-events', 'auto', 'important');
 
-            const shouldForceWindowOpen = userPinnedWindow;
+            const visible = isElementVisible(windowEl);
+            if (visible && !windowShouldStayOpen) {
+                windowShouldStayOpen = true;
+            }
 
-            if (shouldForceWindowOpen) {
+            if (windowShouldStayOpen) {
+
                 if (!pendingUserToggle) {
                     windowEl.style.setProperty('display', 'block', 'important');
                     windowEl.style.setProperty('visibility', 'visible', 'important');
                     windowEl.style.setProperty('opacity', '1', 'important');
-                    windowEl.dataset.akyoForcedOpen = '1';
                 }
-            } else if (!pendingUserToggle && windowEl.dataset.akyoForcedOpen === '1') {
+
+            } else if (!windowShouldStayOpen && visible && !pendingUserToggle) {
+
                 windowEl.style.removeProperty('display');
                 windowEl.style.removeProperty('visibility');
                 windowEl.style.removeProperty('opacity');
-                delete windowEl.dataset.akyoForcedOpen;
             }
         }
     };
@@ -333,7 +341,10 @@ function stabilizeDifyChatWidget() {
             pendingUserToggle = true;
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
-                userPinnedWindow = isElementVisible(windowEl);
+
+
+                windowShouldStayOpen = isElementVisible(windowEl);
+
                 pendingUserToggle = false;
                 syncWidgetStyles();
             }, 80);
@@ -345,7 +356,9 @@ function stabilizeDifyChatWidget() {
             pendingUserToggle = true;
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
-                userPinnedWindow = isElementVisible(windowEl);
+
+
+                windowShouldStayOpen = isElementVisible(windowEl);
                 pendingUserToggle = false;
                 syncWidgetStyles();
             }, 120);
@@ -353,7 +366,9 @@ function stabilizeDifyChatWidget() {
     }, true);
 
     window.addEventListener('scroll', () => {
-        if (!userPinnedWindow) return;
+
+
+        if (!windowShouldStayOpen) return;
         syncWidgetStyles();
     }, { passive: true });
 
