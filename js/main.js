@@ -411,6 +411,13 @@ function updateStaticTextContent(lang = currentLanguage) {
         adminBtn.title = getLanguageConfig(lang).adminButtonTitle;
         adminBtn.setAttribute('aria-label', getLanguageConfig(lang).adminButtonTitle);
     }
+
+    const difyBtn = document.getElementById('difyChatbotBtn');
+    if (difyBtn) {
+        const difyTitle = lang === 'ja' ? 'Difyチャットを開く' : 'Open Dify chat';
+        difyBtn.title = difyTitle;
+        difyBtn.setAttribute('aria-label', difyTitle);
+    }
 }
 
 function updatePreferredLogoPath() {
@@ -1413,6 +1420,33 @@ function setupEventListeners() {
     });
     floatingContainer.appendChild(languageBtn);
 
+    const quickAccessRow = document.createElement('div');
+    quickAccessRow.className = 'flex items-center gap-3 flex-wrap sm:flex-nowrap';
+    floatingContainer.appendChild(quickAccessRow);
+
+    const difyBtn = document.createElement('button');
+    difyBtn.id = 'difyChatbotBtn';
+    difyBtn.className = 'bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-400 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200';
+    difyBtn.innerHTML = '<i class="fas fa-comments"></i>';
+    const difyTitle = currentLanguage === 'ja' ? 'Difyチャットを開く' : 'Open Dify chat';
+    difyBtn.title = difyTitle;
+    difyBtn.setAttribute('aria-label', difyTitle);
+    difyBtn.addEventListener('click', () => {
+        const chatbot = window.difyChatbot;
+        if (chatbot) {
+            if (typeof chatbot.open === 'function') {
+                chatbot.open();
+                return;
+            }
+            if (typeof chatbot.toggle === 'function') {
+                chatbot.toggle();
+                return;
+            }
+        }
+        window.open('https://akyodex.com/dexakyo', '_blank');
+    });
+    quickAccessRow.appendChild(difyBtn);
+
     const adminBtn = document.createElement('button');
     adminBtn.id = 'adminShortcutBtn';
     adminBtn.className = 'bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300';
@@ -1423,7 +1457,7 @@ function setupEventListeners() {
     adminBtn.addEventListener('click', () => {
         window.location.href = 'admin.html';
     });
-    floatingContainer.appendChild(adminBtn);
+    quickAccessRow.appendChild(adminBtn);
 
     document.body.appendChild(floatingContainer);
     updateLanguageToggleButton();
