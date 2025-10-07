@@ -456,6 +456,11 @@ function updateStaticTextContent(lang = currentLanguage) {
         difyBtn.title = difyTitle;
         difyBtn.setAttribute('aria-label', difyTitle);
     }
+
+    const quickAccessRow = document.getElementById('quickAccessRow');
+    if (quickAccessRow) {
+        quickAccessRow.setAttribute('aria-label', lang === 'ja' ? 'クイックアクセス操作' : 'Quick access actions');
+    }
 }
 
 function updatePreferredLogoPath() {
@@ -1459,7 +1464,10 @@ function setupEventListeners() {
     floatingContainer.appendChild(languageBtn);
 
     const quickAccessRow = document.createElement('div');
-    quickAccessRow.className = 'flex items-center gap-3 flex-wrap sm:flex-nowrap';
+    quickAccessRow.id = 'quickAccessRow';
+    quickAccessRow.className = 'mt-3 flex items-center gap-3 flex-wrap sm:flex-nowrap';
+    quickAccessRow.setAttribute('role', 'group');
+    quickAccessRow.setAttribute('aria-label', currentLanguage === 'ja' ? 'クイックアクセス操作' : 'Quick access actions');
     floatingContainer.appendChild(quickAccessRow);
 
     const difyBtn = document.createElement('button');
