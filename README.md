@@ -658,7 +658,7 @@ npx wrangler pages deploy dist --project-name akyodex-site
 
 ### トラブルシューティング
 
-- Cloudflare Tunnel 経由で Dify ウィジェットが 403 エラーになる場合は、[Cloudflare Tunnel 経由で Dify 埋め込みを配信する手順](docs/cloudflare-tunnel-dify.md) を参照してください。
+- Cloudflare Tunnel 経由で Dify ウィジェットが 403/502 エラーになる場合は、[Cloudflare Tunnel 経由で Dify 埋め込みを配信する手順](docs/cloudflare-tunnel-dify.md) を参照してください（502 のときはトンネル先のアプリがリッスンしているポートも確認）。`curl` で 200 OK が返るようになった後は、ハードリロードしてチャットバブルが前面で開くかを確認し、Cloudflare Pages のプレビュー URL でバブルが出ないときはページ右下に出る「AIチャット」ボタン（新しいウィンドウで開く fallback）と同ガイドのプレビュー向け節を使って切り分けます。
 
 ---
 
