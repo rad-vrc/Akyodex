@@ -254,8 +254,10 @@ function stabilizeDifyChatWidget() {
 
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
+
     let windowShouldStayOpen = false;
     let pendingUserToggle = false;
+
 
     const isElementVisible = (element) => {
         if (!element) return false;
@@ -266,6 +268,7 @@ function stabilizeDifyChatWidget() {
         const opacity = parseFloat(style.opacity || '1');
         return !Number.isNaN(opacity) && opacity > 0.05;
     };
+
 
     const syncWidgetStyles = () => {
         const bubbleEl = document.querySelector(bubbleSelector);
@@ -298,12 +301,15 @@ function stabilizeDifyChatWidget() {
             }
 
             if (windowShouldStayOpen) {
+
                 if (!pendingUserToggle) {
                     windowEl.style.setProperty('display', 'block', 'important');
                     windowEl.style.setProperty('visibility', 'visible', 'important');
                     windowEl.style.setProperty('opacity', '1', 'important');
                 }
+
             } else if (!windowShouldStayOpen && visible && !pendingUserToggle) {
+
                 windowEl.style.removeProperty('display');
                 windowEl.style.removeProperty('visibility');
                 windowEl.style.removeProperty('opacity');
@@ -334,7 +340,9 @@ function stabilizeDifyChatWidget() {
             pendingUserToggle = true;
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
+
                 windowShouldStayOpen = isElementVisible(windowEl);
+
                 pendingUserToggle = false;
                 syncWidgetStyles();
             }, 80);
@@ -346,6 +354,7 @@ function stabilizeDifyChatWidget() {
             pendingUserToggle = true;
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
+
                 windowShouldStayOpen = isElementVisible(windowEl);
                 pendingUserToggle = false;
                 syncWidgetStyles();
@@ -354,6 +363,7 @@ function stabilizeDifyChatWidget() {
     }, true);
 
     window.addEventListener('scroll', () => {
+
         if (!windowShouldStayOpen) return;
         syncWidgetStyles();
     }, { passive: true });
