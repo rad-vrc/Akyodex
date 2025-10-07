@@ -24,7 +24,7 @@ const GLOBAL_SCOPE = (() => {
     if (typeof global !== 'undefined') return global;
     return {};
 })();
-const DIFY_CHATBOT_URL = 'https://akyodex.com/dexakyo';
+const DIFY_CHATBOT_URL = 'https://dexakyo.akyodex.com';
 const LANGUAGE_CONFIG = {
     ja: {
         code: 'ja',
