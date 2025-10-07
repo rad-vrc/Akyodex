@@ -460,6 +460,39 @@
     <script src="js/image-manifest-loader.js"></script>
     <script src="js/image-loader.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        window.difyChatbotConfig = {
+            token: 'REPLACE_WITH_DIFY_TOKEN',
+            baseUrl: 'https://akyodex.com/dexakyo',
+            lang: 'ja',
+            layout: {
+                position: 'right',
+                zIndex: 2147483640
+            },
+            appearance: {
+                primaryColor: '#f97316'
+            }
+        };
+    </script>
+    <style>
+        dify-chatbot-bubble::part(button) {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: #fff;
+        }
+
+        dify-chatbot-window::part(container) {
+            max-width: min(420px, 90vw);
+            height: min(640px, 80vh);
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.45);
+        }
+
+        dify-chatbot-window::part(header) {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            color: #fff;
+        }
+    </style>
+    <script src="https://akyodex.com/dexakyo/embed.min.js" defer></script>
     <script src="js/mini-akyo-bg.js?v=2"></script>
     <script src="js/secret-mode.js"></script>
 
