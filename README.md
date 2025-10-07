@@ -656,6 +656,12 @@ npx wrangler pages deploy dist --project-name akyodex-site
 
 ---
 
+### トラブルシューティング
+
+- Cloudflare Tunnel 経由で Dify ウィジェットが 403 エラーになる場合は、[Cloudflare Tunnel 経由で Dify 埋め込みを配信する手順](docs/cloudflare-tunnel-dify.md) を参照してください。
+
+---
+
 ### 完了後の運用メモ
 
 - 画像の追加・差し替えは管理画面から実行（再デプロイ不要）。
