@@ -43,9 +43,9 @@ const LANGUAGE_CONFIG = {
         toggleLabel: 'English',
         toggleAria: '英語版ホームページに切り替える',
         adminButtonTitle: 'ファインダーモード',
-        chatbotButtonTitle: 'Difyチャットを開く',
-        chatbotFallbackLabel: 'AIチャット (別ウィンドウ)',
-        chatbotFallbackTooltip: 'Difyチャットが表示されないときはこちら',
+        chatbotButtonTitle: 'ずかんAkyoにきく',
+        chatbotFallbackLabel: 'ずかんAkyo(別ウィンドウ)',
+        chatbotFallbackTooltip: 'ずかんAkyoが表示されないときはこちら',
         strings: {
             searchPlaceholder: 'Akyoを検索... (名前、ID、属性など)',
             attributePlaceholder: 'すべての属性',
@@ -102,8 +102,8 @@ const LANGUAGE_CONFIG = {
                 partialLoadFailed: '一部の読み込みに失敗しました。ページを更新するか再試行してください。',
                 initFailed: '初期化に失敗しました。再読み込みしますか？',
                 retry: '再試行',
-                difyUnavailable: 'AIチャットが表示されません。右下の「AIチャット」ボタンから新しいウィンドウで開けます。',
-                difyPreviewNotice: 'Cloudflare Pages プレビューでは AI チャットが非表示になる場合があります。本番ドメインを開くか、Dify 側でプレビューのホスト名を許可してください。'
+                difyUnavailable: 'ずかんAkyoにみられている気がする‥ページを再読み込みするか、管理者に連絡してこの不安をぬぐおう。',
+                difyPreviewNotice: 'Cloudflare Pages プレビューでは ずかんAkyoが非表示になる場合があります。Dify 側でプレビューのホスト名を許可してください。'
             }
         }
     },
@@ -183,7 +183,8 @@ const LANGUAGE_CONFIG = {
                 partialLoadFailed: 'Some content failed to load. Refresh the page or try again.',
                 initFailed: 'Initialization failed. Reload the page?',
                 retry: 'Retry',
-                difyUnavailable: 'The AI chat widget did not appear. Use the "AI chat" button to open it in a new tab.',
+                difyUnavailable: 'The AI chat widget did not appear. Refresh the page or review your Dify embed settings.',
+
                 difyPreviewNotice: 'AI chat can stay hidden on Cloudflare Pages previews. Visit the production domain or allow the preview host in Dify.'
             }
         }
@@ -201,20 +202,53 @@ function getDifyChatbotInstance() {
     return null;
 }
 
-function openDifyChatbotFallback() {
-    if (typeof window !== 'undefined' && typeof window.open === 'function') {
-        const newWindow = window.open(DIFY_CHATBOT_URL, '_blank', 'noopener,noreferrer');
-        if (newWindow) {
-            newWindow.opener = null;
+function initDifyEmbedDiagnostics() {
+    if (typeof document === 'undefined') return;
+
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isPagesPreview = typeof host === 'string' && /\.pages\.dev$/i.test(host);
+    let bubbleFound = false;
+
+    const revealFallback = (reason) => {
+        const strings = getLanguageStrings();
+        const notice = isPagesPreview && strings.messages.difyPreviewNotice
+            ? strings.messages.difyPreviewNotice
+            : strings.messages.difyUnavailable;
+        if (notice) {
+            showToast(notice, 'warning');
         }
+
+        const diagnosticMessage = `[Dify] Chatbot bubble did not render (${reason}). Current host: ${host || 'unknown'}.`;
+        console.warn(diagnosticMessage);
+        if (isPagesPreview) {
+            console.warn('[Dify] Cloudflare Pages preview hosts must be added to the allowed domain list in Dify → Settings → Website embedding.');
+        }
+    };
+
+    const embedScript = document.querySelector('script[src^="https://dexakyo.akyodex.com/embed"]');
+    if (!embedScript) {
+        revealFallback('script-tag-missing');
         return;
     }
 
-    try {
-        if (GLOBAL_SCOPE && GLOBAL_SCOPE.location && typeof GLOBAL_SCOPE.location.assign === 'function') {
-            GLOBAL_SCOPE.location.assign(DIFY_CHATBOT_URL);
+    embedScript.addEventListener('error', () => {
+        revealFallback('script-load-error');
+    });
+
+    const interval = window.setInterval(() => {
+        if (document.querySelector('dify-chatbot-bubble')) {
+            bubbleFound = true;
+            window.clearInterval(interval);
+            console.debug('[Dify] Chatbot bubble detected.');
         }
-    } catch (_) {}
+    }, 600);
+
+    window.setTimeout(() => {
+        window.clearInterval(interval);
+        if (!bubbleFound) {
+            revealFallback('bubble-timeout');
+        }
+    }, 9000);
 }
 
 function updateChatbotFallbackButton(lang = currentLanguage) {

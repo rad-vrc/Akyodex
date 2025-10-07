@@ -41,7 +41,6 @@ Zero Trust での許可に加えて、cloudflared のトンネル設定でも HT
      - service: http_status:404
    ```
 2. オリジンサービスが自己署名証明書などを使用している場合は、`originRequest: { noTLSVerify: true }` を `hostname` のブロック内に追加します。
-3. 設定を更新したら `cloudflared service restart` でトンネルを再起動し、ログにエラーがないか確認します。
 
 4. 502 が解消しない場合は、以下を追加でチェックします。
    - `cloudflared tunnel info <YOUR_TUNNEL_NAME>` でコネクタのオンライン状況を確認する。
@@ -69,10 +68,6 @@ Cloudflare が 502 を返している場合、Zero Trust の設定が正しく�
    などで確認します。ここで接続エラーが発生する場合、Cloudflare からも到達できません。
 4. Windows クライアント側で `curl` を実行して 502 が返り、かつ `netstat -ano | findstr <port>` で該当ポートが表示されない場合は、オリ
    ジンのアプリケーションが停止しているか、別ポートで起動していると考えられます。アプリを再起動するか、設定ファイルのポート番号を
-   Cloudflare Tunnel の `service` 設定と一致させてください。
-
-## 5. (任意) Cloudflare Access を利用して保護する場合
-
 
 埋め込みエンドポイントを完全公開にしたくない場合は、Access サービス トークンで保護したうえで、フロントエンドからトークンを付与する方法があります。
 
@@ -80,11 +75,9 @@ Cloudflare が 502 を返している場合、Zero Trust の設定が正しく�
 2. `index.html` など埋め込みを行うページで、`CF-Access-Client-Id` と `CF-Access-Client-Secret` を HTTP ヘッダーに追加できるよう、リバースプロキシまたは Functions を経由させます（静的サイトの場合は Functions/Workers でヘッダーを付与するのが簡単です）。
 3. 発行したトークンを Vault など安全なストレージに保管し、必要に応じてローテーションします。
 
-
 設定後に再度以下の手順で確認します。
 
-1. トンネル経由の環境で `curl https://dexakyo.akyodex.com/embed.min.js` を実行し、200 応答とファイル本文が取得できることを確認する。
-
+1. トンネル経由の環境で 
 2. 200 OK が返ってもブラウザのキャッシュで古いスクリプトが保持されている場合があるため、`Ctrl` + `Shift` + `R`（macOS は `Cmd` + `Shift` + `R`）でハードリロードするか、開発者ツールを開いて **Disable cache** を有効にしてから再読み込みしてください。
 3. サイトをブラウザで開き、JavaScript コンソールに 403/アクセス拒否エラーが出ないこと、および Dify ウィジェットが表示されることを確認する。
 4. バブルが表示されているにもかかわらずクリックしても反応しない場合は、`js/main.js` の `floatingContainer` など他要素の `z-index` が衝突していないか確認し、必要に応じて調整します。
@@ -97,13 +90,10 @@ Cloudflare Pages のプレビュー URL（`*.pages.dev`）は、Dify 側で **We
 
 - ページ読み込み後 10 秒以内に `dify-chatbot-bubble` 要素が DOM に現れない。
 - ブラウザのコンソールに `[Dify] Chatbot bubble did not render (bubble-timeout)` の警告と「Cloudflare Pages preview hosts must be added...」というメッセージが出る。
-- 右下に「AIチャット (別ウィンドウ)」ボタンが表示され、そちらから開くとチャット自体は利用できる。
 
 ### 対処フロー
 
 1. Dify の管理画面 → **Settings** → **Website embedding** → **Allowed domains** に移動し、プレビューのホスト名（例：`https://eac66113.akyodex.pages.dev`）を追加します。
 2. 保存後にプレビューをハードリロードし、チャットバブルが表示されるか確認します。
-3. バブルが出ない場合でも、右下の fallback ボタン（`AIチャット (別ウィンドウ)` / `AI chat (new tab)`）から Dify のベース URL が開けるか確認し、外部からのアクセス自体が通っているかを切り分けてください。
-4. fallback でも開けない場合は、`curl` で 200 OK になるかを再度確認し、Zero Trust / Tunnel 側でのフィルタリングを見直します。
 
 プレビュー環境特有の制限をクリアすれば、本番ドメインと同じように埋め込みウィジェットが表示されます。
