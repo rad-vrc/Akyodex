@@ -1558,7 +1558,8 @@ function setupEventListeners() {
         && window.CSS.supports('padding-bottom: env(safe-area-inset-bottom)');
     const safeAreaInset = supportsSafeArea ? 'env(safe-area-inset-bottom)' : '0px';
     floatingContainer.style.bottom = `calc(9rem + ${safeAreaInset})`;
-    floatingContainer.style.zIndex = '2147483600';
+    // Allow the Dify chatbot window to stack above the floating controls.
+    floatingContainer.style.zIndex = '2147483000';
 
     const languageBtn = document.createElement('button');
     languageBtn.id = 'languageToggleBtn';
