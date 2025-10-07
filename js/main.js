@@ -43,7 +43,9 @@ const LANGUAGE_CONFIG = {
         toggleLabel: 'English',
         toggleAria: '英語版ホームページに切り替える',
         adminButtonTitle: 'ファインダーモード',
-        chatbotButtonTitle: 'Difyチャットを開く',
+        chatbotButtonTitle: 'ずかんAkyoにきく',
+        chatbotFallbackLabel: 'ずかんAkyo(別ウィンドウ)',
+        chatbotFallbackTooltip: 'ずかんAkyoが表示されないときはこちら',
         strings: {
             searchPlaceholder: 'Akyoを検索... (名前、ID、属性など)',
             attributePlaceholder: 'すべての属性',
@@ -100,8 +102,8 @@ const LANGUAGE_CONFIG = {
                 partialLoadFailed: '一部の読み込みに失敗しました。ページを更新するか再試行してください。',
                 initFailed: '初期化に失敗しました。再読み込みしますか？',
                 retry: '再試行',
-                difyUnavailable: 'AIチャットが表示されません。ページを再読み込みするか、Difyの設定を確認してください。',
-                difyPreviewNotice: 'Cloudflare Pages プレビューでは AI チャットが非表示になる場合があります。本番ドメインを開くか、Dify 側でプレビューのホスト名を許可してください。'
+                difyUnavailable: 'ずかんAkyoにみられている気がする‥ページを再読み込みするか、管理者に連絡してこの不安をぬぐおう。',
+                difyPreviewNotice: 'Cloudflare Pages プレビューでは ずかんAkyoが非表示になる場合があります。Dify 側でプレビューのホスト名を許可してください。'
             }
         }
     },
@@ -123,6 +125,8 @@ const LANGUAGE_CONFIG = {
         toggleAria: '日本語版ホームページに切り替える',
         adminButtonTitle: 'Finder mode',
         chatbotButtonTitle: 'Open Dify chat',
+        chatbotFallbackLabel: 'AI chat (new tab)',
+        chatbotFallbackTooltip: 'Use this if the Dify chat bubble does not appear',
         strings: {
             searchPlaceholder: 'Search Akyo... (name, ID, attributes)',
             attributePlaceholder: 'All attributes',
@@ -180,6 +184,7 @@ const LANGUAGE_CONFIG = {
                 initFailed: 'Initialization failed. Reload the page?',
                 retry: 'Retry',
                 difyUnavailable: 'The AI chat widget did not appear. Refresh the page or review your Dify embed settings.',
+
                 difyPreviewNotice: 'AI chat can stay hidden on Cloudflare Pages previews. Visit the production domain or allow the preview host in Dify.'
             }
         }
@@ -205,6 +210,77 @@ function initDifyEmbedDiagnostics() {
     let bubbleFound = false;
 
     const revealFallback = (reason) => {
+        const strings = getLanguageStrings();
+        const notice = isPagesPreview && strings.messages.difyPreviewNotice
+            ? strings.messages.difyPreviewNotice
+            : strings.messages.difyUnavailable;
+        if (notice) {
+            showToast(notice, 'warning');
+        }
+
+        const diagnosticMessage = `[Dify] Chatbot bubble did not render (${reason}). Current host: ${host || 'unknown'}.`;
+        console.warn(diagnosticMessage);
+        if (isPagesPreview) {
+            console.warn('[Dify] Cloudflare Pages preview hosts must be added to the allowed domain list in Dify → Settings → Website embedding.');
+        }
+    };
+
+    const embedScript = document.querySelector('script[src^="https://dexakyo.akyodex.com/embed"]');
+    if (!embedScript) {
+        revealFallback('script-tag-missing');
+        return;
+    }
+
+    embedScript.addEventListener('error', () => {
+        revealFallback('script-load-error');
+    });
+
+    const interval = window.setInterval(() => {
+        if (document.querySelector('dify-chatbot-bubble')) {
+            bubbleFound = true;
+            window.clearInterval(interval);
+            console.debug('[Dify] Chatbot bubble detected.');
+        }
+    }, 600);
+
+    window.setTimeout(() => {
+        window.clearInterval(interval);
+        if (!bubbleFound) {
+            revealFallback('bubble-timeout');
+        }
+    }, 9000);
+}
+
+function updateChatbotFallbackButton(lang = currentLanguage) {
+    const btn = document.getElementById('difyFallbackBtn');
+    if (!btn) return;
+    const config = getLanguageConfig(lang);
+    const label = config.chatbotFallbackLabel || config.chatbotButtonTitle || 'AI chat';
+    const tooltip = config.chatbotFallbackTooltip || config.chatbotButtonTitle || label;
+    btn.textContent = label;
+    btn.title = tooltip;
+    btn.setAttribute('aria-label', tooltip);
+}
+
+function initDifyEmbedDiagnostics() {
+    if (typeof document === 'undefined') return;
+
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isPagesPreview = typeof host === 'string' && /\.pages\.dev$/i.test(host);
+    const fallbackButton = document.getElementById('difyFallbackBtn');
+    let fallbackShown = false;
+    let bubbleFound = false;
+
+    const revealFallback = (reason) => {
+        if (fallbackShown) return;
+        fallbackShown = true;
+
+        if (fallbackButton) {
+            fallbackButton.style.display = '';
+            fallbackButton.classList.remove('hidden');
+            fallbackButton.disabled = false;
+        }
+
         const strings = getLanguageStrings();
         const notice = isPagesPreview && strings.messages.difyPreviewNotice
             ? strings.messages.difyPreviewNotice
@@ -299,6 +375,7 @@ window.akyoCurrentLanguage = currentLanguage;
 updateDocumentLanguageAttributes();
 updatePreferredLogoPath();
 updateStaticTextContent();
+updateChatbotFallbackButton();
 
 function getLanguageConfig(lang = currentLanguage) {
     return LANGUAGE_CONFIG[lang] || LANGUAGE_CONFIG.ja;
@@ -514,6 +591,7 @@ async function setLanguage(lang) {
     safeSetLocalStorage(LANGUAGE_STORAGE_KEY, lang);
     updateDocumentLanguageAttributes(lang);
     updateLanguageToggleButton();
+    updateChatbotFallbackButton(lang);
     updatePreferredLogoPath();
     updateStaticTextContent(lang);
     updateQuickFilterStyles();
@@ -1507,8 +1585,20 @@ function setupEventListeners() {
     });
     floatingContainer.appendChild(adminBtn);
 
+    const difyFallbackBtn = document.createElement('button');
+    difyFallbackBtn.id = 'difyFallbackBtn';
+    difyFallbackBtn.type = 'button';
+    difyFallbackBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-500 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200 hidden';
+    difyFallbackBtn.style.display = 'none';
+    difyFallbackBtn.disabled = true;
+    difyFallbackBtn.addEventListener('click', () => {
+        openDifyChatbotFallback();
+    });
+    floatingContainer.appendChild(difyFallbackBtn);
+
     document.body.appendChild(floatingContainer);
     updateLanguageToggleButton();
+    updateChatbotFallbackButton();
     updateStaticTextContent();
 
     // モーダルクローズ
