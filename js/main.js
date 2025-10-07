@@ -1441,8 +1441,8 @@ function setupEventListeners() {
         && typeof window.CSS.supports === 'function'
         && window.CSS.supports('padding-bottom: env(safe-area-inset-bottom)');
     const safeAreaInset = supportsSafeArea ? 'env(safe-area-inset-bottom)' : '0px';
-    floatingContainer.style.bottom = `calc(6rem + ${safeAreaInset})`;
-    floatingContainer.style.zIndex = '2147483646';
+    floatingContainer.style.bottom = `calc(9rem + ${safeAreaInset})`;
+    floatingContainer.style.zIndex = '2147483600';
 
     const languageBtn = document.createElement('button');
     languageBtn.id = 'languageToggleBtn';
