@@ -1435,7 +1435,14 @@ function setupEventListeners() {
 
     // 言語切り替え・管理者ボタンを追加
     const floatingContainer = document.createElement('div');
-    floatingContainer.className = 'fixed bottom-4 right-4 flex flex-col items-end gap-3 z-50';
+    floatingContainer.className = 'fixed right-4 flex flex-col items-end gap-3';
+    const supportsSafeArea = typeof window !== 'undefined'
+        && window.CSS
+        && typeof window.CSS.supports === 'function'
+        && window.CSS.supports('padding-bottom: env(safe-area-inset-bottom)');
+    const safeAreaInset = supportsSafeArea ? 'env(safe-area-inset-bottom)' : '0px';
+    floatingContainer.style.bottom = `calc(6rem + ${safeAreaInset})`;
+    floatingContainer.style.zIndex = '2147483646';
 
     const languageBtn = document.createElement('button');
     languageBtn.id = 'languageToggleBtn';
