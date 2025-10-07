@@ -44,8 +44,6 @@ const LANGUAGE_CONFIG = {
         toggleAria: '英語版ホームページに切り替える',
         adminButtonTitle: 'ファインダーモード',
         chatbotButtonTitle: 'ずかんAkyoにきく',
-        chatbotFallbackLabel: 'ずかんAkyo(別ウィンドウ)',
-        chatbotFallbackTooltip: 'ずかんAkyoが表示されないときはこちら',
         strings: {
             searchPlaceholder: 'Akyoを検索... (名前、ID、属性など)',
             attributePlaceholder: 'すべての属性',
@@ -125,8 +123,6 @@ const LANGUAGE_CONFIG = {
         toggleAria: '日本語版ホームページに切り替える',
         adminButtonTitle: 'Finder mode',
         chatbotButtonTitle: 'Open Dify chat',
-        chatbotFallbackLabel: 'AI chat (new tab)',
-        chatbotFallbackTooltip: 'Use this if the Dify chat bubble does not appear',
         strings: {
             searchPlaceholder: 'Search Akyo... (name, ID, attributes)',
             attributePlaceholder: 'All attributes',
@@ -209,7 +205,7 @@ function initDifyEmbedDiagnostics() {
     const isPagesPreview = typeof host === 'string' && /\.pages\.dev$/i.test(host);
     let bubbleFound = false;
 
-    const revealFallback = (reason) => {
+    const revealNotice = (reason) => {
         const strings = getLanguageStrings();
         const notice = isPagesPreview && strings.messages.difyPreviewNotice
             ? strings.messages.difyPreviewNotice
@@ -227,12 +223,12 @@ function initDifyEmbedDiagnostics() {
 
     const embedScript = document.querySelector('script[src^="https://dexakyo.akyodex.com/embed"]');
     if (!embedScript) {
-        revealFallback('script-tag-missing');
+        revealNotice('script-tag-missing');
         return;
     }
 
     embedScript.addEventListener('error', () => {
-        revealFallback('script-load-error');
+        revealNotice('script-load-error');
     });
 
     const interval = window.setInterval(() => {
@@ -246,80 +242,123 @@ function initDifyEmbedDiagnostics() {
     window.setTimeout(() => {
         window.clearInterval(interval);
         if (!bubbleFound) {
-            revealFallback('bubble-timeout');
+            revealNotice('bubble-timeout');
         }
     }, 9000);
 }
 
-function updateChatbotFallbackButton(lang = currentLanguage) {
-    const btn = document.getElementById('difyFallbackBtn');
-    if (!btn) return;
-    const config = getLanguageConfig(lang);
-    const label = config.chatbotFallbackLabel || config.chatbotButtonTitle || 'AI chat';
-    const tooltip = config.chatbotFallbackTooltip || config.chatbotButtonTitle || label;
-    btn.textContent = label;
-    btn.title = tooltip;
-    btn.setAttribute('aria-label', tooltip);
-}
+function stabilizeDifyChatWidget() {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    if (window.__akyoDifyStabilizerInitialized) return;
+    window.__akyoDifyStabilizerInitialized = true;
 
-function initDifyEmbedDiagnostics() {
-    if (typeof document === 'undefined') return;
+    const bubbleSelector = 'dify-chatbot-bubble';
+    const windowSelector = 'dify-chatbot-window';
+    let pendingUserToggle = false;
+    let userPinnedWindow = false;
 
-    const host = typeof window !== 'undefined' ? window.location.hostname : '';
-    const isPagesPreview = typeof host === 'string' && /\.pages\.dev$/i.test(host);
-    const fallbackButton = document.getElementById('difyFallbackBtn');
-    let fallbackShown = false;
-    let bubbleFound = false;
+    const isElementVisible = (element) => {
+        if (!element) return false;
+        const rect = element.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return false;
+        const style = window.getComputedStyle(element);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        const opacity = parseFloat(style.opacity || '1');
+        return !Number.isNaN(opacity) && opacity > 0.05;
+    };
 
-    const revealFallback = (reason) => {
-        if (fallbackShown) return;
-        fallbackShown = true;
+    const syncWidgetStyles = () => {
+        const bubbleEl = document.querySelector(bubbleSelector);
+        const windowEl = document.querySelector(windowSelector);
 
-        if (fallbackButton) {
-            fallbackButton.style.display = '';
-            fallbackButton.classList.remove('hidden');
-            fallbackButton.disabled = false;
+        if (bubbleEl) {
+            bubbleEl.style.setProperty('position', 'fixed', 'important');
+            bubbleEl.style.setProperty('right', '1.5rem', 'important');
+            bubbleEl.style.setProperty('bottom', '1.5rem', 'important');
+            bubbleEl.style.setProperty('z-index', '2147483649', 'important');
+            bubbleEl.style.setProperty('pointer-events', 'auto', 'important');
+            bubbleEl.style.setProperty('opacity', '1', 'important');
+            bubbleEl.style.setProperty('visibility', 'visible', 'important');
+            bubbleEl.style.setProperty('display', 'block', 'important');
         }
 
-        const strings = getLanguageStrings();
-        const notice = isPagesPreview && strings.messages.difyPreviewNotice
-            ? strings.messages.difyPreviewNotice
-            : strings.messages.difyUnavailable;
-        if (notice) {
-            showToast(notice, 'warning');
-        }
+        if (windowEl) {
+            windowEl.style.setProperty('position', 'fixed', 'important');
+            windowEl.style.setProperty('right', '1.5rem', 'important');
+            windowEl.style.setProperty('bottom', '7rem', 'important');
+            windowEl.style.setProperty('max-height', '80vh', 'important');
+            windowEl.style.setProperty('z-index', '2147483649', 'important');
+            windowEl.style.removeProperty('top');
+            windowEl.style.removeProperty('left');
+            windowEl.style.setProperty('pointer-events', 'auto', 'important');
 
-        const diagnosticMessage = `[Dify] Chatbot bubble did not render (${reason}). Current host: ${host || 'unknown'}.`;
-        console.warn(diagnosticMessage);
-        if (isPagesPreview) {
-            console.warn('[Dify] Cloudflare Pages preview hosts must be added to the allowed domain list in Dify → Settings → Website embedding.');
+            const shouldForceWindowOpen = userPinnedWindow;
+
+            if (shouldForceWindowOpen) {
+                if (!pendingUserToggle) {
+                    windowEl.style.setProperty('display', 'block', 'important');
+                    windowEl.style.setProperty('visibility', 'visible', 'important');
+                    windowEl.style.setProperty('opacity', '1', 'important');
+                }
+            } else if (!pendingUserToggle) {
+                windowEl.style.removeProperty('display');
+                windowEl.style.removeProperty('visibility');
+                windowEl.style.removeProperty('opacity');
+            }
         }
     };
 
-    const embedScript = document.querySelector('script[src^="https://dexakyo.akyodex.com/embed"]');
-    if (!embedScript) {
-        revealFallback('script-tag-missing');
-        return;
-    }
+    const scheduleSync = () => {
+        if (typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(syncWidgetStyles);
+        } else {
+            window.setTimeout(syncWidgetStyles, 16);
+        }
+    };
 
-    embedScript.addEventListener('error', () => {
-        revealFallback('script-load-error');
+    const observer = new MutationObserver(scheduleSync);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
     });
 
-    const interval = window.setInterval(() => {
-        if (document.querySelector('dify-chatbot-bubble')) {
-            bubbleFound = true;
-            window.clearInterval(interval);
-            console.debug('[Dify] Chatbot bubble detected.');
+    document.addEventListener('click', (event) => {
+        if (typeof event.target.closest !== 'function') return;
+        const bubbleHost = event.target.closest(bubbleSelector);
+        if (bubbleHost) {
+            pendingUserToggle = true;
+            window.setTimeout(() => {
+                const windowEl = document.querySelector(windowSelector);
+                userPinnedWindow = isElementVisible(windowEl);
+                pendingUserToggle = false;
+                syncWidgetStyles();
+            }, 80);
+            return;
         }
-    }, 600);
 
-    window.setTimeout(() => {
-        window.clearInterval(interval);
-        if (!bubbleFound) {
-            revealFallback('bubble-timeout');
+        const windowHost = event.target.closest(windowSelector);
+        if (windowHost) {
+            pendingUserToggle = true;
+            window.setTimeout(() => {
+                const windowEl = document.querySelector(windowSelector);
+                userPinnedWindow = isElementVisible(windowEl);
+                pendingUserToggle = false;
+                syncWidgetStyles();
+            }, 120);
         }
-    }, 9000);
+    }, true);
+
+    window.addEventListener('scroll', () => {
+        if (!userPinnedWindow) return;
+        syncWidgetStyles();
+    }, { passive: true });
+
+    window.addEventListener('resize', scheduleSync, { passive: true });
+    window.addEventListener('orientationchange', scheduleSync);
+
+    syncWidgetStyles();
 }
 
 function safeGetLocalStorage(key) {
@@ -375,7 +414,6 @@ window.akyoCurrentLanguage = currentLanguage;
 updateDocumentLanguageAttributes();
 updatePreferredLogoPath();
 updateStaticTextContent();
-updateChatbotFallbackButton();
 
 function getLanguageConfig(lang = currentLanguage) {
     return LANGUAGE_CONFIG[lang] || LANGUAGE_CONFIG.ja;
@@ -591,7 +629,6 @@ async function setLanguage(lang) {
     safeSetLocalStorage(LANGUAGE_STORAGE_KEY, lang);
     updateDocumentLanguageAttributes(lang);
     updateLanguageToggleButton();
-    updateChatbotFallbackButton(lang);
     updatePreferredLogoPath();
     updateStaticTextContent(lang);
     updateQuickFilterStyles();
@@ -1044,6 +1081,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
     initDifyEmbedDiagnostics();
+    stabilizeDifyChatWidget();
 
     // 初期表示を先に実行（ローディング表示など）
     document.getElementById('noDataContainer').classList.remove('hidden');
@@ -1558,7 +1596,8 @@ function setupEventListeners() {
         && window.CSS.supports('padding-bottom: env(safe-area-inset-bottom)');
     const safeAreaInset = supportsSafeArea ? 'env(safe-area-inset-bottom)' : '0px';
     floatingContainer.style.bottom = `calc(9rem + ${safeAreaInset})`;
-    floatingContainer.style.zIndex = '2147483600';
+    // Allow the Dify chatbot window to stack above the floating controls.
+    floatingContainer.style.zIndex = '2147483000';
 
     const languageBtn = document.createElement('button');
     languageBtn.id = 'languageToggleBtn';
@@ -1585,20 +1624,8 @@ function setupEventListeners() {
     });
     floatingContainer.appendChild(adminBtn);
 
-    const difyFallbackBtn = document.createElement('button');
-    difyFallbackBtn.id = 'difyFallbackBtn';
-    difyFallbackBtn.type = 'button';
-    difyFallbackBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-500 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200 hidden';
-    difyFallbackBtn.style.display = 'none';
-    difyFallbackBtn.disabled = true;
-    difyFallbackBtn.addEventListener('click', () => {
-        openDifyChatbotFallback();
-    });
-    floatingContainer.appendChild(difyFallbackBtn);
-
     document.body.appendChild(floatingContainer);
     updateLanguageToggleButton();
-    updateChatbotFallbackButton();
     updateStaticTextContent();
 
     // モーダルクローズ
