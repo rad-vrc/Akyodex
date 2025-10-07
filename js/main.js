@@ -17,6 +17,14 @@ function populateSelect(selectElement, options, placeholderLabel){
 // Akyoずかん メインJavaScriptファイル
 
 const LANGUAGE_STORAGE_KEY = 'akyoPreferredLanguage';
+const GLOBAL_SCOPE = (() => {
+    if (typeof globalThis !== 'undefined') return globalThis;
+    if (typeof window !== 'undefined') return window;
+    if (typeof self !== 'undefined') return self;
+    if (typeof global !== 'undefined') return global;
+    return {};
+})();
+const DIFY_CHATBOT_URL = 'https://akyodex.com/dexakyo';
 const LANGUAGE_CONFIG = {
     ja: {
         code: 'ja',
@@ -35,6 +43,7 @@ const LANGUAGE_CONFIG = {
         toggleLabel: 'English',
         toggleAria: '英語版ホームページに切り替える',
         adminButtonTitle: 'ファインダーモード',
+        chatbotButtonTitle: 'Difyチャットを開く',
         strings: {
             searchPlaceholder: 'Akyoを検索... (名前、ID、属性など)',
             attributePlaceholder: 'すべての属性',
@@ -111,6 +120,7 @@ const LANGUAGE_CONFIG = {
         toggleLabel: '日本語',
         toggleAria: '日本語版ホームページに切り替える',
         adminButtonTitle: 'Finder mode',
+        chatbotButtonTitle: 'Open Dify chat',
         strings: {
             searchPlaceholder: 'Search Akyo... (name, ID, attributes)',
             attributePlaceholder: 'All attributes',
@@ -171,6 +181,33 @@ const LANGUAGE_CONFIG = {
         }
     }
 };
+
+function getDifyChatbotInstance() {
+    const scope = typeof window !== 'undefined' ? window : GLOBAL_SCOPE;
+    if (!scope || typeof scope !== 'object') return null;
+    const candidate = scope.difyChatbot;
+    if (!candidate) return null;
+    if (typeof candidate === 'object' || typeof candidate === 'function') {
+        return candidate;
+    }
+    return null;
+}
+
+function openDifyChatbotFallback() {
+    if (typeof window !== 'undefined' && typeof window.open === 'function') {
+        const newWindow = window.open(DIFY_CHATBOT_URL, '_blank', 'noopener,noreferrer');
+        if (newWindow) {
+            newWindow.opener = null;
+        }
+        return;
+    }
+
+    try {
+        if (GLOBAL_SCOPE && GLOBAL_SCOPE.location && typeof GLOBAL_SCOPE.location.assign === 'function') {
+            GLOBAL_SCOPE.location.assign(DIFY_CHATBOT_URL);
+        }
+    } catch (_) {}
+}
 
 function safeGetLocalStorage(key) {
     try {
@@ -410,6 +447,14 @@ function updateStaticTextContent(lang = currentLanguage) {
     if (adminBtn) {
         adminBtn.title = getLanguageConfig(lang).adminButtonTitle;
         adminBtn.setAttribute('aria-label', getLanguageConfig(lang).adminButtonTitle);
+    }
+
+    const difyBtn = document.getElementById('difyChatbotBtn');
+    if (difyBtn) {
+        const config = getLanguageConfig(lang);
+        const difyTitle = config?.chatbotButtonTitle || (lang === 'ja' ? 'Difyチャットを開く' : 'Open Dify chat');
+        difyBtn.title = difyTitle;
+        difyBtn.setAttribute('aria-label', difyTitle);
     }
 }
 
@@ -1413,6 +1458,34 @@ function setupEventListeners() {
     });
     floatingContainer.appendChild(languageBtn);
 
+    const quickAccessRow = document.createElement('div');
+    quickAccessRow.className = 'flex items-center gap-3 flex-wrap sm:flex-nowrap';
+    floatingContainer.appendChild(quickAccessRow);
+
+    const difyBtn = document.createElement('button');
+    difyBtn.id = 'difyChatbotBtn';
+    difyBtn.type = 'button';
+    difyBtn.className = 'bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-400 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200';
+    difyBtn.innerHTML = '<i class="fas fa-comments"></i>';
+    const difyTitle = getLanguageConfig().chatbotButtonTitle || (currentLanguage === 'ja' ? 'Difyチャットを開く' : 'Open Dify chat');
+    difyBtn.title = difyTitle;
+    difyBtn.setAttribute('aria-label', difyTitle);
+    difyBtn.addEventListener('click', () => {
+        const chatbot = getDifyChatbotInstance();
+        if (chatbot) {
+            if (typeof chatbot.open === 'function') {
+                chatbot.open();
+                return;
+            }
+            if (typeof chatbot.toggle === 'function') {
+                chatbot.toggle();
+                return;
+            }
+        }
+        openDifyChatbotFallback();
+    });
+    quickAccessRow.appendChild(difyBtn);
+
     const adminBtn = document.createElement('button');
     adminBtn.id = 'adminShortcutBtn';
     adminBtn.className = 'bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300';
@@ -1423,7 +1496,7 @@ function setupEventListeners() {
     adminBtn.addEventListener('click', () => {
         window.location.href = 'admin.html';
     });
-    floatingContainer.appendChild(adminBtn);
+    quickAccessRow.appendChild(adminBtn);
 
     document.body.appendChild(floatingContainer);
     updateLanguageToggleButton();
