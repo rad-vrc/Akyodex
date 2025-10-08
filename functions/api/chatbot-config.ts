@@ -19,7 +19,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     return okJSON({ enabled: false });
   }
 
-  const scriptUrl = "/dify/embed.js";
+  // scriptUrl を空文字列に変更（または完全に削除）
+  // 空文字列の場合、初期化スクリプトが baseUrl から自動的に構築します
+  const scriptUrl = "";
 
   return okJSON({
     enabled: true,
