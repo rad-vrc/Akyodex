@@ -419,6 +419,14 @@ function getDifyChatbotInstance() {
 function initDifyEmbedDiagnostics() {
     if (typeof document === 'undefined') return;
 
+    if (window.__akyoDifyDiagnosticsInitialized) return;
+
+    if (window.__akyoDifyEmbedDisabled) {
+        window.__akyoDifyDiagnosticsInitialized = true;
+        console.info('[Dify] Diagnostics skipped because the chatbot is disabled.');
+        return;
+    }
+
     const host = typeof window !== 'undefined' ? window.location.hostname : '';
     const isPagesPreview = typeof host === 'string' && /\.pages\.dev$/i.test(host);
     let bubbleFound = false;
@@ -440,11 +448,26 @@ function initDifyEmbedDiagnostics() {
         }
     };
 
-    const embedScript = document.querySelector('script[src^="https://dexakyo.akyodex.com/embed"]');
+    const scriptSelector = 'script[data-akyo-dify-embed], script[src^="https://dexakyo.akyodex.com/embed"]';
+    const embedScript = document.querySelector(scriptSelector);
     if (!embedScript) {
+        if (window.__akyoDifyEmbedBootstrapPending) {
+            if (!window.__akyoDifyDiagnosticsWaitScheduled) {
+                window.__akyoDifyDiagnosticsWaitScheduled = true;
+                window.setTimeout(() => {
+                    window.__akyoDifyDiagnosticsWaitScheduled = false;
+                    initDifyEmbedDiagnostics();
+                }, 800);
+            }
+            return;
+        }
+
+        window.__akyoDifyDiagnosticsInitialized = true;
         revealNotice('script-tag-missing');
         return;
     }
+
+    window.__akyoDifyDiagnosticsInitialized = true;
 
     embedScript.addEventListener('error', () => {
         revealNotice('script-load-error');
@@ -475,6 +498,11 @@ function stabilizeDifyChatWidget() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
     if (window.__akyoDifyStabilizerInitialized) return;
     window.__akyoDifyStabilizerInitialized = true;
+
+    if (window.__akyoDifyEmbedDisabled) {
+        console.info('[Dify] Chatbot stabilizer skipped because the chatbot is disabled.');
+        return;
+    }
 
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
