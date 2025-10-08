@@ -2272,10 +2272,36 @@ function updateDisplay() {
 }
 
 // グリッドビューのレンダリング
+// グリッドビューのレンダリング
 function renderGridView() {
     const grid = document.getElementById('akyoGrid');
+    
+    // Dify要素を保護
+    const difyBubble = document.querySelector('dify-chatbot-bubble');
+    const difyWindow = document.querySelector('dify-chatbot-window');
+    let bubbleData = null, windowData = null;
+    
+    // grid内にDify要素があれば保存
+    if (difyBubble && grid.contains(difyBubble)) {
+        bubbleData = {
+            parent: difyBubble.parentNode,
+            nextSibling: difyBubble.nextSibling,
+            element: difyBubble
+        };
+        difyBubble.remove();
+    }
+    
+    if (difyWindow && grid.contains(difyWindow)) {
+        windowData = {
+            parent: difyWindow.parentNode,
+            nextSibling: difyWindow.nextSibling,
+            element: difyWindow
+        };
+        difyWindow.remove();
+    }
+    
+    // 既存の処理
     const fragment = document.createDocumentFragment();
-
     const slice = filteredData.slice(0, renderLimit);
     slice.forEach(akyo => {
         const state = computeAkyoRenderState(akyo);
@@ -2290,6 +2316,85 @@ function renderGridView() {
     });
 
     grid.replaceChildren(fragment);
+    
+    // Dify要素を復元
+    if (bubbleData) {
+        if (bubbleData.nextSibling && bubbleData.nextSibling.parentNode === bubbleData.parent) {
+            bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
+        } else {
+            bubbleData.parent.appendChild(bubbleData.element);
+        }
+    }
+    
+    if (windowData) {
+        if (windowData.nextSibling && windowData.nextSibling.parentNode === windowData.parent) {
+            windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
+        } else {
+            windowData.parent.appendChild(windowData.element);
+        }
+    }
+}
+
+// リストビューのレンダリング（同様の処理）
+function renderListView() {
+    const list = document.getElementById('akyoList');
+    
+    // Dify要素を保護
+    const difyBubble = document.querySelector('dify-chatbot-bubble');
+    const difyWindow = document.querySelector('dify-chatbot-window');
+    let bubbleData = null, windowData = null;
+    
+    if (difyBubble && list.contains(difyBubble)) {
+        bubbleData = {
+            parent: difyBubble.parentNode,
+            nextSibling: difyBubble.nextSibling,
+            element: difyBubble
+        };
+        difyBubble.remove();
+    }
+    
+    if (difyWindow && list.contains(difyWindow)) {
+        windowData = {
+            parent: difyWindow.parentNode,
+            nextSibling: difyWindow.nextSibling,
+            element: difyWindow
+        };
+        difyWindow.remove();
+    }
+    
+    // 既存の処理（元のコードをここに）
+    const fragment = document.createDocumentFragment();
+    const slice = filteredData.slice(0, renderLimit);
+    slice.forEach(akyo => {
+        const state = computeAkyoRenderState(akyo);
+        let row = listRowCache.get(state.id);
+        if (!row) {
+            row = createListRow(state);
+            listRowCache.set(state.id, row);
+        } else {
+            updateListRow(row, state);
+        }
+        fragment.appendChild(row);
+    });
+
+    list.replaceChildren(fragment);
+    
+    // Dify要素を復元
+    if (bubbleData) {
+        if (bubbleData.nextSibling && bubbleData.nextSibling.parentNode === bubbleData.parent) {
+            bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
+        } else {
+            bubbleData.parent.appendChild(bubbleData.element);
+        }
+    }
+    
+    if (windowData) {
+        if (windowData.nextSibling && windowData.nextSibling.parentNode === windowData.parent) {
+            windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
+        } else {
+            windowData.parent.appendChild(windowData.element);
+        }
+    }
 }
 
 function createAkyoCard(state) {
