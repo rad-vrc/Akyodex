@@ -545,26 +545,159 @@
     
  <script src="js/main.js"></script>
     
-    <style>
-        dify-chatbot-bubble::part(button) {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: #fff;
-        }
+    <script>
+(function protectDifyFromLanguageSwitch() {
+    console.log('[Dify Protection] 🛡️ Installing protection...');
+    
+    // initializeLanguage を上書き
+    if (typeof window.initializeLanguage === 'function') {
+        const originalInit = window.initializeLanguage;
+        
+        window.initializeLanguage = function() {
+            console.log('[Dify Protection] 🔒 initializeLanguage intercepted');
+            
+            // Dify要素を保存
+            const difyBubble = document.querySelector('dify-chatbot-bubble');
+            const difyWindow = document.querySelector('dify-chatbot-window');
+            let bubbleData = null, windowData = null;
+            
+            if (difyBubble) {
+                bubbleData = {
+                    parent: difyBubble.parentNode,
+                    nextSibling: difyBubble.nextSibling,
+                    element: difyBubble
+                };
+                difyBubble.remove();
+                console.log('[Dify Protection] 💾 Bubble temporarily removed');
+            }
+            
+            if (difyWindow) {
+                windowData = {
+                    parent: difyWindow.parentNode,
+                    nextSibling: difyWindow.nextSibling,
+                    element: difyWindow
+                };
+                difyWindow.remove();
+                console.log('[Dify Protection] 💾 Window temporarily removed');
+            }
+            
+            // 元の関数を実行
+            originalInit.call(this);
+            
+            // Dify要素を復元
+            setTimeout(() => {
+                if (bubbleData) {
+                    if (bubbleData.nextSibling) {
+                        bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
+                    } else {
+                        bubbleData.parent.appendChild(bubbleData.element);
+                    }
+                    console.log('[Dify Protection] ✅ Bubble restored');
+                }
+                
+                if (windowData) {
+                    if (windowData.nextSibling) {
+                        windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
+                    } else {
+                        windowData.parent.appendChild(windowData.element);
+                    }
+                    console.log('[Dify Protection] ✅ Window restored');
+                }
+            }, 0);
+        };
+        
+        console.log('[Dify Protection] ✅ initializeLanguage wrapped');
+    } else {
+        console.warn('[Dify Protection] ⚠️ initializeLanguage not found');
+    }
+    
+    // switchLanguage を上書き
+    if (typeof window.switchLanguage === 'function') {
+        const originalSwitch = window.switchLanguage;
+        
+        window.switchLanguage = function(lang) {
+            console.log('[Dify Protection] 🔒 switchLanguage intercepted:', lang);
+            
+            // Dify要素を保存
+            const difyBubble = document.querySelector('dify-chatbot-bubble');
+            const difyWindow = document.querySelector('dify-chatbot-window');
+            let bubbleData = null, windowData = null;
+            
+            if (difyBubble) {
+                bubbleData = {
+                    parent: difyBubble.parentNode,
+                    nextSibling: difyBubble.nextSibling,
+                    element: difyBubble
+                };
+                difyBubble.remove();
+                console.log('[Dify Protection] 💾 Bubble temporarily removed');
+            }
+            
+            if (difyWindow) {
+                windowData = {
+                    parent: difyWindow.parentNode,
+                    nextSibling: difyWindow.nextSibling,
+                    element: difyWindow
+                };
+                difyWindow.remove();
+                console.log('[Dify Protection] 💾 Window temporarily removed');
+            }
+            
+            // 元の関数を実行
+            originalSwitch.call(this, lang);
+            
+            // Dify要素を復元
+            setTimeout(() => {
+                if (bubbleData) {
+                    if (bubbleData.nextSibling) {
+                        bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
+                    } else {
+                        bubbleData.parent.appendChild(bubbleData.element);
+                    }
+                    console.log('[Dify Protection] ✅ Bubble restored');
+                }
+                
+                if (windowData) {
+                    if (windowData.nextSibling) {
+                        windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
+                    } else {
+                        windowData.parent.appendChild(windowData.element);
+                    }
+                    console.log('[Dify Protection] ✅ Window restored');
+                }
+            }, 0);
+        };
+        
+        console.log('[Dify Protection] ✅ switchLanguage wrapped');
+    } else {
+        console.warn('[Dify Protection] ⚠️ switchLanguage not found');
+    }
+    
+    console.log('[Dify Protection] 🎉 Protection installed successfully');
+})();
+</script>
 
-        dify-chatbot-window::part(container) {
-            max-width: min(420px, 90vw);
-            height: min(640px, 80vh);
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.45);
-        }
+<style>
+    dify-chatbot-bubble::part(button) {
+        background: linear-gradient(135deg, #f97316, #fb923c);
+        color: #fff;
+    }
 
-        dify-chatbot-window::part(header) {
-            background: linear-gradient(135deg, #a855f7, #6366f1);
-            color: #fff;
-        }
-    </style>
-    <script src="js/mini-akyo-bg.js?v=2"></script>
-    <script src="js/secret-mode.js"></script>
+    dify-chatbot-window::part(container) {
+        max-width: min(420px, 90vw);
+        height: min(640px, 80vh);
+        border-radius: 1.5rem;
+        box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.45);
+    }
+
+    dify-chatbot-window::part(header) {
+        background: linear-gradient(135deg, #a855f7, #6366f1);
+        color: #fff;
+    }
+</style>
+
+<script src="js/mini-akyo-bg.js?v=2"></script>
+<script src="js/secret-mode.js"></script>
 
     <!-- ヘッダーロゴ読み込み -->
 
