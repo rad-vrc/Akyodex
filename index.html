@@ -468,6 +468,7 @@
             const markDisabled = (reason) => {
                 window.__akyoDifyEmbedDisabled = true;
                 window.__akyoDifyEmbedBootstrapPending = false;
+                window.__akyoDifyEmbedDisabledReason = reason;
                 console.info(`[Dify] Chatbot disabled: ${reason}`);
             };
 
@@ -481,6 +482,12 @@
                     }
 
                     const payload = await response.json();
+
+                    if (payload && payload.enabled === false) {
+                        markDisabled('config-disabled');
+                        return;
+                    }
+
                     const rawToken = typeof payload?.token === 'string' ? payload.token.trim() : '';
                     const rawBaseUrl = typeof payload?.baseUrl === 'string' ? payload.baseUrl.trim() : '';
                     const token = rawToken.length > 0 ? rawToken : '';
