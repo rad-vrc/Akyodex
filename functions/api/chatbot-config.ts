@@ -13,20 +13,19 @@ type PagesFunction<Bindings = any> = (context: {
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   const token = env.DIFY_CHATBOT_TOKEN?.trim();
-  const baseUrl = env.DIFY_CHATBOT_BASE_URL?.trim();
+  const baseUrl = env.DIFY_CHATBOT_BASE_URL?.trim() || "https://dexakyo.akyodex.com";
 
   if (!token) {
     return okJSON({ enabled: false });
   }
 
-  // scriptUrl を空文字列に変更（または完全に削除）
-  // 空文字列の場合、初期化スクリプトが baseUrl から自動的に構築します
-  const scriptUrl = "";
+  // プロキシ経由でスクリプトを読み込む
+  const scriptUrl = "/api/dify-embed-proxy";
 
   return okJSON({
     enabled: true,
     token,
-    baseUrl: baseUrl && baseUrl.length > 0 ? baseUrl : undefined,
+    baseUrl,
     scriptUrl,
   });
 };
