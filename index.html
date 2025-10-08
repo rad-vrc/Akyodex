@@ -514,6 +514,7 @@
                 token,
                 baseUrl: normalizedBaseUrl,
                 lang: defaultLang,
+                dynamicScript: true,  // ← これを追加！
                 layout: {
                     position: 'right',
                     zIndex: 2147483648
@@ -523,16 +524,34 @@
                 }
             };
 
+            console.log('[Dify] Config set with dynamicScript:', window.difyChatbotConfig);
+
             const script = document.createElement('script');
             script.src = scriptUrl || `${normalizedBaseUrl}/embed.min.js`;
             script.crossOrigin = 'anonymous';
             script.dataset.akyoDifyEmbed = '1';
+            
             script.addEventListener('load', () => {
                 console.log('[Dify] ✅ Script loaded successfully');
+                
+                // dynamicScript が動作しない場合のフォールバック
+                setTimeout(() => {
+                    const bubble = document.querySelector('dify-chatbot-bubble');
+                    if (!bubble) {
+                        console.warn('[Dify] Bubble not found, triggering body.onload manually');
+                        if (document.body.onload) {
+                            document.body.onload();
+                        }
+                    } else {
+                        console.log('[Dify] ✅ Bubble created successfully');
+                    }
+                }, 500);
             });
+            
             script.addEventListener('error', (event) => {
                 console.warn('[Dify] Failed to load embed script.', event);
             });
+            
             document.head.appendChild(script);
             window.__akyoDifyEmbedBootstrapPending = false;
         } catch (error) {
