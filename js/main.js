@@ -276,6 +276,8 @@ function stabilizeDifyChatWidget() {
         const windowEl = document.querySelector(windowSelector);
 
         if (bubbleEl) {
+            bubbleEl.removeAttribute('hidden');
+            bubbleEl.removeAttribute('aria-hidden');
             bubbleEl.style.setProperty('position', 'fixed', 'important');
             bubbleEl.style.setProperty('right', '1.5rem', 'important');
             bubbleEl.style.setProperty('bottom', '1.5rem', 'important');
@@ -287,6 +289,8 @@ function stabilizeDifyChatWidget() {
         }
 
         if (windowEl) {
+            windowEl.removeAttribute('hidden');
+            windowEl.removeAttribute('aria-hidden');
             windowEl.style.setProperty('position', 'fixed', 'important');
             windowEl.style.setProperty('right', '1.5rem', 'important');
             windowEl.style.setProperty('bottom', '7rem', 'important');
@@ -331,7 +335,7 @@ function stabilizeDifyChatWidget() {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['style', 'class']
+        attributeFilter: ['style', 'class', 'hidden', 'aria-hidden']
     });
 
     document.addEventListener('click', (event) => {
