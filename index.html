@@ -510,11 +510,13 @@
             window.__akyoDifyEmbedDisabled = false;
 
             const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
+            
+            // 設定を先にセット
             window.difyChatbotConfig = {
                 token,
                 baseUrl: normalizedBaseUrl,
                 lang: defaultLang,
-                dynamicScript: true,  // ← これを追加！
+                dynamicScript: true,
                 layout: {
                     position: 'right',
                     zIndex: 2147483648
@@ -524,35 +526,40 @@
                 }
             };
 
-            console.log('[Dify] Config set with dynamicScript:', window.difyChatbotConfig);
+            console.log('[Dify] Config set:', window.difyChatbotConfig);
 
-            const script = document.createElement('script');
-            script.src = scriptUrl || `${normalizedBaseUrl}/embed.min.js`;
-            script.crossOrigin = 'anonymous';
-            script.dataset.akyoDifyEmbed = '1';
+            // スクリプトを取得して直接実行（scriptタグではなく）
+            const finalScriptUrl = scriptUrl || `${normalizedBaseUrl}/embed.min.js`;
+            console.log('[Dify] Fetching script from:', finalScriptUrl);
             
-            script.addEventListener('load', () => {
-                console.log('[Dify] ✅ Script loaded successfully');
+            const scriptResponse = await fetch(finalScriptUrl);
+            const scriptContent = await scriptResponse.text();
+            console.log('[Dify] Script fetched, length:', scriptContent.length);
+            
+            // スクリプトを直接実行
+            try {
+                eval(scriptContent);
+                console.log('[Dify] ✅ Script executed');
                 
-                // dynamicScript が動作しない場合のフォールバック
+                // 少し待ってから確認
                 setTimeout(() => {
                     const bubble = document.querySelector('dify-chatbot-bubble');
+                    const windowEl = document.querySelector('dify-chatbot-window');
+                    console.log('[Dify] Elements check:');
+                    console.log('  Bubble:', bubble);
+                    console.log('  Window:', windowEl);
+                    
                     if (!bubble) {
-                        console.warn('[Dify] Bubble not found, triggering body.onload manually');
+                        console.warn('[Dify] Bubble not created, trying body.onload trigger');
                         if (document.body.onload) {
                             document.body.onload();
                         }
-                    } else {
-                        console.log('[Dify] ✅ Bubble created successfully');
                     }
-                }, 500);
-            });
+                }, 1000);
+            } catch (e) {
+                console.error('[Dify] ❌ Script execution failed:', e);
+            }
             
-            script.addEventListener('error', (event) => {
-                console.warn('[Dify] Failed to load embed script.', event);
-            });
-            
-            document.head.appendChild(script);
             window.__akyoDifyEmbedBootstrapPending = false;
         } catch (error) {
             console.warn('[Dify] Failed to bootstrap chatbot configuration.', error);
@@ -567,6 +574,7 @@
     }
 })();
 </script>
+
     
  <script src="js/main.js"></script>
     
