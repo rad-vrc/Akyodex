@@ -17,6 +17,218 @@ function populateSelect(selectElement, options, placeholderLabel){
 // Akyoずかん メインJavaScriptファイル
 
 const LANGUAGE_STORAGE_KEY = 'akyoPreferredLanguage';
+const GLOBAL_SCOPE = (() => {
+    if (typeof globalThis !== 'undefined') return globalThis;
+    if (typeof window !== 'undefined') return window;
+    if (typeof self !== 'undefined') return self;
+    if (typeof global !== 'undefined') return global;
+    return {};
+})();
+const DIFY_CHATBOT_URL = 'https://dexakyo.akyodex.com';
+const DIFY_PREVIEW_GUIDE_URL = 'https://github.com/Akyodex/Akyodex/blob/main/docs/cloudflare-tunnel-dify.md#7-cloudflare-pages-%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E3%81%A7%E3%83%90%E3%83%96%E3%83%AB%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88';
+const AKYODEX_PRODUCTION_URL = 'https://akyodex.com/?openChat=1';
+
+function showDifyPreviewAllowlistNotice(hostname) {
+    if (typeof document === 'undefined') return;
+
+    const fallbackHost = typeof window !== 'undefined' && window.location ? window.location.hostname : '';
+    const host = (hostname || fallbackHost || '').trim();
+    if (!host) return;
+
+    const existingHost = window.__akyoDifyPreviewHostNotice;
+    if (existingHost === host && document.getElementById('difyPreviewAllowlistNotice')) {
+        return;
+    }
+
+    window.__akyoDifyPreviewHostNotice = host;
+
+    const containerId = 'difyPreviewAllowlistNotice';
+    let wrapper = document.getElementById(containerId);
+    if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.id = containerId;
+        wrapper.style.position = 'fixed';
+        wrapper.style.left = '1.5rem';
+        wrapper.style.bottom = '1.5rem';
+        wrapper.style.zIndex = '2147483600';
+        wrapper.style.maxWidth = '22rem';
+        wrapper.style.pointerEvents = 'auto';
+        wrapper.style.fontFamily = '"Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
+        wrapper.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+        wrapper.style.opacity = '0';
+        wrapper.style.transform = 'translateY(12px)';
+        document.body.appendChild(wrapper);
+        requestAnimationFrame(() => {
+            wrapper.style.opacity = '1';
+            wrapper.style.transform = 'translateY(0)';
+        });
+    } else {
+        wrapper.replaceChildren();
+    }
+
+    const strings = getLanguageStrings();
+    const messages = strings && strings.messages ? strings.messages : {};
+
+    const panel = document.createElement('div');
+    panel.style.background = 'rgba(15, 23, 42, 0.92)';
+    panel.style.color = '#f8fafc';
+    panel.style.padding = '1.5rem';
+    panel.style.borderRadius = '1rem';
+    panel.style.boxShadow = '0 25px 60px -25px rgba(15, 23, 42, 0.8)';
+    panel.style.border = '1px solid rgba(148, 163, 184, 0.35)';
+    panel.style.backdropFilter = 'blur(14px)';
+    panel.style.position = 'relative';
+    panel.style.lineHeight = '1.55';
+    wrapper.appendChild(panel);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', messages.difyPreviewHostClose || 'Dismiss');
+    closeBtn.textContent = '×';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '0.6rem';
+    closeBtn.style.right = '0.75rem';
+    closeBtn.style.background = 'transparent';
+    closeBtn.style.border = 'none';
+    closeBtn.style.color = '#c7d2fe';
+    closeBtn.style.fontSize = '1.25rem';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.padding = '0';
+    closeBtn.addEventListener('click', () => {
+        wrapper.remove();
+        window.__akyoDifyPreviewHostNotice = null;
+    });
+    panel.appendChild(closeBtn);
+
+    const title = document.createElement('h2');
+    title.textContent = messages.difyPreviewHostTitle || 'Allow Dify chat on this preview environment';
+    title.style.fontSize = '1.05rem';
+    title.style.fontWeight = '700';
+    title.style.margin = '0 0 0.6rem';
+    panel.appendChild(title);
+
+    const description = document.createElement('p');
+    description.textContent = messages.difyPreviewHostBody || 'Add the following host name to the Dify allowed domains list.';
+    description.style.margin = '0';
+    description.style.fontSize = '0.95rem';
+    description.style.opacity = '0.92';
+    panel.appendChild(description);
+
+    const hostRow = document.createElement('div');
+    hostRow.style.display = 'flex';
+    hostRow.style.flexWrap = 'wrap';
+    hostRow.style.alignItems = 'center';
+    hostRow.style.gap = '0.75rem';
+    hostRow.style.marginTop = '0.9rem';
+    panel.appendChild(hostRow);
+
+    const hostCode = document.createElement('code');
+    hostCode.textContent = host;
+    hostCode.style.background = 'rgba(15, 23, 42, 0.6)';
+    hostCode.style.borderRadius = '0.75rem';
+    hostCode.style.padding = '0.4rem 0.75rem';
+    hostCode.style.fontSize = '0.85rem';
+    hostCode.style.wordBreak = 'break-all';
+    hostCode.style.flex = '1 1 auto';
+    hostCode.style.letterSpacing = '0.015em';
+    hostRow.appendChild(hostCode);
+
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    const copyLabel = messages.difyPreviewHostCopy || 'Copy host name';
+    const copiedLabel = messages.difyPreviewHostCopied || 'Copied!';
+    copyBtn.textContent = copyLabel;
+    copyBtn.style.background = '#38bdf8';
+    copyBtn.style.color = '#0f172a';
+    copyBtn.style.fontWeight = '600';
+    copyBtn.style.border = 'none';
+    copyBtn.style.borderRadius = '9999px';
+    copyBtn.style.padding = '0.45rem 0.95rem';
+    copyBtn.style.cursor = 'pointer';
+    copyBtn.style.boxShadow = '0 18px 32px -18px rgba(56, 189, 248, 0.8)';
+    copyBtn.style.flex = '0 0 auto';
+    hostRow.appendChild(copyBtn);
+
+    let resetTimer = null;
+    copyBtn.addEventListener('click', async () => {
+        if (resetTimer) {
+            window.clearTimeout(resetTimer);
+            resetTimer = null;
+        }
+
+        let copied = false;
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            try {
+                await navigator.clipboard.writeText(host);
+                copied = true;
+            } catch (_) {}
+        }
+
+        if (!copied) {
+            try {
+                const selection = window.getSelection();
+                if (selection) {
+                    selection.removeAllRanges();
+                    const range = document.createRange();
+                    range.selectNodeContents(hostCode);
+                    selection.addRange(range);
+                    copied = typeof document.execCommand === 'function' && document.execCommand('copy');
+                    selection.removeAllRanges();
+                }
+            } catch (_) {}
+        }
+
+        if (copied) {
+            copyBtn.textContent = copiedLabel;
+            copyBtn.style.background = '#facc15';
+            copyBtn.style.color = '#78350f';
+        } else {
+            copyBtn.textContent = copyLabel;
+            copyBtn.style.background = '#38bdf8';
+            copyBtn.style.color = '#0f172a';
+        }
+
+        resetTimer = window.setTimeout(() => {
+            copyBtn.textContent = copyLabel;
+            copyBtn.style.background = '#38bdf8';
+            copyBtn.style.color = '#0f172a';
+            resetTimer = null;
+        }, 2400);
+    });
+
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.flexWrap = 'wrap';
+    actions.style.gap = '0.6rem';
+    actions.style.marginTop = '1.1rem';
+    panel.appendChild(actions);
+
+    const docLink = document.createElement('a');
+    docLink.href = DIFY_PREVIEW_GUIDE_URL;
+    docLink.target = '_blank';
+    docLink.rel = 'noopener noreferrer';
+    docLink.textContent = messages.difyPreviewHostDocs || 'View setup guide';
+    docLink.style.color = '#cbd5f5';
+    docLink.style.textDecoration = 'underline';
+    docLink.style.fontWeight = '600';
+    docLink.style.fontSize = '0.92rem';
+    actions.appendChild(docLink);
+
+    const visitLink = document.createElement('a');
+    visitLink.href = AKYODEX_PRODUCTION_URL;
+    visitLink.target = '_blank';
+    visitLink.rel = 'noopener noreferrer';
+    visitLink.textContent = messages.difyPreviewHostVisit || 'Open production site';
+    visitLink.style.background = '#f97316';
+    visitLink.style.color = '#fff';
+    visitLink.style.fontWeight = '700';
+    visitLink.style.padding = '0.55rem 1.05rem';
+    visitLink.style.borderRadius = '9999px';
+    visitLink.style.textDecoration = 'none';
+    actions.appendChild(visitLink);
+
+    return wrapper;
+}
 const LANGUAGE_CONFIG = {
     ja: {
         code: 'ja',
@@ -35,6 +247,7 @@ const LANGUAGE_CONFIG = {
         toggleLabel: 'English',
         toggleAria: '英語版ホームページに切り替える',
         adminButtonTitle: 'ファインダーモード',
+        chatbotButtonTitle: 'ずかんAkyoにきく',
         strings: {
             searchPlaceholder: 'Akyoを検索... (名前、ID、属性など)',
             attributePlaceholder: 'すべての属性',
@@ -90,7 +303,16 @@ const LANGUAGE_CONFIG = {
                 reloadFailed: '最新データの取得に失敗しました。再試行してください。',
                 partialLoadFailed: '一部の読み込みに失敗しました。ページを更新するか再試行してください。',
                 initFailed: '初期化に失敗しました。再読み込みしますか？',
-                retry: '再試行'
+                retry: '再試行',
+                difyUnavailable: 'ずかんAkyoにみられている気がする‥ページを再読み込みするか、管理者に連絡してこの不安をぬぐおう。',
+                difyPreviewNotice: 'Cloudflare Pages プレビューでは ずかんAkyoが非表示になる場合があります。Dify 側でプレビューのホスト名を許可してください。',
+                difyPreviewHostTitle: 'Cloudflare Pages プレビューでチャットを表示するには',
+                difyPreviewHostBody: 'Dify 管理画面 → Settings → Website embedding → Allowed domains に次のホスト名を追加してください。',
+                difyPreviewHostCopy: 'ホスト名をコピー',
+                difyPreviewHostCopied: 'コピーしました！',
+                difyPreviewHostDocs: '手順を確認する',
+                difyPreviewHostVisit: '本番サイトで開く',
+                difyPreviewHostClose: '閉じる'
             }
         }
     },
@@ -111,6 +333,7 @@ const LANGUAGE_CONFIG = {
         toggleLabel: '日本語',
         toggleAria: '日本語版ホームページに切り替える',
         adminButtonTitle: 'Finder mode',
+        chatbotButtonTitle: 'Open Dify chat',
         strings: {
             searchPlaceholder: 'Search Akyo... (name, ID, attributes)',
             attributePlaceholder: 'All attributes',
@@ -166,11 +389,354 @@ const LANGUAGE_CONFIG = {
                 reloadFailed: 'Failed to fetch the latest data. Please try again.',
                 partialLoadFailed: 'Some content failed to load. Refresh the page or try again.',
                 initFailed: 'Initialization failed. Reload the page?',
-                retry: 'Retry'
+                retry: 'Retry',
+                difyUnavailable: 'The AI chat widget did not appear. Refresh the page or review your Dify embed settings.',
+
+                difyPreviewNotice: 'AI chat can stay hidden on Cloudflare Pages previews. Visit the production domain or allow the preview host in Dify.',
+                difyPreviewHostTitle: 'Allow Dify chat on this preview environment',
+                difyPreviewHostBody: 'Add the following host name to Dify → Settings → Website embedding → Allowed domains.',
+                difyPreviewHostCopy: 'Copy host name',
+                difyPreviewHostCopied: 'Copied!',
+                difyPreviewHostDocs: 'View setup guide',
+                difyPreviewHostVisit: 'Open production site',
+                difyPreviewHostClose: 'Dismiss'
             }
         }
     }
 };
+
+function getDifyChatbotInstance() {
+    const scope = typeof window !== 'undefined' ? window : GLOBAL_SCOPE;
+    if (!scope || typeof scope !== 'object') return null;
+    const candidate = scope.difyChatbot;
+    if (!candidate) return null;
+    if (typeof candidate === 'object' || typeof candidate === 'function') {
+        return candidate;
+    }
+    return null;
+}
+
+function initDifyEmbedDiagnostics() {
+    if (typeof document === 'undefined') return;
+
+    if (window.__akyoDifyDiagnosticsInitialized) return;
+
+    if (window.__akyoDifyEmbedDisabled) {
+        window.__akyoDifyDiagnosticsInitialized = true;
+        console.info('[Dify] Diagnostics skipped because the chatbot is disabled.');
+        return;
+    }
+
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isPagesPreview = typeof host === 'string' && /\.pages\.dev$/i.test(host);
+    let bubbleFound = false;
+
+    const revealNotice = (reason) => {
+        const strings = getLanguageStrings();
+        const notice = isPagesPreview && strings.messages.difyPreviewNotice
+            ? strings.messages.difyPreviewNotice
+            : strings.messages.difyUnavailable;
+        if (notice) {
+            showToast(notice, 'warning');
+        }
+
+        const diagnosticMessage = `[Dify] Chatbot bubble did not render (${reason}). Current host: ${host || 'unknown'}.`;
+        console.warn(diagnosticMessage);
+        if (isPagesPreview) {
+            console.warn('[Dify] Cloudflare Pages preview hosts must be added to the allowed domain list in Dify → Settings → Website embedding.');
+            showDifyPreviewAllowlistNotice(host);
+        }
+    };
+
+    const scriptSelector = 'script[data-akyo-dify-embed], script[src^="https://dexakyo.akyodex.com/embed"]';
+    const embedScript = document.querySelector(scriptSelector);
+    if (!embedScript) {
+        if (window.__akyoDifyEmbedBootstrapPending) {
+            if (!window.__akyoDifyDiagnosticsWaitScheduled) {
+                window.__akyoDifyDiagnosticsWaitScheduled = true;
+                window.setTimeout(() => {
+                    window.__akyoDifyDiagnosticsWaitScheduled = false;
+                    initDifyEmbedDiagnostics();
+                }, 800);
+            }
+            return;
+        }
+
+        window.__akyoDifyDiagnosticsInitialized = true;
+        revealNotice('script-tag-missing');
+        return;
+    }
+
+    window.__akyoDifyDiagnosticsInitialized = true;
+
+    embedScript.addEventListener('error', () => {
+        revealNotice('script-load-error');
+    });
+
+    const interval = window.setInterval(() => {
+        if (document.querySelector('dify-chatbot-bubble')) {
+            bubbleFound = true;
+            window.clearInterval(interval);
+            console.debug('[Dify] Chatbot bubble detected.');
+            const previewNotice = document.getElementById('difyPreviewAllowlistNotice');
+            if (previewNotice) {
+                previewNotice.remove();
+                window.__akyoDifyPreviewHostNotice = null;
+            }
+        }
+    }, 600);
+
+    window.setTimeout(() => {
+        window.clearInterval(interval);
+        if (!bubbleFound) {
+            revealNotice('bubble-timeout');
+        }
+    }, 9000);
+}
+
+function stabilizeDifyChatWidget() {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    if (window.__akyoDifyStabilizerInitialized) return;
+    window.__akyoDifyStabilizerInitialized = true;
+
+    if (window.__akyoDifyEmbedDisabled) {
+        console.info('[Dify] Chatbot stabilizer skipped because the chatbot is disabled.');
+        return;
+    }
+
+    const bubbleSelector = 'dify-chatbot-bubble';
+    const windowSelector = 'dify-chatbot-window';
+
+    const cssSupports = typeof window.CSS !== 'undefined' && typeof window.CSS.supports === 'function';
+    const supportsSafeAreaBottom = cssSupports
+        && window.CSS.supports('bottom', 'calc(1px + env(safe-area-inset-bottom))');
+    const supportsSafeAreaRight = cssSupports
+        && window.CSS.supports('right', 'calc(1px + env(safe-area-inset-right))');
+
+    const resolveInset = (baseValue, insetName, isSupported) => {
+        if (!isSupported) {
+            return baseValue;
+        }
+        return `calc(${baseValue} + env(${insetName}))`;
+    };
+
+    const bubbleBottom = resolveInset('1.5rem', 'safe-area-inset-bottom', supportsSafeAreaBottom);
+    const bubbleRight = resolveInset('1.5rem', 'safe-area-inset-right', supportsSafeAreaRight);
+    const windowBottom = resolveInset('7rem', 'safe-area-inset-bottom', supportsSafeAreaBottom);
+
+
+    let windowShouldStayOpen = false;
+    let pendingUserToggle = false;
+
+
+    const WATCHER_STABLE_FRAMES = 6;
+    const WATCHER_MAX_DURATION_MS = 5000;
+    const useAnimationFrame = typeof window.requestAnimationFrame === 'function' && typeof window.cancelAnimationFrame === 'function';
+    let watcherHandle = null;
+    let watcherActive = false;
+    let watcherStableFrames = 0;
+    let watcherLastKeepAlive = 0;
+
+    const getNow = () => {
+        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+            return performance.now();
+        }
+        return Date.now();
+    };
+
+
+    const isElementVisible = (element) => {
+        if (!element) return false;
+        const rect = element.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return false;
+        const style = window.getComputedStyle(element);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        const opacity = parseFloat(style.opacity || '1');
+        return !Number.isNaN(opacity) && opacity > 0.05;
+    };
+
+
+    const syncWidgetStyles = () => {
+        const bubbleEl = document.querySelector(bubbleSelector);
+        const windowEl = document.querySelector(windowSelector);
+
+        if (bubbleEl) {
+            bubbleEl.removeAttribute('hidden');
+            bubbleEl.removeAttribute('aria-hidden');
+            bubbleEl.style.setProperty('position', 'fixed', 'important');
+            bubbleEl.style.setProperty('right', bubbleRight, 'important');
+            bubbleEl.style.setProperty('bottom', bubbleBottom, 'important');
+            bubbleEl.style.setProperty('z-index', '2147483649', 'important');
+            bubbleEl.style.setProperty('pointer-events', 'auto', 'important');
+            bubbleEl.style.setProperty('opacity', '1', 'important');
+            bubbleEl.style.setProperty('visibility', 'visible', 'important');
+            bubbleEl.style.setProperty('display', 'block', 'important');
+        }
+
+        if (windowEl) {
+            windowEl.removeAttribute('hidden');
+            windowEl.removeAttribute('aria-hidden');
+            windowEl.style.setProperty('position', 'fixed', 'important');
+            windowEl.style.setProperty('right', bubbleRight, 'important');
+            windowEl.style.setProperty('bottom', windowBottom, 'important');
+            windowEl.style.setProperty('max-height', '80vh', 'important');
+            windowEl.style.setProperty('z-index', '2147483649', 'important');
+            windowEl.style.removeProperty('top');
+            windowEl.style.removeProperty('left');
+            windowEl.style.setProperty('pointer-events', 'auto', 'important');
+
+            const visible = isElementVisible(windowEl);
+            if (visible && !windowShouldStayOpen) {
+                windowShouldStayOpen = true;
+            }
+
+            if (windowShouldStayOpen) {
+
+                if (!pendingUserToggle) {
+                    windowEl.style.setProperty('display', 'block', 'important');
+                    windowEl.style.setProperty('visibility', 'visible', 'important');
+                    windowEl.style.setProperty('opacity', '1', 'important');
+                }
+
+            } else if (!windowShouldStayOpen && visible && !pendingUserToggle) {
+
+                windowEl.style.removeProperty('display');
+                windowEl.style.removeProperty('visibility');
+                windowEl.style.removeProperty('opacity');
+            }
+        }
+    };
+
+    const stopSyncWatcher = () => {
+        if (!watcherActive) return;
+        if (watcherHandle !== null) {
+            if (useAnimationFrame) {
+                window.cancelAnimationFrame(watcherHandle);
+            } else {
+                window.clearTimeout(watcherHandle);
+            }
+        }
+        watcherHandle = null;
+        watcherActive = false;
+        watcherStableFrames = 0;
+    };
+
+    const queueNextWatcherTick = () => {
+        if (!watcherActive) return;
+        if (useAnimationFrame) {
+            watcherHandle = window.requestAnimationFrame(runWatcherTick);
+        } else {
+            watcherHandle = window.setTimeout(runWatcherTick, 50);
+        }
+    };
+
+    const runWatcherTick = () => {
+        if (!watcherActive) return;
+        syncWidgetStyles();
+
+        const bubbleEl = document.querySelector(bubbleSelector);
+        const windowEl = document.querySelector(windowSelector);
+        const bubbleVisible = isElementVisible(bubbleEl);
+        const windowVisible = !windowShouldStayOpen ? true : isElementVisible(windowEl);
+
+        if (bubbleVisible && windowVisible) {
+            watcherStableFrames += 1;
+        } else {
+            watcherStableFrames = 0;
+        }
+
+        const elapsedSinceKeepAlive = getNow() - watcherLastKeepAlive;
+        if (watcherStableFrames >= WATCHER_STABLE_FRAMES) {
+            stopSyncWatcher();
+            return;
+        }
+
+        if (elapsedSinceKeepAlive > WATCHER_MAX_DURATION_MS) {
+            stopSyncWatcher();
+            return;
+        }
+
+        queueNextWatcherTick();
+    };
+
+    const ensureSyncWatcher = () => {
+        watcherLastKeepAlive = getNow();
+        if (!watcherActive) {
+            watcherActive = true;
+            watcherStableFrames = 0;
+            runWatcherTick();
+            return;
+        }
+
+        if (watcherStableFrames >= WATCHER_STABLE_FRAMES) {
+            watcherStableFrames = 0;
+        }
+    };
+
+    const scheduleSync = () => {
+        ensureSyncWatcher();
+    };
+
+    const observer = new MutationObserver(scheduleSync);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class', 'hidden', 'aria-hidden']
+    });
+
+    document.addEventListener('click', (event) => {
+        if (typeof event.target.closest !== 'function') return;
+        const bubbleHost = event.target.closest(bubbleSelector);
+        if (bubbleHost) {
+            pendingUserToggle = true;
+            window.setTimeout(() => {
+                const windowEl = document.querySelector(windowSelector);
+
+
+                windowShouldStayOpen = isElementVisible(windowEl);
+
+                pendingUserToggle = false;
+                syncWidgetStyles();
+                scheduleSync();
+            }, 80);
+            return;
+        }
+
+        const windowHost = event.target.closest(windowSelector);
+        if (windowHost) {
+            pendingUserToggle = true;
+            window.setTimeout(() => {
+                const windowEl = document.querySelector(windowSelector);
+
+
+                windowShouldStayOpen = isElementVisible(windowEl);
+                pendingUserToggle = false;
+                syncWidgetStyles();
+                scheduleSync();
+            }, 120);
+        }
+    }, true);
+
+    window.addEventListener('scroll', () => {
+
+
+        if (!windowShouldStayOpen) return;
+        syncWidgetStyles();
+        scheduleSync();
+    }, { passive: true });
+
+    window.addEventListener('resize', scheduleSync, { passive: true });
+    window.addEventListener('orientationchange', scheduleSync);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        syncWidgetStyles();
+        scheduleSync();
+    });
+
+    syncWidgetStyles();
+    scheduleSync();
+}
 
 function safeGetLocalStorage(key) {
     try {
@@ -891,6 +1457,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
+    initDifyEmbedDiagnostics();
+    stabilizeDifyChatWidget();
 
     // 初期表示を先に実行（ローディング表示など）
     document.getElementById('noDataContainer').classList.remove('hidden');
@@ -1398,7 +1966,15 @@ function setupEventListeners() {
 
     // 言語切り替え・管理者ボタンを追加
     const floatingContainer = document.createElement('div');
-    floatingContainer.className = 'fixed bottom-4 right-4 flex flex-col items-end gap-3 z-50';
+    floatingContainer.className = 'fixed right-4 flex flex-col items-end gap-3';
+    const supportsSafeArea = typeof window !== 'undefined'
+        && window.CSS
+        && typeof window.CSS.supports === 'function'
+        && window.CSS.supports('padding-bottom: env(safe-area-inset-bottom)');
+    const safeAreaInset = supportsSafeArea ? 'env(safe-area-inset-bottom)' : '0px';
+    floatingContainer.style.bottom = `calc(9rem + ${safeAreaInset})`;
+    // Allow the Dify chatbot window to stack above the floating controls.
+    floatingContainer.style.zIndex = '2147483000';
 
     const languageBtn = document.createElement('button');
     languageBtn.id = 'languageToggleBtn';
