@@ -549,12 +549,14 @@
 (function protectDifyFromLanguageSwitch() {
     console.log('[Dify Protection] 🛡️ Installing protection...');
     
-    // initializeLanguage を上書き
-    if (typeof window.initializeLanguage === 'function') {
-        const originalInit = window.initializeLanguage;
+    let protectedCount = 0;
+    
+    // setLanguage を保護
+    if (typeof window.setLanguage === 'function') {
+        const originalSetLanguage = window.setLanguage;
         
-        window.initializeLanguage = function() {
-            console.log('[Dify Protection] 🔒 initializeLanguage intercepted');
+        window.setLanguage = function(...args) {
+            console.log('[Dify Protection] 🔒 setLanguage intercepted:', args);
             
             // Dify要素を保存
             const difyBubble = document.querySelector('dify-chatbot-bubble');
@@ -568,7 +570,7 @@
                     element: difyBubble
                 };
                 difyBubble.remove();
-                console.log('[Dify Protection] 💾 Bubble temporarily removed');
+                console.log('[Dify Protection] 💾 Bubble protected');
             }
             
             if (difyWindow) {
@@ -578,11 +580,11 @@
                     element: difyWindow
                 };
                 difyWindow.remove();
-                console.log('[Dify Protection] 💾 Window temporarily removed');
+                console.log('[Dify Protection] 💾 Window protected');
             }
             
             // 元の関数を実行
-            originalInit.call(this);
+            const result = originalSetLanguage.apply(this, args);
             
             // Dify要素を復元
             setTimeout(() => {
@@ -604,19 +606,20 @@
                     console.log('[Dify Protection] ✅ Window restored');
                 }
             }, 0);
+            
+            return result;
         };
         
-        console.log('[Dify Protection] ✅ initializeLanguage wrapped');
-    } else {
-        console.warn('[Dify Protection] ⚠️ initializeLanguage not found');
+        console.log('[Dify Protection] ✅ setLanguage wrapped');
+        protectedCount++;
     }
     
-    // switchLanguage を上書き
-    if (typeof window.switchLanguage === 'function') {
-        const originalSwitch = window.switchLanguage;
+    // setAkyoLanguage を保護
+    if (typeof window.setAkyoLanguage === 'function') {
+        const originalSetAkyoLanguage = window.setAkyoLanguage;
         
-        window.switchLanguage = function(lang) {
-            console.log('[Dify Protection] 🔒 switchLanguage intercepted:', lang);
+        window.setAkyoLanguage = function(...args) {
+            console.log('[Dify Protection] 🔒 setAkyoLanguage intercepted:', args);
             
             // Dify要素を保存
             const difyBubble = document.querySelector('dify-chatbot-bubble');
@@ -630,7 +633,7 @@
                     element: difyBubble
                 };
                 difyBubble.remove();
-                console.log('[Dify Protection] 💾 Bubble temporarily removed');
+                console.log('[Dify Protection] 💾 Bubble protected');
             }
             
             if (difyWindow) {
@@ -640,11 +643,11 @@
                     element: difyWindow
                 };
                 difyWindow.remove();
-                console.log('[Dify Protection] 💾 Window temporarily removed');
+                console.log('[Dify Protection] 💾 Window protected');
             }
             
             // 元の関数を実行
-            originalSwitch.call(this, lang);
+            const result = originalSetAkyoLanguage.apply(this, args);
             
             // Dify要素を復元
             setTimeout(() => {
@@ -666,14 +669,71 @@
                     console.log('[Dify Protection] ✅ Window restored');
                 }
             }, 0);
+            
+            return result;
         };
         
-        console.log('[Dify Protection] ✅ switchLanguage wrapped');
-    } else {
-        console.warn('[Dify Protection] ⚠️ switchLanguage not found');
+        console.log('[Dify Protection] ✅ setAkyoLanguage wrapped');
+        protectedCount++;
     }
     
-    console.log('[Dify Protection] 🎉 Protection installed successfully');
+    // updateDocumentLanguageAttributes も保護（念のため）
+    if (typeof window.updateDocumentLanguageAttributes === 'function') {
+        const originalUpdate = window.updateDocumentLanguageAttributes;
+        
+        window.updateDocumentLanguageAttributes = function(...args) {
+            console.log('[Dify Protection] 🔒 updateDocumentLanguageAttributes intercepted');
+            
+            const difyBubble = document.querySelector('dify-chatbot-bubble');
+            const difyWindow = document.querySelector('dify-chatbot-window');
+            let bubbleData = null, windowData = null;
+            
+            if (difyBubble) {
+                bubbleData = {
+                    parent: difyBubble.parentNode,
+                    nextSibling: difyBubble.nextSibling,
+                    element: difyBubble
+                };
+                difyBubble.remove();
+            }
+            
+            if (difyWindow) {
+                windowData = {
+                    parent: difyWindow.parentNode,
+                    nextSibling: difyWindow.nextSibling,
+                    element: difyWindow
+                };
+                difyWindow.remove();
+            }
+            
+            const result = originalUpdate.apply(this, args);
+            
+            setTimeout(() => {
+                if (bubbleData) {
+                    if (bubbleData.nextSibling) {
+                        bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
+                    } else {
+                        bubbleData.parent.appendChild(bubbleData.element);
+                    }
+                }
+                
+                if (windowData) {
+                    if (windowData.nextSibling) {
+                        windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
+                    } else {
+                        windowData.parent.appendChild(windowData.element);
+                    }
+                }
+            }, 0);
+            
+            return result;
+        };
+        
+        console.log('[Dify Protection] ✅ updateDocumentLanguageAttributes wrapped');
+        protectedCount++;
+    }
+    
+    console.log(`[Dify Protection] 🎉 Protected ${protectedCount} function(s)`);
 })();
 </script>
 
