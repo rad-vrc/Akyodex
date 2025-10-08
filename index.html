@@ -490,8 +490,10 @@
 
                     const rawToken = typeof payload?.token === 'string' ? payload.token.trim() : '';
                     const rawBaseUrl = typeof payload?.baseUrl === 'string' ? payload.baseUrl.trim() : '';
+                    const rawScriptUrl = typeof payload?.scriptUrl === 'string' ? payload.scriptUrl.trim() : '';
                     const token = rawToken.length > 0 ? rawToken : '';
                     const baseUrl = rawBaseUrl.length > 0 ? rawBaseUrl : defaultBaseUrl;
+                    const scriptUrl = rawScriptUrl.length > 0 ? rawScriptUrl : '';
 
                     if (!token) {
                         markDisabled('missing-token');
@@ -515,7 +517,7 @@
                     };
 
                     const script = document.createElement('script');
-                    script.src = `${normalizedBaseUrl}/embed.min.js`;
+                    script.src = scriptUrl || `${normalizedBaseUrl}/embed.min.js`;
                     script.defer = true;
                     script.dataset.akyoDifyEmbed = '1';
                     script.addEventListener('error', (event) => {
