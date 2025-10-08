@@ -255,9 +255,42 @@ function stabilizeDifyChatWidget() {
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
 
+    const cssSupports = typeof window.CSS !== 'undefined' && typeof window.CSS.supports === 'function';
+    const supportsSafeAreaBottom = cssSupports
+        && window.CSS.supports('bottom', 'calc(1px + env(safe-area-inset-bottom))');
+    const supportsSafeAreaRight = cssSupports
+        && window.CSS.supports('right', 'calc(1px + env(safe-area-inset-right))');
+
+    const resolveInset = (baseValue, insetName, isSupported) => {
+        if (!isSupported) {
+            return baseValue;
+        }
+        return `calc(${baseValue} + env(${insetName}))`;
+    };
+
+    const bubbleBottom = resolveInset('1.5rem', 'safe-area-inset-bottom', supportsSafeAreaBottom);
+    const bubbleRight = resolveInset('1.5rem', 'safe-area-inset-right', supportsSafeAreaRight);
+    const windowBottom = resolveInset('7rem', 'safe-area-inset-bottom', supportsSafeAreaBottom);
+
 
     let windowShouldStayOpen = false;
     let pendingUserToggle = false;
+
+
+    const WATCHER_STABLE_FRAMES = 6;
+    const WATCHER_MAX_DURATION_MS = 5000;
+    const useAnimationFrame = typeof window.requestAnimationFrame === 'function' && typeof window.cancelAnimationFrame === 'function';
+    let watcherHandle = null;
+    let watcherActive = false;
+    let watcherStableFrames = 0;
+    let watcherLastKeepAlive = 0;
+
+    const getNow = () => {
+        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+            return performance.now();
+        }
+        return Date.now();
+    };
 
 
     const isElementVisible = (element) => {
@@ -279,8 +312,8 @@ function stabilizeDifyChatWidget() {
             bubbleEl.removeAttribute('hidden');
             bubbleEl.removeAttribute('aria-hidden');
             bubbleEl.style.setProperty('position', 'fixed', 'important');
-            bubbleEl.style.setProperty('right', '1.5rem', 'important');
-            bubbleEl.style.setProperty('bottom', '1.5rem', 'important');
+            bubbleEl.style.setProperty('right', bubbleRight, 'important');
+            bubbleEl.style.setProperty('bottom', bubbleBottom, 'important');
             bubbleEl.style.setProperty('z-index', '2147483649', 'important');
             bubbleEl.style.setProperty('pointer-events', 'auto', 'important');
             bubbleEl.style.setProperty('opacity', '1', 'important');
@@ -292,8 +325,8 @@ function stabilizeDifyChatWidget() {
             windowEl.removeAttribute('hidden');
             windowEl.removeAttribute('aria-hidden');
             windowEl.style.setProperty('position', 'fixed', 'important');
-            windowEl.style.setProperty('right', '1.5rem', 'important');
-            windowEl.style.setProperty('bottom', '7rem', 'important');
+            windowEl.style.setProperty('right', bubbleRight, 'important');
+            windowEl.style.setProperty('bottom', windowBottom, 'important');
             windowEl.style.setProperty('max-height', '80vh', 'important');
             windowEl.style.setProperty('z-index', '2147483649', 'important');
             windowEl.style.removeProperty('top');
@@ -322,12 +355,74 @@ function stabilizeDifyChatWidget() {
         }
     };
 
-    const scheduleSync = () => {
-        if (typeof window.requestAnimationFrame === 'function') {
-            window.requestAnimationFrame(syncWidgetStyles);
-        } else {
-            window.setTimeout(syncWidgetStyles, 16);
+    const stopSyncWatcher = () => {
+        if (!watcherActive) return;
+        if (watcherHandle !== null) {
+            if (useAnimationFrame) {
+                window.cancelAnimationFrame(watcherHandle);
+            } else {
+                window.clearTimeout(watcherHandle);
+            }
         }
+        watcherHandle = null;
+        watcherActive = false;
+        watcherStableFrames = 0;
+    };
+
+    const queueNextWatcherTick = () => {
+        if (!watcherActive) return;
+        if (useAnimationFrame) {
+            watcherHandle = window.requestAnimationFrame(runWatcherTick);
+        } else {
+            watcherHandle = window.setTimeout(runWatcherTick, 50);
+        }
+    };
+
+    const runWatcherTick = () => {
+        if (!watcherActive) return;
+        syncWidgetStyles();
+
+        const bubbleEl = document.querySelector(bubbleSelector);
+        const windowEl = document.querySelector(windowSelector);
+        const bubbleVisible = isElementVisible(bubbleEl);
+        const windowVisible = !windowShouldStayOpen ? true : isElementVisible(windowEl);
+
+        if (bubbleVisible && windowVisible) {
+            watcherStableFrames += 1;
+        } else {
+            watcherStableFrames = 0;
+        }
+
+        const elapsedSinceKeepAlive = getNow() - watcherLastKeepAlive;
+        if (watcherStableFrames >= WATCHER_STABLE_FRAMES) {
+            stopSyncWatcher();
+            return;
+        }
+
+        if (elapsedSinceKeepAlive > WATCHER_MAX_DURATION_MS) {
+            stopSyncWatcher();
+            return;
+        }
+
+        queueNextWatcherTick();
+    };
+
+    const ensureSyncWatcher = () => {
+        watcherLastKeepAlive = getNow();
+        if (!watcherActive) {
+            watcherActive = true;
+            watcherStableFrames = 0;
+            runWatcherTick();
+            return;
+        }
+
+        if (watcherStableFrames >= WATCHER_STABLE_FRAMES) {
+            watcherStableFrames = 0;
+        }
+    };
+
+    const scheduleSync = () => {
+        ensureSyncWatcher();
     };
 
     const observer = new MutationObserver(scheduleSync);
@@ -351,6 +446,7 @@ function stabilizeDifyChatWidget() {
 
                 pendingUserToggle = false;
                 syncWidgetStyles();
+                scheduleSync();
             }, 80);
             return;
         }
@@ -365,6 +461,7 @@ function stabilizeDifyChatWidget() {
                 windowShouldStayOpen = isElementVisible(windowEl);
                 pendingUserToggle = false;
                 syncWidgetStyles();
+                scheduleSync();
             }, 120);
         }
     }, true);
@@ -374,12 +471,19 @@ function stabilizeDifyChatWidget() {
 
         if (!windowShouldStayOpen) return;
         syncWidgetStyles();
+        scheduleSync();
     }, { passive: true });
 
     window.addEventListener('resize', scheduleSync, { passive: true });
     window.addEventListener('orientationchange', scheduleSync);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        syncWidgetStyles();
+        scheduleSync();
+    });
 
     syncWidgetStyles();
+    scheduleSync();
 }
 
 function safeGetLocalStorage(key) {
