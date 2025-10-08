@@ -564,55 +564,75 @@
     console.log('[Dify Fix] Waiting for button and iframe...');
     
     let attempts = 0;
-    const maxAttempts = 50;
+    const maxAttempts = 100; // 10秒間
+    
+    const setupClickHandler = () => {
+        const button = document.getElementById('dify-chatbot-bubble-button');
+        const iframe = document.getElementById('dify-chatbot-bubble-window');
+        
+        if (!button || !iframe) {
+            return false;
+        }
+        
+        console.log('[Dify Fix] Button and iframe found');
+        
+        // クリックイベントを設定（クローンせずに直接）
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('[Dify Fix] Button clicked!');
+            
+            const currentDisplay = window.getComputedStyle(iframe).display;
+            console.log('[Dify Fix] Current display:', currentDisplay);
+            
+            if (currentDisplay === 'none') {
+                // 表示
+                iframe.style.setProperty('display', 'flex', 'important');
+                iframe.style.setProperty('visibility', 'visible', 'important');
+                iframe.style.setProperty('opacity', '1', 'important');
+                iframe.style.setProperty('position', 'fixed', 'important');
+                iframe.style.setProperty('right', '1rem', 'important');
+                iframe.style.setProperty('bottom', '1rem', 'important');
+                iframe.style.setProperty('z-index', '2147483650', 'important');
+                
+                // SVGアイコンを切り替え
+                const openIcon = this.querySelector('#openIcon');
+                const closeIcon = this.querySelector('#closeIcon');
+                if (openIcon) openIcon.style.display = 'none';
+                if (closeIcon) closeIcon.style.display = 'block';
+                
+                console.log('[Dify Fix] ✅ Chat opened');
+            } else {
+                // 非表示
+                iframe.style.setProperty('display', 'none', 'important');
+                
+                // SVGアイコンを切り替え
+                const openIcon = this.querySelector('#openIcon');
+                const closeIcon = this.querySelector('#closeIcon');
+                if (openIcon) openIcon.style.display = 'block';
+                if (closeIcon) closeIcon.style.display = 'none';
+                
+                console.log('[Dify Fix] Chat closed');
+            }
+        }, true); // capture phase で確実に捕捉
+        
+        console.log('[Dify Fix] ✅ Click handler installed');
+        return true;
+    };
     
     const interval = setInterval(() => {
         attempts++;
         
-        const button = document.getElementById('dify-chatbot-bubble-button');
-        const iframe = document.getElementById('dify-chatbot-bubble-window');
-        
-        if (button && iframe) {
+        if (setupClickHandler()) {
             clearInterval(interval);
-            console.log('[Dify Fix] Button and iframe found, setting up click handler...');
-            
-            button.addEventListener('click', (e) => {
-                e.stopPropagation();
-                
-                const currentDisplay = window.getComputedStyle(iframe).display;
-                
-                if (currentDisplay === 'none') {
-                    iframe.style.setProperty('display', 'flex', 'important');
-                    iframe.style.setProperty('visibility', 'visible', 'important');
-                    iframe.style.setProperty('opacity', '1', 'important');
-                    iframe.style.setProperty('position', 'fixed', 'important');
-                    iframe.style.setProperty('right', '1rem', 'important');
-                    iframe.style.setProperty('bottom', '1rem', 'important');
-                    iframe.style.setProperty('z-index', '2147483650', 'important');
-                    
-                    const openIcon = button.querySelector('#openIcon');
-                    const closeIcon = button.querySelector('#closeIcon');
-                    if (openIcon) openIcon.style.display = 'none';
-                    if (closeIcon) closeIcon.style.display = 'block';
-                } else {
-                    iframe.style.setProperty('display', 'none', 'important');
-                    
-                    const openIcon = button.querySelector('#openIcon');
-                    const closeIcon = button.querySelector('#closeIcon');
-                    if (openIcon) openIcon.style.display = 'block';
-                    if (closeIcon) closeIcon.style.display = 'none';
-                }
-            });
-            
-            console.log('[Dify Fix] ✅ Click handler installed');
         } else if (attempts >= maxAttempts) {
             clearInterval(interval);
-            console.error('[Dify Fix] Button or iframe not found after 5 seconds');
+            console.error('[Dify Fix] Button or iframe not found after 10 seconds');
         }
     }, 100);
 })();
 </script>
-
 
 <script src="js/mini-akyo-bg.js?v=2"></script>
 <script src="js/secret-mode.js"></script>
