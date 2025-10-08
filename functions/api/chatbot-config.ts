@@ -19,7 +19,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     return okJSON({ enabled: false });
   }
 
-  const scriptUrl = "/dify/embed.js";
+  const scriptUrl = "/dify/embed";
 
   return okJSON({
     enabled: true,
