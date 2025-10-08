@@ -557,217 +557,62 @@
 
 
  <script src="js/main.js"></script>
+
     
-    <script>
-(function protectDifyFromLanguageSwitch() {
-    console.log('[Dify Protection] 🛡️ Installing protection...');
+<script>
+(function fixDifyButtonClick() {
+    console.log('[Dify Fix] Waiting for button and iframe...');
     
-    let protectedCount = 0;
+    let attempts = 0;
+    const maxAttempts = 50;
     
-    // setLanguage を保護
-    if (typeof window.setLanguage === 'function') {
-        const originalSetLanguage = window.setLanguage;
+    const interval = setInterval(() => {
+        attempts++;
         
-        window.setLanguage = function(...args) {
-            console.log('[Dify Protection] 🔒 setLanguage intercepted:', args);
+        const button = document.getElementById('dify-chatbot-bubble-button');
+        const iframe = document.getElementById('dify-chatbot-bubble-window');
+        
+        if (button && iframe) {
+            clearInterval(interval);
+            console.log('[Dify Fix] Button and iframe found, setting up click handler...');
             
-            // Dify要素を保存
-            const difyBubble = document.querySelector('dify-chatbot-bubble');
-            const difyWindow = document.querySelector('dify-chatbot-window');
-            let bubbleData = null, windowData = null;
-            
-            if (difyBubble) {
-                bubbleData = {
-                    parent: difyBubble.parentNode,
-                    nextSibling: difyBubble.nextSibling,
-                    element: difyBubble
-                };
-                difyBubble.remove();
-                console.log('[Dify Protection] 💾 Bubble protected');
-            }
-            
-            if (difyWindow) {
-                windowData = {
-                    parent: difyWindow.parentNode,
-                    nextSibling: difyWindow.nextSibling,
-                    element: difyWindow
-                };
-                difyWindow.remove();
-                console.log('[Dify Protection] 💾 Window protected');
-            }
-            
-            // 元の関数を実行
-            const result = originalSetLanguage.apply(this, args);
-            
-            // Dify要素を復元
-            setTimeout(() => {
-                if (bubbleData) {
-                    if (bubbleData.nextSibling) {
-                        bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
-                    } else {
-                        bubbleData.parent.appendChild(bubbleData.element);
-                    }
-                    console.log('[Dify Protection] ✅ Bubble restored');
-                }
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
                 
-                if (windowData) {
-                    if (windowData.nextSibling) {
-                        windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
-                    } else {
-                        windowData.parent.appendChild(windowData.element);
-                    }
-                    console.log('[Dify Protection] ✅ Window restored');
-                }
-            }, 0);
-            
-            return result;
-        };
-        
-        console.log('[Dify Protection] ✅ setLanguage wrapped');
-        protectedCount++;
-    }
-    
-    // setAkyoLanguage を保護
-    if (typeof window.setAkyoLanguage === 'function') {
-        const originalSetAkyoLanguage = window.setAkyoLanguage;
-        
-        window.setAkyoLanguage = function(...args) {
-            console.log('[Dify Protection] 🔒 setAkyoLanguage intercepted:', args);
-            
-            // Dify要素を保存
-            const difyBubble = document.querySelector('dify-chatbot-bubble');
-            const difyWindow = document.querySelector('dify-chatbot-window');
-            let bubbleData = null, windowData = null;
-            
-            if (difyBubble) {
-                bubbleData = {
-                    parent: difyBubble.parentNode,
-                    nextSibling: difyBubble.nextSibling,
-                    element: difyBubble
-                };
-                difyBubble.remove();
-                console.log('[Dify Protection] 💾 Bubble protected');
-            }
-            
-            if (difyWindow) {
-                windowData = {
-                    parent: difyWindow.parentNode,
-                    nextSibling: difyWindow.nextSibling,
-                    element: difyWindow
-                };
-                difyWindow.remove();
-                console.log('[Dify Protection] 💾 Window protected');
-            }
-            
-            // 元の関数を実行
-            const result = originalSetAkyoLanguage.apply(this, args);
-            
-            // Dify要素を復元
-            setTimeout(() => {
-                if (bubbleData) {
-                    if (bubbleData.nextSibling) {
-                        bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
-                    } else {
-                        bubbleData.parent.appendChild(bubbleData.element);
-                    }
-                    console.log('[Dify Protection] ✅ Bubble restored');
-                }
+                const currentDisplay = window.getComputedStyle(iframe).display;
                 
-                if (windowData) {
-                    if (windowData.nextSibling) {
-                        windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
-                    } else {
-                        windowData.parent.appendChild(windowData.element);
-                    }
-                    console.log('[Dify Protection] ✅ Window restored');
+                if (currentDisplay === 'none') {
+                    iframe.style.setProperty('display', 'flex', 'important');
+                    iframe.style.setProperty('visibility', 'visible', 'important');
+                    iframe.style.setProperty('opacity', '1', 'important');
+                    iframe.style.setProperty('position', 'fixed', 'important');
+                    iframe.style.setProperty('right', '1rem', 'important');
+                    iframe.style.setProperty('bottom', '1rem', 'important');
+                    iframe.style.setProperty('z-index', '2147483650', 'important');
+                    
+                    const openIcon = button.querySelector('#openIcon');
+                    const closeIcon = button.querySelector('#closeIcon');
+                    if (openIcon) openIcon.style.display = 'none';
+                    if (closeIcon) closeIcon.style.display = 'block';
+                } else {
+                    iframe.style.setProperty('display', 'none', 'important');
+                    
+                    const openIcon = button.querySelector('#openIcon');
+                    const closeIcon = button.querySelector('#closeIcon');
+                    if (openIcon) openIcon.style.display = 'block';
+                    if (closeIcon) closeIcon.style.display = 'none';
                 }
-            }, 0);
+            });
             
-            return result;
-        };
-        
-        console.log('[Dify Protection] ✅ setAkyoLanguage wrapped');
-        protectedCount++;
-    }
-    
-    // updateDocumentLanguageAttributes も保護（念のため）
-    if (typeof window.updateDocumentLanguageAttributes === 'function') {
-        const originalUpdate = window.updateDocumentLanguageAttributes;
-        
-        window.updateDocumentLanguageAttributes = function(...args) {
-            console.log('[Dify Protection] 🔒 updateDocumentLanguageAttributes intercepted');
-            
-            const difyBubble = document.querySelector('dify-chatbot-bubble');
-            const difyWindow = document.querySelector('dify-chatbot-window');
-            let bubbleData = null, windowData = null;
-            
-            if (difyBubble) {
-                bubbleData = {
-                    parent: difyBubble.parentNode,
-                    nextSibling: difyBubble.nextSibling,
-                    element: difyBubble
-                };
-                difyBubble.remove();
-            }
-            
-            if (difyWindow) {
-                windowData = {
-                    parent: difyWindow.parentNode,
-                    nextSibling: difyWindow.nextSibling,
-                    element: difyWindow
-                };
-                difyWindow.remove();
-            }
-            
-            const result = originalUpdate.apply(this, args);
-            
-            setTimeout(() => {
-                if (bubbleData) {
-                    if (bubbleData.nextSibling) {
-                        bubbleData.parent.insertBefore(bubbleData.element, bubbleData.nextSibling);
-                    } else {
-                        bubbleData.parent.appendChild(bubbleData.element);
-                    }
-                }
-                
-                if (windowData) {
-                    if (windowData.nextSibling) {
-                        windowData.parent.insertBefore(windowData.element, windowData.nextSibling);
-                    } else {
-                        windowData.parent.appendChild(windowData.element);
-                    }
-                }
-            }, 0);
-            
-            return result;
-        };
-        
-        console.log('[Dify Protection] ✅ updateDocumentLanguageAttributes wrapped');
-        protectedCount++;
-    }
-    
-    console.log(`[Dify Protection] 🎉 Protected ${protectedCount} function(s)`);
+            console.log('[Dify Fix] ✅ Click handler installed');
+        } else if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            console.error('[Dify Fix] Button or iframe not found after 5 seconds');
+        }
+    }, 100);
 })();
 </script>
 
-<style>
-    dify-chatbot-bubble::part(button) {
-        background: linear-gradient(135deg, #f97316, #fb923c);
-        color: #fff;
-    }
-
-    dify-chatbot-window::part(container) {
-        max-width: min(420px, 90vw);
-        height: min(640px, 80vh);
-        border-radius: 1.5rem;
-        box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.45);
-    }
-
-    dify-chatbot-window::part(header) {
-        background: linear-gradient(135deg, #a855f7, #6366f1);
-        color: #fff;
-    }
-</style>
 
 <script src="js/mini-akyo-bg.js?v=2"></script>
 <script src="js/secret-mode.js"></script>
