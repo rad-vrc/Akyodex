@@ -255,6 +255,23 @@ function stabilizeDifyChatWidget() {
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
 
+    const cssSupports = typeof window.CSS !== 'undefined' && typeof window.CSS.supports === 'function';
+    const supportsSafeAreaBottom = cssSupports
+        && window.CSS.supports('bottom', 'calc(1px + env(safe-area-inset-bottom))');
+    const supportsSafeAreaRight = cssSupports
+        && window.CSS.supports('right', 'calc(1px + env(safe-area-inset-right))');
+
+    const resolveInset = (baseValue, insetName, isSupported) => {
+        if (!isSupported) {
+            return baseValue;
+        }
+        return `calc(${baseValue} + env(${insetName}))`;
+    };
+
+    const bubbleBottom = resolveInset('1.5rem', 'safe-area-inset-bottom', supportsSafeAreaBottom);
+    const bubbleRight = resolveInset('1.5rem', 'safe-area-inset-right', supportsSafeAreaRight);
+    const windowBottom = resolveInset('7rem', 'safe-area-inset-bottom', supportsSafeAreaBottom);
+
 
     let windowShouldStayOpen = false;
     let pendingUserToggle = false;
@@ -295,8 +312,8 @@ function stabilizeDifyChatWidget() {
             bubbleEl.removeAttribute('hidden');
             bubbleEl.removeAttribute('aria-hidden');
             bubbleEl.style.setProperty('position', 'fixed', 'important');
-            bubbleEl.style.setProperty('right', '1.5rem', 'important');
-            bubbleEl.style.setProperty('bottom', '1.5rem', 'important');
+            bubbleEl.style.setProperty('right', bubbleRight, 'important');
+            bubbleEl.style.setProperty('bottom', bubbleBottom, 'important');
             bubbleEl.style.setProperty('z-index', '2147483649', 'important');
             bubbleEl.style.setProperty('pointer-events', 'auto', 'important');
             bubbleEl.style.setProperty('opacity', '1', 'important');
@@ -308,8 +325,8 @@ function stabilizeDifyChatWidget() {
             windowEl.removeAttribute('hidden');
             windowEl.removeAttribute('aria-hidden');
             windowEl.style.setProperty('position', 'fixed', 'important');
-            windowEl.style.setProperty('right', '1.5rem', 'important');
-            windowEl.style.setProperty('bottom', '7rem', 'important');
+            windowEl.style.setProperty('right', bubbleRight, 'important');
+            windowEl.style.setProperty('bottom', windowBottom, 'important');
             windowEl.style.setProperty('max-height', '80vh', 'important');
             windowEl.style.setProperty('z-index', '2147483649', 'important');
             windowEl.style.removeProperty('top');
@@ -459,6 +476,11 @@ function stabilizeDifyChatWidget() {
 
     window.addEventListener('resize', scheduleSync, { passive: true });
     window.addEventListener('orientationchange', scheduleSync);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        syncWidgetStyles();
+        scheduleSync();
+    });
 
     syncWidgetStyles();
     scheduleSync();
