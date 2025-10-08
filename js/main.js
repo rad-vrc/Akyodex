@@ -25,6 +25,210 @@ const GLOBAL_SCOPE = (() => {
     return {};
 })();
 const DIFY_CHATBOT_URL = 'https://dexakyo.akyodex.com';
+const DIFY_PREVIEW_GUIDE_URL = 'https://github.com/Akyodex/Akyodex/blob/main/docs/cloudflare-tunnel-dify.md#7-cloudflare-pages-%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E3%81%A7%E3%83%90%E3%83%96%E3%83%AB%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88';
+const AKYODEX_PRODUCTION_URL = 'https://akyodex.com/?openChat=1';
+
+function showDifyPreviewAllowlistNotice(hostname) {
+    if (typeof document === 'undefined') return;
+
+    const fallbackHost = typeof window !== 'undefined' && window.location ? window.location.hostname : '';
+    const host = (hostname || fallbackHost || '').trim();
+    if (!host) return;
+
+    const existingHost = window.__akyoDifyPreviewHostNotice;
+    if (existingHost === host && document.getElementById('difyPreviewAllowlistNotice')) {
+        return;
+    }
+
+    window.__akyoDifyPreviewHostNotice = host;
+
+    const containerId = 'difyPreviewAllowlistNotice';
+    let wrapper = document.getElementById(containerId);
+    if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.id = containerId;
+        wrapper.style.position = 'fixed';
+        wrapper.style.left = '1.5rem';
+        wrapper.style.bottom = '1.5rem';
+        wrapper.style.zIndex = '2147483600';
+        wrapper.style.maxWidth = '22rem';
+        wrapper.style.pointerEvents = 'auto';
+        wrapper.style.fontFamily = '"Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
+        wrapper.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+        wrapper.style.opacity = '0';
+        wrapper.style.transform = 'translateY(12px)';
+        document.body.appendChild(wrapper);
+        requestAnimationFrame(() => {
+            wrapper.style.opacity = '1';
+            wrapper.style.transform = 'translateY(0)';
+        });
+    } else {
+        wrapper.replaceChildren();
+    }
+
+    const strings = getLanguageStrings();
+    const messages = strings && strings.messages ? strings.messages : {};
+
+    const panel = document.createElement('div');
+    panel.style.background = 'rgba(15, 23, 42, 0.92)';
+    panel.style.color = '#f8fafc';
+    panel.style.padding = '1.5rem';
+    panel.style.borderRadius = '1rem';
+    panel.style.boxShadow = '0 25px 60px -25px rgba(15, 23, 42, 0.8)';
+    panel.style.border = '1px solid rgba(148, 163, 184, 0.35)';
+    panel.style.backdropFilter = 'blur(14px)';
+    panel.style.position = 'relative';
+    panel.style.lineHeight = '1.55';
+    wrapper.appendChild(panel);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', messages.difyPreviewHostClose || 'Dismiss');
+    closeBtn.textContent = '×';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '0.6rem';
+    closeBtn.style.right = '0.75rem';
+    closeBtn.style.background = 'transparent';
+    closeBtn.style.border = 'none';
+    closeBtn.style.color = '#c7d2fe';
+    closeBtn.style.fontSize = '1.25rem';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.padding = '0';
+    closeBtn.addEventListener('click', () => {
+        wrapper.remove();
+        window.__akyoDifyPreviewHostNotice = null;
+    });
+    panel.appendChild(closeBtn);
+
+    const title = document.createElement('h2');
+    title.textContent = messages.difyPreviewHostTitle || 'Allow Dify chat on this preview environment';
+    title.style.fontSize = '1.05rem';
+    title.style.fontWeight = '700';
+    title.style.margin = '0 0 0.6rem';
+    panel.appendChild(title);
+
+    const description = document.createElement('p');
+    description.textContent = messages.difyPreviewHostBody || 'Add the following host name to the Dify allowed domains list.';
+    description.style.margin = '0';
+    description.style.fontSize = '0.95rem';
+    description.style.opacity = '0.92';
+    panel.appendChild(description);
+
+    const hostRow = document.createElement('div');
+    hostRow.style.display = 'flex';
+    hostRow.style.flexWrap = 'wrap';
+    hostRow.style.alignItems = 'center';
+    hostRow.style.gap = '0.75rem';
+    hostRow.style.marginTop = '0.9rem';
+    panel.appendChild(hostRow);
+
+    const hostCode = document.createElement('code');
+    hostCode.textContent = host;
+    hostCode.style.background = 'rgba(15, 23, 42, 0.6)';
+    hostCode.style.borderRadius = '0.75rem';
+    hostCode.style.padding = '0.4rem 0.75rem';
+    hostCode.style.fontSize = '0.85rem';
+    hostCode.style.wordBreak = 'break-all';
+    hostCode.style.flex = '1 1 auto';
+    hostCode.style.letterSpacing = '0.015em';
+    hostRow.appendChild(hostCode);
+
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    const copyLabel = messages.difyPreviewHostCopy || 'Copy host name';
+    const copiedLabel = messages.difyPreviewHostCopied || 'Copied!';
+    copyBtn.textContent = copyLabel;
+    copyBtn.style.background = '#38bdf8';
+    copyBtn.style.color = '#0f172a';
+    copyBtn.style.fontWeight = '600';
+    copyBtn.style.border = 'none';
+    copyBtn.style.borderRadius = '9999px';
+    copyBtn.style.padding = '0.45rem 0.95rem';
+    copyBtn.style.cursor = 'pointer';
+    copyBtn.style.boxShadow = '0 18px 32px -18px rgba(56, 189, 248, 0.8)';
+    copyBtn.style.flex = '0 0 auto';
+    hostRow.appendChild(copyBtn);
+
+    let resetTimer = null;
+    copyBtn.addEventListener('click', async () => {
+        if (resetTimer) {
+            window.clearTimeout(resetTimer);
+            resetTimer = null;
+        }
+
+        let copied = false;
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            try {
+                await navigator.clipboard.writeText(host);
+                copied = true;
+            } catch (_) {}
+        }
+
+        if (!copied) {
+            try {
+                const selection = window.getSelection();
+                if (selection) {
+                    selection.removeAllRanges();
+                    const range = document.createRange();
+                    range.selectNodeContents(hostCode);
+                    selection.addRange(range);
+                    copied = typeof document.execCommand === 'function' && document.execCommand('copy');
+                    selection.removeAllRanges();
+                }
+            } catch (_) {}
+        }
+
+        if (copied) {
+            copyBtn.textContent = copiedLabel;
+            copyBtn.style.background = '#facc15';
+            copyBtn.style.color = '#78350f';
+        } else {
+            copyBtn.textContent = copyLabel;
+            copyBtn.style.background = '#38bdf8';
+            copyBtn.style.color = '#0f172a';
+        }
+
+        resetTimer = window.setTimeout(() => {
+            copyBtn.textContent = copyLabel;
+            copyBtn.style.background = '#38bdf8';
+            copyBtn.style.color = '#0f172a';
+            resetTimer = null;
+        }, 2400);
+    });
+
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.flexWrap = 'wrap';
+    actions.style.gap = '0.6rem';
+    actions.style.marginTop = '1.1rem';
+    panel.appendChild(actions);
+
+    const docLink = document.createElement('a');
+    docLink.href = DIFY_PREVIEW_GUIDE_URL;
+    docLink.target = '_blank';
+    docLink.rel = 'noopener noreferrer';
+    docLink.textContent = messages.difyPreviewHostDocs || 'View setup guide';
+    docLink.style.color = '#cbd5f5';
+    docLink.style.textDecoration = 'underline';
+    docLink.style.fontWeight = '600';
+    docLink.style.fontSize = '0.92rem';
+    actions.appendChild(docLink);
+
+    const visitLink = document.createElement('a');
+    visitLink.href = AKYODEX_PRODUCTION_URL;
+    visitLink.target = '_blank';
+    visitLink.rel = 'noopener noreferrer';
+    visitLink.textContent = messages.difyPreviewHostVisit || 'Open production site';
+    visitLink.style.background = '#f97316';
+    visitLink.style.color = '#fff';
+    visitLink.style.fontWeight = '700';
+    visitLink.style.padding = '0.55rem 1.05rem';
+    visitLink.style.borderRadius = '9999px';
+    visitLink.style.textDecoration = 'none';
+    actions.appendChild(visitLink);
+
+    return wrapper;
+}
 const LANGUAGE_CONFIG = {
     ja: {
         code: 'ja',
@@ -101,7 +305,14 @@ const LANGUAGE_CONFIG = {
                 initFailed: '初期化に失敗しました。再読み込みしますか？',
                 retry: '再試行',
                 difyUnavailable: 'ずかんAkyoにみられている気がする‥ページを再読み込みするか、管理者に連絡してこの不安をぬぐおう。',
-                difyPreviewNotice: 'Cloudflare Pages プレビューでは ずかんAkyoが非表示になる場合があります。Dify 側でプレビューのホスト名を許可してください。'
+                difyPreviewNotice: 'Cloudflare Pages プレビューでは ずかんAkyoが非表示になる場合があります。Dify 側でプレビューのホスト名を許可してください。',
+                difyPreviewHostTitle: 'Cloudflare Pages プレビューでチャットを表示するには',
+                difyPreviewHostBody: 'Dify 管理画面 → Settings → Website embedding → Allowed domains に次のホスト名を追加してください。',
+                difyPreviewHostCopy: 'ホスト名をコピー',
+                difyPreviewHostCopied: 'コピーしました！',
+                difyPreviewHostDocs: '手順を確認する',
+                difyPreviewHostVisit: '本番サイトで開く',
+                difyPreviewHostClose: '閉じる'
             }
         }
     },
@@ -181,7 +392,14 @@ const LANGUAGE_CONFIG = {
                 retry: 'Retry',
                 difyUnavailable: 'The AI chat widget did not appear. Refresh the page or review your Dify embed settings.',
 
-                difyPreviewNotice: 'AI chat can stay hidden on Cloudflare Pages previews. Visit the production domain or allow the preview host in Dify.'
+                difyPreviewNotice: 'AI chat can stay hidden on Cloudflare Pages previews. Visit the production domain or allow the preview host in Dify.',
+                difyPreviewHostTitle: 'Allow Dify chat on this preview environment',
+                difyPreviewHostBody: 'Add the following host name to Dify → Settings → Website embedding → Allowed domains.',
+                difyPreviewHostCopy: 'Copy host name',
+                difyPreviewHostCopied: 'Copied!',
+                difyPreviewHostDocs: 'View setup guide',
+                difyPreviewHostVisit: 'Open production site',
+                difyPreviewHostClose: 'Dismiss'
             }
         }
     }
@@ -218,6 +436,7 @@ function initDifyEmbedDiagnostics() {
         console.warn(diagnosticMessage);
         if (isPagesPreview) {
             console.warn('[Dify] Cloudflare Pages preview hosts must be added to the allowed domain list in Dify → Settings → Website embedding.');
+            showDifyPreviewAllowlistNotice(host);
         }
     };
 
@@ -236,6 +455,11 @@ function initDifyEmbedDiagnostics() {
             bubbleFound = true;
             window.clearInterval(interval);
             console.debug('[Dify] Chatbot bubble detected.');
+            const previewNotice = document.getElementById('difyPreviewAllowlistNotice');
+            if (previewNotice) {
+                previewNotice.remove();
+                window.__akyoDifyPreviewHostNotice = null;
+            }
         }
     }, 600);
 
