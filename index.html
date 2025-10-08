@@ -462,85 +462,91 @@
    <script>
     window.__akyoDifyDiagnosticsInitialized = true;
     window.__akyoDifyEmbedDisabled = false;
+    window.__akyoDifyStabilizerInitialized = true;  // ← 追加
+    
+    console.log('[Dify Override] Diagnostics and Stabilizer disabled');
 </script>
-    <script>
-    (function initDifyChatbot() {
-        const defaultBaseUrl = 'https://dexakyo.akyodex.com';
-        const defaultLang = 'ja';
 
-        const markDisabled = (reason) => {
-            window.__akyoDifyEmbedDisabled = true;
-            window.__akyoDifyEmbedBootstrapPending = false;
-            window.__akyoDifyEmbedDisabledReason = reason;
-            console.info(`[Dify] Chatbot disabled: ${reason}`);
-        };
+<script>
+(function initDifyChatbot() {
+    const defaultBaseUrl = 'https://dexakyo.akyodex.com';
+    const defaultLang = 'ja';
 
-        const bootstrap = async () => {
-            window.__akyoDifyEmbedBootstrapPending = true;
+    const markDisabled = (reason) => {
+        window.__akyoDifyEmbedDisabled = true;
+        window.__akyoDifyEmbedBootstrapPending = false;
+        window.__akyoDifyEmbedDisabledReason = reason;
+        console.info(`[Dify] Chatbot disabled: ${reason}`);
+    };
 
-            try {
-                const response = await fetch('/api/chatbot-config', { credentials: 'omit' });
-                if (!response.ok) {
-                    throw new Error(`Unexpected status ${response.status}`);
-                }
+    const bootstrap = async () => {
+        window.__akyoDifyEmbedBootstrapPending = true;
 
-                const payload = await response.json();
-
-                if (payload && payload.enabled === false) {
-                    markDisabled('config-disabled');
-                    return;
-                }
-
-                const rawToken = typeof payload?.token === 'string' ? payload.token.trim() : '';
-                const rawBaseUrl = typeof payload?.baseUrl === 'string' ? payload.baseUrl.trim() : '';
-                const rawScriptUrl = typeof payload?.scriptUrl === 'string' ? payload.scriptUrl.trim() : '';
-                const token = rawToken.length > 0 ? rawToken : '';
-                const baseUrl = rawBaseUrl.length > 0 ? rawBaseUrl : defaultBaseUrl;
-                const scriptUrl = rawScriptUrl.length > 0 ? rawScriptUrl : '';
-
-                if (!token) {
-                    markDisabled('missing-token');
-                    return;
-                }
-
-                window.__akyoDifyEmbedDisabled = false;
-
-                const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
-                window.difyChatbotConfig = {
-                    token,
-                    baseUrl: normalizedBaseUrl,
-                    lang: defaultLang,
-                    layout: {
-                        position: 'right',
-                        zIndex: 2147483648
-                    },
-                    appearance: {
-                        primaryColor: '#f97316'
-                    }
-                };
-
-                const script = document.createElement('script');
-                script.src = scriptUrl || `${normalizedBaseUrl}/embed.min.js`;
-                // defer を削除（これが重要！）
-                script.crossOrigin = 'anonymous';
-                script.dataset.akyoDifyEmbed = '1';
-                script.addEventListener('error', (event) => {
-                    console.warn('[Dify] Failed to load embed script.', event);
-                });
-                document.head.appendChild(script);
-                window.__akyoDifyEmbedBootstrapPending = false;
-            } catch (error) {
-                console.warn('[Dify] Failed to bootstrap chatbot configuration.', error);
-                markDisabled('bootstrap-error');
+        try {
+            const response = await fetch('/api/chatbot-config', { credentials: 'omit' });
+            if (!response.ok) {
+                throw new Error(`Unexpected status ${response.status}`);
             }
-        };
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
-        } else {
-            bootstrap();
+            const payload = await response.json();
+
+            if (payload && payload.enabled === false) {
+                markDisabled('config-disabled');
+                return;
+            }
+
+            const rawToken = typeof payload?.token === 'string' ? payload.token.trim() : '';
+            const rawBaseUrl = typeof payload?.baseUrl === 'string' ? payload.baseUrl.trim() : '';
+            const rawScriptUrl = typeof payload?.scriptUrl === 'string' ? payload.scriptUrl.trim() : '';
+            const token = rawToken.length > 0 ? rawToken : '';
+            const baseUrl = rawBaseUrl.length > 0 ? rawBaseUrl : defaultBaseUrl;
+            const scriptUrl = rawScriptUrl.length > 0 ? rawScriptUrl : '';
+
+            if (!token) {
+                markDisabled('missing-token');
+                return;
+            }
+
+            window.__akyoDifyEmbedDisabled = false;
+
+            const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
+            window.difyChatbotConfig = {
+                token,
+                baseUrl: normalizedBaseUrl,
+                lang: defaultLang,
+                layout: {
+                    position: 'right',
+                    zIndex: 2147483648
+                },
+                appearance: {
+                    primaryColor: '#f97316'
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = scriptUrl || `${normalizedBaseUrl}/embed.min.js`;
+            script.crossOrigin = 'anonymous';
+            script.dataset.akyoDifyEmbed = '1';
+            script.addEventListener('load', () => {
+                console.log('[Dify] ✅ Script loaded successfully');
+            });
+            script.addEventListener('error', (event) => {
+                console.warn('[Dify] Failed to load embed script.', event);
+            });
+            document.head.appendChild(script);
+            window.__akyoDifyEmbedBootstrapPending = false;
+        } catch (error) {
+            console.warn('[Dify] Failed to bootstrap chatbot configuration.', error);
+            markDisabled('bootstrap-error');
         }
-    })();
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
+    } else {
+        bootstrap();
+    }
+})();
 </script>
     
  <script src="js/main.js"></script>
