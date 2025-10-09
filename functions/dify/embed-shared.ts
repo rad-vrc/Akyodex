@@ -24,6 +24,10 @@ const CLOUDFLARE_BEACON_PATTERN =
 const CLOUDFLARE_BEACON_LOOSE_PATTERN =
   /https?:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js[^\s"'`)]*/g;
 
+const CLOUDFLARE_BEACON_STUB = `data:text/javascript;charset=utf-8,${encodeURIComponent(
+  "window.dispatchEvent(new Event('akyo:difyCfBeaconStubLoaded'));"
+)}`;
+
 
 export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
   const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
@@ -43,12 +47,12 @@ export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
 
   const withoutStrictBeacon = absolutized.replace(
     CLOUDFLARE_BEACON_PATTERN,
-    (_match, quote: string) => `${quote}about:blank${quote}`
+    (_match, quote: string) => `${quote}${CLOUDFLARE_BEACON_STUB}${quote}`
   );
 
   return withoutStrictBeacon.replace(
     CLOUDFLARE_BEACON_LOOSE_PATTERN,
-    "about:blank"
+    CLOUDFLARE_BEACON_STUB
   );
 
 };
