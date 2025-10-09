@@ -553,6 +553,20 @@ function stabilizeDifyChatWidget() {
         if (!element) return false;
         const rect = element.getBoundingClientRect();
         if (rect.width <= 0 || rect.height <= 0) return false;
+
+        const viewportWidth = window.innerWidth || document.documentElement?.clientWidth || 0;
+        const viewportHeight = window.innerHeight || document.documentElement?.clientHeight || 0;
+        if (viewportWidth > 0 && viewportHeight > 0) {
+            const intersectsViewport =
+                rect.bottom > 0 &&
+                rect.right > 0 &&
+                rect.top < viewportHeight &&
+                rect.left < viewportWidth;
+            if (!intersectsViewport) {
+                return false;
+            }
+        }
+
         const style = window.getComputedStyle(element);
         if (style.display === 'none' || style.visibility === 'hidden') return false;
         const opacity = parseFloat(style.opacity || '1');
