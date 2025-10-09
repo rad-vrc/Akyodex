@@ -544,28 +544,49 @@ document.head.appendChild(inlineScript);
 return true;
 };
 
-    const applyCandidateBaseUrl = (candidate) => {
+    const prepareCandidateBaseUrl = (candidate) => {
         if (!candidate || !candidate.baseUrl) {
-            return () => {};
+            return {
+                commit: () => {},
+                rollback: () => {},
+            };
         }
 
-        const currentConfig = window.difyChatbotConfig || {};
-        const hadBaseProperty = Object.prototype.hasOwnProperty.call(currentConfig, 'baseUrl');
-        const currentBaseRaw = hadBaseProperty ? currentConfig.baseUrl : undefined;
-        const currentBase = typeof currentBaseRaw === 'string' ? currentBaseRaw.trim() : currentBaseRaw;
+        const initialConfig = window.difyChatbotConfig || {};
+        const hadBaseProperty = Object.prototype.hasOwnProperty.call(initialConfig, 'baseUrl');
+        const initialBaseRaw = hadBaseProperty ? initialConfig.baseUrl : undefined;
+        const initialBase = typeof initialBaseRaw === 'string' ? initialBaseRaw.trim() : initialBaseRaw;
 
-        if (currentBase === candidate.baseUrl) {
-            return () => {};
+        if (initialBase === candidate.baseUrl) {
+            return {
+                commit: () => {},
+                rollback: () => {},
+            };
         }
 
-        window.difyChatbotConfig = {
-            ...currentConfig,
-            baseUrl: candidate.baseUrl,
+        let committed = false;
+
+        const commit = () => {
+            if (committed) {
+                return;
+            }
+
+            const latestConfig = window.difyChatbotConfig || {};
+
+            window.difyChatbotConfig = {
+                ...latestConfig,
+                baseUrl: candidate.baseUrl,
+            };
+
+            committed = true;
+            console.log(`[Dify] 🔄 Base URL switched to ${candidate.baseUrl} (${candidate.label || candidate.url})`);
         };
 
-        console.log(`[Dify] 🔄 Base URL switched to ${candidate.baseUrl} (${candidate.label || candidate.url})`);
+        const rollback = () => {
+            if (!committed) {
+                return;
+            }
 
-        return () => {
             const latestConfig = window.difyChatbotConfig || {};
             const latestBaseRaw = Object.prototype.hasOwnProperty.call(latestConfig, 'baseUrl') ? latestConfig.baseUrl : undefined;
             const latestBase = typeof latestBaseRaw === 'string' ? latestBaseRaw.trim() : latestBaseRaw;
@@ -579,7 +600,7 @@ return true;
             };
 
             if (hadBaseProperty) {
-                revertedConfig.baseUrl = currentBaseRaw;
+                revertedConfig.baseUrl = initialBaseRaw;
             } else {
                 delete revertedConfig.baseUrl;
             }
@@ -587,23 +608,26 @@ return true;
             window.difyChatbotConfig = revertedConfig;
             console.log(`[Dify] ↩️ Base URL reverted after failed script load (${candidate.label || candidate.url})`);
         };
+
+        return { commit, rollback };
     };
 
     const attemptScriptLoad = async (candidates) => {
         for (const candidate of candidates) {
             const { url, mode, label } = candidate;
 
-            const revertCandidateBaseUrl = applyCandidateBaseUrl(candidate);
+            const baseUrlSwitch = prepareCandidateBaseUrl(candidate);
             try {
                 if (mode === 'inline') {
                     await loadScriptInline(url, label);
                 } else {
                     await loadScriptTag(url, label);
                 }
+                baseUrlSwitch.commit();
                 console.log(`[Dify] ✅ Script loaded (${label || url})`);
                 return true;
             } catch (error) {
-                revertCandidateBaseUrl();
+                baseUrlSwitch.rollback();
 
                 console.warn(`[Dify] ⚠️ Script load attempt failed (${label || url})`, error);
             }
