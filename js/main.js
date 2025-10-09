@@ -692,7 +692,6 @@ function stabilizeDifyChatWidget() {
             windowEl.removeAttribute('aria-hidden');
             windowEl.style.setProperty('position', 'fixed', 'important');
             windowEl.style.setProperty('z-index', '2147483649', 'important');
-            windowEl.style.setProperty('pointer-events', 'auto', 'important');
 
             ensureWindowHasDimensions(windowEl);
 
@@ -725,6 +724,13 @@ function stabilizeDifyChatWidget() {
             if (visible && !windowShouldStayOpen) {
                 windowShouldStayOpen = true;
             }
+
+            const shouldEnablePointerEvents = windowShouldStayOpen;
+            windowEl.style.setProperty(
+                'pointer-events',
+                shouldEnablePointerEvents ? 'auto' : 'none',
+                'important'
+            );
 
             if (windowShouldStayOpen) {
 

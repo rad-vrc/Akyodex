@@ -583,7 +583,6 @@
             'z-index',
             'visibility',
             'opacity',
-            'pointer-events',
             'display',
             'inset',
             'width',
@@ -643,6 +642,7 @@
             for (const property of propertiesToClear) {
                 iframe.style.removeProperty(property);
             }
+            iframe.style.setProperty('pointer-events', 'none', 'important');
         }
 
         const toggleIcons = (buttonEl, isOpen) => {
