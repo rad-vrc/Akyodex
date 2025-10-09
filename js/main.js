@@ -584,7 +584,9 @@ function stabilizeDifyChatWidget() {
             windowEl.style.setProperty('z-index', '2147483649', 'important');
             windowEl.style.setProperty('pointer-events', 'auto', 'important');
 
-            if (isMobileViewport()) {
+            const mobileViewport = isMobileViewport();
+
+            if (mobileViewport) {
                 windowEl.style.removeProperty('right');
                 windowEl.style.removeProperty('bottom');
                 windowEl.style.removeProperty('top');
@@ -597,7 +599,6 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.setProperty('min-width', '100vw', 'important');
                 windowEl.style.setProperty('min-height', '100dvh', 'important');
                 windowEl.style.setProperty('border-radius', '0px', 'important');
-                windowEl.style.setProperty('transform', 'none', 'important');
             } else {
                 windowEl.style.setProperty('right', bubbleRight, 'important');
                 windowEl.style.setProperty('bottom', windowBottom, 'important');
@@ -611,7 +612,6 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.removeProperty('border-radius');
                 windowEl.style.removeProperty('top');
                 windowEl.style.removeProperty('left');
-                windowEl.style.removeProperty('transform');
             }
 
             const visible = isElementVisible(windowEl);
@@ -625,6 +625,12 @@ function stabilizeDifyChatWidget() {
                     windowEl.style.setProperty('display', 'block', 'important');
                     windowEl.style.setProperty('visibility', 'visible', 'important');
                     windowEl.style.setProperty('opacity', '1', 'important');
+
+                    if (mobileViewport) {
+                        windowEl.style.setProperty('transform', 'none', 'important');
+                    } else {
+                        windowEl.style.removeProperty('transform');
+                    }
                 }
 
             } else if (!windowShouldStayOpen && visible && !pendingUserToggle) {
