@@ -489,51 +489,60 @@
     };
 
     const loadScriptTag = (url, attemptLabel) => {
-        const timeoutMs = 15000;
+const timeoutMs = 15000;
 
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = url;
-            script.crossOrigin = 'anonymous';
-            script.dataset.akyoDifyEmbed = attemptLabel || '1';
+return new Promise((resolve, reject) => {
+const script = document.createElement('script');
+script.src = url;
+script.crossOrigin = 'anonymous';
+// Important: embed likely expects <script id="TOKEN"> so set id from config or fallback to hardcoded token
+[script.id](http://script.id/) = (window.difyChatbotConfig && window.difyChatbotConfig.token) || 'rak9Yh7T7SI5JyDw';
+script.defer = true;
+script.dataset.akyoDifyEmbed = attemptLabel || '1';
 
-            const timeoutId = window.setTimeout(() => {
-                script.remove();
-                reject(new Error('timeout'));
-            }, timeoutMs);
 
-            script.addEventListener('load', () => {
-                window.clearTimeout(timeoutId);
-                resolve(true);
-            });
+const timeoutId = window.setTimeout(() => {
+  script.remove();
+  reject(new Error('timeout'));
+}, timeoutMs);
 
-            script.addEventListener('error', (event) => {
-                window.clearTimeout(timeoutId);
-                script.remove();
-                reject(event?.error || new Error('network-error'));
-            });
+script.addEventListener('load', () => {
+  window.clearTimeout(timeoutId);
+  resolve(true);
+});
 
-            document.head.appendChild(script);
-        });
-    };
+script.addEventListener('error', (event) => {
+  window.clearTimeout(timeoutId);
+  script.remove();
+  reject(event?.error || new Error('network-error'));
+});
+
+document.head.appendChild(script);
+
+
+
+});
+};
 
     const loadScriptInline = async (url, attemptLabel) => {
-        const response = await fetch(url, {
-            credentials: 'omit',
-            cache: 'no-store',
-        });
+const response = await fetch(url, {
+credentials: 'omit',
+cache: 'no-store',
+});
 
-        if (!response.ok) {
-            throw new Error(`inline-fetch-${response.status}`);
-        }
+if (!response.ok) {
+throw new Error(`inline-fetch-${response.status}`);
+}
 
-        const source = await response.text();
-        const inlineScript = document.createElement('script');
-        inlineScript.dataset.akyoDifyEmbed = attemptLabel || 'inline';
-        inlineScript.textContent = source;
-        document.head.appendChild(inlineScript);
-        return true;
-    };
+const source = await response.text();
+const inlineScript = document.createElement('script');
+inlineScript.type = 'text/javascript';
+inlineScript.dataset.akyoDifyEmbed = attemptLabel || 'inline';
+[inlineScript.id](http://inlinescript.id/) = (window.difyChatbotConfig && window.difyChatbotConfig.token) || 'rak9Yh7T7SI5JyDw';
+inlineScript.textContent = source;
+document.head.appendChild(inlineScript);
+return true;
+};
 
     const applyCandidateBaseUrl = (candidate) => {
         if (!candidate || !candidate.baseUrl) {
@@ -595,6 +604,7 @@
                 return true;
             } catch (error) {
                 revertCandidateBaseUrl();
+
                 console.warn(`[Dify] ⚠️ Script load attempt failed (${label || url})`, error);
             }
         }
