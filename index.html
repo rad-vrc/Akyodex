@@ -578,26 +578,6 @@
 
         const isMobileViewport = () => window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
-        const propertiesToClear = [
-            'position',
-            'z-index',
-            'visibility',
-            'opacity',
-            'display',
-            'inset',
-            'width',
-            'height',
-            'max-width',
-            'max-height',
-            'min-width',
-            'min-height',
-            'border-radius',
-            'transform',
-            'right',
-            'bottom',
-            'left',
-            'top'
-        ];
         function applyOpenStyles() {
             const mobile = isMobileViewport();
             iframe.style.setProperty('position', 'fixed', 'important');
@@ -626,12 +606,6 @@
                 iframe.style.setProperty('right', '1rem', 'important');
                 iframe.style.setProperty('bottom', '1rem', 'important');
                 iframe.style.removeProperty('inset');
-                iframe.style.removeProperty('width');
-                iframe.style.removeProperty('height');
-                iframe.style.removeProperty('max-width');
-                iframe.style.removeProperty('max-height');
-                iframe.style.removeProperty('min-width');
-                iframe.style.removeProperty('min-height');
                 iframe.style.removeProperty('top');
                 iframe.style.removeProperty('left');
                 iframe.style.removeProperty('border-radius');
@@ -639,10 +613,11 @@
         }
 
         function applyClosedStyles() {
-            for (const property of propertiesToClear) {
-                iframe.style.removeProperty(property);
-            }
+            iframe.style.setProperty('display', 'none', 'important');
+            iframe.style.setProperty('visibility', 'hidden', 'important');
+            iframe.style.setProperty('opacity', '0', 'important');
             iframe.style.setProperty('pointer-events', 'none', 'important');
+            iframe.style.setProperty('transform', 'none', 'important');
         }
 
         const toggleIcons = (buttonEl, isOpen) => {
