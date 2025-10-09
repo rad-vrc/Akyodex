@@ -553,6 +553,20 @@ function stabilizeDifyChatWidget() {
         if (!element) return false;
         const rect = element.getBoundingClientRect();
         if (rect.width <= 0 || rect.height <= 0) return false;
+
+        const viewportWidth = window.innerWidth || document.documentElement?.clientWidth || 0;
+        const viewportHeight = window.innerHeight || document.documentElement?.clientHeight || 0;
+        if (viewportWidth > 0 && viewportHeight > 0) {
+            const intersectsViewport =
+                rect.bottom > 0 &&
+                rect.right > 0 &&
+                rect.top < viewportHeight &&
+                rect.left < viewportWidth;
+            if (!intersectsViewport) {
+                return false;
+            }
+        }
+
         const style = window.getComputedStyle(element);
         if (style.display === 'none' || style.visibility === 'hidden') return false;
         const opacity = parseFloat(style.opacity || '1');
@@ -584,7 +598,9 @@ function stabilizeDifyChatWidget() {
             windowEl.style.setProperty('z-index', '2147483649', 'important');
             windowEl.style.setProperty('pointer-events', 'auto', 'important');
 
-            if (isMobileViewport()) {
+            const mobileViewport = isMobileViewport();
+
+            if (mobileViewport) {
                 windowEl.style.removeProperty('right');
                 windowEl.style.removeProperty('bottom');
                 windowEl.style.removeProperty('top');
@@ -623,6 +639,12 @@ function stabilizeDifyChatWidget() {
                     windowEl.style.setProperty('display', 'block', 'important');
                     windowEl.style.setProperty('visibility', 'visible', 'important');
                     windowEl.style.setProperty('opacity', '1', 'important');
+
+                    if (mobileViewport) {
+                        windowEl.style.setProperty('transform', 'none', 'important');
+                    } else {
+                        windowEl.style.removeProperty('transform');
+                    }
                 }
 
             } else if (!windowShouldStayOpen && visible && !pendingUserToggle) {
