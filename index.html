@@ -584,15 +584,21 @@
             iframe.style.setProperty('z-index', '2147483650', 'important');
             iframe.style.setProperty('visibility', 'visible', 'important');
             iframe.style.setProperty('opacity', '1', 'important');
+            iframe.style.setProperty('pointer-events', 'auto', 'important');
             if (mobile) {
                 iframe.style.setProperty('display', 'block', 'important');
                 iframe.style.setProperty('inset', '0px', 'important');
                 iframe.style.setProperty('width', '100vw', 'important');
-                iframe.style.setProperty('height', '100vh', 'important');
+                iframe.style.setProperty('height', '100dvh', 'important');
                 iframe.style.setProperty('max-width', '100vw', 'important');
-                iframe.style.setProperty('max-height', '100vh', 'important');
+                iframe.style.setProperty('max-height', '100dvh', 'important');
+                iframe.style.setProperty('min-width', '100vw', 'important');
+                iframe.style.setProperty('min-height', '100dvh', 'important');
+                iframe.style.setProperty('border-radius', '0px', 'important');
                 iframe.style.removeProperty('right');
                 iframe.style.removeProperty('bottom');
+                iframe.style.removeProperty('top');
+                iframe.style.removeProperty('left');
             } else {
                 iframe.style.setProperty('display', 'flex', 'important');
                 iframe.style.setProperty('right', '1rem', 'important');
@@ -602,6 +608,11 @@
                 iframe.style.removeProperty('height');
                 iframe.style.removeProperty('max-width');
                 iframe.style.removeProperty('max-height');
+                iframe.style.removeProperty('min-width');
+                iframe.style.removeProperty('min-height');
+                iframe.style.removeProperty('top');
+                iframe.style.removeProperty('left');
+                iframe.style.removeProperty('border-radius');
             }
         };
 
@@ -609,6 +620,7 @@
             iframe.style.setProperty('display', 'none', 'important');
             iframe.style.setProperty('visibility', 'hidden', 'important');
             iframe.style.setProperty('opacity', '0', 'important');
+            iframe.style.setProperty('pointer-events', 'none', 'important');
         };
 
         // クリックイベントを設定（クローンせずに直接）
