@@ -12,12 +12,18 @@ export const RELATIVE_PATH_PATTERN = /(["'`])(\.{1,2}\/[^"'`]+)\1/g;
 const SCRIPT_PATH = "embed.min.js";
 export const DEFAULT_HEADERS = {
   "content-type": "application/javascript",
+  "cache-control": "no-store, no-cache, must-revalidate",
 } as const;
 
 export const normalizeBaseUrl = (baseUrl: string) => baseUrl.replace(/\/+$/, "");
 
 const CLOUDFLARE_BEACON_PATTERN =
-  /(["'`])https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js[^"'`]*\1/g;
+
+  /(["'`])(?:https?:)?\/\/static\.cloudflareinsights\.com\/beacon\.min\.js[^"'`]*\1/g;
+
+const CLOUDFLARE_BEACON_LOOSE_PATTERN =
+  /https?:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js[^\s"'`)]*/g;
+
 
 export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
   const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
@@ -34,9 +40,17 @@ export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
     }
   );
 
-  return absolutized.replace(CLOUDFLARE_BEACON_PATTERN, (_match, quote: string) => {
-    return `${quote}about:blank${quote}`;
-  });
+
+  const withoutStrictBeacon = absolutized.replace(
+    CLOUDFLARE_BEACON_PATTERN,
+    (_match, quote: string) => `${quote}about:blank${quote}`
+  );
+
+  return withoutStrictBeacon.replace(
+    CLOUDFLARE_BEACON_LOOSE_PATTERN,
+    "about:blank"
+  );
+
 };
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
@@ -74,9 +88,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
 
   return new Response(rewritten, {
     status: 200,
-    headers: {
-      ...DEFAULT_HEADERS,
-      "cache-control": "public, max-age=300",
-    },
+    headers: DEFAULT_HEADERS,
   });
 };
