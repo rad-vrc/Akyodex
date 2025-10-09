@@ -1,5 +1,9 @@
+import { normalizeBaseUrl, rewriteEmbedScript } from "../dify/embed-shared";
+
 export const onRequestGet = async ({ env }) => {
-  const baseUrl = env.DIFY_CHATBOT_BASE_URL || "https://dexakyo.akyodex.com";
+  const baseUrl = normalizeBaseUrl(
+    (env.DIFY_CHATBOT_BASE_URL || "https://dexakyo.akyodex.com").trim()
+  );
   const scriptUrl = `${baseUrl}/embed.min.js`;
   
   try {
@@ -16,8 +20,9 @@ export const onRequestGet = async ({ env }) => {
     }
     
     const script = await response.text();
-    
-    return new Response(script, {
+    const rewritten = rewriteEmbedScript(script, baseUrl);
+
+    return new Response(rewritten, {
       status: 200,
       headers: {
         'Content-Type': 'application/javascript; charset=UTF-8',

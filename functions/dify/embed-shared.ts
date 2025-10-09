@@ -8,11 +8,29 @@ type PagesFunction<Bindings = any> = (context: {
   [key: string]: unknown;
 }) => Promise<Response> | Response;
 
-const RELATIVE_PATH_PATTERN = /(["'`])(\.{1,2}\/[^"'`]+)\1/g;
+export const RELATIVE_PATH_PATTERN = /(["'`])(\.{1,2}\/[^"'`]+)\1/g;
 const SCRIPT_PATH = "embed.min.js";
-const DEFAULT_HEADERS = {
+export const DEFAULT_HEADERS = {
   "content-type": "application/javascript",
 } as const;
+
+export const normalizeBaseUrl = (baseUrl: string) => baseUrl.replace(/\/+$/, "");
+
+export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
+  const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
+
+  return scriptContent.replace(
+    RELATIVE_PATH_PATTERN,
+    (match, quote: string, path: string) => {
+      try {
+        const absolute = new URL(path, `${normalizedBaseUrl}/`).toString();
+        return `${quote}${absolute}${quote}`;
+      } catch {
+        return match;
+      }
+    }
+  );
+};
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   const baseUrl = env.DIFY_CHATBOT_BASE_URL?.trim();
@@ -24,7 +42,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     });
   }
 
-  const normalizedBaseUrl = baseUrl.replace(/\/+$/, "");
+  const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
 
   let upstreamResponse: Response;
   try {
@@ -45,17 +63,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   }
 
   const scriptContent = await upstreamResponse.text();
-  const rewritten = scriptContent.replace(
-    RELATIVE_PATH_PATTERN,
-    (match, quote: string, path: string) => {
-      try {
-        const absolute = new URL(path, `${normalizedBaseUrl}/`).toString();
-        return `${quote}${absolute}${quote}`;
-      } catch {
-        return match;
-      }
-    }
-  );
+  const rewritten = rewriteEmbedScript(scriptContent, normalizedBaseUrl);
 
   return new Response(rewritten, {
     status: 200,
