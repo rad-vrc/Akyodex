@@ -597,7 +597,6 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.setProperty('min-width', '100vw', 'important');
                 windowEl.style.setProperty('min-height', '100dvh', 'important');
                 windowEl.style.setProperty('border-radius', '0px', 'important');
-                windowEl.style.setProperty('transform', 'none', 'important');
             } else {
                 windowEl.style.setProperty('right', bubbleRight, 'important');
                 windowEl.style.setProperty('bottom', windowBottom, 'important');
@@ -611,7 +610,6 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.removeProperty('border-radius');
                 windowEl.style.removeProperty('top');
                 windowEl.style.removeProperty('left');
-                windowEl.style.removeProperty('transform');
             }
 
             const visible = isElementVisible(windowEl);
