@@ -678,12 +678,26 @@
             return rect.width > 0 && rect.height > 0;
         };
 
+        let closeGuardUntil = 0;
+
         const syncStylesWithState = (buttonEl, options = {}) => {
-            const { delay = true } = options;
+            const { delay = true, guardAgainstImmediateClose = false } = options;
 
             const performSync = () => {
                 const isOpen = isIframeVisible();
+                const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+
+                if (!isOpen && guardAgainstImmediateClose && now < closeGuardUntil) {
+                    if (typeof window.requestAnimationFrame === 'function') {
+                        window.requestAnimationFrame(performSync);
+                    } else {
+                        window.setTimeout(performSync, 50);
+                    }
+                    return;
+                }
+
                 if (isOpen) {
+                    closeGuardUntil = 0;
                     applyOpenStyles();
                 } else {
                     applyClosedStyles();
@@ -707,8 +721,10 @@
         // クリックイベントを設定（クローンせずに直接）
         button.addEventListener('click', function() {
             console.log('[Dify Fix] Button clicked!');
-            syncStylesWithState(this, { delay: true });
-        }, true); // capture phase で確実に捕捉
+            const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+            closeGuardUntil = now + 500;
+            syncStylesWithState(this, { delay: true, guardAgainstImmediateClose: true });
+        });
 
         // 初期状態の同期
         syncStylesWithState(button, { delay: false });
