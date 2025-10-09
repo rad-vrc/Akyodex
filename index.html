@@ -599,8 +599,7 @@
             'left',
             'top'
         ];
-
-        const applyOpenStyles = () => {
+        function applyOpenStyles() {
             const mobile = isMobileViewport();
             iframe.style.setProperty('position', 'fixed', 'important');
             iframe.style.setProperty('z-index', '2147483650', 'important');
@@ -638,13 +637,13 @@
                 iframe.style.removeProperty('left');
                 iframe.style.removeProperty('border-radius');
             }
-        };
+        }
 
-        const applyClosedStyles = () => {
+        function applyClosedStyles() {
             for (const property of propertiesToClear) {
                 iframe.style.removeProperty(property);
             }
-        };
+        }
 
         const toggleIcons = (buttonEl, isOpen) => {
             const openIcon = buttonEl.querySelector('#openIcon');
