@@ -578,6 +578,28 @@
 
         const isMobileViewport = () => window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
+        const propertiesToClear = [
+            'position',
+            'z-index',
+            'visibility',
+            'opacity',
+            'pointer-events',
+            'display',
+            'inset',
+            'width',
+            'height',
+            'max-width',
+            'max-height',
+            'min-width',
+            'min-height',
+            'border-radius',
+            'transform',
+            'right',
+            'bottom',
+            'left',
+            'top'
+        ];
+
         const applyOpenStyles = () => {
             const mobile = isMobileViewport();
             iframe.style.setProperty('position', 'fixed', 'important');
@@ -585,6 +607,8 @@
             iframe.style.setProperty('visibility', 'visible', 'important');
             iframe.style.setProperty('opacity', '1', 'important');
             iframe.style.setProperty('pointer-events', 'auto', 'important');
+            iframe.style.setProperty('transform', 'none', 'important');
+
             if (mobile) {
                 iframe.style.setProperty('display', 'block', 'important');
                 iframe.style.setProperty('inset', '0px', 'important');
@@ -595,12 +619,10 @@
                 iframe.style.setProperty('min-width', '100vw', 'important');
                 iframe.style.setProperty('min-height', '100dvh', 'important');
                 iframe.style.setProperty('border-radius', '0px', 'important');
-                iframe.style.setProperty('transform', 'none', 'important');
                 iframe.style.removeProperty('right');
                 iframe.style.removeProperty('bottom');
                 iframe.style.removeProperty('top');
                 iframe.style.removeProperty('left');
-
             } else {
                 iframe.style.setProperty('display', 'flex', 'important');
                 iframe.style.setProperty('right', '1rem', 'important');
@@ -615,55 +637,86 @@
                 iframe.style.removeProperty('top');
                 iframe.style.removeProperty('left');
                 iframe.style.removeProperty('border-radius');
-                iframe.style.setProperty('transform', 'none', 'important');
             }
         };
 
         const applyClosedStyles = () => {
-            iframe.style.setProperty('display', 'none', 'important');
-            iframe.style.setProperty('visibility', 'hidden', 'important');
-            iframe.style.setProperty('opacity', '0', 'important');
-            iframe.style.setProperty('pointer-events', 'none', 'important');
+            for (const property of propertiesToClear) {
+                iframe.style.removeProperty(property);
+            }
+        };
+
+        const toggleIcons = (buttonEl, isOpen) => {
+            const openIcon = buttonEl.querySelector('#openIcon');
+            const closeIcon = buttonEl.querySelector('#closeIcon');
+            if (openIcon) openIcon.style.display = isOpen ? 'none' : 'block';
+            if (closeIcon) closeIcon.style.display = isOpen ? 'block' : 'none';
+        };
+
+        const getWrapperElement = () => document.querySelector('dify-chatbot-window');
+
+        const isWrapperVisible = (wrapper) => {
+            if (!wrapper) return false;
+            const rect = wrapper.getBoundingClientRect();
+            const computed = window.getComputedStyle(wrapper);
+            if (computed.display === 'none' || computed.visibility === 'hidden') {
+                return false;
+            }
+            return rect.width > 0 && rect.height > 0;
+        };
+
+        const isIframeVisible = () => {
+            const wrapper = getWrapperElement();
+            if (isWrapperVisible(wrapper)) {
+                return true;
+            }
+
+            const rect = iframe.getBoundingClientRect();
+            const computed = window.getComputedStyle(iframe);
+            if (computed.display === 'none' || computed.visibility === 'hidden' || computed.opacity === '0') {
+                return false;
+            }
+            return rect.width > 0 && rect.height > 0;
+        };
+
+        const syncStylesWithState = (buttonEl, options = {}) => {
+            const { delay = true } = options;
+
+            const performSync = () => {
+                const isOpen = isIframeVisible();
+                if (isOpen) {
+                    applyOpenStyles();
+                } else {
+                    applyClosedStyles();
+                }
+                toggleIcons(buttonEl, isOpen);
+                console.log(isOpen ? '[Dify Fix] ✅ Chat opened' : '[Dify Fix] Chat closed');
+            };
+
+            if (!delay) {
+                performSync();
+                return;
+            }
+
+            if (typeof window.requestAnimationFrame === 'function') {
+                window.requestAnimationFrame(() => window.requestAnimationFrame(performSync));
+            } else {
+                window.setTimeout(performSync, 0);
+            }
         };
 
         // クリックイベントを設定（クローンせずに直接）
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
+        button.addEventListener('click', function() {
             console.log('[Dify Fix] Button clicked!');
-
-            const currentDisplay = window.getComputedStyle(iframe).display;
-            console.log('[Dify Fix] Current display:', currentDisplay);
-
-            if (currentDisplay === 'none') {
-                // 表示
-                applyOpenStyles();
-
-                // SVGアイコンを切り替え
-                const openIcon = this.querySelector('#openIcon');
-                const closeIcon = this.querySelector('#closeIcon');
-                if (openIcon) openIcon.style.display = 'none';
-                if (closeIcon) closeIcon.style.display = 'block';
-
-                console.log('[Dify Fix] ✅ Chat opened');
-            } else {
-                // 非表示
-                applyClosedStyles();
-
-                // SVGアイコンを切り替え
-                const openIcon = this.querySelector('#openIcon');
-                const closeIcon = this.querySelector('#closeIcon');
-                if (openIcon) openIcon.style.display = 'block';
-                if (closeIcon) closeIcon.style.display = 'none';
-                
-                console.log('[Dify Fix] Chat closed');
-            }
+            syncStylesWithState(this, { delay: true });
         }, true); // capture phase で確実に捕捉
+
+        // 初期状態の同期
+        syncStylesWithState(button, { delay: false });
         
         console.log('[Dify Fix] ✅ Click handler installed');
         const handleViewportChange = () => {
-            if (window.getComputedStyle(iframe).display === 'none') {
+            if (!isIframeVisible()) {
                 return;
             }
             applyOpenStyles();
