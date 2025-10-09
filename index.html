@@ -653,6 +653,77 @@
             return rect.width > 0 && rect.height > 0;
         };
 
+        const callInstanceMethod = (instance, method, ...args) => {
+            if (!instance) return false;
+            const candidate = instance[method];
+            if (typeof candidate !== 'function') {
+                return false;
+            }
+            try {
+                candidate.apply(instance, args);
+                return true;
+            } catch (error) {
+                console.warn(`[Dify Fix] ${method}() threw an error`, error);
+                return false;
+            }
+        };
+
+        const toggleDifyChatWindow = (desiredState) => {
+            const normalizedState = desiredState === 'open'
+                ? 'open'
+                : desiredState === 'close'
+                    ? 'close'
+                    : 'toggle';
+            const instance = window.difyChatbot;
+
+            if (instance) {
+                if (normalizedState === 'open') {
+                    if (callInstanceMethod(instance, 'setOpen', true)) return true;
+                    if (callInstanceMethod(instance, 'open')) return true;
+                    if (callInstanceMethod(instance, 'show')) return true;
+                    if (callInstanceMethod(instance, 'toggleWindow', 'open')) return true;
+                    if (callInstanceMethod(instance, 'toggleBubble', 'open')) return true;
+                } else if (normalizedState === 'close') {
+                    if (callInstanceMethod(instance, 'setOpen', false)) return true;
+                    if (callInstanceMethod(instance, 'close')) return true;
+                    if (callInstanceMethod(instance, 'hide')) return true;
+                    if (callInstanceMethod(instance, 'toggleWindow', 'close')) return true;
+                    if (callInstanceMethod(instance, 'toggleBubble', 'close')) return true;
+                } else {
+                    if (callInstanceMethod(instance, 'toggleBubble')) return true;
+                    if (callInstanceMethod(instance, 'toggleWindow')) return true;
+                }
+
+                if (callInstanceMethod(instance, 'toggle')) return true;
+            }
+
+            const bubbleEl = document.querySelector('dify-chatbot-bubble');
+            const shadowRoot = bubbleEl && bubbleEl.shadowRoot ? bubbleEl.shadowRoot : null;
+            const toggleButton = shadowRoot ? shadowRoot.querySelector('button') : null;
+            if (toggleButton) {
+                const expanded = toggleButton.getAttribute('aria-expanded');
+                if (normalizedState === 'open' && expanded === 'true') {
+                    return true;
+                }
+                if (normalizedState === 'close' && expanded === 'false') {
+                    return true;
+                }
+                toggleButton.click();
+                return true;
+            }
+
+            if (normalizedState === 'open' && iframe && iframe.contentWindow) {
+                try {
+                    iframe.contentWindow.postMessage({ type: 'dify-chatbot:toggle', payload: { open: true } }, '*');
+                    return true;
+                } catch (error) {
+                    console.warn('[Dify Fix] Failed to postMessage toggle request', error);
+                }
+            }
+
+            return false;
+        };
+
         const MAX_SYNC_WAIT_MS = 5000;
         let closeGuardUntil = 0;
 
@@ -711,6 +782,19 @@
         // クリックイベントを設定（クローンせずに直接）
         button.addEventListener('click', function() {
             console.log('[Dify Fix] Button clicked!');
+            const wasVisible = isIframeVisible();
+            const desiredState = wasVisible ? 'close' : 'open';
+            const toggled = toggleDifyChatWindow(desiredState);
+            if (!toggled) {
+                console.warn(`[Dify Fix] Falling back to manual styles (${desiredState}).`);
+                if (desiredState === 'open') {
+                    applyOpenStyles();
+                    toggleIcons(this, true);
+                } else {
+                    applyClosedStyles();
+                    toggleIcons(this, false);
+                }
+            }
             const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
             closeGuardUntil = now + MAX_SYNC_WAIT_MS;
             syncStylesWithState(this, { delay: true, guardAgainstImmediateClose: true });
