@@ -678,32 +678,47 @@
             return rect.width > 0 && rect.height > 0;
         };
 
+        const MAX_SYNC_WAIT_MS = 5000;
         let closeGuardUntil = 0;
 
         const syncStylesWithState = (buttonEl, options = {}) => {
             const { delay = true, guardAgainstImmediateClose = false } = options;
+            const getNow = () => (typeof performance !== 'undefined' && typeof performance.now === 'function')
+                ? performance.now()
+                : Date.now();
+            const syncStart = getNow();
+
+            const scheduleRetry = () => {
+                if (typeof window.requestAnimationFrame === 'function') {
+                    window.requestAnimationFrame(() => window.setTimeout(performSync, 50));
+                } else {
+                    window.setTimeout(performSync, 50);
+                }
+            };
 
             const performSync = () => {
+                const now = getNow();
                 const isOpen = isIframeVisible();
-                const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-
-                if (!isOpen && guardAgainstImmediateClose && now < closeGuardUntil) {
-                    if (typeof window.requestAnimationFrame === 'function') {
-                        window.requestAnimationFrame(performSync);
-                    } else {
-                        window.setTimeout(performSync, 50);
-                    }
-                    return;
-                }
 
                 if (isOpen) {
                     closeGuardUntil = 0;
                     applyOpenStyles();
-                } else {
-                    applyClosedStyles();
+                    toggleIcons(buttonEl, true);
+                    console.log('[Dify Fix] ✅ Chat opened');
+                    return;
                 }
-                toggleIcons(buttonEl, isOpen);
-                console.log(isOpen ? '[Dify Fix] ✅ Chat opened' : '[Dify Fix] Chat closed');
+
+                const guardActive = guardAgainstImmediateClose && now < closeGuardUntil;
+                const elapsed = now - syncStart;
+
+                if (guardAgainstImmediateClose && (guardActive || elapsed < MAX_SYNC_WAIT_MS)) {
+                    scheduleRetry();
+                    return;
+                }
+
+                applyClosedStyles();
+                toggleIcons(buttonEl, false);
+                console.log('[Dify Fix] Chat closed');
             };
 
             if (!delay) {
@@ -722,7 +737,7 @@
         button.addEventListener('click', function() {
             console.log('[Dify Fix] Button clicked!');
             const now = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-            closeGuardUntil = now + 500;
+            closeGuardUntil = now + MAX_SYNC_WAIT_MS;
             syncStylesWithState(this, { delay: true, guardAgainstImmediateClose: true });
         });
 
