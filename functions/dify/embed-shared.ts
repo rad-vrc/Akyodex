@@ -18,10 +18,12 @@ export const DEFAULT_HEADERS = {
 export const normalizeBaseUrl = (baseUrl: string) => baseUrl.replace(/\/+$/, "");
 
 const CLOUDFLARE_BEACON_PATTERN =
+
   /(["'`])(?:https?:)?\/\/static\.cloudflareinsights\.com\/beacon\.min\.js[^"'`]*\1/g;
 
 const CLOUDFLARE_BEACON_LOOSE_PATTERN =
   /https?:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js[^\s"'`)]*/g;
+
 
 export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
   const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
@@ -38,6 +40,7 @@ export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
     }
   );
 
+
   const withoutStrictBeacon = absolutized.replace(
     CLOUDFLARE_BEACON_PATTERN,
     (_match, quote: string) => `${quote}about:blank${quote}`
@@ -47,6 +50,7 @@ export const rewriteEmbedScript = (scriptContent: string, baseUrl: string) => {
     CLOUDFLARE_BEACON_LOOSE_PATTERN,
     "about:blank"
   );
+
 };
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
