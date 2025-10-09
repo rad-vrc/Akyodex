@@ -506,6 +506,7 @@ function stabilizeDifyChatWidget() {
 
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
+    const WINDOW_DIMENSION_PROPS = ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height'];
     const isMobileViewport = () => {
         if (typeof window.matchMedia !== 'function') return false;
         return window.matchMedia('(max-width: 768px)').matches;
@@ -574,6 +575,101 @@ function stabilizeDifyChatWidget() {
     };
 
 
+    const captureWindowDimensions = (element) => {
+        if (!element || typeof element.getBoundingClientRect !== 'function') {
+            return null;
+        }
+
+        const existingSnapshot = element.__akyoDimensionSnapshot || {};
+        const snapshot = { ...existingSnapshot };
+        let snapshotUpdated = false;
+
+        WINDOW_DIMENSION_PROPS.forEach((prop) => {
+            const inlineValue = element.style.getPropertyValue(prop);
+            if (inlineValue && inlineValue.trim()) {
+                const trimmed = inlineValue.trim();
+                if (snapshot[prop] !== trimmed) {
+                    snapshot[prop] = trimmed;
+                    snapshotUpdated = true;
+                }
+            }
+        });
+
+        const rect = element.getBoundingClientRect();
+        if (rect.width > 0) {
+            const widthValue = `${rect.width}px`;
+            if (!snapshot.width || snapshot.width === '0px') {
+                snapshot.width = widthValue;
+                snapshotUpdated = true;
+            }
+        }
+        if (rect.height > 0) {
+            const heightValue = `${rect.height}px`;
+            if (!snapshot.height || snapshot.height === '0px') {
+                snapshot.height = heightValue;
+                snapshotUpdated = true;
+            }
+        }
+
+        if (rect.width > 0 && rect.height > 0) {
+            element.__akyoLastBoundingRect = { width: rect.width, height: rect.height };
+        }
+
+        const computed = window.getComputedStyle(element);
+        const computedMap = {
+            'min-width': computed.minWidth,
+            'min-height': computed.minHeight,
+            'max-width': computed.maxWidth,
+            'max-height': computed.maxHeight
+        };
+        Object.entries(computedMap).forEach(([prop, value]) => {
+            if (!value) return;
+            const trimmed = value.trim();
+            if (!trimmed || trimmed === 'auto' || trimmed === 'none') return;
+            if (!snapshot[prop] || snapshot[prop] === '0px') {
+                snapshot[prop] = trimmed;
+                snapshotUpdated = true;
+            }
+        });
+
+        if (snapshotUpdated || !element.__akyoDimensionSnapshot) {
+            element.__akyoDimensionSnapshot = snapshot;
+        }
+
+        return element.__akyoDimensionSnapshot || null;
+    };
+
+    const ensureWindowHasDimensions = (element) => {
+        if (!element) return;
+
+        const snapshot = captureWindowDimensions(element);
+        if (!snapshot) return;
+
+        const rect = element.getBoundingClientRect();
+        const needsWidth = rect.width <= 0;
+        const needsHeight = rect.height <= 0;
+
+        if (!needsWidth && !needsHeight) {
+            return;
+        }
+
+        if (needsWidth && snapshot.width) {
+            element.style.setProperty('width', snapshot.width);
+        }
+        if (needsHeight && snapshot.height) {
+            element.style.setProperty('height', snapshot.height);
+        }
+
+        ['min-width', 'min-height', 'max-width', 'max-height'].forEach((prop) => {
+            const value = snapshot[prop];
+            if (value) {
+                element.style.setProperty(prop, value);
+            }
+        });
+
+        captureWindowDimensions(element);
+    };
+
     const syncWidgetStyles = () => {
         const bubbleEl = document.querySelector(bubbleSelector);
         const windowEl = document.querySelector(windowSelector);
@@ -598,6 +694,8 @@ function stabilizeDifyChatWidget() {
             windowEl.style.setProperty('z-index', '2147483649', 'important');
             windowEl.style.setProperty('pointer-events', 'auto', 'important');
 
+            ensureWindowHasDimensions(windowEl);
+
             const mobileViewport = isMobileViewport();
 
             if (mobileViewport) {
@@ -618,11 +716,6 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.setProperty('bottom', windowBottom, 'important');
                 windowEl.style.setProperty('max-height', '80vh', 'important');
                 windowEl.style.removeProperty('inset');
-                windowEl.style.removeProperty('width');
-                windowEl.style.removeProperty('height');
-                windowEl.style.removeProperty('max-width');
-                windowEl.style.removeProperty('min-width');
-                windowEl.style.removeProperty('min-height');
                 windowEl.style.removeProperty('border-radius');
                 windowEl.style.removeProperty('top');
                 windowEl.style.removeProperty('left');
@@ -653,6 +746,8 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.removeProperty('visibility');
                 windowEl.style.removeProperty('opacity');
             }
+
+            captureWindowDimensions(windowEl);
         }
     };
 
@@ -756,8 +851,7 @@ function stabilizeDifyChatWidget() {
             pendingUserToggle = true;
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
-
-
+                ensureWindowHasDimensions(windowEl);
                 windowShouldStayOpen = isElementVisible(windowEl);
 
                 pendingUserToggle = false;
@@ -772,8 +866,7 @@ function stabilizeDifyChatWidget() {
             pendingUserToggle = true;
             window.setTimeout(() => {
                 const windowEl = document.querySelector(windowSelector);
-
-
+                ensureWindowHasDimensions(windowEl);
                 windowShouldStayOpen = isElementVisible(windowEl);
                 pendingUserToggle = false;
                 syncWidgetStyles();
