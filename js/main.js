@@ -587,12 +587,17 @@ function stabilizeDifyChatWidget() {
             if (isMobileViewport()) {
                 windowEl.style.removeProperty('right');
                 windowEl.style.removeProperty('bottom');
+                windowEl.style.removeProperty('top');
+                windowEl.style.removeProperty('left');
                 windowEl.style.setProperty('inset', '0px', 'important');
                 windowEl.style.setProperty('width', '100vw', 'important');
-                windowEl.style.setProperty('height', '100vh', 'important');
+                windowEl.style.setProperty('height', '100dvh', 'important');
                 windowEl.style.setProperty('max-width', '100vw', 'important');
-                windowEl.style.setProperty('max-height', '100vh', 'important');
+                windowEl.style.setProperty('max-height', '100dvh', 'important');
+                windowEl.style.setProperty('min-width', '100vw', 'important');
+                windowEl.style.setProperty('min-height', '100dvh', 'important');
                 windowEl.style.setProperty('border-radius', '0px', 'important');
+                windowEl.style.setProperty('transform', 'none', 'important');
             } else {
                 windowEl.style.setProperty('right', bubbleRight, 'important');
                 windowEl.style.setProperty('bottom', windowBottom, 'important');
@@ -601,9 +606,12 @@ function stabilizeDifyChatWidget() {
                 windowEl.style.removeProperty('width');
                 windowEl.style.removeProperty('height');
                 windowEl.style.removeProperty('max-width');
+                windowEl.style.removeProperty('min-width');
+                windowEl.style.removeProperty('min-height');
                 windowEl.style.removeProperty('border-radius');
                 windowEl.style.removeProperty('top');
                 windowEl.style.removeProperty('left');
+                windowEl.style.removeProperty('transform');
             }
 
             const visible = isElementVisible(windowEl);
