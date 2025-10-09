@@ -506,6 +506,10 @@ function stabilizeDifyChatWidget() {
 
     const bubbleSelector = 'dify-chatbot-bubble';
     const windowSelector = 'dify-chatbot-window';
+    const isMobileViewport = () => {
+        if (typeof window.matchMedia !== 'function') return false;
+        return window.matchMedia('(max-width: 768px)').matches;
+    };
 
     const cssSupports = typeof window.CSS !== 'undefined' && typeof window.CSS.supports === 'function';
     const supportsSafeAreaBottom = cssSupports
@@ -577,13 +581,30 @@ function stabilizeDifyChatWidget() {
             windowEl.removeAttribute('hidden');
             windowEl.removeAttribute('aria-hidden');
             windowEl.style.setProperty('position', 'fixed', 'important');
-            windowEl.style.setProperty('right', bubbleRight, 'important');
-            windowEl.style.setProperty('bottom', windowBottom, 'important');
-            windowEl.style.setProperty('max-height', '80vh', 'important');
             windowEl.style.setProperty('z-index', '2147483649', 'important');
-            windowEl.style.removeProperty('top');
-            windowEl.style.removeProperty('left');
             windowEl.style.setProperty('pointer-events', 'auto', 'important');
+
+            if (isMobileViewport()) {
+                windowEl.style.removeProperty('right');
+                windowEl.style.removeProperty('bottom');
+                windowEl.style.setProperty('inset', '0px', 'important');
+                windowEl.style.setProperty('width', '100vw', 'important');
+                windowEl.style.setProperty('height', '100vh', 'important');
+                windowEl.style.setProperty('max-width', '100vw', 'important');
+                windowEl.style.setProperty('max-height', '100vh', 'important');
+                windowEl.style.setProperty('border-radius', '0px', 'important');
+            } else {
+                windowEl.style.setProperty('right', bubbleRight, 'important');
+                windowEl.style.setProperty('bottom', windowBottom, 'important');
+                windowEl.style.setProperty('max-height', '80vh', 'important');
+                windowEl.style.removeProperty('inset');
+                windowEl.style.removeProperty('width');
+                windowEl.style.removeProperty('height');
+                windowEl.style.removeProperty('max-width');
+                windowEl.style.removeProperty('border-radius');
+                windowEl.style.removeProperty('top');
+                windowEl.style.removeProperty('left');
+            }
 
             const visible = isElementVisible(windowEl);
             if (visible && !windowShouldStayOpen) {
@@ -685,9 +706,24 @@ function stabilizeDifyChatWidget() {
         attributeFilter: ['style', 'class', 'hidden', 'aria-hidden']
     });
 
+    const findMatchingHost = (event, selector) => {
+        if (typeof event.composedPath === 'function') {
+            const path = event.composedPath();
+            for (const node of path) {
+                if (node instanceof Element && node.matches && node.matches(selector)) {
+                    return node;
+                }
+            }
+        }
+        const target = event.target;
+        if (target && typeof target.closest === 'function') {
+            return target.closest(selector);
+        }
+        return null;
+    };
+
     document.addEventListener('click', (event) => {
-        if (typeof event.target.closest !== 'function') return;
-        const bubbleHost = event.target.closest(bubbleSelector);
+        const bubbleHost = findMatchingHost(event, bubbleSelector);
         if (bubbleHost) {
             pendingUserToggle = true;
             window.setTimeout(() => {
@@ -703,7 +739,7 @@ function stabilizeDifyChatWidget() {
             return;
         }
 
-        const windowHost = event.target.closest(windowSelector);
+        const windowHost = findMatchingHost(event, windowSelector);
         if (windowHost) {
             pendingUserToggle = true;
             window.setTimeout(() => {
