@@ -599,7 +599,7 @@
                 iframe.style.removeProperty('bottom');
                 iframe.style.removeProperty('top');
                 iframe.style.removeProperty('left');
-
+                iframe.style.setProperty('transform', 'none', 'important');
             } else {
                 iframe.style.setProperty('display', 'flex', 'important');
                 iframe.style.setProperty('right', '1rem', 'important');
@@ -613,6 +613,7 @@
                 iframe.style.removeProperty('min-height');
                 iframe.style.removeProperty('top');
                 iframe.style.removeProperty('left');
+                iframe.style.removeProperty('transform');
                 iframe.style.removeProperty('border-radius');
             }
         };
