@@ -537,13 +537,16 @@
 
     const applyCandidateBaseUrl = (candidate) => {
         if (!candidate || !candidate.baseUrl) {
-            return;
+            return () => {};
         }
 
         const currentConfig = window.difyChatbotConfig || {};
-        const currentBase = typeof currentConfig.baseUrl === 'string' ? currentConfig.baseUrl.trim() : '';
+        const hadBaseProperty = Object.prototype.hasOwnProperty.call(currentConfig, 'baseUrl');
+        const currentBaseRaw = hadBaseProperty ? currentConfig.baseUrl : undefined;
+        const currentBase = typeof currentBaseRaw === 'string' ? currentBaseRaw.trim() : currentBaseRaw;
+
         if (currentBase === candidate.baseUrl) {
-            return;
+            return () => {};
         }
 
         window.difyChatbotConfig = {
@@ -552,13 +555,36 @@
         };
 
         console.log(`[Dify] 🔄 Base URL switched to ${candidate.baseUrl} (${candidate.label || candidate.url})`);
+
+        return () => {
+            const latestConfig = window.difyChatbotConfig || {};
+            const latestBaseRaw = Object.prototype.hasOwnProperty.call(latestConfig, 'baseUrl') ? latestConfig.baseUrl : undefined;
+            const latestBase = typeof latestBaseRaw === 'string' ? latestBaseRaw.trim() : latestBaseRaw;
+
+            if (latestBase !== candidate.baseUrl) {
+                return;
+            }
+
+            const revertedConfig = {
+                ...latestConfig,
+            };
+
+            if (hadBaseProperty) {
+                revertedConfig.baseUrl = currentBaseRaw;
+            } else {
+                delete revertedConfig.baseUrl;
+            }
+
+            window.difyChatbotConfig = revertedConfig;
+            console.log(`[Dify] ↩️ Base URL reverted after failed script load (${candidate.label || candidate.url})`);
+        };
     };
 
     const attemptScriptLoad = async (candidates) => {
         for (const candidate of candidates) {
             const { url, mode, label } = candidate;
 
-            applyCandidateBaseUrl(candidate);
+            const revertCandidateBaseUrl = applyCandidateBaseUrl(candidate);
             try {
                 if (mode === 'inline') {
                     await loadScriptInline(url, label);
@@ -568,6 +594,7 @@
                 console.log(`[Dify] ✅ Script loaded (${label || url})`);
                 return true;
             } catch (error) {
+                revertCandidateBaseUrl();
                 console.warn(`[Dify] ⚠️ Script load attempt failed (${label || url})`, error);
             }
         }
