@@ -496,8 +496,7 @@ const script = document.createElement('script');
 script.src = url;
 script.crossOrigin = 'anonymous';
 // Important: embed likely expects <script id="TOKEN"> so set id from config or fallback to hardcoded token
-[script.id](http://script.id/) = (window.difyChatbotConfig && window.difyChatbotConfig.token) || 'rak9Yh7T7SI5JyDw';
-script.defer = true;
+script.id = (window.difyChatbotConfig && window.difyChatbotConfig.token) || 'rak9Yh7T7SI5JyDw';
 script.dataset.akyoDifyEmbed = attemptLabel || '1';
 
 
@@ -538,7 +537,7 @@ const source = await response.text();
 const inlineScript = document.createElement('script');
 inlineScript.type = 'text/javascript';
 inlineScript.dataset.akyoDifyEmbed = attemptLabel || 'inline';
-[inlineScript.id](http://inlinescript.id/) = (window.difyChatbotConfig && window.difyChatbotConfig.token) || 'rak9Yh7T7SI5JyDw';
+inlineScript.id = (window.difyChatbotConfig && window.difyChatbotConfig.token) || 'rak9Yh7T7SI5JyDw';
 inlineScript.textContent = source;
 document.head.appendChild(inlineScript);
 return true;
