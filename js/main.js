@@ -1940,11 +1940,17 @@ function updateDisplay() {
 function renderGridView() {
   const grid = document.getElementById("akyoGrid");
 
-  // Dify要素を保護
-  let bubbleData = null,
-    windowData = null;
-
-  // grid内にDify要素があれば保存
+  // Dify要素を一時退避
+  const difyBubble = document.getElementById("dify-chatbot-bubble-button");
+  const difyWindow = document.getElementById("dify-chatbot-bubble-window");
+  const stash = [];
+  
+  [difyBubble, difyWindow].forEach(el => {
+    if (el && grid.contains(el)) {
+      stash.push({ el, parent: el.parentNode, next: el.nextSibling });
+      el.parentNode.removeChild(el);
+    }
+  });
 
   // 既存の処理
   const fragment = document.createDocumentFragment();
@@ -1964,44 +1970,33 @@ function renderGridView() {
   grid.replaceChildren(fragment);
 
   // Dify要素を復元
-  if (bubbleData) {
-    if (
-      bubbleData.nextSibling &&
-      bubbleData.nextSibling.parentNode === bubbleData.parent
-    ) {
-      bubbleData.parent.insertBefore(
-        bubbleData.element,
-        bubbleData.nextSibling
-      );
+  stash.forEach(({ el, parent, next }) => {
+    if (next && next.parentNode === parent) {
+      parent.insertBefore(el, next);
     } else {
-      bubbleData.parent.appendChild(bubbleData.element);
+      parent.appendChild(el);
     }
-  }
-
-  if (windowData) {
-    if (
-      windowData.nextSibling &&
-      windowData.nextSibling.parentNode === windowData.parent
-    ) {
-      windowData.parent.insertBefore(
-        windowData.element,
-        windowData.nextSibling
-      );
-    } else {
-      windowData.parent.appendChild(windowData.element);
-    }
-  }
+  });
 }
+
 
 // リストビューのレンダリング（同様の処理）
 function renderListView() {
   const list = document.getElementById("akyoList");
 
-  // Dify要素を保護
-  let bubbleData = null,
-    windowData = null;
+  // Dify要素を一時退避
+  const difyBubble = document.getElementById("dify-chatbot-bubble-button");
+  const difyWindow = document.getElementById("dify-chatbot-bubble-window");
+  const stash = [];
+  
+  [difyBubble, difyWindow].forEach(el => {
+    if (el && list.contains(el)) {
+      stash.push({ el, parent: el.parentNode, next: el.nextSibling });
+      el.parentNode.removeChild(el);
+    }
+  });
 
-  // 既存の処理（元のコードをここに）
+  // 既存の処理
   const fragment = document.createDocumentFragment();
   const slice = filteredData.slice(0, renderLimit);
   slice.forEach((akyo) => {
@@ -2019,20 +2014,13 @@ function renderListView() {
   list.replaceChildren(fragment);
 
   // Dify要素を復元
-
-  if (windowData) {
-    if (
-      windowData.nextSibling &&
-      windowData.nextSibling.parentNode === windowData.parent
-    ) {
-      windowData.parent.insertBefore(
-        windowData.element,
-        windowData.nextSibling
-      );
+  stash.forEach(({ el, parent, next }) => {
+    if (next && next.parentNode === parent) {
+      parent.insertBefore(el, next);
     } else {
-      windowData.parent.appendChild(windowData.element);
+      parent.appendChild(el);
     }
-  }
+  });
 }
 
 function createAkyoCard(state) {
