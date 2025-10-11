@@ -1124,8 +1124,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // イベントリスナーの設定を最初に実行（UIの応答性向上）
     setupEventListeners();
-    initDifyEmbedDiagnostics();
-    stabilizeDifyChatWidget();
 
     // 初期表示を先に実行（ローディング表示など）
     document.getElementById('noDataContainer').classList.remove('hidden');
