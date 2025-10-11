@@ -2219,25 +2219,6 @@ function updateAkyoCard(card, state) {
     }
 }
 
-function renderListView() {
-    const list = document.getElementById('akyoList');
-    const fragment = document.createDocumentFragment();
-
-    const slice = filteredData.slice(0, renderLimit);
-    slice.forEach(akyo => {
-        const state = computeAkyoRenderState(akyo);
-        let row = listRowCache.get(state.id);
-        if (!row) {
-            row = createListRow(state);
-            listRowCache.set(state.id, row);
-        } else {
-            updateListRow(row, state);
-        }
-        fragment.appendChild(row);
-    });
-
-    list.replaceChildren(fragment);
-}
 
 function createListRow(state) {
         const row = document.createElement('tr');
