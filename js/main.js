@@ -1953,15 +1953,7 @@ function stashDifyElements(container) {
   return stash;
 }
 
-function restoreDifyElements(stash) {
-  stash.forEach(({ el, parent, next }) => {
-    if (next && next.parentNode === parent) {
-      parent.insertBefore(el, next);
-    } else {
-      parent.appendChild(el);
-    }
-  });
-}
+function restoreDifyElements(stash) { stash.forEach(({ el, parent, next }) => { const targetParent = parent && document.contains(parent) ? parent : document.body; if (next && document.contains(next) && next.parentNode === targetParent) { targetParent.insertBefore(el, next); } else { targetParent.appendChild(el); } }); }
 
 // グリッドビューのレンダリング
 // グリッドビューのレンダリング
