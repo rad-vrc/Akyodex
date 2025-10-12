@@ -864,49 +864,28 @@ aria-label="通称の重複チェック">
     defer>
     </script>
     <style>
-      /* Difyチャットボタンのスタイル調整 - 強制的に右下配置 */
+      /* Difyチャットボタンのスタイル調整（PC版と統一したシンプル記法） */
       #dify-chatbot-bubble-button {
         background-color: #EE7800 !important;
         position: fixed !important;
-        /* 左上のデフォルト位置をリセット */
-        left: auto !important;
-        top: auto !important;
-        /* 右下に強制配置 */
-        right: 1.5rem !important;
-        bottom: 1.5rem !important;
-        z-index: 50 !important;
-        /* インライン style を上書き */
         inset: auto 1.5rem 1.5rem auto !important;
+        z-index: 50 !important;
       }
       #dify-chatbot-bubble-window {
         width: 24rem !important;
         height: 40rem !important;
         position: fixed !important;
-        /* 位置を明示的に指定 */
-        left: auto !important;
-        top: auto !important;
-        right: 1rem !important;
-        bottom: 5.5rem !important;
-        z-index: 51 !important;
-        /* インライン style を上書き */
         inset: auto 1rem 5.5rem auto !important;
+        z-index: 51 !important;
       }
       /* モバイル対応 */
       @media (max-width: 768px) {
         #dify-chatbot-bubble-button {
-          left: auto !important;
-          top: auto !important;
-          right: 1rem !important;
-          bottom: 1rem !important;
           inset: auto 1rem 1rem auto !important;
         }
         #dify-chatbot-bubble-window {
           width: calc(100vw - 2rem) !important;
           height: calc(100vh - 8rem) !important;
-          left: auto !important;
-          top: auto !important;
-          right: 1rem !important;
-          bottom: 5rem !important;
           inset: auto 1rem 5rem auto !important;
         }
       }
