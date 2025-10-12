@@ -26,6 +26,9 @@ const GLOBAL_SCOPE = (() => {
 })();
 const AKYODEX_PRODUCTION_URL = "https://akyodex.com/?openChat=1";
 
+const DIFY_BUBBLE_ID = "dify-chatbot-bubble-button";
+const DIFY_WINDOW_ID = "dify-chatbot-bubble-window";
+
 const LANGUAGE_CONFIG = {
   ja: {
     code: "ja",
@@ -1935,22 +1938,38 @@ function updateDisplay() {
   }
 }
 
+function stashDifyElements(container) {
+  const difyBubble = document.getElementById(DIFY_BUBBLE_ID);
+  const difyWindow = document.getElementById(DIFY_WINDOW_ID);
+  const stash = [];
+
+  [difyBubble, difyWindow].forEach((el) => {
+    if (el && container.contains(el)) {
+      stash.push({ el, parent: el.parentNode, next: el.nextSibling });
+      el.parentNode.removeChild(el);
+    }
+  });
+
+  return stash;
+}
+
+function restoreDifyElements(stash) {
+  stash.forEach(({ el, parent, next }) => {
+    if (next && next.parentNode === parent) {
+      parent.insertBefore(el, next);
+    } else {
+      parent.appendChild(el);
+    }
+  });
+}
+
 // グリッドビューのレンダリング
 // グリッドビューのレンダリング
 function renderGridView() {
   const grid = document.getElementById("akyoGrid");
 
   // Dify要素を一時退避
-  const difyBubble = document.getElementById("dify-chatbot-bubble-button");
-  const difyWindow = document.getElementById("dify-chatbot-bubble-window");
-  const stash = [];
-  
-  [difyBubble, difyWindow].forEach(el => {
-    if (el && grid.contains(el)) {
-      stash.push({ el, parent: el.parentNode, next: el.nextSibling });
-      el.parentNode.removeChild(el);
-    }
-  });
+  const stash = stashDifyElements(grid);
 
   // 既存の処理
   const fragment = document.createDocumentFragment();
@@ -1970,13 +1989,7 @@ function renderGridView() {
   grid.replaceChildren(fragment);
 
   // Dify要素を復元
-  stash.forEach(({ el, parent, next }) => {
-    if (next && next.parentNode === parent) {
-      parent.insertBefore(el, next);
-    } else {
-      parent.appendChild(el);
-    }
-  });
+  restoreDifyElements(stash);
 }
 
 
@@ -1985,16 +1998,7 @@ function renderListView() {
   const list = document.getElementById("akyoList");
 
   // Dify要素を一時退避
-  const difyBubble = document.getElementById("dify-chatbot-bubble-button");
-  const difyWindow = document.getElementById("dify-chatbot-bubble-window");
-  const stash = [];
-  
-  [difyBubble, difyWindow].forEach(el => {
-    if (el && list.contains(el)) {
-      stash.push({ el, parent: el.parentNode, next: el.nextSibling });
-      el.parentNode.removeChild(el);
-    }
-  });
+  const stash = stashDifyElements(list);
 
   // 既存の処理
   const fragment = document.createDocumentFragment();
@@ -2014,13 +2018,7 @@ function renderListView() {
   list.replaceChildren(fragment);
 
   // Dify要素を復元
-  stash.forEach(({ el, parent, next }) => {
-    if (next && next.parentNode === parent) {
-      parent.insertBefore(el, next);
-    } else {
-      parent.appendChild(el);
-    }
-  });
+  restoreDifyElements(stash);
 }
 
 function createAkyoCard(state) {
