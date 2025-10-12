@@ -848,6 +848,55 @@ aria-label="通称の重複チェック">
             if (window.loadAkyoManifest) { window.loadAkyoManifest().catch(() => {}); }
         });
     </script>
+    <!-- Difyチャットボット設定 -->
+    <script>
+    window.difyChatbotConfig = {
+      token: 'rak9Yh7T7SI5JyDw',
+      baseUrl: 'https://dexakyo.akyodex.com',
+      inputs: {},
+      systemVariables: {},
+      userVariables: {},
+    }
+    </script>
+    <script
+    src="https://dexakyo.akyodex.com/embed.min.js"
+    id="rak9Yh7T7SI5JyDw"
+    defer>
+    </script>
+    <style>
+      /* Difyチャットボタンのスタイル調整（PC版と同じ） */
+      #dify-chatbot-bubble-button {
+        background-color: #EE7800 !important;
+        /* ボタンを右下に固定し、他の要素と重ならないように */
+        position: fixed !important;
+        right: 1.5rem !important;
+        bottom: 1.5rem !important;
+        z-index: 50 !important;
+      }
+      #dify-chatbot-bubble-window {
+        width: 24rem !important;
+        height: 40rem !important;
+        position: fixed !important;
+        right: 1rem !important;
+        bottom: 5.5rem !important;
+        left: auto !important;
+        top: auto !important;
+        z-index: 51 !important;
+      }
+      /* モバイル対応 */
+      @media (max-width: 768px) {
+        #dify-chatbot-bubble-button {
+          right: 1rem !important;
+          bottom: 1rem !important;
+        }
+        #dify-chatbot-bubble-window {
+          width: calc(100vw - 2rem) !important;
+          height: calc(100vh - 8rem) !important;
+          right: 1rem !important;
+          bottom: 5rem !important;
+        }
+      }
+    </style>
     <script src="js/attribute-manager.js"></script>
     <script src="js/admin.js"></script>
     <script>
