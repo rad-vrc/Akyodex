@@ -3,7 +3,7 @@
  */
 
 export interface AkyoData {
-  id: string; // 3桁のID番号 (例: "001")
+  id: string; // 4桁のID番号 (例: "0001")
   appearance: string; // 見た目
   nickname: string; // 通称
   avatarName: string; // アバター名
@@ -54,7 +54,7 @@ export type AuthRole = 'owner' | 'admin' | null;
 /**
  * 画像マニフェスト
  */
-export type ImageManifest = Record<string, string>; // { "001": "https://images.akyodex.com/images/001.webp" }
+export type ImageManifest = Record<string, string>; // { "0001": "https://images.akyodex.com/images/0001.webp" }
 
 /**
  * API レスポンス型

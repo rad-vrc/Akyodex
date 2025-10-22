@@ -1,0 +1,397 @@
+/**
+ * Akyodex Service Worker - Next.js Version
+ * 
+ * Based on the original sw.js with adaptations for Next.js App Router
+ * 
+ * Cache Strategy:
+ * - HTML/Pages: Network First (always fetch latest)
+ * - CSV Data: Network First with fallback
+ * - API Routes: Network Only (never cache)
+ * - Static Assets: Cache First with background update
+ * - Images: Stale While Revalidate
+ */
+
+const CACHE_VERSION = 'akyodex-nextjs-v3';
+const CACHE_NAME = `akyodex-cache-${CACHE_VERSION}`;
+
+// Core files to precache on install
+const PRECACHE_URLS = [
+  '/zukan',
+  '/about',
+  '/offline',
+  '/images/logo.webp',
+  '/images/akyo-bg.webp',
+  '/images/akyodexIcon-192.png',
+  '/images/akyodexIcon-512.png',
+];
+
+/**
+ * Get Service Worker scope
+ */
+function getScope() {
+  return (self.registration && self.registration.scope) || self.location.href;
+}
+
+/**
+ * Install Event - Precache core assets
+ */
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing Service Worker v' + CACHE_VERSION);
+  
+  event.waitUntil(
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+        
+        // Precache core URLs with cache-busting
+        // Use absolute URLs to ensure cache key consistency with fallback lookups
+        await Promise.allSettled(
+          PRECACHE_URLS.map(async (url) => {
+            try {
+              const absoluteUrl = new URL(url, self.location.origin).toString();
+              const request = new Request(absoluteUrl, { cache: 'reload' });
+              const response = await fetch(request);
+              
+              if (response && response.ok) {
+                await cache.put(request, response.clone());
+                console.log('[SW] Precached:', absoluteUrl);
+              }
+            } catch (error) {
+              console.warn('[SW] Failed to precache:', url, error);
+            }
+          })
+        );
+        
+        // Skip waiting to activate immediately
+        await self.skipWaiting();
+        console.log('[SW] Install complete');
+      } catch (error) {
+        console.error('[SW] Install failed:', error);
+      }
+    })()
+  );
+});
+
+/**
+ * Activate Event - Clean up old caches
+ */
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating Service Worker v' + CACHE_VERSION);
+  
+  event.waitUntil(
+    (async () => {
+      try {
+        // Delete old caches
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames
+            .filter((name) => name.startsWith('akyodex-') && name !== CACHE_NAME)
+            .map((name) => {
+              console.log('[SW] Deleting old cache:', name);
+              return caches.delete(name);
+            })
+        );
+        
+        // Take control of all clients immediately
+        await self.clients.claim();
+        console.log('[SW] Activate complete');
+      } catch (error) {
+        console.error('[SW] Activate failed:', error);
+      }
+    })()
+  );
+});
+
+/**
+ * Fetch Event - Intercept network requests with caching strategies
+ */
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  
+  // Only handle GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
+  
+  const url = new URL(request.url);
+  
+  // Don't intercept cross-origin requests (R2, external APIs, etc.)
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+  
+  const accept = request.headers.get('accept') || '';
+  
+  // Strategy 1: HTML Navigation - Network First with offline fallback
+  if (request.mode === 'navigate' || accept.includes('text/html')) {
+    event.respondWith(handleNavigationRequest(request));
+    return;
+  }
+  
+  // Strategy 2a: Image Proxy API routes → treat as images (SWR)
+  const IMAGE_API_PATHS = new Set(['/api/avatar-image', '/api/vrc-avatar-image']);
+  if (IMAGE_API_PATHS.has(url.pathname)) {
+    event.respondWith(handleImageRequest(event, request));
+    return;
+  }
+  
+  // Strategy 2b: Other API Routes - Network Only (never cache)
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(handleApiRequest(request));
+    return;
+  }
+  
+  // Strategy 3: CSV Data - Network First with cache fallback
+  if (url.pathname === '/data/akyo-data.csv' || url.pathname === '/data/akyo-data-US.csv') {
+    event.respondWith(handleCsvRequest(request));
+    return;
+  }
+  
+  // Strategy 4: Next.js Static Assets - Cache First (immutable)
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(handleStaticAssets(request));
+    return;
+  }
+  
+  // Strategy 5: Images - Stale While Revalidate
+  if (url.pathname.startsWith('/images/') || 
+      accept.includes('image/')) {
+    event.respondWith(handleImageRequest(event, request));
+    return;
+  }
+  
+  // Strategy 6: Other Assets (CSS, JS) - Cache First with update
+  event.respondWith(handleDefaultRequest(event, request));
+});
+
+/**
+ * Strategy 1: HTML Navigation - Network First
+ * Always try to fetch latest HTML, fallback to cache if offline
+ */
+async function handleNavigationRequest(request) {
+  const cache = await caches.open(CACHE_NAME);
+  
+  try {
+    // Check for fresh navigation flag
+    const url = new URL(request.url);
+    const wantsFreshNavigation = url.searchParams.has('_akyoFresh');
+    
+    // Fetch latest from network
+    const requestToUse = wantsFreshNavigation
+      ? new Request(request, { cache: 'reload' })
+      : request;
+    
+    const networkResponse = await fetch(requestToUse);
+    
+    if (networkResponse && networkResponse.ok) {
+      // Cache the new response
+      await cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+  } catch (error) {
+    console.log('[SW] Network failed for navigation, trying cache:', error.message);
+  }
+  
+  // Fallback to cache
+  const cachedResponse = await cache.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  
+  // Try fallback pages
+  const scope = getScope();
+  const fallbacks = [
+    new URL('/zukan', scope).toString(),
+    new URL('/offline', scope).toString(),
+  ];
+  
+  for (const fallbackUrl of fallbacks) {
+    const fallbackResponse = await cache.match(fallbackUrl);
+    if (fallbackResponse) {
+      return fallbackResponse;
+    }
+  }
+  
+  // Last resort: minimal offline HTML
+  return new Response(
+    '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Offline - Akyodex</title></head>' +
+    '<body><h1>オフラインです</h1><p>インターネット接続を確認してください。</p></body></html>',
+    {
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+      status: 200,
+    }
+  );
+}
+
+/**
+ * Strategy 2: API Routes - Network Only
+ * Never cache API responses to ensure data freshness
+ */
+async function handleApiRequest(request) {
+  try {
+    return await fetch(request);
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: 'offline', message: 'API request failed - you are offline' }),
+      {
+        headers: { 'content-type': 'application/json' },
+        status: 503,
+      }
+    );
+  }
+}
+
+/**
+ * Strategy 3: CSV Data - Network First with cache fallback
+ * Always try to fetch latest CSV, use cache if offline
+ */
+async function handleCsvRequest(request) {
+  const cache = await caches.open(CACHE_NAME);
+  
+  try {
+    // Always fetch fresh CSV data
+    const networkResponse = await fetch(new Request(request, { cache: 'no-cache' }));
+    
+    if (networkResponse && networkResponse.ok) {
+      // Update cache with fresh data
+      await cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+  } catch (error) {
+    console.log('[SW] Network failed for CSV, trying cache:', error.message);
+  }
+  
+  // Fallback to cached CSV
+  const cachedResponse = await cache.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  
+  // No cache available
+  return new Response('', { status: 204 });
+}
+
+/**
+ * Strategy 4: Next.js Static Assets - Cache First (immutable)
+ * Next.js static assets have content hashes, so they're immutable
+ */
+async function handleStaticAssets(request) {
+  const cache = await caches.open(CACHE_NAME);
+  
+  // Try cache first
+  const cachedResponse = await cache.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  
+  // Fetch and cache
+  try {
+    const networkResponse = await fetch(request);
+    
+    if (networkResponse && networkResponse.ok) {
+      await cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+  } catch (error) {
+    console.log('[SW] Network failed for static asset:', error.message);
+  }
+  
+  return new Response('', { status: 404 });
+}
+
+/**
+ * Strategy 5: Images - Stale While Revalidate
+ * Return cached image immediately, update in background
+ */
+async function handleImageRequest(event, request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+  
+  // If we have cache, return it immediately and refresh in background
+  if (cached) {
+    event.waitUntil(
+      // Force network fetch with cache: 'reload' to ensure fresh data
+      fetch(new Request(request, { cache: 'reload' }))
+        .then(async (resp) => {
+          if (resp && resp.ok) {
+            await cache.put(request, resp.clone());
+          }
+        })
+        .catch(() => {})
+    );
+    return cached;
+  }
+  
+  // No cache → hit network, fallback 404 on failure
+  try {
+    const resp = await fetch(request);
+    if (resp && resp.ok) {
+      await cache.put(request, resp.clone());
+      return resp;
+    }
+  } catch (e) {
+    console.log('[SW] Image fetch failed:', e?.message || e);
+  }
+  return new Response('', { status: 404 });
+}
+
+/**
+ * Strategy 6: Default - Cache First with background update
+ * For other resources (fonts, etc.)
+ */
+async function handleDefaultRequest(event, request) {
+  const cache = await caches.open(CACHE_NAME);
+  
+  // Try cache first
+  const cachedResponse = await cache.match(request);
+  
+  if (cachedResponse) {
+    // Return cached, update in background
+    event.waitUntil(updateCacheInBackground(cache, request));
+    return cachedResponse;
+  }
+  
+  // Fetch from network
+  try {
+    const networkResponse = await fetch(request);
+    
+    if (networkResponse && networkResponse.ok) {
+      await cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+  } catch (error) {
+    console.log('[SW] Network failed for default request:', error.message);
+  }
+  
+  return new Response('', { status: 404 });
+}
+
+/**
+ * Background cache update helper
+ */
+async function updateCacheInBackground(cache, request) {
+  try {
+    const reloadRequest = new Request(request, { cache: 'reload' });
+    const response = await fetch(reloadRequest);
+    
+    if (response && response.ok) {
+      await cache.put(request, response.clone());
+      console.log('[SW] Background updated:', request.url);
+    }
+  } catch (error) {
+    // Silently fail - this is background update
+  }
+}
+
+/**
+ * Message Event - Handle messages from clients
+ */
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[SW] Received SKIP_WAITING message');
+    self.skipWaiting();
+  }
+});
+
+// Log Service Worker lifecycle
+console.log('[SW] Service Worker script loaded');

@@ -114,12 +114,12 @@ function escapeCSVValue(value: string): string {
 }
 
 /**
- * IDを3桁形式に変換
+ * IDを4桁形式に変換 (0001-9999)
  */
 export function formatAkyoId(id: string | number): string {
   const numId = typeof id === 'string' ? parseInt(id, 10) : id;
-  if (isNaN(numId)) return '000';
-  return numId.toString().padStart(3, '0');
+  if (isNaN(numId)) return '0000';
+  return numId.toString().padStart(4, '0');
 }
 
 /**

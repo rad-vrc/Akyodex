@@ -90,8 +90,8 @@ export async function fetchAkyoData(
     // Parse CSV data
     const data = parseCsvToAkyoData(text);
     
-    // Count rows (lines starting with 3 digits)
-    const rowCount = (text.match(/^\d{3},/gm) || []).length;
+    // Count rows (lines starting with 4 digits)
+    const rowCount = (text.match(/^\d{4},/gm) || []).length;
     
     const result: FetchResult = {
       data,

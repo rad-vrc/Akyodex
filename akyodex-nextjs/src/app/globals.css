@@ -657,3 +657,50 @@ select:focus {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
+
+/* Admin Panel Styles (Finder Mode) */
+.admin-body {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed #cbd5e0;
+  transition: all 0.3s;
+}
+
+.drop-zone.dragover {
+  border-color: #667eea;
+  background-color: #f7fafc;
+}
+
+/* Service Worker Update Notification Animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
