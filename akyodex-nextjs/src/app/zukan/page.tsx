@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useAkyoData } from '@/hooks/use-akyo-data';
 import { AkyoCard } from '@/components/akyo-card';
+import { AkyoList } from '@/components/akyo-list';
 import { SearchBar } from '@/components/search-bar';
 import { FilterPanel } from '@/components/filter-panel';
 import { LoadingSpinner } from '@/components/loading-spinner';
@@ -182,7 +183,7 @@ export default function ZukanPage() {
           </div>
         </div>
 
-        {/* Akyoカード表示 */}
+        {/* Akyoカード/リスト表示 */}
         {filteredData.length === 0 ? (
           <div className="akyo-card p-12 text-center space-y-4">
             <div className="text-6xl">🔍</div>
@@ -193,14 +194,17 @@ export default function ZukanPage() {
               検索条件を変更してみてください
             </p>
           </div>
+        ) : viewMode === 'list' ? (
+          <AkyoList
+            data={filteredData}
+            onToggleFavorite={toggleFavorite}
+            onShowDetail={(akyo) => {
+              // TODO: モーダル表示
+              console.log('Show detail:', akyo);
+            }}
+          />
         ) : (
-          <div
-            className={
-              viewMode === 'grid'
-                ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6'
-                : 'space-y-4'
-            }
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {filteredData.map(akyo => (
               <AkyoCard
                 key={akyo.id}

@@ -139,11 +139,11 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         {/* くわしく見るボタン */}
         <button
           onClick={handleCardClick}
-          className="w-full py-3 px-4 rounded-full font-bold text-white bg-gradient-to-r from-pink-400 to-orange-400 hover:from-pink-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+          className="detail-button w-full flex items-center justify-center gap-2"
         >
-          <span>🌟</span>
+          <span className="animate-bounce">🌟</span>
           <span>くわしく見る</span>
-          <span>🌟</span>
+          <span className="animate-bounce">🌟</span>
         </button>
       </div>
     </div>
