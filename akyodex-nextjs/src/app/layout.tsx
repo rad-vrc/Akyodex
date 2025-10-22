@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Kosugi_Maru, M_PLUS_Rounded_1c } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
+import { WebVitals } from "@/components/web-vitals";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -125,6 +126,7 @@ export const metadata: Metadata = {
 };
 
 const fontAwesomeUrl = "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css";
+const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
 
 export default function RootLayout({
   children,
@@ -135,11 +137,18 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href={fontAwesomeUrl} />
+        {/* Sentry エラー監視 */}
+        <script
+          src={sentryUrl}
+          crossOrigin="anonymous"
+          async
+        />
         <StructuredData />
       </head>
       <body
         className={`${mPlusRounded1c.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
+        <WebVitals />
         {children}
       </body>
     </html>
