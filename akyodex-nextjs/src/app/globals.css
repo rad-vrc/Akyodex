@@ -1,0 +1,280 @@
+@import "tailwindcss";
+
+/*
+ * Akyoずかん - 子どもにやさしいデザイン
+ * カラーパレット：明るく温かみのある色合い
+ */
+
+:root {
+  /* メインカラー - パステル調の優しい色（既存と完全一致） */
+  --primary-pink: #FF6B9D;      /* やさしいピンク */
+  --primary-yellow: #FFC107;     /* 明るい黄色 */
+  --primary-blue: #66B2FF;       /* 空色 */
+  --primary-green: #66D9A5;      /* ミントグリーン */
+  --primary-orange: #FFA06D;     /* やさしいオレンジ */
+
+  /* 背景グラデーション */
+  --bg-gradient-start: #FFF5E6;  /* クリーム色 */
+  --bg-gradient-end: #E6F7FF;    /* 薄い水色 */
+
+  /* テキストカラー */
+  --text-primary: #4A4A4A;       /* ソフトな黒 */
+  --text-secondary: #6B6B6B;     /* グレー */
+
+  /* カードの影 */
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
+
+  /* タブアクセント */
+  --tab-accent-color: var(--primary-pink);
+  --tab-accent-text: var(--primary-pink);
+
+  /* 属性モーダル */
+  --attribute-accent: var(--primary-green);
+  --attribute-accent-strong: #2f855a;
+  --attribute-accent-soft: rgba(102, 217, 165, 0.18);
+  --attribute-border: rgba(102, 217, 165, 0.45);
+  --attribute-border-soft: rgba(102, 217, 165, 0.28);
+  --attribute-shadow: rgba(102, 217, 165, 0.3);
+  --attribute-chip-bg: rgba(102, 217, 165, 0.18);
+  --attribute-chip-border: rgba(102, 217, 165, 0.35);
+}
+
+/* 全体のフォント設定 - 丸みを帯びたフォント */
+body {
+  font-family: 'Kosugi Maru', 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif !important;
+  color: var(--text-primary);
+  background-color: var(--bg-gradient-start);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* PC と同じくモバイルでも背景を固定するための擬似要素 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    center top / cover no-repeat url('/images/akyo-bg.webp'),
+    linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, auto;
+  background-position: center top, top;
+  z-index: -2;
+}
+
+/* ワイド画面では見切れ方を整えるために中央寄せ */
+@media (min-aspect-ratio: 16/10) {
+  body::before {
+    background-position: center center, top;
+  }
+}
+
+/* 背景にかわいい模様を追加 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(102, 217, 165, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(102, 178, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ヘッダーのデザイン */
+header {
+  background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%) !important;
+  border-radius: 0 0 30px 30px;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+/* ロゴ・タイトル */
+.logo-text {
+  font-family: 'M PLUS Rounded 1c', 'Kosugi Maru', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 2.5rem !important;
+  color: white !important;
+  position: relative;
+  display: inline-block;
+  /* 多重縁取り効果 */
+  text-shadow:
+    /* 内側の縁取り - ピンク */
+    -1px -1px 0 #FF6B9D,
+    1px -1px 0 #FF6B9D,
+    -1px 1px 0 #FF6B9D,
+    1px 1px 0 #FF6B9D,
+    /* 中間の縁取り - オレンジ */
+    -2px -2px 0 #FFA06D,
+    2px -2px 0 #FFA06D,
+    -2px 2px 0 #FFA06D,
+    2px 2px 0 #FFA06D,
+    -2px 0 0 #FFA06D,
+    2px 0 0 #FFA06D,
+    0 -2px 0 #FFA06D,
+    0 2px 0 #FFA06D,
+    /* 外側の縁取り - 青 */
+    -3px -3px 0 #66B2FF,
+    3px -3px 0 #66B2FF,
+    -3px 3px 0 #66B2FF,
+    3px 3px 0 #66B2FF,
+    -3px 0 0 #66B2FF,
+    3px 0 0 #66B2FF,
+    0 -3px 0 #66B2FF,
+    0 3px 0 #66B2FF,
+    /* 影 */
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    6px 6px 12px rgba(0, 0, 0, 0.2);
+  animation: gentle-bounce 3s ease-in-out infinite;
+  letter-spacing: 0.05em;
+}
+
+.logo-text:hover {
+  animation: logo-shine 0.5s ease-in-out;
+}
+
+@keyframes logo-shine {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ボタンデザイン */
+button, .btn {
+  border-radius: 25px !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* プライマリボタン */
+.bg-purple-600, .bg-purple-500 {
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange)) !important;
+  border: 2px solid transparent !important;
+}
+
+.bg-purple-600:hover, .bg-purple-500:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+}
+
+/* Akyoカード */
+.akyo-card {
+  background: white !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  transition: all 0.3s ease !important;
+  border: 3px solid transparent !important;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, var(--primary-pink), var(--primary-yellow)) border-box !important;
+}
+
+.akyo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+/* 画像のスタイル */
+.akyo-card img {
+  border-radius: 15px !important;
+  transition: transform 0.3s ease !important;
+}
+
+.akyo-card:hover img {
+  transform: scale(1.1);
+}
+
+/* お気に入りボタン */
+.favorite-btn {
+  background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  transition: all 0.3s ease !important;
+  animation: star-pulse 2s ease-in-out infinite;
+}
+
+@keyframes star-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.favorite-btn:hover {
+  transform: rotate(20deg) scale(1.2);
+}
+
+/* 検索バー */
+#searchInput, .search-input {
+  border-radius: 25px !important;
+  border: 3px solid var(--primary-blue) !important;
+  font-size: 18px !important;
+  padding: 12px 20px 12px 60px !important;
+  background: white !important;
+  transition: all 0.3s ease !important;
+}
+
+#searchInput:focus, .search-input:focus {
+  border-color: var(--primary-pink) !important;
+  box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2) !important;
+  outline: none !important;
+}
+
+/* スクロールバー */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-gradient-start);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-blue));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
+}
+
+/* レインボーグラデーション背景（ホームページ用） */
+.rainbow-gradient {
+  background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-yellow) 25%, var(--primary-blue) 50%, var(--primary-green) 75%, var(--primary-orange) 100%);
+  background-size: 200% 200%;
+  animation: rainbow-animation 15s ease infinite;
+}
+
+@keyframes rainbow-animation {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* アニメーション要素 */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
