@@ -19,6 +19,7 @@ import { AkyoList } from '@/components/akyo-list';
 import { SearchBar } from '@/components/search-bar';
 import { FilterPanel } from '@/components/filter-panel';
 import { LanguageToggle } from '@/components/language-toggle';
+import { MiniAkyoBg } from '@/components/mini-akyo-bg';
 import { AkyoDetailModal } from '@/components/akyo-detail-modal';
 import type { AkyoData, ViewMode } from '@/types/akyo';
 import type { SupportedLanguage } from '@/lib/i18n';
@@ -129,7 +130,10 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
   }
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className="min-h-screen pb-16 relative">
+      {/* Mini Akyo Background Animation */}
+      <MiniAkyoBg />
+
       {/* ヘッダー */}
       <header className="sticky top-0 z-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -160,7 +164,7 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
         {/* 検索バー */}
         <div className="akyo-card p-4 sm:p-6">
           <SearchBar onSearch={setSearchQuery} />
@@ -241,6 +245,16 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
 
       {/* Language Toggle Button */}
       <LanguageToggle initialLang={initialLang} />
+
+      {/* Finder Mode Button (Admin) - Fixed bottom right */}
+      <Link
+        href="/admin"
+        className="fixed bottom-20 right-6 z-40 w-14 h-14 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center group"
+        aria-label="ファインダーモード（管理画面）"
+        title="ファインダーモード"
+      >
+        <i className="fas fa-search text-xl group-hover:scale-110 transition-transform"></i>
+      </Link>
     </div>
   );
 }

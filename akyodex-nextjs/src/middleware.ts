@@ -1,31 +1,65 @@
 /**
- * Next.js Middleware for i18n
+ * Next.js Middleware
  * 
  * Handles:
- * - Auto-detect language from Accept-Language header
- * - Country-based language detection (Cloudflare cf.country)
- * - Cookie-based language persistence
- * - Redirect to language-specific route
+ * 1. Language detection (Cloudflare country, Accept-Language, Cookie)
+ * 2. Admin route access (client component handles auth UI)
+ * 
+ * NOTE: Middleware runs in Edge Runtime (Node.js APIs not available).
+ * Security is maintained through:
+ * - API routes validate HMAC-signed sessions (verify-session, login, CRUD)
+ * - CSRF protection on all POST endpoints
+ * - Client-side authentication checks in admin-client.tsx
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { detectLanguageFromHeader, getLanguageFromCountry, isValidLanguage, DEFAULT_LANGUAGE } from '@/lib/i18n';
-
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder (images, etc)
-     * - api routes
-     */
-    '/((?!_next/static|_next/image|favicon.ico|images|api).*)',
-  ],
-};
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 const LANGUAGE_COOKIE = 'AKYO_LANG';
+
+type SupportedLanguage = 'ja' | 'en';
+
+/**
+ * Validate language code
+ */
+function isValidLanguage(lang: string): lang is SupportedLanguage {
+  return lang === 'ja' || lang === 'en';
+}
+
+/**
+ * Get language from country code (Cloudflare cf-ipcountry header)
+ */
+function getLanguageFromCountry(country: string): SupportedLanguage {
+  // English-speaking countries
+  const englishCountries = ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'ZA', 'SG', 'IN', 'PH'];
+  return englishCountries.includes(country.toUpperCase()) ? 'en' : 'ja';
+}
+
+/**
+ * Detect language from Accept-Language header
+ */
+function detectLanguageFromHeader(acceptLanguage: string | null): SupportedLanguage {
+  if (!acceptLanguage) return 'ja';
+
+  // Parse Accept-Language header (e.g., "en-US,en;q=0.9,ja;q=0.8")
+  const languages = acceptLanguage
+    .split(',')
+    .map(lang => {
+      const [code, qStr] = lang.trim().split(';');
+      const q = qStr ? parseFloat(qStr.split('=')[1]) : 1.0;
+      return { code: code.split('-')[0].toLowerCase(), q };
+    })
+    .sort((a, b) => b.q - a.q);
+
+  // Find first supported language
+  for (const { code } of languages) {
+    if (isValidLanguage(code)) {
+      return code;
+    }
+  }
+
+  return 'ja'; // Default to Japanese
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -40,6 +74,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Allow /admin routes to load (client component handles auth UI)
+  if (pathname.startsWith('/admin')) {
+    return NextResponse.next();
+  }
+
+  // Language detection for all other routes
   // 1. Check cookie (user preference)
   const cookieLang = request.cookies.get(LANGUAGE_COOKIE)?.value;
   if (cookieLang && isValidLanguage(cookieLang)) {
@@ -64,7 +104,7 @@ export function middleware(request: NextRequest) {
   // 3. Check Accept-Language header
   const acceptLanguage = request.headers.get('accept-language');
   const detectedLang = detectLanguageFromHeader(acceptLanguage);
-  
+
   const response = NextResponse.next();
   response.headers.set('x-akyo-lang', detectedLang);
   response.cookies.set(LANGUAGE_COOKIE, detectedLang, {
@@ -74,3 +114,10 @@ export function middleware(request: NextRequest) {
 
   return response;
 }
+
+export const config = {
+  matcher: [
+    // Match all routes except static files and API routes
+    '/((?!_next|api|images|.*\\.).*)',
+  ],
+};
