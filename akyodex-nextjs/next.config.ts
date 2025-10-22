@@ -18,13 +18,57 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // セキュリティヘッダー
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
+      },
+    ];
+  },
+
   // i18n対応準備
   i18n: undefined, // App Routerでは別の方法で実装
+
   // 環境変数の検証（オプション）
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://akyodex.com',
     NEXT_PUBLIC_R2_BASE: process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com',
   },
+
+  // パフォーマンス最適化
+  reactStrictMode: true,
+  
+  // 本番環境での最適化
+  poweredByHeader: false,
+  compress: true,
 };
 
 export default nextConfig;

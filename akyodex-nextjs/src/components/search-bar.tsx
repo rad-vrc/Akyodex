@@ -35,6 +35,9 @@ export function SearchBar({ onSearch, placeholder = '名前・作者・属性で
         onChange={handleChange}
         placeholder={placeholder}
         className="search-input w-full"
+        aria-label="Akyo検索"
+        autoComplete="off"
+        spellCheck="false"
       />
 
       {/* クリアボタン */}

@@ -1,0 +1,10 @@
+# Akyoずかん Robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://akyodex.com/sitemap.xml
+
+# クローラー最適化
+Crawl-delay: 1
