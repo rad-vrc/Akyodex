@@ -17,6 +17,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
+import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 
 interface AkyoDetailModalProps {
   akyo: AkyoData | null;
@@ -63,7 +64,12 @@ function getAttributeColor(attribute: string): string {
 }
 
 export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: AkyoDetailModalProps) {
-  const [profileIconUrl, setProfileIconUrl] = useState<string>('/images/profile-icon.webp');
+  const [localAkyo, setLocalAkyo] = useState<AkyoData | null>(akyo);
+
+  // Sync local state with prop changes
+  useEffect(() => {
+    setLocalAkyo(akyo);
+  }, [akyo]);
 
   useEffect(() => {
     // ESCキーでモーダルを閉じる
@@ -84,26 +90,54 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     };
   }, [isOpen, onClose]);
 
-  if (!akyo || !isOpen) return null;
+  if (!localAkyo || !isOpen) return null;
 
-  const displayName = akyo.nickname || akyo.avatarName || '';
-  const attributes = akyo.attribute ? akyo.attribute.split(',').map(a => a.trim()).filter(Boolean) : [];
-  const attributeColor = getAttributeColor(akyo.attribute);
-  const imageUrl = `https://images.akyodex.com/images/${akyo.id}.webp`;
+  const displayName = localAkyo.nickname || localAkyo.avatarName || '';
+  const attributes = localAkyo.attribute ? localAkyo.attribute.split(',').map(a => a.trim()).filter(Boolean) : [];
+  const attributeColor = getAttributeColor(localAkyo.attribute);
+  const imageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
+  const iconImageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 80);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
+    // モーダル外（backdrop または modal container）をクリックしたら閉じる
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   const handleFavoriteClick = () => {
-    onToggleFavorite?.(akyo.id);
+    if (!localAkyo) return;
+    
+    // 楽観的更新（即座にUIを変更）
+    // Note: お気に入りはlocalStorageベースで同期的に処理されるため、
+    // エラーハンドリングやロールバックは不要です。
+    // もし将来サーバーサイドAPIを使用する場合は、try-catchと
+    // 失敗時のロールバック処理を追加してください。
+    setLocalAkyo({
+      ...localAkyo,
+      isFavorite: !localAkyo.isFavorite,
+    });
+    
+    // 親コンポーネントに通知（localStorageを更新）
+    onToggleFavorite?.(localAkyo.id);
   };
 
   const handleVRChatOpen = () => {
-    if (akyo.avatarUrl) {
-      window.open(akyo.avatarUrl, '_blank', 'noopener,noreferrer');
+    if (localAkyo?.avatarUrl) {
+      // Security: Validate URL scheme before opening
+      try {
+        const url = new URL(localAkyo.avatarUrl);
+        // Only allow https and http protocols (prevent javascript:, data:, etc.)
+        if (url.protocol === 'https:' || url.protocol === 'http:') {
+          window.open(localAkyo.avatarUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          console.error('Invalid URL protocol:', url.protocol);
+          alert('無効なURLです');
+        }
+      } catch (error) {
+        console.error('Invalid URL:', error);
+        alert('無効なURLです');
+      }
     }
   };
 
@@ -112,16 +146,23 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       className="fixed inset-0 z-50 overflow-y-auto"
       onClick={handleBackdropClick}
     >
-      {/* Backdrop */}
-      <div className="modal-backdrop fixed inset-0" style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        backdropFilter: 'blur(4px)',
-      }} />
+      {/* Backdrop - クリックで閉じる */}
+      <div 
+        className="modal-backdrop fixed inset-0" 
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(4px)',
+        }}
+        onClick={handleBackdropClick}
+      />
 
-      {/* Modal Container */}
-      <div className="relative min-h-screen px-4 py-8">
+      {/* Modal Container - クリックで閉じる */}
+      <div className="relative min-h-screen px-4 py-8" onClick={handleBackdropClick}>
         <div className="relative mx-auto max-w-2xl">
-          <div className="bg-white rounded-3xl shadow-2xl modal-show">
+          <div 
+            className="bg-white rounded-3xl shadow-2xl modal-show"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Close Button */}
             <button
               onClick={onClose}
@@ -146,14 +187,18 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             >
               <h2 className="text-3xl font-black flex items-center">
                 <Image
-                  src={profileIconUrl}
-                  alt="Profile Icon"
+                  src={iconImageUrl}
+                  alt={displayName}
                   width={40}
                   height={40}
-                  className="w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400"
-                  onError={() => setProfileIconUrl('/images/placeholder.webp')}
+                  className="w-10 h-10 mr-3 inline-block object-cover"
+                  unoptimized
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/placeholder.webp';
+                  }}
                 />
-                <span>#{akyo.id} {displayName}</span>
+                <span>#{localAkyo.id} {displayName}</span>
               </h2>
             </div>
 
@@ -166,9 +211,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     <Image
                       src={imageUrl}
                       alt={displayName}
-                      width={600}
-                      height={400}
+                      width={800}
+                      height={533}
                       className="w-full h-full object-contain rounded-2xl"
+                      unoptimized
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.style.background = `linear-gradient(135deg, ${attributeColor}, ${attributeColor}66)`;
@@ -186,10 +232,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Name Card */}
                   <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4">
-                    <h3 className="text-sm font-bold text-purple-600 mb-2">
+                    <h3 className="text-sm font-bold mb-2" style={{ color: '#FF6B9D' }}>
                       <i className="fas fa-tag mr-1"></i>なまえ
                     </h3>
-                    <p className="text-xl font-black">{akyo.nickname || '-'}</p>
+                    <p className="text-xl font-black">{localAkyo.nickname || '-'}</p>
                   </div>
 
                   {/* Avatar Name Card */}
@@ -197,7 +243,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     <h3 className="text-sm font-bold text-blue-600 mb-2">
                       <i className="fas fa-user-astronaut mr-1"></i>アバター名
                     </h3>
-                    <p className="text-xl font-black">{akyo.avatarName || '-'}</p>
+                    <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
                   </div>
 
                   {/* Attributes Card */}
@@ -228,39 +274,41 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     <h3 className="text-sm font-bold text-green-600 mb-2">
                       <i className="fas fa-palette mr-1"></i>つくったひと
                     </h3>
-                    <p className="text-xl font-black">{akyo.creator || ''}</p>
+                    <p className="text-xl font-black">{localAkyo.creator || ''}</p>
                   </div>
                 </div>
 
                 {/* VRChat URL Section */}
-                {akyo.avatarUrl && (
+                {localAkyo.avatarUrl && (
                   <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-2">
                       VRChat アバターURL
                     </h3>
                     <div className="bg-blue-50 rounded-lg p-4">
                       <a
-                        href={akyo.avatarUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 text-sm break-all"
+                        href={localAkyo.avatarUrl}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleVRChatOpen();
+                        }}
+                        className="text-blue-600 hover:text-blue-800 text-sm break-all cursor-pointer"
                       >
                         <i className="fas fa-external-link-alt mr-1"></i>
-                        {akyo.avatarUrl}
+                        {localAkyo.avatarUrl}
                       </a>
                     </div>
                   </div>
                 )}
 
                 {/* Notes Section */}
-                {akyo.notes && (
+                {localAkyo.notes && (
                   <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5">
-                    <h3 className="text-lg font-bold text-purple-600 mb-3">
-                      <i className="fas fa-gift mr-2"></i>ほかのじょうほう
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">
+                      <i className="fas fa-gift mr-2"></i>おまけじょうほう
                     </h3>
                     <div className="bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner">
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                        {akyo.notes}
+                        {localAkyo.notes}
                       </p>
                     </div>
                   </div>
@@ -268,22 +316,25 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
 
                 {/* Action Buttons */}
                 <div className="flex gap-3 pt-4 border-t">
-                  {/* Favorite Button */}
+                  {/* Favorite Button - ピンク色 */}
                   <button
                     onClick={handleFavoriteClick}
                     className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
-                      akyo.isFavorite
-                        ? 'bg-red-500 text-white hover:bg-red-600'
+                      localAkyo.isFavorite
+                        ? 'text-white hover:opacity-90'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
-                    aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
+                    style={localAkyo.isFavorite ? {
+                      background: 'linear-gradient(135deg, #FF6B9D, #FF8FA3)',
+                    } : undefined}
+                    aria-label={localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
                   >
                     <i className="fas fa-heart"></i>
-                    {akyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
+                    {localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
                   </button>
 
                   {/* VRChat Button - Orange Gradient (not purple!) */}
-                  {akyo.avatarUrl && (
+                  {localAkyo.avatarUrl && (
                     <button
                       onClick={handleVRChatOpen}
                       className="flex-1 py-3 rounded-lg font-medium transition-opacity flex items-center justify-center gap-2"

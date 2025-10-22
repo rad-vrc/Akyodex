@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
+import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 
 interface AkyoCardProps {
   akyo: AkyoData;
@@ -71,11 +72,12 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
       {/* 画像 */}
       <div className="relative w-full aspect-[3/2] bg-gray-100">
         <Image
-          src={`https://images.akyodex.com/images/${akyo.id}.webp`}
+          src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}
           alt={akyo.avatarName || akyo.nickname}
           fill
           className="object-cover"
           loading="lazy"
+          unoptimized
           onError={(e) => {
             // フォールバック画像
             const target = e.target as HTMLImageElement;
@@ -128,12 +130,12 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           </div>
         )}
 
-        {/* 作者情報 - 元の実装と同じ形式 (改行あり) */}
+        {/* 作者情報 - 元の実装と同じ形式 (改行あり、:付き) */}
         <p className="text-xs text-gray-600 mb-2 whitespace-pre-line">
           {akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
-            <>アバター名 {akyo.avatarName}{'\n'}</>
+            <>アバター名: {akyo.avatarName}{'\n'}</>
           )}
-          作者 {akyo.creator}
+          作者: {akyo.creator}
         </p>
 
         {/* くわしく見るボタン */}

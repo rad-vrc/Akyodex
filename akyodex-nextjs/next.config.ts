@@ -17,6 +17,13 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    // Next.js 16対応: APIルート経由の画像読み込み
+    localPatterns: [
+      {
+        pathname: '/api/avatar-image',
+        search: '**',
+      },
+    ],
   },
 
   // セキュリティヘッダー

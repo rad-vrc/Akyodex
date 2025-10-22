@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
+import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 
 interface AkyoListProps {
   data: AkyoData[];
@@ -89,12 +90,13 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
                 <td>
                   <div className="list-image-wrapper">
                     <Image
-                      src={`https://images.akyodex.com/images/${akyo.id}.webp`}
+                      src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 96)}
                       alt={akyo.avatarName || akyo.nickname}
                       width={48}
                       height={48}
                       className="object-cover"
                       loading="lazy"
+                      unoptimized
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = '/images/placeholder.webp';

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_JP, Kosugi_Maru } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -142,6 +143,7 @@ export default function RootLayout({
         className={`${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
         <WebVitals />
+        <ServiceWorkerRegister />
         {children}
       </body>
     </html>
