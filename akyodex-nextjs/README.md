@@ -23,7 +23,7 @@
 
 ## 📖 Project Overview
 
-**Akyodex** は、VRChatのオリジナルアバター「暁」シリーズを網羅したオンライン図鑑です。
+**Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズを網羅したオンライン図鑑です。
 
 ### Key Features
 - 🎨 **639体のアバターデータベース** - 4桁ID管理システム
@@ -485,7 +485,7 @@ openssl rand -hex 64
 
 - **639 Avatars**: Complete database with 4-digit IDs (0001-0639)
 - **Search**: By nickname, avatar name, attributes
-- **Filtering**: By attributes (e.g., アンドロイド, ケモ, etc.)
+- **Filtering**: By attributes (e.g., アンドロイド, 獣, etc.)
 - **Detail View**: Modal with full information
 - **SSG + ISR**: Static generation with 1-hour revalidation
 - **Responsive**: Mobile-first design
@@ -500,9 +500,9 @@ openssl rand -hex 64
 - **Context-Aware**: Uses retrieved avatar data for accurate answers
 
 Example queries:
-- "アンドロイドっぽい暁を教えて"
+- "アンドロイドっぽいAkyoを教えて"
 - "Tell me about kemono avatars"
-- "ピンク色の暁はありますか？"
+- "ピンク色のAkyoはいますか？"
 
 ### 3. Admin Panel
 
@@ -603,7 +603,7 @@ Example queries:
 
 ```typescript
 // Example
-const response = await fetch('/api/chat?message=アンドロイドの暁を教えて');
+const response = await fetch('/api/chat?message=アンドロイドのAkyoを教えて');
 const reader = response.body.getReader();
 ```
 
