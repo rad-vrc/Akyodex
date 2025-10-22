@@ -4,20 +4,84 @@
 
 ## 📋 Table of Contents
 
-1. [Project Overview](#project-overview)
-2. [Architecture](#architecture)
-3. [Tech Stack](#tech-stack)
-4. [Project Structure](#project-structure)
-5. [Development Setup](#development-setup)
-6. [Deployment Guide](#deployment-guide)
-7. [Environment Variables](#environment-variables)
-8. [Features](#features)
-9. [API Endpoints](#api-endpoints)
-10. [Security](#security)
-11. [Troubleshooting](#troubleshooting)
-12. [Migration History](#migration-history)
-13. [Known Issues](#known-issues)
-14. [Contributing](#contributing)
+1. [Quick Start](#quick-start)
+2. [Project Overview](#project-overview)
+3. [Glossary](#glossary)
+4. [Architecture](#architecture)
+5. [Tech Stack](#tech-stack)
+6. [Project Structure](#project-structure)
+7. [Development Setup](#development-setup)
+8. [Deployment Guide](#deployment-guide)
+9. [Deployment Verification](#deployment-verification)
+10. [Environment Variables](#environment-variables)
+11. [Features](#features)
+12. [API Endpoints](#api-endpoints)
+13. [Security](#security)
+14. [Troubleshooting](#troubleshooting)
+15. [Migration History](#migration-history)
+16. [Known Issues](#known-issues)
+17. [Contributing](#contributing)
+
+---
+
+## ⚡ Quick Start
+
+**Get Akyodex running locally in 5 minutes!**
+
+### Prerequisites Check
+```bash
+# Check Node.js version (need 20.x or later)
+node --version
+
+# Check npm version (need 10.x or later)
+npm --version
+```
+
+### Step 1: Clone and Install (2 minutes)
+```bash
+# Clone repository
+git clone https://github.com/rad-vrc/Akyodex.git
+cd Akyodex/akyodex-nextjs
+
+# Install dependencies
+npm install
+```
+
+### Step 2: Set Up Environment (1 minute)
+```bash
+# Create .dev.vars file with default development credentials
+cat > .dev.vars << 'EOF'
+# Admin Authentication (Development only)
+ADMIN_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313
+OWNER_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313
+
+# JWT Secret (Development only)
+JWT_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# AI API Keys (Optional for basic functionality)
+# GEMINI_API_KEY=your_key_here
+# COHERE_API_KEY=your_key_here
+EOF
+```
+
+### Step 3: Run Development Server (30 seconds)
+```bash
+# Start dev server
+npm run dev
+```
+
+### Step 4: Open in Browser
+```
+✅ Gallery:     http://localhost:3000/zukan
+✅ Admin Panel: http://localhost:3000/admin
+✅ Chatbot:     (Click chat icon in bottom-right)
+```
+
+**Default Admin Credentials:**
+- Password: `Akyo-Admin-95cea4f6a6e348da5cec1fc31ef23ba2`
+- Role: Admin (full access)
+
+**Note:** AI Chatbot requires API keys (GEMINI_API_KEY, COHERE_API_KEY) - see [Chatbot Setup](CHATBOT_SETUP.md) for details.
 
 ---
 
@@ -39,6 +103,49 @@
 - ✅ **PWA Implementation** (Service Worker with 6 caching strategies)
 - ✅ **AI Chatbot** (BGE-M3 embeddings → Vectorize → Cohere rerank → Gemini)
 - 📝 **Code Quality Improvements** (Issue #115 - 8 refactoring tasks)
+
+---
+
+## 📖 Glossary
+
+**Key terms used in this documentation:**
+
+### General Terms
+- **SSG (Static Site Generation)**: Pre-rendering pages at build time for faster performance
+- **ISR (Incremental Static Regeneration)**: Updating static pages periodically without rebuilding the entire site
+- **PWA (Progressive Web App)**: Web application with native app-like features (offline support, installable)
+- **Edge Runtime**: Code execution at CDN edge locations (closer to users) for lower latency
+- **JWT (JSON Web Token)**: Secure authentication token standard
+
+### AI & Machine Learning
+- **RAG (Retrieval-Augmented Generation)**: AI technique combining database search with text generation for accurate, context-aware responses
+- **Embeddings**: Numerical vector representations of text that capture semantic meaning (e.g., "cat" and "kitten" have similar vectors)
+- **Vector Database**: Database optimized for storing and searching embeddings using mathematical similarity
+- **BGE-M3**: Multi-lingual embedding model that converts text to 1024-dimensional vectors
+- **Cosine Similarity**: Mathematical measure of similarity between two vectors (used for search)
+- **Reranking**: Re-ordering search results by relevance using a specialized model
+- **LLM (Large Language Model)**: AI model trained on massive text data for text generation (e.g., Gemini, GPT)
+- **Streaming Response**: Sending AI response progressively (word-by-word) instead of waiting for full response
+
+### Cloudflare Services
+- **Cloudflare Pages**: Static site hosting with automatic deployment from Git
+- **R2 Bucket**: Object storage (like AWS S3) for files (CSV, images)
+- **KV (Key-Value) Store**: Fast distributed database for simple key-value pairs (used for sessions)
+- **Vectorize**: Cloudflare's vector database for storing and searching embeddings
+- **Workers AI**: Cloudflare's serverless AI inference platform
+
+### VRChat Terms
+- **Avatar**: 3D character model used in VRChat
+- **暁 (Akyo)**: Japanese VRChat avatar series created by the community
+- **VRChat ID**: Unique identifier for avatars (format: `avtr_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
+
+### Technical Terms
+- **XSS (Cross-Site Scripting)**: Security vulnerability where attackers inject malicious scripts
+- **CSRF (Cross-Site Request Forgery)**: Attack forcing users to execute unwanted actions
+- **ReDoS (Regular Expression Denial of Service)**: Attack exploiting inefficient regex patterns
+- **Timing Attack**: Exploiting time differences in operations to extract sensitive information
+- **HTTP-only Cookie**: Cookie inaccessible to JavaScript (prevents XSS attacks)
+- **SameSite Cookie**: Cookie security attribute preventing CSRF attacks
 
 ---
 
@@ -444,6 +551,137 @@ npm run pages:deploy
 ```
 
 Or push to `main` branch for automatic deployment.
+
+---
+
+## ✅ Deployment Verification
+
+**After successful deployment, verify everything is working correctly:**
+
+### 1. Build Success Check
+
+```bash
+# In Cloudflare Pages Dashboard
+✅ Build status: Success
+✅ Deployment URL: https://your-project.pages.dev
+✅ No build errors in logs
+```
+
+### 2. Basic Functionality Test
+
+| Feature | URL | Expected Result |
+|---------|-----|----------------|
+| **Landing Page** | `https://your-project.pages.dev/` | Loads without errors |
+| **Avatar Gallery** | `https://your-project.pages.dev/zukan` | Shows 639 avatars |
+| **Avatar Detail** | `https://your-project.pages.dev/zukan/detail/0001` | Shows avatar #0001 details |
+| **Admin Login** | `https://your-project.pages.dev/admin` | Login page loads |
+| **Language Switch** | Click language selector | Switches between 日本語/English |
+| **PWA Manifest** | `https://your-project.pages.dev/manifest.json` | JSON file loads |
+| **Service Worker** | `https://your-project.pages.dev/sw.js` | JavaScript file loads |
+
+### 3. Cloudflare Bindings Check
+
+```bash
+# Check R2 bucket
+npx wrangler r2 bucket list
+# Should show: akyo-data
+
+npx wrangler r2 object list akyo-data
+# Should show: data/akyo-data.csv, data/akyo-data-US.csv
+
+# Check KV namespace
+npx wrangler kv:namespace list
+# Should show: AKYO_KV with ID
+
+# Check Vectorize index
+npx wrangler vectorize list
+# Should show: akyo-encyclopedia (1024 dimensions, cosine)
+
+npx wrangler vectorize get-by-ids akyo-encyclopedia --ids=akyo-0001
+# Should return: Vector data for avatar #0001
+```
+
+### 4. Admin Panel Test
+
+```bash
+# 1. Go to /admin
+# 2. Login with your credentials
+# 3. Try each tab:
+```
+
+| Tab | Action | Expected Result |
+|-----|--------|----------------|
+| **Add** | Fetch next ID | Shows next available 4-digit ID |
+| **Add** | VRChat fetch | Retrieves avatar info from VRChat URL |
+| **Edit** | Search avatar | Finds existing avatar |
+| **Edit** | Update field | Saves changes to CSV |
+| **Tools** | View attributes | Shows all attribute tags |
+
+### 5. AI Chatbot Test (if API keys configured)
+
+```bash
+# 1. Click chatbot icon (bottom-right)
+# 2. Type query: "アンドロイドの暁を教えて"
+# 3. Expected:
+```
+
+✅ **Success indicators:**
+- Response starts streaming within 5 seconds
+- Shows "参考にしたデータ" (Referenced Data) section
+- Source avatars are clickable
+- No error messages
+
+❌ **Common errors:**
+- "Error generating response" → Check GEMINI_API_KEY
+- Empty response → Check Vectorize index has data
+- "Timeout" → Check COHERE_API_KEY
+
+### 6. PWA Installation Test
+
+```bash
+# Desktop (Chrome/Edge):
+# 1. Visit site in browser
+# 2. Look for install icon in address bar
+# 3. Click "Install" → Should install as desktop app
+
+# Mobile (Android/iOS):
+# 1. Visit site in browser
+# 2. Menu → "Add to Home Screen"
+# 3. Should add app icon to home screen
+```
+
+### 7. Performance Check
+
+```bash
+# Run Lighthouse audit (Chrome DevTools)
+# Expected scores:
+```
+
+- **Performance**: 90+ (green)
+- **Accessibility**: 95+ (green)
+- **Best Practices**: 90+ (green)
+- **SEO**: 90+ (green)
+- **PWA**: ✅ Installable
+
+### 8. Error Monitoring
+
+```bash
+# Check Cloudflare Pages Dashboard:
+✅ Functions → No errors in last 24h
+✅ Analytics → Requests succeeding
+✅ Logs → No 5xx errors
+```
+
+### Troubleshooting Failed Checks
+
+If any check fails, see [Troubleshooting](#troubleshooting) section for detailed solutions.
+
+**Quick fixes:**
+- Build fails → Check Root directory setting
+- 404 errors → Check Build output directory
+- API errors → Check Environment variables
+- Bindings not working → Check Settings → Functions
+- Chatbot fails → Check API keys and Vectorize data
 
 ---
 
