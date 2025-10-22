@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
-/* Google Fonts Import - must be at top */
+/* Google Fonts Import - MUST be before Tailwind */
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;900&display=swap');
+
+@import "tailwindcss";
 
 /*
  * Akyoずかん - 子どもにやさしいデザイン
@@ -594,4 +594,45 @@ select:focus {
 
 .list-action-btn:hover .list-favorite-icon {
   transform: scale(1.15);
+}
+
+/* Language Toggle Button */
+.language-toggle-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange)) !important;
+  color: white !important;
+  border: 3px solid white !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.language-toggle-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.6) !important;
+}
+
+.language-toggle-btn:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+@media (max-width: 640px) {
+  .language-toggle-btn {
+    bottom: 70px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    font-size: 14px;
+  }
 }

@@ -1,0 +1,37 @@
+# Cloudflare Pages Configuration
+# https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+
+name = "akyodex-nextjs"
+compatibility_date = "2025-01-22"
+
+# Pages-specific settings
+pages_build_output_dir = ".next"
+
+# KV Namespace for avatar metadata
+[[kv_namespaces]]
+binding = "AKYO_KV"
+id = "YOUR_KV_NAMESPACE_ID" # Replace with actual ID from Cloudflare dashboard
+
+# R2 Bucket for images
+[[r2_buckets]]
+binding = "AKYO_BUCKET"
+bucket_name = "akyo-images"
+
+# Environment variables for production
+[env.production]
+# These should be set in Cloudflare Pages dashboard:
+# - GITHUB_TOKEN
+# - GITHUB_REPO_OWNER = "rad-vrc"
+# - GITHUB_REPO_NAME = "Akyodex"
+# - GITHUB_BRANCH = "main"
+# - ADMIN_PASSWORD_OWNER = "RadAkyo"
+# - ADMIN_PASSWORD_ADMIN = "Akyo"
+# - NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
+
+[env.production.vars]
+NODE_ENV = "production"
+
+# Environment variables for preview
+[env.preview]
+[env.preview.vars]
+NODE_ENV = "preview"

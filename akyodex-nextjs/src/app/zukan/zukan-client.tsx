@@ -18,15 +18,18 @@ import { AkyoCard } from '@/components/akyo-card';
 import { AkyoList } from '@/components/akyo-list';
 import { SearchBar } from '@/components/search-bar';
 import { FilterPanel } from '@/components/filter-panel';
+import { LanguageToggle } from '@/components/language-toggle';
 import type { AkyoData, ViewMode } from '@/types/akyo';
+import type { SupportedLanguage } from '@/lib/i18n';
 
 interface ZukanClientProps {
   initialData: AkyoData[];
   attributes: string[];
   creators: string[];
+  initialLang: SupportedLanguage;
 }
 
-export function ZukanClient({ initialData, attributes, creators }: ZukanClientProps) {
+export function ZukanClient({ initialData, attributes, creators, initialLang }: ZukanClientProps) {
   const { data, filteredData, loading, error, filterData, toggleFavorite } = useAkyoData(initialData);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
@@ -209,6 +212,9 @@ export function ZukanClient({ initialData, attributes, creators }: ZukanClientPr
           </div>
         )}
       </main>
+
+      {/* Language Toggle Button */}
+      <LanguageToggle initialLang={initialLang} />
     </div>
   );
 }
