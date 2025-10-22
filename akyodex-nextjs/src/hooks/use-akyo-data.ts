@@ -2,68 +2,33 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { AkyoData, AkyoFilterOptions } from '@/types/akyo';
-import { parseCsvToAkyoData } from '@/lib/csv-parser';
 
 /**
- * Akyoデータを管理するカスタムフック
+ * Akyoデータを管理するカスタムフック (SSR対応版)
+ * 
+ * @param initialData - サーバーサイドで取得した初期データ
  */
-export function useAkyoData() {
+export function useAkyoData(initialData: AkyoData[] = []) {
   const [data, setData] = useState<AkyoData[]>([]);
   const [filteredData, setFilteredData] = useState<AkyoData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData.length);
   const [error, setError] = useState<string | null>(null);
 
-  // CSVデータの取得
+  // 初期データの設定とお気に入り復元
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    if (initialData.length > 0) {
+      // お気に入り情報を復元
+      const favorites = getFavorites();
+      const dataWithFavorites = initialData.map(akyo => ({
+        ...akyo,
+        isFavorite: favorites.includes(akyo.id),
+      }));
 
-        // まずLocalStorageから取得を試みる
-        const cachedCsv = localStorage.getItem('AkyoDataCSV');
-        let csvText: string;
-
-        if (cachedCsv) {
-          csvText = cachedCsv;
-        } else {
-          // LocalStorageになければAPIから取得
-          const response = await fetch('/api/csv');
-          if (!response.ok) {
-            throw new Error(`Failed to fetch CSV: ${response.status}`);
-          }
-          csvText = await response.text();
-          
-          // LocalStorageに保存
-          try {
-            localStorage.setItem('AkyoDataCSV', csvText);
-          } catch (e) {
-            console.warn('Failed to cache CSV in localStorage:', e);
-          }
-        }
-
-        // CSVをパース
-        const parsedData = parseCsvToAkyoData(csvText);
-        
-        // お気に入り情報を復元
-        const favorites = getFavorites();
-        const dataWithFavorites = parsedData.map(akyo => ({
-          ...akyo,
-          isFavorite: favorites.includes(akyo.id),
-        }));
-
-        setData(dataWithFavorites);
-        setFilteredData(dataWithFavorites);
-      } catch (err) {
-        console.error('Failed to load Akyo data:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
+      setData(dataWithFavorites);
+      setFilteredData(dataWithFavorites);
+      setLoading(false);
+    }
+  }, [initialData]);
 
   // フィルタリング機能
   const filterData = useCallback((options: AkyoFilterOptions, sortAsc: boolean = true) => {
