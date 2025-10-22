@@ -10,7 +10,7 @@
  * - Sort and random display
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAkyoData } from '@/hooks/use-akyo-data';
@@ -19,6 +19,7 @@ import { AkyoList } from '@/components/akyo-list';
 import { SearchBar } from '@/components/search-bar';
 import { FilterPanel } from '@/components/filter-panel';
 import { LanguageToggle } from '@/components/language-toggle';
+import { AkyoDetailModal } from '@/components/akyo-detail-modal';
 import type { AkyoData, ViewMode } from '@/types/akyo';
 import type { SupportedLanguage } from '@/lib/i18n';
 
@@ -38,6 +39,29 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
+  
+  // Modal state
+  const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleShowDetail = (akyo: AkyoData) => {
+    setSelectedAkyo(akyo);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedAkyo(null);
+  };
+
+  const handleModalFavoriteToggle = (id: string) => {
+    toggleFavorite(id);
+    // Update modal with latest data
+    const updated = data.find(a => a.id === id);
+    if (updated && selectedAkyo?.id === id) {
+      setSelectedAkyo(updated);
+    }
+  };
 
   // フィルター適用
   useEffect(() => {
@@ -191,10 +215,7 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
           <AkyoList
             data={filteredData}
             onToggleFavorite={toggleFavorite}
-            onShowDetail={(akyo) => {
-              // TODO: モーダル表示
-              console.log('Show detail:', akyo);
-            }}
+            onShowDetail={handleShowDetail}
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -203,15 +224,20 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
                 key={akyo.id}
                 akyo={akyo}
                 onToggleFavorite={toggleFavorite}
-                onShowDetail={(akyo) => {
-                  // TODO: モーダル表示
-                  console.log('Show detail:', akyo);
-                }}
+                onShowDetail={handleShowDetail}
               />
             ))}
           </div>
         )}
       </main>
+
+      {/* Detail Modal */}
+      <AkyoDetailModal
+        akyo={selectedAkyo}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onToggleFavorite={handleModalFavoriteToggle}
+      />
 
       {/* Language Toggle Button */}
       <LanguageToggle initialLang={initialLang} />

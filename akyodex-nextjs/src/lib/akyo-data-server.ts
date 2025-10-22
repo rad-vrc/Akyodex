@@ -45,7 +45,8 @@ export async function fetchAkyoData(
   const { lang = 'ja', bustCache = false } = options;
   
   // Determine CSV filename based on language
-  const csvFileName = lang === 'ja' ? 'akyo-data.csv' : `akyo-data-${lang.toUpperCase()}.csv`;
+  // English uses akyo-data-US.csv (original format)
+  const csvFileName = lang === 'en' ? 'akyo-data-US.csv' : 'akyo-data.csv';
   const baseUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data`;
   
   let url = `${baseUrl}/${csvFileName}`;

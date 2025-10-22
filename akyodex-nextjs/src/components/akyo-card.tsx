@@ -95,26 +95,26 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID & タイトル */}
-        <div className="space-y-1">
-          <div className="text-sm font-bold text-[var(--text-secondary)]">
-            #{akyo.id}
-          </div>
-          <h3 className="text-lg font-bold text-[var(--text-primary)] line-clamp-2">
-            {akyo.nickname || akyo.avatarName}
-          </h3>
+        {/* ID */}
+        <div className="text-sm font-bold text-gray-500 mb-1">
+          #{akyo.id}
         </div>
+
+        {/* タイトル - 元の実装と同じフォント */}
+        <h3 className="font-bold text-lg mb-1 text-gray-800 line-clamp-2">
+          {akyo.nickname || akyo.avatarName}
+        </h3>
 
         {/* 属性バッジ */}
         {akyo.attribute && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1 mb-2">
             {akyo.attribute.split(',').map((attr, index) => {
               const trimmedAttr = attr.trim();
               const color = getAttributeColor(trimmedAttr);
               return (
                 <span
                   key={index}
-                  className="attribute-badge"
+                  className="attribute-badge text-xs"
                   style={{
                     background: `${color}20`,
                     color: color,
@@ -128,13 +128,13 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           </div>
         )}
 
-        {/* 作者情報 */}
-        <div className="text-xs text-[var(--text-secondary)] space-y-0.5">
-          {akyo.nickname && akyo.avatarName && (
-            <div>アバター名: {akyo.avatarName}</div>
+        {/* 作者情報 - 元の実装と同じ形式 (改行あり) */}
+        <p className="text-xs text-gray-600 mb-2 whitespace-pre-line">
+          {akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
+            <>アバター名 {akyo.avatarName}{'\n'}</>
           )}
-          <div>作者: {akyo.creator}</div>
-        </div>
+          作者 {akyo.creator}
+        </p>
 
         {/* くわしく見るボタン */}
         <button

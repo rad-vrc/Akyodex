@@ -1,0 +1,308 @@
+'use client';
+
+/**
+ * Akyo Detail Modal Component
+ * 
+ * Complete recreation of original modal from index.html
+ * Features:
+ * - Header with gradient background
+ * - Profile icon + ID + name
+ * - Large image with sparkle effect
+ * - Info grid (4 sections: name, avatar, attributes, creator)
+ * - VRChat URL section
+ * - Notes section (if available)
+ * - Action buttons (favorite + VRChat link)
+ */
+
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import type { AkyoData } from '@/types/akyo';
+
+interface AkyoDetailModalProps {
+  akyo: AkyoData | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onToggleFavorite?: (id: string) => void;
+}
+
+// 属性色マッピング (元の実装と完全一致)
+function getAttributeColor(attribute: string): string {
+  const colorMap: Record<string, string> = {
+    チョコミント: '#00bfa5',
+    動物: '#ff6f61',
+    きつね: '#ff9800',
+    おばけ: '#9c27b0',
+    人類: '#2196f3',
+    ギミック: '#4caf50',
+    特殊: '#e91e63',
+    ネコ: '#795548',
+    イヌ: '#607d8b',
+    うさぎ: '#ff4081',
+    ドラゴン: '#673ab7',
+    ロボット: '#757575',
+    食べ物: '#ffc107',
+    植物: '#8bc34a',
+    宇宙: '#3f51b5',
+    和風: '#d32f2f',
+    洋風: '#1976d2',
+    ファンタジー: '#ab47bc',
+    SF: '#00acc1',
+    ホラー: '#424242',
+    かわいい: '#ec407a',
+    クール: '#5c6bc0',
+    シンプル: '#78909c',
+  };
+
+  for (const [key, color] of Object.entries(colorMap)) {
+    if (attribute && attribute.includes(key)) {
+      return color;
+    }
+  }
+
+  return '#667eea';
+}
+
+export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: AkyoDetailModalProps) {
+  const [profileIconUrl, setProfileIconUrl] = useState<string>('/images/profile-icon.webp');
+
+  useEffect(() => {
+    // ESCキーでモーダルを閉じる
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!akyo || !isOpen) return null;
+
+  const displayName = akyo.nickname || akyo.avatarName || '';
+  const attributes = akyo.attribute ? akyo.attribute.split(',').map(a => a.trim()).filter(Boolean) : [];
+  const attributeColor = getAttributeColor(akyo.attribute);
+  const imageUrl = `https://images.akyodex.com/images/${akyo.id}.webp`;
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  const handleFavoriteClick = () => {
+    onToggleFavorite?.(akyo.id);
+  };
+
+  const handleVRChatOpen = () => {
+    if (akyo.avatarUrl) {
+      window.open(akyo.avatarUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto"
+      onClick={handleBackdropClick}
+    >
+      {/* Backdrop */}
+      <div className="modal-backdrop fixed inset-0" style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(4px)',
+      }} />
+
+      {/* Modal Container */}
+      <div className="relative min-h-screen px-4 py-8">
+        <div className="relative mx-auto max-w-2xl">
+          <div className="bg-white rounded-3xl shadow-2xl modal-show">
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 w-14 h-14 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110"
+              style={{
+                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+              }}
+              aria-label="閉じる"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 hover:rotate-90">
+                <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            {/* Modal Header */}
+            <div 
+              className="rounded-t-3xl p-6 border-b-4 border-dotted border-purple-200"
+              style={{
+                background: 'linear-gradient(to right, rgb(243 232 255), rgb(252 231 243), rgb(219 234 254))',
+              }}
+            >
+              <h2 className="text-3xl font-black flex items-center">
+                <Image
+                  src={profileIconUrl}
+                  alt="Profile Icon"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-full mr-3 inline-block object-cover border-2 border-purple-400"
+                  onError={() => setProfileIconUrl('/images/placeholder.webp')}
+                />
+                <span>#{akyo.id} {displayName}</span>
+              </h2>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 bg-gradient-to-b from-white to-blue-50">
+              <div className="space-y-6">
+                {/* Image Section */}
+                <div className="relative">
+                  <div className="h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2">
+                    <Image
+                      src={imageUrl}
+                      alt={displayName}
+                      width={600}
+                      height={400}
+                      className="w-full h-full object-contain rounded-2xl"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.background = `linear-gradient(135deg, ${attributeColor}, ${attributeColor}66)`;
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Sparkle Effect */}
+                  <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center animate-bounce">
+                    <span className="text-2xl">✨</span>
+                  </div>
+                </div>
+
+                {/* Info Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Name Card */}
+                  <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4">
+                    <h3 className="text-sm font-bold text-purple-600 mb-2">
+                      <i className="fas fa-tag mr-1"></i>なまえ
+                    </h3>
+                    <p className="text-xl font-black">{akyo.nickname || '-'}</p>
+                  </div>
+
+                  {/* Avatar Name Card */}
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
+                    <h3 className="text-sm font-bold text-blue-600 mb-2">
+                      <i className="fas fa-user-astronaut mr-1"></i>アバター名
+                    </h3>
+                    <p className="text-xl font-black">{akyo.avatarName || '-'}</p>
+                  </div>
+
+                  {/* Attributes Card */}
+                  <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
+                    <h3 className="text-sm font-bold text-orange-600 mb-2">
+                      <i className="fas fa-sparkles mr-1"></i>ぞくせい
+                    </h3>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {attributes.map((attr, index) => {
+                        const color = getAttributeColor(attr);
+                        return (
+                          <span
+                            key={index}
+                            className="px-3 py-1 rounded-full text-sm font-bold text-white shadow-md"
+                            style={{
+                              background: `linear-gradient(135deg, ${color}, ${color}dd)`,
+                            }}
+                          >
+                            {attr}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Creator Card */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4">
+                    <h3 className="text-sm font-bold text-green-600 mb-2">
+                      <i className="fas fa-palette mr-1"></i>つくったひと
+                    </h3>
+                    <p className="text-xl font-black">{akyo.creator || ''}</p>
+                  </div>
+                </div>
+
+                {/* VRChat URL Section */}
+                {akyo.avatarUrl && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-500 mb-2">
+                      VRChat アバターURL
+                    </h3>
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <a
+                        href={akyo.avatarUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 text-sm break-all"
+                      >
+                        <i className="fas fa-external-link-alt mr-1"></i>
+                        {akyo.avatarUrl}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {/* Notes Section */}
+                {akyo.notes && (
+                  <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5">
+                    <h3 className="text-lg font-bold text-purple-600 mb-3">
+                      <i className="fas fa-gift mr-2"></i>ほかのじょうほう
+                    </h3>
+                    <div className="bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner">
+                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                        {akyo.notes}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4 border-t">
+                  {/* Favorite Button */}
+                  <button
+                    onClick={handleFavoriteClick}
+                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+                      akyo.isFavorite
+                        ? 'bg-red-500 text-white hover:bg-red-600'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                    aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
+                  >
+                    <i className="fas fa-heart"></i>
+                    {akyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
+                  </button>
+
+                  {/* VRChat Button - Orange Gradient (not purple!) */}
+                  {akyo.avatarUrl && (
+                    <button
+                      onClick={handleVRChatOpen}
+                      className="flex-1 py-3 rounded-lg font-medium transition-opacity flex items-center justify-center gap-2"
+                      style={{
+                        background: 'linear-gradient(135deg, #f97316, #fb923c)',
+                        color: 'white',
+                      }}
+                      aria-label="VRChatで見る"
+                    >
+                      <i className="fas fa-external-link-alt"></i>
+                      VRChatで見る
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
