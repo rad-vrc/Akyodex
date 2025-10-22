@@ -42,7 +42,7 @@
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
 body {
-  font-family: 'Kosugi Maru', 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif !important;
+  font-family: var(--font-mplus-rounded-1c), 'M PLUS Rounded 1c', var(--font-kosugi-maru), 'Kosugi Maru', var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif !important;
   color: var(--text-primary);
   background-color: var(--bg-gradient-start);
   min-height: 100vh;
@@ -244,9 +244,26 @@ button, .btn {
 }
 
 #searchInput:focus, .search-input:focus {
-  border-color: var(--primary-pink) !important;
-  box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2) !important;
+  border-color: var(--primary-blue) !important;
+  box-shadow: 0 0 0 4px rgba(102, 178, 255, 0.2) !important;
   outline: none !important;
+}
+
+/* ドロップダウン（属性・作者フィルター） */
+select {
+  border-radius: 15px !important;
+  border: 2px solid var(--primary-green) !important;
+  padding: 8px 12px !important;
+  font-weight: 600 !important;
+  background: white !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+select:focus {
+  border-color: var(--primary-green) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(102, 217, 165, 0.2) !important;
 }
 
 /* スクロールバー */
@@ -405,7 +422,7 @@ button, .btn {
   border-radius: 25px !important;
   padding: 12px 24px !important;
   font-weight: 900 !important;
-  font-family: 'M PLUS Rounded 1c', 'Kosugi Maru', sans-serif !important;
+  font-family: 'M PLUS Rounded 1c', 'Kosugi Maru', 'Noto Sans JP', sans-serif !important;
   border: 3px solid white !important;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
   position: relative !important;
