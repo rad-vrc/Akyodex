@@ -135,7 +135,7 @@ export default function ZukanPage() {
               表示{stats.displayed}体
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              ⭐{stats.favorites}
+              ❤️{stats.favorites}
             </div>
           </div>
         </div>
@@ -164,18 +164,20 @@ export default function ZukanPage() {
           />
 
           {/* ビュー切替 */}
-          <div className="flex gap-2 pt-4 border-t border-gray-200">
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => setViewMode('grid')}
-              className={`filter-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              aria-label="グリッド表示"
             >
-              📱 グリッド
+              <i className="fas fa-th text-xl md:text-2xl"></i>
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`filter-btn ${viewMode === 'list' ? 'active' : ''}`}
+              className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+              aria-label="リスト表示"
             >
-              📋 リスト
+              <i className="fas fa-list text-xl md:text-2xl"></i>
             </button>
           </div>
         </div>

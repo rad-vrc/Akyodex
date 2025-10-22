@@ -104,11 +104,11 @@ export function FilterPanel({
           onClick={onFavoritesClick}
           className={`attribute-badge quick-filter-badge transition-colors ${
             favoritesOnly
-              ? 'bg-yellow-200 text-yellow-800 hover:bg-yellow-300'
+              ? 'bg-pink-200 text-pink-800 hover:bg-pink-300'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <i className="fas fa-star"></i> お気に入りのみ
+          <i className="fas fa-heart"></i> お気に入りのみ
         </button>
       </div>
     </div>

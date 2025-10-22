@@ -9,6 +9,53 @@ interface AkyoCardProps {
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
+// 属性に対応する色を取得（元の実装のgetAttributeColorを再現）
+function getAttributeColor(attribute: string): string {
+  const colorMap: Record<string, string> = {
+    チョコミント: '#00bfa5',
+    動物: '#ff6f61',
+    きつね: '#ff9800',
+    おばけ: '#9c27b0',
+    人類: '#2196f3',
+    ギミック: '#4caf50',
+    特殊: '#e91e63',
+    ネコ: '#795548',
+    イヌ: '#607d8b',
+    うさぎ: '#ff4081',
+    ドラゴン: '#673ab7',
+    ロボット: '#757575',
+    食べ物: '#ffc107',
+    植物: '#8bc34a',
+    宇宙: '#3f51b5',
+    和風: '#d32f2f',
+    洋風: '#1976d2',
+    ファンタジー: '#ab47bc',
+    SF: '#00acc1',
+    ホラー: '#424242',
+    かわいい: '#ec407a',
+    クール: '#5c6bc0',
+    シンプル: '#78909c',
+  };
+
+  // 最初にマッチする属性の色を返す
+  for (const [key, color] of Object.entries(colorMap)) {
+    if (attribute && attribute.includes(key)) {
+      return color;
+    }
+  }
+
+  // デフォルト色
+  const defaultColors = [
+    '#667eea',
+    '#764ba2',
+    '#f093fb',
+    '#f5576c',
+    '#4facfe',
+  ];
+  
+  return defaultColors[Math.floor(Math.random() * defaultColors.length)];
+}
+
 export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps) {
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -42,56 +89,61 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           className="favorite-btn absolute top-2 right-2 z-10"
           aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
         >
-          {akyo.isFavorite ? '⭐' : '☆'}
+          {akyo.isFavorite ? '❤️' : '🤍'}
         </button>
       </div>
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID */}
-        <div className="text-sm font-bold text-[var(--primary-blue)]">
-          No. {akyo.id}
+        {/* ID & タイトル */}
+        <div className="space-y-1">
+          <div className="text-sm font-bold text-[var(--text-secondary)]">
+            #{akyo.id}
+          </div>
+          <h3 className="text-lg font-bold text-[var(--text-primary)] line-clamp-2">
+            {akyo.nickname || akyo.avatarName}
+          </h3>
         </div>
 
-        {/* 名前 */}
-        <h3 className="text-lg font-bold text-[var(--text-primary)] line-clamp-1">
-          {akyo.nickname || akyo.avatarName}
-        </h3>
-
-        {/* アバター名（ニックネームがある場合） */}
-        {akyo.nickname && (
-          <p className="text-sm text-[var(--text-secondary)] line-clamp-1">
-            {akyo.avatarName}
-          </p>
-        )}
-
-        {/* 属性 */}
+        {/* 属性バッジ */}
         {akyo.attribute && (
-          <div className="flex flex-wrap gap-1">
-            {akyo.attribute.split(',').map((attr, index) => (
-              <span
-                key={index}
-                className="attribute-badge text-xs px-2 py-1"
-              >
-                {attr.trim()}
-              </span>
-            ))}
+          <div className="flex flex-wrap gap-1.5">
+            {akyo.attribute.split(',').map((attr, index) => {
+              const trimmedAttr = attr.trim();
+              const color = getAttributeColor(trimmedAttr);
+              return (
+                <span
+                  key={index}
+                  className="attribute-badge"
+                  style={{
+                    background: `${color}20`,
+                    color: color,
+                    boxShadow: `0 6px 12px ${color}20`
+                  }}
+                >
+                  {trimmedAttr}
+                </span>
+              );
+            })}
           </div>
         )}
 
-        {/* 作者 */}
-        <div className="text-sm text-[var(--text-secondary)]">
-          作者: <span className="font-semibold">{akyo.creator}</span>
+        {/* 作者情報 */}
+        <div className="text-xs text-[var(--text-secondary)] space-y-0.5">
+          {akyo.nickname && akyo.avatarName && (
+            <div>アバター名: {akyo.avatarName}</div>
+          )}
+          <div>作者: {akyo.creator}</div>
         </div>
 
-        {/* 詳細を見るボタン */}
+        {/* くわしく見るボタン */}
         <button
           onClick={handleCardClick}
-          className="detail-button w-full mt-2"
+          className="w-full py-3 px-4 rounded-full font-bold text-white bg-gradient-to-r from-pink-400 to-orange-400 hover:from-pink-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
         >
-          <span className="animate-bounce inline-block">✨</span>
-          詳細を見る
-          <span className="animate-bounce inline-block">✨</span>
+          <span>🌟</span>
+          <span>くわしく見る</span>
+          <span>🌟</span>
         </button>
       </div>
     </div>
