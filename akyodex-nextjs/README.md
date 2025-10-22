@@ -87,7 +87,7 @@ npm run dev
 
 ## 📖 Project Overview
 
-**Akyodex** は、VRChatのオリジナルアバター「暁」シリーズを網羅したオンライン図鑑です。
+**Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズを網羅したオンライン図鑑です。
 
 ### Key Features
 - 🎨 **639体のアバターデータベース** - 4桁ID管理システム
@@ -136,7 +136,7 @@ npm run dev
 
 ### VRChat Terms
 - **Avatar**: 3D character model used in VRChat
-- **暁 (Akyo)**: Japanese VRChat avatar series created by the community
+- **Akyo (あきょ)**: Japanese VRChat avatar series created by the community
 - **VRChat ID**: Unique identifier for avatars (format: `avtr_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
 
 ### Technical Terms
@@ -1353,7 +1353,7 @@ For questions or issues:
 - **Google**: For Gemini 2.5 Flash API
 - **Cohere**: For Rerank v3 API
 - **VRChat**: For avatar data and API
-- **暁 Community**: For the avatar designs and support
+- **Akyo Community**: For the avatar designs and support
 
 ---
 
