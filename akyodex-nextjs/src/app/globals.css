@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Google Fonts Import - must be at top */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;900&display=swap');
+
 /*
  * Akyoずかん - 子どもにやさしいデザイン
  * カラーパレット：明るく温かみのある色合い
@@ -42,7 +45,7 @@
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
 body {
-  font-family: var(--font-mplus-rounded-1c), 'M PLUS Rounded 1c', var(--font-kosugi-maru), 'Kosugi Maru', var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif !important;
+  font-family: 'M PLUS Rounded 1c', var(--font-kosugi-maru), 'Kosugi Maru', var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif !important;
   color: var(--text-primary);
   background-color: var(--bg-gradient-start);
   min-height: 100vh;

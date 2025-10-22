@@ -97,19 +97,7 @@ export default async function Image() {
               fontWeight: 700,
             }}
           >
-            日本語対応
-          </div>
-          <div
-            style={{
-              padding: '15px 30px',
-              background: 'rgba(255, 107, 157, 0.2)',
-              color: '#e91e63',
-              borderRadius: 9999,
-              fontSize: 28,
-              fontWeight: 700,
-            }}
-          >
-            無料検索
+            日本語/英語対応
           </div>
         </div>
       </div>

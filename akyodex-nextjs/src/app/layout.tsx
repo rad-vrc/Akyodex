@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Kosugi_Maru, M_PLUS_Rounded_1c } from "next/font/google";
+import { Noto_Sans_JP, Kosugi_Maru } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
 import "./globals.css";
@@ -15,13 +15,6 @@ const kosugiMaru = Kosugi_Maru({
   variable: "--font-kosugi-maru",
   subsets: ["latin"],
   weight: ["400"],
-  display: "swap",
-});
-
-const mPlusRounded1c = M_PLUS_Rounded_1c({
-  variable: "--font-mplus-rounded-1c",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
   display: "swap",
 });
 
@@ -146,7 +139,7 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${mPlusRounded1c.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
+        className={`${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
         <WebVitals />
         {children}
