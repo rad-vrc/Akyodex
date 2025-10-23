@@ -43,20 +43,14 @@ export function LanguageToggle({ initialLang = 'ja', className = '' }: LanguageT
     const nextLang = getNextLanguage(currentLang);
 
     try {
-      // Set cookie
-      document.cookie = `AKYO_LANG=${nextLang}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      // Set cookie with immediate effect
+      document.cookie = `AKYO_LANG=${nextLang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
       
-      // Update state
+      // Update state immediately
       setCurrentLang(nextLang);
 
-      // Trigger page refresh to load new language data
-      // Use router.refresh() to preserve client state
-      router.refresh();
-
-      // Show success feedback
-      setTimeout(() => {
-        setIsChanging(false);
-      }, 300);
+      // Hard reload for instant language change (faster than router.refresh())
+      window.location.reload();
     } catch (error) {
       console.error('Failed to change language:', error);
       setIsChanging(false);

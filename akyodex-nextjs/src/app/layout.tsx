@@ -137,6 +137,25 @@ export default function RootLayout({
           crossOrigin="anonymous"
           async
         />
+        {/* Dify AI Chatbot */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.difyChatbotConfig = {
+                token: 'rak9Yh7T7SI5JyDw',
+                baseUrl: 'https://dexakyo.akyodex.com',
+                inputs: {},
+                systemVariables: {},
+                userVariables: {},
+              }
+            `,
+          }}
+        />
+        <script
+          src="https://dexakyo.akyodex.com/embed.min.js"
+          id="dify-chatbot-script"
+          defer
+        />
         <StructuredData />
       </head>
       <body

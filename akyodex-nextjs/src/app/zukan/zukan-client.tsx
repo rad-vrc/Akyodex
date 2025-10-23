@@ -243,28 +243,18 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
         onToggleFavorite={handleModalFavoriteToggle}
       />
 
-      {/* Language Toggle Button - Bottom Right */}
-      <LanguageToggle initialLang={initialLang} />
-
-      {/* Admin Settings Button - Above Language Toggle */}
+      {/* Admin Settings Button - Bottom (same color as Language Toggle) */}
       <Link
         href="/admin"
-        className="fixed bottom-24 sm:bottom-28 right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center group"
+        className="admin-button"
         aria-label="管理画面"
         title="管理画面"
       >
         <i className="fas fa-cog text-lg sm:text-xl group-hover:rotate-90 transition-transform duration-300"></i>
       </Link>
 
-      {/* AI Chat Assistant Button - Above Admin Button */}
-      <button
-        onClick={() => alert('チャットボット機能は実装中です')}
-        className="fixed bottom-40 sm:bottom-48 right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center group"
-        aria-label="AIチャット"
-        title="AIチャット（準備中）"
-      >
-        <i className="fas fa-comment-dots text-lg sm:text-xl group-hover:scale-110 transition-transform"></i>
-      </button>
+      {/* Language Toggle Button - Above Admin Button */}
+      <LanguageToggle initialLang={initialLang} />
     </div>
   );
 }
