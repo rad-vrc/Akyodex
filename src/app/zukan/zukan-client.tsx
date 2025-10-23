@@ -97,13 +97,14 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
 
   // フィルター適用
   useEffect(() => {
+    if (randomMode) return; // ランダム表示中は通常フィルタ適用を抑止
     filterData({
       searchQuery,
       attribute: selectedAttribute || undefined,
       creator: selectedCreator || undefined,
       favoritesOnly,
     }, sortAscending);
-  }, [searchQuery, selectedAttribute, selectedCreator, favoritesOnly, sortAscending, filterData]);
+  }, [searchQuery, selectedAttribute, selectedCreator, favoritesOnly, sortAscending, randomMode, filterData]);
 
   // ソート切替
   const handleSortToggle = () => {
@@ -209,6 +210,8 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
           <FilterPanel
             attributes={attributes}
             creators={creators}
+            selectedAttribute={selectedAttribute}
+            selectedCreator={selectedCreator}
             onAttributeChange={setSelectedAttribute}
             onCreatorChange={setSelectedCreator}
             onSortToggle={handleSortToggle}
@@ -225,14 +228,14 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
             <button
               onClick={() => setViewMode('grid')}
               className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              aria-label="グリッド表示"
+              aria-label={initialLang === 'en' ? 'Grid view' : 'グリッド表示'}
             >
               <i className="fas fa-th text-xl md:text-2xl"></i>
             </button>
             <button
               onClick={() => setViewMode('list')}
               className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-              aria-label="リスト表示"
+              aria-label={initialLang === 'en' ? 'List view' : 'リスト表示'}
             >
               <i className="fas fa-list text-xl md:text-2xl"></i>
             </button>
@@ -257,7 +260,7 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
             onShowDetail={handleShowDetail}
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
             {filteredData.slice(0, renderLimit).map(akyo => (
               <AkyoCard
                 key={akyo.id}
