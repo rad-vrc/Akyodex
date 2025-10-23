@@ -716,6 +716,46 @@ select:focus {
   }
 }
 
+/* Dify Chatbot Loading Spinner - Make it more visible */
+#dify-chatbot-bubble-button svg,
+#dify-chatbot-bubble-button .loading-spinner,
+#dify-chatbot-bubble-button [class*="loading"],
+#dify-chatbot-bubble-button [class*="spinner"] {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) !important;
+  animation: enhanced-spin 1s linear infinite !important;
+}
+
+/* Enhanced spinning animation */
+@keyframes enhanced-spin {
+  0% { 
+    transform: rotate(0deg) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.3);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1));
+  }
+  100% { 
+    transform: rotate(360deg) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+}
+
+/* Add a pulsing background to the button during loading */
+#dify-chatbot-bubble-button.loading,
+#dify-chatbot-bubble-button[data-loading="true"] {
+  animation: pulse-glow 1.5s ease-in-out infinite !important;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px 5px rgba(238, 120, 0, 0.6) !important;
+  }
+  50% {
+    box-shadow: 0 0 30px 10px rgba(238, 120, 0, 0.9) !important;
+  }
+}
+
 /* Modal Animations */
 @keyframes fadeInScale {
   0% {

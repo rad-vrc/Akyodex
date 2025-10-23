@@ -13,6 +13,7 @@ interface FilterPanelProps {
   favoritesOnly: boolean;
   sortAscending: boolean;
   randomMode: boolean;
+  lang?: 'ja' | 'en';
 }
 
 export function FilterPanel({
@@ -26,6 +27,7 @@ export function FilterPanel({
   favoritesOnly,
   sortAscending,
   randomMode,
+  lang = 'ja',
 }: FilterPanelProps) {
   const [selectedAttribute, setSelectedAttribute] = useState('');
   const [selectedCreator, setSelectedCreator] = useState('');
@@ -52,7 +54,7 @@ export function FilterPanel({
           onChange={handleAttributeChange}
           className="w-full"
         >
-          <option value="">すべての属性</option>
+          <option value="">{lang === 'en' ? 'All Attributes' : 'すべての属性'}</option>
           {attributes.map(attr => (
             <option key={attr} value={attr}>
               {attr}
@@ -66,7 +68,7 @@ export function FilterPanel({
           onChange={handleCreatorChange}
           className="w-full"
         >
-          <option value="">すべての作者</option>
+          <option value="">{lang === 'en' ? 'All Creators' : 'すべての作者'}</option>
           {creators.map(creator => (
             <option key={creator} value={creator}>
               {creator}
@@ -86,7 +88,7 @@ export function FilterPanel({
           }`}
         >
           <i className={`fas fa-arrow-${sortAscending ? 'up' : 'down'}-${sortAscending ? '1-9' : '9-1'}`}></i>{' '}
-          {sortAscending ? '昇順' : '降順'}
+          {lang === 'en' ? (sortAscending ? 'Ascending' : 'Descending') : (sortAscending ? '昇順' : '降順')}
         </button>
         
         <button
@@ -97,7 +99,7 @@ export function FilterPanel({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <i className="fas fa-dice"></i> ランダム表示
+          <i className="fas fa-dice"></i> {lang === 'en' ? 'Random' : 'ランダム表示'}
         </button>
         
         <button
@@ -108,7 +110,7 @@ export function FilterPanel({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <i className="fas fa-heart"></i> お気に入りのみ
+          <i className="fas fa-heart"></i> {lang === 'en' ? 'Favorites Only' : 'お気に入りのみ'}
         </button>
       </div>
     </div>

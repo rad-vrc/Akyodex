@@ -171,8 +171,8 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src="/images/logo.webp"
-              alt="Akyoずかん"
+              src={initialLang === 'en' ? '/images/logo-US.webp' : '/images/logo.webp'}
+              alt={initialLang === 'en' ? 'Akyodex' : 'Akyoずかん'}
               width={1980}
               height={305}
               className="logo-animation h-10 sm:h-12 w-auto"
@@ -182,10 +182,10 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
           {/* 統計情報 */}
           <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              全{stats.total}体
+              {initialLang === 'en' ? `Total ${stats.total}` : `全${stats.total}体`}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              表示{stats.displayed}体
+              {initialLang === 'en' ? `Showing ${stats.displayed}` : `表示${stats.displayed}体`}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
               ❤️{stats.favorites}
@@ -198,7 +198,10 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
         {/* 検索バー */}
         <div className="akyo-card p-4 sm:p-6">
-          <SearchBar onSearch={setSearchQuery} />
+          <SearchBar 
+            onSearch={setSearchQuery} 
+            placeholder={initialLang === 'en' ? 'Search by name, creator, or attribute...' : '名前・作者・属性で検索...'}
+          />
         </div>
 
         {/* フィルターとビュー切替 */}
@@ -214,6 +217,7 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
             favoritesOnly={favoritesOnly}
             sortAscending={sortAscending}
             randomMode={randomMode}
+            lang={initialLang}
           />
 
           {/* ビュー切替 */}
