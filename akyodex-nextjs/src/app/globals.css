@@ -704,16 +704,15 @@ select:focus {
 }
 
 #dify-chatbot-bubble-window {
-  bottom: 96px !important;
-  right: 24px !important;
   width: 24rem !important;
   height: 40rem !important;
+  position: fixed !important;
+  inset: auto 1rem 1rem auto !important;
 }
 
 @media (max-width: 640px) {
   #dify-chatbot-bubble-window {
-    bottom: 84px !important;
-    right: 16px !important;
+    inset: auto 1rem 1rem auto !important;
   }
 }
 
