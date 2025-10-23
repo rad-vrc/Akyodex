@@ -6,48 +6,85 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Akyodex (Akyoずかん)** は、500種類以上の「Akyo」という謎の生き物を検索・閲覧できるファン向け図鑑サイト。VRChatアバターへのリンクも提供。
 
-## 主要技術スタック
+## 主要技術スタック（2025年10月更新）
 
-- **フロントエンド**: HTML5, Vanilla JavaScript (ES6+), Tailwind CSS (CDN)
-- **バックエンド**: Cloudflare Pages Functions (TypeScript)
+- **フレームワーク**: Next.js 15.5.2 (App Router)
+- **デプロイアダプター**: @opennextjs/cloudflare ^1.11.0
+- **フロントエンド**: React 19, TypeScript, Tailwind CSS
+- **バックエンド**: Next.js API Routes (Node.js runtime on Cloudflare Pages)
 - **ストレージ**:
-  - R2 (画像), KV (メタデータ), IndexedDB (ローカルキャッシュ), LocalStorage (お気に入り・認証)
-- **データ形式**: CSV → JSON変換
+  - R2 (画像), KV (メタデータ), Cookie (認証セッション)
+  - データ形式: CSV → JSON変換
 - **デプロイ**: Cloudflare Pages (本番: akyodex.com)
+- **AI統合**: Dify Chatbot (dexakyo.akyodex.com)
 
 ## 開発コマンド
 
 ### ローカル開発
 ```bash
-# ローカルサーバー起動（静的ファイル配信のみ）
-npx serve .
-# または
-python -m http.server 8000
+# 開発サーバー起動
+npm run dev
+
+# ビルド（OpenNext）
+npm run build
+
+# Next.jsビルドのみ
+npm run next:build
 ```
 
 ### Cloudflare Pages デプロイ
 ```bash
-# 本番デプロイ
-npx wrangler pages deploy . --project-name akyodex-site
+# ビルド出力ディレクトリ: .open-next
+# Root directory: (空白) ← 重要！
+# Build command: npm run build
 
 # 環境変数設定（Cloudflare Dashboard）
-ADMIN_PASSWORD_OWNER=<オーナー用パスワード>
-ADMIN_PASSWORD_ADMIN=<管理者用パスワード>
-PUBLIC_R2_BASE=https://images.akyodex.com
+ADMIN_PASSWORD_OWNER=RadAkyo
+ADMIN_PASSWORD_ADMIN=Akyo
+NEXT_PUBLIC_SITE_URL=https://akyodex.com
+NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
 ```
 
 ## アーキテクチャ
 
-### データフロー
-1. **CSV管理**: `data/akyo-data.csv` がマスターデータ（GitHub管理）
-2. **画像配信**: R2バケット (`akyodex-images`) から `images.akyodex.com` で配信
-3. **マニフェスト**: `/api/manifest` が ID → 画像URL マッピングを返す
-4. **認証**: Bearer トークンで Pages Functions に認証（KVには非保存）
+### ディレクトリ構造（ルート配置）
+```
+/home/user/webapp/
+├── src/                  # Next.js アプリケーション
+│   ├── app/             # App Router (pages, API routes, layouts)
+│   ├── components/      # React コンポーネント
+│   ├── lib/             # ユーティリティ（セッション、CSV解析等）
+│   └── types/           # TypeScript型定義
+├── public/              # 静的ファイル
+│   ├── images/          # 画像アセット（favicon, logo等）
+│   └── manifest.json    # PWA マニフェスト
+├── data/                # CSVマスターデータ
+│   ├── akyo-data.csv    # 日本語版データ
+│   └── akyo-data-US.csv # 英語版データ
+├── scripts/             # ビルドスクリプト
+│   └── prepare-cloudflare-pages.js  # OpenNext後処理
+├── archive/             # 旧サイトアーカイブ
+│   └── old-site/        # 旧HTML版のバックアップ
+├── docs/                # ドキュメント
+├── package.json
+├── next.config.ts       # Next.js設定
+├── open-next.config.ts  # OpenNext設定
+├── wrangler.toml        # Cloudflare Pages設定
+└── tsconfig.json
+```
 
-### ストレージ階層
-- **R2 (Cloudflare)**: 本番画像 (`images/NNN.webp`)
-- **IndexedDB (ローカル)**: 画像キャッシュ (object store: `images`)
-- **LocalStorage**: お気に入り (`akyoFavorites`), CSV (`AkyoDataCSV`), 削除印 (`akyo:deletedRemoteIds`)
+### データフロー
+1. **CSV管理**: `data/akyo-data.csv` (JP), `data/akyo-data-US.csv` (EN) がマスターデータ
+2. **画像配信**: R2バケット → `images.akyodex.com` CDN経由
+3. **API Routes**: `/api/csv`, `/api/avatar-image`, `/api/login`, `/api/commit-csv` 等
+4. **認証**: Cookie セッション（Web Crypto API、Edge Runtime互換）
+5. **ISR**: 1時間ごとデータ再検証（revalidate: 3600）
+
+### セッション管理
+- **実装**: `src/lib/session.ts` (Web Crypto API使用)
+- **ストレージ**: HTTPOnly Cookie (`akyo_session`)
+- **署名**: HMAC-SHA256
+- **有効期限**: 24時間（自動延長）
 - **SessionStorage**: 認証情報 (`AkyoAdminAuth`)
 
 ### 主要エントリーポイント
