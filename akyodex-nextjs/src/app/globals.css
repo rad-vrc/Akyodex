@@ -600,7 +600,7 @@ select:focus {
 /* Admin Button - Bottom Right (same style as Language Toggle) */
 .admin-button {
   position: fixed;
-  bottom: 24px;
+  bottom: 96px;
   right: 24px;
   width: 56px;
   height: 56px;
@@ -628,10 +628,10 @@ select:focus {
   transform: translateY(-2px) scale(1.02);
 }
 
-/* Language Toggle Button - Above Admin Button */
+/* Language Toggle Button - Top of stack */
 .language-toggle-btn {
   position: fixed;
-  bottom: 96px;
+  bottom: 168px;
   right: 24px;
   width: 56px;
   height: 56px;
@@ -661,7 +661,7 @@ select:focus {
 
 @media (max-width: 640px) {
   .admin-button {
-    bottom: 20px;
+    bottom: 84px;
     right: 16px;
     width: 48px;
     height: 48px;
@@ -669,7 +669,7 @@ select:focus {
   }
 
   .language-toggle-btn {
-    bottom: 84px;
+    bottom: 148px;
     right: 16px;
     width: 48px;
     height: 48px;
@@ -679,7 +679,7 @@ select:focus {
 
 /* Dify Chatbot Custom Styling */
 #dify-chatbot-bubble-button {
-  bottom: 168px !important;
+  bottom: 24px !important;
   right: 24px !important;
   width: 56px !important;
   height: 56px !important;
@@ -696,7 +696,7 @@ select:focus {
 
 @media (max-width: 640px) {
   #dify-chatbot-bubble-button {
-    bottom: 148px !important;
+    bottom: 20px !important;
     right: 16px !important;
     width: 48px !important;
     height: 48px !important;
@@ -704,13 +704,13 @@ select:focus {
 }
 
 #dify-chatbot-bubble-window {
-  bottom: 230px !important;
+  bottom: 96px !important;
   right: 24px !important;
 }
 
 @media (max-width: 640px) {
   #dify-chatbot-bubble-window {
-    bottom: 200px !important;
+    bottom: 84px !important;
     right: 16px !important;
   }
 }

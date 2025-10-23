@@ -8,9 +8,10 @@
  * - View mode switching (grid/list)
  * - Favorites (localStorage)
  * - Sort and random display
+ * - Virtual scrolling (performance optimization)
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAkyoData } from '@/hooks/use-akyo-data';
@@ -45,6 +46,12 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Virtual scrolling state (performance optimization)
+  const INITIAL_RENDER_COUNT = 60;
+  const RENDER_CHUNK = 60;
+  const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
+  const tickingRef = useRef(false);
+
   const handleShowDetail = (akyo: AkyoData) => {
     setSelectedAkyo(akyo);
     setIsModalOpen(true);
@@ -63,6 +70,30 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
       setSelectedAkyo(updated);
     }
   };
+
+  // Virtual scrolling: Reset render limit when filters change
+  useEffect(() => {
+    setRenderLimit(INITIAL_RENDER_COUNT);
+  }, [searchQuery, selectedAttribute, selectedCreator, favoritesOnly, sortAscending, randomMode]);
+
+  // Virtual scrolling: Infinite scroll handler
+  const handleScroll = useCallback(() => {
+    if (tickingRef.current) return;
+    tickingRef.current = true;
+    requestAnimationFrame(() => {
+      const nearBottom = window.innerHeight + window.scrollY > document.body.offsetHeight - 800;
+      if (nearBottom && renderLimit < filteredData.length) {
+        setRenderLimit(prev => Math.min(filteredData.length, prev + RENDER_CHUNK));
+      }
+      tickingRef.current = false;
+    });
+  }, [renderLimit, filteredData.length]);
+
+  // Attach scroll listener
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   // フィルター適用
   useEffect(() => {
@@ -217,13 +248,13 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
           </div>
         ) : viewMode === 'list' ? (
           <AkyoList
-            data={filteredData}
+            data={filteredData.slice(0, renderLimit)}
             onToggleFavorite={toggleFavorite}
             onShowDetail={handleShowDetail}
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {filteredData.map(akyo => (
+            {filteredData.slice(0, renderLimit).map(akyo => (
               <AkyoCard
                 key={akyo.id}
                 akyo={akyo}
@@ -243,7 +274,10 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
         onToggleFavorite={handleModalFavoriteToggle}
       />
 
-      {/* Admin Settings Button - Bottom (same color as Language Toggle) */}
+      {/* Language Toggle Button - Top */}
+      <LanguageToggle initialLang={initialLang} />
+
+      {/* Admin Settings Button - Below Language Toggle (same color as Language Toggle) */}
       <Link
         href="/admin"
         className="admin-button"
@@ -253,8 +287,8 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
         <i className="fas fa-cog text-lg sm:text-xl group-hover:rotate-90 transition-transform duration-300"></i>
       </Link>
 
-      {/* Language Toggle Button - Above Admin Button */}
-      <LanguageToggle initialLang={initialLang} />
+      {/* AI Chat Assistant (Dify embed) */}
+      <div id="dify-chatbot-container" className="fixed bottom-6 right-6 z-[2147483647]" />
     </div>
   );
 }
