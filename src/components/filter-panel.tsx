@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-
 interface FilterPanelProps {
   attributes: string[];
   creators: string[];
+  selectedAttribute?: string;
+  selectedCreator?: string;
   onAttributeChange: (attribute: string) => void;
   onCreatorChange: (creator: string) => void;
   onSortToggle: () => void;
@@ -19,6 +19,8 @@ interface FilterPanelProps {
 export function FilterPanel({
   attributes,
   creators,
+  selectedAttribute,
+  selectedCreator,
   onAttributeChange,
   onCreatorChange,
   onSortToggle,
@@ -29,19 +31,12 @@ export function FilterPanel({
   randomMode,
   lang = 'ja',
 }: FilterPanelProps) {
-  const [selectedAttribute, setSelectedAttribute] = useState('');
-  const [selectedCreator, setSelectedCreator] = useState('');
-
   const handleAttributeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedAttribute(value);
-    onAttributeChange(value);
+    onAttributeChange(e.target.value);
   };
 
   const handleCreatorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedCreator(value);
-    onCreatorChange(value);
+    onCreatorChange(e.target.value);
   };
 
   return (
@@ -50,9 +45,10 @@ export function FilterPanel({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <select
           id="attributeFilter"
-          value={selectedAttribute}
+          value={selectedAttribute ?? ''}
           onChange={handleAttributeChange}
           className="w-full"
+          aria-label={lang === 'en' ? 'Filter by attribute' : '属性で絞り込み'}
         >
           <option value="">{lang === 'en' ? 'All Attributes' : 'すべての属性'}</option>
           {attributes.map(attr => (
@@ -64,9 +60,10 @@ export function FilterPanel({
         
         <select
           id="creatorFilter"
-          value={selectedCreator}
+          value={selectedCreator ?? ''}
           onChange={handleCreatorChange}
           className="w-full"
+          aria-label={lang === 'en' ? 'Filter by creator' : '作者で絞り込み'}
         >
           <option value="">{lang === 'en' ? 'All Creators' : 'すべての作者'}</option>
           {creators.map(creator => (
@@ -81,6 +78,10 @@ export function FilterPanel({
       <div className="flex flex-wrap gap-2 items-center">
         <button
           onClick={onSortToggle}
+          aria-pressed={sortAscending}
+          aria-label={lang === 'en'
+            ? (sortAscending ? 'Sort ascending' : 'Sort descending')
+            : (sortAscending ? '昇順に並び替え' : '降順に並び替え')}
           className={`attribute-badge quick-filter-badge transition-colors ${
             sortAscending
               ? 'bg-green-200 text-green-800 hover:bg-green-300'
@@ -93,6 +94,8 @@ export function FilterPanel({
         
         <button
           onClick={onRandomClick}
+          aria-pressed={randomMode}
+          aria-label={lang === 'en' ? 'Toggle random mode' : 'ランダム表示の切り替え'}
           className={`attribute-badge quick-filter-badge transition-colors ${
             randomMode
               ? 'bg-yellow-200 text-yellow-800 hover:bg-yellow-300'
@@ -104,6 +107,8 @@ export function FilterPanel({
         
         <button
           onClick={onFavoritesClick}
+          aria-pressed={favoritesOnly}
+          aria-label={lang === 'en' ? 'Show favorites only' : 'お気に入りのみ表示'}
           className={`attribute-badge quick-filter-badge transition-colors ${
             favoritesOnly
               ? 'bg-pink-200 text-pink-800 hover:bg-pink-300'
