@@ -243,18 +243,28 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
         onToggleFavorite={handleModalFavoriteToggle}
       />
 
-      {/* Language Toggle Button */}
+      {/* Language Toggle Button - Bottom Right */}
       <LanguageToggle initialLang={initialLang} />
 
-      {/* Finder Mode Button (Admin) - Fixed bottom right */}
+      {/* Admin Settings Button - Above Language Toggle */}
       <Link
         href="/admin"
-        className="fixed bottom-20 right-6 z-40 w-14 h-14 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center group"
-        aria-label="ファインダーモード（管理画面）"
-        title="ファインダーモード"
+        className="fixed bottom-24 sm:bottom-28 right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center group"
+        aria-label="管理画面"
+        title="管理画面"
       >
-        <i className="fas fa-search text-xl group-hover:scale-110 transition-transform"></i>
+        <i className="fas fa-cog text-lg sm:text-xl group-hover:rotate-90 transition-transform duration-300"></i>
       </Link>
+
+      {/* AI Chat Assistant Button - Above Admin Button */}
+      <button
+        onClick={() => alert('チャットボット機能は実装中です')}
+        className="fixed bottom-40 sm:bottom-48 right-6 z-40 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center group"
+        aria-label="AIチャット"
+        title="AIチャット（準備中）"
+      >
+        <i className="fas fa-comment-dots text-lg sm:text-xl group-hover:scale-110 transition-transform"></i>
+      </button>
     </div>
   );
 }

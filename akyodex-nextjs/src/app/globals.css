@@ -599,8 +599,8 @@ select:focus {
 /* Language Toggle Button */
 .language-toggle-btn {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -629,7 +629,7 @@ select:focus {
 
 @media (max-width: 640px) {
   .language-toggle-btn {
-    bottom: 70px;
+    bottom: 20px;
     right: 16px;
     width: 48px;
     height: 48px;
