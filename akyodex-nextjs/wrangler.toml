@@ -9,15 +9,17 @@ compatibility_flags = ["nodejs_compat"]
 # OpenNext Cloudflare generates output in .open-next directory
 pages_build_output_dir = ".open-next"
 
-# KV Namespace for avatar metadata
-[[kv_namespaces]]
-binding = "AKYO_KV"
-id = "YOUR_KV_NAMESPACE_ID" # Replace with actual ID from Cloudflare dashboard
+# KV Namespace and R2 Bucket bindings should be configured in Cloudflare Pages Dashboard
+# This avoids deployment errors with placeholder IDs in wrangler.toml
+# The actual bindings will be inherited from the Pages project settings
 
-# R2 Bucket for images
-[[r2_buckets]]
-binding = "AKYO_BUCKET"
-bucket_name = "akyo-images"
+# [[kv_namespaces]]
+# binding = "AKYO_KV"
+# id = "YOUR_KV_NAMESPACE_ID"
+
+# [[r2_buckets]]
+# binding = "AKYO_BUCKET"
+# bucket_name = "akyo-images"
 
 # Environment variables for production
 [env.production]
@@ -30,26 +32,29 @@ bucket_name = "akyo-images"
 # - ADMIN_PASSWORD_ADMIN = "Akyo"
 # - NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
 
-[[env.production.kv_namespaces]]
-binding = "AKYO_KV"
-id = "YOUR_KV_NAMESPACE_ID"
+# KV and R2 bindings should be configured in Cloudflare Pages Dashboard
+# [[env.production.kv_namespaces]]
+# binding = "AKYO_KV"
+# id = "YOUR_KV_NAMESPACE_ID"
 
-[[env.production.r2_buckets]]
-binding = "AKYO_BUCKET"
-bucket_name = "akyo-images"
+# [[env.production.r2_buckets]]
+# binding = "AKYO_BUCKET"
+# bucket_name = "akyo-images"
 
 [env.production.vars]
 NODE_ENV = "production"
 
 # Environment variables for preview
 [env.preview]
-[[env.preview.kv_namespaces]]
-binding = "AKYO_KV"
-id = "YOUR_KV_NAMESPACE_ID"
+# KV and R2 bindings should be configured in Cloudflare Pages Dashboard
+# Commenting out for now to avoid deployment errors with placeholder IDs
+# [[env.preview.kv_namespaces]]
+# binding = "AKYO_KV"
+# id = "YOUR_KV_NAMESPACE_ID"
 
-[[env.preview.r2_buckets]]
-binding = "AKYO_BUCKET"
-bucket_name = "akyo-images"
+# [[env.preview.r2_buckets]]
+# binding = "AKYO_BUCKET"
+# bucket_name = "akyo-images"
 
 [env.preview.vars]
 NODE_ENV = "preview"
