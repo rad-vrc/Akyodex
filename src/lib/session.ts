@@ -139,12 +139,25 @@ export async function createSessionToken(
     signature,
   };
   
-  // Encode the entire signed session as base64
+  // Encode the entire signed session as base64url (cross-runtime compatible)
   const encoder = new TextEncoder();
   const jsonBytes = encoder.encode(JSON.stringify(signedSession));
   
-  // Use btoa for base64 encoding (available in Edge runtime)
-  return btoa(String.fromCharCode(...jsonBytes));
+  // Cross-runtime base64url encoding (works in both Node.js and Edge)
+  function toBase64Url(bytes: Uint8Array): string {
+    // Node.js: Use Buffer if available (Node 18+ supports base64url)
+    if (typeof Buffer !== 'undefined' && Buffer.from) {
+      return Buffer.from(bytes).toString('base64url');
+    }
+    // Edge: Use btoa and convert to URL-safe format
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  
+  return toBase64Url(jsonBytes);
 }
 
 /**
@@ -155,12 +168,27 @@ export async function createSessionToken(
  */
 export async function validateSessionToken(token: string): Promise<SessionData | null> {
   try {
-    // Decode base64 token using atob (available in Edge runtime)
-    const jsonStr = atob(token);
-    const jsonBytes = new Uint8Array(jsonStr.length);
-    for (let i = 0; i < jsonStr.length; i++) {
-      jsonBytes[i] = jsonStr.charCodeAt(i);
+    // Cross-runtime base64url decoding
+    function fromBase64Url(str: string): Uint8Array {
+      // Convert URL-safe base64 back to standard base64
+      const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+      const padding = (4 - (base64.length % 4)) % 4;
+      const padded = base64 + '='.repeat(padding);
+      
+      // Node.js: Use Buffer if available
+      if (typeof Buffer !== 'undefined' && Buffer.from) {
+        return new Uint8Array(Buffer.from(padded, 'base64'));
+      }
+      // Edge: Use atob
+      const binary = atob(padded);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
     }
+    
+    const jsonBytes = fromBase64Url(token);
     const decoder = new TextDecoder();
     const decodedJson = decoder.decode(jsonBytes);
     
@@ -206,10 +234,10 @@ export async function validateSessionToken(token: string): Promise<SessionData |
  * @param cookieValue - admin_session cookie value
  * @returns SessionData if valid, null otherwise
  */
-export function validateSession(cookieValue: string | undefined): SessionData | null {
+export async function validateSession(cookieValue: string | undefined): Promise<SessionData | null> {
   if (!cookieValue) {
     return null;
   }
   
-  return validateSessionToken(cookieValue);
+  return await validateSessionToken(cookieValue);
 }

@@ -5,9 +5,9 @@
 ### ✅ 1. Dify AIチャットボット本実装
 - **統合先**: layout.tsx に Dify チャットボットスクリプトを追加
 - **設定情報**:
-  - Token: `rak9Yh7T7SI5JyDw`
-  - Base URL: `https://dexakyo.akyodex.com`
-  - Embed Script: `https://dexakyo.akyodex.com/embed.min.js`
+  - Token: `<DIFY_EMBED_TOKEN>` ← Cloudflare Pages Secrets に設定
+  - Base URL: `<DIFY_BASE_URL>`
+  - Embed Script: `<DIFY_EMBED_SCRIPT_URL>`
 - **カスタムスタイリング**:
   - 青/シアン色のグラデーション
   - 他のボタンと統一感のあるデザイン
@@ -98,8 +98,9 @@ https://6485da02.akyodex.pages.dev/zukan
 
 ## 📝 注意事項
 
-### Cloudflare Pages の制約
-- Node.js ランタイムを使用（Edge ランタイム不可）
+### Cloudflare Pages の実行環境
+- **API ルート**: Node.js ランタイム (session管理、CSV処理等)
+- **Middleware**: Edge ランタイム (OpenNext wrapper: cloudflare-edge)
 - `nodejs_compat` 互換性フラグが必須
 - 画像最適化は `unoptimized: true` 設定
 

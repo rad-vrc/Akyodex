@@ -39,8 +39,8 @@ npm run next:build
 # Build command: npm run build
 
 # 環境変数設定（Cloudflare Dashboard）
-ADMIN_PASSWORD_OWNER=RadAkyo
-ADMIN_PASSWORD_ADMIN=Akyo
+ADMIN_PASSWORD_OWNER=<your_secure_owner_password>
+ADMIN_PASSWORD_ADMIN=<your_secure_admin_password>
 NEXT_PUBLIC_SITE_URL=https://akyodex.com
 NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
 ```

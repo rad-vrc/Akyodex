@@ -28,8 +28,8 @@ pages_build_output_dir = ".open-next"
 # - GITHUB_REPO_OWNER = "rad-vrc"
 # - GITHUB_REPO_NAME = "Akyodex"
 # - GITHUB_BRANCH = "main"
-# - ADMIN_PASSWORD_OWNER = "RadAkyo"
-# - ADMIN_PASSWORD_ADMIN = "Akyo"
+# - ADMIN_PASSWORD_OWNER = "<your_secure_owner_password>"
+# - ADMIN_PASSWORD_ADMIN = "<your_secure_admin_password>"
 # - NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
 
 # KV and R2 bindings should be configured in Cloudflare Pages Dashboard

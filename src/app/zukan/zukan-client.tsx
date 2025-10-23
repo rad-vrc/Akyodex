@@ -280,7 +280,7 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
       {/* Admin Settings Button - Below Language Toggle (same color as Language Toggle) */}
       <Link
         href="/admin"
-        className="admin-button"
+        className="admin-button group"
         aria-label="管理画面"
         title="管理画面"
       >

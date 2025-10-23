@@ -209,8 +209,8 @@ git revert HEAD    # or HEAD~2 to revert multiple commits
 - [ ] Build output directory: `.open-next`
 - [ ] Root directory: **(leave empty)** ✅ This is the goal!
 - [ ] Environment variables:
-  - `ADMIN_PASSWORD_OWNER = RadAkyo`
-  - `ADMIN_PASSWORD_ADMIN = Akyo`
+  - `ADMIN_PASSWORD_OWNER = <your_secure_owner_password>`
+  - `ADMIN_PASSWORD_ADMIN = <your_secure_admin_password>`
 
 ### Testing:
 - [ ] Local build: `npm run build`

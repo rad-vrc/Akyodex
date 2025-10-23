@@ -8,6 +8,9 @@
  * Creates a secure session cookie on successful authentication.
  */
 
+// Use Node.js runtime for session management (Web Crypto API and Buffer compatibility)
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createSessionToken } from '@/lib/session';
