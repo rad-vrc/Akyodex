@@ -14,17 +14,9 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { type SupportedLanguage, isValidLanguage, detectLanguageFromHeader } from '@/lib/i18n';
 
 const LANGUAGE_COOKIE = 'AKYO_LANG';
-
-type SupportedLanguage = 'ja' | 'en';
-
-/**
- * Validate language code
- */
-function isValidLanguage(lang: string): lang is SupportedLanguage {
-  return lang === 'ja' || lang === 'en';
-}
 
 /**
  * Get language from country code (Cloudflare cf-ipcountry header)
@@ -33,32 +25,6 @@ function getLanguageFromCountry(country: string): SupportedLanguage {
   // English-speaking countries
   const englishCountries = ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'ZA', 'SG', 'IN', 'PH'];
   return englishCountries.includes(country.toUpperCase()) ? 'en' : 'ja';
-}
-
-/**
- * Detect language from Accept-Language header
- */
-function detectLanguageFromHeader(acceptLanguage: string | null): SupportedLanguage {
-  if (!acceptLanguage) return 'ja';
-
-  // Parse Accept-Language header (e.g., "en-US,en;q=0.9,ja;q=0.8")
-  const languages = acceptLanguage
-    .split(',')
-    .map(lang => {
-      const [code, qStr] = lang.trim().split(';');
-      const q = qStr ? parseFloat(qStr.split('=')[1]) : 1.0;
-      return { code: code.split('-')[0].toLowerCase(), q };
-    })
-    .sort((a, b) => b.q - a.q);
-
-  // Find first supported language
-  for (const { code } of languages) {
-    if (isValidLanguage(code)) {
-      return code;
-    }
-  }
-
-  return 'ja'; // Default to Japanese
 }
 
 export function middleware(request: NextRequest) {

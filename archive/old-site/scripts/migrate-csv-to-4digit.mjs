@@ -63,9 +63,12 @@ function validateCsvStructure(lines) {
     throw new Error('CSV must have at least header + 1 data row');
   }
 
-  const header = lines[0];
-  if (!header.includes('ID') || !header.includes('アバター名')) {
-    throw new Error('CSV header missing required columns');
+  // Parse and validate header with complete match
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  const expectedHeaders = ['ID', 'appearance', 'nickname', 'avatarName', 'attributes', 'notes', 'creator', 'avatarUrl'];
+  
+  if (JSON.stringify(headers) !== JSON.stringify(expectedHeaders)) {
+    throw new Error(`Invalid CSV header. Expected: ${expectedHeaders.join(', ')}. Got: ${headers.join(', ')}`);
   }
 
   return true;
@@ -96,6 +99,8 @@ function migrateCsvFile(filePath) {
 
   // Convert IDs
   let convertedCount = 0;
+  let skippedCount = 0;
+  let already4DigitCount = 0;
   const newLines = lines.map((line, index) => {
     if (index === 0) {
       // Header line - keep as is
@@ -107,17 +112,25 @@ function migrateCsvFile(filePath) {
       return line;
     }
 
+    // Check if already 4-digit ID
+    const fourDigitMatch = line.match(/^(\d{4})(,.*)/);
+    if (fourDigitMatch) {
+      already4DigitCount++;
+      return line;
+    }
+
     // Data line - convert ID (first field)
-    const match = line.match(/^(\d{3})(,.*)/);
-    if (match) {
-      const oldId = match[1];
-      const rest = match[2];
+    const threeDigitMatch = line.match(/^(\d{3})(,.*)/);
+    if (threeDigitMatch) {
+      const oldId = threeDigitMatch[1];
+      const rest = threeDigitMatch[2];
       const newId = convertIdTo4Digit(oldId);
       convertedCount++;
       return `${newId}${rest}`;
     }
 
-    // Line doesn't start with 3-digit ID - keep as is (might be comment or malformed)
+    // Line doesn't start with 3 or 4-digit ID - skip with warning
+    skippedCount++;
     return line;
   });
 
@@ -136,11 +149,21 @@ function migrateCsvFile(filePath) {
 
   console.log(`✅ Migrated ${convertedCount} IDs (verified: ${fourDigitCount} rows with 4-digit IDs)`);
   
+  if (already4DigitCount > 0) {
+    console.log(`ℹ️  Skipped ${already4DigitCount} rows (already 4-digit IDs)`);
+  }
+  
+  if (skippedCount > 0) {
+    console.log(`⚠️  Skipped ${skippedCount} invalid/malformed rows`);
+  }
+  
   return {
     success: true,
     backupPath,
     convertedCount,
     fourDigitCount,
+    already4DigitCount,
+    skippedCount,
   };
 }
 

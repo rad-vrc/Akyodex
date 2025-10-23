@@ -222,28 +222,32 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
     setShowCreatorSuggestions(false);
   };
 
-  // Duplicate check for nickname
-  const handleCheckNicknameDuplicate = async () => {
-    const value = formData.nickname.trim();
+  // Generic duplicate check function
+  const handleCheckDuplicate = async (field: 'nickname' | 'avatarName', value: string) => {
+    const trimmedValue = value.trim();
     
-    if (!value) {
-      setNicknameStatus({
-        message: '通称を入力してください',
+    const setStatus = field === 'nickname' ? setNicknameStatus : setAvatarNameStatus;
+    const setChecking = field === 'nickname' ? setCheckingNickname : setCheckingAvatarName;
+    const fieldLabel = field === 'nickname' ? '通称' : 'アバター名';
+    
+    if (!trimmedValue) {
+      setStatus({
+        message: `${fieldLabel}を入力してください`,
         tone: 'neutral',
       });
       return;
     }
 
-    setCheckingNickname(true);
-    setNicknameStatus({ message: '', tone: 'neutral' });
+    setChecking(true);
+    setStatus({ message: '', tone: 'neutral' });
 
     try {
       const response = await fetch('/api/check-duplicate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          field: 'nickname',
-          value: value,
+          field,
+          value: trimmedValue,
         }),
       });
 
@@ -252,22 +256,25 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
       }
 
       const data = await response.json();
-      setNicknameStatus({
+      setStatus({
         message: data.message,
         tone: data.isDuplicate ? 'error' : 'success',
       });
     } catch (error) {
-      console.error('Nickname duplicate check error:', error);
-      setNicknameStatus({
+      console.error(`${fieldLabel} duplicate check error:`, error);
+      setStatus({
         message: '重複チェックに失敗しました',
         tone: 'error',
       });
     } finally {
-      setCheckingNickname(false);
+      setChecking(false);
     }
   };
 
-  // Duplicate check for avatar name
+  // Wrapper functions for backward compatibility
+  const handleCheckNicknameDuplicate = () => handleCheckDuplicate('nickname', formData.nickname);
+  const handleCheckAvatarNameDuplicate = () => handleCheckDuplicate('avatarName', formData.avatarName);
+
   // Image cropping functions (matching original implementation)
   const resetImagePosition = () => {
     setImageScale(1);
@@ -431,50 +438,6 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
       image.crossOrigin = 'anonymous';
       image.src = originalImageSrc;
     });
-  };
-
-  const handleCheckAvatarNameDuplicate = async () => {
-    const value = formData.avatarName.trim();
-    
-    if (!value) {
-      setAvatarNameStatus({
-        message: 'アバター名を入力してください',
-        tone: 'neutral',
-      });
-      return;
-    }
-
-    setCheckingAvatarName(true);
-    setAvatarNameStatus({ message: '', tone: 'neutral' });
-
-    try {
-      const response = await fetch('/api/check-duplicate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          field: 'avatarName',
-          value: value,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Duplicate check failed');
-      }
-
-      const data = await response.json();
-      setAvatarNameStatus({
-        message: data.message,
-        tone: data.isDuplicate ? 'error' : 'success',
-      });
-    } catch (error) {
-      console.error('Avatar name duplicate check error:', error);
-      setAvatarNameStatus({
-        message: '重複チェックに失敗しました',
-        tone: 'error',
-      });
-    } finally {
-      setCheckingAvatarName(false);
-    }
   };
 
   // VRChat URLからアバター名を取得

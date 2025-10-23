@@ -63,7 +63,13 @@ export function AttributeModal({
       return;
     }
 
-    if (availableAttributes.includes(trimmed)) {
+    // Check for duplicates with Unicode normalization (NFC)
+    const normalizedInput = trimmed.normalize('NFC');
+    const isDuplicate = availableAttributes.some(
+      attr => attr.normalize('NFC').toLowerCase() === normalizedInput.toLowerCase()
+    );
+
+    if (isDuplicate) {
       alert('この属性は既に存在します');
       return;
     }
