@@ -29,10 +29,26 @@ bucket_name = "akyo-images"
 # - ADMIN_PASSWORD_ADMIN = "Akyo"
 # - NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
 
+[[env.production.kv_namespaces]]
+binding = "AKYO_KV"
+id = "YOUR_KV_NAMESPACE_ID"
+
+[[env.production.r2_buckets]]
+binding = "AKYO_BUCKET"
+bucket_name = "akyo-images"
+
 [env.production.vars]
 NODE_ENV = "production"
 
 # Environment variables for preview
 [env.preview]
+[[env.preview.kv_namespaces]]
+binding = "AKYO_KV"
+id = "YOUR_KV_NAMESPACE_ID"
+
+[[env.preview.r2_buckets]]
+binding = "AKYO_BUCKET"
+bucket_name = "akyo-images"
+
 [env.preview.vars]
 NODE_ENV = "preview"
