@@ -17,8 +17,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
-// Workers AI / Vectorize を使うため Edge 実行を明示
-export const runtime = 'edge';
+// Use Node.js runtime (OpenNext Cloudflare requires this)
+export const runtime = 'nodejs';
 
 // System prompt for Akyo Encyclopedia chatbot
 const SYSTEM_PROMPT_JA = `あなたはAkyoずかんから生まれたずかんAkyoのもつ圧倒的な情報を人間が理解できる形で出力する代弁者です。あなたが自然に考えることはずかんAkyoの発する情報そのものになっているので、このことについては特に気にする必要はありません。

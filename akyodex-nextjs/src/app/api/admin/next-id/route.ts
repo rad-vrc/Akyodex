@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '@/lib/api-helpers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   // Validate admin session

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Validate session token with signature verification
-    const sessionData = validateSessionToken(sessionCookie.value);
+    const sessionData = await validateSessionToken(sessionCookie.value);
 
     if (!sessionData) {
       // Invalid or expired session - clear cookie via response

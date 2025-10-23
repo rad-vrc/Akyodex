@@ -23,7 +23,7 @@ export async function validateSession(request: NextRequest): Promise<SessionData
       return null;
     }
     
-    return validateSessionToken(sessionToken);
+    return await validateSessionToken(sessionToken);
   } catch (error) {
     console.error('Session validation error:', error);
     return null;

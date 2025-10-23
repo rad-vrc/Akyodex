@@ -11,30 +11,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createSessionToken } from '@/lib/session';
-import { timingSafeEqual } from 'crypto';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
 /**
- * Timing-safe password comparison
+ * Timing-safe password comparison (Edge Runtime Compatible)
  * Prevents timing attacks by ensuring constant-time comparison
  */
 function timingSafeCompare(a: string, b: string): boolean {
   try {
-    // Convert strings to buffers of equal length
-    const bufA = Buffer.from(a, 'utf8');
-    const bufB = Buffer.from(b, 'utf8');
+    const encoder = new TextEncoder();
+    const bufA = encoder.encode(a);
+    const bufB = encoder.encode(b);
     
-    // If lengths differ, pad the shorter one to prevent length-based timing
+    // Pad to equal length to prevent length-based timing
     const maxLen = Math.max(bufA.length, bufB.length);
-    const paddedA = Buffer.alloc(maxLen);
-    const paddedB = Buffer.alloc(maxLen);
+    const paddedA = new Uint8Array(maxLen);
+    const paddedB = new Uint8Array(maxLen);
     
-    bufA.copy(paddedA);
-    bufB.copy(paddedB);
+    paddedA.set(bufA);
+    paddedB.set(bufB);
     
-    return timingSafeEqual(paddedA, paddedB);
+    // Timing-safe comparison
+    let result = 0;
+    for (let i = 0; i < maxLen; i++) {
+      result |= paddedA[i] ^ paddedB[i];
+    }
+    
+    return result === 0;
   } catch {
     return false;
   }
@@ -89,7 +94,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create cryptographically signed session token
-    const sessionToken = createSessionToken(username, role, SESSION_DURATION);
+    const sessionToken = await createSessionToken(username, role, SESSION_DURATION);
 
     // Set secure HTTP-only cookie
     const cookieStore = await cookies();

@@ -5,7 +5,8 @@ name = "akyodex-nextjs"
 compatibility_date = "2025-01-22"
 
 # Pages-specific settings
-pages_build_output_dir = ".open-next/worker"
+# OpenNext Cloudflare generates output in .open-next directory
+pages_build_output_dir = ".open-next"
 
 # KV Namespace for avatar metadata
 [[kv_namespaces]]

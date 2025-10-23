@@ -1,11 +1,10 @@
 /**
- * Session Management with HMAC Signature
+ * Session Management with HMAC Signature (Edge Runtime Compatible)
  * 
- * Provides secure session token generation and validation using HMAC SHA256.
+ * Provides secure session token generation and validation using Web Crypto API.
  * Protects against session tampering and role escalation attacks.
+ * Compatible with Cloudflare Workers Edge Runtime.
  */
-
-import { createHmac, timingSafeEqual } from 'crypto';
 
 export interface SessionData {
   username: string;
@@ -38,30 +37,74 @@ function getSecretKey(): string {
 }
 
 /**
- * Sign session data with HMAC SHA256
+ * Convert hex string to Uint8Array
  */
-function signSessionData(data: SessionData): string {
+function hexToUint8Array(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  }
+  return bytes;
+}
+
+/**
+ * Convert Uint8Array to hex string
+ */
+function uint8ArrayToHex(arr: Uint8Array): string {
+  return Array.from(arr)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/**
+ * Sign session data with HMAC SHA256 using Web Crypto API
+ */
+async function signSessionData(data: SessionData): Promise<string> {
   const secretKey = getSecretKey();
   const payload = JSON.stringify(data);
-  const hmac = createHmac('sha256', secretKey);
-  hmac.update(payload);
-  return hmac.digest('hex');
+  
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secretKey);
+  const messageData = encoder.encode(payload);
+  
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+  return uint8ArrayToHex(new Uint8Array(signature));
+}
+
+/**
+ * Timing-safe comparison for two Uint8Arrays
+ */
+function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a[i] ^ b[i];
+  }
+  
+  return result === 0;
 }
 
 /**
  * Verify session signature
  */
-function verifySignature(data: SessionData, signature: string): boolean {
+async function verifySignature(data: SessionData, signature: string): Promise<boolean> {
   try {
-    const expectedSignature = signSessionData(data);
+    const expectedSignature = await signSessionData(data);
     
     // Use timing-safe comparison to prevent timing attacks
-    const expectedBuffer = Buffer.from(expectedSignature, 'hex');
-    const actualBuffer = Buffer.from(signature, 'hex');
-    
-    if (expectedBuffer.length !== actualBuffer.length) {
-      return false;
-    }
+    const expectedBuffer = hexToUint8Array(expectedSignature);
+    const actualBuffer = hexToUint8Array(signature);
     
     return timingSafeEqual(expectedBuffer, actualBuffer);
   } catch (error) {
@@ -78,18 +121,18 @@ function verifySignature(data: SessionData, signature: string): boolean {
  * @param durationMs - Session duration in milliseconds (default: 24 hours)
  * @returns Base64-encoded signed session token
  */
-export function createSessionToken(
+export async function createSessionToken(
   username: string,
   role: 'owner' | 'admin',
   durationMs: number = 24 * 60 * 60 * 1000
-): string {
+): Promise<string> {
   const sessionData: SessionData = {
     username,
     role,
     expires: Date.now() + durationMs,
   };
   
-  const signature = signSessionData(sessionData);
+  const signature = await signSessionData(sessionData);
   
   const signedSession: SignedSession = {
     data: sessionData,
@@ -97,7 +140,11 @@ export function createSessionToken(
   };
   
   // Encode the entire signed session as base64
-  return Buffer.from(JSON.stringify(signedSession)).toString('base64');
+  const encoder = new TextEncoder();
+  const jsonBytes = encoder.encode(JSON.stringify(signedSession));
+  
+  // Use btoa for base64 encoding (available in Edge runtime)
+  return btoa(String.fromCharCode(...jsonBytes));
 }
 
 /**
@@ -106,10 +153,17 @@ export function createSessionToken(
  * @param token - Base64-encoded signed session token
  * @returns SessionData if valid, null otherwise
  */
-export function validateSessionToken(token: string): SessionData | null {
+export async function validateSessionToken(token: string): Promise<SessionData | null> {
   try {
-    // Decode base64 token
-    const decodedJson = Buffer.from(token, 'base64').toString('utf-8');
+    // Decode base64 token using atob (available in Edge runtime)
+    const jsonStr = atob(token);
+    const jsonBytes = new Uint8Array(jsonStr.length);
+    for (let i = 0; i < jsonStr.length; i++) {
+      jsonBytes[i] = jsonStr.charCodeAt(i);
+    }
+    const decoder = new TextDecoder();
+    const decodedJson = decoder.decode(jsonBytes);
+    
     const signedSession: SignedSession = JSON.parse(decodedJson);
     
     // Validate structure
@@ -121,7 +175,7 @@ export function validateSessionToken(token: string): SessionData | null {
     const { data, signature } = signedSession;
     
     // Verify signature
-    if (!verifySignature(data, signature)) {
+    if (!(await verifySignature(data, signature))) {
       console.error('Invalid session signature: signature mismatch');
       return null;
     }
