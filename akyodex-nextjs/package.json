@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "opennextjs-cloudflare",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@cloudflare/next-on-pages": "^1.13.7",
     "@opennextjs/cloudflare": "^1.11.0",
     "csv-parse": "^6.1.0",
     "csv-stringify": "^6.6.0",
