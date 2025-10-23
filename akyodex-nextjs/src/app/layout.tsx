@@ -143,7 +143,7 @@ export default function RootLayout({
             __html: `
               window.difyChatbotConfig = {
                 token: 'rak9Yh7T7SI5JyDw',
-                baseUrl: 'https://dexakyo.akyodex.com',
+                baseUrl: 'http://dexakyo.akyodex.com',
                 inputs: {},
                 systemVariables: {},
                 userVariables: {},
@@ -152,8 +152,8 @@ export default function RootLayout({
           }}
         />
         <script
-          src="https://dexakyo.akyodex.com/embed.min.js"
-          id="dify-chatbot-script"
+          src="http://dexakyo.akyodex.com/embed.min.js"
+          id="rak9Yh7T7SI5JyDw"
           defer
         />
         <StructuredData />
