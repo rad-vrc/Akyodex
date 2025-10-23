@@ -62,4 +62,32 @@ if (fs.existsSync(assetsDir)) {
   console.warn('⚠️  assets/ directory not found');
 }
 
+// Create _routes.json for proper static asset handling
+const routesConfig = {
+  version: 1,
+  description: "Cloudflare Pages routing configuration for Next.js with OpenNext",
+  include: [
+    "/*"
+  ],
+  exclude: [
+    "/_next/static/*",
+    "/favicon.ico",
+    "/robots.txt",
+    "/manifest.json",
+    "/sw.js",
+    "/images/*",
+    "/*.svg",
+    "/*.png",
+    "/*.jpg",
+    "/*.jpeg",
+    "/*.gif",
+    "/*.webp",
+    "/*.ico"
+  ]
+};
+
+const routesPath = path.join(openNextDir, '_routes.json');
+fs.writeFileSync(routesPath, JSON.stringify(routesConfig, null, 2));
+console.log('✅ Created _routes.json for static asset routing');
+
 console.log('✨ Ready for Cloudflare Pages deployment!');
