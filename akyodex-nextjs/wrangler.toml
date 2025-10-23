@@ -3,6 +3,7 @@
 
 name = "akyodex-nextjs"
 compatibility_date = "2025-01-22"
+compatibility_flags = ["nodejs_compat"]
 
 # Pages-specific settings
 # OpenNext Cloudflare generates output in .open-next directory
