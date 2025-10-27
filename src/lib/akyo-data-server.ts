@@ -8,7 +8,7 @@
  * - Error handling with retry logic
  */
 
-import { parseCsvToAkyoData } from './csv-parser';
+import { parseCsvToAkyoData } from './csv-utils';
 import type { AkyoData } from '@/types/akyo';
 
 const GITHUB_OWNER = process.env.GITHUB_REPO_OWNER || 'rad-vrc';
