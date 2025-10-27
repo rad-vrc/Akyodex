@@ -213,9 +213,10 @@ export function formatAkyoId(id: string | number): string {
 
 /**
  * Split attributes string into array
+ * Supports both Japanese comma (、) and regular comma (,) separators
  * 
- * @param attribute - Comma-separated attributes string
- * @returns Array of attribute strings
+ * @param attribute - Comma-separated attributes string (e.g., "チョコミント類,ギミック" or "チョコミント類、ギミック")
+ * @returns Array of trimmed attribute strings
  */
 export function splitAttributes(attribute: string): string[] {
   if (!attribute) return [];
