@@ -63,8 +63,6 @@ NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
 │   └── akyo-data-US.csv # 英語版データ
 ├── scripts/             # ビルドスクリプト
 │   └── prepare-cloudflare-pages.js  # OpenNext後処理
-├── archive/             # 旧サイトアーカイブ
-│   └── old-site/        # 旧HTML版のバックアップ
 ├── docs/                # ドキュメント
 ├── package.json
 ├── next.config.ts       # Next.js設定
