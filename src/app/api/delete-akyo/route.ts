@@ -11,9 +11,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { validateSession, validateOrigin, validateAkyoId } from '@/lib/api-helpers';
 import { parseCSV, stringifyCSV, filterOutRecordById, findRecordById } from '@/lib/csv-utils';
+import { fetchCSVFromGitHub, commitCSVToGitHub } from '@/lib/github-utils';
+import { deleteImageFromR2 } from '@/lib/r2-utils';
 
 // Use Node.js runtime for Buffer and R2 binding access
 export const runtime = 'nodejs';
@@ -58,51 +59,8 @@ export async function POST(request: NextRequest) {
 
     // Step 1: Delete from CSV via GitHub API
     try {
-      const githubToken = process.env.GITHUB_TOKEN;
-      const repoOwner = process.env.GITHUB_REPO_OWNER;
-      const repoName = process.env.GITHUB_REPO_NAME;
-      const branch = process.env.GITHUB_BRANCH || 'main';
-
-      if (!githubToken || !repoOwner || !repoName) {
-        console.error('[delete-akyo] GitHub credentials not configured');
-        return NextResponse.json(
-          { success: false, error: 'GitHub設定が不足しています' },
-          { status: 500 }
-        );
-      }
-
       // Fetch current CSV content
-      const csvPath = 'data/akyo-data.csv';
-      const getFileUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${csvPath}?ref=${branch}`;
-      
-      // 30-second timeout for GitHub API request
-      const getController = new AbortController();
-      const getTimeoutId = setTimeout(() => getController.abort(), 30000);
-      
-      let getResponse;
-      try {
-        getResponse = await fetch(getFileUrl, {
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json',
-          },
-          signal: getController.signal,
-        });
-        clearTimeout(getTimeoutId);
-      } catch (error) {
-        clearTimeout(getTimeoutId);
-        if (error instanceof Error && error.name === 'AbortError') {
-          throw new Error('GitHub API request timed out (30s)');
-        }
-        throw error;
-      }
-
-      if (!getResponse.ok) {
-        throw new Error(`GitHub API error: ${getResponse.status}`);
-      }
-
-      const fileData = await getResponse.json() as { content: string; sha: string };
-      const currentContent = Buffer.from(fileData.content, 'base64').toString('utf-8');
+      const { content: currentContent, sha: fileSha } = await fetchCSVFromGitHub();
       
       // Parse CSV properly (handles quoted fields, commas, newlines)
       const records = parseCSV(currentContent);
@@ -134,74 +92,14 @@ export async function POST(request: NextRequest) {
       const newContent = stringifyCSV(allRecords);
 
       // Commit updated CSV to GitHub
-      const updateUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${csvPath}`;
-      
-      // 30-second timeout for GitHub API commit
-      const updateController = new AbortController();
-      const updateTimeoutId = setTimeout(() => updateController.abort(), 30000);
-      
-      let updateResponse;
-      try {
-        updateResponse = await fetch(updateUrl, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: `Delete Akyo #${id}: ${String(deletedAvatarName ?? '').replace(/[\r\n]+/g, ' ').slice(0, 100)}`,
-            content: Buffer.from(newContent).toString('base64'),
-            sha: fileData.sha,
-            branch: branch,
-          }),
-          signal: updateController.signal,
-        });
-        clearTimeout(updateTimeoutId);
-      } catch (error) {
-        clearTimeout(updateTimeoutId);
-        if (error instanceof Error && error.name === 'AbortError') {
-          throw new Error('GitHub API commit timed out (30s)');
-        }
-        throw error;
-      }
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        throw new Error(`GitHub commit failed: ${errorData.message || updateResponse.status}`);
-      }
-
-      const commitData = await updateResponse.json() as { commit: { html_url: string } };
+      const commitMessage = `Delete Akyo #${id}: ${String(deletedAvatarName ?? '').replace(/[\r\n]+/g, ' ').slice(0, 100)}`;
+      const commitData = await commitCSVToGitHub(newContent, fileSha, commitMessage);
 
       // Step 2: Delete image from R2 (if exists)
-      let imageDeleted = false;
-      try {
-        // Access R2 bucket through Cloudflare Pages binding
-        // See upload-akyo/route.ts for detailed explanation
-        let r2Bucket: any;
-        try {
-          const context = getCloudflareContext();
-          r2Bucket = context?.env?.AKYO_BUCKET;
-        } catch (error) {
-          console.warn('[delete-akyo] getCloudflareContext() not available (local dev?):', error);
-          r2Bucket = undefined;
-        }
-        
-        if (r2Bucket && typeof r2Bucket === 'object' && typeof r2Bucket.delete === 'function') {
-          // Delete from R2 with proper key format (WebP)
-          const imageKey = `${id}.webp`;
-          await r2Bucket.delete(imageKey);
-          
-          console.log(`[delete-akyo] Image deleted from R2: ${imageKey}`);
-          imageDeleted = true;
-        } else {
-          // R2 binding not available (local development or misconfigured)
-          console.warn('[delete-akyo] R2 binding not available, skipping image deletion');
-          console.warn('[delete-akyo] Ensure AKYO_BUCKET is bound in Cloudflare Pages settings');
-          imageDeleted = false;
-        }
-      } catch (error) {
-        console.error('[delete-akyo] Image deletion warning:', error);
+      const deleteResult = await deleteImageFromR2(id);
+      
+      if (!deleteResult.success) {
+        console.error('[delete-akyo] Image deletion warning:', deleteResult.error);
         // Don't fail the entire operation if image deletion fails
         // The CSV has already been updated
       }
@@ -209,7 +107,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: `Akyoを削除しました (ID: ${id})`,
-        imageDeleted,
+        imageDeleted: deleteResult.success,
         commitUrl: commitData.commit.html_url,
       });
 
