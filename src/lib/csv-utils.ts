@@ -123,6 +123,19 @@ export function akyoDataToCsv(data: AkyoData[]): string {
 }
 
 /**
+ * Sanitize CSV cell value to prevent formula injection
+ * Escapes cells starting with =, +, -, @, or tab characters
+ * 
+ * @param value - Cell value to sanitize
+ * @returns Sanitized value safe for CSV export
+ */
+function sanitizeCsvCell(value: string): string {
+  const str = String(value ?? '');
+  // Prepend single quote to prevent formula execution in Excel/LibreOffice
+  return /^[=+\-@\t]/.test(str) ? `'${str}` : str;
+}
+
+/**
  * Find record by ID (first column)
  * 
  * @param records - Array of CSV records
@@ -174,9 +187,10 @@ export function replaceRecordById(
 
 /**
  * Create a new record from form data
+ * Applies CSV formula injection protection to all fields
  * 
  * @param data - Object with field values
- * @returns Array of field values
+ * @returns Array of field values with security sanitization
  */
 export function createAkyoRecord(data: {
   id: string;
@@ -188,14 +202,14 @@ export function createAkyoRecord(data: {
   notes?: string;
 }): string[] {
   return [
-    data.id,
+    sanitizeCsvCell(data.id),
     '', // appearance field is not used in form
-    data.nickname || '',
-    data.avatarName,
-    data.attributes || '',
-    data.notes || '',
-    data.creator,
-    data.avatarUrl || '',
+    sanitizeCsvCell(data.nickname || ''),
+    sanitizeCsvCell(data.avatarName),
+    sanitizeCsvCell(data.attributes || ''),
+    sanitizeCsvCell(data.notes || ''),
+    sanitizeCsvCell(data.creator),
+    sanitizeCsvCell(data.avatarUrl || ''),
   ];
 }
 

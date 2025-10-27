@@ -81,8 +81,9 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      // Extract avatar name for commit message (3rd column, index 2)
-      const deletedAvatarName = String(recordToDelete[2] ?? '').trim() || 'Unknown';
+      // Extract avatar name for commit message (4th column, index 3)
+      // CSV structure: [ID, 見た目, 通称, アバター名, ...]
+      const deletedAvatarName = String(recordToDelete[3] ?? '').trim() || 'Unknown';
       
       // Filter out the record
       const filteredRecords = filterOutRecordById(dataRecords, id);
