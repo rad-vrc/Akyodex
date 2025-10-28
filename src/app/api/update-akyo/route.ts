@@ -15,9 +15,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { validateSession, validateOrigin, validateAkyoId } from '@/lib/api-helpers';
 import { parseCSV, stringifyCSV, createAkyoRecord, replaceRecordById, findRecordById } from '@/lib/csv-utils';
+import { fetchCSVFromGitHub, commitCSVToGitHub } from '@/lib/github-utils';
+import { uploadImageToR2 } from '@/lib/r2-utils';
 
 // Use Node.js runtime for Buffer and R2 binding access
 export const runtime = 'nodejs';
@@ -70,51 +71,8 @@ export async function POST(request: NextRequest) {
 
     // Step 1: Update CSV via GitHub API (do this FIRST to prevent orphaned R2 images)
     try {
-      const githubToken = process.env.GITHUB_TOKEN;
-      const repoOwner = process.env.GITHUB_REPO_OWNER;
-      const repoName = process.env.GITHUB_REPO_NAME;
-      const branch = process.env.GITHUB_BRANCH || 'main';
-
-      if (!githubToken || !repoOwner || !repoName) {
-        console.error('[update-akyo] GitHub credentials not configured');
-        return NextResponse.json(
-          { success: false, error: 'GitHub設定が不足しています' },
-          { status: 500 }
-        );
-      }
-
       // Fetch current CSV content
-      const csvPath = 'data/akyo-data.csv';
-      const getFileUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${csvPath}?ref=${branch}`;
-      
-      // 30-second timeout for GitHub API request
-      const getController = new AbortController();
-      const getTimeoutId = setTimeout(() => getController.abort(), 30000);
-      
-      let getResponse;
-      try {
-        getResponse = await fetch(getFileUrl, {
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json',
-          },
-          signal: getController.signal,
-        });
-        clearTimeout(getTimeoutId);
-      } catch (error) {
-        clearTimeout(getTimeoutId);
-        if (error instanceof Error && error.name === 'AbortError') {
-          throw new Error('GitHub API request timed out (30s)');
-        }
-        throw error;
-      }
-
-      if (!getResponse.ok) {
-        throw new Error(`GitHub API error: ${getResponse.status}`);
-      }
-
-      const fileData = await getResponse.json() as { content: string; sha: string };
-      const currentContent = Buffer.from(fileData.content, 'base64').toString('utf-8');
+      const { content: currentContent, sha: fileSha } = await fetchCSVFromGitHub();
       
       // Parse CSV properly (handles quoted fields, commas, newlines)
       const records = parseCSV(currentContent);
@@ -153,104 +111,27 @@ export async function POST(request: NextRequest) {
       const newContent = stringifyCSV(allRecords);
 
       // Commit updated CSV to GitHub
-      const updateUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${csvPath}`;
-      
-      // 30-second timeout for GitHub API commit
-      const updateController = new AbortController();
-      const updateTimeoutId = setTimeout(() => updateController.abort(), 30000);
-      
-      let updateResponse;
-      try {
-        updateResponse = await fetch(updateUrl, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: `Update Akyo #${id}: ${String(avatarName ?? '').replace(/[\r\n]+/g, ' ').slice(0, 100)}`,
-            content: Buffer.from(newContent).toString('base64'),
-            sha: fileData.sha,
-            branch: branch,
-          }),
-          signal: updateController.signal,
-        });
-        clearTimeout(updateTimeoutId);
-      } catch (error) {
-        clearTimeout(updateTimeoutId);
-        if (error instanceof Error && error.name === 'AbortError') {
-          throw new Error('GitHub API commit timed out (30s)');
-        }
-        throw error;
-      }
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        throw new Error(`GitHub commit failed: ${errorData.message || updateResponse.status}`);
-      }
-
-      const commitData = await updateResponse.json() as { commit: { html_url: string } };
+      const commitMessage = `Update Akyo #${id}: ${String(avatarName ?? '').replace(/[\r\n]+/g, ' ').slice(0, 100)}`;
+      const commitData = await commitCSVToGitHub(newContent, fileSha, commitMessage);
 
       // Step 2: Update image to R2 (AFTER successful CSV commit, if provided)
       let imageUpdated = false;
       if (imageData) {
-        try {
-          // Validate image format (WebP only - client converts to WebP before upload)
-          if (!/^data:image\/webp;base64,/.test(imageData)) {
-            throw new Error('Only WebP format is supported (client converts before upload)');
-          }
-
-          // Convert base64 data URL to buffer
-          const base64Data = imageData.split(',')[1];
-          const buffer = Buffer.from(base64Data, 'base64');
-
-          // Validate size limit (5MB)
-          const MAX = 5 * 1024 * 1024; // 5MB
-          if (buffer.byteLength > MAX) {
-            throw new Error('Image too large (max 5MB)');
-          }
-          
-          // Access R2 bucket through Cloudflare Pages binding
-          // See upload-akyo/route.ts for detailed explanation
-          let r2Bucket: any;
-          try {
-            const context = getCloudflareContext();
-            r2Bucket = context?.env?.AKYO_BUCKET;
-          } catch (error) {
-            console.warn('[update-akyo] getCloudflareContext() not available (local dev?):', error);
-            r2Bucket = undefined;
-          }
-          
-          if (r2Bucket && typeof r2Bucket === 'object' && typeof r2Bucket.put === 'function') {
-            // Upload to R2 with proper key format (overwrites existing, WebP)
-            const imageKey = `${id}.webp`;
-            await r2Bucket.put(imageKey, buffer, {
-              httpMetadata: {
-                contentType: 'image/webp',
-              },
-            });
-            
-            console.log(`[update-akyo] Image updated in R2: ${imageKey}`);
-            imageUpdated = true;
-          } else {
-            // R2 binding not available (local development or misconfigured)
-            console.warn('[update-akyo] R2 binding not available, skipping image update');
-            console.warn('[update-akyo] Ensure AKYO_BUCKET is bound in Cloudflare Pages settings');
-            imageUpdated = false;
-          }
-        } catch (error) {
+        const uploadResult = await uploadImageToR2(id, imageData);
+        
+        if (!uploadResult.success) {
           // Image update failed, but CSV is already committed
-          // Log error but don't fail the entire operation
-          console.error('[update-akyo] Image update error (CSV already committed):', error);
+          console.error('[update-akyo] Image update error:', uploadResult.error);
           return NextResponse.json({
             success: true,
             message: 'Akyoを更新しましたが、画像の更新に失敗しました',
             imageUpdated: false,
             commitUrl: commitData.commit.html_url,
-            warning: '画像の更新に失敗しました。後で再試行してください。',
+            warning: uploadResult.error || '画像の更新に失敗しました。後で再試行してください。',
           });
         }
+        
+        imageUpdated = true;
       }
 
       return NextResponse.json({

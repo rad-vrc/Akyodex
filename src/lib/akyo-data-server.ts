@@ -8,7 +8,7 @@
  * - Error handling with retry logic
  */
 
-import { parseCsvToAkyoData } from './csv-parser';
+import { parseCsvToAkyoData } from './csv-utils';
 import type { AkyoData } from '@/types/akyo';
 
 const GITHUB_OWNER = process.env.GITHUB_REPO_OWNER || 'rad-vrc';
@@ -90,8 +90,9 @@ export async function fetchAkyoData(
     // Parse CSV data
     const data = parseCsvToAkyoData(text);
     
-    // Count rows (lines starting with 4 digits)
-    const rowCount = (text.match(/^\d{4},/gm) || []).length;
+    // Count rows (lines starting with 4 digits, with or without quotes)
+    // Handles both 0001, and "0001",
+    const rowCount = (text.match(/^"?\d{4}"?,/gm) || []).length;
     
     const result: FetchResult = {
       data,
