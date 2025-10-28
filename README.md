@@ -282,7 +282,6 @@ akyodex-nextjs/
 ├── README.md                        # This file
 ├── DEPLOYMENT.md                    # Cloudflare Pages deployment guide
 ├── CHATBOT_SETUP.md                 # AI chatbot setup instructions
-├── MIGRATION_COMPARISON.md          # Migration history and comparison
 │
 ├── package.json                     # Dependencies and scripts
 ├── package-lock.json
@@ -1327,7 +1326,6 @@ chore: Update dependencies
 
 - **Deployment Guide**: See `DEPLOYMENT.md`
 - **Chatbot Setup**: See `CHATBOT_SETUP.md`
-- **Migration Comparison**: See `MIGRATION_COMPARISON.md`
 
 ---
 
