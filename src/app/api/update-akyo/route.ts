@@ -15,7 +15,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateSession, validateOrigin, validateAkyoId } from '@/lib/api-helpers';
+import { validateSession, validateOrigin, parseAkyoFormData } from '@/lib/api-helpers';
 import { parseCSV, stringifyCSV, createAkyoRecord, replaceRecordById, findRecordById } from '@/lib/csv-utils';
 import { fetchCSVFromGitHub, commitCSVToGitHub } from '@/lib/github-utils';
 import { uploadImageToR2 } from '@/lib/r2-utils';
@@ -43,31 +43,25 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    
-    const id = formData.get('id') as string;
-    const nickname = formData.get('nickname') as string;
-    const avatarName = formData.get('avatarName') as string;
-    const attributes = formData.get('attributes') as string;
-    const creator = formData.get('creator') as string;
-    const avatarUrl = formData.get('avatarUrl') as string;
-    const notes = formData.get('notes') as string;
-    const imageData = formData.get('imageData') as string; // Base64 data URL
+    const parsedForm = parseAkyoFormData(formData);
 
-    // Validate required fields and ID format
-    if (!id || !avatarName || !creator) {
+    if (!parsedForm.success) {
       return NextResponse.json(
-        { success: false, error: '必須フィールドが不足しています' },
-        { status: 400 }
+        { success: false, error: parsedForm.error },
+        { status: parsedForm.status }
       );
     }
 
-    // Validate ID format (must be 4-digit numeric: 0001-9999)
-    if (!validateAkyoId(id)) {
-      return NextResponse.json(
-        { success: false, error: '有効な4桁ID（0001-9999）が必要です' },
-        { status: 400 }
-      );
-    }
+    const {
+      id,
+      nickname,
+      avatarName,
+      attributes,
+      creator,
+      avatarUrl,
+      notes,
+      imageData,
+    } = parsedForm.data;
 
     // Step 1: Update CSV via GitHub API (do this FIRST to prevent orphaned R2 images)
     try {
