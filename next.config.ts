@@ -45,13 +45,14 @@ const nextConfig: NextConfig = {
         permanent: true, // 301 Redirect
       },
       // index.html?id=XXX → /zukan?id=XXX
+      // Accepts alphanumeric IDs (e.g., 001, 0001, 612, etc.)
       {
         source: '/index.html',
         has: [
           {
             type: 'query',
             key: 'id',
-            value: '(?<id>.*)',
+            value: '(?<id>[0-9A-Za-z]+)',
           },
         ],
         destination: '/zukan?id=:id',
