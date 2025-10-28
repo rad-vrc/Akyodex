@@ -35,6 +35,31 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // 301リダイレクト（旧URL → 新URL）
+  async redirects() {
+    return [
+      // index.html (クエリパラメータなし) → /zukan
+      {
+        source: '/index.html',
+        destination: '/zukan',
+        permanent: true, // 301 Redirect
+      },
+      // index.html?id=XXX → /zukan?id=XXX
+      {
+        source: '/index.html',
+        has: [
+          {
+            type: 'query',
+            key: 'id',
+            value: '(?<id>.*)',
+          },
+        ],
+        destination: '/zukan?id=:id',
+        permanent: true, // 301 Redirect
+      },
+    ];
+  },
+
   // セキュリティヘッダー
   async headers() {
     return [
