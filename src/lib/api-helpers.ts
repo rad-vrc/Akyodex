@@ -103,3 +103,64 @@ export function validateOrigin(request: NextRequest): boolean {
 export function validateAkyoId(id: string): boolean {
   return /^\d{4}$/.test(id);
 }
+
+export interface AkyoFormData {
+  id: string;
+  nickname: string;
+  avatarName: string;
+  attributes: string;
+  creator: string;
+  avatarUrl: string;
+  notes: string;
+  imageData?: string;
+}
+
+export type AkyoFormParseResult =
+  | { success: true; data: AkyoFormData }
+  | { success: false; status: number; error: string };
+
+export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
+  const readField = (key: string): string => {
+    const value = formData.get(key);
+    return typeof value === 'string' ? value.trim() : '';
+  };
+
+  const id = readField('id');
+  const avatarName = readField('avatarName');
+  const creator = readField('creator');
+
+  if (!id || !avatarName || !creator) {
+    return {
+      success: false,
+      status: 400,
+      error: '必須フィールドが不足しています',
+    };
+  }
+
+  if (!validateAkyoId(id)) {
+    return {
+      success: false,
+      status: 400,
+      error: '有効な4桁ID（0001-9999）が必要です',
+    };
+  }
+
+  const imageValue = formData.get('imageData');
+  const imageData = typeof imageValue === 'string' && imageValue.trim().length > 0
+    ? imageValue.trim()
+    : undefined;
+
+  return {
+    success: true,
+    data: {
+      id,
+      avatarName,
+      creator,
+      nickname: readField('nickname'),
+      attributes: readField('attributes'),
+      avatarUrl: readField('avatarUrl'),
+      notes: readField('notes'),
+      imageData,
+    },
+  };
+}
