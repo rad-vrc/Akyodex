@@ -198,9 +198,9 @@ akyodex-nextjs/
 ├── package.json                     # Dependencies and scripts
 ├── package-lock.json
 ├── next.config.ts                   # Next.js + Cloudflare config
+├── open-next.config.ts              # OpenNext Cloudflare adapter config
 ├── tailwind.config.ts               # Tailwind CSS config
 ├── tsconfig.json                    # TypeScript config
-├── wrangler.toml                    # Cloudflare bindings config
 │
 ├── public/
 │   ├── sw.js                        # Service Worker (6 caching strategies)
