@@ -1,6 +1,6 @@
 # Akyodex - Next.js 15 + Cloudflare Pages
 
-**VRChat Avatar Encyclopedia**
+**VRChat Avatar Encyclopedia with AI-Powered Chatbot**
 
 ## 📋 Table of Contents
 
@@ -57,6 +57,10 @@ OWNER_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd
 
 # JWT Secret (Development only)
 JWT_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# AI API Keys (Optional for basic functionality)
+# GEMINI_API_KEY=your_key_here
+# COHERE_API_KEY=your_key_here
 EOF
 ```
 
@@ -70,11 +74,14 @@ npm run dev
 ```
 ✅ Gallery:     http://localhost:3000/zukan
 ✅ Admin Panel: http://localhost:3000/admin
+✅ Chatbot:     (Click chat icon in bottom-right)
 ```
 
 **Default Admin Credentials:**
 - Password: `Akyo-Admin-95cea4f6a6e348da5cec1fc31ef23ba2`
 - Role: Admin (full access)
+
+**Note:** AI Chatbot requires API keys (GEMINI_API_KEY, COHERE_API_KEY) - see [Chatbot Setup](CHATBOT_SETUP.md) for details.
 
 ---
 
@@ -84,15 +91,17 @@ npm run dev
 
 ### Key Features
 - 🎨 **639体のアバターデータベース** - 4桁ID管理システム
+- 🤖 **AI Chatbot (RAG)** - Cloudflare Workers AI + Vectorize + Gemini 2.5 Flash
 - 🔐 **Admin Panel** - JWT認証、画像クロッピング、VRChat連携
 - 📱 **PWA対応** - 6種類のキャッシング戦略
 - 🌍 **多言語対応** - 日本語/英語（自動検出）
-- ⚡ **Edge Runtime** - Cloudflare Pages + R2 + KV
+- ⚡ **Edge Runtime** - Cloudflare Pages + R2 + KV + Vectorize
 
 ### Project Status
 - ✅ **Next.js 15.5.6 Migration Complete** (PR #113 - 2025-10-22)
 - ✅ **Security Hardening** (Timing attack, XSS prevention, Input validation)
 - ✅ **PWA Implementation** (Service Worker with 6 caching strategies)
+- ✅ **AI Chatbot** (BGE-M3 embeddings → Vectorize → Cohere rerank → Gemini)
 - 📝 **Code Quality Improvements** (Issue #115 - 8 refactoring tasks)
 
 ---
@@ -108,10 +117,22 @@ npm run dev
 - **Edge Runtime**: Code execution at CDN edge locations (closer to users) for lower latency
 - **JWT (JSON Web Token)**: Secure authentication token standard
 
+### AI & Machine Learning
+- **RAG (Retrieval-Augmented Generation)**: AI technique combining database search with text generation for accurate, context-aware responses
+- **Embeddings**: Numerical vector representations of text that capture semantic meaning (e.g., "cat" and "kitten" have similar vectors)
+- **Vector Database**: Database optimized for storing and searching embeddings using mathematical similarity
+- **BGE-M3**: Multi-lingual embedding model that converts text to 1024-dimensional vectors
+- **Cosine Similarity**: Mathematical measure of similarity between two vectors (used for search)
+- **Reranking**: Re-ordering search results by relevance using a specialized model
+- **LLM (Large Language Model)**: AI model trained on massive text data for text generation (e.g., Gemini, GPT)
+- **Streaming Response**: Sending AI response progressively (word-by-word) instead of waiting for full response
+
 ### Cloudflare Services
 - **Cloudflare Pages**: Static site hosting with automatic deployment from Git
 - **R2 Bucket**: Object storage (like AWS S3) for files (CSV, images)
 - **KV (Key-Value) Store**: Fast distributed database for simple key-value pairs (used for sessions)
+- **Vectorize**: Cloudflare's vector database for storing and searching embeddings
+- **Workers AI**: Cloudflare's serverless AI inference platform
 
 ### VRChat Terms
 - **Avatar**: 3D character model used in VRChat
@@ -145,12 +166,72 @@ npm run dev
 │           │                │                │                │
 │           ├────────────────┼────────────────┤                │
 │           ▼                ▼                ▼                │
-│  ┌────────────┐  ┌─────────────┐                            │
-│  │  R2 Bucket │  │  KV Store   │                            │
-│  │   (CSV +   │  │  (Session)  │                            │
-│  │   Images)  │  └─────────────┘                            │
+│  ┌────────────┐  ┌─────────────┐  ┌──────────────┐         │
+│  │  R2 Bucket │  │  KV Store   │  │  Vectorize   │         │
+│  │   (CSV +   │  │  (Session)  │  │ (Embeddings) │         │
+│  │   Images)  │  └─────────────┘  └──────────────┘         │
 │  └────────────┘                                              │
 └─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+              ┌────────────────────────┐
+              │  External AI Services  │
+              │  ・Workers AI (BGE-M3) │
+              │  ・Cohere (Rerank v3)  │
+              │  ・Gemini 2.5 Flash    │
+              └────────────────────────┘
+```
+
+### AI Chatbot Flow (RAG)
+
+```
+User Query
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ 1. Embedding Generation                  │
+│    Workers AI: @cf/baai/bge-m3          │
+│    Input: User question (Japanese/EN)    │
+│    Output: 1024-dim vector               │
+└──────────────────────────────────────────┘
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ 2. Vector Search                         │
+│    Cloudflare Vectorize                  │
+│    - Cosine similarity search            │
+│    - Top 20 results                      │
+│    - Metadata: ID, appearance, nickname  │
+└──────────────────────────────────────────┘
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ 3. Reranking                             │
+│    Cohere Rerank v3                      │
+│    - Relevance scoring                   │
+│    - Top 5 results                       │
+│    - 30s timeout with AbortController    │
+└──────────────────────────────────────────┘
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ 4. Context Retrieval                     │
+│    R2 Bucket (CSV)                       │
+│    - Fetch full avatar data              │
+│    - Format context for LLM              │
+└──────────────────────────────────────────┘
+    │
+    ▼
+┌──────────────────────────────────────────┐
+│ 5. Response Generation                   │
+│    Gemini 2.5 Flash                      │
+│    - Streaming response                  │
+│    - System prompt in Japanese           │
+│    - Citation with source IDs            │
+└──────────────────────────────────────────┘
+    │
+    ▼
+Response with Sources
 ```
 
 ---
@@ -174,6 +255,12 @@ npm run dev
 - **Session Storage**: Cloudflare KV
 - **File Storage**: Cloudflare R2
 
+### AI Services
+- **Embeddings**: Cloudflare Workers AI (@cf/baai/bge-m3)
+- **Vector DB**: Cloudflare Vectorize (1024 dimensions, cosine similarity)
+- **Reranking**: Cohere Rerank v3 API
+- **LLM**: Google Gemini 2.5 Flash API (gemini-2.0-flash-exp)
+
 ### Security
 - **HTML Sanitization**: sanitize-html 2.17.0
 - **Timing Attack Prevention**: crypto.timingSafeEqual()
@@ -194,6 +281,7 @@ npm run dev
 akyodex-nextjs/
 ├── README.md                        # This file
 ├── DEPLOYMENT.md                    # Cloudflare Pages deployment guide
+├── CHATBOT_SETUP.md                 # AI chatbot setup instructions
 │
 ├── package.json                     # Dependencies and scripts
 ├── package-lock.json
@@ -210,7 +298,7 @@ akyodex-nextjs/
 │
 ├── src/
 │   ├── app/                         # Next.js App Router
-│   │   ├── layout.tsx               # Root layout (i18n, PWA)
+│   │   ├── layout.tsx               # Root layout (i18n, PWA, chatbot)
 │   │   ├── page.tsx                 # Landing page
 │   │   ├── offline/                 # PWA offline page
 │   │   ├── admin/                   # Admin panel pages
@@ -223,6 +311,7 @@ akyodex-nextjs/
 │   │   │       ├── page.tsx
 │   │   │       └── loading.tsx
 │   │   └── api/                     # API Routes (Edge Runtime)
+│   │       ├── chat/                # AI Chatbot endpoint
 │   │       ├── admin/               # Admin API
 │   │       │   ├── login/
 │   │       │   ├── logout/
@@ -240,6 +329,7 @@ akyodex-nextjs/
 │   │   ├── akyo-card.tsx            # Avatar card component
 │   │   ├── akyo-list.tsx            # Avatar list component
 │   │   ├── akyo-detail-modal.tsx    # Detail modal
+│   │   ├── akyo-chatbot.tsx         # AI Chatbot UI
 │   │   ├── mini-akyo-bg.tsx         # Animated background
 │   │   ├── service-worker-register.tsx  # SW registration
 │   │   ├── language-selector.tsx    # Language switcher
@@ -270,6 +360,8 @@ akyodex-nextjs/
 │   └── middleware.ts                # Edge middleware (i18n detection)
 │
 ├── scripts/
+│   ├── prepare-vectorize-data.mjs   # Generate NDJSON for Vectorize
+│   ├── upload-to-vectorize.mjs      # Upload embeddings to Vectorize
 │   └── migrate-csv-to-4digit.mjs    # Migrate CSV to 4-digit IDs
 │
 └── data/
@@ -288,6 +380,9 @@ akyodex-nextjs/
 - **npm**: 10.x or later
 - **Git**: Latest version
 - **Cloudflare Account**: For deployment
+- **API Keys**:
+  - Google Gemini API Key
+  - Cohere API Key
 
 ### Installation
 
@@ -307,6 +402,10 @@ OWNER_PASSWORD_HASH=your_owner_password_hash_here
 
 # JWT Secret
 JWT_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# AI API Keys
+GEMINI_API_KEY=your_gemini_api_key_here
+COHERE_API_KEY=your_cohere_api_key_here
 EOF
 
 # Run development server
@@ -337,6 +436,10 @@ npm run pages:dev        # Local Cloudflare Pages dev server
 # Linting & Type Check
 npm run lint             # Run ESLint
 npm run type-check       # Run TypeScript compiler check
+
+# Vectorize Data Preparation
+node scripts/prepare-vectorize-data.mjs    # Generate NDJSON
+node scripts/upload-to-vectorize.mjs       # Upload to Vectorize
 
 # CSV Migration
 node scripts/migrate-csv-to-4digit.mjs     # Migrate to 4-digit IDs
@@ -382,6 +485,10 @@ OWNER_PASSWORD_HASH=your_owner_password_hash_here
 
 # JWT Secret (generate with: openssl rand -hex 64)
 JWT_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# AI API Keys
+GEMINI_API_KEY=your_gemini_api_key_here
+COHERE_API_KEY=your_cohere_api_key_here
 ```
 
 #### 4. Cloudflare Bindings
@@ -398,6 +505,11 @@ bucket_name = "akyo-data"
 [[kv_namespaces]]
 binding = "AKYO_KV"
 id = "your_kv_namespace_id"
+
+# Vectorize Index Binding
+[[vectorize]]
+binding = "AKYO_VECTORIZE"
+index_name = "akyo-encyclopedia"
 ```
 
 #### 5. Create R2 Bucket
@@ -420,7 +532,18 @@ npx wrangler kv:namespace create "AKYO_KV"
 # Copy the ID and add to Cloudflare Pages bindings
 ```
 
-#### 7. Deploy
+#### 7. Create Vectorize Index
+
+```bash
+# Create Vectorize index
+npx wrangler vectorize create akyo-encyclopedia --dimensions=1024 --metric=cosine
+
+# Prepare and upload embeddings
+node scripts/prepare-vectorize-data.mjs
+node scripts/upload-to-vectorize.mjs
+```
+
+#### 8. Deploy
 
 ```bash
 npm run pages:deploy
@@ -468,6 +591,13 @@ npx wrangler r2 object list akyo-data
 # Check KV namespace
 npx wrangler kv:namespace list
 # Should show: AKYO_KV with ID
+
+# Check Vectorize index
+npx wrangler vectorize list
+# Should show: akyo-encyclopedia (1024 dimensions, cosine)
+
+npx wrangler vectorize get-by-ids akyo-encyclopedia --ids=akyo-0001
+# Should return: Vector data for avatar #0001
 ```
 
 ### 4. Admin Panel Test
@@ -486,7 +616,26 @@ npx wrangler kv:namespace list
 | **Edit** | Update field | Saves changes to CSV |
 | **Tools** | View attributes | Shows all attribute tags |
 
-### 5. PWA Installation Test
+### 5. AI Chatbot Test (if API keys configured)
+
+```bash
+# 1. Click chatbot icon (bottom-right)
+# 2. Type query: "アンドロイドの暁を教えて"
+# 3. Expected:
+```
+
+✅ **Success indicators:**
+- Response starts streaming within 5 seconds
+- Shows "参考にしたデータ" (Referenced Data) section
+- Source avatars are clickable
+- No error messages
+
+❌ **Common errors:**
+- "Error generating response" → Check GEMINI_API_KEY
+- Empty response → Check Vectorize index has data
+- "Timeout" → Check COHERE_API_KEY
+
+### 6. PWA Installation Test
 
 ```bash
 # Desktop (Chrome/Edge):
@@ -500,7 +649,7 @@ npx wrangler kv:namespace list
 # 3. Should add app icon to home screen
 ```
 
-### 6. Performance Check
+### 7. Performance Check
 
 ```bash
 # Run Lighthouse audit (Chrome DevTools)
@@ -513,7 +662,7 @@ npx wrangler kv:namespace list
 - **SEO**: 90+ (green)
 - **PWA**: ✅ Installable
 
-### 7. Error Monitoring
+### 8. Error Monitoring
 
 ```bash
 # Check Cloudflare Pages Dashboard:
@@ -531,6 +680,7 @@ If any check fails, see [Troubleshooting](#troubleshooting) section for detailed
 - 404 errors → Check Build output directory
 - API errors → Check Environment variables
 - Bindings not working → Check Settings → Functions
+- Chatbot fails → Check API keys and Vectorize data
 
 ---
 
@@ -543,6 +693,8 @@ If any check fails, see [Troubleshooting](#troubleshooting) section for detailed
 | `ADMIN_PASSWORD_HASH` | SHA-256 hash of admin password | `e5df0cec...` | ✅ Yes |
 | `OWNER_PASSWORD_HASH` | SHA-256 hash of owner password | `a1b2c3d4...` | ✅ Yes |
 | `JWT_SECRET` | Secret key for JWT signing | `629de6ec...` (128 chars) | ✅ Yes |
+| `GEMINI_API_KEY` | Google Gemini API key | `AIzaSy...` | ✅ Yes (for chatbot) |
+| `COHERE_API_KEY` | Cohere API key | `abc123...` | ✅ Yes (for chatbot) |
 
 ### Cloudflare Bindings (Auto-configured)
 
@@ -550,6 +702,7 @@ If any check fails, see [Troubleshooting](#troubleshooting) section for detailed
 |---------|------|---------|
 | `AKYO_BUCKET` | R2 Bucket | CSV files and avatar images |
 | `AKYO_KV` | KV Namespace | Admin session storage |
+| `AKYO_VECTORIZE` | Vectorize Index | Avatar embeddings for RAG |
 
 ### How to Generate Secrets
 
@@ -574,7 +727,21 @@ openssl rand -hex 64
 - **SSG + ISR**: Static generation with 1-hour revalidation
 - **Responsive**: Mobile-first design
 
-### 2. Admin Panel
+### 2. AI Chatbot (RAG)
+
+- **Natural Language Queries**: Ask questions in Japanese or English
+- **Vector Search**: BGE-M3 embeddings (1024 dimensions)
+- **Reranking**: Cohere Rerank v3 for relevance scoring
+- **Streaming Response**: Gemini 2.5 Flash with streaming
+- **Source Citations**: Shows which avatars were referenced
+- **Context-Aware**: Uses retrieved avatar data for accurate answers
+
+Example queries:
+- "アンドロイドっぽい暁を教えて"
+- "Tell me about kemono avatars"
+- "ピンク色の暁はありますか？"
+
+### 3. Admin Panel
 
 **Access**: `/admin` (requires authentication)
 
@@ -605,7 +772,7 @@ openssl rand -hex 64
 - 🔒 CSRF protection
 - 🔒 Role-based access control (Owner/Admin)
 
-### 3. PWA (Progressive Web App)
+### 4. PWA (Progressive Web App)
 
 #### Service Worker Caching Strategies:
 
@@ -639,7 +806,7 @@ openssl rand -hex 64
 - ✅ Push notifications (future)
 - ✅ App-like experience
 
-### 4. Internationalization (i18n)
+### 5. Internationalization (i18n)
 
 #### Supported Languages:
 - 🇯🇵 Japanese (ja) - Default
@@ -662,6 +829,20 @@ openssl rand -hex 64
 ## 🔌 API Endpoints
 
 ### Public APIs
+
+#### `GET /api/chat`
+**AI Chatbot endpoint** (Streaming)
+
+**Query Parameters**:
+- `message` (string): User query
+
+**Response**: Server-Sent Events (SSE) stream
+
+```typescript
+// Example
+const response = await fetch('/api/chat?message=アンドロイドの暁を教えて');
+const reader = response.body.getReader();
+```
 
 #### `GET /api/avatar-image`
 **Avatar image proxy**
@@ -852,7 +1033,19 @@ if (!avtrMatch) {
 }
 ```
 
-#### 4. Session Management
+#### 4. Path Traversal Prevention
+**File**: `src/components/akyo-chatbot.tsx`
+
+```typescript
+// Strict source ID validation
+const sourceIdMatch = sourceId.match(/^akyo-\d{4}$/);
+if (!sourceIdMatch) {
+  console.warn(`Invalid source ID: ${sourceId}`);
+  return null;
+}
+```
+
+#### 5. Session Management
 **File**: `src/lib/session.ts`
 
 ```typescript
@@ -895,7 +1088,35 @@ export function setSessionCookie(res: NextResponse, token: string) {
 Root directory (advanced): akyodex-nextjs
 ```
 
-#### 2. Admin Login Fails
+#### 2. Vectorize Upload Fails
+
+**Error**: `Worker exceeded CPU time limit`
+
+**Solution**: Split NDJSON file into smaller batches (< 100 vectors per batch).
+
+```bash
+# Edit scripts/upload-to-vectorize.mjs
+const BATCH_SIZE = 50; // Reduce from 100
+```
+
+#### 3. Chatbot Returns Empty Response
+
+**Possible Causes**:
+1. Missing API keys (GEMINI_API_KEY, COHERE_API_KEY)
+2. Vectorize index not created
+3. No embeddings uploaded
+
+**Solution**:
+```bash
+# Check Vectorize index
+npx wrangler vectorize list
+
+# Re-upload embeddings
+node scripts/prepare-vectorize-data.mjs
+node scripts/upload-to-vectorize.mjs
+```
+
+#### 4. Admin Login Fails
 
 **Possible Causes**:
 1. Wrong password hash
@@ -910,7 +1131,7 @@ node -e "const crypto = require('crypto'); console.log(crypto.createHash('sha256
 # Check environment variables in Cloudflare Pages
 ```
 
-#### 3. Images Not Loading
+#### 5. Images Not Loading
 
 **Possible Causes**:
 1. R2 bucket not created
@@ -926,7 +1147,7 @@ npx wrangler r2 bucket list
 npx wrangler r2 object put akyo-data/data/akyo-data.csv --file=../data/akyo-data.csv
 ```
 
-#### 4. PWA Not Installing
+#### 6. PWA Not Installing
 
 **Possible Causes**:
 1. Service Worker not registered
@@ -966,20 +1187,26 @@ npx wrangler r2 object put akyo-data/data/akyo-data.csv --file=../data/akyo-data
 - ✅ Image cropping functionality
 - ✅ VRChat integration
 
-### Phase 5: PWA (Completed 2025-02-15)
+### Phase 5: AI Chatbot (Completed 2025-02-10)
+- ✅ RAG implementation (BGE-M3 + Vectorize + Cohere + Gemini)
+- ✅ Streaming responses
+- ✅ Source citations
+- ✅ Error handling and timeouts
+
+### Phase 6: PWA (Completed 2025-02-15)
 - ✅ Service Worker with 6 caching strategies
 - ✅ Offline support
 - ✅ PWA manifest
 - ✅ Install prompt
 
-### Phase 6: Security Hardening (Completed 2025-10-22)
+### Phase 7: Security Hardening (Completed 2025-10-22)
 - ✅ Timing attack prevention (PR #113)
 - ✅ XSS prevention with sanitize-html (PR #113)
 - ✅ Input validation improvements (PR #113)
 - ✅ HTML entity decoding (PR #113)
 - ✅ Session management hardening (PR #113)
 
-### Phase 7: Code Quality (In Progress)
+### Phase 8: Code Quality (In Progress)
 - 📝 Issue #115 created (8 refactoring tasks)
 - ⏳ VRChat page fetch logic extraction
 - ⏳ CSV header validation improvement
@@ -1023,6 +1250,7 @@ npx wrangler r2 object put akyo-data/data/akyo-data.csv --file=../data/akyo-data
 
 - ✅ Next.js 15 migration
 - ✅ PWA implementation
+- ✅ AI Chatbot
 - ✅ Security hardening
 - ✅ Language detection
 - ✅ Admin panel
@@ -1097,6 +1325,7 @@ chore: Update dependencies
 ## 📚 Additional Documentation
 
 - **Deployment Guide**: See `DEPLOYMENT.md`
+- **Chatbot Setup**: See `CHATBOT_SETUP.md`
 
 ---
 
@@ -1118,7 +1347,9 @@ For questions or issues:
 ## 🎉 Acknowledgments
 
 - **Next.js Team**: For the amazing framework
-- **Cloudflare**: For Pages platform, R2, and KV services
+- **Cloudflare**: For Workers AI, Vectorize, and Pages platform
+- **Google**: For Gemini 2.5 Flash API
+- **Cohere**: For Rerank v3 API
 - **VRChat**: For avatar data and API
 - **Akyo Community**: For the avatar designs and support
 
@@ -1172,6 +1403,10 @@ OWNER_PASSWORD_HASH=(set this to your owner password hash)
 
 # JWT Secret
 JWT_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# AI API Keys
+GEMINI_API_KEY=(set this to your Gemini API key)
+COHERE_API_KEY=(set this to your Cohere API key)
 ```
 
 ### Cloudflare Bindings Checklist
@@ -1180,6 +1415,7 @@ Ensure these are configured in **Settings** → **Functions**:
 
 1. **R2 Bucket**: `AKYO_BUCKET` → `akyo-data`
 2. **KV Namespace**: `AKYO_KV` → (your KV namespace ID)
+3. **Vectorize Index**: `AKYO_VECTORIZE` → `akyo-encyclopedia`
 
 ### Current Branch Status
 
