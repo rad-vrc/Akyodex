@@ -1,0 +1,15 @@
+name: Lint project
+
+on: push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Ubuntu/Node v20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+      - name: Run knip
+        run: npm run knip
