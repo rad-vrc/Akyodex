@@ -48,8 +48,8 @@ Bucket名をメモしておきます。
 3. Build設定:
    ```
    Framework preset:     None (空白のまま)
-   Build command:        cd akyodex-nextjs && npm install && npm run build
-   Build output directory: akyodex-nextjs/.vercel/output/static
+   Build command:        npm run build
+   Build output directory: .open-next
    Root directory:       / (空白またはルート)
    ```
 
@@ -61,19 +61,17 @@ Bucket名をメモしておきます。
 4. 以下のように設定:
    ```
    Framework preset:     None (または空白)
-   Build command:        cd akyodex-nextjs && npm install && npm run build
-   Build output directory: akyodex-nextjs/.vercel/output/static
+   Build command:        npm run build
+   Build output directory: .open-next
    Root directory:       / (空白またはルート)
    ```
 5. **Save** をクリック
 
 **⚠️ 重要**: 
-- **Framework preset は "Next.js" にしないでください**
-  - "Next.js" を選ぶとルートディレクトリでNext.jsを探してエラーになります
-  - `akyodex-nextjs/` フォルダは自動認識されません
-- **カスタムビルドコマンドを使用**してください
-  - `cd akyodex-nextjs` でフォルダに移動してからビルド
-  - これでサブディレクトリのNext.jsプロジェクトを正しくビルドできます
+- **Framework preset は "None" を選択してください**
+  - OpenNextを使用してCloudflare Pages用にビルドします
+- **Build output directory は `.open-next` を指定してください**
+  - これはOpenNextビルドの出力ディレクトリです
 
 #### 3.2 環境変数設定
 
@@ -210,7 +208,6 @@ Pages プロジェクト → Deployments → Create deployment
 
 **解決策**:
 ```bash
-cd akyodex-nextjs
 rm -rf node_modules package-lock.json
 npm install
 npm run build
