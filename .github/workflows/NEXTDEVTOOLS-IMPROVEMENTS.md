@@ -282,3 +282,38 @@ fi
 
 **作成日**: 2025-10-29
 **対応バージョン**: Next.js 15.5.2 → 16.x 対応準備完了
+
+---
+
+## 📚 関連ドキュメント
+
+### CI/CD ワークフロー
+- **README.md**: ワークフロー完全ガイド
+- **ARCHITECTURE.md**: アーキテクチャ図とフロー
+- **QUICKSTART.md**: 5分セットアップガイド
+- **SUMMARY.md**: 実装サマリー
+- **NEXTDEVTOOLS-IMPROVEMENTS.md**: Next.js DevTools 改善内容
+- **WORKERS-VS-PAGES-ANALYSIS.md**: Workers vs Pages 比較分析
+
+### 将来の移行パス
+
+#### Next.js 16 への移行（推奨順序: 1番目）
+Cloudflare Pages のまま Next.js 16 にアップグレード:
+1. @opennextjs/cloudflare を最新版に更新
+2. Next.js 16 にアップグレード
+3. 互換性テスト
+4. ワークフローは変更不要
+
+詳細は `NEXTDEVTOOLS-IMPROVEMENTS.md` の「今後の改善機会」セクションを参照。
+
+#### Cloudflare Workers への移行（推奨順序: 2番目、条件付き）
+以下の条件が該当する場合のみ検討:
+- ビルドサイズが 25MB を恒常的に超える
+- Durable Objects が必須
+- Cron Triggers が必須
+
+移行が必要な場合の詳細手順は `WORKERS-VS-PAGES-ANALYSIS.md` を参照。
+
+**重要**: 現時点では Workers への移行は不要です。Cloudflare Pages での継続使用を推奨します。
+
+---

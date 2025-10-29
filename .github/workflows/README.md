@@ -9,10 +9,38 @@
 3. [Cloudflare Pages デプロイメント](#cloudflare-pages-デプロイメント)
 4. [セキュリティ監査](#セキュリティ監査)
 5. [Cloudflare リソース検証](#cloudflare-リソース検証)
-6. [再利用可能なビルドワークフロー](#再利用可能なビルドワークフロー)
-7. [必要なシークレットと変数](#必要なシークレットと変数)
-8. [ベストプラクティス](#ベストプラクティス)
-9. [トラブルシューティング](#トラブルシューティング)
+6. [Next.js Health Check](#nextjs-health-check)
+7. [再利用可能なビルドワークフロー](#再利用可能なビルドワークフロー)
+8. [必要なシークレットと変数](#必要なシークレットと変数)
+9. [ベストプラクティス](#ベストプラクティス)
+10. [トラブルシューティング](#トラブルシューティング)
+11. [関連ドキュメント](#関連ドキュメント)
+
+---
+
+## 📚 関連ドキュメント
+
+このディレクトリには、以下の追加ドキュメントが含まれています:
+
+| ドキュメント | 内容 |
+|------------|------|
+| **ARCHITECTURE.md** | ワークフローのアーキテクチャ図、フロー、セキュリティレイヤー |
+| **QUICKSTART.md** | 5分セットアップガイド（日本語） |
+| **SUMMARY.md** | 実装サマリーと完了チェックリスト |
+| **NEXTDEVTOOLS-IMPROVEMENTS.md** | Next.js DevTools を活用した改善内容と Next.js 16 移行パス |
+| **WORKERS-VS-PAGES-ANALYSIS.md** | ⭐ Cloudflare Workers vs Pages 詳細比較分析 |
+
+### 🔍 Cloudflare Workers vs Pages について
+
+**重要**: このプロジェクトは Cloudflare Pages を使用していますが、Cloudflare Workers への移行を検討する際は `WORKERS-VS-PAGES-ANALYSIS.md` を参照してください。
+
+**調査結果サマリー**:
+- ✅ **推奨**: Cloudflare Pages での継続使用
+- ❌ **非推奨**: Cloudflare Workers への移行（現時点では不要）
+- 📝 **理由**: Pages は Next.js 15 + App Router に最適化されており、Git 統合とプレビューデプロイが有用
+- 🔄 **Next.js 16 移行**: Pages のまま移行可能（Workers への移行は不要）
+
+詳細な技術比較、移行手順、リスク分析は `WORKERS-VS-PAGES-ANALYSIS.md` を参照。
 
 ---
 
