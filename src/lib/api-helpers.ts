@@ -11,7 +11,6 @@ import { SessionData, validateSession as validateSessionToken } from './session'
 /**
  * Validate session from request cookies
  *
- * @param request - NextRequest object
  * @returns SessionData if valid, null otherwise
  */
 export async function validateSession(): Promise<SessionData | null> {

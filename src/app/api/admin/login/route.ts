@@ -75,7 +75,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check password and determine role using timing-safe comparison
-  let role: AdminRole | null = null;
+    // Keep this null until both comparisons run to avoid timing-based role inference.
+    let role: AdminRole | null = null;
     let username = '';
 
     // Always check both passwords to prevent timing-based role detection

@@ -283,9 +283,9 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
         id="miniAkyoBg"
         ref={containerRef}
         aria-hidden="true"
-        className={className}
-        data-image-url={imageUrl ?? undefined}
-        data-density={density || undefined}
+  className={className}
+  data-image-url={imageUrl}
+  data-density={density}
       />
     </>
   );

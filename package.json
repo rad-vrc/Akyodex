@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "next:build": "next build",
-    "build": "opennextjs-cloudflare build && node scripts/prepare-cloudflare-pages.js",
+  "build": "opennextjs-cloudflare build && node scripts/prepare-cloudflare-pages.js",
     "start": "next start",
     "lint": "eslint",
-    "knip": "knip"
+  "knip": "knip",
+  "test": "vitest run"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.11.0",
@@ -26,11 +27,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-  "eslint-config-next": "15.5.2",
-  "knip": "^5.66.4",
-  "postcss": "^8.4.49",
-  "tailwindcss": "^4",
+    "eslint-config-next": "15.5.2",
+    "knip": "^5.66.4",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4",
     "typescript": "^5.9.3",
+    "vitest": "^2.1.1",
     "wrangler": "^4.44.0"
   }
 }

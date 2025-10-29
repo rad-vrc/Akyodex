@@ -71,9 +71,9 @@ export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' 
         language-toggle-btn
         ${isChanging ? 'opacity-50 cursor-not-allowed' : ''}
         ${className}
-      `}
-  aria-label={`Switch to ${nextLanguageLabel}`}
-  title={`Switch to ${nextLanguageLabel}`}
+    `}
+    aria-label={`Switch to ${nextLanguageLabel}`}
+    title={`Switch to ${nextLanguageLabel}`}
     >
       <span className="text-lg font-bold">
         {LANGUAGE_TOGGLE_LABELS[currentLang]}

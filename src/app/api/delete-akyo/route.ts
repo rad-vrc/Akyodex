@@ -25,15 +25,31 @@ export async function POST(request: NextRequest) {
       requireOwner: true,
       ownerErrorMessage: '削除機能はらど（上位管理者）のみ使用できます',
     });
-    if (guard.response) {
+    if ('response' in guard) {
       return guard.response;
     }
 
-    const body = await request.json();
-    const { id } = body;
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonError('JSONの解析に失敗しました', 400);
+    }
+
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return jsonError('リクエスト形式が不正です', 400);
+    }
+
+    const { id } = body as { id?: unknown };
+
+    if (typeof id !== 'string') {
+      return jsonError('有効な4桁ID（0001-9999）が必要です', 400);
+    }
+
+    const normalizedId = id.trim();
 
     // Validate ID format (must be 4-digit numeric: 0001-9999)
-    if (!id || typeof id !== 'string' || !validateAkyoId(id)) {
+    if (!validateAkyoId(normalizedId)) {
       return jsonError('有効な4桁ID（0001-9999）が必要です', 400);
     }
 
@@ -42,10 +58,10 @@ export async function POST(request: NextRequest) {
       const { header, dataRecords, fileSha } = await loadAkyoCsv();
 
       // Find the record to delete (for commit message)
-      const recordToDelete = findRecordById(dataRecords, id);
+      const recordToDelete = findRecordById(dataRecords, normalizedId);
 
       if (!recordToDelete) {
-        return jsonError(`ID: ${id} が見つかりませんでした`, 404);
+        return jsonError(`ID: ${normalizedId} が見つかりませんでした`, 404);
       }
 
       // Extract avatar name for commit message (4th column, index 3)
@@ -53,9 +69,9 @@ export async function POST(request: NextRequest) {
       const deletedAvatarName = String(recordToDelete[3] ?? '').trim() || 'Unknown';
 
       // Filter out the record
-      const filteredRecords = filterOutRecordById(dataRecords, id);
+      const filteredRecords = filterOutRecordById(dataRecords, normalizedId);
       // Commit updated CSV to GitHub
-      const commitMessage = formatAkyoCommitMessage('Delete', id, deletedAvatarName);
+      const commitMessage = formatAkyoCommitMessage('Delete', normalizedId, deletedAvatarName);
       const commitData = await commitAkyoCsv({
         header,
         dataRecords: filteredRecords,
@@ -64,7 +80,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Step 2: Delete image from R2 (if exists)
-      const deleteResult: R2UploadResult = await deleteImageFromR2(id);
+      const deleteResult: R2UploadResult = await deleteImageFromR2(normalizedId);
 
       if (!deleteResult.success) {
         console.error('[delete-akyo] Image deletion warning:', deleteResult.error);
@@ -74,7 +90,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: `Akyoを削除しました (ID: ${id})`,
+        message: `Akyoを削除しました (ID: ${normalizedId})`,
         imageDeleted: deleteResult.success,
         commitUrl: commitData.commit.html_url,
       });

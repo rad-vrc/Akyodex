@@ -27,7 +27,7 @@ export const runtime = 'nodejs';
 export async function POST(request: NextRequest) {
   try {
     const guard = await ensureAdminRequest(request);
-    if (guard.response) {
+    if ('response' in guard) {
       return guard.response;
     }
 
