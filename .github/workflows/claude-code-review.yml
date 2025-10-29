@@ -24,7 +24,7 @@ jobs:
 
     # Claudeがコメントを書くために書き込み権限が必要
     permissions:
-      contents: write
+      contents: read
       pull-requests: write    # 追加: PRコメントを書くため
       issues: write          # 追加: Issueコメントを書くため
       id-token: write
