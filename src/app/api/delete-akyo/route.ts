@@ -52,9 +52,9 @@ export async function POST(request: NextRequest) {
       // CSV structure: [ID, 見た目, 通称, アバター名, ...]
       const deletedAvatarName = String(recordToDelete[3] ?? '').trim() || 'Unknown';
 
-  // Filter out the record
-  const filteredRecords = filterOutRecordById(dataRecords, id);
-  // Commit updated CSV to GitHub
+      // Filter out the record
+      const filteredRecords = filterOutRecordById(dataRecords, id);
+      // Commit updated CSV to GitHub
       const commitMessage = formatAkyoCommitMessage('Delete', id, deletedAvatarName);
       const commitData = await commitAkyoCsv({
         header,
@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
         commitMessage,
       });
 
-    // Step 2: Delete image from R2 (if exists)
-    const deleteResult: R2UploadResult = await deleteImageFromR2(id);
+      // Step 2: Delete image from R2 (if exists)
+      const deleteResult: R2UploadResult = await deleteImageFromR2(id);
 
       if (!deleteResult.success) {
         console.error('[delete-akyo] Image deletion warning:', deleteResult.error);

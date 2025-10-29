@@ -24,8 +24,8 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
   const [activeTab, setActiveTab] = useState<TabType>('add');
 
   const handleDataChange = () => {
-  // For now, just show a message that page needs refresh
-  // In production, this would trigger a router refresh or data revalidation
+    // For now, just show a message that page needs refresh
+    // In production, this would trigger a router refresh or data revalidation
     alert('データが更新されました。\nページを再読み込みして最新のデータを表示してください。');
   };
 
@@ -86,7 +86,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
             onDataChange={handleDataChange}
           />
         )}
-  {activeTab === 'tools' && <ToolsTab />}
+        {activeTab === 'tools' && <ToolsTab />}
       </div>
     </div>
   );
