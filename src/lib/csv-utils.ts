@@ -23,6 +23,7 @@ export function parseCSV(content: string): string[][] {
       relax_column_count: true,
       skip_empty_lines: true,
       trim: false, // Preserve original whitespace
+      record_delimiter: ['\r\n', '\n', '\r'], // Handle mixed line endings (Windows/Unix/Mac)
     });
     return records;
   } catch (error) {
