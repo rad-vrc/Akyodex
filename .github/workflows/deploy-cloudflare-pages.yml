@@ -68,8 +68,49 @@ jobs:
           echo "Build output contents:"
           ls -la .open-next/
           
+          echo ""
           echo "Build output size:"
           du -sh .open-next/
+          
+          echo ""
+          echo "Verifying critical files..."
+          test -f .open-next/_worker.js && echo "✅ Worker script present" || (echo "❌ Worker script missing" && exit 1)
+          test -f .open-next/_routes.json && echo "✅ Routes config present" || (echo "❌ Routes config missing" && exit 1)
+          test -d .open-next/_next && echo "✅ Next.js assets present" || (echo "❌ Next.js assets missing" && exit 1)
+          
+          echo ""
+          echo "✅ All critical files verified successfully"
+          
+      - name: Deploy to Cloudflare Pages
+        id: deployment
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .open-next --project-name=akyodex-nextjs
+          
+      - name: Wait for deployment to be ready
+        if: steps.deployment.outcome == 'success'
+        run: |
+          echo "Waiting 10 seconds for deployment to stabilize..."
+          sleep 10
+          
+      - name: Verify deployment health
+        if: steps.deployment.outcome == 'success'
+        run: |
+          echo "Checking deployment health..."
+          DEPLOY_URL="${{ steps.deployment.outputs.url }}"
+          if [ -n "$DEPLOY_URL" ]; then
+            echo "Testing deployment at: $DEPLOY_URL"
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOY_URL" || echo "000")
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+              echo "✅ Deployment is responding (HTTP $HTTP_CODE)"
+            else
+              echo "⚠️  Deployment returned HTTP $HTTP_CODE"
+            fi
+          else
+            echo "⚠️  Deployment URL not available for health check"
+          fi
           
       - name: Deploy to Cloudflare Pages
         id: deployment

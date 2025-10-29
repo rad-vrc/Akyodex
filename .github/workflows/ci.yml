@@ -57,6 +57,17 @@ jobs:
           node-version: '20'
           cache: 'npm'
           
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+            .open-next
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-nextjs-
+          
       - name: Install dependencies
         run: npm ci
         
@@ -72,6 +83,15 @@ jobs:
         run: |
           echo "Checking build output directory..."
           ls -la .open-next/
+          echo "Build output size:"
+          du -sh .open-next/
+          
+      - name: Verify critical files
+        run: |
+          echo "Verifying critical build artifacts..."
+          test -f .open-next/_worker.js && echo "✅ Worker script present" || exit 1
+          test -f .open-next/_routes.json && echo "✅ Routes config present" || exit 1
+          test -d .open-next/_next && echo "✅ Next.js assets present" || exit 1
           
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -172,4 +192,14 @@ jobs:
         run: |
           echo "Analyzing build output size..."
           du -sh .open-next/
+          echo ""
+          echo "Detailed breakdown:"
           du -sh .open-next/* | sort -h
+          echo ""
+          echo "Next.js cache info:"
+          if [ -d ".next/cache" ]; then
+            du -sh .next/cache
+            echo "✅ Next.js cache directory exists"
+          else
+            echo "⚠️  No Next.js cache directory found"
+          fi

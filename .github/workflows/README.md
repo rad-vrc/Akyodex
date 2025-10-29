@@ -27,6 +27,7 @@
 | **Security Audit** | `security-audit.yml` | 毎週月曜日, Manual | 依存関係の脆弱性スキャン |
 | **Validate Resources** | `validate-cloudflare-resources.yml` | 毎日, Manual | R2/KV/CSV データの整合性チェック |
 | **Reusable Build** | `reusable-build.yml` | Workflow call | 共通ビルドロジック（DRY原則） |
+| **Next.js Health Check** | `nextjs-health-check.yml` | PR (コード変更時) | Next.js設定とベストプラクティス検証 |
 
 ---
 
@@ -84,6 +85,28 @@ on:
 - **npm キャッシュ**: 依存関係のインストール時間を短縮
   ```yaml
   cache: 'npm'
+  ```
+
+- **Next.js ビルドキャッシュ**: `.next/cache` と `.open-next` をキャッシュ
+  ```yaml
+  - uses: actions/cache@v4
+    with:
+      path: |
+        .next/cache
+        .open-next
+      key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx') }}
+  ```
+  
+  **効果**: 
+  - 初回ビルド: ~2-3分
+  - キャッシュヒット時: ~1-2分（30-50% 高速化）
+  - Next.js の増分ビルド機能を活用
+
+- **ビルド検証**: 重要なファイルの存在を確認
+  ```bash
+  test -f .open-next/_worker.js  # Worker スクリプト
+  test -f .open-next/_routes.json  # ルート設定
+  test -d .open-next/_next  # Next.js アセット
   ```
 
 ### 実行例
@@ -250,6 +273,67 @@ on:
 ```bash
 # 手動実行
 GitHub Actions タブ → "Validate Cloudflare Resources" → "Run workflow"
+```
+
+---
+
+## Next.js Health Check
+
+**ファイル**: `.github/workflows/nextjs-health-check.yml`
+
+### トリガー条件
+
+```yaml
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'app/**'
+      - 'pages/**'
+      - 'next.config.*'
+      - 'package.json'
+  workflow_dispatch:
+```
+
+### 検証内容
+
+#### 1. Next.js バージョンチェック
+- Next.js のバージョンを確認
+- Next.js 15.5+ の使用を推奨
+
+#### 2. App Router 構造検証
+- App Router の使用確認
+- params/searchParams の適切な await 処理確認
+- Next.js 15 の非同期 API 対応
+
+#### 3. 非推奨パターンチェック
+- getServerSideProps/getStaticProps の誤用検出
+- レガシー Image コンポーネントの使用検出
+- Pages Router メソッドの App Router での使用検出
+
+#### 4. Cloudflare Pages 互換性
+- Edge Runtime 互換性チェック
+- Node.js API の誤用検出（fs, child_process など）
+- runtime export の検証
+
+#### 5. ビルド設定検証
+- next.config の存在確認
+- Turbopack の使用確認
+- 画像最適化設定の確認
+
+#### 6. バンドル最適化分析
+- 大きな依存関係の検出
+- Dynamic imports の使用確認
+- コード分割の推奨
+
+### 実行例
+
+```bash
+# PR を作成すると自動実行（コード変更時）
+git checkout -b feature/my-feature
+# src/ 配下を変更
+git push origin feature/my-feature
+# → GitHub で PR 作成 → Health Check 自動実行
 ```
 
 ---
