@@ -2,9 +2,9 @@ name: Lint project
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, cloudflare-opennext-test]
   pull_request:
-    branches: [main]
+    branches: [main, cloudflare-opennext-test]
 
 jobs:
   lint:
