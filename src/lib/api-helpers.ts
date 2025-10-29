@@ -1,28 +1,28 @@
 /**
  * API Route Helpers
- * 
+ *
  * Common utilities for API routes including session validation and CSRF protection.
  */
 
-import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
-import { validateSession as validateSessionToken, SessionData } from './session';
+import { NextRequest, NextResponse } from 'next/server';
+import { SessionData, validateSession as validateSessionToken } from './session';
 
 /**
  * Validate session from request cookies
- * 
+ *
  * @param request - NextRequest object
  * @returns SessionData if valid, null otherwise
  */
-export async function validateSession(request: NextRequest): Promise<SessionData | null> {
+export async function validateSession(): Promise<SessionData | null> {
   try {
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get('admin_session')?.value;
-    
+
     if (!sessionToken) {
       return null;
     }
-    
+
     return await validateSessionToken(sessionToken);
   } catch (error) {
     console.error('Session validation error:', error);
@@ -30,15 +30,65 @@ export async function validateSession(request: NextRequest): Promise<SessionData
   }
 }
 
+export type AdminGuardResult =
+  | { session: SessionData; response?: undefined }
+  | { session?: undefined; response: NextResponse };
+
+export interface AdminGuardOptions {
+  requireOrigin?: boolean;
+  requireOwner?: boolean;
+  ownerErrorMessage?: string;
+}
+
+export function jsonError(
+  message: string,
+  status: number,
+  extra: Record<string, unknown> = {}
+): NextResponse {
+  return NextResponse.json({ success: false, error: message, ...extra }, { status });
+}
+
+export async function ensureAdminRequest(
+  request: NextRequest,
+  options: AdminGuardOptions = {}
+): Promise<AdminGuardResult> {
+  const {
+    requireOrigin = true,
+    requireOwner = false,
+    ownerErrorMessage = 'この操作は所有者のみが可能です',
+  } = options;
+
+  if (requireOrigin && !validateOrigin(request)) {
+    return {
+      response: jsonError('不正なリクエスト元です', 403),
+    };
+  }
+
+  const session = await validateSession();
+  if (!session) {
+    return {
+      response: jsonError('認証が必要です', 401),
+    };
+  }
+
+  if (requireOwner && session.role !== 'owner') {
+    return {
+      response: jsonError(ownerErrorMessage, 403),
+    };
+  }
+
+  return { session };
+}
+
 /**
  * Validate CSRF protection via Origin/Referer headers
- * 
+ *
  * @param request - NextRequest object
  * @returns true if valid origin, false otherwise
  */
 export function validateOrigin(request: NextRequest): boolean {
   const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_ORIGIN;
-  
+
   if (!allowedOrigin) {
     // In development, allow any origin if not configured
     if (process.env.NODE_ENV !== 'production') {
@@ -48,10 +98,10 @@ export function validateOrigin(request: NextRequest): boolean {
     console.error('CSRF protection: APP_ORIGIN not configured');
     return false;
   }
-  
+
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
-  
+
   // Parse allowed origin to get canonical form
   const allowedOriginCanonical = (() => {
     try {
@@ -60,7 +110,7 @@ export function validateOrigin(request: NextRequest): boolean {
       return allowedOrigin;
     }
   })();
-  
+
   // Check Origin header (preferred) - strict comparison
   if (origin) {
     try {
@@ -69,12 +119,12 @@ export function validateOrigin(request: NextRequest): boolean {
         return true;
       }
     } catch (error) {
-      console.error(`CSRF protection: Malformed origin ${origin}`);
+      console.error(`CSRF protection: Malformed origin ${origin}`, error);
     }
     console.error(`CSRF protection: Invalid origin ${origin}`);
     return false;
   }
-  
+
   // Fallback to Referer header - strict comparison
   if (referer) {
     try {
@@ -83,12 +133,12 @@ export function validateOrigin(request: NextRequest): boolean {
         return true;
       }
     } catch (error) {
-      console.error(`CSRF protection: Malformed referer ${referer}`);
+      console.error(`CSRF protection: Malformed referer ${referer}`, error);
     }
     console.error(`CSRF protection: Invalid referer ${referer}`);
     return false;
   }
-  
+
   // No origin or referer header (suspicious)
   console.error('CSRF protection: Missing origin and referer headers');
   return false;
@@ -96,7 +146,7 @@ export function validateOrigin(request: NextRequest): boolean {
 
 /**
  * Validate ID format (4-digit numeric for Akyo IDs: 0001-9999)
- * 
+ *
  * @param id - ID string to validate
  * @returns true if valid, false otherwise
  */

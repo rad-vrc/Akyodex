@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useRef, useEffect, FormEvent } from 'react';
+/* eslint-disable @next/next/no-img-element */
+
 import type { AkyoData } from '@/types/akyo';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from './attribute-modal';
 
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   akyo: AkyoData | null;
-  userRole: 'owner' | 'admin';
   attributes: string[];
-  creators: string[];
   onSuccess: () => void;
 }
 
@@ -22,9 +22,7 @@ export function EditModal({
   isOpen,
   onClose,
   akyo,
-  userRole,
   attributes,
-  creators,
   onSuccess,
 }: EditModalProps) {
   const [formData, setFormData] = useState({
@@ -39,7 +37,7 @@ export function EditModal({
   const [showAttributeModal, setShowAttributeModal] = useState(false);
   const [fetchingName, setFetchingName] = useState(false);
   const [fetchingImage, setFetchingImage] = useState(false);
-  
+
   // Image cropping states
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
@@ -121,7 +119,7 @@ export function EditModal({
       const imgSrc = e.target?.result as string;
       setOriginalImageSrc(imgSrc);
       setShowImagePreview(true);
-      
+
       setTimeout(() => {
         const img = cropImageRef.current;
         const container = cropContainerRef.current;
@@ -259,7 +257,7 @@ export function EditModal({
   // Duplicate check for nickname
   const handleCheckNicknameDuplicate = async () => {
     const value = formData.nickname.trim();
-    
+
     if (!value) {
       setNicknameStatus({
         message: '通称を入力してください',
@@ -305,7 +303,7 @@ export function EditModal({
   // Duplicate check for avatar name
   const handleCheckAvatarNameDuplicate = async () => {
     const value = formData.avatarName.trim();
-    
+
     if (!value) {
       setAvatarNameStatus({
         message: 'アバター名を入力してください',
@@ -373,19 +371,19 @@ export function EditModal({
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         throw new Error(`アバター情報取得に失敗しました: ${response.status}`);
       }
 
       const data = await response.json();
       handleInputChange('avatarName', data.avatarName || '');
-      
+
       setTimeout(() => setFetchingName(false), 1000);
     } catch (error) {
       clearTimeout(timeoutId);
       console.error('VRChatアバター名取得エラー:', error);
-      
+
       if (error instanceof Error && error.name === 'AbortError') {
         alert('リクエストがタイムアウトしました。\nもう一度お試しください。');
       } else {
@@ -420,7 +418,7 @@ export function EditModal({
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         throw new Error(`画像取得に失敗しました: ${response.status}`);
       }
@@ -429,12 +427,12 @@ export function EditModal({
       const file = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
 
       handleImageFile(file);
-      
+
       setTimeout(() => setFetchingImage(false), 1000);
     } catch (error) {
       clearTimeout(timeoutId);
       console.error('VRChat画像取得エラー:', error);
-      
+
       if (error instanceof Error && error.name === 'AbortError') {
         alert('リクエストがタイムアウトしました。\nもう一度お試しください。');
       } else {
@@ -446,7 +444,7 @@ export function EditModal({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!akyo) return;
 
     // Validate required fields
@@ -518,7 +516,7 @@ export function EditModal({
 
       onSuccess();
       onClose();
-      
+
     } catch (error) {
       console.error('Form submission error:', error);
       alert(
@@ -827,7 +825,7 @@ export function EditModal({
                       <h3 className="text-sm font-medium text-gray-700 mb-3">
                         <i className="fas fa-crop mr-2"></i>画像のトリミング調整
                       </h3>
-                      
+
                       <div
                         ref={cropContainerRef}
                         className="relative mx-auto mb-4 overflow-hidden border-2 border-indigo-500 rounded-lg"

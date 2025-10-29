@@ -2,19 +2,31 @@
  * API Route: Get Next Available Akyo ID
  * GET /api/admin/next-id
  * Returns: { nextId: string }
- * 
+ *
  * Finds the maximum ID in the CSV and returns the next available 4-digit ID.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '@/lib/api-helpers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { NextResponse } from 'next/server';
+
+interface R2TextObject {
+  text: () => Promise<string>;
+}
+
+interface R2BucketBinding {
+  get: (key: string) => Promise<R2TextObject | null>;
+}
+
+interface NextIdEnv {
+  AKYO_BUCKET?: R2BucketBinding;
+}
 
 export const runtime = 'nodejs';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   // Validate admin session
-  const session = await validateSession(request);
+  const session = await validateSession();
   if (!session) {
     return NextResponse.json(
       { error: 'Unauthorized' },
@@ -24,15 +36,17 @@ export async function GET(request: NextRequest) {
 
   try {
     // Get Cloudflare context for R2 access
-    let env: any;
+  let env: NextIdEnv | undefined;
     try {
-      const ctx = getCloudflareContext();
-      env = ctx?.env;
+  const ctx = getCloudflareContext();
+  env = ctx?.env as NextIdEnv | undefined;
     } catch {
       env = undefined;
     }
 
-    if (!env?.AKYO_BUCKET) {
+    const bucket = env?.AKYO_BUCKET;
+
+    if (!bucket) {
       return NextResponse.json(
         { error: 'R2 bucket not configured' },
         { status: 500 }
@@ -41,8 +55,8 @@ export async function GET(request: NextRequest) {
 
     // Fetch Japanese CSV
     const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data.csv';
-    const csvObject = await env.AKYO_BUCKET.get(csvPath);
-    
+    const csvObject = await bucket.get(csvPath);
+
     if (!csvObject) {
       // If CSV doesn't exist, start from 0001
       return NextResponse.json({ nextId: '0001' });
@@ -69,7 +83,7 @@ export async function GET(request: NextRequest) {
 
     // Return next ID with 4-digit padding
     const nextId = (maxId + 1).toString().padStart(4, '0');
-    
+
     return NextResponse.json({ nextId });
 
   } catch (error) {

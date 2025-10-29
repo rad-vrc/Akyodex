@@ -2,18 +2,14 @@
 
 import { useRef } from 'react';
 
-interface ToolsTabProps {
-  userRole: 'owner' | 'admin';
-}
-
 /**
  * Tools Tab Component
  * ツールタブ（完全再現）
  */
-export function ToolsTab({ userRole }: ToolsTabProps) {
+export function ToolsTab() {
   // Ref for file input (better than document.getElementById)
   const csvInputRef = useRef<HTMLInputElement>(null);
-  
+
   return (
     <div>
       <h2 className="text-xl font-bold text-gray-800 mb-6">
@@ -45,7 +41,7 @@ export function ToolsTab({ userRole }: ToolsTabProps) {
           <p className="text-sm text-gray-600 mb-4">
             CSVファイルから一括でデータをインポートします。既存データは上書きされます。
           </p>
-          
+
           {/* ドロップゾーン */}
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
             <i className="fas fa-file-upload text-4xl text-gray-400 mb-2"></i>

@@ -3,7 +3,7 @@
  * POST /api/admin/login
  * Body: { password: string }
  * Returns: { success: boolean, role?: 'owner' | 'admin', message?: string }
- * 
+ *
  * Server-side authentication endpoint to prevent client-side password exposure.
  * Creates a secure session cookie on successful authentication.
  */
@@ -11,9 +11,10 @@
 // Use Node.js runtime for session management (Web Crypto API and Buffer compatibility)
 export const runtime = 'nodejs';
 
-import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { createSessionToken } from '@/lib/session';
+import type { AdminRole } from '@/types/akyo';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
@@ -27,21 +28,21 @@ function timingSafeCompare(a: string, b: string): boolean {
     const encoder = new TextEncoder();
     const bufA = encoder.encode(a);
     const bufB = encoder.encode(b);
-    
+
     // Pad to equal length to prevent length-based timing
     const maxLen = Math.max(bufA.length, bufB.length);
     const paddedA = new Uint8Array(maxLen);
     const paddedB = new Uint8Array(maxLen);
-    
+
     paddedA.set(bufA);
     paddedB.set(bufB);
-    
+
     // Timing-safe comparison
     let result = 0;
     for (let i = 0; i < maxLen; i++) {
       result |= paddedA[i] ^ paddedB[i];
     }
-    
+
     return result === 0;
   } catch {
     return false;
@@ -74,13 +75,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check password and determine role using timing-safe comparison
-    let role: 'owner' | 'admin' | null = null;
+  let role: AdminRole | null = null;
     let username = '';
-    
+
     // Always check both passwords to prevent timing-based role detection
     const isOwner = timingSafeCompare(password, ownerPassword);
     const isAdmin = timingSafeCompare(password, adminPassword);
-    
+
     if (isOwner) {
       role = 'owner';
       username = 'rado'; // Owner username

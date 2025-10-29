@@ -49,39 +49,17 @@ export type ViewMode = 'grid' | 'list';
 /**
  * 認証レベル
  */
-export type AuthRole = 'owner' | 'admin' | null;
+export type AdminRole = 'owner' | 'admin';
 
-/**
- * 画像マニフェスト
- */
-export type ImageManifest = Record<string, string>; // { "0001": "https://images.akyodex.com/images/0001.webp" }
-
-/**
- * API レスポンス型
- */
-export interface ApiResponse<T = unknown> {
-  ok: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
-}
-
-/**
- * アップロードレスポンス
- */
-export interface UploadResponse {
-  ok: boolean;
-  id: string;
-  url: string;
-  key: string;
-  updatedAt: string;
-}
+export type AuthRole = AdminRole | null;
 
 /**
  * VRChat アバター情報
  */
 export interface VRChatAvatarInfo {
-  name: string;
-  author?: string;
-  imageUrl?: string;
+  avatarName: string;
+  creatorName: string;
+  description: string;
+  fullTitle: string;
+  avtr: string;
 }

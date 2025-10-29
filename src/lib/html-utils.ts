@@ -1,6 +1,6 @@
 /**
  * HTML Utilities
- * 
+ *
  * Functions for HTML entity decoding and sanitization.
  */
 
@@ -8,10 +8,10 @@ import sanitizeHtml from 'sanitize-html';
 
 /**
  * Decode HTML entities in a string
- * 
+ *
  * Handles common entities like &amp;, &lt;, &gt;, &quot;, &#39;, etc.
  * This is useful for text retrieved from VRChat API which may contain encoded entities.
- * 
+ *
  * @param text - Text with HTML entities
  * @returns Decoded text
  */
@@ -50,28 +50,15 @@ export function decodeHTMLEntities(text: string): string {
 }
 
 /**
- * Strip HTML tags from a string
- * 
- * Uses sanitize-html library for safe removal of all HTML tags and attributes.
- * This prevents incomplete multi-character sanitization vulnerabilities.
- * 
- * @param html - HTML string
- * @returns Plain text with all HTML tags safely removed
+ * Strip HTML tags from a string while preserving text content.
+ *
+ * Uses sanitize-html with no allowlist to ensure complete tag removal.
  */
 export function stripHTMLTags(html: string): string {
   if (!html) return html;
-  return sanitizeHtml(html, { 
-    allowedTags: [], 
-    allowedAttributes: {} 
+  return sanitizeHtml(html, {
+    allowedTags: [],
+    allowedAttributes: {},
   });
 }
 
-/**
- * Decode and strip HTML
- * 
- * @param html - HTML string with entities
- * @returns Plain text with decoded entities
- */
-export function decodeAndStripHTML(html: string): string {
-  return decodeHTMLEntities(stripHTMLTags(html));
-}

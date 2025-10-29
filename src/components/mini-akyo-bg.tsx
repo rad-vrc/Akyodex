@@ -2,7 +2,7 @@
 
 /**
  * Mini Akyo Background Animation
- * 
+ *
  * Floating mini Akyo avatars in the background - signature UX feature from original site
  * Port from js/mini-akyo-bg.js with complete feature parity:
  * - Golden ratio pseudo-random placement for visual balance
@@ -13,7 +13,7 @@
  * - Loads miniakyo.webp image from R2 with fallback cascade
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Frequency boost (1.5x from original)
 const FREQ_BOOST = 1.5;
@@ -47,17 +47,17 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
   const resizeHandler = useRef<(() => void) | null>(null);
 
   // Low-discrepancy sequence for balanced placement
-  const nextUniform = () => {
+  const nextUniform = useCallback(() => {
     seqU.current = (seqU.current + PHI) % 1;
     return seqU.current;
-  };
+  }, []);
 
-  const clamp = (v: number, min: number, max: number) => {
+  const clamp = useCallback((v: number, min: number, max: number) => {
     return v < min ? min : v > max ? max : v;
-  };
+  }, []);
 
   // Probe image availability
-  const probeImage = (url: string, timeout = 8000): Promise<string> => {
+  const probeImage = useCallback((url: string, timeout = 8000): Promise<string> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       let settled = false;
@@ -82,10 +82,10 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
       img.onerror = () => finalize(false);
       img.src = url;
     });
-  };
+  }, []);
 
   // Resolve miniakyo.webp URL with fallback cascade
-  const resolveMiniAkyoUrl = async (): Promise<string | null> => {
+  const resolveMiniAkyoUrl = useCallback(async (): Promise<string | null> => {
     // Try fetch with fallback to image probe
     let fallback: string | null = null;
     const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
@@ -118,10 +118,10 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
     }
 
     return fallback;
-  };
+  }, [probeImage]);
 
   // Spawn single mini Akyo element
-  const spawnOne = (container: HTMLDivElement, url: string, uOverride?: number) => {
+  const spawnOne = useCallback((container: HTMLDivElement, url: string, uOverride?: number) => {
     const el = document.createElement('div');
     el.className = 'mini-akyo';
 
@@ -150,7 +150,7 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
     });
 
     container.appendChild(el);
-  };
+  }, [clamp, nextUniform]);
 
   // Initialize background animation
   useEffect(() => {
@@ -230,7 +230,7 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
         window.removeEventListener('resize', resizeHandler.current);
       }
     };
-  }, []);
+  }, [resolveMiniAkyoUrl, spawnOne]);
 
   return (
     <>
@@ -284,6 +284,8 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
         ref={containerRef}
         aria-hidden="true"
         className={className}
+        data-image-url={imageUrl ?? undefined}
+        data-density={density || undefined}
       />
     </>
   );

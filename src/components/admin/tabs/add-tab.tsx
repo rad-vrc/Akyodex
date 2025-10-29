@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect, FormEvent } from 'react';
+/* eslint-disable @next/next/no-img-element */
+
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 
 interface AddTabProps {
-  userRole: 'owner' | 'admin';
   attributes: string[];
   creators: string[];
 }
@@ -13,9 +14,8 @@ interface AddTabProps {
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
  */
-export function AddTab({ userRole, attributes, creators }: AddTabProps) {
+export function AddTab({ attributes, creators }: AddTabProps) {
   const [nextId, setNextId] = useState('0001');
-  const [loadingNextId, setLoadingNextId] = useState(true);
   const [formData, setFormData] = useState({
     nickname: '',
     avatarName: '',
@@ -38,8 +38,6 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
         }
       } catch (error) {
         console.error('Error fetching next ID:', error);
-      } finally {
-        setLoadingNextId(false);
       }
     };
 
@@ -51,10 +49,10 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
   const [fetchingImage, setFetchingImage] = useState(false);
   const [showCreatorSuggestions, setShowCreatorSuggestions] = useState(false);
   const [creatorSuggestions, setCreatorSuggestions] = useState<string[]>([]);
-  
+
   // Ref for file input (better than document.getElementById)
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Image cropping states
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
@@ -65,7 +63,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const cropImageRef = useRef<HTMLImageElement>(null);
   const cropContainerRef = useRef<HTMLDivElement>(null);
-  
+
   // Duplicate check states
   const [nicknameStatus, setNicknameStatus] = useState<{
     message: string;
@@ -88,7 +86,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.avatarName.trim()) {
       alert('アバター名は必須です');
@@ -183,7 +181,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
       if (!isNaN(currentId)) {
         setNextId((currentId + 1).toString().padStart(4, '0'));
       }
-      
+
     } catch (error) {
       console.error('Form submission error:', error);
       alert(
@@ -202,11 +200,11 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // 作者フィールドの場合、サジェストを更新
     if (field === 'creator' && typeof value === 'string') {
       if (value.trim()) {
-        const filtered = creators.filter(c => 
+        const filtered = creators.filter(c =>
           c.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 10);
         setCreatorSuggestions(filtered);
@@ -225,11 +223,11 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
   // Generic duplicate check function
   const handleCheckDuplicate = async (field: 'nickname' | 'avatarName', value: string) => {
     const trimmedValue = value.trim();
-    
+
     const setStatus = field === 'nickname' ? setNicknameStatus : setAvatarNameStatus;
     const setChecking = field === 'nickname' ? setCheckingNickname : setCheckingAvatarName;
     const fieldLabel = field === 'nickname' ? '通称' : 'アバター名';
-    
+
     if (!trimmedValue) {
       setStatus({
         message: `${fieldLabel}を入力してください`,
@@ -306,7 +304,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
       const imgSrc = e.target?.result as string;
       setOriginalImageSrc(imgSrc);
       setShowImagePreview(true);
-      
+
       // Wait for image to load
       setTimeout(() => {
         const img = cropImageRef.current;
@@ -466,20 +464,20 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         throw new Error(`アバター情報取得に失敗しました: ${response.status}`);
       }
 
       const data = await response.json();
       handleInputChange('avatarName', data.avatarName || '');
-      
+
       // 成功通知
       setTimeout(() => setFetchingName(false), 1000);
     } catch (error) {
       clearTimeout(timeoutId);
       console.error('VRChatアバター名取得エラー:', error);
-      
+
       if (error instanceof Error && error.name === 'AbortError') {
         alert('リクエストがタイムアウトしました。\nもう一度お試しください。');
       } else {
@@ -515,7 +513,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         throw new Error(`画像取得に失敗しました: ${response.status}`);
       }
@@ -525,12 +523,12 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
 
       // Display image in cropping preview
       handleImageFile(file);
-      
+
       setTimeout(() => setFetchingImage(false), 1000);
     } catch (error) {
       clearTimeout(timeoutId);
       console.error('VRChat画像取得エラー:', error);
-      
+
       if (error instanceof Error && error.name === 'AbortError') {
         alert('リクエストがタイムアウトしました。\nもう一度お試しください。');
       } else {
@@ -727,7 +725,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
                 placeholder="例: ugai"
                 autoComplete="off"
               />
-              
+
               {/* オートコンプリートサジェスト */}
               {showCreatorSuggestions && creatorSuggestions.length > 0 && (
                 <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-30">
@@ -857,7 +855,7 @@ export function AddTab({ userRole, attributes, creators }: AddTabProps) {
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
                   <i className="fas fa-crop mr-2"></i>画像のトリミング調整
                 </h3>
-                
+
                 {/* Crop Container */}
                 <div
                   ref={cropContainerRef}

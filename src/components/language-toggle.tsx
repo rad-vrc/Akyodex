@@ -2,7 +2,7 @@
 
 /**
  * Language Toggle Button Component
- * 
+ *
  * Features:
  * - Floating button (like original site)
  * - Toggle between Japanese and English
@@ -10,19 +10,27 @@
  * - Smooth transition
  */
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { getNextLanguage, LANGUAGE_TOGGLE_LABELS, type SupportedLanguage } from '@/lib/i18n';
+import {
+    DEFAULT_LANGUAGE,
+    getNextLanguage,
+    LANGUAGE_NAMES,
+    LANGUAGE_TOGGLE_LABELS,
+    SUPPORTED_LANGUAGES,
+    type SupportedLanguage,
+} from '@/lib/i18n';
+import { useEffect, useState } from 'react';
 
 interface LanguageToggleProps {
   initialLang?: SupportedLanguage;
   className?: string;
 }
 
-export function LanguageToggle({ initialLang = 'ja', className = '' }: LanguageToggleProps) {
+export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' }: LanguageToggleProps) {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>(initialLang);
   const [isChanging, setIsChanging] = useState(false);
-  const router = useRouter();
+
+  const nextLanguage = getNextLanguage(currentLang);
+  const nextLanguageLabel = LANGUAGE_NAMES[nextLanguage];
 
   // Read language from cookie on mount (client-side only)
   useEffect(() => {
@@ -30,9 +38,9 @@ export function LanguageToggle({ initialLang = 'ja', className = '' }: LanguageT
       .split('; ')
       .find(row => row.startsWith('AKYO_LANG='))
       ?.split('=')[1] as SupportedLanguage | undefined;
-    
-    if (cookieLang && (cookieLang === 'ja' || cookieLang === 'en')) {
-      setCurrentLang(cookieLang);
+
+    if (cookieLang && SUPPORTED_LANGUAGES.includes(cookieLang as SupportedLanguage)) {
+      setCurrentLang(cookieLang as SupportedLanguage);
     }
   }, []);
 
@@ -40,14 +48,12 @@ export function LanguageToggle({ initialLang = 'ja', className = '' }: LanguageT
     if (isChanging) return;
 
     setIsChanging(true);
-    const nextLang = getNextLanguage(currentLang);
-
     try {
       // Set cookie with immediate effect
-      document.cookie = `AKYO_LANG=${nextLang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-      
+      document.cookie = `AKYO_LANG=${nextLanguage}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+
       // Update state immediately
-      setCurrentLang(nextLang);
+      setCurrentLang(nextLanguage);
 
       // Hard reload for instant language change (faster than router.refresh())
       window.location.reload();
@@ -66,8 +72,8 @@ export function LanguageToggle({ initialLang = 'ja', className = '' }: LanguageT
         ${isChanging ? 'opacity-50 cursor-not-allowed' : ''}
         ${className}
       `}
-      aria-label={`Switch to ${currentLang === 'ja' ? 'English' : 'Japanese'}`}
-      title={`Switch to ${currentLang === 'ja' ? 'English' : 'Japanese'}`}
+  aria-label={`Switch to ${nextLanguageLabel}`}
+  title={`Switch to ${nextLanguageLabel}`}
     >
       <span className="text-lg font-bold">
         {LANGUAGE_TOGGLE_LABELS[currentLang]}

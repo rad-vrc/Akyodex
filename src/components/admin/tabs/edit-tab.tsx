@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import Image from 'next/image';
-import type { AkyoData } from '@/types/akyo';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import type { AdminRole, AkyoData } from '@/types/akyo';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
 import { EditModal } from '../edit-modal';
 
 interface EditTabProps {
-  userRole: 'owner' | 'admin';
+  userRole: AdminRole;
   akyoData: AkyoData[];
   attributes: string[];
-  creators: string[];
   onDataChange: () => void;
 }
 
@@ -18,7 +17,7 @@ interface EditTabProps {
  * Edit Tab Component
  * 編集・削除タブ（完全再現）
  */
-export function EditTab({ userRole, akyoData, attributes, creators, onDataChange }: EditTabProps) {
+export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTabProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -239,9 +238,7 @@ export function EditTab({ userRole, akyoData, attributes, creators, onDataChange
           setSelectedAkyo(null);
         }}
         akyo={selectedAkyo}
-        userRole={userRole}
         attributes={attributes}
-        creators={creators}
         onSuccess={handleEditSuccess}
       />
     </div>

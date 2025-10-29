@@ -13,7 +13,7 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
   // Security: Explicitly construct VRChat URL to prevent SSRF
   // Only allow vrchat.com domain
   const vrchatPageUrl = `https://vrchat.com/home/avatar/${avtr}`;
-  
+
   // Validate URL is actually vrchat.com (defense in depth)
   const parsedUrl = new URL(vrchatPageUrl);
   if (parsedUrl.hostname !== 'vrchat.com') {
@@ -55,7 +55,7 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
  * @param avatarUrl - The VRChat avatar URL (e.g., https://vrchat.com/home/avatar/avtr_xxx)
  * @returns The avatar ID (e.g., avtr_xxx) or null if not found
  */
-export function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
+function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
   if (!avatarUrl) {
     return null;
   }
@@ -78,10 +78,10 @@ export function buildAvatarImageUrl(
   width: number = 512
 ): string {
   const avtrId = extractVRChatAvatarId(avatarUrl);
-  
+
   if (avtrId) {
     return `/api/avatar-image?id=${id}&avtr=${avtrId}&w=${width}`;
   }
-  
+
   return `/api/avatar-image?id=${id}&w=${width}`;
 }

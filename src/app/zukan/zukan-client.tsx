@@ -2,7 +2,7 @@
 
 /**
  * Zukan Client Component
- * 
+ *
  * Handles all client-side interactivity:
  * - Search and filtering
  * - View mode switching (grid/list)
@@ -11,19 +11,19 @@
  * - Virtual scrolling (performance optimization)
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useAkyoData } from '@/hooks/use-akyo-data';
 import { AkyoCard } from '@/components/akyo-card';
+import { AkyoDetailModal } from '@/components/akyo-detail-modal';
 import { AkyoList } from '@/components/akyo-list';
-import { SearchBar } from '@/components/search-bar';
 import { FilterPanel } from '@/components/filter-panel';
 import { LanguageToggle } from '@/components/language-toggle';
 import { MiniAkyoBg } from '@/components/mini-akyo-bg';
-import { AkyoDetailModal } from '@/components/akyo-detail-modal';
-import type { AkyoData, ViewMode } from '@/types/akyo';
+import { SearchBar } from '@/components/search-bar';
+import { useAkyoData } from '@/hooks/use-akyo-data';
 import type { SupportedLanguage } from '@/lib/i18n';
+import type { AkyoData, ViewMode } from '@/types/akyo';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ZukanClientProps {
   initialData: AkyoData[];
@@ -33,7 +33,7 @@ interface ZukanClientProps {
 }
 
 export function ZukanClient({ initialData, attributes, creators, initialLang }: ZukanClientProps) {
-  const { data, filteredData, loading, error, filterData, toggleFavorite } = useAkyoData(initialData);
+  const { data, filteredData, error, filterData, toggleFavorite } = useAkyoData(initialData);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAttribute, setSelectedAttribute] = useState('');
@@ -41,7 +41,7 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
-  
+
   // Modal state
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -199,8 +199,8 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
         {/* 検索バー */}
         <div className="akyo-card p-4 sm:p-6">
-          <SearchBar 
-            onSearch={setSearchQuery} 
+          <SearchBar
+            onSearch={setSearchQuery}
             placeholder={initialLang === 'en' ? 'Search by name, creator, or attribute...' : '名前・作者・属性で検索...'}
           />
         </div>
