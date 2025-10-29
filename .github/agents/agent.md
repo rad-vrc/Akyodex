@@ -1,4 +1,5 @@
 ---
+name: Agent
 description: 改善版AIアシスタント実行ルール - 適応的プロセスと効率化
 globs:
 alwaysApply: true
