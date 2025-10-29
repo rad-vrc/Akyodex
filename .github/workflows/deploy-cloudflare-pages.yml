@@ -1,0 +1,103 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+# Prevent multiple deployments at once
+concurrency:
+  group: cloudflare-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      deployments: write
+      
+    environment:
+      name: ${{ github.event.inputs.environment || 'production' }}
+      url: ${{ steps.deployment.outputs.url }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build for Cloudflare Pages
+        run: npm run build
+        env:
+          # Environment variables should be configured in Cloudflare Pages dashboard
+          # These are mock values for build process only
+          ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH || 'e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313' }}
+          OWNER_PASSWORD_HASH: ${{ secrets.OWNER_PASSWORD_HASH || 'e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313' }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || '629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf' }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://akyodex.com' }}
+          NEXT_PUBLIC_R2_BASE: ${{ vars.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com' }}
+          
+      - name: Verify build output
+        run: |
+          echo "Verifying build output..."
+          if [ ! -d ".open-next" ]; then
+            echo "Error: .open-next directory not found"
+            exit 1
+          fi
+          
+          echo "Build output contents:"
+          ls -la .open-next/
+          
+          echo "Build output size:"
+          du -sh .open-next/
+          
+      - name: Deploy to Cloudflare Pages
+        id: deployment
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .open-next --project-name=akyodex-nextjs
+          
+      - name: Create deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployment successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.event.inputs.environment || 'production' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Time**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚀 Deployment Preview\n\nYour changes have been deployed to Cloudflare Pages!\n\n**Environment**: ${context.payload.inputs?.environment || 'production'}\n**URL**: ${process.env.DEPLOYMENT_URL}\n\n✅ Build completed successfully.`
+            })

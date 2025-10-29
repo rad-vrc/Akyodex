@@ -1,0 +1,175 @@
+name: CI - Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+# Prevent multiple CI runs for the same commit
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: Lint and Type Check
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+        
+      - name: Run TypeScript type check
+        run: npx tsc --noEmit
+        
+  # Job 2: Build Validation
+  build-validation:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build for Cloudflare Pages
+        run: npm run build
+        env:
+          # Mock environment variables for build
+          ADMIN_PASSWORD_HASH: "e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313"
+          OWNER_PASSWORD_HASH: "e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313"
+          JWT_SECRET: "629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf"
+          
+      - name: Check build output
+        run: |
+          echo "Checking build output directory..."
+          ls -la .open-next/
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .open-next/
+          retention-days: 7
+          
+  # Job 3: Security Scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    
+    permissions:
+      contents: read
+      security-events: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+        
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        
+  # Job 4: Dependency Review (PR only)
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          
+  # Job 5: Build Performance Report
+  build-performance:
+    name: Build Performance Report
+    runs-on: ubuntu-latest
+    needs: build-validation
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Measure build time
+        run: |
+          echo "Starting build performance measurement..."
+          START_TIME=$(date +%s)
+          npm run build
+          END_TIME=$(date +%s)
+          BUILD_TIME=$((END_TIME - START_TIME))
+          echo "Build completed in ${BUILD_TIME} seconds"
+          echo "BUILD_TIME=${BUILD_TIME}" >> $GITHUB_ENV
+        env:
+          ADMIN_PASSWORD_HASH: "e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313"
+          OWNER_PASSWORD_HASH: "e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313"
+          JWT_SECRET: "629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf"
+          
+      - name: Analyze build size
+        run: |
+          echo "Analyzing build output size..."
+          du -sh .open-next/
+          du -sh .open-next/* | sort -h
