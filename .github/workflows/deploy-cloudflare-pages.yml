@@ -50,12 +50,12 @@ jobs:
         run: npm run build
         env:
           # Environment variables should be configured in Cloudflare Pages dashboard
-          # These are mock values for build process only
-          ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH || 'e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313' }}
-          OWNER_PASSWORD_HASH: ${{ secrets.OWNER_PASSWORD_HASH || 'e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313' }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET || '629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf' }}
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://akyodex.com' }}
-          NEXT_PUBLIC_R2_BASE: ${{ vars.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com' }}
+          # These are fallback values for build process only
+          ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH || vars.DEFAULT_ADMIN_PASSWORD_HASH }}
+          OWNER_PASSWORD_HASH: ${{ secrets.OWNER_PASSWORD_HASH || vars.DEFAULT_OWNER_PASSWORD_HASH }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || vars.DEFAULT_JWT_SECRET }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_R2_BASE: ${{ vars.NEXT_PUBLIC_R2_BASE }}
           
       - name: Verify build output
         run: |

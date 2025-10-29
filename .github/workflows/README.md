@@ -312,17 +312,22 @@ jobs:
 |--------------|------|------|
 | `CLOUDFLARE_API_TOKEN` | ✅ Yes | Cloudflare API トークン (デプロイ用) |
 | `CLOUDFLARE_ACCOUNT_ID` | ✅ Yes | Cloudflare アカウント ID |
-| `ADMIN_PASSWORD_HASH` | ⚠️ Recommended | 管理者パスワードハッシュ (ビルド用) |
-| `OWNER_PASSWORD_HASH` | ⚠️ Recommended | オーナーパスワードハッシュ (ビルド用) |
-| `JWT_SECRET` | ⚠️ Recommended | JWT 署名シークレット (ビルド用) |
 | `SNYK_TOKEN` | 🔵 Optional | Snyk API トークン (セキュリティ監査用) |
+
+**注意**: パスワードハッシュと JWT シークレットは、セキュリティのため GitHub Variables に設定します。
 
 ### GitHub Variables
 
-| 変数名 | 説明 | デフォルト値 |
-|-------|------|------------|
-| `NEXT_PUBLIC_SITE_URL` | サイト URL | `https://akyodex.com` |
-| `NEXT_PUBLIC_R2_BASE` | R2 ベース URL | `https://images.akyodex.com` |
+| 変数名 | 必須 | 説明 | デフォルト値 |
+|-------|------|------|------------|
+| `DEFAULT_ADMIN_PASSWORD_HASH` | ✅ Yes | ビルド用管理者パスワードハッシュ | - |
+| `DEFAULT_OWNER_PASSWORD_HASH` | ✅ Yes | ビルド用オーナーパスワードハッシュ | - |
+| `DEFAULT_JWT_SECRET` | ✅ Yes | ビルド用 JWT シークレット | - |
+| `NEXT_PUBLIC_SITE_URL` | 🔵 Optional | サイト URL | - |
+| `NEXT_PUBLIC_R2_BASE` | 🔵 Optional | R2 ベース URL | - |
+
+**重要**: 本番用の環境変数は、必ず Cloudflare Pages ダッシュボードで設定してください。
+GitHub Variables はビルドプロセス用の値です。
 
 ### Cloudflare API トークンの作成
 
@@ -338,16 +343,30 @@ jobs:
 
 ```bash
 # GitHub リポジトリで設定
-Settings → Secrets and variables → Actions
-→ New repository secret
+# Secrets (Settings → Secrets and variables → Actions → New repository secret)
+CLOUDFLARE_API_TOKEN
+CLOUDFLARE_ACCOUNT_ID
+SNYK_TOKEN (optional)
+
+# Variables (Settings → Secrets and variables → Actions → Variables → New repository variable)
+DEFAULT_ADMIN_PASSWORD_HASH
+DEFAULT_OWNER_PASSWORD_HASH
+DEFAULT_JWT_SECRET
+NEXT_PUBLIC_SITE_URL
+NEXT_PUBLIC_R2_BASE
 
 # Cloudflare Pages で設定 (本番用)
 Cloudflare Pages ダッシュボード
 → プロジェクト選択 → Settings → Environment variables
+ADMIN_PASSWORD_HASH (本番用の値)
+OWNER_PASSWORD_HASH (本番用の値)
+JWT_SECRET (本番用の値)
 ```
 
-**重要**: 本番環境の環境変数は Cloudflare Pages ダッシュボードで設定してください。
-GitHub Secrets はビルドプロセスのフォールバックとして使用されます。
+**重要**: 
+- GitHub Variables は CI/CD ビルドプロセス用です
+- 本番環境の実際の値は Cloudflare Pages ダッシュボードで設定してください
+- Secrets と Variables を混同しないでください（Secrets は暗号化、Variables は平文）
 
 ---
 

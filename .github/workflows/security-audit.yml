@@ -44,7 +44,7 @@ jobs:
           retention-days: 30
           
       - name: Run Snyk Security Scan
-        uses: snyk/actions/node@master
+        uses: snyk/actions/node@0.4.0
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
