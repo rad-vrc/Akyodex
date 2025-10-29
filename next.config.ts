@@ -35,6 +35,32 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // 301リダイレクト（旧URL → 新URL）
+  async redirects() {
+    return [
+      // index.html (クエリパラメータなし) → /zukan
+      {
+        source: '/index.html',
+        destination: '/zukan',
+        permanent: true, // 301 Redirect
+      },
+      // index.html?id=XXX → /zukan?id=XXX
+      // Accepts alphanumeric IDs (e.g., 001, 0001, 612, etc.)
+      {
+        source: '/index.html',
+        has: [
+          {
+            type: 'query',
+            key: 'id',
+            value: '(?<id>[0-9A-Za-z]+)',
+          },
+        ],
+        destination: '/zukan?id=:id',
+        permanent: true, // 301 Redirect
+      },
+    ];
+  },
+
   // セキュリティヘッダー
   async headers() {
     return [
