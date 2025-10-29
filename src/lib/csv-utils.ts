@@ -18,7 +18,7 @@ import { commitCSVToGitHub, fetchCSVFromGitHub } from './github-utils';
  * @param content - CSV file content as string
  * @returns Array of records (each record is an array of fields)
  */
-export function parseCSV(content: string): string[][] {
+function parseCSV(content: string): string[][] {
   try {
     const records: string[][] = parse(content, {
       relax_quotes: true,
@@ -33,18 +33,10 @@ export function parseCSV(content: string): string[][] {
   }
 }
 
-export interface AkyoCsvSnapshot {
-  header: string[];
-  dataRecords: string[][];
-  fileSha: string;
-}
-
-export interface LoadAkyoCsvOptions {
+export async function loadAkyoCsv(options: {
   csvFileName?: string;
   githubConfig?: GitHubConfig;
-}
-
-export async function loadAkyoCsv(options: LoadAkyoCsvOptions = {}): Promise<AkyoCsvSnapshot> {
+} = {}) {
   const { csvFileName, githubConfig } = options;
   const csvFile = await fetchCSVFromGitHub(csvFileName, githubConfig);
   const records = parseCSV(csvFile.content);
@@ -61,17 +53,21 @@ export async function loadAkyoCsv(options: LoadAkyoCsvOptions = {}): Promise<Aky
   };
 }
 
-export interface CommitAkyoCsvParams {
+export async function commitAkyoCsv({
+  header,
+  dataRecords,
+  fileSha,
+  commitMessage,
+  csvFileName,
+  githubConfig,
+}: {
   header: string[];
   dataRecords: string[][];
   fileSha: string;
   commitMessage: string;
   csvFileName?: string;
   githubConfig?: GitHubConfig;
-}
-
-export async function commitAkyoCsv(params: CommitAkyoCsvParams): Promise<GitHubCommitResponse> {
-  const { header, dataRecords, fileSha, commitMessage, csvFileName, githubConfig } = params;
+}): Promise<GitHubCommitResponse> {
   const records = [header, ...dataRecords];
   const content = stringifyCSV(records);
   return commitCSVToGitHub(content, fileSha, commitMessage, csvFileName, githubConfig);
@@ -92,7 +88,7 @@ export function formatAkyoCommitMessage(
  * @param records - Array of records (each record is an array of fields)
  * @returns CSV content as string
  */
-export function stringifyCSV(records: string[][]): string {
+function stringifyCSV(records: string[][]): string {
   try {
     return stringify(records, {
       quoted: true, // Quote all fields for safety

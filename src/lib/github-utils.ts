@@ -12,11 +12,6 @@ export interface GitHubConfig {
   branch: string;
 }
 
-export interface GitHubFileResponse {
-  content: string;
-  sha: string;
-}
-
 export interface GitHubCommitResponse {
   commit: {
     html_url: string;
@@ -27,7 +22,7 @@ export interface GitHubCommitResponse {
  * Get GitHub configuration from environment variables
  * @throws Error if required environment variables are not set
  */
-export function getGitHubConfig(): GitHubConfig {
+function getGitHubConfig(): GitHubConfig {
   const token = process.env.GITHUB_TOKEN;
   const owner = process.env.GITHUB_REPO_OWNER;
   const repo = process.env.GITHUB_REPO_NAME;
@@ -53,7 +48,7 @@ async function fetchFileFromGitHub(
   filePath: string,
   config?: GitHubConfig,
   timeoutMs: number = 30000
-): Promise<GitHubFileResponse> {
+): Promise<{ content: string; sha: string }> {
   const githubConfig = config || getGitHubConfig();
   const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}?ref=${githubConfig.branch}`;
 
@@ -160,7 +155,7 @@ async function commitFileToGitHub(
 export async function fetchCSVFromGitHub(
   csvFileName: string = 'akyo-data.csv',
   config?: GitHubConfig
-): Promise<GitHubFileResponse> {
+): Promise<{ content: string; sha: string }> {
   const filePath = `data/${csvFileName}`;
   return fetchFileFromGitHub(filePath, config);
 }

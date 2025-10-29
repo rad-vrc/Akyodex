@@ -30,16 +30,6 @@ export async function validateSession(): Promise<SessionData | null> {
   }
 }
 
-export type AdminGuardResult =
-  | { session: SessionData; response?: undefined }
-  | { session?: undefined; response: NextResponse };
-
-export interface AdminGuardOptions {
-  requireOrigin?: boolean;
-  requireOwner?: boolean;
-  ownerErrorMessage?: string;
-}
-
 export function jsonError(
   message: string,
   status: number,
@@ -50,8 +40,12 @@ export function jsonError(
 
 export async function ensureAdminRequest(
   request: NextRequest,
-  options: AdminGuardOptions = {}
-): Promise<AdminGuardResult> {
+  options: {
+    requireOrigin?: boolean;
+    requireOwner?: boolean;
+    ownerErrorMessage?: string;
+  } = {}
+): Promise<{ session: SessionData } | { response: NextResponse }> {
   const {
     requireOrigin = true,
     requireOwner = false,
