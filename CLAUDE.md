@@ -67,7 +67,6 @@ NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
 ├── package.json
 ├── next.config.ts       # Next.js設定
 ├── open-next.config.ts  # OpenNext設定
-├── wrangler.toml        # Cloudflare Pages設定
 └── tsconfig.json
 ```
 
