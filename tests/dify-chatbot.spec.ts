@@ -107,6 +107,6 @@ test.describe('Dify Cloud Chatbot', () => {
     expect(difyConfig.token).toBe('ITAESZx7R09Y05jy');
     
     console.log('✓ Dify configuration is correctly set with cloud token');
-    console.log('Dify Config:', JSON.stringify(difyConfig, null, 2));
+    
   });
 });
