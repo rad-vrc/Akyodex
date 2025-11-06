@@ -683,15 +683,15 @@ select:focus {
   right: 24px !important;
   width: 56px !important;
   height: 56px !important;
-  background-color: #EE7800 !important;
-  box-shadow: 0 4px 12px rgba(238, 120, 0, 0.4) !important;
+  background-color: #1C64F2 !important;
+  box-shadow: 0 4px 12px rgba(28, 100, 242, 0.4) !important;
   border: 3px solid white !important;
   transition: all 0.3s ease !important;
 }
 
 #dify-chatbot-bubble-button:hover {
   transform: translateY(-4px) scale(1.05) !important;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6) !important;
+  box-shadow: 0 8px 20px rgba(28, 100, 242, 0.6) !important;
 }
 
 @media (max-width: 640px) {
