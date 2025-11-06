@@ -39,7 +39,7 @@ test.describe('Dify Cloud Chatbot', () => {
     expect(backgroundColor).toContain('238');
     expect(backgroundColor).toContain('120');
     
-    console.log('✓ Chatbot button is visible with correct styling');
+    
   });
 
   test('should open chatbot window when button is clicked', async ({ page }) => {
