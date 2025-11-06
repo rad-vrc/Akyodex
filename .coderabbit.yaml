@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+reviews:
+  profile: assertive
+  high_level_summary: true
+  high_level_summary_in_walkthrough: true
+  auto_review:
+    enabled: true
+    drafts: false
+  #to auto generate the title of your pull request, put the placeholder when creating it: @coderabbitai, it then follows the auto_title_instructions below:
+  auto_title_instructions: "use conventional commits structure: <type>[optional scope]: <description>"
+  collapse_walkthrough: true
+  suggested_labels: false
+  poem: false
+  # add linters and other tools, CodeRabbit will run and check these as part of its review process. See a list of supported tools: https://docs.coderabbit.ai/tools/list
+  tools:
+    eslint:
+      enabled: true
