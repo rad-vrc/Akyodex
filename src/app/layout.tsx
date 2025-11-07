@@ -142,8 +142,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               window.difyChatbotConfig = {
-                token: 'rak9Yh7T7SI5JyDw',
-                baseUrl: 'https://dexakyo.akyodex.com',
+                token: 'ITAESZx7R09Y05jy',
                 inputs: {},
                 systemVariables: {},
                 userVariables: {},
@@ -152,8 +151,8 @@ export default function RootLayout({
           }}
         />
         <script
-          src="https://dexakyo.akyodex.com/embed.min.js"
-          id="rak9Yh7T7SI5JyDw"
+          src="https://udify.app/embed.min.js"
+          id="ITAESZx7R09Y05jy"
           defer
         />
         <StructuredData />
