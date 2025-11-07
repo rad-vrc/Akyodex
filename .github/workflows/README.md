@@ -711,5 +711,5 @@ Could not list R2 buckets - check API token permissions
 
 ---
 
-**最終更新**: 2025-10-29
+**最終更新**: 2025-11-07
 **対応バージョン**: Next.js 15.5.2, Tailwind CSS 4.x, @opennextjs/cloudflare 1.11.0

@@ -112,14 +112,6 @@ jobs:
             echo "⚠️  Deployment URL not available for health check"
           fi
           
-      - name: Deploy to Cloudflare Pages
-        id: deployment
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .open-next --project-name=akyodex-nextjs
-          
       - name: Create deployment summary
         run: |
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY

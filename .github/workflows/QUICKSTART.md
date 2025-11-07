@@ -352,4 +352,4 @@ gh workflow run deploy-cloudflare-pages.yml \
 
 **所要時間**: 5-10分
 **難易度**: 初級
-**最終更新**: 2025-10-29
+**最終更新**: 2025-11-07

@@ -37,7 +37,7 @@ jobs:
           fi
           
       - name: Validate R2 bucket access
-        if: secrets.CLOUDFLARE_API_TOKEN != ''
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
         run: |
           # List R2 buckets (if API token is available)
           wrangler r2 bucket list || echo "Could not list R2 buckets - check API token permissions"
@@ -62,7 +62,7 @@ jobs:
         run: npm install -g wrangler
         
       - name: Validate KV namespace access
-        if: secrets.CLOUDFLARE_API_TOKEN != ''
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
         run: |
           # List KV namespaces (if API token is available)
           wrangler kv:namespace list || echo "Could not list KV namespaces - check API token permissions"

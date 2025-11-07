@@ -600,7 +600,7 @@ jobs:
 
 ---
 
-**調査日**: 2025-10-29
+**調査日**: 2025-11-07
 **調査者**: GitHub Copilot
 **対象プロジェクト**: Akyodex Next.js (Next.js 15.5.2 + App Router + Cloudflare Pages)
 **結論**: **Cloudflare Pages での継続使用を推奨。Workers への移行は不要。**
