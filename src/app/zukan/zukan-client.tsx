@@ -22,6 +22,7 @@ import { FilterPanel } from '@/components/filter-panel';
 import { LanguageToggle } from '@/components/language-toggle';
 import { MiniAkyoBg } from '@/components/mini-akyo-bg';
 import { AkyoDetailModal } from '@/components/akyo-detail-modal';
+import { DifyChatbotHandler } from '@/components/dify-chatbot-handler';
 import type { AkyoData, ViewMode } from '@/types/akyo';
 import type { SupportedLanguage } from '@/lib/i18n';
 
@@ -165,6 +166,9 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
     <div className="min-h-screen pb-16 relative">
       {/* Mini Akyo Background Animation */}
       <MiniAkyoBg />
+
+      {/* Dify Chatbot Handler */}
+      <DifyChatbotHandler />
 
       {/* ヘッダー */}
       <header className="sticky top-0 z-50 p-4 sm:p-6">
