@@ -725,6 +725,14 @@ select:focus {
   animation: enhanced-spin 1s linear infinite !important;
 }
 
+/* Stop rotation animation when chat window is open */
+#dify-chatbot-bubble-button.chat-window-open svg,
+#dify-chatbot-bubble-button.chat-window-open .loading-spinner,
+#dify-chatbot-bubble-button.chat-window-open [class*="loading"],
+#dify-chatbot-bubble-button.chat-window-open [class*="spinner"] {
+  animation: none !important;
+}
+
 /* Enhanced spinning animation */
 @keyframes enhanced-spin {
   0% { 

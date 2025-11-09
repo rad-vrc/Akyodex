@@ -56,6 +56,14 @@ test.describe('Dify Cloud Chatbot', () => {
     // Take a screenshot before clicking
     await page.screenshot({ path: 'tests/screenshots/before-click.png', fullPage: false });
     
+    // Check if the button has rotation animation (before opening)
+    const buttonBeforeClick = await page.locator('#dify-chatbot-bubble-button svg').first();
+    const animationBefore = await buttonBeforeClick.evaluate((el) => {
+      return window.getComputedStyle(el).animation;
+    });
+    console.log('Animation before click:', animationBefore);
+    expect(animationBefore).toContain('enhanced-spin');
+    
     // Click the chatbot button
     await chatbotButton.click();
     
@@ -64,6 +72,20 @@ test.describe('Dify Cloud Chatbot', () => {
     
     // The window should become visible after clicking
     await expect(chatbotWindow).toBeVisible({ timeout: 5000 });
+    
+    // Wait a bit for the handler to update the class
+    await page.waitForTimeout(1000);
+    
+    // Verify that the button has the 'chat-window-open' class
+    await expect(chatbotButton).toHaveClass(/chat-window-open/);
+    
+    // Check if the rotation animation is removed (after opening)
+    const animationAfter = await buttonBeforeClick.evaluate((el) => {
+      return window.getComputedStyle(el).animation;
+    });
+    console.log('Animation after click:', animationAfter);
+    // Animation should be 'none' or not contain 'enhanced-spin'
+    expect(animationAfter).not.toContain('enhanced-spin');
     
     // Take a screenshot after clicking to show the chatbot window
     await page.screenshot({ path: 'tests/screenshots/after-click.png', fullPage: false });
@@ -88,6 +110,20 @@ test.describe('Dify Cloud Chatbot', () => {
     });
     
     console.log(`✓ Chatbot window positioned at bottom: ${position.bottom}, right: ${position.right}`);
+    
+    // Close the window by clicking the button again
+    await chatbotButton.click();
+    
+    // Wait for the window to close
+    await page.waitForTimeout(1000);
+    
+    // Verify that the button no longer has the 'chat-window-open' class
+    const hasClassAfterClose = await chatbotButton.evaluate((el) => {
+      return el.classList.contains('chat-window-open');
+    });
+    expect(hasClassAfterClose).toBe(false);
+    
+    console.log('✓ Rotation animation restored after closing chat window');
   });
 
   test('should verify Dify config is properly set', async ({ page }) => {
