@@ -1,0 +1,136 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+# Prevent multiple deployments at once
+concurrency:
+  group: cloudflare-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      deployments: write
+      
+    environment:
+      name: ${{ github.event.inputs.environment || 'production' }}
+      url: ${{ steps.deployment.outputs.url }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build for Cloudflare Pages
+        run: npm run build
+        env:
+          # Environment variables should be configured in Cloudflare Pages dashboard
+          # These are fallback values for build process only
+          ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH || vars.DEFAULT_ADMIN_PASSWORD_HASH }}
+          OWNER_PASSWORD_HASH: ${{ secrets.OWNER_PASSWORD_HASH || vars.DEFAULT_OWNER_PASSWORD_HASH }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || vars.DEFAULT_JWT_SECRET }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_R2_BASE: ${{ vars.NEXT_PUBLIC_R2_BASE }}
+          
+      - name: Verify build output
+        run: |
+          echo "Verifying build output..."
+          if [ ! -d ".open-next" ]; then
+            echo "Error: .open-next directory not found"
+            exit 1
+          fi
+          
+          echo "Build output contents:"
+          ls -la .open-next/
+          
+          echo ""
+          echo "Build output size:"
+          du -sh .open-next/
+          
+          echo ""
+          echo "Verifying critical files..."
+          test -f .open-next/_worker.js && echo "✅ Worker script present" || (echo "❌ Worker script missing" && exit 1)
+          test -f .open-next/_routes.json && echo "✅ Routes config present" || (echo "❌ Routes config missing" && exit 1)
+          test -d .open-next/_next && echo "✅ Next.js assets present" || (echo "❌ Next.js assets missing" && exit 1)
+          
+          echo ""
+          echo "✅ All critical files verified successfully"
+          
+      - name: Deploy to Cloudflare Pages
+        id: deployment
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .open-next --project-name=akyodex-nextjs
+          
+      - name: Wait for deployment to be ready
+        if: steps.deployment.outcome == 'success'
+        run: |
+          echo "Waiting 10 seconds for deployment to stabilize..."
+          sleep 10
+          
+      - name: Verify deployment health
+        if: steps.deployment.outcome == 'success'
+        run: |
+          echo "Checking deployment health..."
+          DEPLOY_URL="${{ steps.deployment.outputs.url }}"
+          if [ -n "$DEPLOY_URL" ]; then
+            echo "Testing deployment at: $DEPLOY_URL"
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOY_URL" || echo "000")
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+              echo "✅ Deployment is responding (HTTP $HTTP_CODE)"
+            else
+              echo "⚠️  Deployment returned HTTP $HTTP_CODE"
+            fi
+          else
+            echo "⚠️  Deployment URL not available for health check"
+          fi
+          
+      - name: Create deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployment successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.event.inputs.environment || 'production' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Time**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚀 Deployment Preview\n\nYour changes have been deployed to Cloudflare Pages!\n\n**Environment**: ${context.payload.inputs?.environment || 'production'}\n**URL**: ${process.env.DEPLOYMENT_URL}\n\n✅ Build completed successfully.`
+            })
