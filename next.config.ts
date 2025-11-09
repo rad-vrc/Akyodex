@@ -26,13 +26,8 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // Next.js 16対応: APIルート経由の画像読み込み
-    localPatterns: [
-      {
-        pathname: '/api/avatar-image',
-        search: '**',
-      },
-    ],
+    // Note: localPatterns is a Next.js 16+ feature, not available in 15.5.2
+    // Images from /api/avatar-image work via unoptimized: true setting
   },
 
   // 301リダイレクト（旧URL → 新URL）
