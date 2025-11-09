@@ -73,8 +73,11 @@ test.describe('Dify Cloud Chatbot', () => {
     // The window should become visible after clicking
     await expect(chatbotWindow).toBeVisible({ timeout: 5000 });
     
-    // Wait a bit for the handler to update the class
-    await page.waitForTimeout(1000);
+    // Wait for the chatbot button to have the 'chat-window-open' class
+    await page.waitForFunction(() => {
+      const button = document.getElementById('dify-chatbot-bubble-button');
+      return button?.classList.contains('chat-window-open');
+    }, { timeout: 5000 });
     
     // Verify that the button has the 'chat-window-open' class
     await expect(chatbotButton).toHaveClass(/chat-window-open/);
@@ -114,8 +117,11 @@ test.describe('Dify Cloud Chatbot', () => {
     // Close the window by clicking the button again
     await chatbotButton.click();
     
-    // Wait for the window to close
-    await page.waitForTimeout(1000);
+    // Wait for the window to close (wait for class to be removed)
+    await page.waitForFunction(() => {
+      const button = document.getElementById('dify-chatbot-bubble-button');
+      return !button?.classList.contains('chat-window-open');
+    }, { timeout: 5000 });
     
     // Verify that the button no longer has the 'chat-window-open' class
     const hasClassAfterClose = await chatbotButton.evaluate((el) => {

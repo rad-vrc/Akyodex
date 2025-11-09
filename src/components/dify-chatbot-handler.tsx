@@ -2,6 +2,9 @@
 
 import { useEffect } from 'react';
 
+// Delay in milliseconds to wait for Dify chatbot to load before initializing observers
+const DIFY_LOAD_DELAY_MS = 1000;
+
 /**
  * Dify Chatbot Handler Component
  * 
@@ -29,7 +32,7 @@ export function DifyChatbotHandler() {
     };
 
     // Check initial state after a delay to ensure Dify has loaded
-    const initialCheckTimer = setTimeout(checkWindowState, 1000);
+    const initialCheckTimer = setTimeout(checkWindowState, DIFY_LOAD_DELAY_MS);
 
     // Create a MutationObserver to watch for changes to the chat window
     const observer = new MutationObserver(() => {
@@ -54,16 +57,12 @@ export function DifyChatbotHandler() {
           subtree: true,
         });
       }
-    }, 1000);
-
-    // Check periodically as a fallback
-    const intervalId = setInterval(checkWindowState, 500);
+    }, DIFY_LOAD_DELAY_MS);
 
     // Cleanup
     return () => {
       clearTimeout(initialCheckTimer);
       clearTimeout(observerTimer);
-      clearInterval(intervalId);
       observer.disconnect();
     };
   }, []);

@@ -15,8 +15,11 @@ test('Visual verification: Chatbot rotation behavior', async ({ page }) => {
   // Wait for the chatbot button to appear
   await page.waitForSelector('#dify-chatbot-bubble-button', { timeout: 15000 });
   
-  // Wait a bit more to ensure Dify is fully loaded
-  await page.waitForTimeout(3000);
+  // Wait for Dify to be fully loaded and initialized
+  await page.waitForFunction(() => {
+    const button = document.getElementById('dify-chatbot-bubble-button');
+    return button !== null;
+  }, { timeout: 5000 });
   
   // Take screenshot 1: Initial state with rotation
   console.log('📸 Taking screenshot 1: Button with rotation animation (before opening)');
@@ -28,8 +31,11 @@ test('Visual verification: Chatbot rotation behavior', async ({ page }) => {
   // Click the chatbot button to open the window
   await page.click('#dify-chatbot-bubble-button');
   
-  // Wait for the window to open and handler to update
-  await page.waitForTimeout(2000);
+  // Wait for the 'chat-window-open' class to be added
+  await page.waitForFunction(() => {
+    const button = document.getElementById('dify-chatbot-bubble-button');
+    return button?.classList.contains('chat-window-open');
+  }, { timeout: 5000 });
   
   // Take screenshot 2: Window open, rotation stopped
   console.log('📸 Taking screenshot 2: Window open, rotation stopped');
@@ -48,8 +54,11 @@ test('Visual verification: Chatbot rotation behavior', async ({ page }) => {
   // Close the window by clicking the button again
   await page.click('#dify-chatbot-bubble-button');
   
-  // Wait for the window to close and class to be removed
-  await page.waitForTimeout(2000);
+  // Wait for the 'chat-window-open' class to be removed
+  await page.waitForFunction(() => {
+    const button = document.getElementById('dify-chatbot-bubble-button');
+    return !button?.classList.contains('chat-window-open');
+  }, { timeout: 5000 });
   
   // Take screenshot 3: Window closed, rotation restored
   console.log('📸 Taking screenshot 3: Window closed, rotation restored');
