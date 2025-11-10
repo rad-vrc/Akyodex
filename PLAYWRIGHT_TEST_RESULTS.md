@@ -18,38 +18,40 @@ Both `index.html` and `finder.html` successfully migrated from self-hosted Dify 
 ## Detailed Test Results
 
 ### index.html
-```
-✓ Dify config token: bJthPu2B6Jf4AnsU
+
+```plaintext
+✓ Dify config token: bJthPu2B***[REDACTED] (see index.html for current value)
 ✓ baseUrl removed: true
 ✓ Chat button exists: true
 ✓ Button background color: rgb(238, 120, 0)
 ✓ Button position: fixed
 ✓ Window dimensions: 384px x 640px (24rem × 40rem)
 ✓ No old host (dexakyo.akyodex.com): true
-✓ No old token (rak9Yh7T7SI5JyDw): true
+✓ No old token (rak9Yh7T***[REDACTED]): true
 ✓ Has new host (udify.app): true
-✓ Has new token (bJthPu2B6Jf4AnsU): true
+✓ Has new token: true
 ✓ Chatbot-related errors: 0
 ```
 
 ### finder.html
-```
-✓ Dify config token: bJthPu2B6Jf4AnsU
+
+```plaintext
+✓ Dify config token: bJthPu2B***[REDACTED] (see finder.html for current value)
 ✓ baseUrl removed: true
 ✓ Chat button exists: true
 ✓ Button background color: rgb(238, 120, 0)
 ✓ Button position: fixed
 ✓ Window dimensions: 384px x 640px (24rem × 40rem)
 ✓ No old host (dexakyo.akyodex.com): true
-✓ No old token (rak9Yh7T7SI5JyDw): true
+✓ No old token (rak9Yh7T***[REDACTED]): true
 ✓ Has new host (udify.app): true
-✓ Has new token (bJthPu2B6Jf4AnsU): true
+✓ Has new token: true
 ✓ Chatbot-related errors: 0
 ```
 
 ## Migration Verification Checklist
 
-- [x] Token updated from `rak9Yh7T7SI5JyDw` to `bJthPu2B6Jf4AnsU`
+- [x] Token updated (old token removed, new token configured)
 - [x] Script src updated from `https://dexakyo.akyodex.com/embed.min.js` to `https://udify.app/embed.min.js`
 - [x] Script id updated to match new token
 - [x] baseUrl property removed from difyChatbotConfig

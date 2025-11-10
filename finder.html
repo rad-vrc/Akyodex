@@ -850,12 +850,14 @@ aria-label="通称の重複チェック">
     </script>
     <!-- Difyチャットボット設定 -->
     <script>
-    window.difyChatbotConfig = {
-      token: 'bJthPu2B6Jf4AnsU',
-      inputs: {},
-      systemVariables: {},
-      userVariables: {},
-    }
+    (() => {
+      window.difyChatbotConfig = {
+        token: 'bJthPu2B6Jf4AnsU',
+        inputs: {},
+        systemVariables: {},
+        userVariables: {},
+      };
+    })();
     </script>
     <script
     src="https://udify.app/embed.min.js"
