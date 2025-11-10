@@ -1,5 +1,20 @@
 # Cloudflare Tunnel 経由で Dify 埋め込みを配信する手順
 
+> **⚠️ DEPRECATION NOTICE / 廃止のお知らせ**  
+> **2025-11-10 更新**: このドキュメントは **レガシー自己ホスト版 (dexakyo.akyodex.com)** の設定手順を記載しています。  
+> 現在は **Dify Cloud (udify.app)** に移行済みで、Cloudflare Tunnel 経由のアクセス制御は不要になりました。  
+> 以下の内容は歴史的記録として保持していますが、本番環境では使用していません。
+>
+> **最新状況**:
+> - **移行先**: Dify Cloud (https://udify.app)
+> - **トークン**: `bJthPu2B6Jf4AnsU` (フロントエンド公開)
+> - **利点**: Cloudflare Tunnel の設定不要、グローバルアクセス可能、Zero Trust Gateway 設定不要
+> - **スタイリング**: 既存のオレンジ配色 (#EE7800) を保持
+
+---
+
+## 旧 自己ホスト版 (レガシー) の設定手順
+
 Dify の埋め込みウィジェット (`embed.min.js`) は HTTPS で配信され、外部からの直接アクセスを許可しておく必要があります。Cloudflare Tunnel/Zero Trust を HTTP プロキシとして経由させている環境では、トンネル側のアクセス制御でブロックされると 403 応答になり、フロントエンドからチャットボットが読み込めません。このページでは、Cloudflare Tunnel と Zero Trust の設定で **埋め込み用エンドポイントを許可する方法** をまとめています。
 
 ## 1. 事象の確認
@@ -97,3 +112,67 @@ Cloudflare Pages のプレビュー URL（`*.pages.dev`）は、Dify 側で **We
 2. 保存後にプレビューをハードリロードし、チャットバブルが表示されるか確認します。
 
 プレビュー環境特有の制限をクリアすれば、本番ドメインと同じように埋め込みウィジェットが表示されます。
+
+---
+
+## 8. Cloud版 Dify への移行 (2025年11月)
+
+### 移行の背景
+
+自己ホスト版 (dexakyo.akyodex.com) から **Dify Cloud (udify.app)** へ移行しました。これにより以下のメリットが得られます:
+
+- **設定簡素化**: Cloudflare Tunnel や Zero Trust Gateway の複雑な設定が不要
+- **グローバルアクセス**: どの環境からも追加設定なしでアクセス可能
+- **メンテナンス負荷軽減**: インフラ管理が不要
+
+### 新しい設定
+
+Cloud版では以下の設定を使用します:
+
+```html
+<script>
+window.difyChatbotConfig = {
+  token: 'bJthPu2B6Jf4AnsU',
+  inputs: {},
+  systemVariables: {},
+  userVariables: {},
+}
+</script>
+<script
+  src="https://udify.app/embed.min.js"
+  id="bJthPu2B6Jf4AnsU"
+  defer>
+</script>
+```
+
+**重要な変更点**:
+- `baseUrl` プロパティを削除 (Cloud版では不要)
+- スクリプトURL を `https://udify.app/embed.min.js` に変更
+- トークンを `bJthPu2B6Jf4AnsU` に更新
+
+### スタイリングの保持
+
+既存のオレンジ配色 (#EE7800) はそのまま維持します:
+
+```css
+#dify-chatbot-bubble-button {
+  background-color: #EE7800 !important;
+}
+#dify-chatbot-bubble-window {
+  width: 24rem !important;
+  height: 40rem !important;
+  position: fixed !important;
+  inset: auto 1rem 1rem auto !important;
+}
+```
+
+モバイル対応のレスポンシブ調整も変更ありません。
+
+### トラブルシューティング
+
+**チャットバブルが表示されない場合**:
+1. Dify Cloud の管理画面で **Allowed domains** に本番ドメイン (akyodex.com) とプレビューURLを追加
+2. ブラウザのキャッシュをクリア (`Ctrl + Shift + R`)
+3. ブラウザのコンソールで読み込みエラーがないか確認
+
+**注意**: Cloud版では Cloudflare Tunnel の設定は不要です。もし以前の自己ホスト版の設定 (Zero Trust ポリシーなど) が残っている場合は、削除しても問題ありません。
