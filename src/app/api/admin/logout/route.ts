@@ -6,21 +6,21 @@
  * Clears the admin session cookie.
  */
 
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { clearSessionCookie } from '@/lib/api-helpers';
+
+export const runtime = 'edge';
 
 export async function POST() {
   try {
-    const cookieStore = await cookies();
-    cookieStore.delete('admin_session');
+    await clearSessionCookie();
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       message: 'ログアウトしました',
     });
   } catch (error) {
     console.error('Logout error:', error);
-    return NextResponse.json(
+    return Response.json(
       { success: false, message: 'ログアウトエラーが発生しました' },
       { status: 500 }
     );

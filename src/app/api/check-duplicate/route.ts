@@ -5,15 +5,16 @@
  * Returns: { duplicates: string[], message: string, isDuplicate: boolean }
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { getAkyoData } from '@/lib/akyo-data-server';
 import { validateOrigin } from '@/lib/api-helpers';
 
-export async function POST(request: NextRequest) {
+export const runtime = 'edge';
+
+export async function POST(request: Request) {
   try {
     // CSRF Protection: Validate Origin/Referer
     if (!validateOrigin(request)) {
-      return NextResponse.json(
+      return Response.json(
         { error: '不正なリクエスト元です' },
         { status: 403 }
       );
@@ -24,14 +25,14 @@ export async function POST(request: NextRequest) {
 
     // Validate input
     if (!field || !value || typeof value !== 'string') {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Invalid request. field and value are required.' },
         { status: 400 }
       );
     }
 
     if (field !== 'nickname' && field !== 'avatarName') {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Invalid field. Must be "nickname" or "avatarName".' },
         { status: 400 }
       );
@@ -82,14 +83,14 @@ export async function POST(request: NextRequest) {
       message = `重複している${fieldName}はありません`;
     }
 
-    return NextResponse.json({
+    return Response.json({
       duplicates: formattedIds,
       message,
       isDuplicate,
     });
   } catch (error) {
     console.error('Duplicate check error:', error);
-    return NextResponse.json(
+    return Response.json(
       { error: 'Internal server error' },
       { status: 500 }
     );

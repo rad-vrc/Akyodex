@@ -447,26 +447,147 @@ export default async function Page({ params, searchParams }: PageProps) {
 
 ### API Routes
 
-**✅ Correct Typing**:
+**✅ Prefer Standard Request/Response (Next.js 15+ Best Practice)**:
 ```typescript
-import { NextRequest, NextResponse } from 'next/server';
+import { jsonError } from '@/lib/api-helpers';
 
-export async function GET(request: NextRequest) {
+export const runtime = 'edge';
+
+export async function GET(request: Request) {
   try {
     const data = await fetchData();
-    return NextResponse.json({ success: true, data });
+    return Response.json({ success: true, data });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal error' },
-      { status: 500 }
-    );
+    console.error('[route-name] Error:', error);
+    return jsonError('Internal error', 500);
   }
 }
 
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-  // Process body
-  return NextResponse.json({ success: true });
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    // Process body
+    return Response.json({ success: true, data: result });
+  } catch (error) {
+    return jsonError('Invalid request', 400);
+  }
+}
+```
+
+**⚠️ Use NextRequest Only When Necessary**:
+```typescript
+import type { NextRequest } from 'next/server';
+
+// Only use NextRequest if you need Next.js-specific features
+export async function GET(request: NextRequest) {
+  // Use nextUrl for complex query parsing
+  const query = request.nextUrl.searchParams.get('query');
+  // Note: new URL(request.url) works for most cases
+  return Response.json({ query });
+}
+```
+
+**✅ Use Helper Functions for Consistency**:
+```typescript
+import { jsonError, setSessionCookie, clearSessionCookie, ensureAdminRequest } from '@/lib/api-helpers';
+
+export async function POST(request: Request) {
+  // Validate admin authentication
+  const result = await ensureAdminRequest(request, { requireOwner: true });
+  if ('response' in result) {
+    return result.response; // Returns error response
+  }
+  
+  const { session } = result;
+  
+  try {
+    // Process request
+    const data = await processData();
+    
+    // Set session cookie
+    await setSessionCookie(token);
+    
+    return Response.json({ success: true, data });
+  } catch (error) {
+    // Use jsonError helper for consistent error responses
+    return jsonError('Operation failed', 500);
+  }
+}
+```
+
+## API Helper Functions
+
+### Response Helpers
+
+**✅ Use jsonError for Error Responses**:
+```typescript
+import { jsonError } from '@/lib/api-helpers';
+
+// Returns: { success: false, error: 'message' }
+return jsonError('Invalid input', 400);
+
+// With extra fields
+return jsonError('Not found', 404, { id: '1234' });
+```
+
+**✅ Maintain Response Contract**:
+```typescript
+// Success responses should include success flag
+return Response.json({ success: true, data: result });
+
+// Error responses use jsonError helper
+return jsonError('Error message', 500);
+```
+
+### Cookie Management
+
+**✅ Use Cookie Helpers**:
+```typescript
+import { setSessionCookie, clearSessionCookie } from '@/lib/api-helpers';
+
+// Set session cookie (handles all security settings)
+await setSessionCookie(token);
+
+// Clear session cookie
+await clearSessionCookie();
+```
+
+### Authentication Helpers
+
+**✅ Use ensureAdminRequest for Protected Routes**:
+```typescript
+import { ensureAdminRequest } from '@/lib/api-helpers';
+
+export async function POST(request: Request) {
+  // Validate admin authentication
+  const result = await ensureAdminRequest(request, {
+    requireOrigin: true,  // CSRF protection
+    requireOwner: false,  // Allow both owner and admin
+  });
+  
+  if ('response' in result) {
+    return result.response; // Returns error response
+  }
+  
+  const { session } = result;
+  // session.role is 'owner' or 'admin'
+  
+  // Continue with authenticated logic
+}
+```
+
+### CSRF Protection
+
+**✅ Use validateOrigin for State-Changing Operations**:
+```typescript
+import { validateOrigin } from '@/lib/api-helpers';
+
+export async function POST(request: Request) {
+  if (!validateOrigin(request)) {
+    return jsonError('Invalid origin', 403);
+  }
+  
+  // Continue with request
 }
 ```
 
@@ -482,6 +603,19 @@ export const runtime = 'edge'; // Cloudflare Edge Runtime
 export async function GET() {
   return new Response('Hello from Edge');
 }
+```
+
+**⚠️ Document Node.js Runtime Requirements**:
+```typescript
+// app/api/upload-akyo/route.ts
+export const runtime = 'nodejs';
+
+/**
+ * This route requires Node.js runtime because:
+ * - Uses csv-parse/sync for synchronous CSV parsing
+ * - Uses GitHub API with complex Node.js dependencies
+ * - Uses Buffer for R2 binary operations
+ */
 ```
 
 ### Environment Variables
@@ -535,6 +669,55 @@ export default function Page() {
 
 ## Common Pitfalls
 
+### ❌ Don't: Use NextRequest/NextResponse When Standard Request/Response Works
+
+```typescript
+// ❌ Bad - Unnecessary NextRequest usage
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  return NextResponse.json({ success: true });
+}
+
+// ✅ Good - Use standard Request/Response
+export async function POST(request: Request) {
+  const body = await request.json();
+  return Response.json({ success: true });
+}
+```
+
+### ❌ Don't: Duplicate Cookie Configuration
+
+```typescript
+// ❌ Bad - Duplicating cookie settings
+const cookieStore = await cookies();
+cookieStore.set('admin_session', token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  maxAge: 60 * 60 * 24 * 7,
+  path: '/',
+});
+
+// ✅ Good - Use helper function
+import { setSessionCookie } from '@/lib/api-helpers';
+await setSessionCookie(token);
+```
+
+### ❌ Don't: Inline Error Responses
+
+```typescript
+// ❌ Bad - Inconsistent error format
+return NextResponse.json({ error: 'Error' }, { status: 400 });
+return Response.json({ message: 'Failed' }, { status: 500 });
+
+// ✅ Good - Use jsonError helper
+import { jsonError } from '@/lib/api-helpers';
+return jsonError('Error', 400);
+return jsonError('Failed', 500);
+```
+
 ### ❌ Don't: Use useState in Server Components
 ```typescript
 // ❌ Error
@@ -583,9 +766,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 ## Summary
 
 1. **Server Components by default** - Only use `'use client'` when needed
-2. **Image optimization** - Always use `next/image` with proper configuration
-3. **Tailwind CSS** - Use className, not styled-jsx
-4. **TypeScript** - Explicit types for props and API routes
-5. **Cloudflare Edge** - Use Edge Runtime for API routes
-6. **Performance** - Dynamic imports, Suspense, streaming
-7. **Documentation** - ALWAYS use `nextjs_docs` tool for Next.js concepts
+2. **Standard Request/Response** - Prefer Web API types over NextRequest/NextResponse
+3. **Helper functions** - Use jsonError, setSessionCookie, ensureAdminRequest for consistency
+4. **Image optimization** - Always use `next/image` with proper configuration
+5. **Tailwind CSS** - Use className, not styled-jsx
+6. **TypeScript** - Explicit types for props and API routes
+7. **Cloudflare Edge** - Use Edge Runtime for compatible routes, document Node.js requirements
+8. **Performance** - Dynamic imports, Suspense, streaming
+9. **Documentation** - ALWAYS use `nextjs_docs` tool for Next.js concepts

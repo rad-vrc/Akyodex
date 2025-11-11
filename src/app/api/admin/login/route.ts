@@ -8,13 +8,12 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Use Node.js runtime for session management (Web Crypto API and Buffer compatibility)
-export const runtime = 'nodejs';
+// Use Edge Runtime for optimal performance
+export const runtime = 'edge';
 
 import { createSessionToken } from '@/lib/session';
+import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
 import type { AdminRole } from '@/types/akyo';
-import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
@@ -49,16 +48,13 @@ function timingSafeCompare(a: string, b: string): boolean {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { password } = body;
 
     if (!password || typeof password !== 'string') {
-      return NextResponse.json(
-        { success: false, message: 'パスワードを入力してください' },
-        { status: 400 }
-      );
+      return jsonError('パスワードを入力してください', 400, { message: 'パスワードを入力してください' });
     }
 
     // Get passwords from environment variables (server-side only - NOT NEXT_PUBLIC)
@@ -68,10 +64,7 @@ export async function POST(request: NextRequest) {
     // Validate that passwords are configured
     if (!ownerPassword || !adminPassword) {
       console.error('Admin passwords not configured in environment variables');
-      return NextResponse.json(
-        { success: false, message: '認証設定エラーです' },
-        { status: 500 }
-      );
+      return jsonError('認証設定エラーです', 500, { message: '認証設定エラーです' });
     }
 
     // Check password and determine role using timing-safe comparison
@@ -92,35 +85,21 @@ export async function POST(request: NextRequest) {
     }
 
     if (!role) {
-      return NextResponse.json(
-        { success: false, message: 'パスワードが違います' },
-        { status: 401 }
-      );
+      return jsonError('パスワードが違います', 401, { message: 'パスワードが違います' });
     }
 
     // Create cryptographically signed session token
     const sessionToken = await createSessionToken(username, role, SESSION_DURATION);
 
-    // Set secure HTTP-only cookie
-    const cookieStore = await cookies();
-    cookieStore.set('admin_session', sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: SESSION_DURATION / 1000, // seconds
-      path: '/',
-    });
+    // Set secure HTTP-only cookie using helper
+    await setSessionCookie(sessionToken, SESSION_DURATION / 1000);
 
-    return NextResponse.json({
-      success: true,
+    return jsonSuccess({
       role,
       message: 'ログインしました',
     });
   } catch (error) {
     console.error('Login error:', error);
-    return NextResponse.json(
-      { success: false, message: 'ログインエラーが発生しました' },
-      { status: 500 }
-    );
+    return jsonError('ログインエラーが発生しました', 500, { message: 'ログインエラーが発生しました' });
   }
 }

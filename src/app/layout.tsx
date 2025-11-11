@@ -3,6 +3,7 @@ import { Noto_Sans_JP, Kosugi_Maru } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -30,21 +31,21 @@ export const viewport: Viewport = {
 // メタデータ設定
 export const metadata: Metadata = {
   metadataBase: new URL('https://akyodex.com'),
-  
+
   title: {
     default: 'Akyoずかん-VRChatアバター Akyo図鑑- | Akyodex-VRChat Avatar Akyo Index',
     template: '%s | Akyoずかん',
   },
-  
+
   description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
-  
+
   keywords: ['Akyo', 'Akyodex', 'VRChat', 'Avatar', 'VRChatアバター図鑑', 'Akyoずかん'],
-  
+
   authors: [{ name: 'らど', url: 'https://akyodex.com' }],
-  
+
   creator: 'らど',
   publisher: 'Akyodex',
-  
+
   robots: {
     index: true,
     follow: true,
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  
+
   alternates: {
     canonical: 'https://akyodex.com',
     languages: {
@@ -64,9 +65,9 @@ export const metadata: Metadata = {
       'en-US': 'https://akyodex.com',
     },
   },
-  
-  manifest: '/manifest.json',
-  
+
+  // manifest.ts will be automatically detected by Next.js
+
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
+
   twitter: {
     card: 'summary',
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
@@ -92,7 +93,7 @@ export const metadata: Metadata = {
     images: ['/images/logo-200.png'],
     creator: '@akyodex',
   },
-  
+
   icons: {
     icon: [
       { url: '/images/akyodexIcon-16.png', sizes: '16x16', type: 'image/png' },
@@ -107,14 +108,14 @@ export const metadata: Metadata = {
       { rel: 'icon', url: '/images/akyodexIcon-512.png', sizes: '512x512' },
     ],
   },
-  
+
   // 検証とアナリティクス用（必要に応じて追加）
   verification: {
     // google: 'your-google-site-verification',
     // yandex: 'your-yandex-verification',
     // bing: 'your-bing-verification',
   },
-  
+
   // カテゴリー
   category: 'entertainment',
 };
@@ -122,38 +123,54 @@ export const metadata: Metadata = {
 const fontAwesomeUrl = "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css";
 const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get nonce from middleware
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') || undefined;
+
   return (
     <html lang="ja" suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         <link rel="stylesheet" href={fontAwesomeUrl} />
         {/* Sentry エラー監視 */}
         <script
           src={sentryUrl}
           crossOrigin="anonymous"
           async
+          {...(nonce && { nonce })}
         />
-        {/* Dify AI Chatbot */}
+        {/* Dify AI Chatbot - Config must be set before loading embed script */}
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `
-              window.difyChatbotConfig = {
-                token: 'ITAESZx7R09Y05jy',
-                inputs: {},
-                systemVariables: {},
-                userVariables: {},
-              }
-            `,
+            __html: `window.difyChatbotConfig = { token: 'bJthPu2B6Jf4AnsU' };`,
           }}
         />
         <script
           src="https://udify.app/embed.min.js"
-          id="ITAESZx7R09Y05jy"
+          id="bJthPu2B6Jf4AnsU"
           defer
+          nonce={nonce}
+        />
+        <style
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `
+              #dify-chatbot-bubble-button {
+                background-color: #EE7800 !important;
+              }
+              #dify-chatbot-bubble-window {
+                width: 24rem !important;
+                height: 40rem !important;
+                position: fixed !important;
+                inset: auto 1rem 1rem auto !important;
+              }
+            `,
+          }}
         />
         <StructuredData />
       </head>

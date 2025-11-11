@@ -9,10 +9,11 @@
     "start": "next start",
     "lint": "eslint",
     "knip": "knip",
-    "test": "vitest run",
+    "test": "playwright test",
     "test:playwright": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed"
+    "test:headed": "playwright test --headed",
+    "test:csv": "node scripts/test-csv-quality.js"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.11.0",
@@ -36,7 +37,6 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
-    "vitest": "^2.1.1",
     "wrangler": "^4.44.0"
   }
 }

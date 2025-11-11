@@ -5,7 +5,8 @@
 
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 
-export const runtime = 'nodejs';
+// Edge Runtime compatible - uses only Web Standard APIs (fetch, URL, AbortController)
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

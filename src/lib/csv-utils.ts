@@ -22,10 +22,13 @@ function parseCSV(content: string): string[][] {
   try {
     const records: string[][] = parse(content, {
       relax_quotes: true,
-      relax_column_count: true,
+      relax_column_count: true, // Allow variable column counts (will be validated later)
       skip_empty_lines: true,
       trim: false, // Preserve original whitespace
       record_delimiter: ['\r\n', '\n', '\r'], // Handle mixed line endings (Windows/Unix/Mac)
+      columns: false, // Don't use first row as column names
+      quote: '"', // Standard CSV quote character
+      escape: '"', // Standard CSV escape character
     });
     return records;
   } catch (error) {
@@ -120,8 +123,17 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
   const data: AkyoData[] = [];
 
   for (const record of dataRecords) {
+    // Skip records with column count mismatch (malformed data)
     if (record.length !== header.length) {
-      console.warn('Column count mismatch:', { expected: header.length, got: record.length, record });
+      // Only log first few mismatches to avoid spam
+      if (data.length < 5) {
+        console.warn('Column count mismatch - skipping record:', {
+          expected: header.length,
+          got: record.length,
+          firstColumn: record[0],
+          recordLength: record.length,
+        });
+      }
       continue;
     }
 

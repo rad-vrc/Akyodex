@@ -1,21 +1,26 @@
 /**
  * GitHub API Utilities
  *
- * Common utilities for interacting with GitHub API, including CSV file operations.
+ * Centralized GitHub API operations for CSV file operations.
  * These functions centralize GitHub API logic to follow DRY principles.
  */
 
 export interface GitHubConfig {
-  token: string;
-  owner: string;
-  repo: string;
-  branch: string;
+    token: string;
+    owner: string;
+    repo: string;
+    branch: string;
+}
+
+interface GitHubFileResponse {
+    content: string;
+    sha: string;
 }
 
 export interface GitHubCommitResponse {
-  commit: {
-    html_url: string;
-  };
+    commit: {
+        html_url: string;
+    };
 }
 
 /**
@@ -23,16 +28,16 @@ export interface GitHubCommitResponse {
  * @throws Error if required environment variables are not set
  */
 function getGitHubConfig(): GitHubConfig {
-  const token = process.env.GITHUB_TOKEN;
-  const owner = process.env.GITHUB_REPO_OWNER;
-  const repo = process.env.GITHUB_REPO_NAME;
-  const branch = process.env.GITHUB_BRANCH || 'main';
+    const token = process.env.GITHUB_TOKEN;
+    const owner = process.env.GITHUB_REPO_OWNER;
+    const repo = process.env.GITHUB_REPO_NAME;
+    const branch = process.env.GITHUB_BRANCH || 'main';
 
-  if (!token || !owner || !repo) {
-    throw new Error('GitHub credentials not configured (GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME)');
-  }
+    if (!token || !owner || !repo) {
+        throw new Error('GitHub credentials not configured (GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME)');
+    }
 
-  return { token, owner, repo, branch };
+    return { token, owner, repo, branch };
 }
 
 /**
@@ -45,43 +50,43 @@ function getGitHubConfig(): GitHubConfig {
  * @throws Error if request fails or times out
  */
 async function fetchFileFromGitHub(
-  filePath: string,
-  config?: GitHubConfig,
-  timeoutMs: number = 30000
-): Promise<{ content: string; sha: string }> {
-  const githubConfig = config || getGitHubConfig();
-  const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}?ref=${githubConfig.branch}`;
+    filePath: string,
+    config?: GitHubConfig,
+    timeoutMs: number = 30000
+): Promise<GitHubFileResponse> {
+    const githubConfig = config || getGitHubConfig();
+    const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}?ref=${githubConfig.branch}`;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'Authorization': `token ${githubConfig.token}`,
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      signal: controller.signal,
-    });
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+            },
+            signal: controller.signal,
+        });
 
-    clearTimeout(timeoutId);
+        clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`GitHub API error: ${response.status}`);
+        }
+
+        const data = await response.json() as { content: string; sha: string };
+        return {
+            content: Buffer.from(data.content, 'base64').toString('utf-8'),
+            sha: data.sha,
+        };
+    } catch (error) {
+        clearTimeout(timeoutId);
+        if (error instanceof Error && error.name === 'AbortError') {
+            throw new Error(`GitHub API request timed out (${timeoutMs}ms)`);
+        }
+        throw error;
     }
-
-    const data = await response.json() as { content: string; sha: string };
-    return {
-      content: Buffer.from(data.content, 'base64').toString('utf-8'),
-      sha: data.sha,
-    };
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error(`GitHub API request timed out (${timeoutMs}ms)`);
-    }
-    throw error;
-  }
 }
 
 /**
@@ -97,51 +102,51 @@ async function fetchFileFromGitHub(
  * @throws Error if commit fails or times out
  */
 async function commitFileToGitHub(
-  filePath: string,
-  content: string,
-  sha: string,
-  message: string,
-  config?: GitHubConfig,
-  timeoutMs: number = 30000
+    filePath: string,
+    content: string,
+    sha: string,
+    message: string,
+    config?: GitHubConfig,
+    timeoutMs: number = 30000
 ): Promise<GitHubCommitResponse> {
-  const githubConfig = config || getGitHubConfig();
-  const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}`;
+    const githubConfig = config || getGitHubConfig();
+    const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}`;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  try {
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${githubConfig.token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message,
-        content: Buffer.from(content).toString('base64'),
-        sha,
-        branch: githubConfig.branch,
-      }),
-      signal: controller.signal,
-    });
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message,
+                content: Buffer.from(content).toString('base64'),
+                sha,
+                branch: githubConfig.branch,
+            }),
+            signal: controller.signal,
+        });
 
-    clearTimeout(timeoutId);
+        clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`GitHub commit failed: ${errorData.message || response.status}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`GitHub commit failed: ${errorData.message || response.status}`);
+        }
+
+        return await response.json() as GitHubCommitResponse;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        if (error instanceof Error && error.name === 'AbortError') {
+            throw new Error(`GitHub API commit timed out (${timeoutMs}ms)`);
+        }
+        throw error;
     }
-
-    return await response.json() as GitHubCommitResponse;
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error(`GitHub API commit timed out (${timeoutMs}ms)`);
-    }
-    throw error;
-  }
 }
 
 /**
@@ -153,11 +158,11 @@ async function commitFileToGitHub(
  * @returns CSV content and SHA
  */
 export async function fetchCSVFromGitHub(
-  csvFileName: string = 'akyo-data.csv',
-  config?: GitHubConfig
-): Promise<{ content: string; sha: string }> {
-  const filePath = `data/${csvFileName}`;
-  return fetchFileFromGitHub(filePath, config);
+    csvFileName: string = 'akyo-data.csv',
+    config?: GitHubConfig
+): Promise<GitHubFileResponse> {
+    const filePath = `data/${csvFileName}`;
+    return fetchFileFromGitHub(filePath, config);
 }
 
 /**
@@ -172,12 +177,12 @@ export async function fetchCSVFromGitHub(
  * @returns Commit information
  */
 export async function commitCSVToGitHub(
-  content: string,
-  sha: string,
-  message: string,
-  csvFileName: string = 'akyo-data.csv',
-  config?: GitHubConfig
+    content: string,
+    sha: string,
+    message: string,
+    csvFileName: string = 'akyo-data.csv',
+    config?: GitHubConfig
 ): Promise<GitHubCommitResponse> {
-  const filePath = `data/${csvFileName}`;
-  return commitFileToGitHub(filePath, content, sha, message, config);
+    const filePath = `data/${csvFileName}`;
+    return commitFileToGitHub(filePath, content, sha, message, config);
 }

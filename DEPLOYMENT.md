@@ -81,12 +81,12 @@ Pages プロジェクト → Settings → Environment variables
 
 | 変数名 | 説明 | 例 |
 |--------|------|-----|
-| `SESSION_SECRET` | **🔴 重要** セッション署名用の秘密鍵 (32文字以上推奨) | `your-super-secret-key-min-32-chars-1234567890` |
-| `ADMIN_PASSWORD_OWNER` | オーナー（らど）のパスワード | `your_secure_password` |
-| `ADMIN_PASSWORD_ADMIN` | 管理者のパスワード | `admin_secure_password` |
+| `SESSION_SECRET` | **🔴 重要** セッション署名用の秘密鍵 (128文字推奨) | `629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d...` |
+| `ADMIN_PASSWORD_OWNER` | オーナー（らど）のアクセスコード | `RadAkyo` |
+| `ADMIN_PASSWORD_ADMIN` | 管理者のアクセスコード | `Akyo` |
 | `GITHUB_TOKEN` | GitHub Personal Access Token (repo権限必須) | `ghp_xxxxxxxxxxxx` |
-| `GITHUB_REPO_OWNER` | リポジトリオーナー名 | `radodeh` |
-| `GITHUB_REPO_NAME` | リポジトリ名 | `akyodex` |
+| `GITHUB_REPO_OWNER` | リポジトリオーナー名 | `rad-vrc` |
+| `GITHUB_REPO_NAME` | リポジトリ名 | `Akyodex` |
 | `GITHUB_BRANCH` | 使用するブランチ (省略時: main) | `main` |
 
 ##### オプションの環境変数
@@ -258,19 +258,19 @@ npm run build
 
 ## 🔐 セキュリティ設定
 
-### 🔴 必須: セッション秘密鍵の設定
+### 🔴 必須: JWT秘密鍵の設定
 
 **重要**: `SESSION_SECRET` 環境変数は本番環境で**必須**です。
 
-セッショントークンはHMAC SHA256で署名されており、この秘密鍵がないと攻撃者がセッションを改ざんして権限昇格できます。
+セッショントークンはJWT (JSON Web Token) で署名されており、この秘密鍵がないと攻撃者がセッションを改ざんして権限昇格できます。
 
 **秘密鍵の生成方法**:
 ```bash
-# ランダムな64文字の秘密鍵を生成 (推奨)
-openssl rand -hex 32
+# ランダムな128文字の秘密鍵を生成 (推奨)
+openssl rand -hex 64
 
 # または Node.jsで生成
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
 生成した秘密鍵を `SESSION_SECRET` 環境変数に設定してください。
@@ -280,24 +280,21 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 - 本番環境と開発環境で異なる秘密鍵を使用してください
 - 秘密鍵を変更すると、すべてのユーザーのセッションが無効になります
 
-### 管理者パスワードの変更
+### 管理者アクセスコード
 
-管理者パスワードは環境変数で設定されます。
+管理者アクセスコードは環境変数で設定されます。
 
 **環境変数**:
 ```
-ADMIN_PASSWORD_OWNER=your_secure_owner_password
-ADMIN_PASSWORD_ADMIN=your_secure_admin_password
+ADMIN_PASSWORD_OWNER=RadAkyo
+ADMIN_PASSWORD_ADMIN=Akyo
 ```
 
-**推奨事項**:
-1. 強力なパスワードを使用（16文字以上、英数字記号混合）
-2. 定期的にパスワードを変更
-3. パスワードは絶対にGitにコミットしない
-
-**将来的な改善案**:
-- bcrypt等でパスワードをハッシュ化
-- 多要素認証 (2FA) の追加
+**アクセスコードについて**:
+- **RadAkyo**: オーナー権限（フルアクセス、削除可能）
+- **Akyo**: 管理者権限（追加・編集のみ）
+- これらは信頼できるコミュニティメンバーと共有するためのシンプルなアクセスコードです
+- 高度なセキュリティが必要な場合は、より複雑なパスワードに変更してください
 
 ### セッション有効期限
 
@@ -471,5 +468,23 @@ Workers & Pages → KV → Namespace → Usage
 
 ---
 
-**最終更新**: 2025-10-22  
-**対象バージョン**: Next.js 15.5.6 / React 19.1.0
+## 🆕 新機能
+
+### VRChatフォールバック機能
+画像が見つからない場合、自動的にVRChat APIから画像を取得します：
+1. R2バケットから画像を取得
+2. 失敗した場合、CSVからVRChat URLを取得
+3. VRChat APIから画像を取得
+4. それでも失敗した場合、プレースホルダー画像を表示
+
+### Difyチャットボット
+右下のオレンジ色のボタンからAIチャットボットにアクセスできます：
+- 自然言語でアバターを検索
+- 属性や作者で絞り込み
+- 日本語・英語対応
+
+---
+
+**最終更新**: 2025-01-22  
+**対象バージョン**: Next.js 15.5.2 / React 19.1.0 / @opennextjs/cloudflare 1.11.0
+

@@ -1,190 +1,190 @@
-# Project Structure & Organization
+# プロジェクト構造 & 組織化
 
-## Repository Layout
+## リポジトリレイアウト
 
 ```
 Akyodex/
-├── akyodex-nextjs/          # Next.js 15 application (primary)
-├── data/                    # CSV data files
-├── functions/               # Cloudflare Pages Functions (legacy)
-├── js/                      # Legacy JavaScript files
-├── css/                     # Legacy CSS files
-├── images/                  # Static images
-├── docs/                    # Documentation
-├── scripts/                 # Utility scripts
-└── *.html                   # Legacy HTML pages
+├── akyodex-nextjs/          # Next.js 15アプリケーション (メイン)
+├── data/                    # CSVデータファイル
+├── functions/               # Cloudflare Pages Functions (レガシー)
+├── js/                      # レガシーJavaScriptファイル
+├── css/                     # レガシーCSSファイル
+├── images/                  # 静的画像
+├── docs/                    # ドキュメント
+├── scripts/                 # ユーティリティスクリプト
+└── *.html                   # レガシーHTMLページ
 ```
 
-## Next.js Application (`akyodex-nextjs/`)
+## Next.jsアプリケーション (`akyodex-nextjs/`)
 
-### Directory Structure
+### ディレクトリ構造
 
 ```
 akyodex-nextjs/
 ├── src/
 │   ├── app/                 # Next.js App Router
-│   │   ├── layout.tsx       # Root layout (i18n, PWA)
-│   │   ├── page.tsx         # Landing page
-│   │   ├── admin/           # Admin panel
-│   │   ├── zukan/           # Avatar gallery
-│   │   │   ├── page.tsx     # Gallery (SSG + ISR)
-│   │   │   └── detail/[id]/ # Detail pages (SSG)
-│   │   └── api/             # API Routes (Edge Runtime)
-│   │       ├── admin/       # Admin APIs
-│   │       └── *.ts         # Other APIs
-│   ├── components/          # React Components
-│   │   ├── akyo-*.tsx       # Avatar components
-│   │   ├── admin/           # Admin components
-│   │   └── *.tsx            # Shared components
-│   ├── lib/                 # Utility Libraries
-│   │   ├── csv-*.ts         # CSV processing
-│   │   ├── api-helpers.ts   # API utilities
-│   │   ├── session.ts       # JWT session
-│   │   └── *.ts             # Other utilities
+│   │   ├── layout.tsx       # ルートレイアウト (i18n, PWA)
+│   │   ├── page.tsx         # ランディングページ
+│   │   ├── admin/           # 管理パネル
+│   │   ├── zukan/           # アバターギャラリー
+│   │   │   ├── page.tsx     # ギャラリー (SSG + ISR)
+│   │   │   └── detail/[id]/ # 詳細ページ (SSG)
+│   │   └── api/             # APIルート (Edge Runtime)
+│   │       ├── admin/       # 管理API
+│   │       └── *.ts         # その他のAPI
+│   ├── components/          # Reactコンポーネント
+│   │   ├── akyo-*.tsx       # アバターコンポーネント
+│   │   ├── admin/           # 管理コンポーネント
+│   │   └── *.tsx            # 共有コンポーネント
+│   ├── lib/                 # ユーティリティライブラリ
+│   │   ├── csv-*.ts         # CSV処理
+│   │   ├── api-helpers.ts   # APIユーティリティ
+│   │   ├── session.ts       # JWTセッション
+│   │   └── *.ts             # その他のユーティリティ
 │   ├── types/
-│   │   └── akyo.ts          # TypeScript types
-│   └── middleware.ts        # Edge middleware (i18n)
+│   │   └── akyo.ts          # TypeScript型定義
+│   └── middleware.ts        # Edgeミドルウェア (i18n)
 ├── public/
 │   ├── sw.js                # Service Worker
-│   ├── manifest.json        # PWA manifest
-│   └── icons/               # PWA icons
-├── scripts/                 # Data processing scripts
-├── next.config.ts           # Next.js config
-├── wrangler.toml            # Cloudflare bindings
-├── tsconfig.json            # TypeScript config
-└── package.json             # Dependencies
+│   ├── manifest.json        # PWAマニフェスト
+│   └── icons/               # PWAアイコン
+├── scripts/                 # データ処理スクリプト
+├── next.config.ts           # Next.js設定
+├── wrangler.toml            # Cloudflareバインディング
+├── tsconfig.json            # TypeScript設定
+└── package.json             # 依存関係
 ```
 
-## Key Directories
+## 主要ディレクトリ
 
-### `/src/app` - App Router Pages
-- **Convention**: File-based routing
-- **Layout**: Shared layout with i18n detection, Dify chatbot integration
-- **Pages**: Server Components by default
-- **API Routes**: Edge Runtime functions
+### `/src/app` - App Routerページ
+- **規約**: ファイルベースルーティング
+- **レイアウト**: i18n検出、Difyチャットボット統合を含む共有レイアウト
+- **ページ**: デフォルトでServer Components
+- **APIルート**: Edge Runtime関数
 
-### `/src/components` - React Components
-- **Naming**: kebab-case (e.g., `akyo-card.tsx`)
-- **Organization**: Group by feature (admin/, shared)
-- **Client Components**: Use `'use client'` directive
-- **Server Components**: Default (no directive)
+### `/src/components` - Reactコンポーネント
+- **命名**: kebab-case (例: `akyo-card.tsx`)
+- **組織化**: 機能別にグループ化 (admin/, shared)
+- **Client Components**: `'use client'`ディレクティブを使用
+- **Server Components**: デフォルト (ディレクティブなし)
 
-### `/src/lib` - Utility Libraries
-- **Naming**: kebab-case (e.g., `csv-parser.ts`)
-- **Purpose**: Shared logic, helpers, utilities
-- **Server-only**: Mark with `import 'server-only'` if needed
+### `/src/lib` - ユーティリティライブラリ
+- **命名**: kebab-case (例: `csv-parser.ts`)
+- **目的**: 共有ロジック、ヘルパー、ユーティリティ
+- **Server-only**: 必要に応じて`import 'server-only'`でマーク
 
-### `/src/types` - TypeScript Types
-- **Convention**: Centralized type definitions
-- **Main file**: `akyo.ts` (AkyoData, AkyoCsvRow, etc.)
+### `/src/types` - TypeScript型定義
+- **規約**: 集中型定義
+- **メインファイル**: `akyo.ts` (AkyoData, AkyoCsvRow, など)
 
-## Data Flow
+## データフロー
 
-### CSV Data
+### CSVデータ
 ```
-data/akyo-data.csv (Japanese)
-data/akyo-data-US.csv (English)
+data/akyo-data.csv (日本語)
+data/akyo-data-US.csv (英語)
     ↓
-R2 Bucket (akyo-data/)
+R2バケット (akyo-data/)
     ↓
-API: /api/csv (fetch)
+API: /api/csv (取得)
     ↓
-lib/csv-parser.ts (parse)
+lib/csv-parser.ts (パース)
     ↓
 AkyoData[] (TypeScript)
 ```
 
-### Image Data
+### 画像データ
 ```
-images/*.webp (local)
+images/*.webp (ローカル)
     ↓
-R2 Bucket (images/)
+R2バケット (images/)
     ↓
 CDN: images.akyodex.com
     ↓
-API: /api/avatar-image (proxy)
+API: /api/avatar-image (プロキシ)
     ↓
-<img> tags (lazy loading)
+<img>タグ (遅延読み込み)
 ```
 
-### Dify Chatbot
+### Difyチャットボット
 ```
-User Query
+ユーザークエリ
     ↓
-Dify Embedded Widget
+Dify埋め込みウィジェット
     ↓
-Dify API (external service)
+Dify API (外部サービス)
     ↓
-Response displayed in widget
+ウィジェットに応答を表示
 ```
 
-## File Naming Conventions
+## ファイル命名規則
 
 ### TypeScript/React
-- **Components**: kebab-case (e.g., `akyo-card.tsx`)
-- **Utilities**: kebab-case (e.g., `csv-parser.ts`)
-- **Types**: kebab-case (e.g., `akyo.ts`)
-- **API Routes**: kebab-case (e.g., `upload-akyo/route.ts`)
+- **コンポーネント**: kebab-case (例: `akyo-card.tsx`)
+- **ユーティリティ**: kebab-case (例: `csv-parser.ts`)
+- **型定義**: kebab-case (例: `akyo.ts`)
+- **APIルート**: kebab-case (例: `upload-akyo/route.ts`)
 
-### Legacy Files
-- **JavaScript**: kebab-case (e.g., `main.js`, `admin.js`)
-- **CSS**: kebab-case (e.g., `kid-friendly.css`)
-- **HTML**: kebab-case (e.g., `index.html`, `admin.html`)
+### レガシーファイル
+- **JavaScript**: kebab-case (例: `main.js`, `admin.js`)
+- **CSS**: kebab-case (例: `kid-friendly.css`)
+- **HTML**: kebab-case (例: `index.html`, `admin.html`)
 
-## Code Organization Patterns
+## コード組織化パターン
 
-### Component Structure
+### コンポーネント構造
 ```typescript
-// 1. Imports
+// 1. インポート
 import { useState } from 'react';
 import type { AkyoData } from '@/types/akyo';
 
-// 2. Types/Interfaces
+// 2. 型/インターフェース
 interface AkyoCardProps {
   akyo: AkyoData;
   onFavorite?: (id: string) => void;
 }
 
-// 3. Component
+// 3. コンポーネント
 export function AkyoCard({ akyo, onFavorite }: AkyoCardProps) {
-  // State
+  // 状態
   const [isHovered, setIsHovered] = useState(false);
   
-  // Handlers
+  // ハンドラー
   const handleClick = () => { /* ... */ };
   
-  // Render
+  // レンダー
   return <div>...</div>;
 }
 ```
 
-### API Route Structure
+### APIルート構造
 ```typescript
-// 1. Imports
+// 1. インポート
 import { NextRequest, NextResponse } from 'next/server';
 import type { AkyoData } from '@/types/akyo';
 
-// 2. Types
+// 2. 型定義
 interface RequestBody {
   id: string;
   nickname: string;
 }
 
-// 3. Handler
+// 3. ハンドラー
 export async function POST(request: NextRequest) {
   try {
-    // 1. Parse request
+    // 1. リクエストをパース
     const body: RequestBody = await request.json();
     
-    // 2. Validate
+    // 2. バリデーション
     if (!body.id) {
       return NextResponse.json({ error: 'ID required' }, { status: 400 });
     }
     
-    // 3. Process
+    // 3. 処理
     const result = await processData(body);
     
-    // 4. Return
+    // 4. 返却
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
@@ -192,36 +192,36 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-## Import Path Aliases
+## インポートパスエイリアス
 
-### Configured Aliases
-- `@/*` → `./src/*` (Next.js app)
-- Example: `import { AkyoCard } from '@/components/akyo-card'`
+### 設定済みエイリアス
+- `@/*` → `./src/*` (Next.jsアプリ)
+- 例: `import { AkyoCard } from '@/components/akyo-card'`
 
-### Import Order (Recommended)
-1. External packages (react, next, etc.)
-2. Internal aliases (@/components, @/lib, @/types)
-3. Relative imports (./utils, ../types)
-4. CSS/styles
+### インポート順序 (推奨)
+1. 外部パッケージ (react, next, など)
+2. 内部エイリアス (@/components, @/lib, @/types)
+3. 相対インポート (./utils, ../types)
+4. CSS/スタイル
 
-## State Management
+## 状態管理
 
-### Client State
-- **React useState**: Component-local state
-- **React Context**: Shared state (language, theme)
-- **localStorage**: Persistent state (favorites, language)
-- **sessionStorage**: Session state (admin auth)
+### クライアント状態
+- **React useState**: コンポーネントローカル状態
+- **React Context**: 共有状態 (言語、テーマ)
+- **localStorage**: 永続状態 (お気に入り、言語)
+- **sessionStorage**: セッション状態 (管理者認証)
 
-### Server State
-- **Cloudflare KV**: Session tokens
-- **R2 Bucket**: CSV data, images
+### サーバー状態
+- **Cloudflare KV**: セッショントークン
+- **R2バケット**: CSVデータ、画像
 
-## Error Handling
+## エラーハンドリング
 
-### API Routes
+### APIルート
 ```typescript
 try {
-  // Operation
+  // 操作
 } catch (error) {
   console.error('Operation failed:', error);
   return NextResponse.json(
@@ -231,33 +231,33 @@ try {
 }
 ```
 
-### Components
+### コンポーネント
 ```typescript
 try {
-  // Operation
+  // 操作
 } catch (error) {
   console.error('Component error:', error);
   setError('Something went wrong');
 }
 ```
 
-## Testing Locations
+## テスト場所
 
-### Development URLs
-- Gallery: http://localhost:3000/zukan
-- Admin: http://localhost:3000/admin
+### 開発環境URL
+- ギャラリー: http://localhost:3000/zukan
+- 管理画面: http://localhost:3000/admin
 - API: http://localhost:3000/api/*
 
-### Production URLs
-- Gallery: https://akyodex.com/zukan
-- Admin: https://akyodex.com/admin
+### 本番環境URL
+- ギャラリー: https://akyodex.com/zukan
+- 管理画面: https://akyodex.com/admin
 - API: https://akyodex.com/api/*
 
-## Migration Notes
+## 移行メモ
 
-### Legacy → Next.js
-- **Status**: In progress (Next.js 15 migration complete)
-- **Legacy files**: Root directory (HTML/CSS/JS)
-- **New files**: akyodex-nextjs/ directory
-- **Coexistence**: Both versions deployed separately
-- **Future**: Gradual migration to Next.js only
+### レガシー → Next.js
+- **ステータス**: 進行中 (Next.js 15移行完了)
+- **レガシーファイル**: ルートディレクトリ (HTML/CSS/JS)
+- **新規ファイル**: akyodex-nextjs/ ディレクトリ
+- **共存**: 両バージョンを別々にデプロイ
+- **将来**: Next.jsのみへ段階的に移行

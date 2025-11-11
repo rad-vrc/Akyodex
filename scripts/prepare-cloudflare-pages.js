@@ -65,6 +65,7 @@ if (fs.existsSync(assetsDir)) {
 }
 
 // Create _routes.json for proper static asset handling
+// Ref: https://developers.cloudflare.com/pages/functions/routing/#create-a-_routesjson-file
 const routesConfig = {
   version: 1,
   description: "Cloudflare Pages routing configuration for Next.js with OpenNext",
@@ -72,19 +73,15 @@ const routesConfig = {
     "/*"
   ],
   exclude: [
+    // Next.js static assets (automatically cached by Cloudflare)
     "/_next/static/*",
+
+    // Static files in root
     "/favicon.ico",
-    "/robots.txt",
-    "/manifest.json",
     "/sw.js",
-    "/images/*",
-    "/*.svg",
-    "/*.png",
-    "/*.jpg",
-    "/*.jpeg",
-    "/*.gif",
-    "/*.webp",
-    "/*.ico"
+
+    // All images (wildcard matches any depth)
+    "/images/*"
   ]
 };
 

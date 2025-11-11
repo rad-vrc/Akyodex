@@ -1,153 +1,161 @@
-# Tech Stack & Build System
+# 技術スタック & ビルドシステム
 
-## Technology Stack
+## 技術スタック
 
-### Frontend
-- **Framework**: Next.js 15.5.6 (App Router, React 19.1.0)
-- **Styling**: Tailwind CSS 4.x
-- **Language**: TypeScript 5.x
-- **Runtime**: Cloudflare Pages (Edge Runtime)
+### フロントエンド
+- **フレームワーク**: Next.js 15.5.6 (App Router, React 19.1.0)
+- **スタイリング**: Tailwind CSS 4.x
+- **言語**: TypeScript 5.x
+- **ランタイム**: Cloudflare Pages (Edge Runtime)
 
-### Backend
-- **Adapter**: @opennextjs/cloudflare 1.11.0
-- **Authentication**: JWT (jsonwebtoken 9.0.2)
-- **Security**: sanitize-html 2.17.0, crypto.timingSafeEqual()
-- **CSV Processing**: csv-parse 6.1.0, csv-stringify 6.6.0
+### バックエンド
+- **アダプター**: @opennextjs/cloudflare 1.11.0
+- **認証**: JWT (jsonwebtoken 9.0.2)
+- **セキュリティ**: sanitize-html 2.17.0, crypto.timingSafeEqual()
+- **CSV処理**: csv-parse 6.1.0, csv-stringify 6.6.0
 
-### External Services
-- **Chatbot**: Dify embedded chatbot widget
+### 外部サービス
+- **チャットボット**: Dify埋め込みチャットボットウィジェット
 
-### Infrastructure
-- **Hosting**: Cloudflare Pages
-- **Storage**: R2 (images/CSV), KV (sessions)
+### インフラストラクチャ
+- **ホスティング**: Cloudflare Pages
+- **ストレージ**: R2 (画像/CSV), KV (セッション)
 - **CDN**: Cloudflare Edge Network
 
-## Build System
+## ビルドシステム
 
-### Package Manager
-- **npm** 10.x (required)
-- **Node.js** 20.x (required)
+### パッケージマネージャー
+- **npm** 10.x (必須)
+- **Node.js** 20.x (必須)
 
-### Common Commands
+### 共通コマンド
 
-#### Development
+#### 開発
 ```bash
-# Start Next.js dev server (akyodex-nextjs/)
+# Next.js開発サーバーを起動 (akyodex-nextjs/)
 npm run dev
 
-# Start with Turbopack (faster)
+# Turbopackで起動 (高速)
 npm run dev --turbopack
 
-# Local Cloudflare Pages dev server
+# ローカルCloudflare Pages開発サーバー
 npm run pages:dev
 ```
 
-#### Build & Deploy
+#### ビルド & デプロイ
 ```bash
-# Build for Vercel (standard Next.js)
+# Vercel用ビルド (標準Next.js)
 npm run build
 
-# Build for Cloudflare Pages
+# Cloudflare Pages用ビルド
 npm run pages:build
 
-# Deploy to Cloudflare Pages
+# Cloudflare Pagesへデプロイ
 npm run pages:deploy
 ```
 
-#### Code Quality
+#### コード品質
 ```bash
-# Run ESLint
+# ESLintを実行
 npm run lint
 
-# Type check (no emit)
+# 型チェック (出力なし)
 npx tsc --noEmit
 ```
 
-#### Data Management
+#### データ管理
 ```bash
-# Migrate CSV to 4-digit IDs
+# CSVを4桁IDに移行
 node scripts/migrate-csv-to-4digit.mjs
 ```
 
-## Configuration Files
+## 設定ファイル
 
-### Next.js Config (`next.config.ts`)
-- Image optimization: `unoptimized: true` (Cloudflare R2)
-- Security headers: HSTS, CSP, X-Frame-Options
-- Remote patterns: images.akyodex.com, *.vrchat.com
+### Next.js設定 (`next.config.ts`)
+- 画像最適化: `unoptimized: true` (Cloudflare R2)
+- セキュリティヘッダー: HSTS, CSP, X-Frame-Options
+- リモートパターン: images.akyodex.com, *.vrchat.com
 
-### Cloudflare Config (`wrangler.toml`)
-- KV binding: `AKYO_KV`
-- R2 binding: `AKYO_BUCKET`
+### Cloudflare設定 (`wrangler.toml`)
+- KVバインディング: `AKYO_KV`
+- R2バインディング: `AKYO_BUCKET`
 
-### TypeScript Config (`tsconfig.json`)
-- Target: ES2017
-- Module: esnext (bundler resolution)
-- Path alias: `@/*` → `./src/*`
-- Strict mode enabled
+### TypeScript設定 (`tsconfig.json`)
+- ターゲット: ES2017
+- モジュール: esnext (bundler resolution)
+- パスエイリアス: `@/*` → `./src/*`
+- Strictモード有効
 
-## Environment Variables
+## 環境変数
 
-### Required (Production)
+### 必須 (本番環境)
 ```bash
-ADMIN_PASSWORD_HASH=<sha256_hash>
-OWNER_PASSWORD_HASH=<sha256_hash>
-JWT_SECRET=<128_hex_chars>
+ADMIN_PASSWORD_OWNER=<access_code>
+ADMIN_PASSWORD_ADMIN=<access_code>
+SESSION_SECRET=<128_hex_chars>
 ```
 
-### Development (`.dev.vars`)
+### 開発環境 (`.dev.vars` または `.env.local`)
 ```bash
-# Default admin password: Akyo-Admin-95cea4f6a6e348da5cec1fc31ef23ba2
-ADMIN_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313
-OWNER_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313
-JWT_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+# 管理者パスワード (開発環境ではプレーンテキスト)
+ADMIN_PASSWORD_OWNER=RadAkyo
+ADMIN_PASSWORD_ADMIN=Akyo
+
+# セッションシークレット (セッショントークン用)
+SESSION_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# R2ベースURL
+NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
+
+# アプリオリジン (CSRF保護)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-## Testing & Verification
+## テスト & 検証
 
-### Local Testing
+### ローカルテスト
 ```bash
-# Test Next.js build
+# Next.jsビルドをテスト
 npm run build && npm start
 
-# Test Cloudflare Pages build
+# Cloudflare Pagesビルドをテスト
 npm run pages:build
 npx wrangler pages dev .vercel/output/static
 ```
 
-### Production Verification
-- Gallery: https://akyodex.com/zukan
-- Admin: https://akyodex.com/admin
-- API Health: https://akyodex.com/api/health
+### 本番環境検証
+- ギャラリー: https://akyodex.com/zukan
+- 管理画面: https://akyodex.com/admin
+- APIヘルスチェック: https://akyodex.com/api/health
 
-## Performance Optimization
+## パフォーマンス最適化
 
-### Build Optimization
-- Turbopack enabled for faster dev builds
-- Static generation (SSG) for gallery pages
-- Incremental Static Regeneration (ISR): 1 hour
+### ビルド最適化
+- Turbopack有効化で高速開発ビルド
+- ギャラリーページの静的生成 (SSG)
+- インクリメンタル静的再生成 (ISR): 1時間
 
-### Runtime Optimization
-- Edge Runtime for low latency
-- Service Worker with 6 caching strategies
-- Image lazy loading with IntersectionObserver
-- Virtual scrolling for large lists
+### ランタイム最適化
+- 低レイテンシのためのEdge Runtime
+- 6つのキャッシング戦略を持つService Worker
+- IntersectionObserverによる画像遅延読み込み
+- 大規模リストの仮想スクロール
 
-## Security Practices
+## セキュリティプラクティス
 
-### Authentication
-- SHA-256 password hashing
-- Timing-safe comparison (crypto.timingSafeEqual)
-- HTTP-only cookies for JWT
-- 7-day session expiration
+### 認証
+- SHA-256パスワードハッシュ化
+- タイミングセーフ比較 (crypto.timingSafeEqual)
+- JWTのHTTP-onlyクッキー
+- 7日間のセッション有効期限
 
-### Input Validation
-- HTML sanitization (sanitize-html)
-- URL validation (URL constructor)
-- CSV parsing with error handling
-- Length-limited regex patterns
+### 入力検証
+- HTMLサニタイゼーション (sanitize-html)
+- URL検証 (URLコンストラクタ)
+- エラーハンドリング付きCSVパース
+- 長さ制限付き正規表現パターン
 
-### Headers
+### ヘッダー
 - HSTS: max-age=63072000
 - X-Content-Type-Options: nosniff
 - X-Frame-Options: SAMEORIGIN

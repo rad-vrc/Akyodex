@@ -3,17 +3,71 @@
  *
  * Priority:
  * 1. R2 bucket (direct URL or binding)
- * 2. VRChat API (scrape)
+ * 2. VRChat API (scrape) - using avtr ID from CSV if available
  * 3. Placeholder image
  *
  * Features:
  * - Image caching (1 hour via Cache-Control headers)
  * - Size optimization (w parameter)
- * - Fallback chain
+ * - Fallback chain with CSV lookup
  */
 
-// Using Node.js runtime for now (edge runtime has fetch caching issues)
+import { jsonError } from '@/lib/api-helpers';
+
+// Using Node.js runtime (edge runtime has issues with fetch caching and AbortController)
 export const runtime = 'nodejs';
+
+/**
+ * Extract avtr ID from VRChat URL
+ */
+function extractAvtrId(url: string): string | null {
+  if (!url) return null;
+  const match = url.match(/avtr_[A-Za-z0-9-]+/);
+  return match ? match[0] : null;
+}
+
+/**
+ * Fetch CSV data and find avtr ID for given Akyo ID
+ */
+async function getAvtrIdFromCsv(akyoId: string): Promise<string | null> {
+  try {
+    const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
+    const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data.csv`;
+
+    const response = await fetch(csvUrl, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      console.log(`[avatar-image] CSV fetch failed: ${response.status}`);
+      return null;
+    }
+
+    const csvText = await response.text();
+    const lines = csvText.split('\n');
+
+    // Find the line with matching ID (format: 0001,...)
+    for (const line of lines) {
+      if (line.startsWith(akyoId + ',')) {
+        // CSV uses quoted fields, so we need proper parsing
+        // For now, use simple regex to extract the last URL
+        const urlMatch = line.match(/https:\/\/vrchat\.com\/home\/avatar\/(avtr_[A-Za-z0-9-]+)/);
+        if (urlMatch) {
+          return urlMatch[1];
+        }
+        // Fallback: extract last column
+        const columns = line.split(',');
+        const avatarUrl = columns[columns.length - 1];
+        return extractAvtrId(avatarUrl);
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.log(`[avatar-image] CSV lookup error for ${akyoId}:`, error);
+    return null;
+  }
+}
 
 /**
  * GET /api/avatar-image?avtr=avtr_xxx&w=512
@@ -22,17 +76,23 @@ export const runtime = 'nodejs';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const avtr = searchParams.get('avtr');
+  let avtr = searchParams.get('avtr');
   const id = searchParams.get('id');
-  const widthParam = searchParams.get('w') || '512';
-  const width = Math.max(32, Math.min(4096, parseInt(widthParam, 10) || 512));
+  const widthParam = searchParams.get('w');
+
+  // Parse width with proper fallback handling
+  let width = 512; // Default width
+  if (widthParam) {
+    const parsed = parseInt(widthParam, 10);
+    if (!isNaN(parsed) && parsed > 0) {
+      width = Math.max(32, Math.min(4096, parsed));
+    }
+    // If invalid, use default 512
+  }
 
   // Need either avtr or id
   if (!avtr && !id) {
-    return new Response('Missing avtr or id parameter', {
-      status: 400,
-      headers: { 'Content-Type': 'text/plain' },
-    });
+    return jsonError('Missing avtr or id parameter', 400);
   }
 
   // Strengthen input validation for security
@@ -40,10 +100,7 @@ export async function GET(request: Request) {
     // Strict validation: must start with avtr_, followed by alphanumeric and hyphens, max 50 chars
     const avtrRegex = /^avtr_[A-Za-z0-9-]{1,50}$/;
     if (!avtrRegex.test(avtr)) {
-      return new Response('Invalid avtr format', {
-        status: 400,
-        headers: { 'Content-Type': 'text/plain' },
-      });
+      return jsonError('Invalid avtr format', 400);
     }
   }
 
@@ -51,23 +108,30 @@ export async function GET(request: Request) {
     // Validate ID format: exactly 4 digits (0001-9999)
     const idRegex = /^\d{4}$/;
     if (!idRegex.test(id)) {
-      return new Response('Invalid id format: must be 4 digits (e.g., 0001)', {
-        status: 400,
-        headers: { 'Content-Type': 'text/plain' },
-      });
+      return jsonError('Invalid id format: must be 4 digits (e.g., 0001)', 400);
+    }
+  }
+
+  // If id is provided but no avtr, try to get avtr from CSV
+  if (id && !avtr) {
+    avtr = await getAvtrIdFromCsv(id);
+    if (avtr) {
+      console.log(`[avatar-image] Found avtr ${avtr} for ID ${id} from CSV`);
     }
   }
 
   try {
-    // Step 1: Try R2 via direct URL
+    console.log(`[avatar-image] Processing request: id=${id}, avtr=${avtr}, width=${width}`);
+
+    // Step 1: Try R2 via direct URL (only if id is provided)
     if (id) {
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
       const r2Url = `${r2BaseUrl}/images/${id}.webp`;
 
       try {
-        // Create AbortController for 30-second timeout
+        // Create AbortController for 5-second timeout (shorter for faster fallback)
         const r2Controller = new AbortController();
-        const r2TimeoutId = setTimeout(() => r2Controller.abort(), 30000);
+        const r2TimeoutId = setTimeout(() => r2Controller.abort(), 5000);
 
         try {
           const r2Response = await fetch(r2Url, {
@@ -88,29 +152,28 @@ export async function GET(request: Request) {
                 'X-Image-Source': 'r2',
               },
             });
+          } else {
+            console.log(`[avatar-image] R2 returned ${r2Response.status} for ${id}, trying VRChat fallback`);
           }
         } catch (fetchError) {
           clearTimeout(r2TimeoutId);
           if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-            console.warn(`[avatar-image] R2 fetch timeout for ${id}`);
+            console.log(`[avatar-image] R2 fetch timeout for ${id}, trying VRChat fallback`);
           } else {
-            throw fetchError;
+            console.log(`[avatar-image] R2 fetch error for ${id}:`, fetchError);
           }
         }
       } catch (error) {
-        console.warn(`[avatar-image] R2 fetch failed for ${id}:`, error);
+        console.log(`[avatar-image] R2 fetch failed for ${id}, trying VRChat fallback:`, error);
       }
     }
 
-    // Step 2: Try VRChat API if avtr is provided
+    // Step 2: Try VRChat API if avtr is available (from parameter or CSV lookup)
     if (avtr) {
       // Validate avtr format
       const avtrMatch = avtr.match(/avtr_[A-Za-z0-9-]+/);
       if (!avtrMatch) {
-        return new Response('Invalid avtr format', {
-          status: 400,
-          headers: { 'Content-Type': 'text/plain' },
-        });
+        return jsonError('Invalid avtr format', 400);
       }
 
       const cleanAvtr = avtrMatch[0];
@@ -122,10 +185,7 @@ export async function GET(request: Request) {
       // Validate URL is actually vrchat.com (defense in depth)
       const parsedUrl = new URL(vrchatPageUrl);
       if (parsedUrl.hostname !== 'vrchat.com') {
-        return new Response('Invalid domain', {
-          status: 400,
-          headers: { 'Content-Type': 'text/plain' },
-        });
+        return jsonError('Invalid domain', 400);
       }
 
       try {
@@ -249,16 +309,32 @@ export async function GET(request: Request) {
       }
     }
 
-    // Step 3: Return placeholder (need absolute URL for edge runtime)
+    // Step 3: Return placeholder redirect
+    console.log('[avatar-image] Returning placeholder redirect');
     const url = new URL(request.url);
     const placeholderUrl = `${url.protocol}//${url.host}/images/placeholder.webp`;
+    console.log('[avatar-image] Placeholder URL:', placeholderUrl);
     return Response.redirect(placeholderUrl, 302);
 
   } catch (error) {
     console.error('[avatar-image] Unexpected error:', error);
-    return new Response('Internal Server Error', {
-      status: 500,
-      headers: { 'Content-Type': 'text/plain' },
+    console.error('[avatar-image] Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      avtr,
+      id,
+      width,
+      url: request.url,
     });
+
+    // Return detailed error in development
+    if (process.env.NODE_ENV !== 'production') {
+      return jsonError(
+        `Internal Server Error: ${error instanceof Error ? error.message : String(error)}`,
+        500
+      );
+    }
+
+    return jsonError('Internal Server Error', 500);
   }
 }

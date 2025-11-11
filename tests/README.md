@@ -4,6 +4,40 @@ This directory contains automated tests for the Akyodex application using Playwr
 
 ## Test Coverage
 
+### Admin Authentication (`authentication.spec.ts`)
+
+Tests the admin authentication system including:
+
+1. **Owner Login Test** - Verifies that:
+   - Owner password (`RadAkyo`) successfully authenticates
+   - Session cookie is set with secure attributes (HttpOnly, SameSite=Strict)
+   - Admin panel becomes accessible after login
+
+2. **Admin Login Test** - Verifies that:
+   - Admin password (`Akyo`) successfully authenticates
+   - Session cookie is properly created
+   - Admin controls are visible after login
+
+3. **Invalid Password Test** - Verifies that:
+   - Wrong passwords are rejected with appropriate error message
+   - No session cookie is set for failed login attempts
+
+4. **Logout Test** - Verifies that:
+   - Logout button successfully clears the session
+   - User is redirected back to login screen
+   - Session cookie is removed
+
+5. **Session Verification Test** - Verifies that:
+   - Valid sessions return authenticated status with correct role
+   - Invalid/missing sessions return unauthenticated status
+   - Session persists across page reloads
+
+6. **API Direct Tests** - Verifies that:
+   - Login API returns correct response format (`{ success, role, message }`)
+   - Failed login returns proper error format (`{ success: false, error }`)
+   - Owner and admin roles are correctly distinguished
+   - Session cookies have proper security attributes
+
 ### Dify Cloud Chatbot Integration (`dify-chatbot.spec.ts`)
 
 Tests the integration of the Dify Cloud chatbot on the Zukan (図鑑) page:

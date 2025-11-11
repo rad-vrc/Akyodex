@@ -5,7 +5,6 @@
  */
 
 import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
 import { SessionData, validateSession as validateSessionToken } from './session';
 
 /**
@@ -29,22 +28,51 @@ export async function validateSession(): Promise<SessionData | null> {
   }
 }
 
+/**
+ * Returns a standardized JSON error response
+ * IMPORTANT: Maintains { success: false, error } format for frontend compatibility
+ * @param message - User-friendly error message
+ * @param status - HTTP status code (default: 400)
+ * @param extra - Additional fields to include in response
+ * @returns Response object with error structure
+ */
 export function jsonError(
   message: string,
-  status: number,
+  status: number = 400,
   extra: Record<string, unknown> = {}
-): NextResponse {
-  return NextResponse.json({ success: false, error: message, ...extra }, { status });
+): Response {
+  return Response.json({ success: false, error: message, ...extra }, { status });
 }
 
+/**
+ * Returns a standardized JSON success response
+ * IMPORTANT: Maintains { success: true, ...data } format for frontend compatibility
+ * @param data - Response data (will be spread into response)
+ * @param status - HTTP status code (default: 200)
+ * @returns Response object with success structure
+ */
+export function jsonSuccess<T extends Record<string, unknown>>(
+  data: T,
+  status: number = 200
+): Response {
+  return Response.json({ success: true, ...data }, { status });
+}
+
+/**
+ * Ensure admin authentication and authorization
+ * Updated to work with standard Request (not NextRequest)
+ * @param request - Standard Request object
+ * @param options - Validation options
+ * @returns Session data or error response
+ */
 export async function ensureAdminRequest(
-  request: NextRequest,
+  request: Request,
   options: {
     requireOrigin?: boolean;
     requireOwner?: boolean;
     ownerErrorMessage?: string;
   } = {}
-): Promise<{ session: SessionData } | { response: NextResponse }> {
+): Promise<{ session: SessionData } | { response: Response }> {
   const {
     requireOrigin = true,
     requireOwner = false,
@@ -75,11 +103,11 @@ export async function ensureAdminRequest(
 
 /**
  * Validate CSRF protection via Origin/Referer headers
- *
- * @param request - NextRequest object
+ * Updated to work with standard Request (not NextRequest)
+ * @param request - Standard Request object
  * @returns true if valid origin, false otherwise
  */
-export function validateOrigin(request: NextRequest): boolean {
+export function validateOrigin(request: Request): boolean {
   const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_ORIGIN;
 
   if (!allowedOrigin) {
@@ -138,10 +166,9 @@ export function validateOrigin(request: NextRequest): boolean {
 }
 
 /**
- * Validate ID format (4-digit numeric for Akyo IDs: 0001-9999)
- *
- * @param id - ID string to validate
- * @returns true if valid, false otherwise
+ * Validate Akyo ID format (4-digit string)
+ * @param id - Akyo ID to validate
+ * @returns true if valid 4-digit format, false otherwise
  */
 export function validateAkyoId(id: string): boolean {
   return /^\d{4}$/.test(id);
@@ -161,6 +188,31 @@ export interface AkyoFormData {
 export type AkyoFormParseResult =
   | { success: true; data: AkyoFormData }
   | { success: false; status: number; error: string };
+
+/**
+ * Set session cookie with secure configuration
+ * @param token - JWT session token
+ * @param maxAge - Cookie max age in seconds (default: 7 days)
+ */
+export async function setSessionCookie(token: string, maxAge: number = 60 * 60 * 24 * 7): Promise<void> {
+  const cookieStore = await cookies();
+
+  cookieStore.set('admin_session', token, {
+    httpOnly: true,                              // Prevent XSS
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    sameSite: 'strict',                          // CSRF protection
+    maxAge,                                      // 7 days default
+    path: '/',
+  });
+}
+
+/**
+ * Clear session cookie (logout)
+ */
+export async function clearSessionCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete('admin_session');
+}
 
 export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
   const readField = (key: string): string => {

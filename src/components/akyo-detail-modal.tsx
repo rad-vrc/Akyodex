@@ -96,7 +96,6 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   const attributes = localAkyo.attribute ? localAkyo.attribute.split(',').map(a => a.trim()).filter(Boolean) : [];
   const attributeColor = getAttributeColor(localAkyo.attribute);
   const imageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
-  const iconImageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 80);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     // モーダル外（backdrop または modal container）をクリックしたら閉じる
@@ -107,7 +106,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
 
   const handleFavoriteClick = () => {
     if (!localAkyo) return;
-    
+
     // 楽観的更新（即座にUIを変更）
     // Note: お気に入りはlocalStorageベースで同期的に処理されるため、
     // エラーハンドリングやロールバックは不要です。
@@ -117,7 +116,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       ...localAkyo,
       isFavorite: !localAkyo.isFavorite,
     });
-    
+
     // 親コンポーネントに通知（localStorageを更新）
     onToggleFavorite?.(localAkyo.id);
   };
@@ -142,13 +141,13 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 overflow-y-auto"
       onClick={handleBackdropClick}
     >
       {/* Backdrop - クリックで閉じる */}
-      <div 
-        className="modal-backdrop fixed inset-0" 
+      <div
+        className="modal-backdrop fixed inset-0"
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           backdropFilter: 'blur(4px)',
@@ -159,7 +158,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       {/* Modal Container - クリックで閉じる */}
       <div className="relative min-h-screen px-4 py-8" onClick={handleBackdropClick}>
         <div className="relative mx-auto max-w-2xl">
-          <div 
+          <div
             className="bg-white rounded-3xl shadow-2xl modal-show"
             onClick={(e) => e.stopPropagation()}
           >
@@ -174,12 +173,12 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
               aria-label="閉じる"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 hover:rotate-90">
-                <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
 
             {/* Modal Header */}
-            <div 
+            <div
               className="rounded-t-3xl p-6 border-b-4 border-dotted border-purple-200"
               style={{
                 background: 'linear-gradient(to right, rgb(243 232 255), rgb(252 231 243), rgb(219 234 254))',
@@ -187,16 +186,12 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             >
               <h2 className="text-3xl font-black flex items-center">
                 <Image
-                  src={iconImageUrl}
-                  alt={displayName}
+                  src="/images/profileIcon.webp"
+                  alt="Profile Icon"
                   width={40}
                   height={40}
-                  className="w-10 h-10 mr-3 inline-block object-cover"
+                  className="w-10 h-10 mr-3 inline-block object-cover rounded-full"
                   unoptimized
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/placeholder.webp';
-                  }}
                 />
                 <span>#{localAkyo.id} {displayName}</span>
               </h2>
@@ -221,7 +216,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                       }}
                     />
                   </div>
-                  
+
                   {/* Sparkle Effect */}
                   <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center animate-bounce">
                     <span className="text-2xl">✨</span>
@@ -319,11 +314,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Favorite Button - ピンク色 */}
                   <button
                     onClick={handleFavoriteClick}
-                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
-                      localAkyo.isFavorite
-                        ? 'text-white hover:opacity-90'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
+                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${localAkyo.isFavorite
+                      ? 'text-white hover:opacity-90'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
                     style={localAkyo.isFavorite ? {
                       background: 'linear-gradient(135deg, #FF6B9D, #FF8FA3)',
                     } : undefined}

@@ -14,17 +14,19 @@
  * This endpoint requires server-side authentication.
  */
 
-import type { AkyoFormData, AkyoFormParseResult } from '@/lib/api-helpers';
+import type { AkyoFormParseResult } from '@/lib/api-helpers';
 import { ensureAdminRequest, jsonError, parseAkyoFormData } from '@/lib/api-helpers';
-import { commitAkyoCsv, createAkyoRecord, findRecordById, formatAkyoCommitMessage, loadAkyoCsv, replaceRecordById } from '@/lib/csv-utils';
-import type { R2UploadOptions, R2UploadResult } from '@/lib/r2-utils';
-import { uploadImageToR2 } from '@/lib/r2-utils';
-import { NextRequest, NextResponse } from 'next/server';
+import { processAkyoCRUD } from '@/lib/akyo-crud-helpers';
 
-// Use Node.js runtime for Buffer and R2 binding access
+/**
+ * This route requires Node.js runtime because:
+ * - Uses csv-parse/sync for synchronous CSV parsing
+ * - Uses GitHub API with complex Node.js dependencies
+ * - Uses Buffer for R2 binary operations
+ */
 export const runtime = 'nodejs';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const guard = await ensureAdminRequest(request);
     if ('response' in guard) {
@@ -38,89 +40,7 @@ export async function POST(request: NextRequest) {
       return jsonError(parsedForm.error, parsedForm.status);
     }
 
-    const {
-      id,
-      nickname,
-      avatarName,
-      attributes,
-      creator,
-      avatarUrl,
-      notes,
-      imageData,
-    }: AkyoFormData = parsedForm.data;
-
-    // Step 1: Update CSV via GitHub API (do this FIRST to prevent orphaned R2 images)
-    try {
-      const { header, dataRecords, fileSha } = await loadAkyoCsv();
-
-      // Check if record exists
-      const existingRecord = findRecordById(dataRecords, id);
-      if (!existingRecord) {
-        return jsonError(`ID: ${id} が見つかりませんでした`, 404);
-      }
-
-      // Create updated record
-      const updatedRecord = createAkyoRecord({
-        id,
-        nickname,
-        avatarName,
-        attributes,
-        creator,
-        avatarUrl,
-        notes,
-      });
-
-      // Replace record
-      const updatedRecords = replaceRecordById(dataRecords, id, updatedRecord);
-
-      // Reconstruct CSV with header
-      // Commit updated CSV to GitHub
-      const commitMessage = formatAkyoCommitMessage('Update', id, avatarName);
-      const commitData = await commitAkyoCsv({
-        header,
-        dataRecords: updatedRecords,
-        fileSha,
-        commitMessage,
-      });
-
-      // Step 2: Update image to R2 (AFTER successful CSV commit, if provided)
-      let imageUpdated = false;
-      if (imageData) {
-        const uploadOptions: R2UploadOptions = {
-          contentType: 'image/webp',
-          maxSizeBytes: 5 * 1024 * 1024,
-        };
-        const uploadResult: R2UploadResult = await uploadImageToR2(id, imageData, uploadOptions);
-
-        if (!uploadResult.success) {
-          // Image update failed, but CSV is already committed
-          console.error('[update-akyo] Image update error:', uploadResult.error);
-          return NextResponse.json({
-            success: true,
-            message: 'Akyoを更新しましたが、画像の更新に失敗しました',
-            imageUpdated: false,
-            commitUrl: commitData.commit.html_url,
-            warning: uploadResult.error || '画像の更新に失敗しました。後で再試行してください。',
-          });
-        }
-
-        imageUpdated = true;
-      }
-
-      return NextResponse.json({
-        success: true,
-        message: 'Akyoを更新しました',
-        imageUpdated,
-        commitUrl: commitData.commit.html_url,
-      });
-
-    } catch (error) {
-      console.error('[update-akyo] GitHub API error:', error);
-      return jsonError(
-        error instanceof Error ? error.message : 'CSVの更新に失敗しました',
-        500
-      );
-    }
+    return processAkyoCRUD('update', parsedForm.data);
 
   } catch (error) {
     console.error('[update-akyo] Unexpected error:', error);

@@ -6,9 +6,8 @@
  * Finds the maximum ID in the CSV and returns the next available 4-digit ID.
  */
 
-import { validateSession } from '@/lib/api-helpers';
+import { validateSession, jsonError } from '@/lib/api-helpers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { NextResponse } from 'next/server';
 
 interface R2TextObject {
   text: () => Promise<string>;
@@ -22,47 +21,70 @@ interface NextIdEnv {
   AKYO_BUCKET?: R2BucketBinding;
 }
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 export async function GET() {
   // Validate admin session
   const session = await validateSession();
   if (!session) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
+    return jsonError('Unauthorized', 401);
   }
 
   try {
-    // Get Cloudflare context for R2 access
-  let env: NextIdEnv | undefined;
+    let csvContent: string;
+
+    // Try R2 bucket first (production)
+    let env: NextIdEnv | undefined;
     try {
-  const ctx = getCloudflareContext();
-  env = ctx?.env as NextIdEnv | undefined;
+      const ctx = getCloudflareContext();
+      env = ctx?.env as NextIdEnv | undefined;
     } catch {
       env = undefined;
     }
 
     const bucket = env?.AKYO_BUCKET;
 
-    if (!bucket) {
-      return NextResponse.json(
-        { error: 'R2 bucket not configured' },
-        { status: 500 }
-      );
+    if (bucket) {
+      // Production: Use R2 bucket
+      const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data.csv';
+      const csvObject = await bucket.get(csvPath);
+
+      if (!csvObject) {
+        // If CSV doesn't exist, start from 0001
+        return Response.json({ nextId: '0001' });
+      }
+
+      csvContent = await csvObject.text();
+    } else {
+      // Development: Fetch from GitHub or R2 public URL
+      const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
+      const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data.csv`;
+
+      try {
+        const response = await fetch(csvUrl, {
+          next: { revalidate: 60 }, // Cache for 1 minute
+        });
+
+        if (!response.ok) {
+          // Fallback to GitHub
+          const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data.csv';
+          const githubResponse = await fetch(githubUrl, {
+            next: { revalidate: 60 },
+          });
+
+          if (!githubResponse.ok) {
+            return Response.json({ nextId: '0001' });
+          }
+
+          csvContent = await githubResponse.text();
+        } else {
+          csvContent = await response.text();
+        }
+      } catch (error) {
+        console.error('[next-id] Failed to fetch CSV:', error);
+        return Response.json({ nextId: '0001' });
+      }
     }
-
-    // Fetch Japanese CSV
-    const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data.csv';
-    const csvObject = await bucket.get(csvPath);
-
-    if (!csvObject) {
-      // If CSV doesn't exist, start from 0001
-      return NextResponse.json({ nextId: '0001' });
-    }
-
-    const csvContent = await csvObject.text();
     const lines = csvContent.split('\n').filter(line => line.trim());
 
     // Skip header
@@ -84,13 +106,10 @@ export async function GET() {
     // Return next ID with 4-digit padding
     const nextId = (maxId + 1).toString().padStart(4, '0');
 
-    return NextResponse.json({ nextId });
+    return Response.json({ nextId });
 
   } catch (error) {
     console.error('[next-id] Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch next ID', nextId: '0001' },
-      { status: 500 }
-    );
+    return jsonError('Failed to fetch next ID', 500, { nextId: '0001' });
   }
 }
