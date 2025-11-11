@@ -24,17 +24,24 @@ This implementation plan breaks down the refactoring into discrete, manageable c
 
 - [ ] 0.3 Security baseline - HTTP headers and middleware
   - Create `src/middleware/security.ts` for security headers
-  - Implement CSP (Content Security Policy) headers
-  - Add X-Frame-Options, Referrer-Policy, Permissions-Policy headers
+  - Implement CSP (Content Security Policy) headers with minimal permissions
+  - CSP img-src: 'self' https://imagedelivery.net https://images.akyodex.com https://*.vrchat.com
+  - CSP frame-ancestors: 'none'
+  - CSP connect-src: 'self' (add Sentry/OTel endpoints if needed)
+  - Add X-Frame-Options: DENY, Referrer-Policy: strict-origin-when-cross-origin
+  - Add Permissions-Policy: geolocation=(), microphone=(), camera=()
   - Add X-Content-Type-Options: nosniff
-  - Configure CORS policy
+  - Configure CORS policy (restrict origins)
   - Set Cookie attributes (HttpOnly, SameSite=Strict, Secure)
   - _Requirements: 13.1, 13.5_
 
 - [ ] 0.4 Authentication hardening
-  - Implement rate limiting for admin login (IP + fingerprint based)
+  - Implement rate limiting using KV Namespace (5 attempts per 15 min for login, 100 req/min for API)
+  - Design rate limit keys: `rate_limit:{ip}:{endpoint}` with TTL
   - Integrate Cloudflare Turnstile for bot protection
-  - Replace SHA-256 with bcryptjs or argon2-wasm for password hashing
+  - Replace SHA-256 with bcryptjs (rounds: 10, target p95 < 300ms)
+  - Conduct load testing for password hashing performance
+  - If performance insufficient, fallback to PBKDF2 (WebCrypto, 100k iterations)
   - Implement CSRF protection (Double Submit Cookie or SameSite + token)
   - Add session timeout and refresh mechanism
   - _Requirements: 13.2, 13.3, 13.4, 13.6_
@@ -42,8 +49,9 @@ This implementation plan breaks down the refactoring into discrete, manageable c
 - [ ] 0.5 R2 concurrent write protection
   - Implement ETag-based optimistic locking in CSVProcessor
   - Add If-Match header support for R2 PUT operations
-  - Return 409 (Conflict) status on ETag mismatch
+  - Handle both 409 (Conflict) and 412 (Precondition Failed) status codes
   - Implement retry logic with exponential backoff
+  - Test with 10MB CSV files and concurrent updates
   - Document Durable Objects alternative for exclusive locking if needed
   - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
@@ -68,7 +76,10 @@ This implementation plan breaks down the refactoring into discrete, manageable c
 - [ ] 0.8 Error tracking and observability setup
   - Create `src/lib/error-tracking.ts` with errorId generation
   - Implement structured logging with requestId, route, status, stack
-  - Add Sentry SDK integration (or OpenTelemetry)
+  - Add Sentry SDK integration using `@sentry/cloudflare` or `@sentry/nextjs` (Edge-compatible)
+  - Configure PII masking (remove Authorization, Cookie headers)
+  - Set tracesSampleRate to 0.1 (10% sampling)
+  - Implement traceparent propagation for distributed tracing
   - Create error categorization (VRChatAPIError, ValidationError, etc.)
   - Implement errorId-based log correlation
   - Add performance monitoring hooks
@@ -79,9 +90,10 @@ This implementation plan breaks down the refactoring into discrete, manageable c
 - [ ] 1. Create VRChat API utility module
   - Create `src/lib/vrchat-api.ts` with centralized VRChat API logic
   - Use node-html-parser (not cheerio) for HTML parsing
-  - Implement `fetchVRChatAvatarInfo()` with timeout (AbortController), exponential backoff, and rate limiting
-  - Add Accept-Language header固定 to prevent response variation
-  - Implement caching using caches.default API
+  - Implement `fetchVRChatAvatarInfo()` with timeout (AbortController, 10s), exponential backoff, and rate limiting
+  - Add fixed Accept-Language header: 'en-US,en;q=0.9' to prevent response variation
+  - Implement caching using caches.default API with cache key: `vrchat:${avtrId}`
+  - Cache TTL: 24 hours for successful responses only (do not cache errors)
   - Implement `fetchVRChatAvatarImage()` with proper error handling
   - Implement `validateVRChatId()` with strict regex: `^avtr_[a-f0-9-]{36}$`
   - Create `VRChatAPIError` custom error class with errorId
@@ -91,6 +103,7 @@ This implementation plan breaks down the refactoring into discrete, manageable c
 - [ ] 2. Create CSV processor module
   - Create `src/lib/csv-processor.ts` with unified CSV processing logic
   - Implement `CSVProcessor` class with ETag-based optimistic locking
+  - Implement `parseCSVStream()` using Web Streams for memory efficiency (handle 10MB+ files)
   - Implement `parseCSV()` with UTF-8 BOM/CRLF/Shift_JIS detection and UTF-8 normalization
   - Implement header validation with alias table for multi-language support
   - Implement `generateCSV()` with consistent formatting
@@ -98,32 +111,38 @@ This implementation plan breaks down the refactoring into discrete, manageable c
   - Create separate `foldUnicode()` for NFKC-equivalent comparison
   - Add duplicate detection with normalization + trim + full-width/half-width conversion
   - Implement R2 read/write with If-Match header for concurrent protection
+  - Handle both 409 and 412 status codes for precondition failures
   - _Requirements: 1.2, 4.2, 11.1, 11.2, 11.3, 11.4_
 
 - [ ] 3. Create image utilities module
   - Create `src/lib/image-utils.ts` with client-side and server-side functions
   - Implement `useImageLoader()` hook for loading state management (client-side)
   - Implement `validateImageFile()` for file type and size validation (server-side)
-  - Implement `optimizeImageClient()` using Canvas API or Squoosh WASM (client-side)
+  - Implement `optimizeImageClient()` using Squoosh WASM with dynamic import (lazy loading)
   - Add EXIF orientation correction in `optimizeImageClient()`
   - Add transparency preservation for PNG format
   - Add WebP/AVIF format support with quality presets
   - Implement `cropImageClient()` using Canvas API (client-side)
-  - Implement `generateCloudflareImageUrl()` for Cloudflare Images integration (server-side)
+  - Implement `generateCloudflareImageUrl()` for Cloudflare Images API (server-side)
+  - Format: `https://imagedelivery.net/<ACCOUNT_HASH>/${imageId}/${variant}`
+  - Implement `getR2ImageUrl()` for R2 fallback (server-side)
   - Implement `validateImageMetadata()` for server-side validation (server-side)
+  - Update CSP: `img-src 'self' https://imagedelivery.net https://images.akyodex.com https://*.vrchat.com`
   - _Requirements: 1.3, 4.4, 10.3_
 
 - [ ] 4. Create API response standardization module
   - Create `src/types/api.ts` with response type definitions
-  - Define `APISuccessResponse<T>` with version, etag, traceId fields
+  - Define `APISuccessResponse<T>` (remove version, etag, traceId from body)
   - Define `APIErrorResponse` with errorId, code, details fields
-  - Define `HTTP_STATUS` constants object
+  - Define `HTTP_STATUS` constants object (include 412 for Precondition Failed)
   - Create `src/lib/api-response.ts` with helper functions
-  - Implement `createSuccessResponse()` with automatic version/etag/traceId generation
-  - Implement `createErrorResponse()` with errorId generation
+  - Implement `createSuccessResponse()` with ETag (stable content hash) and X-Trace-ID (headers only)
+  - Implement `generateETag()` for stable content-based hashing
+  - Implement `createErrorResponse()` with errorId generation (header only)
   - Implement `handleAPIError()` with error categorization (VRChatAPIError, ValidationError, ConflictError, NotFoundError)
   - Add structured logging with requestId, route, status, stack, errorId
   - Integrate with error tracking service (Sentry/OpenTelemetry)
+  - Headers: ETag, X-Trace-ID, X-Request-ID, Cache-Control
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 12.1, 12.2, 12.3, 12.4_
 
 - [ ] 5. Create validation schemas module

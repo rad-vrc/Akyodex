@@ -13,6 +13,17 @@ This specification defines a comprehensive refactoring plan for the Akyodex Next
 
 ## Specification Documents
 
+### 0. [Final Decisions](./FINAL-DECISIONS.md) ⭐ **START HERE**
+最終決定事項と実装前の確定仕様：
+- レートリミット保存先（KV Namespace）
+- パスワードハッシュ戦略（bcryptjs + 負荷テスト）
+- 画像パイプライン（Cloudflare Images + R2）
+- ETag/traceID分離戦略
+- 大きなCSV処理（Web Streams）
+- Sentry/OTel設定
+- CSP/CORS最終調整
+- VRChatキャッシュ戦略
+
 ### 1. [Requirements](./requirements.md)
 Defines 14 main requirements with detailed acceptance criteria following EARS syntax:
 - Code Duplication Elimination

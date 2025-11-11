@@ -485,9 +485,340 @@ interface FilterState {
 }
 ```
 
-## Error Handling
+## Rate Limiting Strategy
 
-### Error Hierarchy
+### Storage and Configuration
+
+**Storage**: Cloudflare KV Namespace (`AKYO_KV`)
+
+**Key Design**:
+```typescript
+// Key format: rate_limit:{ip}:{endpoint}
+// Example: rate_limit:192.168.1.1:admin_login
+const key = `rate_limit:${ip}:${endpoint}`;
+```
+
+**Rate Limit Configuration**:
+- **Admin Login**: 5 attempts per 15 minutes per IP
+- **API Endpoints**: 100 requests per minute per IP
+- **TTL**: 900 seconds (15 minutes) for login, 60 seconds for API
+
+**Implementation**:
+```typescript
+interface RateLimitConfig {
+  maxAttempts: number;
+  windowSeconds: number;
+}
+
+const RATE_LIMITS: Record<string, RateLimitConfig> = {
+  admin_login: { maxAttempts: 5, windowSeconds: 900 },
+  api_general: { maxAttempts: 100, windowSeconds: 60 },
+};
+
+async function checkRateLimit(
+  kv: KVNamespace,
+  ip: string,
+  endpoint: string
+): Promise<{ allowed: boolean; remaining: number; resetAt: number }> {
+  const key = `rate_limit:${ip}:${endpoint}`;
+  const config = RATE_LIMITS[endpoint];
+  
+  const current = await kv.get(key);
+  const count = current ? parseInt(current) : 0;
+  
+  if (count >= config.maxAttempts) {
+    const ttl = await kv.getWithMetadata(key);
+    return {
+      allowed: false,
+      remaining: 0,
+      resetAt: Date.now() + (ttl.metadata?.ttl || 0) * 1000,
+    };
+  }
+  
+  await kv.put(key, String(count + 1), {
+    expirationTtl: config.windowSeconds,
+  });
+  
+  return {
+    allowed: true,
+    remaining: config.maxAttempts - count - 1,
+    resetAt: Date.now() + config.windowSeconds * 1000,
+  };
+}
+```
+
+## Password Hashing Strategy
+
+### Runtime Performance Considerations
+
+**Primary Choice**: bcryptjs (proven Edge compatibility)
+**Fallback**: PBKDF2 with WebCrypto API (if bcryptjs performance is insufficient)
+
+**Performance Target**: p95 < 200-300ms per request
+
+**Implementation Strategy**:
+1. Start with bcryptjs (rounds: 10)
+2. Load test with realistic traffic patterns
+3. If p95 > 300ms, consider:
+   - Reduce bcrypt rounds to 8
+   - Switch to PBKDF2 (WebCrypto, 100k iterations)
+   - Combine with Turnstile + short-lived sessions
+
+**Load Testing Plan**:
+```typescript
+// Test scenarios:
+// 1. Single login: measure p50, p95, p99
+// 2. Concurrent logins: 10 req/s for 1 minute
+// 3. Burst: 50 req in 5 seconds
+```
+
+## Image Pipeline Decision
+
+### Final Architecture: Cloudflare Images + R2 Fallback
+
+**Primary**: Cloudflare Images API for optimization and delivery
+**Storage**: R2 bucket for original images
+**Client Processing**: Squoosh WASM for pre-upload optimization (dynamic import)
+
+**Implementation**:
+```typescript
+// Server-side: Generate Cloudflare Images URL
+function generateCloudflareImageUrl(
+  imageId: string,
+  options: { width?: number; height?: number; format?: 'auto' | 'webp' | 'avif' }
+): string {
+  const baseUrl = 'https://imagedelivery.net/<ACCOUNT_HASH>';
+  const variant = options.width ? `w=${options.width}` : 'public';
+  return `${baseUrl}/${imageId}/${variant}`;
+}
+
+// Client-side: Optimize before upload (lazy loaded)
+async function optimizeBeforeUpload(file: File): Promise<Blob> {
+  const { default: squoosh } = await import('@squoosh/lib');
+  // EXIF correction, compression, format conversion
+  return optimizedBlob;
+}
+
+// R2 fallback for direct access
+function getR2ImageUrl(imageId: string): string {
+  return `https://images.akyodex.com/${imageId}`;
+}
+```
+
+**CSP Configuration**:
+```typescript
+img-src 'self' https://imagedelivery.net https://images.akyodex.com https://*.vrchat.com;
+```
+
+## R2 Concurrent Update Protection
+
+### HTTP Status Code Handling
+
+**R2 Precondition Failure**: Handle both 409 and 412 status codes
+
+```typescript
+async function updateCSVWithLock(
+  r2: R2Bucket,
+  key: string,
+  updateFn: (data: string) => string
+): Promise<{ success: boolean; etag?: string; error?: string }> {
+  // Read with ETag
+  const object = await r2.get(key);
+  if (!object) {
+    return { success: false, error: 'File not found' };
+  }
+  
+  const currentETag = object.etag;
+  const currentData = await object.text();
+  
+  // Apply update
+  const newData = updateFn(currentData);
+  
+  // Write with If-Match
+  try {
+    const result = await r2.put(key, newData, {
+      httpMetadata: {
+        contentType: 'text/csv; charset=utf-8',
+      },
+      customMetadata: {
+        'if-match': currentETag,
+      },
+    });
+    
+    return { success: true, etag: result.etag };
+  } catch (error) {
+    // Handle both 409 (Conflict) and 412 (Precondition Failed)
+    if (error.status === 409 || error.status === 412) {
+      return {
+        success: false,
+        error: 'Concurrent modification detected. Please retry.',
+      };
+    }
+    throw error;
+  }
+}
+```
+
+## Response Headers Strategy
+
+### ETag and TraceID Separation
+
+**ETag**: Stable, content-based hash (for caching)
+**TraceID/ErrorID**: Request-specific (headers only, not in body)
+
+```typescript
+interface APISuccessResponse<T> {
+  success: true;
+  data: T;
+  // version and etag removed from body
+}
+
+// Headers:
+// ETag: "hash-of-response-body"
+// X-Trace-ID: "uuid-v4"
+// X-Request-ID: "uuid-v4"
+
+function createSuccessResponse<T>(data: T): Response {
+  const body = { success: true, data };
+  const bodyString = JSON.stringify(body);
+  const etag = generateETag(bodyString); // Stable hash
+  const traceId = crypto.randomUUID();
+  
+  return new Response(bodyString, {
+    headers: {
+      'Content-Type': 'application/json',
+      'ETag': etag,
+      'X-Trace-ID': traceId,
+      'X-Request-ID': traceId,
+      'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+    },
+  });
+}
+```
+
+## Large CSV Handling
+
+### Web Streams for Memory Efficiency
+
+**Constraint**: Handle CSV files up to 10MB without memory issues
+
+```typescript
+async function parseCSVStream(
+  readable: ReadableStream<Uint8Array>
+): Promise<AkyoData[]> {
+  const decoder = new TextDecoder('utf-8');
+  const reader = readable.getReader();
+  const results: AkyoData[] = [];
+  let buffer = '';
+  
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    
+    buffer += decoder.decode(value, { stream: true });
+    
+    // Process complete lines
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || ''; // Keep incomplete line
+    
+    for (const line of lines) {
+      if (line.trim()) {
+        results.push(parseCSVLine(line));
+      }
+    }
+  }
+  
+  // Process remaining buffer
+  if (buffer.trim()) {
+    results.push(parseCSVLine(buffer));
+  }
+  
+  return results;
+}
+```
+
+## Observability Configuration
+
+### Sentry/OpenTelemetry Setup
+
+**SDK**: `@sentry/cloudflare` or `@sentry/nextjs` (Edge-compatible)
+
+**Configuration**:
+```typescript
+import * as Sentry from '@sentry/cloudflare';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  tracesSampleRate: 0.1, // 10% sampling
+  beforeSend(event) {
+    // PII masking
+    if (event.request?.headers) {
+      delete event.request.headers['Authorization'];
+      delete event.request.headers['Cookie'];
+    }
+    return event;
+  },
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+  ],
+});
+
+// Traceparent propagation
+function propagateTrace(request: Request): Headers {
+  const headers = new Headers(request.headers);
+  const traceId = Sentry.getCurrentHub().getScope()?.getTransaction()?.traceId;
+  if (traceId) {
+    headers.set('traceparent', `00-${traceId}-${generateSpanId()}-01`);
+  }
+  return headers;
+}
+```
+
+## VRChat Scraping Cache Strategy
+
+### Cache Key Design
+
+**Key Format**: `vrchat:${avtrId}:${acceptLanguage}`
+**TTL**: 24 hours for successful responses
+**Failure Handling**: Do not cache error responses
+
+```typescript
+async function fetchVRChatAvatarInfoCached(
+  avtrId: string
+): Promise<VRChatAvatarInfo> {
+  const cacheKey = `https://vrchat.com/home/avatar/${avtrId}`;
+  const cache = caches.default;
+  
+  // Try cache first
+  let response = await cache.match(cacheKey);
+  
+  if (!response) {
+    // Fetch with fixed Accept-Language
+    response = await fetch(cacheKey, {
+      headers: {
+        'Accept-Language': 'en-US,en;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (compatible; Akyodex/1.0)',
+      },
+      signal: AbortSignal.timeout(10000), // 10s timeout
+    });
+    
+    // Only cache successful responses
+    if (response.ok) {
+      const cacheResponse = response.clone();
+      await cache.put(cacheKey, cacheResponse, {
+        headers: {
+          'Cache-Control': 'public, max-age=86400', // 24 hours
+        },
+      });
+    }
+  }
+  
+  return parseVRChatHTML(await response.text());
+}
+```
+
+## Error Handling
 
 ```typescript
 // Base error class
