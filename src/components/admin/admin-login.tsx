@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import type { AdminRole } from '@/types/akyo';
+import { FormEvent, useState } from 'react';
 
 interface AdminLoginProps {
-  onLogin: (role: 'owner' | 'admin') => void;
+  onLogin: (role: AdminRole) => void;
 }
 
 /**
@@ -87,9 +88,9 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
           <p className="mb-2">次のいずれかのアカウント宛に：</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <a 
-                href="https://x.com/rad_vrc" 
-                target="_blank" 
+              <a
+                href="https://x.com/rad_vrc"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 underline hover:text-blue-800"
               >
@@ -97,9 +98,9 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
               </a>
             </li>
             <li>
-              <a 
-                href="https://x.com/nknmnThe_VRC" 
-                target="_blank" 
+              <a
+                href="https://x.com/nknmnThe_VRC"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 underline hover:text-blue-800"
               >
@@ -107,9 +108,9 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
               </a>
             </li>
             <li>
-              <a 
-                href="https://x.com/KAYA_Vchat" 
-                target="_blank" 
+              <a
+                href="https://x.com/KAYA_Vchat"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 underline hover:text-blue-800"
               >
@@ -117,9 +118,9 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
               </a>
             </li>
             <li>
-              <a 
-                href="https://x.com/zhoney666" 
-                target="_blank" 
+              <a
+                href="https://x.com/zhoney666"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 underline hover:text-blue-800"
               >

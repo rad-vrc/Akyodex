@@ -1,0 +1,27 @@
+name: Lint project
+
+on:
+  push:
+    branches: [main, cloudflare-opennext-test]
+  pull_request:
+    branches: [main, cloudflare-opennext-test]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Ubuntu/Node v20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # Next.js 15 に最適。Node.js 22 も使用可能
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run knip
+        run: npm run knip

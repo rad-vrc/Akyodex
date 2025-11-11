@@ -1,10 +1,11 @@
 'use client';
 
+import type { AuthRole } from '@/types/akyo';
 import Link from 'next/link';
 
 interface AdminHeaderProps {
   isAuthenticated: boolean;
-  userRole: 'owner' | 'admin' | null;
+  userRole: AuthRole;
   onLogout: () => void;
 }
 
@@ -32,8 +33,8 @@ export function AdminHeader({ isAuthenticated, userRole, onLogout }: AdminHeader
                 {roleText}
               </span>
             )}
-            <Link 
-              href="/zukan" 
+            <Link
+              href="/zukan"
               className="px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm transition-colors"
             >
               <i className="fas fa-home mr-1" aria-hidden="true"></i> 図鑑に戻る

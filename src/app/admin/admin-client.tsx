@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { AdminLogin } from '@/components/admin/admin-login';
 import { AdminTabs } from '@/components/admin/admin-tabs';
+import { useEffect, useState } from 'react';
 
-import type { AkyoData } from '@/types/akyo';
+import type { AdminRole, AkyoData, AuthRole } from '@/types/akyo';
 
 interface AdminClientProps {
   attributes: string[];
@@ -19,7 +19,7 @@ interface AdminClientProps {
  */
 export function AdminClient({ attributes, creators, akyoData }: AdminClientProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<'owner' | 'admin' | null>(null);
+  const [userRole, setUserRole] = useState<AuthRole>(null);
 
   useEffect(() => {
     // サーバーサイドセッション検証を使用（セキュリティ向上）
@@ -27,7 +27,7 @@ export function AdminClient({ attributes, creators, akyoData }: AdminClientProps
       try {
         const response = await fetch('/api/admin/verify-session');
         const data = await response.json();
-        
+
         if (data.authenticated && data.role) {
           setIsAuthenticated(true);
           setUserRole(data.role);
@@ -36,11 +36,11 @@ export function AdminClient({ attributes, creators, akyoData }: AdminClientProps
         console.error('Session verification error:', error);
       }
     };
-    
+
     verifySession();
   }, []);
 
-  const handleLogin = (role: 'owner' | 'admin') => {
+  const handleLogin = (role: AdminRole) => {
     setIsAuthenticated(true);
     setUserRole(role);
     // サーバーサイドセッションCookieが設定されている（sessionStorage不要）
@@ -55,24 +55,24 @@ export function AdminClient({ attributes, creators, akyoData }: AdminClientProps
     } catch (error) {
       console.error('Logout error:', error);
     }
-    
+
     setIsAuthenticated(false);
     setUserRole(null);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
-      <AdminHeader 
+      <AdminHeader
         isAuthenticated={isAuthenticated}
         userRole={userRole}
         onLogout={handleLogout}
       />
-      
+
       {!isAuthenticated ? (
         <AdminLogin onLogin={handleLogin} />
       ) : (
-        <AdminTabs 
-          userRole={userRole!} 
+        <AdminTabs
+          userRole={userRole!}
           attributes={attributes}
           creators={creators}
           akyoData={akyoData}

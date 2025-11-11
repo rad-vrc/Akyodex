@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/.specstory
 
 # playwright
 /test-results/

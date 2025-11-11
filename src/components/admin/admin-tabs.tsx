@@ -5,10 +5,10 @@ import { AddTab } from './tabs/add-tab';
 import { EditTab } from './tabs/edit-tab';
 import { ToolsTab } from './tabs/tools-tab';
 
-import type { AkyoData } from '@/types/akyo';
+import type { AdminRole, AkyoData } from '@/types/akyo';
 
 interface AdminTabsProps {
-  userRole: 'owner' | 'admin';
+  userRole: AdminRole;
   attributes: string[];
   creators: string[];
   akyoData: AkyoData[];
@@ -22,12 +22,8 @@ type TabType = 'add' | 'edit' | 'tools';
  */
 export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>('add');
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleDataChange = () => {
-    // Trigger a re-fetch by incrementing key
-    // Parent component will need to handle actual data refresh
-    setRefreshKey(prev => prev + 1);
     // For now, just show a message that page needs refresh
     // In production, this would trigger a router refresh or data revalidation
     alert('データが更新されました。\nページを再読み込みして最新のデータを表示してください。');
@@ -77,22 +73,20 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
       {/* タブコンテンツ */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         {activeTab === 'add' && (
-          <AddTab 
-            userRole={userRole} 
+          <AddTab
             attributes={attributes}
             creators={creators}
           />
         )}
         {activeTab === 'edit' && (
-          <EditTab 
-            userRole={userRole} 
+          <EditTab
+            userRole={userRole}
             akyoData={akyoData}
             attributes={attributes}
-            creators={creators}
             onDataChange={handleDataChange}
           />
         )}
-        {activeTab === 'tools' && <ToolsTab userRole={userRole} />}
+        {activeTab === 'tools' && <ToolsTab />}
       </div>
     </div>
   );

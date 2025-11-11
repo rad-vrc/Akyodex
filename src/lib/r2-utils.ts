@@ -1,6 +1,6 @@
 /**
  * Cloudflare R2 Storage Utilities
- * 
+ *
  * Common utilities for R2 bucket operations (image upload/delete).
  * Centralizes R2 logic and error handling following DRY principles.
  */
@@ -28,18 +28,18 @@ interface R2Bucket {
 
 /**
  * Get R2 bucket from Cloudflare context
- * 
+ *
  * @returns R2 bucket object or null if not available
  */
-export function getR2Bucket(): R2Bucket | null {
+function getR2Bucket(): R2Bucket | null {
   try {
     const context = getCloudflareContext();
     const bucket = context?.env?.AKYO_BUCKET as R2Bucket | undefined;
-    
+
     if (bucket && typeof bucket === 'object' && typeof bucket.put === 'function') {
       return bucket;
     }
-    
+
     console.warn('[R2] Bucket binding not available (AKYO_BUCKET)');
     return null;
   } catch (error) {
@@ -50,7 +50,7 @@ export function getR2Bucket(): R2Bucket | null {
 
 /**
  * Upload image to R2 bucket
- * 
+ *
  * @param id - Akyo ID (used as filename)
  * @param imageData - Base64 data URL (e.g., "data:image/webp;base64,...")
  * @param options - Upload options
@@ -138,7 +138,7 @@ export async function uploadImageToR2(
 
 /**
  * Delete image from R2 bucket
- * 
+ *
  * @param id - Akyo ID (used as filename)
  * @returns Deletion result
  */
@@ -155,7 +155,7 @@ export async function deleteImageFromR2(id: string): Promise<R2UploadResult> {
 
     // Delete from R2
     const imageKey = `${id}.webp`;
-    
+
     if (typeof bucket.delete !== 'function') {
       return {
         success: false,
@@ -178,13 +178,4 @@ export async function deleteImageFromR2(id: string): Promise<R2UploadResult> {
       error: error instanceof Error ? error.message : 'Unknown delete error',
     };
   }
-}
-
-/**
- * Check if R2 bucket is available
- * 
- * @returns true if R2 bucket is available, false otherwise
- */
-export function isR2Available(): boolean {
-  return getR2Bucket() !== null;
 }

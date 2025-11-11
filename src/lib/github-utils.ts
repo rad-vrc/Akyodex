@@ -1,6 +1,6 @@
 /**
  * GitHub API Utilities
- * 
+ *
  * Common utilities for interacting with GitHub API, including CSV file operations.
  * These functions centralize GitHub API logic to follow DRY principles.
  */
@@ -10,11 +10,6 @@ export interface GitHubConfig {
   owner: string;
   repo: string;
   branch: string;
-}
-
-export interface GitHubFileResponse {
-  content: string;
-  sha: string;
 }
 
 export interface GitHubCommitResponse {
@@ -27,7 +22,7 @@ export interface GitHubCommitResponse {
  * Get GitHub configuration from environment variables
  * @throws Error if required environment variables are not set
  */
-export function getGitHubConfig(): GitHubConfig {
+function getGitHubConfig(): GitHubConfig {
   const token = process.env.GITHUB_TOKEN;
   const owner = process.env.GITHUB_REPO_OWNER;
   const repo = process.env.GITHUB_REPO_NAME;
@@ -42,18 +37,18 @@ export function getGitHubConfig(): GitHubConfig {
 
 /**
  * Fetch file content from GitHub repository
- * 
+ *
  * @param filePath - Path to file in repository (e.g., 'data/akyo-data.csv')
  * @param config - GitHub configuration (optional, uses environment variables by default)
  * @param timeoutMs - Request timeout in milliseconds (default: 30000)
  * @returns File content and SHA
  * @throws Error if request fails or times out
  */
-export async function fetchFileFromGitHub(
+async function fetchFileFromGitHub(
   filePath: string,
   config?: GitHubConfig,
   timeoutMs: number = 30000
-): Promise<GitHubFileResponse> {
+): Promise<{ content: string; sha: string }> {
   const githubConfig = config || getGitHubConfig();
   const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${filePath}?ref=${githubConfig.branch}`;
 
@@ -91,7 +86,7 @@ export async function fetchFileFromGitHub(
 
 /**
  * Commit file update to GitHub repository
- * 
+ *
  * @param filePath - Path to file in repository
  * @param content - New file content
  * @param sha - Current file SHA (required for update)
@@ -101,7 +96,7 @@ export async function fetchFileFromGitHub(
  * @returns Commit information
  * @throws Error if commit fails or times out
  */
-export async function commitFileToGitHub(
+async function commitFileToGitHub(
   filePath: string,
   content: string,
   sha: string,
@@ -152,7 +147,7 @@ export async function commitFileToGitHub(
 /**
  * Fetch CSV file from GitHub
  * Convenience wrapper for fetchFileFromGitHub with CSV-specific path
- * 
+ *
  * @param csvFileName - CSV filename (default: 'akyo-data.csv')
  * @param config - GitHub configuration (optional)
  * @returns CSV content and SHA
@@ -160,7 +155,7 @@ export async function commitFileToGitHub(
 export async function fetchCSVFromGitHub(
   csvFileName: string = 'akyo-data.csv',
   config?: GitHubConfig
-): Promise<GitHubFileResponse> {
+): Promise<{ content: string; sha: string }> {
   const filePath = `data/${csvFileName}`;
   return fetchFileFromGitHub(filePath, config);
 }
@@ -168,7 +163,7 @@ export async function fetchCSVFromGitHub(
 /**
  * Commit CSV update to GitHub
  * Convenience wrapper for commitFileToGitHub with CSV-specific path
- * 
+ *
  * @param content - New CSV content
  * @param sha - Current file SHA
  * @param message - Commit message

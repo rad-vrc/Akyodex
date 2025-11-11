@@ -1,11 +1,11 @@
 /**
  * Avatar Image Proxy API
- * 
+ *
  * Priority:
  * 1. R2 bucket (direct URL or binding)
  * 2. VRChat API (scrape)
  * 3. Placeholder image
- * 
+ *
  * Features:
  * - Image caching (1 hour via Cache-Control headers)
  * - Size optimization (w parameter)
@@ -15,19 +15,13 @@
 // Using Node.js runtime for now (edge runtime has fetch caching issues)
 export const runtime = 'nodejs';
 
-interface AvatarImageParams {
-  avtr?: string;  // VRChat avatar ID (avtr_xxx)
-  id?: string;    // Akyo ID (0001, 0002, etc. - 4 digits)
-  w?: string;     // Width (default: 512)
-}
-
 /**
  * GET /api/avatar-image?avtr=avtr_xxx&w=512
  * GET /api/avatar-image?id=0001&w=512
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  
+
   const avtr = searchParams.get('avtr');
   const id = searchParams.get('id');
   const widthParam = searchParams.get('w') || '512';
@@ -69,7 +63,7 @@ export async function GET(request: Request) {
     if (id) {
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
       const r2Url = `${r2BaseUrl}/images/${id}.webp`;
-      
+
       try {
         // Create AbortController for 30-second timeout
         const r2Controller = new AbortController();
@@ -80,7 +74,7 @@ export async function GET(request: Request) {
             signal: r2Controller.signal,
             next: { revalidate: 3600 }, // Cache for 1 hour
           });
-          
+
           clearTimeout(r2TimeoutId);
 
           if (r2Response.ok) {
@@ -120,11 +114,11 @@ export async function GET(request: Request) {
       }
 
       const cleanAvtr = avtrMatch[0];
-      
+
       // Security: Explicitly construct VRChat URL to prevent SSRF
       // Only allow vrchat.com domain
       const vrchatPageUrl = `https://vrchat.com/home/avatar/${cleanAvtr}`;
-      
+
       // Validate URL is actually vrchat.com (defense in depth)
       const parsedUrl = new URL(vrchatPageUrl);
       if (parsedUrl.hostname !== 'vrchat.com') {
@@ -133,7 +127,7 @@ export async function GET(request: Request) {
           headers: { 'Content-Type': 'text/plain' },
         });
       }
-      
+
       try {
         // Create AbortController for 30-second timeout
         const controller = new AbortController();

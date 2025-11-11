@@ -1,10 +1,10 @@
 /**
  * Next.js Middleware
- * 
+ *
  * Handles:
  * 1. Language detection (Cloudflare country, Accept-Language, Cookie)
  * 2. Admin route access (client component handles auth UI)
- * 
+ *
  * NOTE: Middleware runs in Edge Runtime (Node.js APIs not available).
  * Security is maintained through:
  * - API routes validate HMAC-signed sessions (verify-session, login, CRUD)
@@ -12,20 +12,15 @@
  * - Client-side authentication checks in admin-client.tsx
  */
 
-import { NextResponse } from 'next/server';
+import {
+    detectLanguageFromHeader,
+    getLanguageFromCountry,
+    isValidLanguage
+} from '@/lib/i18n';
 import type { NextRequest } from 'next/server';
-import { type SupportedLanguage, isValidLanguage, detectLanguageFromHeader } from '@/lib/i18n';
+import { NextResponse } from 'next/server';
 
 const LANGUAGE_COOKIE = 'AKYO_LANG';
-
-/**
- * Get language from country code (Cloudflare cf-ipcountry header)
- */
-function getLanguageFromCountry(country: string): SupportedLanguage {
-  // English-speaking countries
-  const englishCountries = ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'ZA', 'SG', 'IN', 'PH'];
-  return englishCountries.includes(country.toUpperCase()) ? 'en' : 'ja';
-}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

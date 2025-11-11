@@ -1,22 +1,24 @@
 /**
  * CSV Utilities
- * 
+ *
  * Proper CSV parsing and stringifying using csv-parse and csv-stringify libraries.
  * Handles quoted fields, commas, newlines, and special characters correctly.
  * Also includes AkyoData type conversion utilities.
  */
 
+import type { AkyoCsvRow, AkyoData } from '@/types/akyo';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
-import type { AkyoData } from '@/types/akyo';
+import type { GitHubCommitResponse, GitHubConfig } from './github-utils';
+import { commitCSVToGitHub, fetchCSVFromGitHub } from './github-utils';
 
 /**
  * Parse CSV content into records
- * 
+ *
  * @param content - CSV file content as string
  * @returns Array of records (each record is an array of fields)
  */
-export function parseCSV(content: string): string[][] {
+function parseCSV(content: string): string[][] {
   try {
     const records: string[][] = parse(content, {
       relax_quotes: true,
@@ -32,13 +34,62 @@ export function parseCSV(content: string): string[][] {
   }
 }
 
+export async function loadAkyoCsv(options: {
+  csvFileName?: string;
+  githubConfig?: GitHubConfig;
+} = {}) {
+  const { csvFileName, githubConfig } = options;
+  const csvFile = await fetchCSVFromGitHub(csvFileName, githubConfig);
+  const records = parseCSV(csvFile.content);
+
+  if (records.length === 0) {
+    throw new Error('CSV file is empty');
+  }
+
+  const [header, ...dataRecords] = records;
+  return {
+    header,
+    dataRecords,
+    fileSha: csvFile.sha,
+  };
+}
+
+export async function commitAkyoCsv({
+  header,
+  dataRecords,
+  fileSha,
+  commitMessage,
+  csvFileName,
+  githubConfig,
+}: {
+  header: string[];
+  dataRecords: string[][];
+  fileSha: string;
+  commitMessage: string;
+  csvFileName?: string;
+  githubConfig?: GitHubConfig;
+}): Promise<GitHubCommitResponse> {
+  const records = [header, ...dataRecords];
+  const content = stringifyCSV(records);
+  return commitCSVToGitHub(content, fileSha, commitMessage, csvFileName, githubConfig);
+}
+
+export function formatAkyoCommitMessage(
+  action: 'Add' | 'Update' | 'Delete',
+  id: string,
+  avatarName?: string | null
+): string {
+  const safeName = String(avatarName ?? '').replace(/[\r\n]+/g, ' ').slice(0, 100);
+  return `${action} Akyo #${id}: ${safeName}`;
+}
+
 /**
  * Stringify records into CSV content
- * 
+ *
  * @param records - Array of records (each record is an array of fields)
  * @returns CSV content as string
  */
-export function stringifyCSV(records: string[][]): string {
+function stringifyCSV(records: string[][]): string {
   try {
     return stringify(records, {
       quoted: true, // Quote all fields for safety
@@ -54,13 +105,13 @@ export function stringifyCSV(records: string[][]): string {
 /**
  * Parse CSV text to AkyoData array
  * Handles both Japanese and English CSV formats
- * 
+ *
  * @param csvText - CSV content as string
  * @returns Array of AkyoData objects
  */
 export function parseCsvToAkyoData(csvText: string): AkyoData[] {
   const records = parseCSV(csvText);
-  
+
   if (records.length < 2) {
     return []; // Need at least header + 1 data row
   }
@@ -74,23 +125,33 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
       continue;
     }
 
-    // Build object from header-value pairs
-    const row: Record<string, string> = {};
+    const rawRow: Record<string, string> = {};
     header.forEach((headerName, index) => {
-      row[headerName] = record[index] || '';
+      rawRow[headerName] = record[index] || '';
     });
 
-    // Convert to AkyoData format
-    // CSV columns: ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
+    const csvRow: AkyoCsvRow = {
+      ID: rawRow['ID'] ?? '',
+      見た目: rawRow['見た目'] ?? '',
+      通称: rawRow['通称'] ?? '',
+      アバター名: rawRow['アバター名'] ?? '',
+      属性: rawRow['属性'] || undefined,
+      '属性（モチーフが基準）': rawRow['属性（モチーフが基準）'] || undefined,
+      備考: rawRow['備考'] ?? '',
+      作者: rawRow['作者'] || undefined,
+      '作者（敬称略）': rawRow['作者（敬称略）'] || undefined,
+      アバターURL: rawRow['アバターURL'] ?? '',
+    };
+
     data.push({
-      id: row['ID'] || '',
-      appearance: row['見た目'] || '',
-      nickname: row['通称'] || '',
-      avatarName: row['アバター名'] || '',
-      attribute: row['属性'] || row['属性（モチーフが基準）'] || '',
-      notes: row['備考'] || '',
-      creator: row['作者'] || row['作者（敬称略）'] || '',
-      avatarUrl: row['アバターURL'] || '',
+      id: csvRow.ID,
+      appearance: csvRow.見た目,
+      nickname: csvRow.通称,
+      avatarName: csvRow.アバター名,
+      attribute: csvRow.属性 || csvRow['属性（モチーフが基準）'] || '',
+      notes: csvRow.備考,
+      creator: csvRow.作者 || csvRow['作者（敬称略）'] || '',
+      avatarUrl: csvRow.アバターURL,
     });
   }
 
@@ -99,46 +160,13 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
 
 /**
  * Convert AkyoData array to CSV text
- * 
+ *
  * @param data - Array of AkyoData objects
  * @returns CSV content as string
  */
-export function akyoDataToCsv(data: AkyoData[]): string {
-  const headers = ['ID', '見た目', '通称', 'アバター名', '属性', '備考', '作者', 'アバターURL'];
-  const records: string[][] = [headers];
-
-  for (const akyo of data) {
-    records.push([
-      akyo.id,
-      akyo.appearance,
-      akyo.nickname,
-      akyo.avatarName,
-      akyo.attribute,
-      akyo.notes,
-      akyo.creator,
-      akyo.avatarUrl,
-    ]);
-  }
-
-  return stringifyCSV(records);
-}
-
-/**
- * Sanitize CSV cell value to prevent formula injection
- * Escapes cells starting with =, +, -, @, or tab characters
- * 
- * @param value - Cell value to sanitize
- * @returns Sanitized value safe for CSV export
- */
-function sanitizeCsvCell(value: string): string {
-  const str = String(value ?? '');
-  // Prepend single quote to prevent formula execution in Excel/LibreOffice
-  return /^[=+\-@\t]/.test(str) ? `'${str}` : str;
-}
-
 /**
  * Find record by ID (first column)
- * 
+ *
  * @param records - Array of CSV records
  * @param id - ID to search for
  * @returns Record if found, undefined otherwise
@@ -152,7 +180,7 @@ export function findRecordById(records: string[][], id: string): string[] | unde
 
 /**
  * Filter out record by ID (first column)
- * 
+ *
  * @param records - Array of CSV records
  * @param id - ID to filter out
  * @returns Filtered array of records
@@ -166,7 +194,7 @@ export function filterOutRecordById(records: string[][], id: string): string[][]
 
 /**
  * Replace record by ID (first column)
- * 
+ *
  * @param records - Array of CSV records
  * @param id - ID of record to replace
  * @param newRecord - New record data
@@ -186,10 +214,15 @@ export function replaceRecordById(
   });
 }
 
+function sanitizeCsvCell(value: string): string {
+  const str = String(value ?? '');
+  return /^[=+\-@\t]/.test(str) ? `'${str}` : str;
+}
+
 /**
  * Create a new record from form data
  * Applies CSV formula injection protection to all fields
- * 
+ *
  * @param data - Object with field values
  * @returns Array of field values with security sanitization
  */
@@ -212,28 +245,4 @@ export function createAkyoRecord(data: {
     sanitizeCsvCell(data.creator),
     sanitizeCsvCell(data.avatarUrl || ''),
   ];
-}
-
-/**
- * Format ID to 4-digit format (0001-9999)
- * 
- * @param id - ID as string or number
- * @returns Formatted 4-digit ID
- */
-export function formatAkyoId(id: string | number): string {
-  const numId = typeof id === 'string' ? parseInt(id, 10) : id;
-  if (isNaN(numId)) return '0000';
-  return numId.toString().padStart(4, '0');
-}
-
-/**
- * Split attributes string into array
- * Supports both Japanese comma (、) and regular comma (,) separators
- * 
- * @param attribute - Comma-separated attributes string (e.g., "チョコミント類,ギミック" or "チョコミント類、ギミック")
- * @returns Array of trimmed attribute strings
- */
-export function splitAttributes(attribute: string): string[] {
-  if (!attribute) return [];
-  return attribute.split(/[、,]/).map(a => a.trim()).filter(Boolean);
 }

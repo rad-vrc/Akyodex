@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import type { AkyoData, AkyoFilterOptions } from '@/types/akyo';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Akyoデータを管理するカスタムフック (SSR対応版)
- * 
+ *
  * @param initialData - サーバーサイドで取得した初期データ
  */
 export function useAkyoData(initialData: AkyoData[] = []) {
   const [data, setData] = useState<AkyoData[]>([]);
   const [filteredData, setFilteredData] = useState<AkyoData[]>([]);
   const [loading, setLoading] = useState(!initialData.length);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   // 初期データの設定とお気に入り復元
   useEffect(() => {
@@ -88,11 +88,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       const newData = prevData.map(akyo =>
         akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo
       );
-      
+
       // LocalStorageに保存
       const favorites = newData.filter(a => a.isFavorite).map(a => a.id);
       saveFavorites(favorites);
-      
+
       return newData;
     });
 

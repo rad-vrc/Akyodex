@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 /**
  * Prepare OpenNext build output for Cloudflare Pages deployment
- * 
+ *
  * Cloudflare Pages expects:
  * - _worker.js at the root of the output directory
  * - Static assets at the root (not in assets/ subdirectory)
@@ -30,33 +32,33 @@ if (fs.existsSync(workerSrc)) {
 // Move assets from assets/ to root
 if (fs.existsSync(assetsDir)) {
   console.log('📁 Moving static assets to root...');
-  
+
   const items = fs.readdirSync(assetsDir);
   let movedCount = 0;
-  
+
   for (const item of items) {
     const srcPath = path.join(assetsDir, item);
     const destPath = path.join(openNextDir, item);
-    
+
     // Skip if destination already exists (avoid conflicts)
     if (fs.existsSync(destPath)) {
       console.log(`⚠️  Skipping ${item} (already exists at root)`);
       continue;
     }
-    
+
     // Move the item
     fs.renameSync(srcPath, destPath);
     movedCount++;
   }
-  
+
   console.log(`✅ Moved ${movedCount} items from assets/ to root`);
-  
+
   // Remove empty assets directory
   try {
     fs.rmdirSync(assetsDir);
     console.log('✅ Removed empty assets/ directory');
   } catch (err) {
-    console.log('⚠️  Could not remove assets/ directory (may not be empty)');
+    console.log('⚠️  Could not remove assets/ directory (may not be empty):', err);
   }
 } else {
   console.warn('⚠️  assets/ directory not found');

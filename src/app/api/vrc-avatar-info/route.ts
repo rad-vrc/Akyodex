@@ -3,8 +3,9 @@
  * VRChatのアバターページからアバター名を取得
  */
 
-import { decodeHTMLEntities } from '@/lib/html-utils';
+import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
+import type { VRChatAvatarInfo } from '@/types/akyo';
 
 export const runtime = 'nodejs';
 
@@ -84,13 +85,17 @@ export async function GET(request: Request) {
       description = descMatch[1].trim();
     }
 
-    return Response.json({
-      avatarName: decodeHTMLEntities(avatarName),
-      creatorName: decodeHTMLEntities(creatorName),
-      description: decodeHTMLEntities(description),
-      fullTitle: decodeHTMLEntities(fullTitle),
+    const sanitize = (value: string) => decodeHTMLEntities(stripHTMLTags(value));
+
+    const payload: VRChatAvatarInfo = {
+      avatarName: sanitize(avatarName),
+      creatorName: sanitize(creatorName),
+      description: sanitize(description),
+      fullTitle: sanitize(fullTitle),
       avtr: cleanAvtr,
-    });
+    };
+
+    return Response.json(payload);
 
   } catch (error) {
     console.error('[vrc-avatar-info] Error:', error);
