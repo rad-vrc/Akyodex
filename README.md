@@ -22,6 +22,8 @@
 16. [Known Issues](#known-issues)
 17. [Contributing](#contributing)
 
+> 🧭 Contributors: 詳細な開発フローや命名・検証ルールは [Repository Guidelines](./AGENTS.md) を先に確認してください。
+
 ---
 
 ## ⚡ Quick Start
@@ -1305,6 +1307,8 @@ export const runtime = 'nodejs';
 ---
 
 ## 🤝 Contributing
+
+> コントリビューションの詳細なチェックリストは必ず [Repository Guidelines](./AGENTS.md) を参照し、PR テンプレートやテスト要件を満たしてください。
 
 ### Git Workflow
 

@@ -2,11 +2,14 @@
 
 このドキュメントでは、Akyoずかん Next.jsアプリケーションをCloudflare Pagesにデプロイする手順を説明します。
 
+> ⚠️ デプロイ作業を始める前に、開発ルールとレビュー要件をまとめた [Repository Guidelines](./AGENTS.md) に必ず目を通してください。
+
 ## 📋 前提条件
 
 - Cloudflareアカウント（Pro/Business推奨）
 - GitHubリポジトリへのアクセス権
-- Node.js 18以上（ローカル開発用）
+- Node.js 20.x以上（ローカル開発用）
+- npm 10.x以上
 
 ## 🚀 デプロイ手順
 
@@ -28,14 +31,20 @@ npx wrangler kv:namespace create AKYO_KV
 
 ### 2. Cloudflare R2 Bucket作成
 
-アバター画像の保存にR2を使用します。
+アバター画像とCSVファイルの保存にR2を使用します。
 
 1. Cloudflare ダッシュボード → R2 → Create bucket
-2. Bucket名: `akyo-images` (または任意の名前)
+2. Bucket名: `akyo-images` (**重要**: この名前を使用してください)
 3. Location: Automatic (推奨)
 4. Public access: **オフ** (APIを通じてのみアクセス)
 
-Bucket名をメモしておきます。
+**バケット内の構造**:
+```
+akyo-images/
+├── images/          # アバター画像 (例: 0001.webp, 0002.webp)
+├── akyo-data/       # CSVファイル (akyo-data.csv, akyo-data-US.csv)
+└── miniakyo.webp    # 背景画像
+```
 
 ### 3. Cloudflare Pages プロジェクト作成（または既存プロジェクトの更新）
 
@@ -44,14 +53,19 @@ Bucket名をメモしておきます。
 ##### 新規プロジェクトの場合
 
 1. Cloudflare ダッシュボード → Pages → Create a project
-2. Connect to Git → GitHubリポジトリを選択
+2. Connect to Git → GitHubリポジトリを選択: `rad-vrc/Akyodex`
 3. Build設定:
    ```
    Framework preset:     None (空白のまま)
-   Build command:        npm run build
+   Build command:        npm ci && npm run build
    Build output directory: .open-next
-   Root directory:       / (空白またはルート)
+   Root directory:       (空白のまま - リポジトリルート)
    ```
+
+**⚠️ 重要な注意事項**:
+- **Root directory**: 空白のままにしてください。このプロジェクトはリポジトリのルートに配置されています。
+- **Build command**: `npm ci && npm run build` を使用（`npm ci`は`npm install`より高速で信頼性が高い）
+- **Build output directory**: `.open-next` を指定（OpenNextビルドの出力ディレクトリ）
 
 ##### 既存プロジェクトの更新の場合
 
@@ -61,17 +75,30 @@ Bucket名をメモしておきます。
 4. 以下のように設定:
    ```
    Framework preset:     None (または空白)
-   Build command:        npm run build
+   Build command:        npm ci && npm run build
    Build output directory: .open-next
-   Root directory:       / (空白またはルート)
+   Root directory:       (空白のまま)
    ```
 5. **Save** をクリック
 
-**⚠️ 重要**: 
-- **Framework preset は "None" を選択してください**
-  - OpenNextを使用してCloudflare Pages用にビルドします
-- **Build output directory は `.open-next` を指定してください**
-  - これはOpenNextビルドの出力ディレクトリです
+**⚠️ ビルド設定の詳細説明**:
+
+1. **Framework preset**: "None" を選択
+   - OpenNext Cloudflareアダプター（@opennextjs/cloudflare）を使用してビルドします
+   - Next.jsの標準ビルドではなく、Cloudflare Pages用に最適化されたビルドを実行
+
+2. **Build command**: `npm ci && npm run build`
+   - `npm ci`: package-lock.jsonから依存関係をクリーンインストール（高速・信頼性高）
+   - `npm run build`: `opennextjs-cloudflare build && node scripts/prepare-cloudflare-pages.js` を実行
+   - OpenNextビルド後、prepare-cloudflare-pages.jsで追加の最適化を実行
+
+3. **Build output directory**: `.open-next`
+   - OpenNext Cloudflareビルドの出力ディレクトリ
+   - このディレクトリにCloudflare Pages用の静的ファイルとEdge Functionsが生成される
+
+4. **Root directory**: 空白
+   - プロジェクトはリポジトリのルートに配置されているため、空白のままにする
+   - サブディレクトリ（例: `akyodex-nextjs/`）を指定する必要はありません
 
 #### 3.2 環境変数設定
 
@@ -206,9 +233,18 @@ Pages プロジェクト → Deployments → Create deployment
 
 **原因**: `node_modules` が正しくインストールされていない
 
-**解決策**:
-```bash
-rm -rf node_modules package-lock.json
+**解決策** (Windows):
+```cmd
+rmdir /s /q node_modules
+del package-lock.json
+npm install
+npm run build
+```
+
+**解決策** (PowerShell):
+```powershell
+Remove-Item -Recurse -Force node_modules
+Remove-Item package-lock.json
 npm install
 npm run build
 ```
@@ -485,6 +521,21 @@ Workers & Pages → KV → Namespace → Usage
 
 ---
 
+---
+
+## 📝 変更履歴
+
+### 2025-01-22 (最新)
+- ✅ Node.js 20.x要件を明記
+- ✅ R2 Bucket名を`akyo-images`に確認・明記（バケット内構造も追加）
+- ✅ Build commandを`npm ci && npm run build`に更新
+- ✅ Root directoryの説明を明確化（空白のまま）
+- ✅ ビルド設定の詳細説明を追加
+- ✅ Windows用のトラブルシューティングコマンドを追加
+
+---
+
 **最終更新**: 2025-01-22  
-**対象バージョン**: Next.js 15.5.2 / React 19.1.0 / @opennextjs/cloudflare 1.11.0
+**対象バージョン**: Next.js 15.5.2 / React 19.1.0 / @opennextjs/cloudflare 1.11.0  
+**Node.js**: 20.x以上 / npm 10.x以上
 
