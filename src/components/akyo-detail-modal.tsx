@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
@@ -93,11 +94,13 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   if (!localAkyo || !isOpen) return null;
 
   const displayName = localAkyo.nickname || localAkyo.avatarName || '';
-  const attributes = localAkyo.attribute ? localAkyo.attribute.split(',').map(a => a.trim()).filter(Boolean) : [];
+  const attributes: string[] = localAkyo.attribute
+    ? localAkyo.attribute.split(',').map((a: string) => a.trim()).filter(Boolean)
+    : [];
   const attributeColor = getAttributeColor(localAkyo.attribute);
   const imageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  const handleBackdropClick = (e: ReactMouseEvent<HTMLDivElement>) => {
     // モーダル外（backdrop または modal container）をクリックしたら閉じる
     if (e.target === e.currentTarget) {
       onClose();
