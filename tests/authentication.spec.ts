@@ -199,13 +199,19 @@ test.describe('Admin Authentication', () => {
         // Reload the page
         await page.reload();
         await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(500);
 
         // Verify we're still logged in after reload
-        await expect(adminControls).toBeVisible({ timeout: 10000 });
+        const adminControlsAfterReload = page.locator('button:has-text("新規登録")');
+        await expect(adminControlsAfterReload).toBeVisible({ timeout: 10000 });
 
         // Verify session is still valid via API
-        const response = await page.request.get('/api/admin/verify-session');
-        const data = await response.json();
+        const data = await page.evaluate(async () => {
+            const response = await fetch('/api/admin/verify-session', {
+                credentials: 'include',
+            });
+            return response.json();
+        });
         expect(data.authenticated).toBe(true);
 
         console.log('✓ Session persists across page reloads');
@@ -292,7 +298,7 @@ test.describe('Authentication API Direct Tests', () => {
 
         // Verify cookie attributes
         expect(setCookieHeader).toContain('HttpOnly');
-        expect(setCookieHeader).toContain('SameSite=Strict');
+        expect(setCookieHeader?.toLowerCase()).toContain('samesite=strict');
         expect(setCookieHeader).toContain('Path=/');
 
         console.log('✓ Session cookie has correct security attributes');

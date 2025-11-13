@@ -17,6 +17,15 @@ import { test, expect, type Page } from '@playwright/test';
 
 test.describe('CRUD Operations', () => {
 
+    async function fetchSession(page: Page) {
+        return page.evaluate(async () => {
+            const response = await fetch('/api/admin/verify-session', {
+                credentials: 'include',
+            });
+            return response.json();
+        });
+    }
+
     // Helper function to login as owner
     async function loginAsOwner(page: Page) {
         await page.goto('/admin');
@@ -31,6 +40,31 @@ test.describe('CRUD Operations', () => {
         // Wait longer for page to load after login
         await page.waitForTimeout(3000);
         await page.waitForLoadState('networkidle');
+
+        const ownerSession = await fetchSession(page);
+        expect(ownerSession.authenticated).toBe(true);
+        expect(ownerSession.role).toBe('owner');
+    }
+
+    async function postDeleteAkyo(page: Page, payload: Record<string, unknown>) {
+        return page.evaluate(async (body) => {
+            const response = await fetch('/api/delete-akyo', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+            const text = await response.text();
+            let json: unknown;
+            try {
+                json = JSON.parse(text);
+            } catch {
+                json = text;
+            }
+            return { status: response.status, json };
+        }, payload);
     }
 
     // Helper function to login as admin
@@ -47,6 +81,10 @@ test.describe('CRUD Operations', () => {
         // Wait longer for page to load after login
         await page.waitForTimeout(3000);
         await page.waitForLoadState('networkidle');
+
+        const adminSession = await fetchSession(page);
+        expect(adminSession.authenticated).toBe(true);
+        expect(adminSession.role).toBe('admin');
     }
 
     test.describe('Add New Akyo - UI Tests', () => {
@@ -147,20 +185,14 @@ test.describe('CRUD Operations', () => {
             await loginAsAdmin(page);
 
             // Try to delete via API with proper CSRF headers
-            const response = await page.request.post('/api/delete-akyo', {
-                data: { id: '0001' },
-                headers: {
-                    'origin': 'http://localhost:3000',
-                    'referer': 'http://localhost:3000/admin'
-                }
-            });
+            const response = await postDeleteAkyo(page, { id: '0001' });
 
             // Should return 403 Forbidden (admin cannot delete)
-            expect(response.status()).toBe(403);
+            expect(response.status).toBe(403);
 
-            const data = await response.json();
-            expect(data.success).toBe(false);
-            expect(data.error).toBeDefined();
+            const data = response.json as { success?: boolean; error?: string };
+            expect(data?.success).toBe(false);
+            expect(data?.error).toBeDefined();
 
             console.log('✓ API correctly prevents deletion for non-owner');
         });
@@ -188,19 +220,13 @@ test.describe('CRUD Operations', () => {
             await loginAsOwner(page);
 
             // Try to delete with invalid ID
-            const response = await page.request.post('/api/delete-akyo', {
-                data: { id: '123' }, // Invalid: only 3 digits
-                headers: {
-                    'origin': 'http://localhost:3000',
-                    'referer': 'http://localhost:3000/admin'
-                }
-            });
+            const response = await postDeleteAkyo(page, { id: '123' });
 
-            expect(response.status()).toBe(400);
-            const data = await response.json();
+            expect(response.status).toBe(400);
+            const data = response.json as { success?: boolean; error?: string };
 
-            expect(data.success).toBe(false);
-            expect(data.error).toBeDefined();
+            expect(data?.success).toBe(false);
+            expect(data?.error).toBeDefined();
 
             console.log('✓ Delete API validates ID format');
         });
@@ -210,19 +236,13 @@ test.describe('CRUD Operations', () => {
             await loginAsOwner(page);
 
             // Try to delete with missing ID
-            const response = await page.request.post('/api/delete-akyo', {
-                data: {},
-                headers: {
-                    'origin': 'http://localhost:3000',
-                    'referer': 'http://localhost:3000/admin'
-                }
-            });
+            const response = await postDeleteAkyo(page, {});
 
-            expect(response.status()).toBe(400);
-            const data = await response.json();
+            expect(response.status).toBe(400);
+            const data = response.json as { success?: boolean; error?: string };
 
-            expect(data.success).toBe(false);
-            expect(data.error).toBeDefined();
+            expect(data?.success).toBe(false);
+            expect(data?.error).toBeDefined();
 
             console.log('✓ CRUD APIs return consistent error format');
         });

@@ -122,6 +122,7 @@ export const metadata: Metadata = {
 
 const fontAwesomeUrl = "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css";
 const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
+const defaultDifyToken = 'ITAESZx7R09Y05jy';
 
 export default async function RootLayout({
   children,
@@ -131,6 +132,7 @@ export default async function RootLayout({
   // Get nonce from middleware
   const headersList = await headers();
   const nonce = headersList.get('x-nonce') || undefined;
+  const difyToken = process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN ?? defaultDifyToken;
 
   return (
     <html lang="ja" suppressHydrationWarning>
@@ -147,12 +149,12 @@ export default async function RootLayout({
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `window.difyChatbotConfig = { token: 'bJthPu2B6Jf4AnsU' };`,
+            __html: `window.difyChatbotConfig = { token: '${difyToken}' };`,
           }}
         />
         <script
           src="https://udify.app/embed.min.js"
-          id="bJthPu2B6Jf4AnsU"
+          id={difyToken}
           defer
           nonce={nonce}
         />

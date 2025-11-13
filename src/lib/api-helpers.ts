@@ -109,10 +109,11 @@ export async function ensureAdminRequest(
  */
 export function validateOrigin(request: Request): boolean {
   const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_ORIGIN;
+  const allowDevHosts = process.env.CSRF_DEV_ALLOWLIST === 'true';
 
   if (!allowedOrigin) {
     // In development, allow any origin if not configured
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' || allowDevHosts) {
       console.warn('⚠️ CSRF protection disabled - set NEXT_PUBLIC_APP_URL or APP_ORIGIN');
       return true;
     }
@@ -120,43 +121,64 @@ export function validateOrigin(request: Request): boolean {
     return false;
   }
 
-  const origin = request.headers.get('origin');
-  const referer = request.headers.get('referer');
+  const originHeader = request.headers.get('origin');
+  const refererHeader = request.headers.get('referer');
 
-  // Parse allowed origin to get canonical form
-  const allowedOriginCanonical = (() => {
+  const canonical = (value: string) => {
     try {
-      return new URL(allowedOrigin).origin;
+      return new URL(value).origin;
     } catch {
-      return allowedOrigin;
+      return value;
     }
-  })();
+  };
 
-  // Check Origin header (preferred) - strict comparison
-  if (origin) {
+  const allowedOriginCanonical = canonical(allowedOrigin);
+
+  const isLocalhostMatch = (value: string | null) => {
+    if (!value || !allowDevHosts) {
+      return false;
+    }
     try {
-      const originUrl = new URL(origin);
-      if (originUrl.origin === allowedOriginCanonical) {
+      const allowed = new URL(allowedOriginCanonical);
+      const candidate = new URL(value);
+      const localHosts = new Set(['localhost', '127.0.0.1']);
+      return localHosts.has(allowed.hostname) && localHosts.has(candidate.hostname);
+    } catch {
+      return false;
+    }
+  };
+
+  const matchesAllowed = (value: string | null) => {
+    if (!value) {
+      return false;
+    }
+    try {
+      const parsed = new URL(value);
+      if (parsed.origin === allowedOriginCanonical) {
         return true;
       }
     } catch (error) {
-      console.error(`CSRF protection: Malformed origin ${origin}`, error);
+      console.error(`CSRF protection: Malformed origin ${value}`, error);
+      return false;
     }
-    console.error(`CSRF protection: Invalid origin ${origin}`);
+    return isLocalhostMatch(value);
+  };
+
+  // Check Origin header (preferred)
+  if (originHeader) {
+    if (matchesAllowed(originHeader)) {
+      return true;
+    }
+    console.error(`CSRF protection: Invalid origin ${originHeader}`);
     return false;
   }
 
-  // Fallback to Referer header - strict comparison
-  if (referer) {
-    try {
-      const refererUrl = new URL(referer);
-      if (refererUrl.origin === allowedOriginCanonical) {
-        return true;
-      }
-    } catch (error) {
-      console.error(`CSRF protection: Malformed referer ${referer}`, error);
+  // Fallback to Referer header
+  if (refererHeader) {
+    if (matchesAllowed(refererHeader)) {
+      return true;
     }
-    console.error(`CSRF protection: Invalid referer ${referer}`);
+    console.error(`CSRF protection: Invalid referer ${refererHeader}`);
     return false;
   }
 

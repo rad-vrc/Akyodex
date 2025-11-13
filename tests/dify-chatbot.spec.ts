@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+const DEFAULT_DIFY_TOKEN = 'ITAESZx7R09Y05jy';
+const difyToken = process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN ?? DEFAULT_DIFY_TOKEN;
+
 /**
  * Test suite for Dify Cloud Chatbot Integration
  * 
@@ -12,15 +15,15 @@ test.describe('Dify Cloud Chatbot', () => {
     // Navigate to the Zukan page
     await page.goto('/zukan');
 
-    // Wait for the page to load
-    await page.waitForLoadState('networkidle');
+    // Wait for the page to load (network requests continue for the chatbot script)
+    await page.waitForLoadState('domcontentloaded');
 
     // Verify that the Dify script is loaded
     const difyScript = page.locator('script[src="https://udify.app/embed.min.js"]');
     await expect(difyScript).toHaveCount(1);
 
     // Verify the script has the correct ID (should match the token)
-    await expect(difyScript).toHaveAttribute('id', 'ITAESZx7R09Y05jy');
+    await expect(difyScript).toHaveAttribute('id', difyToken);
 
     // Wait for the chatbot button to appear (Dify loads asynchronously)
     // The button should appear in the bottom right corner
@@ -146,7 +149,7 @@ test.describe('Dify Cloud Chatbot', () => {
 
     // Verify the config has the cloud token
     expect(difyConfig).toBeDefined();
-    expect(difyConfig?.token).toBe('ITAESZx7R09Y05jy');
+    expect(difyConfig?.token).toBe(difyToken);
 
     console.log('✓ Dify configuration is correctly set with cloud token');
 
