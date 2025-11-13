@@ -8,7 +8,7 @@
 import { getAkyoData } from '@/lib/akyo-data-server';
 import { validateOrigin } from '@/lib/api-helpers';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {

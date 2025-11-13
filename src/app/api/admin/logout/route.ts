@@ -8,7 +8,7 @@
 
 import { clearSessionCookie } from '@/lib/api-helpers';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST() {
   try {

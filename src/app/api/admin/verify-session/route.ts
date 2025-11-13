@@ -10,7 +10,7 @@ import { validateSessionToken } from '@/lib/session';
 import { cookies } from 'next/headers';
 import { jsonError } from '@/lib/api-helpers';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET() {
   try {

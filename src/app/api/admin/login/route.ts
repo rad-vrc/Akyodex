@@ -9,7 +9,7 @@
  */
 
 // Use Edge Runtime for optimal performance
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 import { createSessionToken } from '@/lib/session';
 import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
