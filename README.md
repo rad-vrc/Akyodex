@@ -556,14 +556,34 @@ If any check fails, see [Troubleshooting](#troubleshooting) section for detailed
 
 ### Required Variables
 
-#### Required Variables (All Environments)
+#### Local Development (`.env.local`)
 
-| Variable | Description | Example | Required |
-|----------|-------------|---------|----------|
-| `ADMIN_PASSWORD_OWNER` | Owner access code | `RadAkyo` | ✅ Yes |
-| `ADMIN_PASSWORD_ADMIN` | Admin access code | `Akyo` | ✅ Yes |
-| `SESSION_SECRET` | Secret key for JWT signing | `629de6ec...` (128 chars) | ✅ Yes |
-| `NEXT_PUBLIC_R2_BASE` | R2 bucket base URL | `https://images.akyodex.com` | ✅ Yes |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ADMIN_PASSWORD_OWNER` | Owner access code（平文、開発専用） | `RadAkyo` |
+| `ADMIN_PASSWORD_ADMIN` | Admin access code（平文、開発専用） | `Akyo` |
+| `SESSION_SECRET` | Secret key for JWT signing | `629de6ec...` (128 chars) |
+| `NEXT_PUBLIC_APP_URL` | App origin for CSRF allowlist | `http://localhost:3000` |
+| `NEXT_PUBLIC_R2_BASE` | R2 bucket base URL | `https://images.akyodex.com` |
+| `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` | Udify cloud token | `ITAESZx7R09Y05jy` |
+| `CSRF_DEV_ALLOWLIST` (任意) | Playwright などで localhost を許可する場合 `true` | `true` |
+
+#### Production (Cloudflare Pages)
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ADMIN_PASSWORD_HASH` | Admin access code (SHA-256 hash) | `e5df0c...` |
+| `OWNER_PASSWORD_HASH` | Owner access code (SHA-256 hash) | `2f7d8c...` |
+| `SESSION_SECRET` | Same as local、必ず 128 文字以上 | `629de6ec...` |
+| `NEXT_PUBLIC_APP_URL` | `https://akyodex.com` | `https://akyodex.com` |
+| `NEXT_PUBLIC_R2_BASE` | CDN base | `https://images.akyodex.com` |
+| `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` | Udify token（cloud環境で使用する値） | `ITAESZx7R09Y05jy` |
+| `GITHUB_TOKEN` | CSV 更新用 PAT（`repo` scope） | `ghp_xxx` |
+| `GITHUB_REPO_OWNER` | GitHub org/user | `rad-vrc` |
+| `GITHUB_REPO_NAME` | Repo name | `Akyodex` |
+| `GITHUB_BRANCH` | Tracking branch | `main` |
+
+> ❗️Cloudflare 上では **平文パスワード変数（`ADMIN_PASSWORD_OWNER/ADMIN_PASSWORD_ADMIN`）を設定する必要はありません**。ハッシュ値だけを登録し、ローカル `.env.local` に平文を保持してください。
 
 ### Cloudflare Bindings (Auto-configured)
 
@@ -696,8 +716,8 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 - 📱 **Responsive**: Works on desktop and mobile
 
 #### Configuration:
-- **Token**: `bJthPu2B6Jf4AnsU`
-- **Provider**: Udify.app
+- **Token**: `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` から読み込み（例: `ITAESZx7R09Y05jy`）
+- **Provider**: Udify.app（`https://udify.app/embed.min.js`）
 - **Position**: Fixed bottom-right
 - **Size**: 24rem × 40rem
 
