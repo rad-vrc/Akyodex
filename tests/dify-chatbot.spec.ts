@@ -1,7 +1,40 @@
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 const DEFAULT_DIFY_TOKEN = 'ITAESZx7R09Y05jy';
-const difyToken = process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN ?? DEFAULT_DIFY_TOKEN;
+
+function resolveEnvValue(key: string): string | undefined {
+  if (process.env[key]) {
+    return process.env[key];
+  }
+
+  try {
+    const envPath = path.join(process.cwd(), '.env.local');
+    const content = readFileSync(envPath, 'utf8');
+    for (const line of content.split(/\r?\n/)) {
+      if (!line || line.trimStart().startsWith('#')) {
+        continue;
+      }
+      const idx = line.indexOf('=');
+      if (idx === -1) {
+        continue;
+      }
+      const k = line.slice(0, idx).trim();
+      if (k !== key) {
+        continue;
+      }
+      const value = line.slice(idx + 1).trim();
+      return value.replace(/^"|"$/g, '');
+    }
+  } catch (error) {
+    console.warn(`[dify-chatbot-tests] Unable to read .env.local: ${String(error)}`);
+  }
+
+  return undefined;
+}
+
+const difyToken = resolveEnvValue('NEXT_PUBLIC_DIFY_CHATBOT_TOKEN') ?? DEFAULT_DIFY_TOKEN;
 
 /**
  * Test suite for Dify Cloud Chatbot Integration
@@ -139,8 +172,10 @@ test.describe('Dify Cloud Chatbot', () => {
     // Navigate to the Zukan page
     await page.goto('/zukan');
 
-    // Wait for the page to load
-    await page.waitForLoadState('networkidle');
+    // Wait for the chatbot script to load
+    const difyScript = page.locator('script[src="https://udify.app/embed.min.js"]');
+    await expect(difyScript).toHaveAttribute('id', difyToken);
+    await page.waitForLoadState('domcontentloaded');
 
     // Check that window.difyChatbotConfig exists and has the correct token
     const difyConfig = await page.evaluate(() => {

@@ -109,6 +109,13 @@ test.describe('CRUD Operations', () => {
         test('should have form fields for adding Akyo', async ({ page }) => {
             // Check for file input (image upload)
             const fileInput = page.locator('input[type="file"]');
+
+            // Ensure the add tab finished rendering before asserting on hidden inputs
+            await expect(page.locator('button:has-text("新規登録")')).toHaveClass(/border-red-500/, {
+                timeout: 10_000,
+            });
+            await expect(fileInput.first()).toBeAttached({ timeout: 10_000 });
+
             expect(await fileInput.count()).toBeGreaterThan(0);
 
             console.log('✓ Add form has required input fields');
