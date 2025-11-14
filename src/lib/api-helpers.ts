@@ -1,0 +1,283 @@
+/**
+ * API Route Helpers
+ *
+ * Common utilities for API routes including session validation and CSRF protection.
+ */
+
+import { cookies } from 'next/headers';
+import { SessionData, validateSession as validateSessionToken } from './session';
+
+/**
+ * Validate session from request cookies
+ *
+ * @returns SessionData if valid, null otherwise
+ */
+export async function validateSession(): Promise<SessionData | null> {
+  try {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get('admin_session')?.value;
+
+    if (!sessionToken) {
+      return null;
+    }
+
+    return await validateSessionToken(sessionToken);
+  } catch (error) {
+    console.error('Session validation error:', error);
+    return null;
+  }
+}
+
+/**
+ * Returns a standardized JSON error response
+ * IMPORTANT: Maintains { success: false, error } format for frontend compatibility
+ * @param message - User-friendly error message
+ * @param status - HTTP status code (default: 400)
+ * @param extra - Additional fields to include in response
+ * @returns Response object with error structure
+ */
+export function jsonError(
+  message: string,
+  status: number = 400,
+  extra: Record<string, unknown> = {}
+): Response {
+  return Response.json({ success: false, error: message, ...extra }, { status });
+}
+
+/**
+ * Returns a standardized JSON success response
+ * IMPORTANT: Maintains { success: true, ...data } format for frontend compatibility
+ * @param data - Response data (will be spread into response)
+ * @param status - HTTP status code (default: 200)
+ * @returns Response object with success structure
+ */
+export function jsonSuccess<T extends Record<string, unknown>>(
+  data: T,
+  status: number = 200
+): Response {
+  return Response.json({ success: true, ...data }, { status });
+}
+
+/**
+ * Ensure admin authentication and authorization
+ * Updated to work with standard Request (not NextRequest)
+ * @param request - Standard Request object
+ * @param options - Validation options
+ * @returns Session data or error response
+ */
+export async function ensureAdminRequest(
+  request: Request,
+  options: {
+    requireOrigin?: boolean;
+    requireOwner?: boolean;
+    ownerErrorMessage?: string;
+  } = {}
+): Promise<{ session: SessionData } | { response: Response }> {
+  const {
+    requireOrigin = true,
+    requireOwner = false,
+    ownerErrorMessage = 'この操作は所有者のみが可能です',
+  } = options;
+
+  if (requireOrigin && !validateOrigin(request)) {
+    return {
+      response: jsonError('不正なリクエスト元です', 403),
+    };
+  }
+
+  const session = await validateSession();
+  if (!session) {
+    return {
+      response: jsonError('認証が必要です', 401),
+    };
+  }
+
+  if (requireOwner && session.role !== 'owner') {
+    return {
+      response: jsonError(ownerErrorMessage, 403),
+    };
+  }
+
+  return { session };
+}
+
+/**
+ * Validate CSRF protection via Origin/Referer headers
+ * Updated to work with standard Request (not NextRequest)
+ * @param request - Standard Request object
+ * @returns true if valid origin, false otherwise
+ */
+export function validateOrigin(request: Request): boolean {
+  const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_ORIGIN;
+  const allowDevHosts = process.env.CSRF_DEV_ALLOWLIST === 'true';
+
+  if (!allowedOrigin) {
+    // In development, allow any origin if not configured
+    if (process.env.NODE_ENV !== 'production' || allowDevHosts) {
+      console.warn('⚠️ CSRF protection disabled - set NEXT_PUBLIC_APP_URL or APP_ORIGIN');
+      return true;
+    }
+    console.error('CSRF protection: APP_ORIGIN not configured');
+    return false;
+  }
+
+  const originHeader = request.headers.get('origin');
+  const refererHeader = request.headers.get('referer');
+
+  const canonical = (value: string) => {
+    try {
+      return new URL(value).origin;
+    } catch {
+      return value;
+    }
+  };
+
+  const allowedOriginCanonical = canonical(allowedOrigin);
+
+  const isLocalhostMatch = (value: string | null) => {
+    if (!value || !allowDevHosts) {
+      return false;
+    }
+    try {
+      const allowed = new URL(allowedOriginCanonical);
+      const candidate = new URL(value);
+      const localHosts = new Set(['localhost', '127.0.0.1']);
+      return localHosts.has(allowed.hostname) && localHosts.has(candidate.hostname);
+    } catch {
+      return false;
+    }
+  };
+
+  const matchesAllowed = (value: string | null) => {
+    if (!value) {
+      return false;
+    }
+    try {
+      const parsed = new URL(value);
+      if (parsed.origin === allowedOriginCanonical) {
+        return true;
+      }
+    } catch (error) {
+      console.error(`CSRF protection: Malformed origin ${value}`, error);
+      return false;
+    }
+    return isLocalhostMatch(value);
+  };
+
+  // Check Origin header (preferred)
+  if (originHeader) {
+    if (matchesAllowed(originHeader)) {
+      return true;
+    }
+    console.error(`CSRF protection: Invalid origin ${originHeader}`);
+    return false;
+  }
+
+  // Fallback to Referer header
+  if (refererHeader) {
+    if (matchesAllowed(refererHeader)) {
+      return true;
+    }
+    console.error(`CSRF protection: Invalid referer ${refererHeader}`);
+    return false;
+  }
+
+  // No origin or referer header (suspicious)
+  console.error('CSRF protection: Missing origin and referer headers');
+  return false;
+}
+
+/**
+ * Validate Akyo ID format (4-digit string)
+ * @param id - Akyo ID to validate
+ * @returns true if valid 4-digit format, false otherwise
+ */
+export function validateAkyoId(id: string): boolean {
+  return /^\d{4}$/.test(id);
+}
+
+export interface AkyoFormData {
+  id: string;
+  nickname: string;
+  avatarName: string;
+  attributes: string;
+  creator: string;
+  avatarUrl: string;
+  notes: string;
+  imageData?: string;
+}
+
+export type AkyoFormParseResult =
+  | { success: true; data: AkyoFormData }
+  | { success: false; status: number; error: string };
+
+/**
+ * Set session cookie with secure configuration
+ * @param token - JWT session token
+ * @param maxAge - Cookie max age in seconds (default: 7 days)
+ */
+export async function setSessionCookie(token: string, maxAge: number = 60 * 60 * 24 * 7): Promise<void> {
+  const cookieStore = await cookies();
+
+  cookieStore.set('admin_session', token, {
+    httpOnly: true,                              // Prevent XSS
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    sameSite: 'strict',                          // CSRF protection
+    maxAge,                                      // 7 days default
+    path: '/',
+  });
+}
+
+/**
+ * Clear session cookie (logout)
+ */
+export async function clearSessionCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete('admin_session');
+}
+
+export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
+  const readField = (key: string): string => {
+    const value = formData.get(key);
+    return typeof value === 'string' ? value.trim() : '';
+  };
+
+  const id = readField('id');
+  const avatarName = readField('avatarName');
+  const creator = readField('creator');
+
+  if (!id || !avatarName || !creator) {
+    return {
+      success: false,
+      status: 400,
+      error: '必須フィールドが不足しています',
+    };
+  }
+
+  if (!validateAkyoId(id)) {
+    return {
+      success: false,
+      status: 400,
+      error: '有効な4桁ID（0001-9999）が必要です',
+    };
+  }
+
+  const imageValue = formData.get('imageData');
+  const imageData = typeof imageValue === 'string' && imageValue.trim().length > 0
+    ? imageValue.trim()
+    : undefined;
+
+  return {
+    success: true,
+    data: {
+      id,
+      avatarName,
+      creator,
+      nickname: readField('nickname'),
+      attributes: readField('attributes'),
+      avatarUrl: readField('avatarUrl'),
+      notes: readField('notes'),
+      imageData,
+    },
+  };
+}

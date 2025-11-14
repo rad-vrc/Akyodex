@@ -1,42 +1,53 @@
-# Images: keep only brand/dev essentials
-images/**
-!images/logo.webp
-!images/logo-US.webp
-!images/akyogallery.webp
-!images/logo-200.png
-!images/profileIcon.png
-!images/miniakyo.webp
-!images/
-!images/apple-touch-icon-180.png
-!images/akyodexIcon-32.png
-!images/akyodexIcon-16.png
-!images/akyodexIcon-192.png
-!images/akyodexIcon-512.png
-!images/akyo-bg.webp
-!images/akyo-bg2.webp
-# Allow a checked-in manifest when needed
-!images/manifest.json
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Backups and large archives
-images_backup/**
-*.zip
-*.7z
-*.tar.gz
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Node/Yarn
-node_modules/
-.pnpm-store/
+# testing
+/coverage
+/.specstory
 
-# Logs
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/tests/screenshots/
+
+# next.js
+/.next/
+/out/
+/.open-next/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# OS
-.DS_Store
-Thumbs.db
-images.zip
+# env files (can opt-in for committing if needed)
+.env*
 
-.mcp.json
-.env
-.env.*
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+.env.local
+
+# Test screenshots
+tests/screenshots/*.png

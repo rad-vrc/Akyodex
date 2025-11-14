@@ -1,0 +1,207 @@
+name: CI - Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+# Prevent multiple CI runs for the same commit
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: Lint and Type Check
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+        
+      - name: Run TypeScript type check
+        run: npx tsc --noEmit
+        
+  # Job 2: Build Validation
+  build-validation:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+            .open-next
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-nextjs-
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build for Cloudflare Pages
+        run: npm run build
+        env:
+          # Mock environment variables for build (use repository variables for defaults)
+          ADMIN_PASSWORD_HASH: ${{ vars.DEFAULT_ADMIN_PASSWORD_HASH }}
+          OWNER_PASSWORD_HASH: ${{ vars.DEFAULT_OWNER_PASSWORD_HASH }}
+          JWT_SECRET: ${{ vars.DEFAULT_JWT_SECRET }}
+          
+      - name: Check build output
+        run: |
+          echo "Checking build output directory..."
+          ls -la .open-next/
+          echo "Build output size:"
+          du -sh .open-next/
+          
+      - name: Verify critical files
+        run: |
+          echo "Verifying critical build artifacts..."
+          test -f .open-next/_worker.js && echo "✅ Worker script present" || exit 1
+          test -f .open-next/_routes.json && echo "✅ Routes config present" || exit 1
+          test -d .open-next/_next && echo "✅ Next.js assets present" || exit 1
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .open-next/
+          retention-days: 7
+          
+  # Job 3: Security Scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    
+    permissions:
+      contents: read
+      security-events: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+        
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        
+  # Job 4: Dependency Review (PR only)
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          
+  # Job 5: Build Performance Report
+  build-performance:
+    name: Build Performance Report
+    runs-on: ubuntu-latest
+    needs: build-validation
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Measure build time
+        run: |
+          echo "Starting build performance measurement..."
+          START_TIME=$(date +%s)
+          npm run build
+          END_TIME=$(date +%s)
+          BUILD_TIME=$((END_TIME - START_TIME))
+          echo "Build completed in ${BUILD_TIME} seconds"
+          echo "BUILD_TIME=${BUILD_TIME}" >> $GITHUB_ENV
+        env:
+          ADMIN_PASSWORD_HASH: ${{ vars.DEFAULT_ADMIN_PASSWORD_HASH }}
+          OWNER_PASSWORD_HASH: ${{ vars.DEFAULT_OWNER_PASSWORD_HASH }}
+          JWT_SECRET: ${{ vars.DEFAULT_JWT_SECRET }}
+          
+      - name: Analyze build size
+        run: |
+          echo "Analyzing build output size..."
+          du -sh .open-next/
+          echo ""
+          echo "Detailed breakdown:"
+          du -sh .open-next/* | sort -h
+          echo ""
+          echo "Next.js cache info:"
+          if [ -d ".next/cache" ]; then
+            du -sh .next/cache
+            echo "✅ Next.js cache directory exists"
+          else
+            echo "⚠️  No Next.js cache directory found"
+          fi

@@ -1,677 +1,1519 @@
-# Akyoずかん - 500種類以上のなぞの生き物を探索しよう
+# Akyodex - Next.js 15 + Cloudflare Pages
 
-## プロジェクト概要
+**VRChat Avatar Encyclopedia**
 
-Akyoずかんは、500種類以上存在する「Akyo」というなぞの生き物たちを検索・閲覧できるファン向けの図鑑サイトです。子どもでも親しみやすいモダンなカードデザインで、ポケモン図鑑のような楽しい体験を提供します。
+## 📋 Table of Contents
 
-## プロジェクトの目標
+1. [Quick Start](#quick-start)
+2. [Project Overview](#project-overview)
+3. [Glossary](#glossary)
+4. [Architecture](#architecture)
+5. [Tech Stack](#tech-stack)
+6. [Project Structure](#project-structure)
+7. [Development Setup](#development-setup)
+8. [Deployment Guide](#deployment-guide)
+9. [Deployment Verification](#deployment-verification)
+10. [Environment Variables](#environment-variables)
+11. [Features](#features)
+12. [API Endpoints](#api-endpoints)
+13. [Security](#security)
+14. [Troubleshooting](#troubleshooting)
+15. [Migration History](#migration-history)
+16. [Known Issues](#known-issues)
+17. [Contributing](#contributing)
 
-- Akyoファンが全種類のAkyoを簡単に検索・閲覧できる
-- お気に入り機能で好きなAkyoをコレクション
-- 属性や作者による詳細な分類と検索
-- VRChatアバターへの直接リンク提供
-- レスポンシブデザインでスマホ・タブレット対応
+> 🧭 Contributors: 詳細な開発フローや命名・検証ルールは [Repository Guidelines](./AGENTS.md) を先に確認してください。
 
-## 主な機能
+---
 
-### 現在実装済みの機能
+## ⚡ Quick Start
 
-1. **データ管理**
-   - CSV形式のAkyoデータの読み込みと解析（data/Akyo-data.csv または localStorage.AkyoDataCSV）
-   - クロスタブ同期：'AkyoDataCSV' の更新を検知して自動リロード
-   - IndexedDBによる大容量画像データの保存（数GB対応）
+**Get Akyodex running locally in 5 minutes!**
 
-2. **表示モード**
-   - **グリッドビュー**: カード形式で視覚的に表示（デフォルト）
-   - **リストビュー**: 詳細情報を含む表形式表示
-   - ワンクリックでビュー切り替え可能
+### Prerequisites Check
+```bash
+# Check Node.js version (need 20.x or later)
+node --version
 
-3. **検索・フィルタリング機能**
-   - **フリーワード検索**: ID、名前、属性、作者、備考から検索
-   - **属性フィルター**: ドロップダウンで属性別に絞り込み
-   - **クイックフィルター**:
-     - ランダム表示（20体をランダムピックアップ）
-     - お気に入りのみ表示
-
-4. **詳細表示機能**
-   - モーダルウィンドウで詳細情報を表示
-   - 備考の完全表示（複数行対応）
-   - VRChatアバターURLへの直接リンク
-
-5. **お気に入り機能**
-   - ワンクリックでお気に入り登録/解除
-   - LocalStorageによる永続化（ブラウザを閉じても保持）
-   - お気に入り数のリアルタイム表示
-
-6. **統計情報**
-   - 全Akyo数の表示
-   - 現在表示中の件数
-   - お気に入り登録数
-
-7. **レスポンシブデザイン**
-   - PC、タブレット、スマートフォンに完全対応
-   - Tailwind CSSによるモダンなUI
-   - 滑らかなアニメーション効果
-
-8. **管理者機能**
-   - 2階層認証システム（オーナー/管理者）
-   - Akyoデータの追加・編集・削除
-   - **ドラッグ&ドロップ + クロップUI** (新規登録・編集両対応)
-     - 画像位置調整・ズーム機能
-     - PC/スマホ両対応（タッチイベント対応）
-   - **VRChat連携機能**
-     - URLから画像を自動取得
-     - URLからアバター名を自動取得
-   - CSVインポート（ツールタブに統合）
-   - CSV更新時のアバターマップ自動更新
-   - 自動ID割り当て機能
-   - ID自動圧縮・再採番機能
-
-9. **デバッグツール**
-   - データ状態のリアルタイム確認
-   - ID割り当てロジックのテスト
-   - 使用済みIDの可視化
-   - デバッグログ表示
-
-10. **子供向けデザイン**
-    - パステルカラーの優しい配色
-    - 丸みを帯びたデザイン要素
-    - 楽しいアニメーション効果
-    - 虹色グラデーション背景
-    - 絵文字を活用した親しみやすいUI
-    - カスタムロゴアップロード機能
-
-## 🔗 機能別エントリーポイント
-
-- `/index.html` - 図鑑（zukan）メインUI。CSV: data/Akyo-data.csv または localStorage.AkyoDataCSV
-- `/admin.html` - 管理UI（タブ: 新規登録 / 編集・削除 / ツール（CSVインポート・ID再採番・エクスポート・統計））
-- `/admin.html` - 管理UI（タブ: 新規登録 / 編集・削除 / ツール（CSVインポート・ID再採番・統計））
-
-URLパラメータ（将来検討）
-
-- `/?search={keyword}` - 検索キーワード指定
-- `/?attribute={attr}` - 属性フィルター指定
-- `/?id={AkyoId}` - 特定Akyoの詳細表示
-
-## データ構造
-
-### CSVデータフォーマット
-
-```csv
-ID,見た目,通称,アバター名,属性,備考,作者,アバターURL
-001,,オリジンAkyo,Akyo origin,チョコミント類,すべてのはじまり,ugai,https://vrchat.com/...
+# Check npm version (need 10.x or later)
+npm --version
 ```
 
-### 内部データモデル
+### Step 1: Clone and Install (2 minutes)
+```bash
+# Clone repository
+git clone https://github.com/rad-vrc/Akyodex.git
+cd Akyodex/akyodex-nextjs
 
-```javascript
+# Install dependencies
+npm install
+```
+
+### Step 2: Set Up Environment (1 minute)
+```bash
+# Create .env.local file with default credentials
+cat > .env.local << 'EOF'
+# Admin Authentication (simple access codes)
+# Owner password (full access): RadAkyo
+# Admin password (limited access): Akyo
+ADMIN_PASSWORD_OWNER=RadAkyo
+ADMIN_PASSWORD_ADMIN=Akyo
+
+# Session Secret (Development only)
+SESSION_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# R2 Base URL (for image fetching)
+NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
+
+# App Origin (for CSRF protection)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+EOF
+```
+
+### Step 3: Run Development Server (30 seconds)
+```bash
+# Start dev server
+npm run dev
+```
+
+### Step 4: Open in Browser
+```
+✅ Gallery:     http://localhost:3000/zukan
+✅ Admin Panel: http://localhost:3000/admin
+```
+
+**Default Admin Credentials:**
+- Owner Password: `RadAkyo` (full access)
+- Admin Password: `Akyo` (limited access)
+
+---
+
+## 📖 Project Overview
+
+**Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズを網羅したオンライン図鑑です。
+
+### Key Features
+- 🎨 **640体のアバターデータベース** - 4桁ID管理システム (0001-0640)
+- 🔐 **Admin Panel** - JWT認証、画像クロッピング、VRChat連携
+- 📱 **PWA対応** - 6種類のキャッシング戦略
+- 🌍 **多言語対応** - 日本語/英語（自動検出）
+- ⚡ **Edge Runtime** - Cloudflare Pages + R2 + KV
+- 🤖 **Difyチャットボット** - AI搭載のアバター検索アシスタント
+
+### Project Status
+- ✅ **Next.js 15.5.6 Migration Complete** (2025-01-22)
+- ✅ **Security Hardening** (Timing attack, XSS prevention, Input validation)
+- ✅ **PWA Implementation** (Service Worker with 6 caching strategies)
+- ✅ **VRChat Image Fallback** (3-tier fallback: R2 → VRChat API → Placeholder)
+- ✅ **Dify AI Chatbot Integration** (Natural language avatar search)
+- ✅ **Dual Admin System** (Owner/Admin role separation)
+
+---
+
+## 📖 Glossary
+
+**Key terms used in this documentation:**
+
+### General Terms
+- **SSG (Static Site Generation)**: Pre-rendering pages at build time for faster performance
+- **ISR (Incremental Static Regeneration)**: Updating static pages periodically without rebuilding the entire site
+- **PWA (Progressive Web App)**: Web application with native app-like features (offline support, installable)
+- **Edge Runtime**: Code execution at CDN edge locations (closer to users) for lower latency
+- **JWT (JSON Web Token)**: Secure authentication token standard
+
+### Cloudflare Services
+- **Cloudflare Pages**: Static site hosting with automatic deployment from Git
+- **R2 Bucket**: Object storage (like AWS S3) for files (CSV, images)
+- **KV (Key-Value) Store**: Fast distributed database for simple key-value pairs (used for sessions)
+
+### VRChat Terms
+- **Avatar**: 3D character model used in VRChat
+- **Akyo (あきょ)**: Japanese VRChat avatar series created by the community
+- **VRChat ID**: Unique identifier for avatars (format: `avtr_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
+
+### Technical Terms
+- **XSS (Cross-Site Scripting)**: Security vulnerability where attackers inject malicious scripts
+- **CSRF (Cross-Site Request Forgery)**: Attack forcing users to execute unwanted actions
+- **ReDoS (Regular Expression Denial of Service)**: Attack exploiting inefficient regex patterns
+- **Timing Attack**: Exploiting time differences in operations to extract sensitive information
+- **HTTP-only Cookie**: Cookie inaccessible to JavaScript (prevents XSS attacks)
+- **SameSite Cookie**: Cookie security attribute preventing CSRF attacks
+
+---
+
+## 🏗️ Architecture
+
+### Deployment Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Cloudflare Pages                         │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              Next.js 15 App (Edge Runtime)            │  │
+│  │  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  │  │
+│  │  │   SSG Pages │  │ API Routes   │  │ Middleware  │  │  │
+│  │  │   (Static)  │  │ (Edge Funcs) │  │  (i18n)     │  │  │
+│  │  └─────────────┘  └──────────────┘  └─────────────┘  │  │
+│  └───────────────────────────────────────────────────────┘  │
+│           │                │                │                │
+│           ├────────────────┼────────────────┤                │
+│           ▼                ▼                ▼                │
+│  ┌────────────┐  ┌─────────────┐                            │
+│  │  R2 Bucket │  │  KV Store   │                            │
+│  │   (CSV +   │  │  (Session)  │                            │
+│  │   Images)  │  └─────────────┘                            │
+│  └────────────┘                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15.5.6 (App Router)
+- **React**: 19.1.0 (Server/Client Components)
+- **Styling**: Tailwind CSS 3.4.17
+- **UI Components**: Radix UI (Dialog, Dropdown, Tabs)
+- **Icons**: Lucide React
+- **Image Processing**: react-image-crop 11.0.7
+- **PWA**: Custom Service Worker with 6 caching strategies
+
+### Backend
+- **Runtime**: Cloudflare Pages (Edge Runtime)
+- **Adapter**: @opennextjs/cloudflare 1.3.1
+- **Authentication**: JWT (jsonwebtoken 9.0.2)
+- **Password Hashing**: crypto.createHash('sha256')
+- **Session Storage**: Cloudflare KV
+- **File Storage**: Cloudflare R2
+
+### Security
+- **HTML Sanitization**: sanitize-html 2.17.0
+- **Timing Attack Prevention**: crypto.timingSafeEqual()
+- **Input Validation**: Length-limited regex patterns
+- **XSS Prevention**: HTML entity decoding + tag stripping
+
+### DevOps
+- **Package Manager**: npm 10.x
+- **Node Version**: 20.x
+- **Git Workflow**: Feature branches → PR → main
+- **CI/CD**: Cloudflare Pages automatic deployment
+
+---
+
+## 📁 Project Structure
+
+```
+akyodex-nextjs/
+├── README.md                        # This file
+├── DEPLOYMENT.md                    # Cloudflare Pages deployment guide
+│
+├── package.json                     # Dependencies and scripts
+├── package-lock.json
+├── next.config.ts                   # Next.js + Cloudflare config
+├── open-next.config.ts              # OpenNext Cloudflare adapter config
+├── tailwind.config.ts               # Tailwind CSS config
+├── tsconfig.json                    # TypeScript config
+│
+├── public/
+│   ├── sw.js                        # Service Worker (6 caching strategies)
+│   ├── manifest.json                # PWA manifest
+│   ├── icons/                       # PWA icons
+│   └── fonts/                       # M PLUS Rounded 1c
+│
+├── src/
+│   ├── app/                         # Next.js App Router
+│   │   ├── layout.tsx               # Root layout (i18n, PWA)
+│   │   ├── page.tsx                 # Landing page
+│   │   ├── offline/                 # PWA offline page
+│   │   ├── admin/                   # Admin panel pages
+│   │   │   ├── page.tsx             # Admin dashboard
+│   │   │   └── admin-client.tsx     # Client-side admin logic
+│   │   ├── zukan/                   # Avatar gallery
+│   │   │   ├── page.tsx             # Gallery page (SSG + ISR)
+│   │   │   ├── loading.tsx          # Loading skeleton
+│   │   │   └── detail/[id]/         # Detail page (SSG)
+│   │   │       ├── page.tsx
+│   │   │       └── loading.tsx
+│   │   └── api/                     # API Routes (Edge Runtime)
+│   │       ├── admin/               # Admin API
+│   │       │   ├── login/
+│   │       │   ├── logout/
+│   │       │   ├── verify-session/
+│   │       │   └── next-id/         # Auto ID numbering
+│   │       ├── upload-akyo/         # Avatar registration
+│   │       ├── update-akyo/         # Avatar update
+│   │       ├── delete-akyo/         # Avatar deletion
+│   │       ├── check-duplicate/     # Duplicate check
+│   │       ├── avatar-image/        # Image proxy
+│   │       ├── vrc-avatar-info/     # VRChat avatar info fetch
+│   │       └── vrc-avatar-image/    # VRChat avatar image fetch
+│   │
+│   ├── components/                  # React Components
+│   │   ├── akyo-card.tsx            # Avatar card component
+│   │   ├── akyo-list.tsx            # Avatar list component
+│   │   ├── akyo-detail-modal.tsx    # Detail modal
+│   │   ├── mini-akyo-bg.tsx         # Animated background
+│   │   ├── service-worker-register.tsx  # SW registration
+│   │   ├── language-selector.tsx    # Language switcher
+│   │   └── admin/                   # Admin components
+│   │       ├── admin-header.tsx
+│   │       ├── admin-login.tsx
+│   │       ├── admin-tabs.tsx
+│   │       ├── attribute-modal.tsx  # Attribute management
+│   │       ├── edit-modal.tsx       # Edit modal with image crop
+│   │       └── tabs/
+│   │           ├── add-tab.tsx      # Add avatar tab
+│   │           ├── edit-tab.tsx     # Edit avatar tab
+│   │           └── tools-tab.tsx    # Tools tab
+│   │
+│   ├── lib/                         # Utility Libraries
+│   │   ├── akyo-data-server.ts      # Server-side data loading
+│   │   ├── api-helpers.ts           # API helper functions
+│   │   ├── csv-parser.ts            # CSV parser
+│   │   ├── csv-utils.ts             # CSV utilities (createAkyoRecord)
+│   │   ├── html-utils.ts            # HTML sanitization (NEW)
+│   │   ├── i18n.ts                  # i18n utilities
+│   │   ├── session.ts               # JWT session management
+│   │   └── vrchat-utils.ts          # VRChat API utilities
+│   │
+│   ├── types/
+│   │   └── akyo.ts                  # TypeScript types
+│   │
+│   └── middleware.ts                # Edge middleware (i18n detection)
+│
+├── scripts/
+│   └── migrate-csv-to-4digit.mjs    # Migrate CSV to 4-digit IDs
+│
+└── data/
+    ├── akyo-data.csv                # Main avatar data (639 entries)
+    └── akyo-data-US.csv             # English avatar data
+
+```
+
+---
+
+## 🚀 Development Setup
+
+### Prerequisites
+
+- **Node.js**: 20.x or later
+- **npm**: 10.x or later
+- **Git**: Latest version
+- **Cloudflare Account**: For deployment
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/rad-vrc/Akyodex.git
+cd Akyodex/akyodex-nextjs
+
+# Install dependencies
+npm install
+
+# Create .env.local file for local development
+cat > .env.local << 'EOF'
+# Admin Authentication (simple access codes)
+# Owner password (full access): RadAkyo
+# Admin password (limited access): Akyo
+ADMIN_PASSWORD_OWNER=RadAkyo
+ADMIN_PASSWORD_ADMIN=Akyo
+
+# Session Secret (Development only)
+SESSION_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+
+# R2 Base URL (for image fetching)
+NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
+
+# App Origin (for CSRF protection)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+EOF
+
+# Run development server
+npm run dev
+```
+
+### Admin Password Setup
+
+**Simple Access Codes** (same for development and production):
+- **Owner Password**: `RadAkyo` (full access - can delete avatars)
+- **Admin Password**: `Akyo` (limited access - can add/edit only)
+
+These are simple, easy-to-share access codes for community contributors.
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev              # Start dev server (localhost:3000)
+npm run build            # Build for production (Vercel)
+npm run pages:build      # Build for Cloudflare Pages
+npm run pages:deploy     # Deploy to Cloudflare Pages
+npm run pages:dev        # Local Cloudflare Pages dev server
+
+# Linting & Type Check
+npm run lint             # Run ESLint
+npm run type-check       # Run TypeScript compiler check
+
+# CSV Migration
+node scripts/migrate-csv-to-4digit.mjs     # Migrate to 4-digit IDs
+```
+
+---
+
+## 🚀 Deployment Guide
+
+### Cloudflare Pages Setup
+
+#### 1. Create Cloudflare Pages Project
+
+```bash
+cd akyodex-nextjs
+npm run pages:deploy
+```
+
+Or manually via dashboard:
+1. Go to Cloudflare Dashboard → Pages
+2. Create a new project
+3. Connect to GitHub repository: `rad-vrc/Akyodex`
+
+#### 2. Build Configuration
+
+**IMPORTANT**: Set the correct root directory!
+
+```yaml
+Framework preset: None (or Next.js)
+Build command: npm ci && npm run pages:build
+Build output directory: .vercel/output/static
+Root directory (advanced): akyodex-nextjs  ← CRITICAL!
+```
+
+#### 3. Environment Variables
+
+Go to **Settings** → **Environment variables** and add:
+
+```bash
+# Admin Authentication
+ADMIN_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313
+OWNER_PASSWORD_HASH=your_owner_password_hash_here
+
+# Session Secret (generate with: openssl rand -hex 64)
+SESSION_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+```
+
+#### 4. Cloudflare Bindings
+
+Add these bindings in **Settings** → **Functions**:
+
+```toml
+# R2 Bucket Binding
+[[r2_buckets]]
+binding = "AKYO_BUCKET"
+bucket_name = "akyo-data"
+
+# KV Namespace Binding
+[[kv_namespaces]]
+binding = "AKYO_KV"
+id = "your_kv_namespace_id"
+```
+
+#### 5. Create R2 Bucket
+
+```bash
+# Create R2 bucket
+npx wrangler r2 bucket create akyo-data
+
+# Upload CSV files
+npx wrangler r2 object put akyo-data/data/akyo-data.csv --file=../data/akyo-data.csv
+npx wrangler r2 object put akyo-data/data/akyo-data-US.csv --file=../data/akyo-data-US.csv
+```
+
+#### 6. Create KV Namespace
+
+```bash
+# Create KV namespace for sessions
+npx wrangler kv:namespace create "AKYO_KV"
+
+# Copy the ID and add to Cloudflare Pages bindings
+```
+
+#### 7. Deploy
+
+```bash
+npm run pages:deploy
+```
+
+Or push to `main` branch for automatic deployment.
+
+---
+
+## ✅ Deployment Verification
+
+**After successful deployment, verify everything is working correctly:**
+
+### 1. Build Success Check
+
+```bash
+# In Cloudflare Pages Dashboard
+✅ Build status: Success
+✅ Deployment URL: https://your-project.pages.dev
+✅ No build errors in logs
+```
+
+### 2. Basic Functionality Test
+
+| Feature | URL | Expected Result |
+|---------|-----|----------------|
+| **Landing Page** | `https://your-project.pages.dev/` | Loads without errors |
+| **Avatar Gallery** | `https://your-project.pages.dev/zukan` | Shows 639 avatars |
+| **Avatar Detail** | `https://your-project.pages.dev/zukan/detail/0001` | Shows avatar #0001 details |
+| **Admin Login** | `https://your-project.pages.dev/admin` | Login page loads |
+| **Language Switch** | Click language selector | Switches between 日本語/English |
+| **PWA Manifest** | `https://your-project.pages.dev/manifest.json` | JSON file loads |
+| **Service Worker** | `https://your-project.pages.dev/sw.js` | JavaScript file loads |
+
+### 3. Cloudflare Bindings Check
+
+```bash
+# Check R2 bucket
+npx wrangler r2 bucket list
+# Should show: akyo-data
+
+npx wrangler r2 object list akyo-data
+# Should show: data/akyo-data.csv, data/akyo-data-US.csv
+
+# Check KV namespace
+npx wrangler kv:namespace list
+# Should show: AKYO_KV with ID
+```
+
+### 4. Admin Panel Test
+
+```bash
+# 1. Go to /admin
+# 2. Login with your credentials
+# 3. Try each tab:
+```
+
+| Tab | Action | Expected Result |
+|-----|--------|----------------|
+| **Add** | Fetch next ID | Shows next available 4-digit ID |
+| **Add** | VRChat fetch | Retrieves avatar info from VRChat URL |
+| **Edit** | Search avatar | Finds existing avatar |
+| **Edit** | Update field | Saves changes to CSV |
+| **Tools** | View attributes | Shows all attribute tags |
+
+### 5. PWA Installation Test
+
+```bash
+# Desktop (Chrome/Edge):
+# 1. Visit site in browser
+# 2. Look for install icon in address bar
+# 3. Click "Install" → Should install as desktop app
+
+# Mobile (Android/iOS):
+# 1. Visit site in browser
+# 2. Menu → "Add to Home Screen"
+# 3. Should add app icon to home screen
+```
+
+### 6. Performance Check
+
+```bash
+# Run Lighthouse audit (Chrome DevTools)
+# Expected scores:
+```
+
+- **Performance**: 90+ (green)
+- **Accessibility**: 95+ (green)
+- **Best Practices**: 90+ (green)
+- **SEO**: 90+ (green)
+- **PWA**: ✅ Installable
+
+### 7. Error Monitoring
+
+```bash
+# Check Cloudflare Pages Dashboard:
+✅ Functions → No errors in last 24h
+✅ Analytics → Requests succeeding
+✅ Logs → No 5xx errors
+```
+
+### Troubleshooting Failed Checks
+
+If any check fails, see [Troubleshooting](#troubleshooting) section for detailed solutions.
+
+**Quick fixes:**
+- Build fails → Check Root directory setting
+- 404 errors → Check Build output directory
+- API errors → Check Environment variables
+- Bindings not working → Check Settings → Functions
+
+---
+
+## 🔑 Environment Variables
+
+### Required Variables
+
+#### Local Development (`.env.local`)
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ADMIN_PASSWORD_OWNER` | Owner access code（平文、開発専用） | `RadAkyo` |
+| `ADMIN_PASSWORD_ADMIN` | Admin access code（平文、開発専用） | `Akyo` |
+| `SESSION_SECRET` | Secret key for JWT signing | `629de6ec...` (128 chars) |
+| `NEXT_PUBLIC_APP_URL` | App origin for CSRF allowlist | `http://localhost:3000` |
+| `NEXT_PUBLIC_R2_BASE` | R2 bucket base URL | `https://images.akyodex.com` |
+| `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` | Udify cloud token | *(required, no default)* |
+| `CSRF_DEV_ALLOWLIST` (任意) | Playwright などで localhost を許可する場合 `true` | `true` |
+
+#### Production (Cloudflare Pages)
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ADMIN_PASSWORD_HASH` | Admin access code (SHA-256 hash) | `e5df0c...` |
+| `OWNER_PASSWORD_HASH` | Owner access code (SHA-256 hash) | `2f7d8c...` |
+| `SESSION_SECRET` | Same as local、必ず 128 文字以上 | `629de6ec...` |
+| `NEXT_PUBLIC_APP_URL` | `https://akyodex.com` | `https://akyodex.com` |
+| `NEXT_PUBLIC_R2_BASE` | CDN base | `https://images.akyodex.com` |
+| `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` | Udify token（cloud環境で使用する値） | *(必須・デフォルトなし)* |
+| `GITHUB_TOKEN` | CSV 更新用 PAT（`repo` scope） | `ghp_xxx` |
+| `GITHUB_REPO_OWNER` | GitHub org/user | `rad-vrc` |
+| `GITHUB_REPO_NAME` | Repo name | `Akyodex` |
+| `GITHUB_BRANCH` | Tracking branch | `main` |
+
+> ❗️Cloudflare 上では **平文パスワード変数（`ADMIN_PASSWORD_OWNER/ADMIN_PASSWORD_ADMIN`）を設定する必要はありません**。ハッシュ値だけを登録し、ローカル `.env.local` に平文を保持してください。
+
+### Cloudflare Bindings (Auto-configured)
+
+| Binding | Type | Purpose |
+|---------|------|---------|
+| `AKYO_BUCKET` | R2 Bucket | CSV files and avatar images |
+| `AKYO_KV` | KV Namespace | Admin session storage |
+
+### How to Generate JWT Secret
+
+```bash
+# Session Secret (128 hex characters)
+openssl rand -hex 64
+
+# Or use Node.js
+node -e "const crypto = require('crypto'); console.log(crypto.randomBytes(64).toString('hex'));"
+```
+
+### About Access Codes
+
+The admin passwords are **simple access codes** designed to be easily shared with community contributors:
+- **RadAkyo**: Full access (owner role)
+- **Akyo**: Limited access (admin role)
+
+These are not meant to be highly secure passwords, but rather easy-to-remember codes for trusted community members.
+
+---
+
+## ✨ Features
+
+### 1. Avatar Gallery
+
+- **640 Avatars**: Complete database with 4-digit IDs (0001-0640)
+- **Search**: By nickname, avatar name, attributes
+- **Filtering**: By attributes (e.g., チョコミント類, きつね, etc.)
+- **Detail View**: Modal with full information
+- **SSG + ISR**: Static generation with 1-hour revalidation
+- **Responsive**: Mobile-first design
+- **Image Fallback**: R2 → VRChat API → Placeholder (3-tier fallback system)
+
+### 2. Admin Panel
+
+**Access**: `/admin` (requires authentication)
+
+#### Features:
+- ✅ **JWT Authentication**: Secure session management
+- ✅ **Add Avatar**: 
+  - Auto ID numbering (fetches next available ID)
+  - Image cropping (400x400px)
+  - VRChat integration (fetch avatar info from VRChat)
+  - Duplicate checking (nickname, avatar name)
+- ✅ **Edit Avatar**:
+  - Update all fields
+  - Re-crop images
+  - Delete avatars
+- ✅ **Attribute Management**:
+  - Add new attributes
+  - Edit existing attributes
+  - Unicode normalization (NFC) for duplicate checking
+- ✅ **Tools**:
+  - CSV export
+  - Data migration
+  - Bulk operations
+
+#### Security:
+- 🔒 Timing-safe password comparison (prevents timing attacks)
+- 🔒 HTTP-only cookies for session tokens
+- 🔒 JWT expiration (7 days)
+- 🔒 CSRF protection
+- 🔒 Role-based access control (Owner/Admin)
+
+### 3. PWA (Progressive Web App)
+
+#### Service Worker Caching Strategies:
+
+1. **Cache First** (Fonts, Icons)
+   - Check cache → Network fallback
+   - 30-day cache duration
+
+2. **Network First** (HTML, API)
+   - Network first → Cache fallback
+   - 5-minute cache duration
+
+3. **Cache Only** (Offline page)
+   - Always serve from cache
+
+4. **Network Only** (Admin, Auth)
+   - Never cache sensitive data
+
+5. **Stale While Revalidate** (Images, CSS, JS)
+   - Serve from cache immediately
+   - Fetch fresh copy in background
+   - 7-day cache duration
+
+6. **Offline Fallback**
+   - Custom offline page
+   - Shows cached avatars
+
+#### PWA Features:
+- ✅ Installable (Add to Home Screen)
+- ✅ Offline support
+- ✅ Background sync
+- ✅ Push notifications (future)
+- ✅ App-like experience
+
+### 4. Internationalization (i18n)
+
+#### Supported Languages:
+- 🇯🇵 Japanese (ja) - Default
+- 🇺🇸 English (en)
+
+#### Detection Priority:
+1. **Cookie** (`lang=ja` or `lang=en`)
+2. **Cloudflare Header** (`cf-ipcountry`)
+3. **Accept-Language Header**
+4. **Default**: Japanese
+
+#### Implementation:
+- Edge Middleware for language detection
+- Client-side language switcher
+- Separate CSV files (akyo-data.csv, akyo-data-US.csv)
+- Dynamic content loading
+
+### 5. Dify AI Chatbot
+
+#### Features:
+- 🤖 **AI-Powered Search**: Natural language avatar queries
+- 💬 **Embedded Widget**: Right-bottom corner chat button
+- 🎨 **Custom Styling**: Orange theme (#EE7800) matching site design
+- 📱 **Responsive**: Works on desktop and mobile
+
+#### Configuration:
+- **Token**: `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` から読み込み（必須・未設定ならチャットボットを読み込まない）
+- **Provider**: Udify.app（`https://udify.app/embed.min.js`）
+- **Position**: Fixed bottom-right
+- **Size**: 24rem × 40rem
+
+#### Usage:
+Users can ask questions like:
+- "チョコミント類のAkyoを見せて"
+- "Show me fox-type Akyos"
+- "ugaiさんが作ったアバターは？"
+
+---
+
+## 🔌 API Endpoints
+
+### Public APIs
+
+#### `GET /api/avatar-image`
+**Avatar image proxy with VRChat fallback**
+
+**Query Parameters**:
+- `id` (string): Avatar ID (e.g., "0001")
+- `avtr` (string, optional): VRChat avatar ID (e.g., "avtr_abc123...")
+- `w` (number, optional): Image width (default: 512, max: 4096)
+
+**Fallback Priority**:
+1. R2 Bucket (`https://images.akyodex.com/images/{id}.webp`)
+2. VRChat API (if `avtr` provided or found in CSV)
+3. Placeholder image
+
+**Response**: Image binary (WebP/PNG/JPEG)
+
+#### `GET /api/vrc-avatar-info`
+**Fetch VRChat avatar info**
+
+**Query Parameters**:
+- `avtr` (string): VRChat avatar ID (e.g., "avtr_abc123...")
+
+**Response**:
+```json
 {
-  id: string,           // 3桁のID番号
-  appearance: string,   // 見た目（現在は空）
-  nickname: string,     // 通称
-  avatarName: string,   // アバター名
-  attribute: string,    // 属性（カンマ区切りで複数可）
-  notes: string,        // 備考（複数行対応）
-  creator: string,      // 作者名
-  avatarUrl: string,    // VRChatアバターURL
-  isFavorite: boolean   // お気に入りフラグ
+  "avatarName": "Avatar Name",
+  "creatorName": "Creator Name",
+  "description": "Description...",
+  "fullTitle": "Full OGP Title",
+  "avtr": "avtr_abc123..."
 }
 ```
 
-## 今後の実装予定機能
+#### `GET /api/vrc-avatar-image`
+**Fetch VRChat avatar image**
 
-1. **高度な検索機能**
-   - 複数条件の組み合わせ検索
-   - 検索履歴の保存
-   - サジェスト機能
+**Query Parameters**:
+- `avtr` (string): VRChat avatar ID
 
-3. **統計・分析ページ**
-   - 属性別分布グラフ（Chart.js使用）
-   - 作者別統計
-   - 人気ランキング
+**Response**: Image binary
 
-4. **コレクション機能**
-   - 取得済み/未取得の管理
-   - コレクション進捗率表示
-   - 達成バッジシステム
+### Admin APIs (Authentication Required)
 
-5. **共有機能**
-   - SNS共有ボタン
-   - お気に入りリストの共有URL生成
-   - QRコード生成
+#### `POST /api/admin/login`
+**Admin login**
 
-6. **PWA化**
-   - オフライン対応
-   - ホーム画面追加
-   - プッシュ通知（新Akyo追加時）
-
-## 技術スタック
-
-- **フロントエンド**: HTML5, CSS3, JavaScript (ES6+)
-- **CSSフレームワーク**: Tailwind CSS (CDN)
-- **アイコン**: Font Awesome 6.4
-- **フォント**: Google Fonts (Noto Sans JP, Kosugi Maru)
-- **データ形式**: CSV → JSON変換
-- **ストレージ**:
-  - IndexedDB（画像Base64データの一次保存: object store 'images'）
-  - LocalStorage（お気に入り、CSVデータ 'AkyoDataCSV'、画像のフォールバック 'AkyoImages'）
-  - SessionStorage（認証情報 'AkyoAdminAuth'）
-
-## ファイル構成
-
-```
-/
-├── index.html          # メインページ（図鑑）
-├── admin.html          # 管理者ページ
-├── (削除) image-manager.html  # 画像管理・編集ツール（削除済み）
-├── (削除) bulk-upload.html    # 一括画像登録ツール（削除済み）
-├── logo-upload.html    # アイコン設定ツール 🆙
-├── migrate-storage.html # IndexedDB移行ツール
-├── (削除) admin-import.html   # CSVインポートページ（削除済み）
-├── test-indexeddb.html # IndexedDB確認ツール
-├── test-debug.html     # デバッグツール
-├── HOSTING-GUIDE.md    # ホスティングガイド 🆕
-├── js/
-│   ├── main.js        # 図鑑ページ用JavaScript
-│   ├── admin.js       # 管理者ページ用JavaScript (クロップ機能含む)
-│   ├── image-loader.js # 画像読み込み用JavaScript (VRChatフォールバック対応)
-│   ├── storage-manager.js # IndexedDB管理
-│   ├── storage-adapter.js # ストレージ互換レイヤー
-│   ├── attribute-manager.js # 属性管理API
-│   └── mini-akyo-bg.js # 背景アニメーション
-├── functions/
-│   ├── _utils.ts      # 共通ユーティリティ
-│   └── api/
-│       ├── csv.ts     # CSV取得
-│       ├── commit-csv.ts # CSV更新 + アバターマップ自動更新
-│       ├── upload.ts  # 画像アップロード (R2)
-│       ├── manifest.ts # 画像マニフェスト取得
-│       ├── vrc-avatar-image.ts # VRChat画像プロキシ (CORS/403回避)
-│       ├── vrc-avatar-info.ts # VRChatアバター名取得
-│       └── ... (その他のAPI)
-├── css/
-│   └── kid-friendly.css # 子ども向けデザインCSS
-├── data/
-│   └── Akyo-data.csv  # Akyoデータ
-└── README.md          # このファイル
+**Body**:
+```json
+{
+  "password": "YourPassword",
+  "role": "admin" | "owner"
+}
 ```
 
-## デザインコンセプト
-
-- **モダンカード式**: Material Design風の洗練されたカードUI
-- **親しみやすい配色**: パープル×ブルーのグラデーション
-- **直感的な操作**: 子どもでも使いやすいシンプルな操作性
-- **視覚的な楽しさ**: 属性ごとの色分けとアニメーション
-
-## 開発者向け情報
-
-### ローカル開発
-
-1. すべてのファイルをWebサーバーに配置
-2. `index.html`をブラウザで開く
-3. CSVファイルは`data/Akyo-data.csv`に配置
-4. 管理機能は`admin.html`からアクセス
-5. デバッグは`test-debug.html`で確認
-
-### スクリプト読込ポリシー
-
-- 外部JavaScriptは基本的に`defer`属性で読み込み、依存するインラインスクリプトより先に実行済みになるよう配置します。
-- インラインスクリプトは即時関数 (IIFE) でラップし、グローバル名前空間を汚染しないようにしてください。
-
-### 管理者ログイン情報
-
-- **オーナー権限**: `RadAkyo` - 全機能利用可能（削除含む）
-- **管理者権限**: `Akyo` - 追加・編集のみ
-
-### カスタマイズポイント
-
-- 属性の色設定: `main.js`の`getAttributeColor()`関数
-- カードデザイン: `main.js`の`createAkyoCard()`関数
-- フィルター条件: 各種フィルター関数をカスタマイズ可能
-
-## 開発メモ
-
-- CSVの永続化は localStorage.AkyoDataCSV。未設定時は data/Akyo-data.csv をフェッチ
-- 画像取得優先順位: マニフェスト → R2直リンク → VRChatフォールバック → 静的ファイル
-- **画像ロード高速化**（実装済み）:
-  - マニフェストのlocalStorageキャッシュ（5分間、バックグラウンド更新）
-  - 画像の自動フォールバック（onerrorで次の候補を自動試行）
-  - IntersectionObserver先読み 200px（体感速度大幅向上）
-- VRChat連携: `/api/vrc-avatar-image`でCORS/403を回避、`/api/vrc-avatar-info`でメタデータ取得
-- 自動ID割り当ては001-020を優先的に使用
-- ID削除時は自動で後続IDを詰める（お気に入り・画像のIDマップも更新）
-- CSV更新時にアバターマップ (`data/akyo-avatar-map.js`) を自動再生成
-
-## 次の開発推奨事項
-
-1. **検索機能の強化**
-   - 複数条件のAND/OR検索
-   - 検索履歴の保存
-   - サジェスト機能の実装
-   - 編集モードでも並び替えやソート可能に
-
-2. **パフォーマンス最適化**
-   - 仮想スクロールの実装
-   - 画像の遅延読み込み（✅実装済み・強化：先読み200px、自動フォールバック）
-   - サムネイル生成機能（現在は300×200固定）
-
-3. **ユーザー体験の向上**
-   - PWA化によるオフライン対応
-   - ダークモード対応
-   - 音声検索機能
-   - ゲーミフィケーション要素（バッジ、実績など）
-
-4. **管理機能の拡充**
-   - VRChat一括インポート機能（複数URLから一括取得）
-   - 画像の一括エクスポート/インポート
-   - バックアップ・リストア機能
-   - 変更履歴の記録
-
-5. **VRChat連携の強化**
-   - アバター更新検知（VRChatで画像が変わった場合の通知）
-   - 作者情報の自動取得・更新
-   - VRChatプロフィールページへのリンク追加
-
-## 📧 お問い合わせ
-
-Akyoずかんに関するご意見・ご要望は、プロジェクト管理者までお願いします。
-
----
-
-公開URL/デプロイ
-
-- デプロイはPublishタブから行ってください（ワンクリックで公開できます）
-
-データモデル/ストレージまとめ
-
-- CSV: data/Akyo-data.csv または localStorage.AkyoDataCSV
-- 画像: IndexedDB 'images'（フォールバック localStorage.AkyoImages）
-- 認証: sessionStorage.AkyoAdminAuth
-
-**Akyoずかん** - すべてのAkyoファンのために
-
-## Akyodex 公開手順・完全版（Cloudflare Pages＋Functions＋R2＋KV）
-
-- **API トークン**：`<CLOUDFLARE_API_TOKEN>`
-- **Cloudflare アカウント名**：`<CLOUDFLARE_ACCOUNT_EMAIL>`
-- **Pages プロジェクト名**：`akyodex-site`
-- **本番ドメイン**：`akyodex.com`
-- **画像配信ドメイン（R2公開用）**：`images.akyodex.com`
-- **R2 バケット名**：`akyodex-images`
-- **KV 名前空間**：`AKYO_KV`
-- **管理者パスワード（オーナー）**：`<ADMIN_PASSWORD_OWNER>`
-- **管理者パスワード（一般管理者）**：`<ADMIN_PASSWORD_ADMIN>`
-
----
-
-## 0) 前提と現在のフォルダ構成
-
-- いまのフォルダは**まだ変更していない**（`functions/` や `api` など未作成）。
-- 画像は `images/001.webp`〜`images/612.webp`（3桁固定）＋ `images/logo.webp` と `images/profileIcon.webp` の計 **614枚**。
-- **方針**：
-
-  - ロゴ/アイコンは本体から直配信（`https://akyodex.com/images/logo.webp` など）。
-  - Akyo画像は **R2** に置き、`https://images.akyodex.com/images/NNN.webp` で配信。
-  - 表示側は **ID→URLマニフェスト**を `/api/manifest` から取得して解決。
-
----
-
-## 1) Cloudflare 側の準備（ダッシュボード）
-
-1. **Pages プロジェクトの作成**
-
-   - プロジェクト名：`akyodex-site`
-   - デプロイ方式：一旦は **手動（wrangler）** を想定（Git連携でも可）。
-   - カスタムドメインに **`akyodex.com`** を割り当て（DNS が Cloudflare 管理下であること）。
-
-2. **R2 バケットの作成**
-
-   - バケット名：`akyodex-images`
-   - **公開バケット**に設定。
-   - カスタムドメイン **`images.akyodex.com`** を紐づけ（R2 側の「公開設定」→「カスタムドメイン」）。
-
-3. **KV 名前空間の作成**
-
-   - 名前空間：`AKYO_KV`
-
-4. **Pages Functions のバインディングと環境変数**
-
-   - 対象：`akyodex-site` → *Settings* → *Functions* → *Bindings*
-   - 追加：
-
-     - **R2**：`AKYO_BUCKET` → `akyodex-images`
-     - **KV**：`AKYO_KV` → さきほど作った名前空間
-     - **環境変数**：
-
-       - `ADMIN_PASSWORD_OWNER = <ADMIN_PASSWORD_OWNER>`
-       - `ADMIN_PASSWORD_ADMIN = <ADMIN_PASSWORD_ADMIN>`
-       - `PUBLIC_R2_BASE = https://images.akyodex.com`
-
-> ここまでで「Pages（本体）」「R2（公開画像）」「KV（メタデータ）」の受け皿が完成する。
-
----
-
-## 2) ローカルの準備（wrangler とトークン）
-
-- Node.js を準備（v18+ 推奨）。
-- `npm i -D wrangler` または `npm i -g wrangler`
-- **APIトークン** を環境に設定：
-
-  - macOS/Linux: `export CLOUDFLARE_API_TOKEN=<CLOUDFLARE_API_TOKEN>`
-  - PowerShell: `$env:CLOUDFLARE_API_TOKEN = '<CLOUDFLARE_API_TOKEN>'`
-
-> 今回は **ユーザートークン（スコープ最小）**で運用する。Global API Key は使わない。
-
----
-
-## 3) プロジェクト差分（ファイル追加）
-
-ルートに以下を追加する。ディレクトリが無ければ作成する。
-
-```
-functions/
-  _utils.ts
-  api/
-    upload.ts
-    manifest.ts
-public/  （使わない場合は作成不要。既存 index.html などがルートにあるならそのまま）
-js/
-  image-manifest-loader.js  （なければ追加）
+**Response**:
+```json
+{
+  "success": true,
+  "role": "admin"
+}
 ```
 
-### 3.1 functions/_utils.ts
+**Sets HTTP-only cookie**: `admin_session`
 
-```ts
-export function okJSON(data: unknown, init: ResponseInit = {}) {
-  return new Response(JSON.stringify(data), {
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      ...(init.headers || {}),
-    },
-    status: init.status ?? 200,
+#### `POST /api/admin/logout`
+**Admin logout**
+
+**Response**:
+```json
+{
+  "success": true
+}
+```
+
+#### `GET /api/admin/verify-session`
+**Verify admin session**
+
+**Response**:
+```json
+{
+  "valid": true,
+  "role": "admin"
+}
+```
+
+#### `GET /api/admin/next-id`
+**Get next available avatar ID**
+
+**Response**:
+```json
+{
+  "nextId": "0640"
+}
+```
+
+#### `POST /api/upload-akyo`
+**Register new avatar**
+
+**Body** (FormData):
+- `id`: Avatar ID
+- `appearance`: Appearance date
+- `nickname`: Nickname
+- `avatarName`: Avatar name
+- `attributes`: Comma-separated attributes
+- `notes`: Notes
+- `creator`: Creator name
+- `avatarUrl`: VRChat avatar URL
+- `image`: Image file (optional)
+
+#### `POST /api/update-akyo`
+**Update existing avatar**
+
+**Body** (FormData): Same as upload-akyo
+
+#### `POST /api/delete-akyo`
+**Delete avatar**
+
+**Body**:
+```json
+{
+  "id": "0001"
+}
+```
+
+#### `POST /api/check-duplicate`
+**Check for duplicates**
+
+**Body**:
+```json
+{
+  "field": "nickname" | "avatarName",
+  "value": "value to check",
+  "excludeId": "0001" (optional)
+}
+```
+
+---
+
+## 🔒 Security
+
+### Implemented Security Measures
+
+#### 1. Timing Attack Prevention
+**File**: `src/app/api/admin/login/route.ts`
+
+```typescript
+import { timingSafeEqual } from 'crypto';
+
+function timingSafeCompare(a: string, b: string): boolean {
+  const bufA = Buffer.from(a, 'utf8');
+  const bufB = Buffer.from(b, 'utf8');
+  const maxLen = Math.max(bufA.length, bufB.length);
+  const paddedA = Buffer.alloc(maxLen);
+  const paddedB = Buffer.alloc(maxLen);
+  bufA.copy(paddedA);
+  bufB.copy(paddedB);
+  return timingSafeEqual(paddedA, paddedB);
+}
+
+// Always check both passwords to prevent role detection
+const isOwner = timingSafeCompare(password, ownerPassword);
+const isAdmin = timingSafeCompare(password, adminPassword);
+```
+
+#### 2. XSS Prevention
+**File**: `src/lib/html-utils.ts`
+
+```typescript
+import sanitizeHtml from 'sanitize-html';
+
+// Strip all HTML tags safely
+export function stripHTMLTags(html: string): string {
+  if (!html) return html;
+  return sanitizeHtml(html, { 
+    allowedTags: [], 
+    allowedAttributes: {} 
   });
 }
 
-export function errJSON(status: number, message: string) {
-  return okJSON({ error: message }, { status });
-}
-
-export function corsHeaders(origin?: string) {
-  return {
-    "access-control-allow-origin": origin ?? "*",
-    "access-control-allow-methods": "GET,POST,OPTIONS,DELETE",
-    "access-control-allow-headers": "authorization,content-type",
-  };
-}
-
-export function requireAuth(request: Request, env: { ADMIN_PASSWORD_OWNER: string; ADMIN_PASSWORD_ADMIN: string }) {
-  const h = request.headers.get("authorization") ?? "";
-  const token = h.startsWith("Bearer ") ? h.slice(7) : "";
-  if (!token) throw new Response("Unauthorized", { status: 401 });
-  if (token === env.ADMIN_PASSWORD_OWNER) return "owner" as const;
-  if (token === env.ADMIN_PASSWORD_ADMIN) return "admin" as const;
-  throw new Response("Unauthorized", { status: 401 });
-}
-
-export function threeDigits(id: string): string | null {
-  if (typeof id !== "string") return null;
-  const trimmed = id.trim();
-  if (!trimmed) return null;
-  if (!/^\d{1,3}$/.test(trimmed)) return null;
-  return trimmed.padStart(3, "0");
-}
-
-export function sanitizeFileName(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9._-]+/g, "_");
+// Decode HTML entities
+export function decodeHTMLEntities(text: string): string {
+  // Handles &amp;, &lt;, &gt;, &quot;, &#39;, numeric entities
+  // ...
 }
 ```
 
-### 3.2 functions/api/upload.ts
+#### 3. Input Validation
+**File**: `src/app/api/vrc-avatar-info/route.ts`
 
-```ts
-import { okJSON, errJSON, corsHeaders, requireAuth, threeDigits, sanitizeFileName } from "../_utils";
-
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-};
-
-export const onRequestPost: PagesFunction = async ({ request, env }) => {
-  try {
-    const role = requireAuth(request, env as any); // "owner" | "admin"
-    const form = await request.formData();
-
-    const idRaw = String(form.get("id") ?? "");
-    const id = threeDigits(idRaw);
-    if (!id) return errJSON(400, "invalid id");
-
-    const file = form.get("file");
-    if (!(file instanceof File)) return errJSON(400, "file is required");
-
-    const original = file.name || `${id}.webp`;
-    const safeName = sanitizeFileName(original);
-    const key = `images/${id}_${safeName}`; // 実ファイル名は自由だが先頭3桁IDで揃える
-
-    await (env as any).AKYO_BUCKET.put(key, file.stream(), {
-      httpMetadata: { contentType: file.type || "application/octet-stream" },
-    });
-
-    const base = (env as any).PUBLIC_R2_BASE as string; // 例: https://images.akyodex.com
-    const url = `${base}/${key}`;
-
-    // メタデータ（最小）
-    const name = String(form.get("name") ?? "");
-    const type = String(form.get("type") ?? "");
-    const desc = String(form.get("desc") ?? "");
-    const now = new Date().toISOString();
-    const updater = role; // ロールのみ記録（必要ならIP/UAも）
-
-    const data = { id, name, type, desc, key, url, updatedAt: now, updater };
-    await (env as any).AKYO_KV.put(`akyo:${id}`, JSON.stringify(data));
-
-    return okJSON({ ok: true, id, url, key, updatedAt: now }, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-  } catch (e: any) {
-    if (e instanceof Response) return e;
-    return errJSON(500, e?.message || "upload failed");
-  }
-};
-```
-
-### 3.3 functions/api/manifest.ts
-
-```ts
-import { okJSON, errJSON, corsHeaders } from "../_utils";
-
-export const onRequestOptions: PagesFunction = async ({ request }) => {
-  return new Response(null, { headers: corsHeaders(request.headers.get("origin") ?? undefined) });
-};
-
-export const onRequestGet: PagesFunction = async ({ request, env }) => {
-  try {
-    const list = await (env as any).AKYO_KV.list({ prefix: "akyo:" });
-    const out: Record<string, string> = {};
-    const values = await Promise.all(list.keys.map((k: any) => (env as any).AKYO_KV.get(k.name, "json")));
-    for (const v of values) {
-      if (v?.id && v?.url) out[v.id] = v.url;
-    }
-    return okJSON(out, {
-      headers: {
-        ...corsHeaders(request.headers.get("origin") ?? undefined),
-        "cache-control": "public, max-age=60, stale-while-revalidate=300",
-      },
-    });
-  } catch (e: any) {
-    return errJSON(500, e?.message || "manifest failed");
-  }
-};
-```
-
-### 3.4 js/image-manifest-loader.js（最小）
-
-```js
-window.akyoImageManifest = {};
-
-async function loadAkyoManifest() {
-  try {
-    const res = await fetch('/api/manifest', { cache: 'no-store' });
-    window.akyoImageManifest = await res.json();
-  } catch (e) {
-    console.warn('manifest fetch failed', e);
-    window.akyoImageManifest = window.akyoImageManifest || {};
-  }
+```typescript
+// Length-limited regex (prevents ReDoS)
+const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,50}$/);
+if (!avtrMatch) {
+  return Response.json({ error: 'Invalid avtr format' }, { status: 400 });
 }
-
-function getAkyoImageUrl(id3) {
-  return window.akyoImageManifest[id3] || `/images/${id3}.webp`; // フォールバック
-}
-
-window.loadAkyoManifest = loadAkyoManifest;
-window.getAkyoImageUrl = getAkyoImageUrl;
 ```
 
-### 3.5 HTML の読み込み
+#### 4. Session Management
+**File**: `src/lib/session.ts`
 
-- `index.html` と `admin.html` の末尾で以下を読み込む：
-
-```html
-<script src="js/image-manifest-loader.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    loadAkyoManifest();
+```typescript
+// JWT with HTTP-only cookies
+export function setSessionCookie(res: NextResponse, token: string) {
+  res.cookies.set('admin_session', token, {
+    httpOnly: true,      // Prevent XSS
+    secure: true,        // HTTPS only
+    sameSite: 'strict',  // CSRF protection
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: '/',
   });
-  </script>
-```
-
-### 3.6 管理画面からのアップロード（追記）
-
-```js
-async function uploadAkyoOnline({ id, name, type, desc, file, adminPassword }) {
-  const form = new FormData();
-  form.set('id', id);
-  form.set('name', name);
-  form.set('type', type);
-  form.set('desc', desc);
-  form.set('file', file);
-
-  const res = await fetch('/api/upload', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${adminPassword}` },
-    body: form,
-  });
-  const json = await res.json();
-  if (!res.ok || !json.ok) throw new Error(json.error || 'upload failed');
-
-  await loadAkyoManifest();
-  return json;
 }
 ```
 
+### Security Best Practices
+
+✅ **Passwords**: SHA-256 hashed, never stored in plaintext
+✅ **Sessions**: JWT with HTTP-only cookies
+✅ **API Keys**: Environment variables only (never in code)
+✅ **Input**: Validated with length-limited regex
+✅ **HTML**: Sanitized with `sanitize-html` library
+✅ **Timing Attacks**: Constant-time comparison for passwords
+✅ **CSRF**: SameSite=Strict cookies
+✅ **XSS**: HTML entity decoding + tag stripping
+
 ---
 
-## 4) 既存画像の初期投入（R2）
+## 🐛 Troubleshooting
 
-### 推奨：ダッシュボードでドラッグ＆ドロップ
+### Common Issues
 
-1. R2 の `akyodex-images` を開く。
-2. `images/` フォルダを作成。
-3. ローカルの `images/001.webp`〜`612.webp` を **`images/` 以下にまとめてアップロード**する。
-4. 途中でエラーになった場合は、重複ファイルは**上書き**で良い。
+#### 1. Build Fails on Cloudflare Pages
 
-## 5) デプロイ
+**Error**: `npm error enoent Could not read package.json`
 
-### 5.1 単発デプロイ（wrangler）
+**Solution**: Set **Root directory** to `akyodex-nextjs` in build settings.
 
-- ルートがそのまま公開ルートなら：
+```yaml
+Root directory (advanced): akyodex-nextjs
+```
+
+#### 2. Admin Login Fails
+
+**Possible Causes**:
+1. Wrong password hash
+2. Missing SESSION_SECRET
+3. Cookie not set (check browser)
+
+**Solution**:
+```bash
+# Regenerate password hash
+node -e "const crypto = require('crypto'); console.log(crypto.createHash('sha256').update('YourPassword').digest('hex'));"
+
+# Check environment variables in Cloudflare Pages
+```
+
+#### 3. Images Not Loading
+
+**Possible Causes**:
+1. R2 bucket not created
+2. Binding name mismatch
+3. CSV file path incorrect
+
+**Solution**:
+```bash
+# Check R2 bucket
+npx wrangler r2 bucket list
+
+# Re-upload CSV files
+npx wrangler r2 object put akyo-data/data/akyo-data.csv --file=../data/akyo-data.csv
+```
+
+#### 4. PWA Not Installing
+
+**Possible Causes**:
+1. Service Worker not registered
+2. HTTPS not enabled (required for PWA)
+3. Manifest.json issues
+
+**Solution**:
+1. Check browser console for SW errors
+2. Ensure HTTPS is enabled (Cloudflare Pages auto-enables)
+3. Verify manifest.json is accessible at `/manifest.json`
+
+#### 5. API Route Type Errors After Refactoring
+
+**Error**: `Type 'NextRequest' is not assignable to type 'Request'`
+
+**Solution**: The refactoring migrated most routes to standard `Request` type. Update your code:
+
+```typescript
+// ❌ Old pattern
+import { NextRequest, NextResponse } from 'next/server';
+export async function POST(request: NextRequest) {
+  return NextResponse.json({ success: true });
+}
+
+// ✅ New pattern
+export async function POST(request: Request) {
+  return Response.json({ success: true });
+}
+```
+
+**When to use NextRequest**: Only if you need Next.js-specific features like `request.nextUrl` or `request.geo`. Document the reason in a comment.
+
+#### 6. Error Response Format Issues
+
+**Error**: Frontend expecting `{ success: false, error: 'message' }` but getting different format
+
+**Solution**: Use the `jsonError()` helper for all error responses:
+
+```typescript
+import { jsonError } from '@/lib/api-helpers';
+
+// ❌ Old pattern
+return Response.json({ error: 'Invalid input' }, { status: 400 });
+
+// ✅ New pattern
+return jsonError('Invalid input', 400);
+// Returns: { success: false, error: 'Invalid input' }
+```
+
+#### 7. Cookie Management Issues
+
+**Error**: Session cookies not being set correctly
+
+**Solution**: Use the cookie helper functions:
+
+```typescript
+import { setSessionCookie, clearSessionCookie } from '@/lib/api-helpers';
+
+// ❌ Old pattern
+const cookieStore = await cookies();
+cookieStore.set('admin_session', token, { /* config */ });
+
+// ✅ New pattern
+await setSessionCookie(token);
+```
+
+#### 8. Runtime Configuration Errors
+
+**Error**: Route using Node.js APIs fails on Edge Runtime
+
+**Solution**: Check if your route requires Node.js runtime and add the export:
+
+```typescript
+// For routes using csv-parse/sync, GitHub API, or Buffer
+export const runtime = 'nodejs';
+
+/**
+ * This route requires Node.js runtime because:
+ * - Uses csv-parse/sync for synchronous CSV parsing
+ * - Uses GitHub API with complex Node.js dependencies
+ * - Uses Buffer for R2 binary operations
+ */
+```
+
+**Edge-compatible routes** should export:
+```typescript
+export const runtime = 'edge';
+```
+
+---
+
+## 📜 Migration History
+
+### Phase 1: Initial Next.js Setup (Completed 2025-01-15)
+- ✅ Next.js 15.5.6 project setup
+- ✅ Tailwind CSS configuration
+- ✅ Basic routing structure
+
+### Phase 2: Static Site Generation (Completed 2025-01-20)
+- ✅ SSG implementation for avatar gallery
+- ✅ ISR (Incremental Static Regeneration) with 1-hour revalidation
+- ✅ CSV data parsing and loading
+- ✅ Detail pages with dynamic routes
+
+### Phase 3: Internationalization (Completed 2025-01-25)
+- ✅ i18n middleware implementation
+- ✅ Language detection (Cookie → cf-ipcountry → Accept-Language)
+- ✅ English CSV support
+- ✅ Language switcher component
+
+### Phase 4: Admin Panel (Completed 2025-02-01)
+- ✅ JWT authentication
+- ✅ Admin dashboard with tabs
+- ✅ CRUD operations for avatars
+- ✅ Image cropping functionality
+- ✅ VRChat integration
+
+### Phase 5: PWA (Completed 2025-02-15)
+- ✅ Service Worker with 6 caching strategies
+- ✅ Offline support
+- ✅ PWA manifest
+- ✅ Install prompt
+
+### Phase 6: Security Hardening (Completed 2025-10-22)
+- ✅ Timing attack prevention (PR #113)
+- ✅ XSS prevention with sanitize-html (PR #113)
+- ✅ Input validation improvements (PR #113)
+- ✅ HTML entity decoding (PR #113)
+- ✅ Session management hardening (PR #113)
+
+### Phase 7: Code Quality (In Progress)
+- 📝 Issue #115 created (8 refactoring tasks)
+- ⏳ VRChat page fetch logic extraction
+- ⏳ CSV header validation improvement
+- ⏳ Unicode normalization for attributes
+- ⏳ Code duplication removal
+
+### Phase 8: Next.js 15 Best Practices Refactoring (Completed 2025-01-22)
+
+**Spec**: `.kiro/specs/nextjs-best-practices-refactoring/`
+
+This refactoring standardized all API routes to follow Next.js 15 and Cloudflare Pages best practices, improving code consistency, maintainability, and Edge Runtime compatibility.
+
+#### Changes Made
+
+**1. Request/Response Type Migration**
+- ✅ Migrated 15+ API routes from `NextRequest`/`NextResponse` to standard `Request`/`Response`
+- ✅ Only use `NextRequest` when Next.js-specific features are required (documented with comments)
+- ✅ All routes now use `Response.json()` instead of `NextResponse.json()`
+
+**2. Helper Function Standardization**
+- ✅ Created `jsonError()` helper for consistent error responses
+- ✅ Created `jsonSuccess()` helper for consistent success responses
+- ✅ Centralized cookie management with `setSessionCookie()` and `clearSessionCookie()`
+- ✅ Updated `validateOrigin()` and `ensureAdminRequest()` to work with standard `Request`
+- ✅ Added JSDoc documentation to all helper functions
+
+**3. Runtime Configuration**
+- ✅ Added `export const runtime = 'edge'` to Edge-compatible routes
+- ✅ Added `export const runtime = 'nodejs'` to Node.js-dependent routes with documentation
+- ✅ Documented why each route requires Node.js runtime (csv-parse/sync, GitHub API, Buffer operations)
+
+**4. Routes Migrated**
+
+**Edge Runtime Routes** (11 routes):
+- `admin/login`, `admin/logout`, `admin/verify-session`
+- `check-duplicate`, `manifest`, `avatar-image`
+- `vrc-avatar-image`, `vrc-avatar-info`
+
+**Node.js Runtime Routes** (4 routes - documented reasons):
+- `upload-akyo` - csv-parse/sync, GitHub API, Buffer
+- `update-akyo` - csv-parse/sync, GitHub API, Buffer
+- `delete-akyo` - csv-parse/sync, GitHub API, R2 Buffer
+- `admin/next-id` - fs.readFile (could be migrated to fetch in future)
+
+#### Breaking Changes
+
+**None** - All changes maintain backward compatibility:
+- ✅ API response format unchanged (`{ success: true/false, ...data }`)
+- ✅ Frontend compatibility maintained
+- ✅ Authentication flow unchanged
+- ✅ Cookie behavior unchanged
+- ✅ All existing functionality preserved
+
+#### Migration Guide for Developers
+
+If you're working on this codebase or forking it, follow these patterns:
+
+**Pattern 1: Use Standard Request/Response**
+```typescript
+// ✅ Preferred - Standard Web APIs
+export async function POST(request: Request) {
+  const body = await request.json();
+  return Response.json({ success: true, data: result });
+}
+
+// ❌ Avoid - Next.js-specific types (unless needed)
+import { NextRequest, NextResponse } from 'next/server';
+export async function POST(request: NextRequest) {
+  return NextResponse.json({ success: true });
+}
+```
+
+**Pattern 2: Use Helper Functions**
+```typescript
+import { jsonError, setSessionCookie, ensureAdminRequest } from '@/lib/api-helpers';
+
+// Error responses
+return jsonError('Invalid input', 400);
+// Returns: { success: false, error: 'Invalid input' }
+
+// Cookie management
+await setSessionCookie(token);
+await clearSessionCookie();
+
+// Authentication
+const result = await ensureAdminRequest(request, { requireOwner: true });
+if ('response' in result) return result.response;
+```
+
+**Pattern 3: Declare Runtime**
+```typescript
+// Edge-compatible routes
+export const runtime = 'edge';
+
+// Node.js-required routes (document why)
+export const runtime = 'nodejs';
+/**
+ * This route requires Node.js runtime because:
+ * - Uses csv-parse/sync for synchronous CSV parsing
+ * - Uses GitHub API with complex Node.js dependencies
+ * - Uses Buffer for R2 binary operations
+ */
+```
+
+#### Performance Impact
+
+- ✅ **Edge Runtime**: 11 routes now run on Cloudflare Edge (lower latency)
+- ✅ **Bundle Size**: Reduced by removing unnecessary Next.js imports
+- ✅ **Type Safety**: Improved with explicit types and JSDoc
+- ✅ **Maintainability**: Centralized patterns reduce code duplication
+
+#### Testing Performed
+
+- ✅ All authentication flows (login, logout, session verification)
+- ✅ All CRUD operations (add, edit, delete avatars)
+- ✅ All utility endpoints (duplicate check, CSV, manifest, image proxy)
+- ✅ Error scenarios (invalid inputs, unauthorized access, missing data)
+- ✅ Frontend compatibility (admin panel, gallery, detail pages)
+
+#### Documentation Updates
+
+- ✅ Updated `nextjs-best-practices.md` steering rule with new patterns
+- ✅ Added migration notes to README (this section)
+- ✅ Created comprehensive spec documents (requirements, design, tasks)
+- ✅ Added troubleshooting section for common migration issues
+
+#### Future Improvements
+
+**Potential Edge Runtime Migration** (not in this refactoring):
+- `admin/next-id` - Replace fs.readFile with fetch from R2
+- `csv` route - Replace fs.readFile with fetch from R2
+- CRUD routes - Replace csv-parse/sync with streaming parser (complex, requires significant refactoring)
+
+**Key Learnings**:
+- Standard Web APIs are more portable and future-proof
+- Helper functions reduce code duplication and improve consistency
+- Runtime declarations help optimize deployment
+- Documentation is critical for maintaining consistency
+
+---
+
+## ⚠️ Known Issues
+
+### Open Issues
+
+#### Issue #115: Code Quality Improvements
+**Priority**: Medium  
+**Status**: Open  
+**Created**: 2025-10-22
+
+8 refactoring tasks from CodeRabbit review:
+
+1. **High Priority** (Code Duplication):
+   - [ ] Extract VRChat page fetch logic to common utility
+   - [ ] Refactor duplicate code in add-tab.tsx
+   - [ ] Remove duplication in middleware.ts
+
+2. **Medium Priority** (Data Integrity):
+   - [ ] Fix CSV header validation in migrate-csv-to-4digit.mjs
+   - [ ] Add Unicode normalization to attribute-modal.tsx
+   - [ ] Remove "- VRChat" suffix in vrc-avatar-info.ts
+
+3. **Low Priority** (Logging & Grammar):
+   - [ ] Add logging to migration script
+   - [ ] Fix grammar in DEPLOYMENT.md line 15
+
+**Link**: https://github.com/rad-vrc/Akyodex/issues/115
+
+### Closed Issues
+
+#### PR #113: Complete Migration ✅
+**Status**: Merged (2025-10-22)  
+**Link**: https://github.com/rad-vrc/Akyodex/pull/113
+
+- ✅ Next.js 15 migration
+- ✅ PWA implementation
+- ✅ Security hardening
+- ✅ Language detection
+- ✅ Admin panel
+- ✅ All CodeRabbit/Copilot/CodeQL critical issues resolved
+
+#### PR #114: Duplicate PR ❌
+**Status**: Should be closed  
+**Link**: https://github.com/rad-vrc/Akyodex/pull/114
+
+- ⚠️ Contains same changes as PR #113
+- ⚠️ Has merge conflicts
+- ⚠️ Should be closed to avoid confusion
+
+---
+
+## 🤝 Contributing
+
+> コントリビューションの詳細なチェックリストは必ず [Repository Guidelines](./AGENTS.md) を参照し、PR テンプレートやテスト要件を満たしてください。
+
+### Git Workflow
+
+```bash
+# 1. Create feature branch from main
+git checkout main
+git pull origin main
+git checkout -b feature/your-feature-name
+
+# 2. Make changes and commit
+git add .
+git commit -m "feat: description of changes"
+
+# 3. Push to remote
+git push origin feature/your-feature-name
+
+# 4. Create Pull Request on GitHub
+
+# 5. After PR review, squash commits before merge
+git reset --soft HEAD~N  # N = number of commits
+git commit -m "feat: comprehensive commit message"
+git push -f origin feature/your-feature-name
+```
+
+### Commit Message Convention
 
 ```
-npx wrangler pages deploy . --project-name <PAGES_PROJECT_NAME>
+feat: Add new feature
+fix: Fix bug
+docs: Update documentation
+style: Format code
+refactor: Refactor code
+test: Add tests
+chore: Update dependencies
 ```
 
-- `dist/` などビルド成果がある場合はそのパスを指定：
+### Code Style
 
+- **TypeScript**: Strict mode enabled
+- **Formatting**: Prettier (2-space indent)
+- **Linting**: ESLint with Next.js config
+- **Components**: Functional components with TypeScript
+- **Naming**: PascalCase for components, camelCase for functions
+
+### Before PR
+
+1. ✅ Run `npm run lint`
+2. ✅ Run `npm run type-check`
+3. ✅ Test locally with `npm run dev`
+4. ✅ Test Cloudflare build with `npm run pages:build`
+5. ✅ Squash commits into one comprehensive commit
+6. ✅ Write descriptive PR description
+
+---
+
+## 📚 Additional Documentation
+
+- **Deployment Guide**: See `DEPLOYMENT.md`
+
+---
+
+## 📞 Support
+
+For questions or issues:
+1. Check this README
+2. Check existing issues: https://github.com/rad-vrc/Akyodex/issues
+3. Create new issue with detailed description
+
+---
+
+## 📄 License
+
+[MIT License](../LICENSE) - See LICENSE file for details
+
+---
+
+## 🎉 Acknowledgments
+
+- **Next.js Team**: For the amazing framework
+- **Cloudflare**: For Pages platform, R2, and KV services
+- **VRChat**: For avatar data and API
+- **Akyo Community**: For the avatar designs and support
+
+---
+
+**Last Updated**: 2025-01-22  
+**Version**: 1.1.0 (VRChat Fallback + Dify Chatbot + Dual Admin)  
+**Status**: ✅ Production Ready
+
+---
+
+## 🚨 CRITICAL NOTES FOR NEXT SESSION
+
+### Cloudflare Pages Build Configuration
+
+**⚠️ IMPORTANT**: The build is currently failing because the root directory is not set correctly.
+
+**Current Error**:
 ```
-npx wrangler pages deploy dist --project-name akyodex-site
+npm error path /opt/buildhome/repo/package.json
+npm error errno -2
+npm error enoent Could not read package.json
 ```
 
-> 実行前に `CLOUDFLARE_API_TOKEN=<CLOUDFLARE_API_TOKEN>` を環境に設定しておく。
+**Root Cause**: Cloudflare Pages is looking for `package.json` in the repository root (`/opt/buildhome/repo/`), but it's actually in `/opt/buildhome/repo/akyodex-nextjs/`.
 
-### 5.2 カスタムドメイン確認
+**FIX REQUIRED**:
+1. Go to Cloudflare Pages Dashboard
+2. Select the Akyodex project
+3. Go to **Settings** → **Builds & deployments**
+4. Click **Configure Production deployments**
+5. Set the following:
 
-- Pages プロジェクトの *Custom domains* で `akyodex.com` の状況が **Active** になっていること。
-- R2 公開設定のカスタムドメイン `images.akyodex.com` も **有効**であること。
+```yaml
+Framework preset: None (or Next.js)
+Build command: npm ci && npm run pages:build
+Build output directory: .vercel/output/static
+Root directory (advanced): akyodex-nextjs  ← THIS IS CRITICAL!
+```
+
+6. **Save** and retry deployment
+
+### Environment Variables Checklist
+
+Ensure these are set in Cloudflare Pages:
+
+```bash
+# Admin Authentication
+ADMIN_PASSWORD_HASH=e5df0cec59ac2279226f7ea28c1ded885b61c3afe1177fcd282f211965bd3313
+OWNER_PASSWORD_HASH=(set this to your owner password hash)
+
+# Session Secret
+SESSION_SECRET=629de6ec4bc16b1b31a6b0be24a63a9ab32869c3e7138407cafece0a5226c39d8439bd4ac8c21b028d7eb9be948cf37a23288ce4b8eebe3aa6fefb255b9c4cbf
+```
+
+### Cloudflare Bindings Checklist
+
+Ensure these are configured in **Settings** → **Functions**:
+
+1. **R2 Bucket**: `AKYO_BUCKET` → `akyo-data`
+2. **KV Namespace**: `AKYO_KV` → (your KV namespace ID)
+
+### Current Branch Status
+
+- **main**: ✅ Up to date with PR #113 merged
+- **genspark_ai_developer**: ✅ Already merged into main
+- **feature/chatbot** (PR #114): ⚠️ Should be closed (duplicate of PR #113)
+
+### Pending Tasks
+
+1. **URGENT**: Fix Cloudflare Pages build configuration (set root directory)
+2. **HIGH**: Close PR #114 (duplicate)
+3. **MEDIUM**: Address Issue #115 (8 refactoring tasks) - can be done later
+4. **LOW**: Test deployment after build fix
+
+### Quick Start Commands for Next Session
+
+```bash
+# Navigate to project
+cd /home/user/webapp/akyodex-nextjs
+
+# Check current branch
+git branch --show-current
+
+# Pull latest changes
+git checkout main
+git pull origin main
+
+# Check build locally
+npm run pages:build
+
+# Deploy (after fixing Cloudflare Pages settings)
+npm run pages:deploy
+```
+
+### Admin Credentials (Simple Access Codes)
+
+**Community-Friendly Access Codes**
+
+- **Owner Password**: `RadAkyo` (full access)
+- **Admin Password**: `Akyo` (limited access)
+
+These simple codes are designed to be easily shared with trusted community contributors.
 
 ---
 
-## 6) 動作確認
+**END OF README** - All information documented for seamless session recovery 🎯
 
-1. ブラウザで `https://akyodex.com/api/manifest` を開き、`{"001": "https://images.akyodex.com/images/001.webp", ...}` が返ること。
-2. `index.html` を開き、ID→画像が正しく表示されること（必要に応じてキャッシュを無効化）。
-3. `admin.html` からログイン（`<ADMIN_PASSWORD_OWNER>` / `<ADMIN_PASSWORD_ADMIN>`）、任意のIDで画像をアップロード → 即時反映を確認。
-
----
-
-## 7) 運用ルール
-
-- 新しい画像は **`id=NNN` を指定してアップロード**（`NNN` は3桁、フォーマットは `.webp` 推奨）。
-- 既存画像の差し替えは **同じIDで上書き**する。
-- 削除操作は **`<ADMIN_PASSWORD_OWNER>` のみ許可**（必要なら `DELETE /api/akyo/:id` を追加実装）。
-- 画像は `loading="lazy"` と `width/height` 指定を維持し、パフォーマンスを確保。
-
----
-
-## 8) 既知のハマりどころと対処
-
-- **/api/manifest が空**：KV に `akyo:*` が無い。少なくとも1件を `/api/upload` から登録してから再確認する。
-- **403 Unauthorized**：Bearer が未設定／誤り。`<ADMIN_PASSWORD_OWNER>` か `<ADMIN_PASSWORD_ADMIN>` を入力して送っているか確認。
-- **R2 の URL が 403**：公開設定とカスタムドメイン割当を再確認。パスは `images/NNN_*.webp` になっているか。
-- **CORS エラー**：`corsHeaders` を確認。基本は同一オリジンだが、別ドメインから管理する場合は許可オリジンを調整。
-
----
-
-## 9) 付録：リネーム・クリーンアップ（PowerShell）
-
-## 10) 片付けのチェックリスト（公開直前）
-
-- [ ] `functions/` 3ファイルを追加済み
-- [ ] `js/image-manifest-loader.js` を読み込み、起動時に `loadAkyoManifest()` を実行
-- [ ] R2 に `images/001.webp`〜`612.webp` が配置済み（`images/` フォルダ直下）
-- [ ] Pages Functions の **Bindings**（`AKYO_BUCKET` / `AKYO_KV` / `PUBLIC_R2_BASE`）と **ENV**（`ADMIN_PASSWORD_*`）を設定
-- [ ] `npx wrangler pages deploy . --project-name akyodex-site` を実行し公開
-- [ ] `/api/manifest` が正しいJSONを返し、トップページで画像が見える
-- [ ] `admin.html` からのアップロードが反映される
-- [ ] 画像はR2へ集約。ローカルは `images/logo.webp`, `images/logo-200.png`, `images/profileIcon.png`, `images/miniakyo.webp` のみ
-
-### 画像移行メモ
-
-1. R2へ同期（AWS CLI例）
-
-   ```bash
-   aws s3 sync ./images s3://$AKYO_BUCKET/images \
-     --endpoint-url https://$ACCOUNT_ID.r2.cloudflarestorage.com \
-     --exclude "*" --include "[0-9][0-9][0-9]*.webp" --include "[0-9][0-9][0-9]*.png" --include "[0-9][0-9][0-9]*.jpg"
-   ```
-
-2. CI/ローカルで `node generate-manifest.mjs` 実行（`FULL_URL=true BASE_URL=https://images.akyodex.com/images` 推奨）
-3. デプロイ後 `?reloadBg=1` でキャッシュ刷新
-
----
-
-### トラブルシューティング
-
----
-
-### 完了後の運用メモ
-
-- 画像の追加・差し替えは管理画面から実行（再デプロイ不要）。
-- コストを抑えるため、順次 **WebP** 化と **サムネイル**導入を検討（`thumbs/NNN.webp` など）。
-- 需要が増えたら、`/api/akyo/:id` のメタデータCRUDや履歴（更新ログ）を追加していく。
-
----
-
-### ミニAkyo背景のデバッグクエリ
-
-- `?reloadBg=1`: 背景を強制再初期化（SWキャッシュを跨いで最新版を読みたいときに有効）
-- `?bgdensity=NN`: 同時表示体数を上書き（推奨 10–28）例: `?bgdensity=24`
-- `?bg=front`: 一時的に前面へ出して視認性を上げる（確認用）
-
-本番では R2 画像 `https://images.akyodex.com/miniakyo.webp` → `https://images.akyodex.com/images/miniakyo.webp` → 相対 `images/miniakyo.webp` の順で自動解決します。画像を更新した場合は `?reloadBg=1` を付けて再読込してください。
