@@ -27,6 +27,7 @@ id = "42b435eff5ca4de9a33d70faff6c6abc"  # TODO: set your KV namespace ID
 binding = "AKYO_BUCKET"
 bucket_name = "akyo-images"
 
+
 # Environment variables for production
 [env.production]
 # These should be set in Cloudflare Pages dashboard:

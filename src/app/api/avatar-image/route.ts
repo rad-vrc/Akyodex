@@ -131,9 +131,11 @@ export async function GET(request: Request) {
 
     // Step 1: Try R2 via direct URL (only if id is provided)
     if (id) {
+
       const paddedId = id.padStart(4, '0');
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
       const r2Url = `${r2BaseUrl}/images/${paddedId}.webp`;
+
 
       try {
         // Create AbortController for 5-second timeout (shorter for faster fallback)
