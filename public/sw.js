@@ -168,48 +168,27 @@ self.addEventListener('fetch', (event) => {
  * Always try to fetch latest HTML, fallback to cache if offline
  */
 async function handleNavigationRequest(request) {
-  const cache = await caches.open(CACHE_NAME);
-  
   try {
-    // Check for fresh navigation flag
     const url = new URL(request.url);
     const wantsFreshNavigation = url.searchParams.has('_akyoFresh');
-    
-    // Fetch latest from network
     const requestToUse = wantsFreshNavigation
       ? new Request(request, { cache: 'reload' })
       : request;
-    
+
     const networkResponse = await fetch(requestToUse);
-    
     if (networkResponse && networkResponse.ok) {
       return networkResponse;
     }
   } catch (error) {
-    console.log('[SW] Network failed for navigation, trying cache:', error.message);
+    console.log('[SW] Navigation fetch failed:', error.message);
   }
-  
-  // Fallback to cache
-  const cachedResponse = await cache.match(request);
-  if (cachedResponse) {
-    return cachedResponse;
+
+  const cache = await caches.open(CACHE_NAME);
+  const offline = await cache.match('/offline');
+  if (offline) {
+    return offline;
   }
-  
-  // Try fallback pages
-  const scope = getScope();
-  const fallbacks = [
-    new URL('/zukan', scope).toString(),
-    new URL('/offline', scope).toString(),
-  ];
-  
-  for (const fallbackUrl of fallbacks) {
-    const fallbackResponse = await cache.match(fallbackUrl);
-    if (fallbackResponse) {
-      return fallbackResponse;
-    }
-  }
-  
-  // Last resort: minimal offline HTML
+
   return new Response(
     '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Offline - Akyodex</title></head>' +
     '<body><h1>オフラインです</h1><p>インターネット接続を確認してください。</p></body></html>',
