@@ -131,12 +131,10 @@ export async function GET(request: Request) {
   try {
     console.log(`[avatar-image] Processing request: id=${id}, avtr=${avtr}, width=${width}`);
 
-    // Step 1: Try R2 via direct URL (only if id is provided)
-    if (id) {
-
-      const paddedId = id.padStart(4, '0');
+    // Step 1: Try R2 via direct URL (only if normalizedId is available)
+    if (normalizedId) {
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-      const r2Url = `${r2BaseUrl}/images/${paddedId}.webp`;
+      const r2Url = `${r2BaseUrl}/images/${normalizedId}.webp`;
 
 
       try {
@@ -164,18 +162,18 @@ export async function GET(request: Request) {
               },
             });
           } else {
-            console.log(`[avatar-image] R2 returned ${r2Response.status} for ${id}, trying VRChat fallback`);
+            console.log(`[avatar-image] R2 returned ${r2Response.status} for ${normalizedId}, trying VRChat fallback`);
           }
         } catch (fetchError) {
           clearTimeout(r2TimeoutId);
           if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-            console.log(`[avatar-image] R2 fetch timeout for ${id}, trying VRChat fallback`);
+            console.log(`[avatar-image] R2 fetch timeout for ${normalizedId}, trying VRChat fallback`);
           } else {
-            console.log(`[avatar-image] R2 fetch error for ${id}:`, fetchError);
+            console.log(`[avatar-image] R2 fetch error for ${normalizedId}:`, fetchError);
           }
         }
       } catch (error) {
-        console.log(`[avatar-image] R2 fetch failed for ${id}, trying VRChat fallback:`, error);
+        console.log(`[avatar-image] R2 fetch failed for ${normalizedId}, trying VRChat fallback:`, error);
       }
     }
 
