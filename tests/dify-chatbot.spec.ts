@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-const DEFAULT_DIFY_TOKEN = 'bJthPu2B6Jf4AnsU';
+const DEFAULT_DIFY_TOKEN = 'LOCAL_TEST_TOKEN';
 
 function resolveEnvValue(key: string): string | undefined {
   if (process.env[key]) {
@@ -36,6 +36,8 @@ function resolveEnvValue(key: string): string | undefined {
 
 const difyToken = resolveEnvValue('NEXT_PUBLIC_DIFY_CHATBOT_TOKEN') ?? DEFAULT_DIFY_TOKEN;
 
+const shouldSkipDifyTests = !process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN;
+
 /**
  * Test suite for Dify Cloud Chatbot Integration
  * 
@@ -44,6 +46,7 @@ const difyToken = resolveEnvValue('NEXT_PUBLIC_DIFY_CHATBOT_TOKEN') ?? DEFAULT_D
  */
 
 test.describe('Dify Cloud Chatbot', () => {
+  test.skip(shouldSkipDifyTests, 'NEXT_PUBLIC_DIFY_CHATBOT_TOKEN is not set; skipping Dify tests.');
   test('should load and display chatbot button on Zukan page', async ({ page }) => {
     // Navigate to the Zukan page
     await page.goto('/zukan');

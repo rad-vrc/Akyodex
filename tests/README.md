@@ -44,7 +44,7 @@ Tests the integration of the Dify Cloud chatbot on the Zukan (図鑑) page:
 
 1. **Script Loading Test** - Verifies that:
    - The Dify cloud script (`https://udify.app/embed.min.js`) is loaded
-   - The script has the correct token ID (`bJthPu2B6Jf4AnsU`)
+   - The script has the correct token ID (set via `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN`)
    - The chatbot button appears in the bottom right corner
    - The button has the correct orange color (#EE7800)
 
