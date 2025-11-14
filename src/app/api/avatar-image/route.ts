@@ -46,9 +46,15 @@ async function getAvtrIdFromCsv(akyoId: string): Promise<string | null> {
     const csvText = await response.text();
     const lines = csvText.split('\n');
 
-    // Find the line with matching ID (format: 0001,...)
+    // Find the line with matching ID (CSV uses quoted cells "0001",...)
     for (const line of lines) {
-      if (line.startsWith(akyoId + ',')) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      const idMatch = trimmed.match(/^"?(\d{4})"?,/);
+      if (!idMatch) continue;
+
+      if (idMatch[1] === akyoId) {
         // CSV uses quoted fields, so we need proper parsing
         // For now, use simple regex to extract the last URL
         const urlMatch = line.match(/https:\/\/vrchat\.com\/home\/avatar\/(avtr_[A-Za-z0-9-]+)/);
