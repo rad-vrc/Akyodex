@@ -20,11 +20,11 @@ export const revalidate = 3600;
 
 // Dynamic metadata
 export const metadata: Metadata = {
-  title: 'Akyoずかん - VRChatアバター図鑑',
-  description: '500体以上のVRChatアバター「Akyo」を検索・閲覧できる図鑑。属性、作者、お気に入り機能付き。',
+  title: 'Akyoずかん - VRChatアバター Akyo図鑑',
+  description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
   openGraph: {
-    title: 'Akyoずかん - VRChatアバター図鑑',
-    description: '500体以上のVRChatアバター「Akyo」を検索・閲覧できる図鑑',
+    title: 'Akyoずかん - VRChatアバター Akyo図鑑',
+    description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     type: 'website',
   },
 };
