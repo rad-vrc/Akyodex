@@ -11,12 +11,11 @@
  * - Images: Stale While Revalidate
  */
 
-const CACHE_VERSION = 'akyodex-nextjs-v3';
+const CACHE_VERSION = 'akyodex-nextjs-v4';
 const CACHE_NAME = `akyodex-cache-${CACHE_VERSION}`;
 
 // Core files to precache on install
 const PRECACHE_URLS = [
-  '/zukan',
   '/about',
   '/offline',
   '/images/logo.webp',
@@ -184,8 +183,6 @@ async function handleNavigationRequest(request) {
     const networkResponse = await fetch(requestToUse);
     
     if (networkResponse && networkResponse.ok) {
-      // Cache the new response
-      await cache.put(request, networkResponse.clone());
       return networkResponse;
     }
   } catch (error) {

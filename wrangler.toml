@@ -21,7 +21,9 @@ GITHUB_CSV_PATH_JA = "data/akyo-data.csv"
 # Replace the placeholder IDs/names below with the actual ones from your account
 [[kv_namespaces]]
 binding = "AKYO_KV"
-id = "42b435eff5ca4de9a33d70faff6c6abc"  # TODO: set your KV namespace ID
+
+id = "42b435eff5ca4de9a33d70faff6c6abc"
+
 
 [[r2_buckets]]
 binding = "AKYO_BUCKET"
