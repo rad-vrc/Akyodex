@@ -9,6 +9,14 @@ compatibility_flags = ["nodejs_compat"]
 # OpenNext Cloudflare generates output in .open-next directory
 pages_build_output_dir = ".open-next"
 
+[vars]
+NEXT_PUBLIC_APP_URL = "https://akyodex.com"
+NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
+GITHUB_REPO_OWNER = "rad-vrc"
+GITHUB_REPO_NAME = "Akyodex"
+GITHUB_BRANCH = "main"
+GITHUB_CSV_PATH_JA = "data/akyo-data.csv"
+
 # KV Namespace and R2 Bucket bindings should be configured in Cloudflare Pages Dashboard
 # This avoids deployment errors with placeholder IDs in wrangler.toml
 # The actual bindings will be inherited from the Pages project settings
