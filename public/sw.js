@@ -121,9 +121,8 @@ self.addEventListener('fetch', (event) => {
   
   const accept = request.headers.get('accept') || '';
   
-  // Strategy 1: HTML Navigation - Network First with offline fallback
+  // Let the browser handle navigations to avoid stale SW fallback
   if (request.mode === 'navigate' || accept.includes('text/html')) {
-    event.respondWith(handleNavigationRequest(request));
     return;
   }
   
