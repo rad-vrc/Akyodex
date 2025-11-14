@@ -17,17 +17,15 @@ GITHUB_REPO_NAME = "Akyodex"
 GITHUB_BRANCH = "main"
 GITHUB_CSV_PATH_JA = "data/akyo-data.csv"
 
-# KV Namespace and R2 Bucket bindings should be configured in Cloudflare Pages Dashboard
-# This avoids deployment errors with placeholder IDs in wrangler.toml
-# The actual bindings will be inherited from the Pages project settings
+# Bindings for Cloudflare Pages Functions runtime
+# Replace the placeholder IDs/names below with the actual ones from your account
+[[kv_namespaces]]
+binding = "AKYO_KV"
+id = "AKYO_KV"  # TODO: set your KV namespace ID
 
-# [[kv_namespaces]]
-# binding = "AKYO_KV"
-# id = "YOUR_KV_NAMESPACE_ID"
-
-# [[r2_buckets]]
-# binding = "AKYO_BUCKET"
-# bucket_name = "akyo-images"
+[[r2_buckets]]
+binding = "AKYO_BUCKET"
+bucket_name = "akyo-images"
 
 # Environment variables for production
 [env.production]
