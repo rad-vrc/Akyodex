@@ -110,19 +110,21 @@ export async function GET(request: Request) {
     }
   }
 
+  let normalizedId: string | null = null;
   if (id) {
-    // Validate ID format: exactly 4 digits (0001-9999)
-    const idRegex = /^\d{4}$/;
+    // Accept IDs with 1-4 digits and normalize to 4 digits (e.g., 3 -> 0003)
+    const idRegex = /^\d{1,4}$/;
     if (!idRegex.test(id)) {
-      return jsonError('Invalid id format: must be 4 digits (e.g., 0001)', 400);
+      return jsonError('Invalid id format: must be numeric (up to 4 digits)', 400);
     }
+    normalizedId = id.padStart(4, '0');
   }
 
   // If id is provided but no avtr, try to get avtr from CSV
-  if (id && !avtr) {
-    avtr = await getAvtrIdFromCsv(id);
+  if (normalizedId && !avtr) {
+    avtr = await getAvtrIdFromCsv(normalizedId);
     if (avtr) {
-      console.log(`[avatar-image] Found avtr ${avtr} for ID ${id} from CSV`);
+      console.log(`[avatar-image] Found avtr ${avtr} for ID ${normalizedId} from CSV`);
     }
   }
 
