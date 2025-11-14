@@ -122,7 +122,7 @@ export const metadata: Metadata = {
 
 const fontAwesomeUrl = "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css";
 const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
-const defaultDifyToken = 'ITAESZx7R09Y05jy';
+const defaultDifyToken = 'bJthPu2B6Jf4AnsU';
 
 export default async function RootLayout({
   children,

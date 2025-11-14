@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-const DEFAULT_DIFY_TOKEN = 'ITAESZx7R09Y05jy';
+const DEFAULT_DIFY_TOKEN = 'bJthPu2B6Jf4AnsU';
 
 function resolveEnvValue(key: string): string | undefined {
   if (process.env[key]) {
