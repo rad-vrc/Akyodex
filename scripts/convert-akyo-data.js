@@ -76,7 +76,7 @@ function main() {
     }
 
     const item = {
-      id: normalizeValue(cols[0]),
+      id: normalizeValue(cols[0]).padStart(4, '0'),
       nickname: normalizeValue(cols[1]),
       avatarName: normalizeValue(cols[2]),
       category: normalizeValue(cols[3]),
