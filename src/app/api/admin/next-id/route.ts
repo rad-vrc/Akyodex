@@ -49,12 +49,21 @@ export async function GET() {
       const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data.csv';
       const csvObject = await bucket.get(csvPath);
 
-      if (!csvObject) {
-        // If CSV doesn't exist, start from 0001
-        return Response.json({ nextId: '0001' });
-      }
+      if (csvObject) {
+        csvContent = await csvObject.text();
+      } else {
+        // Fallback to GitHub if R2 file missing
+        console.warn('[next-id] CSV not found in R2, falling back to GitHub');
+        const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data.csv';
+        const githubResponse = await fetch(githubUrl, {
+          next: { revalidate: 0 },
+        });
 
-      csvContent = await csvObject.text();
+        if (!githubResponse.ok) {
+          return Response.json({ nextId: '0001' });
+        }
+        csvContent = await githubResponse.text();
+      }
     } else {
       // Development: Fetch from GitHub or R2 public URL
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
