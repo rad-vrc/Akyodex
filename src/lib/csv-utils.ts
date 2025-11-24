@@ -244,19 +244,26 @@ export function createAkyoRecord(data: {
   id: string;
   nickname?: string;
   avatarName: string;
-  attributes?: string;
-  creator: string;
+  category?: string;
+  author?: string;
+  comment?: string;
   avatarUrl?: string;
+  /** backward compat */
+  attributes?: string;
+  creator?: string;
   notes?: string;
 }): string[] {
+  const category = data.category ?? data.attributes ?? '';
+  const author = data.author ?? data.creator ?? '';
+  const comment = data.comment ?? data.notes ?? '';
+
   return [
     sanitizeCsvCell(data.id),
-    // appearance (2nd column) is REMOVED
     sanitizeCsvCell(data.nickname || ''),
     sanitizeCsvCell(data.avatarName),
-    sanitizeCsvCell(data.attributes || ''),
-    sanitizeCsvCell(data.notes || ''),
-    sanitizeCsvCell(data.creator),
+    sanitizeCsvCell(category),
+    sanitizeCsvCell(comment),
+    sanitizeCsvCell(author),
     sanitizeCsvCell(data.avatarUrl || ''),
   ];
 }
