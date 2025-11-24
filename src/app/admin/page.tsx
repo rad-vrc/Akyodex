@@ -1,5 +1,5 @@
 import { AdminClient } from './admin-client';
-import { getAllAttributes, getAllCreators, getAkyoData } from '@/lib/akyo-data-server';
+import { getAllCategories, getAllAuthors, getAkyoData } from '@/lib/akyo-data-server';
 
 export const metadata = {
   title: 'Akyoずかん - ファインダーモード',
@@ -13,11 +13,20 @@ export const metadata = {
  */
 export default async function AdminPage() {
   // サーバーサイドで属性、作者、全データを取得
-  const [attributes, creators, akyoData] = await Promise.all([
-    getAllAttributes('ja'),
-    getAllCreators('ja'),
+  const [categories, authors, akyoData] = await Promise.all([
+    getAllCategories('ja'),
+    getAllAuthors('ja'),
     getAkyoData('ja'),
   ]);
 
-  return <AdminClient attributes={attributes} creators={creators} akyoData={akyoData} />;
+  return (
+    <AdminClient 
+      categories={categories} 
+      authors={authors} 
+      // 互換性のため旧プロップスも渡す
+      attributes={categories} 
+      creators={authors} 
+      akyoData={akyoData} 
+    />
+  );
 }

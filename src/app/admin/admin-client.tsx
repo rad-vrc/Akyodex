@@ -8,7 +8,11 @@ import { useEffect, useState } from 'react';
 import type { AdminRole, AkyoData, AuthRole } from '@/types/akyo';
 
 interface AdminClientProps {
+  categories: string[];
+  authors: string[];
+  /** @deprecated use categories */
   attributes: string[];
+  /** @deprecated use authors */
   creators: string[];
   akyoData: AkyoData[];
 }
@@ -17,7 +21,13 @@ interface AdminClientProps {
  * Admin Client Component
  * 管理画面のメインコンポーネント（ログイン状態管理）
  */
-export function AdminClient({ attributes, creators, akyoData }: AdminClientProps) {
+export function AdminClient({ 
+  categories, 
+  authors, 
+  attributes, 
+  creators, 
+  akyoData 
+}: AdminClientProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<AuthRole>(null);
 
@@ -73,8 +83,9 @@ export function AdminClient({ attributes, creators, akyoData }: AdminClientProps
       ) : (
         <AdminTabs
           userRole={userRole!}
-          attributes={attributes}
-          creators={creators}
+          // 暫定対応: AdminTabsが更新されるまで、新フィールドの値を旧プロップス名で渡す
+          attributes={categories || attributes}
+          creators={authors || creators}
           akyoData={akyoData}
         />
       )}

@@ -200,10 +200,21 @@ export interface AkyoFormData {
   id: string;
   nickname: string;
   avatarName: string;
+  
+  // 新フィールド
+  category: string;
+  author: string;
+  comment: string;
+
+  // 旧フィールド（互換性維持のため）
+  /** @deprecated use category */
   attributes: string;
+  /** @deprecated use author */
   creator: string;
-  avatarUrl: string;
+  /** @deprecated use comment */
   notes: string;
+  
+  avatarUrl: string;
   imageData?: string;
 }
 
@@ -244,9 +255,12 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
 
   const id = readField('id');
   const avatarName = readField('avatarName');
-  const creator = readField('creator');
+  
+  // 新旧フィールドの両方をサポート
+  // 優先順位: author (新) > creator (旧)
+  const author = readField('author') || readField('creator');
 
-  if (!id || !avatarName || !creator) {
+  if (!id || !avatarName || !author) {
     return {
       success: false,
       status: 400,
@@ -266,18 +280,29 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
   const imageData = typeof imageValue === 'string' && imageValue.trim().length > 0
     ? imageValue.trim()
     : undefined;
+    
+  // 他のフィールドも新旧両方から取得
+  const category = readField('category') || readField('attributes');
+  const comment = readField('comment') || readField('notes');
 
   return {
     success: true,
     data: {
       id,
       avatarName,
-      creator,
       nickname: readField('nickname'),
-      attributes: readField('attributes'),
       avatarUrl: readField('avatarUrl'),
-      notes: readField('notes'),
       imageData,
+      
+      // 新フィールド
+      author,
+      category,
+      comment,
+      
+      // 旧フィールド (互換性維持)
+      creator: author,
+      attributes: category,
+      notes: comment,
     },
   };
 }

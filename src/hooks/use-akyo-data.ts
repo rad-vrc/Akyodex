@@ -32,54 +32,65 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
   // フィルタリング機能
   const filterData = useCallback((options: AkyoFilterOptions, sortAsc: boolean = true) => {
-    let result = [...data];
+    const query = (options.searchQuery || '').toLowerCase();
+    const targetCategory = options.category || options.attribute;
+    const targetAuthor = options.author || options.creator;
 
-    // フリーワード検索
-    if (options.searchQuery) {
-      const query = options.searchQuery.toLowerCase();
-      result = result.filter(akyo =>
-        akyo.id.toLowerCase().includes(query) ||
-        akyo.nickname.toLowerCase().includes(query) ||
-        akyo.avatarName.toLowerCase().includes(query) ||
-        akyo.attribute.toLowerCase().includes(query) ||
-        akyo.creator.toLowerCase().includes(query) ||
-        akyo.notes.toLowerCase().includes(query)
-      );
+    let filtered = [...data];
+
+    // Filter by attribute/category
+    if (targetCategory && targetCategory !== 'all') {
+      filtered = filtered.filter((akyo) => {
+        const catsStr = akyo.category || akyo.attribute || '';
+        const cats = catsStr.split(/[、,]/).map((a) => a.trim());
+        return cats.includes(targetCategory);
+      });
     }
 
-    // 属性フィルター
-    if (options.attribute) {
-      result = result.filter(akyo =>
-        akyo.attribute.split(',').map(a => a.trim()).includes(options.attribute!)
-      );
+    // Filter by creator/author
+    if (targetAuthor && targetAuthor !== 'all') {
+      filtered = filtered.filter((akyo) => {
+        const authorsStr = akyo.author || akyo.creator || '';
+        const authors = authorsStr.split(/[、,]/).map((c) => c.trim());
+        return authors.includes(targetAuthor);
+      });
     }
 
-    // 作者フィルター
-    if (options.creator) {
-      result = result.filter(akyo =>
-        akyo.creator === options.creator
-      );
-    }
-
-    // お気に入りのみ
+    // Filter by favorites
     if (options.favoritesOnly) {
-      result = result.filter(akyo => akyo.isFavorite);
+      filtered = filtered.filter((akyo) => akyo.isFavorite);
     }
 
-    // ランダム表示
-    if (options.randomCount && options.randomCount > 0) {
-      const shuffled = [...result].sort(() => Math.random() - 0.5);
-      result = shuffled.slice(0, options.randomCount);
+    // Filter by search query
+    if (query) {
+      filtered = filtered.filter(
+        (akyo) =>
+          (akyo.id || '').toLowerCase().includes(query) ||
+          (akyo.nickname || '').toLowerCase().includes(query) ||
+          (akyo.avatarName || '').toLowerCase().includes(query) ||
+          (akyo.category || akyo.attribute || '').toLowerCase().includes(query) ||
+          (akyo.author || akyo.creator || '').toLowerCase().includes(query) ||
+          (akyo.comment || akyo.notes || '').toLowerCase().includes(query)
+      );
+    }
+
+    // Random display mode
+    if (options.randomCount) {
+      filtered = filtered
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+        .slice(0, options.randomCount);
     } else {
-      // ソート機能（ランダム表示時以外）
-      result.sort((a, b) => {
+      // Sort by ID
+      filtered.sort((a, b) => {
         const idA = parseInt(a.id, 10);
         const idB = parseInt(b.id, 10);
         return sortAsc ? idA - idB : idB - idA;
       });
     }
 
-    setFilteredData(result);
+    setFilteredData(filtered);
   }, [data]);
 
   // お気に入り機能

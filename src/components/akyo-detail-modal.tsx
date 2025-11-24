@@ -27,8 +27,8 @@ interface AkyoDetailModalProps {
   onToggleFavorite?: (id: string) => void;
 }
 
-// 属性色マッピング (元の実装と完全一致)
-function getAttributeColor(attribute: string): string {
+// カテゴリ色マッピング (元の実装と完全一致)
+function getCategoryColor(category: string): string {
   const colorMap: Record<string, string> = {
     チョコミント: '#00bfa5',
     動物: '#ff6f61',
@@ -56,7 +56,7 @@ function getAttributeColor(attribute: string): string {
   };
 
   for (const [key, color] of Object.entries(colorMap)) {
-    if (attribute && attribute.includes(key)) {
+    if (category && category.includes(key)) {
       return color;
     }
   }
@@ -93,11 +93,16 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
 
   if (!localAkyo || !isOpen) return null;
 
+  // 新旧フィールド対応
+  const categoryStr = localAkyo.category || localAkyo.attribute || '';
+  const authorStr = localAkyo.author || localAkyo.creator || '';
+  const commentStr = localAkyo.comment || localAkyo.notes || '';
+
   const displayName = localAkyo.nickname || localAkyo.avatarName || '';
-  const attributes: string[] = localAkyo.attribute
-    ? localAkyo.attribute.split(',').map((a: string) => a.trim()).filter(Boolean)
+  const categories: string[] = categoryStr
+    ? categoryStr.split(/[、,]/).map((a: string) => a.trim()).filter(Boolean)
     : [];
-  const attributeColor = getAttributeColor(localAkyo.attribute);
+  const categoryColor = getCategoryColor(categoryStr);
   const imageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
 
   const handleBackdropClick = (e: ReactMouseEvent<HTMLDivElement>) => {
@@ -215,7 +220,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                       unoptimized
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.style.background = `linear-gradient(135deg, ${attributeColor}, ${attributeColor}66)`;
+                        target.style.background = `linear-gradient(135deg, ${categoryColor}, ${categoryColor}66)`;
                       }}
                     />
                   </div>
@@ -244,14 +249,14 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
                   </div>
 
-                  {/* Attributes Card */}
+                  {/* Categories Card */}
                   <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-orange-600 mb-2">
                       <i className="fas fa-sparkles mr-1"></i>ぞくせい
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
-                      {attributes.map((attr, index) => {
-                        const color = getAttributeColor(attr);
+                      {categories.map((cat, index) => {
+                        const color = getCategoryColor(cat);
                         return (
                           <span
                             key={index}
@@ -260,19 +265,19 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                               background: `linear-gradient(135deg, ${color}, ${color}dd)`,
                             }}
                           >
-                            {attr}
+                            {cat}
                           </span>
                         );
                       })}
                     </div>
                   </div>
 
-                  {/* Creator Card */}
+                  {/* Author Card */}
                   <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-green-600 mb-2">
                       <i className="fas fa-palette mr-1"></i>つくったひと
                     </h3>
-                    <p className="text-xl font-black">{localAkyo.creator || ''}</p>
+                    <p className="text-xl font-black">{authorStr || ''}</p>
                   </div>
                 </div>
 
@@ -298,15 +303,15 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   </div>
                 )}
 
-                {/* Notes Section */}
-                {localAkyo.notes && (
+                {/* Notes/Comment Section */}
+                {commentStr && (
                   <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5">
                     <h3 className="text-lg font-bold text-gray-900 mb-3">
                       <i className="fas fa-gift mr-2"></i>おまけじょうほう
                     </h3>
                     <div className="bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner">
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                        {localAkyo.notes}
+                        {commentStr}
                       </p>
                     </div>
                   </div>
