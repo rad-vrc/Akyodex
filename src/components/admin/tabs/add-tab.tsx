@@ -32,6 +32,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     avatarUrl: '',
     comment: '',
   });
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   // Fetch next available ID on component mount
   useEffect(() => {
@@ -127,7 +128,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     }
 
     // Show loading state
-    const formEl = e.currentTarget as HTMLFormElement | null;
+
+    const formEl = formRef.current;
+
     if (!formEl) {
       console.error('Form element not found on submit');
       return;
@@ -564,7 +567,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         <i className="fas fa-plus-circle text-red-500 mr-2"></i> 新しいAkyoを登録
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* ID（自動採番） */}
           <div>
