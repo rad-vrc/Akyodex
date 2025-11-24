@@ -32,9 +32,17 @@ bucket_name = "akyo-images"
 
 # Environment variables for production
 [env.production]
-# These should be set in Cloudflare Pages dashboard:
+vars = { 
+  NEXT_PUBLIC_APP_URL = "https://akyodex.com",
+  NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com",
+  GITHUB_REPO_OWNER = "rad-vrc",
+  GITHUB_REPO_NAME = "Akyodex",
+  GITHUB_BRANCH = "main",
+  GITHUB_CSV_PATH_JA = "data/akyo-data.csv"
+}
+
+# Secrets (set via wrangler secret or dashboard):
 # - GITHUB_TOKEN
-# - GITHUB_REPO_OWNER = "rad-vrc"
-# - GITHUB_REPO_NAME = "Akyodex"
-# - GITHUB_BRANCH = "main"
-# - ADMIN_PASSWORD_OWNER = "
+# - ADMIN_PASSWORD_OWNER
+# - ADMIN_PASSWORD_ADMIN
+# - SESSION_SECRET
