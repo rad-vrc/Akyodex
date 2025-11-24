@@ -72,7 +72,8 @@ async function fetchFileFromGitHub(
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-            throw new Error(`GitHub API error: ${response.status}`);
+            const body = await response.text().catch(() => '');
+            throw new Error(`GitHub API error: ${response.status} ${body}`);
         }
 
         const data = await response.json() as { content: string; sha: string };
@@ -135,8 +136,20 @@ async function commitFileToGitHub(
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`GitHub commit failed: ${errorData.message || response.status}`);
+            const errorBody = await response.text().catch(() => '');
+            let message = `GitHub commit failed: ${response.status}`;
+            // Try to parse JSON error for clarity
+            try {
+                const json = JSON.parse(errorBody);
+                if (json.message) {
+                    message += ` ${json.message}`;
+                }
+            } catch {
+                if (errorBody) {
+                    message += ` ${errorBody}`;
+                }
+            }
+            throw new Error(message);
         }
 
         return await response.json() as GitHubCommitResponse;
