@@ -259,6 +259,10 @@ export function EditModal({
           }
         }, 'image/webp', 0.9);
       };
+      image.onerror = () => {
+        console.error('Failed to load image for cropping');
+        resolve(null);
+      };
       image.crossOrigin = 'anonymous';
       image.src = originalImageSrc;
     });
@@ -484,15 +488,18 @@ export function EditModal({
       }
     }
 
+    // Get form element and button BEFORE await
+    const formEl = e.currentTarget;
+    const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    const originalText = submitBtn?.innerHTML || '';
+
     // Generate cropped image if available
     let croppedImageData: string | null = null;
     if (showImagePreview && originalImageSrc) {
       croppedImageData = await generateCroppedImage();
     }
 
-    const formEl = e.currentTarget;
-    const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-    const originalText = submitBtn?.innerHTML || '';
+    // Show loading state
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 更新中...';
@@ -625,7 +632,7 @@ export function EditModal({
                   />
                   {nicknameStatus.message && (
                     <p
-                      className={`mt-2 text-sm ${
+                      className={`mt-2 text-sm ${ 
                         nicknameStatus.tone === 'error'
                           ? 'text-red-600'
                           : nicknameStatus.tone === 'success'
@@ -678,7 +685,7 @@ export function EditModal({
                     </button>
                     {avatarNameStatus.message && (
                       <p
-                        className={`text-sm ${
+                        className={`text-sm ${ 
                           avatarNameStatus.tone === 'error'
                             ? 'text-red-600'
                             : avatarNameStatus.tone === 'success'
