@@ -44,9 +44,18 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('[upload-akyo] Unexpected error:', error);
+    
+    // 詳細なエラー情報を返す（デバッグ用）
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
     return jsonError(
-      error instanceof Error ? error.message : 'サーバーエラーが発生しました',
-      500
+      `Upload failed: ${errorMessage}`,
+      500,
+      { 
+        details: errorMessage,
+        stack: process.env.NODE_ENV === 'development' ? errorStack : undefined
+      }
     );
   }
 }
