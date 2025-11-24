@@ -14,7 +14,7 @@ interface EditModalProps {
   categories?: string[];
   // 旧フィールド（互換性）
   attributes: string[];
-  
+
   onSuccess: () => void;
 }
 
@@ -48,6 +48,7 @@ export function EditModal({
   // ... (省略: 変更なし) ...
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
   const [imageScale, setImageScale] = useState(1);
   const [imageX, setImageX] = useState(0);
   const [imageY, setImageY] = useState(0);
@@ -518,17 +519,17 @@ export function EditModal({
       submitData.append('nickname', formData.nickname);
       submitData.append('avatarName', formData.avatarName);
       submitData.append('avatarUrl', formData.avatarUrl);
-      
+
       // 新フィールド
       submitData.append('author', formData.author);
       submitData.append('category', formData.categories.join(','));
       submitData.append('comment', formData.comment);
-      
+
       // 旧フィールド (互換性のため)
       submitData.append('creator', formData.author);
       submitData.append('attributes', formData.categories.join(','));
       submitData.append('notes', formData.comment);
-      
+
       if (croppedImageData) {
         submitData.append('imageData', croppedImageData);
       }
@@ -588,7 +589,7 @@ export function EditModal({
           </div>
 
           <div className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* ID（変更不可） */}
                 <div>
@@ -639,7 +640,7 @@ export function EditModal({
                   />
                   {nicknameStatus.message && (
                     <p
-                      className={`mt-2 text-sm ${ 
+                      className={`mt-2 text-sm ${
                         nicknameStatus.tone === 'error'
                           ? 'text-red-600'
                           : nicknameStatus.tone === 'success'
@@ -692,7 +693,7 @@ export function EditModal({
                     </button>
                     {avatarNameStatus.message && (
                       <p
-                        className={`text-sm ${ 
+                        className={`text-sm ${
                           avatarNameStatus.tone === 'error'
                             ? 'text-red-600'
                             : avatarNameStatus.tone === 'success'
