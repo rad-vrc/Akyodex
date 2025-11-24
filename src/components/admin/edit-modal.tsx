@@ -489,11 +489,14 @@ export function EditModal({
     }
 
     // Get form element and button BEFORE await
+
     const formEl = e.currentTarget as HTMLFormElement | null;
     if (!formEl) {
       console.error('Form element not found on submit');
       return;
     }
+
+
     const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
     const originalText = submitBtn?.innerHTML || '';
 
