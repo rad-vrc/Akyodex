@@ -31,6 +31,13 @@ bucket_name = "akyo-images"
 
 
 # Environment variables for production
+
+[env.production]
+[[env.production.r2_buckets]]
+binding = "AKYO_BUCKET"
+bucket_name = "akyo-images"
+
+
 [env.production.vars]
 NEXT_PUBLIC_APP_URL = "https://akyodex.com"
 NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
