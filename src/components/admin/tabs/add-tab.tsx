@@ -127,7 +127,11 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     }
 
     // Show loading state
-    const formEl = e.currentTarget;
+    const formEl = e.currentTarget as HTMLFormElement | null;
+    if (!formEl) {
+      console.error('Form element not found on submit');
+      return;
+    }
     const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
     const originalText = submitBtn?.innerHTML || '';
     if (submitBtn) {

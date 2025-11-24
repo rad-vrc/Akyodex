@@ -8,10 +8,10 @@
 - 秘匿情報（`CLOUDFLARE_API_TOKEN` 等）は環境変数で渡す。コードに直書きしない。
 
 ## 1. スキーマ確定とマッピング
-- CSV ヘッダー（日本語版/英語版共通の列順を固定）  
-  `ID, 通称, アバター名, カテゴリ, 備考, 作者（敬称略）, アバターURL`
+- CSV ヘッダー（英語で固定、全行7列）  
+  `ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL`
 - JSON (Next.js) フィールド:  
-  `id, nickname, avatarname, category, comment, author, url`
+  `id, nickname, avatarName, category, comment, author, avatarUrl`
 - Worker / Vectorize 用メタデータへの対応:  
   - `id` → `id`  
   - `nickname` → `nickname`  
@@ -19,7 +19,7 @@
   - `category` → `category`  
   - `comment` → `description`  
   - `author` → `author`  
-  - `url` → `url`  
+  - `avatarUrl` → `url`  
   - `language` は生成時に付与（ja / en）
 
 ## 2. 段階的移行（順番に実施）
@@ -38,6 +38,7 @@
 - オプション: Worker 用ペイロード（`name/description` へのマッピング）を出力できるフラグを追加。  
 - JSON 出力はトップレベル配列のまま（`akyo` キーを付けない）。  
 - 出力後にフォーマット確認 (`jq '.[0]' data/akyo-data.json` 等)。
+- Vectorize Worker 用に `scripts/generate-vectorize-payload.js` で `data/vectorize-payload.json` を生成（`avatarUrl` → `url` へマッピング、`name/description` も付与）。
 
 ### D. Vectorize / D1 への再投入
 - 新 CSV → JSON 生成 → `/insert-data` に POST（バッチでも可）。  
