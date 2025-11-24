@@ -10,8 +10,8 @@ interface AkyoCardProps {
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
-// 属性に対応する色を取得（元の実装のgetAttributeColorを再現）
-function getAttributeColor(attribute: string): string {
+// カテゴリに対応する色を取得（元の実装のgetAttributeColorを再現）
+function getCategoryColor(category: string): string {
   const colorMap: Record<string, string> = {
     チョコミント: '#00bfa5',
     動物: '#ff6f61',
@@ -40,7 +40,7 @@ function getAttributeColor(attribute: string): string {
 
   // 最初にマッチする属性の色を返す
   for (const [key, color] of Object.entries(colorMap)) {
-    if (attribute && attribute.includes(key)) {
+    if (category && category.includes(key)) {
       return color;
     }
   }
@@ -66,6 +66,10 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
   const handleCardClick = () => {
     onShowDetail?.(akyo);
   };
+
+  // 互換性のため新旧フィールドをチェック
+  const category = akyo.category || akyo.attribute;
+  const author = akyo.author || akyo.creator;
 
   return (
     <div className="akyo-card cursor-pointer" onClick={handleCardClick}>
@@ -108,11 +112,11 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         </h3>
 
         {/* 属性バッジ */}
-        {akyo.attribute && (
+        {category && (
           <div className="flex flex-wrap gap-1 mb-2">
-            {akyo.attribute.split(',').map((attr, index) => {
-              const trimmedAttr = attr.trim();
-              const color = getAttributeColor(trimmedAttr);
+            {category.split(',').map((cat, index) => {
+              const trimmedCat = cat.trim();
+              const color = getCategoryColor(trimmedCat);
               return (
                 <span
                   key={index}
@@ -123,7 +127,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
                     boxShadow: `0 6px 12px ${color}20`
                   }}
                 >
-                  {trimmedAttr}
+                  {trimmedCat}
                 </span>
               );
             })}
@@ -135,7 +139,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           {akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
             <>アバター名: {akyo.avatarName}{'\n'}</>
           )}
-          作者: {akyo.creator}
+          作者: {author}
         </p>
 
         {/* くわしく見るボタン */}

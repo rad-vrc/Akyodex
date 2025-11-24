@@ -28,15 +28,33 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ZukanClientProps {
   initialData: AkyoData[];
+  
+  // 新フィールド
+  categories: string[];
+  authors: string[];
+
+  // 旧フィールド（非推奨）
+  /** @deprecated use categories */
   attributes: string[];
+  /** @deprecated use authors */
   creators: string[];
+  
   initialLang: SupportedLanguage;
 }
 
-export function ZukanClient({ initialData, attributes, creators, initialLang }: ZukanClientProps) {
+export function ZukanClient({ 
+  initialData, 
+  categories, 
+  authors,
+  attributes, 
+  creators, 
+  initialLang 
+}: ZukanClientProps) {
   const { data, filteredData, error, filterData, toggleFavorite } = useAkyoData(initialData);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // 状態変数名は変更量が多いので一旦そのまま（selectedCategory等への変更は今後の課題）
   const [selectedAttribute, setSelectedAttribute] = useState('');
   const [selectedCreator, setSelectedCreator] = useState('');
   const [favoritesOnly, setFavoritesOnly] = useState(false);
@@ -101,6 +119,10 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
     if (randomMode) return; // ランダム表示中は通常フィルタ適用を抑止
     filterData({
       searchQuery,
+      // 新フィールド名を優先して渡す
+      category: selectedAttribute || undefined,
+      author: selectedCreator || undefined,
+      // 旧フィールド名も念のため渡す
       attribute: selectedAttribute || undefined,
       creator: selectedCreator || undefined,
       favoritesOnly,
@@ -212,8 +234,9 @@ export function ZukanClient({ initialData, attributes, creators, initialLang }: 
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
           <FilterPanel
-            attributes={attributes}
-            creators={creators}
+            // 新旧両方サポート
+            attributes={categories || attributes}
+            creators={authors || creators}
             selectedAttribute={selectedAttribute}
             selectedCreator={selectedCreator}
             onAttributeChange={setSelectedAttribute}

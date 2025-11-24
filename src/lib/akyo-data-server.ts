@@ -127,37 +127,51 @@ export async function getAkyoData(lang: SupportedLanguage = 'ja'): Promise<AkyoD
 }
 
 /**
- * Get all unique attributes from the dataset
+ * Get all unique categories (formerly attributes) from the dataset
  *
  * @param lang - Language code
- * @returns Array of unique attributes
+ * @returns Array of unique categories
  */
-export async function getAllAttributes(lang: SupportedLanguage = 'ja'): Promise<string[]> {
+export async function getAllCategories(lang: SupportedLanguage = 'ja'): Promise<string[]> {
   const data = await getAkyoData(lang);
-  const attributesSet = new Set<string>();
+  const categoriesSet = new Set<string>();
 
   data.forEach((akyo) => {
-    const attrs = akyo.attribute.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
-    attrs.forEach((attr) => attributesSet.add(attr));
+    const cats = akyo.category.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
+    cats.forEach((cat) => categoriesSet.add(cat));
   });
 
-  return Array.from(attributesSet).sort();
+  return Array.from(categoriesSet).sort();
 }
 
 /**
- * Get all unique creators from the dataset
+ * @deprecated Use getAllCategories instead
+ */
+export async function getAllAttributes(lang: SupportedLanguage = 'ja'): Promise<string[]> {
+  return getAllCategories(lang);
+}
+
+/**
+ * Get all unique authors (formerly creators) from the dataset
  *
  * @param lang - Language code
- * @returns Array of unique creators
+ * @returns Array of unique authors
  */
-export async function getAllCreators(lang: SupportedLanguage = 'ja'): Promise<string[]> {
+export async function getAllAuthors(lang: SupportedLanguage = 'ja'): Promise<string[]> {
   const data = await getAkyoData(lang);
-  const creatorsSet = new Set<string>();
+  const authorsSet = new Set<string>();
 
   data.forEach((akyo) => {
-    const creators = akyo.creator.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
-    creators.forEach((creator) => creatorsSet.add(creator));
+    const authors = akyo.author.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
+    authors.forEach((author) => authorsSet.add(author));
   });
 
-  return Array.from(creatorsSet).sort();
+  return Array.from(authorsSet).sort();
+}
+
+/**
+ * @deprecated Use getAllAuthors instead
+ */
+export async function getAllCreators(lang: SupportedLanguage = 'ja'): Promise<string[]> {
+  return getAllAuthors(lang);
 }

@@ -6,6 +6,10 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 
 interface AddTabProps {
+  // 新フィールド
+  categories?: string[];
+  authors?: string[];
+  // 旧フィールド（互換性）
   attributes: string[];
   creators: string[];
 }
@@ -14,15 +18,19 @@ interface AddTabProps {
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
  */
-export function AddTab({ attributes, creators }: AddTabProps) {
+export function AddTab({ categories, authors, attributes, creators }: AddTabProps) {
+  // 新旧フィールドのマージ
+  const allAttributes = categories || attributes;
+  const allCreators = authors || creators;
+
   const [nextId, setNextId] = useState('0001');
   const [formData, setFormData] = useState({
     nickname: '',
     avatarName: '',
-    attributes: [] as string[],
-    creator: '',
+    categories: [] as string[],
+    author: '',
     avatarUrl: '',
-    notes: '',
+    comment: '',
   });
 
   // Fetch next available ID on component mount
@@ -65,14 +73,14 @@ export function AddTab({ attributes, creators }: AddTabProps) {
   const cropContainerRef = useRef<HTMLDivElement>(null);
 
   // Duplicate check states
-  const [nicknameStatus, setNicknameStatus] = useState<{
-    message: string;
-    tone: 'neutral' | 'success' | 'error';
-  }>({ message: '', tone: 'neutral' });
-  const [avatarNameStatus, setAvatarNameStatus] = useState<{
-    message: string;
-    tone: 'neutral' | 'success' | 'error';
-  }>({ message: '', tone: 'neutral' });
+  const [nicknameStatus, setNicknameStatus] = useState({
+    message: '',
+    tone: 'neutral' as 'neutral' | 'success' | 'error',
+  });
+  const [avatarNameStatus, setAvatarNameStatus] = useState({
+    message: '',
+    tone: 'neutral' as 'neutral' | 'success' | 'error',
+  });
   const [checkingNickname, setCheckingNickname] = useState(false);
   const [checkingAvatarName, setCheckingAvatarName] = useState(false);
 
@@ -92,12 +100,12 @@ export function AddTab({ attributes, creators }: AddTabProps) {
       alert('アバター名は必須です');
       return;
     }
-    if (!formData.creator.trim()) {
+    if (!formData.author.trim()) {
       alert('作者は必須です');
       return;
     }
-    if (formData.attributes.length === 0) {
-      alert('属性を1つ以上選択してください');
+    if (formData.categories.length === 0) {
+      alert('カテゴリを1つ以上選択してください');
       return;
     }
 
@@ -133,10 +141,18 @@ export function AddTab({ attributes, creators }: AddTabProps) {
       submitData.append('id', nextId);
       submitData.append('nickname', formData.nickname);
       submitData.append('avatarName', formData.avatarName);
-      submitData.append('attributes', formData.attributes.join(','));
-      submitData.append('creator', formData.creator);
       submitData.append('avatarUrl', formData.avatarUrl);
-      submitData.append('notes', formData.notes);
+      
+      // 新フィールド
+      submitData.append('author', formData.author);
+      submitData.append('category', formData.categories.join(','));
+      submitData.append('comment', formData.comment);
+      
+      // 旧フィールド (互換性のため)
+      submitData.append('creator', formData.author);
+      submitData.append('attributes', formData.categories.join(','));
+      submitData.append('notes', formData.comment);
+      
       if (croppedImageData) {
         submitData.append('imageData', croppedImageData);
       }
@@ -158,7 +174,7 @@ export function AddTab({ attributes, creators }: AddTabProps) {
         `✅ ${result.message}\n\n` +
         `ID: #${nextId}\n` +
         `アバター名: ${formData.avatarName}\n` +
-        `作者: ${formData.creator}\n\n` +
+        `作者: ${formData.author}\n\n` +
         (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
       );
 
@@ -166,10 +182,10 @@ export function AddTab({ attributes, creators }: AddTabProps) {
       setFormData({
         nickname: '',
         avatarName: '',
-        attributes: [],
-        creator: '',
+        categories: [],
+        author: '',
         avatarUrl: '',
-        notes: '',
+        comment: '',
       });
       setShowImagePreview(false);
       setOriginalImageSrc(null);
@@ -202,9 +218,9 @@ export function AddTab({ attributes, creators }: AddTabProps) {
     setFormData(prev => ({ ...prev, [field]: value }));
 
     // 作者フィールドの場合、サジェストを更新
-    if (field === 'creator' && typeof value === 'string') {
+    if (field === 'author' && typeof value === 'string') {
       if (value.trim()) {
-        const filtered = creators.filter(c =>
+        const filtered = allCreators.filter(c =>
           c.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 10);
         setCreatorSuggestions(filtered);
@@ -216,7 +232,7 @@ export function AddTab({ attributes, creators }: AddTabProps) {
   };
 
   const handleSelectCreator = (creator: string) => {
-    handleInputChange('creator', creator);
+    handleInputChange('author', creator);
     setShowCreatorSuggestions(false);
   };
 
@@ -601,7 +617,7 @@ export function AddTab({ attributes, creators }: AddTabProps) {
             />
             {nicknameStatus.message && (
               <p
-                className={`mt-2 text-sm ${
+                className={`mt-2 text-sm ${ 
                   nicknameStatus.tone === 'error'
                     ? 'text-red-600'
                     : nicknameStatus.tone === 'success'
@@ -655,7 +671,7 @@ export function AddTab({ attributes, creators }: AddTabProps) {
               </button>
               {avatarNameStatus.message && (
                 <p
-                  className={`text-sm ${
+                  className={`text-sm ${ 
                     avatarNameStatus.tone === 'error'
                       ? 'text-red-600'
                       : avatarNameStatus.tone === 'success'
@@ -669,9 +685,9 @@ export function AddTab({ attributes, creators }: AddTabProps) {
             </div>
           </div>
 
-          {/* 属性 */}
+          {/* カテゴリ (旧: 属性) */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">属性</label>
+            <label className="block text-gray-700 text-sm font-medium mb-1">カテゴリ</label>
             <div className="space-y-2">
               <button
                 type="button"
@@ -679,22 +695,22 @@ export function AddTab({ attributes, creators }: AddTabProps) {
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
               >
                 <i className="fas fa-tags"></i>
-                属性を管理
+                カテゴリを管理
               </button>
               <div className="border border-dashed border-green-200 rounded-lg bg-white/60 p-3 min-h-[60px]">
-                {formData.attributes.length === 0 ? (
+                {formData.categories.length === 0 ? (
                   <p className="text-sm text-gray-500">
-                    選択された属性がここに表示されます
+                    選択されたカテゴリがここに表示されます
                   </p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
-                    {formData.attributes.map((attr) => (
+                    {formData.categories.map((cat) => (
                       <span
-                        key={attr}
+                        key={cat}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full"
                       >
                         <i className="fas fa-tag text-xs"></i>
-                        {attr}
+                        {cat}
                       </span>
                     ))}
                   </div>
@@ -709,10 +725,10 @@ export function AddTab({ attributes, creators }: AddTabProps) {
             <div className="relative">
               <input
                 type="text"
-                value={formData.creator}
-                onChange={(e) => handleInputChange('creator', e.target.value)}
+                value={formData.author}
+                onChange={(e) => handleInputChange('author', e.target.value)}
                 onFocus={() => {
-                  if (formData.creator.trim() && creatorSuggestions.length > 0) {
+                  if (formData.author.trim() && creatorSuggestions.length > 0) {
                     setShowCreatorSuggestions(true);
                   }
                 }}
@@ -810,12 +826,12 @@ export function AddTab({ attributes, creators }: AddTabProps) {
           </div>
         </div>
 
-        {/* 備考 */}
+        {/* 備考（comment） */}
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">備考</label>
           <textarea
-            value={formData.notes}
-            onChange={(e) => handleInputChange('notes', e.target.value)}
+            value={formData.comment}
+            onChange={(e) => handleInputChange('comment', e.target.value)}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
             placeholder="Quest対応、特殊機能など"
@@ -926,9 +942,9 @@ export function AddTab({ attributes, creators }: AddTabProps) {
       <AttributeModal
         isOpen={showAttributeModal}
         onClose={() => setShowAttributeModal(false)}
-        currentAttributes={formData.attributes}
-        onApply={(attributes) => handleInputChange('attributes', attributes)}
-        allAttributes={attributes}
+        currentAttributes={formData.categories}
+        onApply={(attributes) => handleInputChange('categories', attributes)}
+        allAttributes={allAttributes}
       />
     </div>
   );

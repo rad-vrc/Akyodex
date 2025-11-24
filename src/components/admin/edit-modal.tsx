@@ -10,7 +10,11 @@ interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   akyo: AkyoData | null;
+  // 新フィールド
+  categories?: string[];
+  // 旧フィールド（互換性）
   attributes: string[];
+  
   onSuccess: () => void;
 }
 
@@ -22,16 +26,18 @@ export function EditModal({
   isOpen,
   onClose,
   akyo,
+  categories,
   attributes,
   onSuccess,
 }: EditModalProps) {
   const [formData, setFormData] = useState({
     nickname: '',
     avatarName: '',
-    attributes: [] as string[],
-    creator: '',
+    // UI上は複数選択UIを維持するため配列で扱う
+    categories: [] as string[],
+    author: '',
     avatarUrl: '',
-    notes: '',
+    comment: '',
   });
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
@@ -39,6 +45,7 @@ export function EditModal({
   const [fetchingImage, setFetchingImage] = useState(false);
 
   // Image cropping states
+  // ... (省略: 変更なし) ...
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
   const [imageScale, setImageScale] = useState(1);
@@ -51,6 +58,7 @@ export function EditModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Duplicate check states
+  // ... (省略: 変更なし) ...
   const [nicknameStatus, setNicknameStatus] = useState<{
     message: string;
     tone: 'neutral' | 'success' | 'error';
@@ -65,13 +73,18 @@ export function EditModal({
   // Initialize form data when akyo changes
   useEffect(() => {
     if (akyo) {
+      // 新旧フィールド対応
+      const categoryStr = akyo.category || akyo.attribute || '';
+      const authorStr = akyo.author || akyo.creator || '';
+      const commentStr = akyo.comment || akyo.notes || '';
+
       setFormData({
         nickname: akyo.nickname || '',
         avatarName: akyo.avatarName || '',
-        attributes: akyo.attribute ? akyo.attribute.split(',').map(a => a.trim()) : [],
-        creator: akyo.creator || '',
+        categories: categoryStr ? categoryStr.split(/[、,]/).map(a => a.trim()) : [],
+        author: authorStr,
         avatarUrl: akyo.avatarUrl || '',
-        notes: akyo.notes || '',
+        comment: commentStr,
       });
       setShowImagePreview(false);
       setOriginalImageSrc(null);
@@ -80,6 +93,7 @@ export function EditModal({
     }
   }, [akyo]);
 
+  // ... (画像処理系ロジックは変更なし) ...
   // Update image transform when position or scale changes
   useEffect(() => {
     const img = cropImageRef.current;
@@ -254,6 +268,7 @@ export function EditModal({
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // ... (重複チェック系ロジックは変更なし) ...
   // Duplicate check for nickname
   const handleCheckNicknameDuplicate = async () => {
     const value = formData.nickname.trim();
@@ -346,6 +361,7 @@ export function EditModal({
     }
   };
 
+  // ... (VRChat連携ロジックは変更なし) ...
   // VRChat URLからアバター名を取得
   const handleFetchAvatarName = async () => {
     const url = formData.avatarUrl.trim();
@@ -452,12 +468,12 @@ export function EditModal({
       alert('アバター名は必須です');
       return;
     }
-    if (!formData.creator.trim()) {
+    if (!formData.author.trim()) {
       alert('作者は必須です');
       return;
     }
-    if (formData.attributes.length === 0) {
-      alert('属性を1つ以上選択してください');
+    if (formData.categories.length === 0) {
+      alert('カテゴリを1つ以上選択してください');
       return;
     }
 
@@ -487,10 +503,18 @@ export function EditModal({
       submitData.append('id', akyo.id);
       submitData.append('nickname', formData.nickname);
       submitData.append('avatarName', formData.avatarName);
-      submitData.append('attributes', formData.attributes.join(','));
-      submitData.append('creator', formData.creator);
       submitData.append('avatarUrl', formData.avatarUrl);
-      submitData.append('notes', formData.notes);
+      
+      // 新フィールド
+      submitData.append('author', formData.author);
+      submitData.append('category', formData.categories.join(','));
+      submitData.append('comment', formData.comment);
+      
+      // 旧フィールド (互換性のため)
+      submitData.append('creator', formData.author);
+      submitData.append('attributes', formData.categories.join(','));
+      submitData.append('notes', formData.comment);
+      
       if (croppedImageData) {
         submitData.append('imageData', croppedImageData);
       }
@@ -510,7 +534,7 @@ export function EditModal({
         `✅ ${result.message}\n\n` +
         `ID: #${akyo.id}\n` +
         `アバター名: ${formData.avatarName}\n` +
-        `作者: ${formData.creator}\n\n` +
+        `作者: ${formData.author}\n\n` +
         (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
       );
 
@@ -668,9 +692,9 @@ export function EditModal({
                   </div>
                 </div>
 
-                {/* 属性 */}
+                {/* カテゴリ (旧: 属性) */}
                 <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-1">属性</label>
+                  <label className="block text-gray-700 text-sm font-medium mb-1">カテゴリ</label>
                   <div className="space-y-2">
                     <button
                       type="button"
@@ -678,22 +702,22 @@ export function EditModal({
                       className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
                     >
                       <i className="fas fa-tags"></i>
-                      属性を管理
+                      カテゴリを管理
                     </button>
                     <div className="border border-dashed border-green-200 rounded-lg bg-white/60 p-3 min-h-[60px]">
-                      {formData.attributes.length === 0 ? (
+                      {formData.categories.length === 0 ? (
                         <p className="text-sm text-gray-500">
-                          選択された属性がここに表示されます
+                          選択されたカテゴリがここに表示されます
                         </p>
                       ) : (
                         <div className="flex flex-wrap gap-2">
-                          {formData.attributes.map((attr) => (
+                          {formData.categories.map((cat) => (
                             <span
-                              key={attr}
+                              key={cat}
                               className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full"
                             >
                               <i className="fas fa-tag text-xs"></i>
-                              {attr}
+                              {cat}
                             </span>
                           ))}
                         </div>
@@ -707,8 +731,8 @@ export function EditModal({
                   <label className="block text-gray-700 text-sm font-medium mb-1">作者</label>
                   <input
                     type="text"
-                    value={formData.creator}
-                    onChange={(e) => handleInputChange('creator', e.target.value)}
+                    value={formData.author}
+                    onChange={(e) => handleInputChange('author', e.target.value)}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="例: ugai"
@@ -780,12 +804,12 @@ export function EditModal({
                 </div>
               </div>
 
-              {/* 備考 */}
+              {/* 備考（comment） */}
               <div>
                 <label className="block text-gray-700 text-sm font-medium mb-1">備考</label>
                 <textarea
-                  value={formData.notes}
-                  onChange={(e) => handleInputChange('notes', e.target.value)}
+                  value={formData.comment}
+                  onChange={(e) => handleInputChange('comment', e.target.value)}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Quest対応、特殊機能など"
@@ -893,13 +917,13 @@ export function EditModal({
         </div>
       </div>
 
-      {/* 属性管理モーダル */}
+      {/* カテゴリ管理モーダル */}
       <AttributeModal
         isOpen={showAttributeModal}
         onClose={() => setShowAttributeModal(false)}
-        currentAttributes={formData.attributes}
-        onApply={(attributes) => handleInputChange('attributes', attributes)}
-        allAttributes={attributes}
+        currentAttributes={formData.categories}
+        onApply={(categories) => handleInputChange('categories', categories)}
+        allAttributes={categories || attributes}
       />
     </div>
   );

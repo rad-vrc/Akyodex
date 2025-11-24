@@ -1,9 +1,15 @@
 'use client';
 
 interface FilterPanelProps {
+  // 新フィールド（オプショナル）
+  categories?: string[];
+  authors?: string[];
+
+  // 旧フィールド（互換性維持、必須のまま）
   attributes: string[];
   creators: string[];
-  selectedAttribute?: string;
+  
+  selectedAttribute?: string; // 選択状態のプロップス名は今回は維持
   selectedCreator?: string;
   onAttributeChange: (attribute: string) => void;
   onCreatorChange: (creator: string) => void;
@@ -17,6 +23,8 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({
+  categories,
+  authors,
   attributes,
   creators,
   selectedAttribute,
@@ -39,6 +47,10 @@ export function FilterPanel({
     onCreatorChange(e.target.value);
   };
 
+  // 新旧フィールドのマージ（新フィールド優先）
+  const displayCategories = categories || attributes;
+  const displayAuthors = authors || creators;
+
   return (
     <div className="space-y-4">
       {/* ドロップダウン */}
@@ -48,10 +60,10 @@ export function FilterPanel({
           value={selectedAttribute ?? ''}
           onChange={handleAttributeChange}
           className="w-full"
-          aria-label={lang === 'en' ? 'Filter by attribute' : '属性で絞り込み'}
+          aria-label={lang === 'en' ? 'Filter by category' : 'カテゴリで絞り込み'}
         >
-          <option value="">{lang === 'en' ? 'All Attributes' : 'すべての属性'}</option>
-          {attributes.map(attr => (
+          <option value="">{lang === 'en' ? 'All Categories' : 'すべてのカテゴリ'}</option>
+          {displayCategories.map(attr => (
             <option key={attr} value={attr}>
               {attr}
             </option>
@@ -63,10 +75,10 @@ export function FilterPanel({
           value={selectedCreator ?? ''}
           onChange={handleCreatorChange}
           className="w-full"
-          aria-label={lang === 'en' ? 'Filter by creator' : '作者で絞り込み'}
+          aria-label={lang === 'en' ? 'Filter by author' : '作者で絞り込み'}
         >
-          <option value="">{lang === 'en' ? 'All Creators' : 'すべての作者'}</option>
-          {creators.map(creator => (
+          <option value="">{lang === 'en' ? 'All Authors' : 'すべての作者'}</option>
+          {displayAuthors.map(creator => (
             <option key={creator} value={creator}>
               {creator}
             </option>

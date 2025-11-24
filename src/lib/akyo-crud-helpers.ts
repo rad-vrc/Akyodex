@@ -45,8 +45,33 @@ export async function processAkyoCRUD(
     formData: AkyoFormData | DeleteData
 ): Promise<Response> {
     const { id } = formData;
-    const { nickname, avatarName, attributes, creator, avatarUrl, notes, imageData } =
-        'nickname' in formData ? formData : { nickname: '', avatarName: '', attributes: '', creator: '', avatarUrl: '', notes: '', imageData: undefined };
+    
+    // 分割代入で新旧フィールドを取得
+    const { 
+        nickname, 
+        avatarName, 
+        avatarUrl, 
+        imageData,
+        category,
+        author,
+        comment,
+        attributes,
+        creator,
+        notes
+    } = 'nickname' in formData 
+        ? formData 
+        : { 
+            nickname: '', 
+            avatarName: '', 
+            avatarUrl: '', 
+            imageData: undefined,
+            category: '',
+            author: '',
+            comment: '',
+            attributes: '',
+            creator: '',
+            notes: '' 
+        };
 
     try {
         // Step 1: Load CSV
@@ -56,6 +81,21 @@ export async function processAkyoCRUD(
         let updatedRecords: string[][];
         let commitMessageAction: string;
         let successMessage: string;
+        
+        // createAkyoRecordに渡すデータ
+        // 将来的にcreateAkyoRecordの引数も更新する必要があるが、
+        // 現時点ではcsv-utils.ts側の変更を最小限にするため、
+        // 新旧フィールドをマッピングして渡す（またはcreateAkyoRecord側で処理する）
+        const recordData = {
+            id,
+            nickname,
+            avatarName,
+            // 新フィールドを優先
+            attributes: category || attributes,
+            creator: author || creator,
+            notes: comment || notes,
+            avatarUrl,
+        };
 
         switch (operation) {
             case 'add': {
@@ -66,15 +106,7 @@ export async function processAkyoCRUD(
                 }
 
                 // Create and add new record
-                const newRecord = createAkyoRecord({
-                    id,
-                    nickname,
-                    avatarName,
-                    attributes,
-                    creator,
-                    avatarUrl,
-                    notes,
-                });
+                const newRecord = createAkyoRecord(recordData);
                 updatedRecords = [...dataRecords, newRecord];
                 commitMessageAction = 'Add';
                 successMessage = 'Akyoを登録しました';
@@ -89,15 +121,7 @@ export async function processAkyoCRUD(
                 }
 
                 // Create updated record
-                const updatedRecord = createAkyoRecord({
-                    id,
-                    nickname,
-                    avatarName,
-                    attributes,
-                    creator,
-                    avatarUrl,
-                    notes,
-                });
+                const updatedRecord = createAkyoRecord(recordData);
                 updatedRecords = replaceRecordById(dataRecords, id, updatedRecord);
                 commitMessageAction = 'Update';
                 successMessage = 'Akyoを更新しました';

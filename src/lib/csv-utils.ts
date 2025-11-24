@@ -139,31 +139,33 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
 
     const rawRow: Record<string, string> = {};
     header.forEach((headerName, index) => {
-      rawRow[headerName] = record[index] || '';
+      // Remove BOM and whitespace from header name just in case
+      const safeHeader = headerName.trim().replace(/^\ufeff/, '');
+      rawRow[safeHeader] = record[index] || '';
     });
 
-    const csvRow: AkyoCsvRow = {
-      ID: rawRow['ID'] ?? '',
-      見た目: rawRow['見た目'] ?? '',
-      通称: rawRow['通称'] ?? '',
-      アバター名: rawRow['アバター名'] ?? '',
-      属性: rawRow['属性'] || undefined,
-      '属性（モチーフが基準）': rawRow['属性（モチーフが基準）'] || undefined,
-      備考: rawRow['備考'] ?? '',
-      作者: rawRow['作者'] || undefined,
-      '作者（敬称略）': rawRow['作者（敬称略）'] || undefined,
-      アバターURL: rawRow['アバターURL'] ?? '',
-    };
+    // Map English headers to data structure
+    const attribute = rawRow['Category'] || '';
+    const notes = rawRow['Comment'] || '';
+    const creator = rawRow['Author'] || '';
 
     data.push({
-      id: csvRow.ID,
-      appearance: csvRow.見た目,
-      nickname: csvRow.通称,
-      avatarName: csvRow.アバター名,
-      attribute: csvRow.属性 || csvRow['属性（モチーフが基準）'] || '',
-      notes: csvRow.備考,
-      creator: csvRow.作者 || csvRow['作者（敬称略）'] || '',
-      avatarUrl: csvRow.アバターURL,
+      id: rawRow['ID'] ?? '',
+      appearance: '', // Removed field
+      nickname: rawRow['Nickname'] ?? '',
+      avatarName: rawRow['AvatarName'] ?? '',
+      
+      // Standardized fields
+      category: attribute,
+      comment: notes,
+      author: creator,
+      
+      // Backward compatibility fields
+      attribute: attribute,
+      notes: notes,
+      creator: creator,
+      
+      avatarUrl: rawRow['AvatarURL'] ?? '',
     });
   }
 
@@ -249,7 +251,7 @@ export function createAkyoRecord(data: {
 }): string[] {
   return [
     sanitizeCsvCell(data.id),
-    '', // appearance field is not used in form
+    // appearance (2nd column) is REMOVED
     sanitizeCsvCell(data.nickname || ''),
     sanitizeCsvCell(data.avatarName),
     sanitizeCsvCell(data.attributes || ''),

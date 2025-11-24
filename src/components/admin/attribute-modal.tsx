@@ -12,7 +12,7 @@ interface AttributeModalProps {
 
 /**
  * Attribute Management Modal
- * 属性管理モーダル（完全再現）
+ * カテゴリ（旧: 属性）管理モーダル（完全再現）
  */
 export function AttributeModal({
   isOpen,
@@ -59,7 +59,7 @@ export function AttributeModal({
   const handleCreateAttribute = () => {
     const trimmed = newAttributeName.trim();
     if (!trimmed) {
-      alert('属性名を入力してください');
+      alert('カテゴリ名を入力してください');
       return;
     }
 
@@ -70,7 +70,7 @@ export function AttributeModal({
     );
 
     if (isDuplicate) {
-      alert('この属性は既に存在します');
+      alert('このカテゴリは既に存在します');
       return;
     }
 
@@ -123,7 +123,7 @@ export function AttributeModal({
               className="text-lg font-bold text-gray-800 flex items-center gap-2"
             >
               <i className="fas fa-tags text-green-500" aria-hidden="true"></i>
-              属性を管理
+              カテゴリを管理
             </h3>
             <button
               type="button"
@@ -146,7 +146,7 @@ export function AttributeModal({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="属性を検索"
+                  placeholder="カテゴリを検索"
                 />
               </div>
               <button
@@ -155,7 +155,7 @@ export function AttributeModal({
                 className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-green-100 text-green-800 hover:bg-green-200 transition-colors"
               >
                 <i className="fas fa-plus-circle" aria-hidden="true"></i>
-                新しい属性を作成
+                新しいカテゴリを作成
               </button>
             </div>
 
@@ -167,7 +167,7 @@ export function AttributeModal({
                     htmlFor="attributeNewInput"
                     className="block text-sm font-medium text-green-900 mb-1"
                   >
-                    新しい属性名
+                    新しいカテゴリ名
                   </label>
                   <input
                     type="text"
@@ -236,7 +236,7 @@ export function AttributeModal({
               </div>
               {filteredAttributes.length === 0 && (
                 <p className="px-4 pb-4 text-sm text-gray-500">
-                  一致する属性がありません。
+                  一致するカテゴリがありません。
                 </p>
               )}
             </div>

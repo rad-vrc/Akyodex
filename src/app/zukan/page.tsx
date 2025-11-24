@@ -10,7 +10,7 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { headers, cookies } from 'next/headers';
-import { getAkyoData, getAllAttributes, getAllCreators } from '@/lib/akyo-data-server';
+import { getAkyoData, getAllCategories, getAllAuthors } from '@/lib/akyo-data-server';
 import { ZukanClient } from './zukan-client';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { isValidLanguage, type SupportedLanguage } from '@/lib/i18n';
@@ -59,18 +59,21 @@ export default async function ZukanPage() {
   const lang = await getLanguage();
 
   // Server-side data fetching with ISR (language-specific)
-  const [data, attributes, creators] = await Promise.all([
+  const [data, categories, authors] = await Promise.all([
     getAkyoData(lang),
-    getAllAttributes(lang),
-    getAllCreators(lang),
+    getAllCategories(lang),
+    getAllAuthors(lang),
   ]);
 
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <ZukanClient
         initialData={data}
-        attributes={attributes}
-        creators={creators}
+        categories={categories}
+        authors={authors}
+        // 互換性のため旧プロップスも渡す
+        attributes={categories}
+        creators={authors}
         initialLang={lang}
       />
     </Suspense>
