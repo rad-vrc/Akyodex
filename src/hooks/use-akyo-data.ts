@@ -65,6 +65,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     if (query) {
       filtered = filtered.filter(
         (akyo) =>
+          akyo.id.includes(query) ||
           (akyo.nickname || '').toLowerCase().includes(query) ||
           (akyo.avatarName || '').toLowerCase().includes(query) ||
           (akyo.category || akyo.attribute || '').toLowerCase().includes(query) ||
