@@ -65,6 +65,7 @@ async function fetchFileFromGitHub(
             headers: {
                 'Authorization': `token ${githubConfig.token}`,
                 'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Akyodex-App',
             },
             signal: controller.signal,
         });
@@ -123,6 +124,7 @@ async function commitFileToGitHub(
                 'Authorization': `token ${githubConfig.token}`,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json',
+                'User-Agent': 'Akyodex-App',
             },
             body: JSON.stringify({
                 message,
