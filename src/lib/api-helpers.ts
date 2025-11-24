@@ -108,17 +108,25 @@ export async function ensureAdminRequest(
  * @returns true if valid origin, false otherwise
  */
 export function validateOrigin(request: Request): boolean {
-  const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_ORIGIN;
+  let allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_ORIGIN;
   const allowDevHosts = process.env.CSRF_DEV_ALLOWLIST === 'true';
 
   if (!allowedOrigin) {
-    // In development, allow any origin if not configured
-    if (process.env.NODE_ENV !== 'production' || allowDevHosts) {
-      console.warn('⚠️ CSRF protection disabled - set NEXT_PUBLIC_APP_URL or APP_ORIGIN');
-      return true;
+    // Fallback: trust the current host (same-origin) to avoid lockout if env vars are missing
+    try {
+      allowedOrigin = new URL(request.url).origin;
+      console.warn(
+        '⚠️ CSRF protection: NEXT_PUBLIC_APP_URL/APP_ORIGIN 未設定のため request.url.origin を暫定使用します:',
+        allowedOrigin,
+      );
+    } catch {
+      if (process.env.NODE_ENV !== 'production' || allowDevHosts) {
+        console.warn('⚠️ CSRF protection disabled - set NEXT_PUBLIC_APP_URL or APP_ORIGIN');
+        return true;
+      }
+      console.error('CSRF protection: APP_ORIGIN not configured and request.origin parse failed');
+      return false;
     }
-    console.error('CSRF protection: APP_ORIGIN not configured');
-    return false;
   }
 
   const originHeader = request.headers.get('origin');
@@ -182,7 +190,19 @@ export function validateOrigin(request: Request): boolean {
     return false;
   }
 
-  // No origin or referer header (suspicious)
+  // No origin or referer header: allow only if request host matches allowed origin host
+  try {
+    const requestOrigin = new URL(request.url).origin;
+    const allowedHost = new URL(allowedOriginCanonical).host;
+    const requestHost = new URL(requestOrigin).host;
+    if (requestHost === allowedHost) {
+      console.warn('⚠️ CSRF protection: Missing origin/referer, but request host matches allowed origin host. Allowing.');
+      return true;
+    }
+  } catch (error) {
+    console.error('CSRF protection: Missing origin/referer and request URL parse failed', error);
+  }
+
   console.error('CSRF protection: Missing origin and referer headers');
   return false;
 }
