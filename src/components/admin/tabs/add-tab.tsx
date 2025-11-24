@@ -128,7 +128,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     }
 
     // Show loading state
+
     const formEl = formRef.current;
+
     if (!formEl) {
       console.error('Form element not found on submit');
       return;
