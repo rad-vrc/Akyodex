@@ -57,7 +57,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
     // Filter by favorites
     if (options.favoritesOnly) {
-      filtered = filtered.filter((akyo) => favorites.includes(akyo.id));
+      filtered = filtered.filter((akyo) => akyo.isFavorite);
     }
 
     // Filter by search query
@@ -72,7 +72,23 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       );
     }
 
-    setFilteredData(result);
+    // Random display mode
+    if (options.randomCount) {
+      filtered = filtered
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+        .slice(0, options.randomCount);
+    } else {
+      // Sort by ID
+      filtered.sort((a, b) => {
+        const idA = parseInt(a.id, 10);
+        const idB = parseInt(b.id, 10);
+        return sortAsc ? idA - idB : idB - idA;
+      });
+    }
+
+    setFilteredData(filtered);
   }, [data]);
 
   // お気に入り機能
