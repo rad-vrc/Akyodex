@@ -45,6 +45,7 @@ export function EditModal({
   const [fetchingImage, setFetchingImage] = useState(false);
 
   // Image cropping states
+  // ... (省略: 変更なし) ...
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
   const [imageScale, setImageScale] = useState(1);
@@ -57,6 +58,7 @@ export function EditModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Duplicate check states
+  // ... (省略: 変更なし) ...
   const [nicknameStatus, setNicknameStatus] = useState<{
     message: string;
     tone: 'neutral' | 'success' | 'error';
@@ -91,6 +93,7 @@ export function EditModal({
     }
   }, [akyo]);
 
+  // ... (画像処理系ロジックは変更なし) ...
   // Update image transform when position or scale changes
   useEffect(() => {
     const img = cropImageRef.current;
@@ -269,6 +272,7 @@ export function EditModal({
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // ... (重複チェック系ロジックは変更なし) ...
   // Duplicate check for nickname
   const handleCheckNicknameDuplicate = async () => {
     const value = formData.nickname.trim();
@@ -361,6 +365,7 @@ export function EditModal({
     }
   };
 
+  // ... (VRChat連携ロジックは変更なし) ...
   // VRChat URLからアバター名を取得
   const handleFetchAvatarName = async () => {
     const url = formData.avatarUrl.trim();
@@ -925,7 +930,7 @@ export function EditModal({
         onClose={() => setShowAttributeModal(false)}
         currentAttributes={formData.categories}
         onApply={(categories) => handleInputChange('categories', categories)}
-        allAttributes={attributes}
+        allAttributes={categories || attributes}
       />
     </div>
   );
