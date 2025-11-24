@@ -34,6 +34,14 @@ interface R2Bucket {
 function getR2Bucket(): R2Bucket | null {
   try {
     const context = getCloudflareContext();
+    
+    // Debug logging
+    if (context?.env) {
+      console.log('[R2] Available bindings:', Object.keys(context.env));
+    } else {
+      console.warn('[R2] No Cloudflare context or env found');
+    }
+
     const bucket = context?.env?.AKYO_BUCKET as R2Bucket | undefined;
 
     if (bucket && typeof bucket === 'object' && typeof bucket.put === 'function') {
