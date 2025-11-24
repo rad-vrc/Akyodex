@@ -121,8 +121,8 @@ export async function uploadImageToR2(
       };
     }
 
-    // Upload to R2 (store in images/ subdirectory to match fetch path)
-    const imageKey = `images/${id}.webp`;
+    // Upload to R2
+    const imageKey = `${id}.webp`;
     await bucket.put(imageKey, buffer, {
       httpMetadata: {
         contentType,
@@ -161,8 +161,8 @@ export async function deleteImageFromR2(id: string): Promise<R2UploadResult> {
       };
     }
 
-    // Delete from R2 (images/ subdirectory)
-    const imageKey = `images/${id}.webp`;
+    // Delete from R2
+    const imageKey = `${id}.webp`;
 
     if (typeof bucket.delete !== 'function') {
       return {

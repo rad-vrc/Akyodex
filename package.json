@@ -36,7 +36,7 @@
     "knip": "^5.66.4",
     "postcss": "^8.4.49",
     "tailwindcss": "^4",
-    "typescript": "^5.9.3",
+    "typescript": "5.9.3",
     "wrangler": "^4.44.0"
   }
 }
