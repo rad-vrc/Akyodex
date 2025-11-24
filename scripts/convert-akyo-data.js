@@ -67,9 +67,11 @@ function main() {
   for (const line of lines) {
     const cols = parseCsvLine(line);
 
-    if (cols.length < 7) {
+    if (cols.length !== 7) {
       // 想定外の行はスキップして警告
-      console.warn(`列数が想定外のためスキップ: (${cols.length} 列) ${line}`);
+      console.warn(
+        `列数が想定外のためスキップ: (想定 7 列, 実際 ${cols.length} 列) ${line}`,
+      );
       continue;
     }
 

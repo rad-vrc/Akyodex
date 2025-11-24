@@ -100,7 +100,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
 
   const displayName = localAkyo.nickname || localAkyo.avatarName || '';
   const categories: string[] = categoryStr
-    ? categoryStr.split(',').map((a: string) => a.trim()).filter(Boolean)
+    ? categoryStr.split(/[、,]/).map((a: string) => a.trim()).filter(Boolean)
     : [];
   const categoryColor = getCategoryColor(categoryStr);
   const imageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);

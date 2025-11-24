@@ -137,7 +137,8 @@ export async function getAllCategories(lang: SupportedLanguage = 'ja'): Promise<
   const categoriesSet = new Set<string>();
 
   data.forEach((akyo) => {
-    const cats = akyo.category.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
+    const catStr = akyo.category || akyo.attribute || '';
+    const cats = catStr.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
     cats.forEach((cat) => categoriesSet.add(cat));
   });
 
@@ -162,7 +163,8 @@ export async function getAllAuthors(lang: SupportedLanguage = 'ja'): Promise<str
   const authorsSet = new Set<string>();
 
   data.forEach((akyo) => {
-    const authors = akyo.author.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
+    const authorStr = akyo.author || akyo.creator || '';
+    const authors = authorStr.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
     authors.forEach((author) => authorsSet.add(author));
   });
 

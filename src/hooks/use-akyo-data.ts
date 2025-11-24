@@ -41,8 +41,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     // Filter by attribute/category
     if (targetCategory && targetCategory !== 'all') {
       filtered = filtered.filter((akyo) => {
-        // 新旧フィールド両方チェック（データロード時に同期されているはずだが念のため）
-        const cats = (akyo.category || akyo.attribute).split(/[、,]/).map((a) => a.trim());
+        const catsStr = akyo.category || akyo.attribute || '';
+        const cats = catsStr.split(/[、,]/).map((a) => a.trim());
         return cats.includes(targetCategory);
       });
     }
@@ -50,7 +50,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     // Filter by creator/author
     if (targetAuthor && targetAuthor !== 'all') {
       filtered = filtered.filter((akyo) => {
-        const authors = (akyo.author || akyo.creator).split(/[、,]/).map((c) => c.trim());
+        const authorsStr = akyo.author || akyo.creator || '';
+        const authors = authorsStr.split(/[、,]/).map((c) => c.trim());
         return authors.includes(targetAuthor);
       });
     }
@@ -64,11 +65,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     if (query) {
       filtered = filtered.filter(
         (akyo) =>
-          akyo.nickname.toLowerCase().includes(query) ||
-          akyo.avatarName.toLowerCase().includes(query) ||
-          (akyo.category || akyo.attribute).toLowerCase().includes(query) ||
-          (akyo.author || akyo.creator).toLowerCase().includes(query) ||
-          (akyo.comment || akyo.notes).toLowerCase().includes(query)
+          (akyo.nickname || '').toLowerCase().includes(query) ||
+          (akyo.avatarName || '').toLowerCase().includes(query) ||
+          (akyo.category || akyo.attribute || '').toLowerCase().includes(query) ||
+          (akyo.author || akyo.creator || '').toLowerCase().includes(query) ||
+          (akyo.comment || akyo.notes || '').toLowerCase().includes(query)
       );
     }
 

@@ -114,7 +114,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         {/* 属性バッジ */}
         {category && (
           <div className="flex flex-wrap gap-1 mb-2">
-            {category.split(',').map((cat, index) => {
+            {category.split(/[、,]/).map((cat, index) => {
               const trimmedCat = cat.trim();
               const color = getCategoryColor(trimmedCat);
               return (
