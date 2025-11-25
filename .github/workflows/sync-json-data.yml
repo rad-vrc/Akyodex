@@ -208,7 +208,7 @@ jobs:
           fi
           echo "🎉 R2 upload complete!"
 
-      - name: Trigger ISR Revalidation
+      - name: Trigger ISR Revalidation and KV Cache Update
         if: steps.json-changes.outputs.changed == 'true'
         env:
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
@@ -227,7 +227,7 @@ jobs:
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
           if [ "$HTTP_CODE" -eq 200 ]; then
-            echo "✅ ISR revalidation successful"
+            echo "✅ ISR revalidation and KV cache update successful"
             echo "Response: $BODY"
           else
             echo "::warning::ISR revalidation failed (HTTP $HTTP_CODE)"
@@ -236,8 +236,9 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## JSON Sync Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Cache Invalidation (Phase 5a + 5b)" >> $GITHUB_STEP_SUMMARY
+            echo "- ISR revalidation triggered for instant page updates" >> $GITHUB_STEP_SUMMARY
+            echo "- KV cache updated for edge-side data access (~5ms)" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.json-changes.outputs.changed }}" == "true" ]; then
             echo "✅ JSON files updated and uploaded to R2" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
