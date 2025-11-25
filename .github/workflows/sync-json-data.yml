@@ -222,8 +222,8 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ env.SITE_URL }}/api/revalidate" \
             -H "Content-Type: application/json" \
             -H "x-revalidate-secret: $REVALIDATE_SECRET" \
-            -d '{"paths": ["/", "/en"], "tags": ["akyo-data", "akyo-data-ja", "akyo-data-en"]}' \
-            --max-time 30)
+            -d '{"paths": ["/", "/en"], "tags": ["akyo-data", "akyo-data-ja", "akyo-data-en"], "updateKV": true}' \
+            --max-time 60)
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
           if [ "$HTTP_CODE" -eq 200 ]; then
