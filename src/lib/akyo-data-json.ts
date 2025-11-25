@@ -2,9 +2,11 @@
  * JSON-based Data Loading for Akyoずかん
  * 
  * Phase 4 Implementation: R2 JSON Data Cache
+ * Phase 5a: On-demand ISR with cache tags
  * 
  * This module handles JSON data fetching with:
- * - ISR (Incremental Static Regeneration) every hour
+ * - ISR (Incremental Static Regeneration) every hour as fallback
+ * - On-demand revalidation via cache tags ('akyo-data')
  * - Automatic language fallback (en -> ja)
  * - React cache() for request deduplication
  * - Fallback to CSV method on error
@@ -13,6 +15,7 @@
  * - 90% faster data loading (no CSV parsing)
  * - Direct JSON.parse() to JavaScript objects
  * - Reduced server CPU usage
+ * - Near-instant updates via on-demand revalidation
  */
 
 import { cache } from 'react';
@@ -54,10 +57,12 @@ export const getAkyoDataFromJSON = cache(
     
     try {
       const response = await fetch(url, {
-        next: { revalidate: 3600 }, // ISR: 1 hour
+        next: { 
+          revalidate: 3600, // ISR: 1 hour (fallback)
+          tags: ['akyo-data', `akyo-data-${lang}`], // On-demand revalidation tags
+        },
         headers: {
           'Accept': 'application/json',
-          'Cache-Control': 'public, max-age=3600',
         },
       });
       
@@ -67,10 +72,12 @@ export const getAkyoDataFromJSON = cache(
         const jaUrl = getJsonUrl('ja');
         
         const jaResponse = await fetch(jaUrl, {
-          next: { revalidate: 3600 },
+          next: { 
+            revalidate: 3600,
+            tags: ['akyo-data', 'akyo-data-ja'],
+          },
           headers: {
             'Accept': 'application/json',
-            'Cache-Control': 'public, max-age=3600',
           },
         });
         

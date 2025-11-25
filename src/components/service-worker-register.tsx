@@ -52,7 +52,20 @@ export function ServiceWorkerRegister() {
         }, 60 * 60 * 1000);
 
       } catch (error) {
-        console.error('[SW] Registration failed:', error);
+        // Log detailed error information
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error('[SW] Registration failed:', errorMessage);
+        
+        // Don't report to Sentry for expected failures (e.g., private browsing, unsupported)
+        const isExpectedError = 
+          errorMessage.includes('Service Workers are not supported') ||
+          errorMessage.includes('The operation is insecure') ||
+          errorMessage.includes('Failed to register a ServiceWorker');
+        
+        if (!isExpectedError && typeof window !== 'undefined' && 'Sentry' in window) {
+          // Only report unexpected errors to Sentry
+          console.warn('[SW] Unexpected registration error, may be reported to Sentry');
+        }
       }
     };
 
