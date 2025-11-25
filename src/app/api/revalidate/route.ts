@@ -121,6 +121,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     // Phase 5b: Update KV cache if requested
     let kvUpdated = false;
     let kvUpdateDetails: { ja: boolean; en: boolean; metadata: boolean } | null = null;
+    let kvError: string | null = null;
+    
     if (updateKV) {
       try {
         console.log('[revalidate] Updating KV cache...');
@@ -136,10 +138,16 @@ export async function POST(request: NextRequest): Promise<Response> {
         // Update both languages atomically to avoid metadata race condition
         kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn);
         kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata;
-        console.log(`[revalidate] KV cache update: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`);
+        
+        if (!kvUpdated) {
+          kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`;
+          console.error(`[revalidate] ${kvError}`);
+        } else {
+          console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`);
+        }
       } catch (error) {
+        kvError = `KV update failed: ${error}`;
         console.error('[revalidate] Failed to update KV cache:', error);
-        // Don't fail the request, ISR revalidation still succeeded
       }
     }
 
@@ -149,9 +157,18 @@ export async function POST(request: NextRequest): Promise<Response> {
       paths: revalidatedPaths,
       tags: revalidatedTags,
       kvUpdated,
+      kvUpdateDetails,
+      kvError,
     };
 
     console.log('[revalidate] Revalidation complete:', result);
+
+    // If updateKV was requested but failed, return 500 to signal data inconsistency
+    // This ensures calling workflows (e.g., GitHub Actions) detect the failure
+    // and can retry or alert, preventing stale KV data from being served
+    if (updateKV && !kvUpdated) {
+      return Response.json(result, { status: 500 });
+    }
 
     return Response.json(result, { status: 200 });
   } catch (error) {

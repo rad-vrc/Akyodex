@@ -33,6 +33,10 @@ bucket_name = "akyo-images"
 # Environment variables for production
 
 [env.production]
+[[env.production.kv_namespaces]]
+binding = "AKYO_KV"
+id = "42b435eff5ca4de9a33d70faff6c6abc"
+
 [[env.production.r2_buckets]]
 binding = "AKYO_BUCKET"
 bucket_name = "akyo-images"
