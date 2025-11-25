@@ -367,5 +367,14 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// Global error handler for uncaught errors in Service Worker
+self.addEventListener('error', (event) => {
+  console.error('[SW] Uncaught error:', event.error?.message || event.message);
+});
+
+self.addEventListener('unhandledrejection', (event) => {
+  console.error('[SW] Unhandled promise rejection:', event.reason);
+});
+
 // Log Service Worker lifecycle
 console.log('[SW] Service Worker script loaded');

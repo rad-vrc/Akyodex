@@ -25,6 +25,12 @@ declare global {
       GITHUB_REPO?: string;
       CLOUDFLARE_ACCOUNT_ID?: string;
       CLOUDFLARE_API_TOKEN?: string;
+      
+      // On-demand ISR revalidation
+      REVALIDATE_SECRET?: string;
+      
+      // Phase 4: JSON data source toggle
+      NEXT_PUBLIC_USE_JSON_DATA?: string;
     }
   }
 

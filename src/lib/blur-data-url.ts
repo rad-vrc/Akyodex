@@ -117,7 +117,7 @@ export function generateSolidColorDataURL(avatarId: string): string {
  * 4. Convert to base64
  * 5. Store in static JSON file for build-time access
  * 
- * @param imagePath - Path to source image
+ * @param _imagePath - Path to source image (prefixed with _ as unused)
  * @returns Promise resolving to base64 data URL
  */
 export async function generatePlaceholderFromImage(

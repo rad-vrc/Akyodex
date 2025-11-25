@@ -1,0 +1,136 @@
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { NextRequest } from 'next/server';
+
+/**
+ * On-demand ISR Revalidation API
+ * 
+ * This endpoint allows external services (like GitHub Actions) to trigger
+ * cache invalidation after data updates, enabling near-instant updates
+ * instead of waiting for the ISR revalidation period (1 hour).
+ * 
+ * Security:
+ * - Requires REVALIDATE_SECRET header for authentication
+ * - Should only be called from trusted sources (GitHub Actions webhook)
+ * 
+ * Usage:
+ * POST /api/revalidate
+ * Headers:
+ *   x-revalidate-secret: <REVALIDATE_SECRET>
+ * Body (optional):
+ *   { "paths": ["/", "/en"], "tags": ["akyo-data"] }
+ * 
+ * If no body is provided, revalidates all main pages by default.
+ * 
+ * Environment Variables:
+ * - REVALIDATE_SECRET: Secret token for authentication (required)
+ */
+
+// Note: OpenNext/Cloudflare requires nodejs runtime for API routes
+export const runtime = 'nodejs';
+
+interface RevalidateRequest {
+  paths?: string[];
+  tags?: string[];
+}
+
+// Default paths to revalidate when no specific paths are provided
+const DEFAULT_PATHS = [
+  '/',      // Japanese home
+  '/en',    // English home
+];
+
+// Default tags to revalidate
+const DEFAULT_TAGS = [
+  'akyo-data',
+];
+
+export async function POST(request: NextRequest): Promise<Response> {
+  try {
+    // Verify secret
+    const secret = request.headers.get('x-revalidate-secret');
+    const expectedSecret = process.env.REVALIDATE_SECRET;
+
+    if (!expectedSecret) {
+      console.error('[revalidate] REVALIDATE_SECRET is not configured');
+      return Response.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
+    if (!secret || secret !== expectedSecret) {
+      console.warn('[revalidate] Invalid or missing secret');
+      return Response.json(
+        { error: 'Invalid secret' },
+        { status: 401 }
+      );
+    }
+
+    // Parse request body (optional)
+    let paths = DEFAULT_PATHS;
+    let tags = DEFAULT_TAGS;
+
+    try {
+      const body = await request.json() as RevalidateRequest;
+      if (body.paths && Array.isArray(body.paths) && body.paths.length > 0) {
+        paths = body.paths;
+      }
+      if (body.tags && Array.isArray(body.tags) && body.tags.length > 0) {
+        tags = body.tags;
+      }
+    } catch {
+      // No body or invalid JSON - use defaults
+    }
+
+    // Revalidate paths
+    const revalidatedPaths: string[] = [];
+    for (const path of paths) {
+      try {
+        revalidatePath(path);
+        revalidatedPaths.push(path);
+        console.log(`[revalidate] Revalidated path: ${path}`);
+      } catch (error) {
+        console.error(`[revalidate] Failed to revalidate path ${path}:`, error);
+      }
+    }
+
+    // Revalidate tags
+    const revalidatedTags: string[] = [];
+    for (const tag of tags) {
+      try {
+        revalidateTag(tag);
+        revalidatedTags.push(tag);
+        console.log(`[revalidate] Revalidated tag: ${tag}`);
+      } catch (error) {
+        console.error(`[revalidate] Failed to revalidate tag ${tag}:`, error);
+      }
+    }
+
+    const result = {
+      revalidated: true,
+      timestamp: new Date().toISOString(),
+      paths: revalidatedPaths,
+      tags: revalidatedTags,
+    };
+
+    console.log('[revalidate] Revalidation complete:', result);
+
+    return Response.json(result, { status: 200 });
+  } catch (error) {
+    console.error('[revalidate] Unexpected error:', error);
+    return Response.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// Health check endpoint
+export async function GET(): Promise<Response> {
+  return Response.json({
+    status: 'ok',
+    endpoint: '/api/revalidate',
+    method: 'POST',
+    description: 'On-demand ISR revalidation endpoint',
+  });
+}
