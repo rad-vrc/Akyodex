@@ -1,5 +1,6 @@
 import { AdminClient } from './admin-client';
-import { getAllCategories, getAllAuthors, getAkyoData } from '@/lib/akyo-data-server';
+// Phase 4: Using unified data module with JSON support
+import { getAllCategories, getAllAuthors, getAkyoData } from '@/lib/akyo-data';
 
 export const metadata = {
   title: 'Akyoずかん - ファインダーモード',

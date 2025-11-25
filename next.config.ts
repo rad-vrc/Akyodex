@@ -12,17 +12,39 @@ const nextConfig: NextConfig = {
   },
   // Cloudflare Pages対応設定
   images: {
-    // R2から画像を配信するためのカスタムローダー
-    unoptimized: true, // Cloudflare Imagesを使う場合はfalseに変更可能
+    // Image optimization configuration
+    // To enable Cloudflare Images:
+    // 1. Set NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES=true
+    // 2. Set NEXT_PUBLIC_CLOUDFLARE_IMAGES_ACCOUNT_HASH=your_account_hash
+    // 3. Change unoptimized to false
+    unoptimized: process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES !== 'true',
+    
+    // Use custom loader when Cloudflare Images is enabled
+    ...(process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true' && {
+      loader: 'custom',
+      loaderFile: './src/lib/cloudflare-image-loader.ts',
+    }),
+    
+    // Image formats and sizes
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    
+    // Remote patterns for image sources
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.akyodex.com',
+        hostname: 'imagedelivery.net', // Cloudflare Images CDN
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.akyodex.com', // R2 fallback
         pathname: '/images/**',
       },
       {
         protocol: 'https',
-        hostname: '**.vrchat.com',
+        hostname: '**.vrchat.com', // VRChat API fallback
         pathname: '/**',
       },
     ],
