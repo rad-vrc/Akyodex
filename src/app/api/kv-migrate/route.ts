@@ -165,9 +165,26 @@ export async function POST(request: NextRequest): Promise<Response> {
           updateKVCache(dataEn, 'en'),
         ]);
         
-        if (kvJaResult) result.newKeysCreated.push('akyo-data-ja');
-        if (kvEnResult) result.newKeysCreated.push('akyo-data-en');
-        if (kvJaResult || kvEnResult) result.newKeysCreated.push('akyo-data-meta');
+        // Track successful updates
+        if (kvJaResult) {
+          result.newKeysCreated.push('akyo-data-ja');
+        } else {
+          const errMsg = 'Failed to update KV cache for Japanese data (updateKVCache returned false)';
+          console.error(`[kv-migrate] ${errMsg}`);
+          result.errors.push(errMsg);
+        }
+        
+        if (kvEnResult) {
+          result.newKeysCreated.push('akyo-data-en');
+        } else {
+          const errMsg = 'Failed to update KV cache for English data (updateKVCache returned false)';
+          console.error(`[kv-migrate] ${errMsg}`);
+          result.errors.push(errMsg);
+        }
+        
+        if (kvJaResult && kvEnResult) {
+          result.newKeysCreated.push('akyo-data-meta');
+        }
         
         console.log(`[kv-migrate] Initialization complete: ja=${kvJaResult}, en=${kvEnResult}`);
       } catch (error) {
@@ -177,10 +194,16 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
     }
 
-    return Response.json({
-      success: result.errors.length === 0,
+    const success = result.errors.length === 0;
+    const responseData = {
+      success,
       timestamp: new Date().toISOString(),
       ...result,
+    };
+    
+    // Return 500 status if any errors occurred
+    return Response.json(responseData, { 
+      status: success ? 200 : 500 
     });
     
   } catch (error) {
