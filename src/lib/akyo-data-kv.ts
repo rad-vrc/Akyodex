@@ -88,20 +88,31 @@ function getKVKey(lang: SupportedLanguage): string {
 }
 
 /**
- * Fetch Akyo data from KV with fallback to JSON
- * Wrapped with React cache() for automatic deduplication within a single request
+ * Result type for KV data fetching
+ * Indicates the actual source of the data for accurate logging
+ */
+export interface KVFetchResult {
+  data: AkyoData[];
+  source: 'kv' | 'kv-ja-fallback' | 'json-fallback' | 'error-fallback';
+}
+
+/**
+ * Fetch Akyo data from KV only (no internal fallback)
+ * Throws or returns null if KV is unavailable or empty
+ * 
+ * This is the "pure" KV fetch that doesn't hide the data source.
+ * Use getAkyoDataFromKVWithSource for explicit source tracking.
  * 
  * @param lang - Language code (default: 'ja')
- * @returns Array of Akyo data
+ * @returns Array of Akyo data, or null if KV unavailable/empty
  */
-export const getAkyoDataFromKV = cache(
-  async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
+export const getAkyoDataFromKVOnly = cache(
+  async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[] | null> => {
     const kv = getKVNamespace();
     
     if (!kv) {
-      console.log('[KV] Falling back to JSON data source');
-      const { getAkyoDataFromJSON } = await import('./akyo-data-json');
-      return getAkyoDataFromJSON(lang);
+      console.log('[KV] KV namespace not available');
+      return null;
     }
     
     const key = getKVKey(lang);
@@ -115,9 +126,9 @@ export const getAkyoDataFromKV = cache(
         return data;
       }
       
-      // KV is empty or data not found, try fallback to Japanese
+      // KV is empty or data not found, try fallback to Japanese within KV
       if (lang !== 'ja') {
-        console.log(`[KV] ${lang} data not found, trying Japanese fallback`);
+        console.log(`[KV] ${lang} data not found, trying Japanese in KV`);
         const jaData = await kv.get<AkyoData[]>(KV_KEYS.DATA_JA, { type: 'json' });
         
         if (jaData && Array.isArray(jaData) && jaData.length > 0) {
@@ -126,17 +137,82 @@ export const getAkyoDataFromKV = cache(
         }
       }
       
+      // KV is completely empty
+      console.log('[KV] No data in KV');
+      return null;
+      
+    } catch (error) {
+      console.error('[KV] Error fetching from KV:', error);
+      throw error;
+    }
+  }
+);
+
+/**
+ * Fetch Akyo data from KV with explicit source tracking
+ * Returns both data and the actual source for accurate logging
+ * 
+ * @param lang - Language code (default: 'ja')
+ * @returns Object with data array and source indicator
+ */
+export const getAkyoDataFromKVWithSource = cache(
+  async (lang: SupportedLanguage = 'ja'): Promise<KVFetchResult> => {
+    const kv = getKVNamespace();
+    
+    if (!kv) {
+      console.log('[KV] Falling back to JSON data source (KV unavailable)');
+      const { getAkyoDataFromJSON } = await import('./akyo-data-json');
+      return { data: await getAkyoDataFromJSON(lang), source: 'json-fallback' };
+    }
+    
+    const key = getKVKey(lang);
+    console.log(`[KV] Fetching ${lang} data from KV key: ${key}`);
+    
+    try {
+      const data = await kv.get<AkyoData[]>(key, { type: 'json' });
+      
+      if (data && Array.isArray(data) && data.length > 0) {
+        console.log(`[KV] Success: ${data.length} avatars (${lang})`);
+        return { data, source: 'kv' };
+      }
+      
+      // KV is empty or data not found, try fallback to Japanese within KV
+      if (lang !== 'ja') {
+        console.log(`[KV] ${lang} data not found, trying Japanese in KV`);
+        const jaData = await kv.get<AkyoData[]>(KV_KEYS.DATA_JA, { type: 'json' });
+        
+        if (jaData && Array.isArray(jaData) && jaData.length > 0) {
+          console.log(`[KV] Japanese KV fallback success: ${jaData.length} avatars`);
+          return { data: jaData, source: 'kv-ja-fallback' };
+        }
+      }
+      
       // KV is completely empty, fall back to JSON
       console.log('[KV] No data in KV, falling back to JSON');
       const { getAkyoDataFromJSON } = await import('./akyo-data-json');
-      return getAkyoDataFromJSON(lang);
+      return { data: await getAkyoDataFromJSON(lang), source: 'json-fallback' };
       
     } catch (error) {
       console.error('[KV] Error fetching from KV:', error);
       // Fallback to JSON on error
       const { getAkyoDataFromJSON } = await import('./akyo-data-json');
-      return getAkyoDataFromJSON(lang);
+      return { data: await getAkyoDataFromJSON(lang), source: 'error-fallback' };
     }
+  }
+);
+
+/**
+ * Fetch Akyo data from KV with fallback to JSON
+ * Wrapped with React cache() for automatic deduplication within a single request
+ * 
+ * @deprecated Use getAkyoDataFromKVOnly or getAkyoDataFromKVWithSource for clearer semantics
+ * @param lang - Language code (default: 'ja')
+ * @returns Array of Akyo data
+ */
+export const getAkyoDataFromKV = cache(
+  async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
+    const result = await getAkyoDataFromKVWithSource(lang);
+    return result.data;
   }
 );
 
@@ -225,27 +301,32 @@ export async function updateKVCache(
     await kv.put(key, JSON.stringify(data));
     console.log(`[KV] Updated ${key} with ${data.length} avatars`);
     
-    // Update metadata
+    // Update metadata with proper merging
+    // First, read existing metadata to preserve other language counts
+    let existingMeta: KVMetadata | null = null;
+    try {
+      existingMeta = await kv.get<KVMetadata>(KV_KEYS.META, { type: 'json' });
+    } catch (metaReadError) {
+      console.warn('[KV] Failed to read existing metadata, will create new:', metaReadError);
+    }
+    
+    // Build new metadata, preserving existing counts for other language
     const meta: KVMetadata = {
       lastUpdated: new Date().toISOString(),
-      countJa: lang === 'ja' ? data.length : 0,
-      countEn: lang === 'en' ? data.length : 0,
+      countJa: lang === 'ja' ? data.length : (existingMeta?.countJa ?? 0),
+      countEn: lang === 'en' ? data.length : (existingMeta?.countEn ?? 0),
       version: '5b',
     };
     
-    // Merge with existing metadata if available
+    // Write metadata
     try {
-      const existingMeta = await kv.get<KVMetadata>(KV_KEYS.META, { type: 'json' });
-      if (existingMeta) {
-        meta.countJa = lang === 'ja' ? data.length : existingMeta.countJa;
-        meta.countEn = lang === 'en' ? data.length : existingMeta.countEn;
-      }
-    } catch {
-      // Ignore if metadata doesn't exist yet
+      await kv.put(KV_KEYS.META, JSON.stringify(meta));
+      console.log(`[KV] Updated metadata: ja=${meta.countJa}, en=${meta.countEn}`);
+    } catch (metaWriteError) {
+      // Log error but don't fail the whole operation since data was written successfully
+      console.error('[KV] Failed to update metadata:', metaWriteError);
+      // Note: Data is still valid, just metadata may be stale
     }
-    
-    await kv.put(KV_KEYS.META, JSON.stringify(meta));
-    console.log('[KV] Updated metadata');
     
     return true;
   } catch (error) {
