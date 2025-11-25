@@ -31,7 +31,7 @@ export default function cloudflareImageLoader({
   
   // If Cloudflare Images is not configured, fallback to R2
   if (!accountHash || !enableCloudflareImages) {
-    return handleR2Fallback(src, width, quality);
+    return handleR2Fallback(src);
   }
   
   // Extract image ID from src
@@ -44,7 +44,7 @@ export default function cloudflareImageLoader({
       return src;
     }
     console.warn(`[cloudflareImageLoader] Invalid image src: ${src}, falling back to R2`);
-    return handleR2Fallback(src, width, quality);
+    return handleR2Fallback(src);
   }
 
   // Select appropriate variant based on width
@@ -110,8 +110,11 @@ function selectVariant(width: number): string {
  * IMPORTANT: Only converts avatar image paths to R2 URLs.
  * API routes (/api/*) and other relative paths are returned as-is
  * to preserve the fallback chain in AvatarImage component.
+ * 
+ * @param src - Image source path or URL
+ * @returns R2 URL or original path
  */
-function handleR2Fallback(src: string, width: number, quality?: number): string {
+function handleR2Fallback(src: string): string {
   // If it's already a full URL, return as-is
   if (src.startsWith('http://') || src.startsWith('https://')) {
     return src;
@@ -150,8 +153,10 @@ function handleR2Fallback(src: string, width: number, quality?: number): string 
  */
 export function getCloudflareImageURL(imageId: string, variant: string = 'medium'): string {
   const accountHash = process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGES_ACCOUNT_HASH;
+  const enableCloudflareImages = process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true';
   
-  if (!accountHash) {
+  // Require both accountHash and feature flag to use Cloudflare Images
+  if (!accountHash || !enableCloudflareImages) {
     // Fallback to R2
     const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
     return `${r2Base}/images/${imageId}.webp`;

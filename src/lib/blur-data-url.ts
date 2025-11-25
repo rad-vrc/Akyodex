@@ -24,7 +24,9 @@
  */
 export function generateBlurDataURL(avatarId: string): string {
   // Parse ID to number (e.g., "0001" → 1, "0640" → 640)
-  const idNum = parseInt(avatarId, 10);
+  const parsed = parseInt(avatarId, 10);
+  // Fallback to 0 if parsing fails (non-numeric input)
+  const idNum = Number.isNaN(parsed) ? 0 : parsed;
   
   // Generate deterministic color from ID using golden angle for distribution
   const hue = (idNum * 137.5) % 360;
@@ -86,7 +88,9 @@ export function getCloudflareBlurURL(avatarId: string): string {
  * @returns Base64-encoded data URL for solid color placeholder
  */
 export function generateSolidColorDataURL(avatarId: string): string {
-  const idNum = parseInt(avatarId, 10);
+  const parsed = parseInt(avatarId, 10);
+  // Fallback to 0 if parsing fails (non-numeric input)
+  const idNum = Number.isNaN(parsed) ? 0 : parsed;
   const hue = (idNum * 137.5) % 360;
   const saturation = 70;
   const lightness = 85;
@@ -117,7 +121,7 @@ export function generateSolidColorDataURL(avatarId: string): string {
  * @returns Promise resolving to base64 data URL
  */
 export async function generatePlaceholderFromImage(
-  imagePath: string
+  _imagePath: string
 ): Promise<string> {
   throw new Error('Not implemented - requires build-time image processing with sharp or similar');
 }
