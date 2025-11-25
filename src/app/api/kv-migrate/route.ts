@@ -40,11 +40,12 @@ interface KVNamespace {
 
 function getKVNamespace(): KVNamespace | null {
   try {
-    const { getRequestContext } = require('@cloudflare/next-on-pages');
-    const context = getRequestContext();
+    // Use OpenNext.js Cloudflare helper to get context
+    const { getCloudflareContext } = require('@opennextjs/cloudflare');
+    const { env } = getCloudflareContext();
     
-    if (context?.env?.AKYO_KV) {
-      return context.env.AKYO_KV as KVNamespace;
+    if (env?.AKYO_KV) {
+      return env.AKYO_KV as KVNamespace;
     }
     return null;
   } catch {

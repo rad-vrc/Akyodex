@@ -59,23 +59,27 @@ interface KVMetadata {
 /**
  * Get KV namespace from Cloudflare context
  * Returns null if not in Cloudflare environment
+ * 
+ * Uses @opennextjs/cloudflare's getCloudflareContext helper
+ * which provides access to KV, R2, and other bindings defined in wrangler.toml
  */
 function getKVNamespace(): KVNamespace | null {
   try {
-    // Try to get from Cloudflare's context
-    // This is available in Cloudflare Pages Functions
-    const { getRequestContext } = require('@cloudflare/next-on-pages');
-    const context = getRequestContext();
+    // Use OpenNext.js Cloudflare helper to get context
+    // This is the correct way to access bindings in @opennextjs/cloudflare
+    const { getCloudflareContext } = require('@opennextjs/cloudflare');
+    const { env } = getCloudflareContext();
     
-    if (context?.env?.AKYO_KV) {
-      return context.env.AKYO_KV as KVNamespace;
+    if (env?.AKYO_KV) {
+      return env.AKYO_KV as KVNamespace;
     }
     
-    console.log('[KV] AKYO_KV binding not available');
+    console.log('[KV] AKYO_KV binding not available in env');
     return null;
   } catch (error) {
-    // Not in Cloudflare environment or binding not available
-    console.log('[KV] Not in Cloudflare environment or getRequestContext failed');
+    // Not in Cloudflare environment or getCloudflareContext failed
+    // This is expected during local development or build time
+    console.log('[KV] Not in Cloudflare environment or getCloudflareContext failed');
     return null;
   }
 }
