@@ -106,6 +106,10 @@ function selectVariant(width: number): string {
 /**
  * Fallback to R2 when Cloudflare Images is not available
  * Returns direct R2 URL without optimization
+ * 
+ * IMPORTANT: Only converts avatar image paths to R2 URLs.
+ * API routes (/api/*) and other relative paths are returned as-is
+ * to preserve the fallback chain in AvatarImage component.
  */
 function handleR2Fallback(src: string, width: number, quality?: number): string {
   // If it's already a full URL, return as-is
@@ -116,16 +120,23 @@ function handleR2Fallback(src: string, width: number, quality?: number): string 
   // Construct R2 URL
   const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
   
-  // Handle relative paths
-  if (src.startsWith('/')) {
+  // Handle avatar image paths: /images/0001.webp → R2 URL
+  // Only convert paths that match avatar image pattern
+  const avatarImageMatch = src.match(/^\/images\/(\d{4})\.(webp|png|jpg|jpeg)$/);
+  if (avatarImageMatch) {
     return `${r2Base}${src}`;
   }
   
-  // Handle direct image IDs
+  // Handle direct image IDs: 0001 → R2 URL
   if (/^\d{4}$/.test(src)) {
     return `${r2Base}/images/${src}.webp`;
   }
   
+  // For all other relative paths (API routes, placeholders, etc.),
+  // return as-is to preserve Next.js routing
+  // Examples:
+  // - /api/avatar-image?id=0001 → keep as-is (API fallback)
+  // - /images/placeholder.png → keep as-is (static asset)
   return src;
 }
 
