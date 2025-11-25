@@ -1,0 +1,243 @@
+name: Sync JSON Data from CSV
+
+# =============================================================================
+# CSV to JSON Sync Workflow
+# =============================================================================
+# This workflow automatically converts CSV data files to JSON format and
+# uploads them to Cloudflare R2 for optimized data fetching (Phase 4).
+#
+# Required Secrets:
+#   - R2_ACCESS_KEY_ID: Cloudflare R2 Access Key ID
+#     (Create at: Cloudflare Dashboard → R2 → Manage R2 API Tokens)
+#   - R2_SECRET_ACCESS_KEY: Cloudflare R2 Secret Access Key
+#     (Displayed only once when creating the R2 API token)
+#   - CLOUDFLARE_ACCOUNT_ID: Your Cloudflare Account ID
+#     (Found in: Cloudflare Dashboard → R2 → Overview, or in the URL)
+#
+# R2 Bucket Structure:
+#   akyo-images/
+#   ├── data/
+#   │   ├── akyo-data-ja.json  (Japanese data)
+#   │   └── akyo-data-en.json  (English data)
+#   └── images/
+#       └── *.webp (avatar images)
+#
+# Public URL: https://images.akyodex.com/data/akyo-data-{lang}.json
+# =============================================================================
+
+# Trigger on CSV file changes in main branch
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/akyo-data.csv'
+      - 'data/akyo-data-US.csv'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Prevent concurrent runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Environment variables for R2 bucket configuration
+env:
+  R2_BUCKET: akyo-images
+  R2_DATA_PATH: data
+  JSON_FILE_JA: akyo-data-ja.json
+  JSON_FILE_EN: akyo-data-en.json
+
+jobs:
+  sync-json:
+    name: Convert CSV to JSON and Upload to R2
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+
+      # Review #1: Add error handling for CSV to JSON conversion
+      - name: Convert CSV to JSON
+        run: |
+          set -e
+          echo "Converting CSV files to JSON..."
+          if ! npm run data:convert; then
+            echo "::error::CSV to JSON conversion failed"
+            exit 1
+          fi
+          echo "✅ CSV to JSON conversion completed successfully"
+
+      # Review #2: Use explicit file list and -- separator for git diff
+      - name: Check for JSON changes
+        id: json-changes
+        run: |
+          set -e
+          JSON_JA="data/${{ env.JSON_FILE_JA }}"
+          JSON_EN="data/${{ env.JSON_FILE_EN }}"
+          
+          if git diff --quiet -- "$JSON_JA" "$JSON_EN"; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No JSON changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "JSON changes detected:"
+            git diff --stat -- "$JSON_JA" "$JSON_EN"
+          fi
+
+      # Review #3: Add error handling and retry for git push
+      - name: Commit JSON changes
+        if: steps.json-changes.outputs.changed == 'true'
+        run: |
+          set -e
+          JSON_JA="data/${{ env.JSON_FILE_JA }}"
+          JSON_EN="data/${{ env.JSON_FILE_EN }}"
+          
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -- "$JSON_JA" "$JSON_EN"
+          git commit -m "chore: auto-sync JSON data from CSV changes"
+          
+          # Retry logic for git push (max 3 attempts with backoff)
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          RETRY_DELAY=5
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if git push; then
+              echo "✅ Git push successful"
+              exit 0
+            fi
+            
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+              echo "::warning::Git push failed, retrying in ${RETRY_DELAY}s (attempt $RETRY_COUNT/$MAX_RETRIES)..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+              git pull --rebase
+            fi
+          done
+          
+          echo "::error::Git push failed after $MAX_RETRIES attempts"
+          exit 1
+
+      # Review #4: Add preflight checks, environment variables, and error handling
+      - name: Upload JSON to Cloudflare R2
+        if: steps.json-changes.outputs.changed == 'true'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -e
+          
+          # Preflight check: Validate required secrets
+          echo "Validating required secrets..."
+          MISSING_SECRETS=""
+          
+          if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS}R2_ACCESS_KEY_ID "
+          fi
+          if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS}R2_SECRET_ACCESS_KEY "
+          fi
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS}CLOUDFLARE_ACCOUNT_ID "
+          fi
+          
+          if [ -n "$MISSING_SECRETS" ]; then
+            echo "::error::Missing required secrets: $MISSING_SECRETS"
+            echo "Please configure these secrets in: Repository Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+          
+          # Set R2 endpoint
+          R2_ENDPOINT="https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com"
+          
+          # Preflight check: Verify bucket exists and is accessible
+          echo "Verifying R2 bucket access..."
+          if ! aws s3 ls "s3://${{ env.R2_BUCKET }}/${{ env.R2_DATA_PATH }}/" --endpoint-url "$R2_ENDPOINT" > /dev/null 2>&1; then
+            # Try to list the bucket root (data/ directory might not exist yet)
+            if ! aws s3 ls "s3://${{ env.R2_BUCKET }}/" --endpoint-url "$R2_ENDPOINT" > /dev/null 2>&1; then
+              echo "::error::Cannot access R2 bucket '${{ env.R2_BUCKET }}'. Please verify:"
+              echo "  1. The bucket exists in your Cloudflare R2 dashboard"
+              echo "  2. The R2 API token has read/write permissions for this bucket"
+              echo "  3. The CLOUDFLARE_ACCOUNT_ID is correct"
+              exit 1
+            fi
+          fi
+          echo "✅ R2 bucket is accessible"
+          
+          # Upload files with error handling
+          echo "Uploading JSON files to R2..."
+          UPLOAD_FAILED=false
+          
+          # Upload Japanese JSON
+          JSON_JA_PATH="data/${{ env.JSON_FILE_JA }}"
+          R2_JA_PATH="s3://${{ env.R2_BUCKET }}/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_JA }}"
+          
+          echo "Uploading $JSON_JA_PATH to $R2_JA_PATH..."
+          if aws s3 cp "$JSON_JA_PATH" "$R2_JA_PATH" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --content-type "application/json"; then
+            echo "✅ Uploaded ${{ env.JSON_FILE_JA }}"
+          else
+            echo "::error::Failed to upload ${{ env.JSON_FILE_JA }}"
+            UPLOAD_FAILED=true
+          fi
+          
+          # Upload English JSON
+          JSON_EN_PATH="data/${{ env.JSON_FILE_EN }}"
+          R2_EN_PATH="s3://${{ env.R2_BUCKET }}/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_EN }}"
+          
+          echo "Uploading $JSON_EN_PATH to $R2_EN_PATH..."
+          if aws s3 cp "$JSON_EN_PATH" "$R2_EN_PATH" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --content-type "application/json"; then
+            echo "✅ Uploaded ${{ env.JSON_FILE_EN }}"
+          else
+            echo "::error::Failed to upload ${{ env.JSON_FILE_EN }}"
+            UPLOAD_FAILED=true
+          fi
+          
+          # Final status check
+          if [ "$UPLOAD_FAILED" = true ]; then
+            echo "::error::One or more uploads failed"
+            exit 1
+          fi
+          
+          echo "🎉 R2 upload complete!"
+          
+      - name: Summary
+        run: |
+          echo "## JSON Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.json-changes.outputs.changed }}" == "true" ]; then
+            echo "✅ JSON files updated and uploaded to R2" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Updated Files" >> $GITHUB_STEP_SUMMARY
+            echo "- \`data/${{ env.JSON_FILE_JA }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- \`data/${{ env.JSON_FILE_EN }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### R2 URLs" >> $GITHUB_STEP_SUMMARY
+            echo "- https://images.akyodex.com/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_JA }}" >> $GITHUB_STEP_SUMMARY
+            echo "- https://images.akyodex.com/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_EN }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes detected in JSON files" >> $GITHUB_STEP_SUMMARY
+          fi

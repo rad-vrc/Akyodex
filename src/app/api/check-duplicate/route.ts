@@ -5,7 +5,8 @@
  * Returns: { duplicates: string[], message: string, isDuplicate: boolean }
  */
 
-import { getAkyoData } from '@/lib/akyo-data-server';
+// Phase 4: Using unified data module with JSON support
+import { getAkyoData } from '@/lib/akyo-data';
 import { validateOrigin } from '@/lib/api-helpers';
 
 export const runtime = 'nodejs';
