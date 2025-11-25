@@ -25,36 +25,8 @@
 import { cache } from 'react';
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
-
-/**
- * KV Namespace binding interface
- */
-interface KVNamespace {
-  get(key: string, options?: { type?: 'text' | 'json' | 'arrayBuffer' | 'stream' }): Promise<string | null>;
-  get<T>(key: string, options: { type: 'json' }): Promise<T | null>;
-  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: { expirationTtl?: number; metadata?: Record<string, unknown> }): Promise<void>;
-  delete(key: string): Promise<void>;
-  list(options?: { prefix?: string; limit?: number; cursor?: string }): Promise<{ keys: { name: string }[]; list_complete: boolean; cursor?: string }>;
-}
-
-/**
- * KV key constants
- */
-const KV_KEYS = {
-  DATA_JA: 'akyo-data-ja',
-  DATA_EN: 'akyo-data-en',
-  META: 'akyo-data-meta',
-} as const;
-
-/**
- * Metadata structure for KV cache
- */
-interface KVMetadata {
-  lastUpdated: string;
-  countJa: number;
-  countEn: number;
-  version: string;
-}
+import type { KVNamespace, KVMetadata } from '@/types/kv';
+import { KV_KEYS } from '@/types/kv';
 
 /**
  * Get KV namespace from Cloudflare context
@@ -139,8 +111,10 @@ export const getAkyoDataFromKVOnly = cache(
       return null;
       
     } catch (error) {
+      // Return null on error to match docstring contract
+      // This allows callers to properly fall back to JSON/CSV
       console.error('[KV] Error fetching from KV:', error);
-      throw error;
+      return null;
     }
   }
 );

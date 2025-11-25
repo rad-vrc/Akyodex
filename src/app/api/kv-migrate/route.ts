@@ -23,20 +23,10 @@
  */
 
 import { NextRequest } from 'next/server';
+import type { KVNamespace } from '@/types/kv';
 
 // Note: OpenNext/Cloudflare requires nodejs runtime for API routes
 export const runtime = 'nodejs';
-
-/**
- * KV Namespace binding interface
- */
-interface KVNamespace {
-  get(key: string, options?: { type?: 'text' | 'json' | 'arrayBuffer' | 'stream' }): Promise<string | null>;
-  get<T>(key: string, options: { type: 'json' }): Promise<T | null>;
-  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: { expirationTtl?: number; metadata?: Record<string, unknown> }): Promise<void>;
-  delete(key: string): Promise<void>;
-  list(options?: { prefix?: string; limit?: number; cursor?: string }): Promise<{ keys: { name: string }[]; list_complete: boolean; cursor?: string }>;
-}
 
 function getKVNamespace(): KVNamespace | null {
   try {
@@ -254,9 +244,13 @@ export async function GET(request: NextRequest): Promise<Response> {
     const oldKeys: string[] = [];
     const newKeys: string[] = [];
     
-    // Check old format keys
-    const oldList = await kv.list({ prefix: 'akyo:', limit: 100 });
-    oldKeys.push(...oldList.keys.map(k => k.name));
+    // Check old format keys with pagination (fetch all, not just first 100)
+    let cursor: string | undefined;
+    do {
+      const oldList = await kv.list({ prefix: 'akyo:', limit: 100, cursor });
+      oldKeys.push(...oldList.keys.map(k => k.name));
+      cursor = oldList.list_complete ? undefined : oldList.cursor;
+    } while (cursor);
     
     // Check new format keys
     const newFormats = ['akyo-data-ja', 'akyo-data-en', 'akyo-data-meta'];
@@ -269,6 +263,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       status: 'ok',
       kvAvailable: true,
       oldFormatKeys: oldKeys,
+      oldFormatKeysCount: oldKeys.length,
       newFormatKeys: newKeys,
       needsMigration: oldKeys.length > 0 || newKeys.length === 0,
     });
