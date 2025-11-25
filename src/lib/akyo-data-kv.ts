@@ -93,18 +93,20 @@ function getKVKey(lang: SupportedLanguage): string {
  */
 export interface KVFetchResult {
   data: AkyoData[];
-  source: 'kv' | 'kv-ja-fallback' | 'json-fallback' | 'error-fallback';
+  source: 'kv' | 'json-fallback' | 'error-fallback';
 }
 
 /**
  * Fetch Akyo data from KV only (no internal fallback)
- * Throws or returns null if KV is unavailable or empty
+ * Returns null if KV is unavailable or the requested language data is empty
  * 
  * This is the "pure" KV fetch that doesn't hide the data source.
- * Use getAkyoDataFromKVWithSource for explicit source tracking.
+ * It does NOT fall back to Japanese data when English is missing,
+ * allowing the caller to properly fall back to JSON/CSV which may
+ * have the correct language data.
  * 
  * @param lang - Language code (default: 'ja')
- * @returns Array of Akyo data, or null if KV unavailable/empty
+ * @returns Array of Akyo data, or null if KV unavailable/empty for requested language
  */
 export const getAkyoDataFromKVOnly = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[] | null> => {
@@ -126,19 +128,10 @@ export const getAkyoDataFromKVOnly = cache(
         return data;
       }
       
-      // KV is empty or data not found, try fallback to Japanese within KV
-      if (lang !== 'ja') {
-        console.log(`[KV] ${lang} data not found, trying Japanese in KV`);
-        const jaData = await kv.get<AkyoData[]>(KV_KEYS.DATA_JA, { type: 'json' });
-        
-        if (jaData && Array.isArray(jaData) && jaData.length > 0) {
-          console.log(`[KV] Japanese fallback success: ${jaData.length} avatars`);
-          return jaData;
-        }
-      }
-      
-      // KV is completely empty
-      console.log('[KV] No data in KV');
+      // KV data not found for requested language
+      // Do NOT fall back to Japanese here - let the caller handle fallback
+      // to JSON/CSV which may have proper English data
+      console.log(`[KV] No ${lang} data in KV, returning null for proper fallback`);
       return null;
       
     } catch (error) {
@@ -176,19 +169,10 @@ export const getAkyoDataFromKVWithSource = cache(
         return { data, source: 'kv' };
       }
       
-      // KV is empty or data not found, try fallback to Japanese within KV
-      if (lang !== 'ja') {
-        console.log(`[KV] ${lang} data not found, trying Japanese in KV`);
-        const jaData = await kv.get<AkyoData[]>(KV_KEYS.DATA_JA, { type: 'json' });
-        
-        if (jaData && Array.isArray(jaData) && jaData.length > 0) {
-          console.log(`[KV] Japanese KV fallback success: ${jaData.length} avatars`);
-          return { data: jaData, source: 'kv-ja-fallback' };
-        }
-      }
-      
-      // KV is completely empty, fall back to JSON
-      console.log('[KV] No data in KV, falling back to JSON');
+      // KV data not found for requested language
+      // Fall back to JSON with the SAME language to preserve language correctness
+      // Do NOT use Japanese KV data for English requests
+      console.log(`[KV] No ${lang} data in KV, falling back to JSON with same language`);
       const { getAkyoDataFromJSON } = await import('./akyo-data-json');
       return { data: await getAkyoDataFromJSON(lang), source: 'json-fallback' };
       
@@ -375,11 +359,20 @@ export async function updateKVCacheBoth(
     result.en = enResult;
     
     // Update metadata once with both counts
+    // Read existing metadata first to preserve counts for failed updates
     if (jaResult || enResult) {
+      let existingMeta: KVMetadata | null = null;
+      try {
+        existingMeta = await kv.get<KVMetadata>(KV_KEYS.META, { type: 'json' });
+      } catch (metaReadError) {
+        console.warn('[KV] Failed to read existing metadata:', metaReadError);
+      }
+      
+      // Build metadata preserving previous counts for failed updates
       const meta: KVMetadata = {
         lastUpdated: new Date().toISOString(),
-        countJa: jaResult ? dataJa.length : 0,
-        countEn: enResult ? dataEn.length : 0,
+        countJa: jaResult ? dataJa.length : (existingMeta?.countJa ?? 0),
+        countEn: enResult ? dataEn.length : (existingMeta?.countEn ?? 0),
         version: '5b',
       };
       
