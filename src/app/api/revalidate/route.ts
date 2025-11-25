@@ -4,6 +4,9 @@ import { NextRequest } from 'next/server';
 /**
  * On-demand ISR Revalidation API
  * 
+ * Phase 5a: ISR cache invalidation
+ * Phase 5b: KV cache update
+ * 
  * This endpoint allows external services (like GitHub Actions) to trigger
  * cache invalidation after data updates, enabling near-instant updates
  * instead of waiting for the ISR revalidation period (1 hour).
@@ -17,7 +20,11 @@ import { NextRequest } from 'next/server';
  * Headers:
  *   x-revalidate-secret: <REVALIDATE_SECRET>
  * Body (optional):
- *   { "paths": ["/", "/en"], "tags": ["akyo-data"] }
+ *   { 
+ *     "paths": ["/", "/en"], 
+ *     "tags": ["akyo-data"],
+ *     "updateKV": true  // Phase 5b: Also update KV cache
+ *   }
  * 
  * If no body is provided, revalidates all main pages by default.
  * 
@@ -31,6 +38,7 @@ export const runtime = 'nodejs';
 interface RevalidateRequest {
   paths?: string[];
   tags?: string[];
+  updateKV?: boolean; // Phase 5b: Also update KV cache with fresh data
 }
 
 // Default paths to revalidate when no specific paths are provided
@@ -69,6 +77,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     // Parse request body (optional)
     let paths = DEFAULT_PATHS;
     let tags = DEFAULT_TAGS;
+    let updateKV = false;
 
     try {
       const body = await request.json() as RevalidateRequest;
@@ -77,6 +86,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
       if (body.tags && Array.isArray(body.tags) && body.tags.length > 0) {
         tags = body.tags;
+      }
+      if (body.updateKV === true) {
+        updateKV = true;
       }
     } catch {
       // No body or invalid JSON - use defaults
@@ -106,11 +118,37 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
     }
 
+    // Phase 5b: Update KV cache if requested
+    let kvUpdated = false;
+    let kvUpdateDetails: { ja: boolean; en: boolean; metadata: boolean } | null = null;
+    if (updateKV) {
+      try {
+        console.log('[revalidate] Updating KV cache...');
+        const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
+        const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
+        
+        // Fetch fresh data from JSON for both languages
+        const [dataJa, dataEn] = await Promise.all([
+          getAkyoDataFromJSON('ja'),
+          getAkyoDataFromJSON('en'),
+        ]);
+        
+        // Update both languages atomically to avoid metadata race condition
+        kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn);
+        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata;
+        console.log(`[revalidate] KV cache update: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`);
+      } catch (error) {
+        console.error('[revalidate] Failed to update KV cache:', error);
+        // Don't fail the request, ISR revalidation still succeeded
+      }
+    }
+
     const result = {
       revalidated: true,
       timestamp: new Date().toISOString(),
       paths: revalidatedPaths,
       tags: revalidatedTags,
+      kvUpdated,
     };
 
     console.log('[revalidate] Revalidation complete:', result);
