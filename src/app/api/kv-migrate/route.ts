@@ -148,7 +148,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       console.log('[kv-migrate] Initializing new KV format...');
       try {
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
-        const { updateKVCache } = await import('@/lib/akyo-data-kv');
+        const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
         
         // Fetch fresh data from JSON
         const [dataJa, dataEn] = await Promise.all([
@@ -159,34 +159,36 @@ export async function POST(request: NextRequest): Promise<Response> {
         result.dataCount.ja = dataJa.length;
         result.dataCount.en = dataEn.length;
         
-        // Update KV with new format
-        const [kvJaResult, kvEnResult] = await Promise.all([
-          updateKVCache(dataJa, 'ja'),
-          updateKVCache(dataEn, 'en'),
-        ]);
+        // Update KV atomically to avoid metadata race condition
+        const kvResult = await updateKVCacheBoth(dataJa, dataEn);
         
         // Track successful updates
-        if (kvJaResult) {
+        if (kvResult.ja) {
           result.newKeysCreated.push('akyo-data-ja');
         } else {
-          const errMsg = 'Failed to update KV cache for Japanese data (updateKVCache returned false)';
+          const errMsg = 'Failed to update KV cache for Japanese data';
           console.error(`[kv-migrate] ${errMsg}`);
           result.errors.push(errMsg);
         }
         
-        if (kvEnResult) {
+        if (kvResult.en) {
           result.newKeysCreated.push('akyo-data-en');
         } else {
-          const errMsg = 'Failed to update KV cache for English data (updateKVCache returned false)';
+          const errMsg = 'Failed to update KV cache for English data';
           console.error(`[kv-migrate] ${errMsg}`);
           result.errors.push(errMsg);
         }
         
-        if (kvJaResult && kvEnResult) {
+        if (kvResult.metadata) {
           result.newKeysCreated.push('akyo-data-meta');
+        } else if (kvResult.ja || kvResult.en) {
+          // Data was written but metadata failed
+          const errMsg = 'Data written but metadata update failed';
+          console.error(`[kv-migrate] ${errMsg}`);
+          result.errors.push(errMsg);
         }
         
-        console.log(`[kv-migrate] Initialization complete: ja=${kvJaResult}, en=${kvEnResult}`);
+        console.log(`[kv-migrate] Initialization complete: ja=${kvResult.ja}, en=${kvResult.en}, meta=${kvResult.metadata}`);
       } catch (error) {
         const errMsg = `Initialization failed: ${error}`;
         console.error(`[kv-migrate] ${errMsg}`);
@@ -215,8 +217,28 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 }
 
-// Status endpoint
-export async function GET(): Promise<Response> {
+// Status endpoint - requires authentication
+export async function GET(request: NextRequest): Promise<Response> {
+  // Verify secret - same authentication as POST
+  const secret = request.headers.get('x-revalidate-secret');
+  const expectedSecret = process.env.REVALIDATE_SECRET;
+
+  if (!expectedSecret) {
+    console.error('[kv-migrate] REVALIDATE_SECRET is not configured');
+    return Response.json(
+      { error: 'Server configuration error' },
+      { status: 500 }
+    );
+  }
+
+  if (!secret || secret !== expectedSecret) {
+    console.warn('[kv-migrate] GET: Invalid or missing secret');
+    return Response.json(
+      { error: 'Invalid secret' },
+      { status: 401 }
+    );
+  }
+
   const kv = getKVNamespace();
   
   if (!kv) {

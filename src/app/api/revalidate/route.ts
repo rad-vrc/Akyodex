@@ -120,25 +120,23 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Phase 5b: Update KV cache if requested
     let kvUpdated = false;
+    let kvUpdateDetails: { ja: boolean; en: boolean; metadata: boolean } | null = null;
     if (updateKV) {
       try {
         console.log('[revalidate] Updating KV cache...');
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
-        const { updateKVCache } = await import('@/lib/akyo-data-kv');
+        const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
         
-        // Fetch fresh data from JSON and update KV for both languages
+        // Fetch fresh data from JSON for both languages
         const [dataJa, dataEn] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
         ]);
         
-        const [kvJaResult, kvEnResult] = await Promise.all([
-          updateKVCache(dataJa, 'ja'),
-          updateKVCache(dataEn, 'en'),
-        ]);
-        
-        kvUpdated = kvJaResult && kvEnResult;
-        console.log(`[revalidate] KV cache update: ja=${kvJaResult}, en=${kvEnResult}`);
+        // Update both languages atomically to avoid metadata race condition
+        kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn);
+        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata;
+        console.log(`[revalidate] KV cache update: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`);
       } catch (error) {
         console.error('[revalidate] Failed to update KV cache:', error);
         // Don't fail the request, ISR revalidation still succeeded
