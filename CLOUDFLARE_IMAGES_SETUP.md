@@ -84,27 +84,53 @@ You have two options:
 # scripts/upload-to-cloudflare-images.sh
 
 #!/bin/bash
+set -e  # Exit on error
 
 ACCOUNT_ID="your_account_id"
 API_TOKEN="your_api_token"
 R2_BASE="https://images.akyodex.com"
 
+# Counters for summary
+SUCCESS_COUNT=0
+FAIL_COUNT=0
+
 # Upload all avatars (0001-0640)
-for id in {0001..0640}; do
+# Use seq with printf to preserve leading zeros
+for i in $(seq 1 640); do
+  # Format ID with leading zeros (0001, 0002, ..., 0640)
+  id=$(printf "%04d" $i)
+  
   echo "Uploading avatar $id..."
   
-  curl -X POST "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/images/v1" \
+  # Upload with error handling
+  HTTP_CODE=$(curl -s -o /tmp/cf_response.json -w "%{http_code}" \
+    -X POST "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/images/v1" \
     -H "Authorization: Bearer ${API_TOKEN}" \
     -F "url=${R2_BASE}/images/${id}.webp" \
     -F "id=${id}" \
     -F "requireSignedURLs=false" \
-    -F "metadata={\"name\":\"Avatar ${id}\"}"
+    -F "metadata={\"name\":\"Avatar ${id}\"}")
   
-  # Rate limit: 1 request per second
-  sleep 1
+  if [ "$HTTP_CODE" -eq 200 ]; then
+    echo "  ✅ Success: $id"
+    SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+  else
+    echo "  ❌ Failed: $id (HTTP $HTTP_CODE)"
+    cat /tmp/cf_response.json
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  fi
+  
+  # Rate limit: Cloudflare Images API allows ~1000 requests/5min
+  # Using 0.5s delay for safety (120 requests/min)
+  sleep 0.5
 done
 
-echo "✅ Upload complete!"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Upload complete!"
+echo "  ✅ Success: $SUCCESS_COUNT"
+echo "  ❌ Failed:  $FAIL_COUNT"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 ```
 
 2. **Make executable and run:**
