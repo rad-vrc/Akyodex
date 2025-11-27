@@ -110,7 +110,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
             href={`${process.env.NEXT_PUBLIC_R2_BASE}/images/${akyo.id}.png`}
             download={`akyo-${akyo.id}-reference.png`}
             onClick={(e) => e.stopPropagation()}
-            className="text-xs px-2 py-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md"
+            className="reference-sheet-button"
             title="三面図をダウンロード"
           >
             <span>📐</span>

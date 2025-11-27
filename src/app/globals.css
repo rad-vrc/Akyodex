@@ -474,6 +474,43 @@ select:focus {
   100% { background-position: 0% 50%; }
 }
 
+/* 三面図ダウンロードボタン（detail-buttonと同じグラデーション） */
+.reference-sheet-button {
+  background: linear-gradient(135deg, #ff6b9d, #ffd93d, #6bcf7f, #4facfe) !important;
+  background-size: 300% 300% !important;
+  animation: rainbow-gradient 3s ease infinite !important;
+  color: white !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.5rem !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  font-family: 'M PLUS Rounded 1c', 'Kosugi Maru', 'Noto Sans JP', sans-serif !important;
+  border: 2px solid white !important;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important;
+  box-shadow:
+    0 3px 10px rgba(255, 107, 157, 0.3),
+    0 4px 12px rgba(255, 217, 61, 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.4) !important;
+  text-decoration: none !important;
+}
+
+.reference-sheet-button:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow:
+    0 6px 16px rgba(255, 107, 157, 0.4),
+    0 8px 20px rgba(255, 217, 61, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.6) !important;
+  border-color: #ffd93d !important;
+}
+
+.reference-sheet-button:active {
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
 /* ボタンに波紋エフェクト */
 .detail-button::after {
   content: '';
