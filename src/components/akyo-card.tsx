@@ -1,8 +1,8 @@
 'use client';
 
-import Image from 'next/image';
-import type { AkyoData } from '@/types/akyo';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import type { AkyoData } from '@/types/akyo';
+import Image from 'next/image';
 
 interface AkyoCardProps {
   akyo: AkyoData;
@@ -46,14 +46,8 @@ function getCategoryColor(category: string): string {
   }
 
   // デフォルト色
-  const defaultColors = [
-    '#667eea',
-    '#764ba2',
-    '#f093fb',
-    '#f5576c',
-    '#4facfe',
-  ];
-  
+  const defaultColors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'];
+
   return defaultColors[Math.floor(Math.random() * defaultColors.length)];
 }
 
@@ -88,7 +82,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
             target.src = '/images/placeholder.webp';
           }}
         />
-        
+
         {/* お気に入りボタン */}
         <button
           onClick={handleFavoriteClick}
@@ -103,9 +97,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
       <div className="p-4 space-y-2">
         {/* ID と 三面図DLボタン */}
         <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-bold text-gray-500">
-            #{akyo.id}
-          </span>
+          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
           <a
             href={`${process.env.NEXT_PUBLIC_R2_BASE}/images/${akyo.id}.png`}
             download={`akyo-${akyo.id}-reference.png`}
@@ -113,8 +105,19 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
             className="reference-sheet-button"
             title="三面図をダウンロード"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
             </svg>
             <span className="hidden sm:inline">三面図DL</span>
           </a>
@@ -138,7 +141,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
                   style={{
                     background: `${color}20`,
                     color: color,
-                    boxShadow: `0 6px 12px ${color}20`
+                    boxShadow: `0 6px 12px ${color}20`,
                   }}
                 >
                   {trimmedCat}
@@ -151,7 +154,10 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         {/* 作者情報 - 元の実装と同じ形式 (改行あり、:付き) */}
         <p className="text-xs text-gray-600 mb-2 whitespace-pre-line">
           {akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
-            <>アバター名: {akyo.avatarName}{'\n'}</>
+            <>
+              アバター名: {akyo.avatarName}
+              {'\n'}
+            </>
           )}
           作者: {author}
         </p>
