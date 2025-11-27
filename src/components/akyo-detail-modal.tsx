@@ -7,14 +7,14 @@
  * Features:
  * - Header with gradient background
  * - Profile icon + ID + name
- * - Large image with sparkle effect
+ * - Large image with sparkle effect (PNG reference sheet preferred, WebP fallback)
  * - Info grid (4 sections: name, avatar, attributes, creator)
  * - VRChat URL section
  * - Notes section (if available)
  * - Action buttons (favorite + VRChat link)
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { MouseEvent as ReactMouseEvent } from 'react';
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
@@ -103,7 +103,30 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     ? categoryStr.split(/[、,]/).map((a: string) => a.trim()).filter(Boolean)
     : [];
   const categoryColor = getCategoryColor(categoryStr);
-  const imageUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
+  
+  // 三面図（PNG）優先、WebPフォールバック
+  const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
+  const pngUrl = `${r2Base}/${localAkyo.id}.png`;  // 三面図（優先）
+  const webpUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);  // サムネイル（フォールバック）
+  const [imageUrl, setImageUrl] = useState(pngUrl);
+  const [imageLoadAttempt, setImageLoadAttempt] = useState(0);
+
+  // PNG→WebPフォールバック処理
+  const handleImageError = useCallback(() => {
+    if (imageLoadAttempt === 0) {
+      // PNG失敗 → WebPにフォールバック
+      console.log(`[detail-modal] PNG not found for ${localAkyo.id}, falling back to WebP`);
+      setImageUrl(webpUrl);
+      setImageLoadAttempt(1);
+    }
+    // WebPも失敗した場合はonErrorのスタイル処理に任せる
+  }, [imageLoadAttempt, localAkyo.id, webpUrl]);
+
+  // akyo変更時にリセット
+  useEffect(() => {
+    setImageUrl(pngUrl);
+    setImageLoadAttempt(0);
+  }, [localAkyo.id, pngUrl]);
 
   const handleBackdropClick = (e: ReactMouseEvent<HTMLDivElement>) => {
     // モーダル外（backdrop または modal container）をクリックしたら閉じる
@@ -219,6 +242,9 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                       className="w-full h-full object-contain rounded-2xl"
                       unoptimized
                       onError={(e) => {
+                        // PNG→WebPフォールバック
+                        handleImageError();
+                        // 最終フォールバック：グラデーション背景
                         const target = e.target as HTMLImageElement;
                         target.style.background = `linear-gradient(135deg, ${categoryColor}, ${categoryColor}66)`;
                       }}

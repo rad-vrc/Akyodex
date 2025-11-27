@@ -35,7 +35,7 @@ export default function cloudflareImageLoader({
   }
   
   // Extract image ID from src
-  // Expected format: /images/0001.webp or https://images.akyodex.com/images/0001.webp
+  // Expected format: /0001.webp, https://images.akyodex.com/0001.webp, or direct ID "0001"
   const imageId = extractImageId(src);
   
   if (!imageId) {
@@ -66,21 +66,26 @@ export default function cloudflareImageLoader({
  * Extract image ID from various src formats
  * 
  * Supported formats:
- * - /images/0001.webp → 0001
- * - https://images.akyodex.com/images/0001.webp → 0001
+ * - /0001.webp → 0001
+ * - https://images.akyodex.com/0001.webp → 0001
  * - 0001 → 0001 (direct ID)
+ * - /images/0001.webp → 0001 (legacy support)
  */
 function extractImageId(src: string): string | null {
-  // Pattern 1: /images/0001.webp → 0001
-  const match1 = src.match(/\/images\/(\d{4})\.(webp|png|jpg|jpeg)/);
+  // Pattern 1: /0001.webp → 0001 (R2 direct)
+  const match1 = src.match(/^\/(\d{4})\.(webp|png|jpg|jpeg)$/);
   if (match1) return match1[1];
   
-  // Pattern 2: https://images.akyodex.com/images/0001.webp → 0001
-  const match2 = src.match(/images\.akyodex\.com\/images\/(\d{4})\.(webp|png|jpg|jpeg)/);
+  // Pattern 2: https://images.akyodex.com/0001.webp → 0001
+  const match2 = src.match(/images\.akyodex\.com\/(\d{4})\.(webp|png|jpg|jpeg)/);
   if (match2) return match2[1];
   
   // Pattern 3: Direct ID (0001) → 0001
   if (/^\d{4}$/.test(src)) return src;
+  
+  // Pattern 4: Legacy /images/0001.webp → 0001
+  const match4 = src.match(/\/images\/(\d{4})\.(webp|png|jpg|jpeg)/);
+  if (match4) return match4[1];
   
   return null;
 }
@@ -123,16 +128,22 @@ function handleR2Fallback(src: string): string {
   // Construct R2 URL
   const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
   
-  // Handle avatar image paths: /images/0001.webp → R2 URL
-  // Only convert paths that match avatar image pattern
-  const avatarImageMatch = src.match(/^\/images\/(\d{4})\.(webp|png|jpg|jpeg)$/);
+  // Handle avatar image paths: /0001.webp → R2 URL
+  // R2 stores files directly at root (e.g., 0001.webp, not /images/0001.webp)
+  const avatarImageMatch = src.match(/^\/(\d{4})\.(webp|png|jpg|jpeg)$/);
   if (avatarImageMatch) {
     return `${r2Base}${src}`;
   }
   
+  // Handle legacy /images/ paths → convert to direct R2 URL
+  const legacyImageMatch = src.match(/^\/images\/(\d{4})\.(webp|png|jpg|jpeg)$/);
+  if (legacyImageMatch) {
+    return `${r2Base}/${legacyImageMatch[1]}.${legacyImageMatch[2]}`;
+  }
+  
   // Handle direct image IDs: 0001 → R2 URL
   if (/^\d{4}$/.test(src)) {
-    return `${r2Base}/images/${src}.webp`;
+    return `${r2Base}/${src}.webp`;
   }
   
   // For all other relative paths (API routes, placeholders, etc.),
@@ -157,9 +168,9 @@ export function getCloudflareImageURL(imageId: string, variant: string = 'medium
   
   // Require both accountHash and feature flag to use Cloudflare Images
   if (!accountHash || !enableCloudflareImages) {
-    // Fallback to R2
+    // Fallback to R2 (files stored directly at root: 0001.webp)
     const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-    return `${r2Base}/images/${imageId}.webp`;
+    return `${r2Base}/${imageId}.webp`;
   }
   
   return `https://imagedelivery.net/${accountHash}/${imageId}/${variant}`;

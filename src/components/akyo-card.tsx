@@ -99,7 +99,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         <div className="flex items-center justify-between mb-1">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
           <a
-            href={`${process.env.NEXT_PUBLIC_R2_BASE}/images/${akyo.id}.png`}
+            href={`${process.env.NEXT_PUBLIC_R2_BASE}/${akyo.id}.png`}
             download={`akyo-${akyo.id}-reference.png`}
             onClick={(e) => e.stopPropagation()}
             className="reference-sheet-button"

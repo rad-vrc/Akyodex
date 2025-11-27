@@ -69,9 +69,7 @@ function main() {
 
     if (cols.length !== 7) {
       // 想定外の行はスキップして警告
-      console.warn(
-        `列数が想定外のためスキップ: (想定 7 列, 実際 ${cols.length} 列) ${line}`,
-      );
+      console.warn(`列数が想定外のためスキップ: (想定 7 列, 実際 ${cols.length} 列) ${line}`);
       continue;
     }
 
@@ -92,12 +90,11 @@ function main() {
   console.log(
     `✅ ${path.relative(rootDir, csvPath)} から ${items.length} 件を変換し、${path.relative(
       rootDir,
-      jsonPath,
-    )} に出力しました。`,
+      jsonPath
+    )} に出力しました。`
   );
 }
 
 if (require.main === module) {
   main();
 }
-
