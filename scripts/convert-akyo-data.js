@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * data/akyo-data.csv → data/akyo-data-ja.json 変換スクリプト
+ * CSV → JSON 変換スクリプト
+ * - data/akyo-data-ja.csv → data/akyo-data-ja.json
+ * - data/akyo-data-en.csv → data/akyo-data-en.json
  * - CSV の列: ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL
  * - JSON の列: id, nickname, avatarName, category, comment, author, avatarUrl
  */
@@ -10,8 +12,12 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
-const csvPath = path.join(rootDir, 'data', 'akyo-data-ja.csv');
-const jsonPath = path.join(rootDir, 'data', 'akyo-data-ja.json');
+
+// 変換対象のファイルペア
+const files = [
+  { csv: 'akyo-data-ja.csv', json: 'akyo-data-ja.json' },
+  { csv: 'akyo-data-en.csv', json: 'akyo-data-en.json' },
+];
 
 /**
  * 1 行ぶんの CSV をパースする簡易パーサ
@@ -50,13 +56,18 @@ function normalizeValue(value) {
   return value.replace(/\r/g, '');
 }
 
-function main() {
+function convertCsvToJson(csvPath, jsonPath) {
+  if (!fs.existsSync(csvPath)) {
+    console.warn(`⚠️ CSVファイルが存在しません: ${csvPath}`);
+    return 0;
+  }
+
   const raw = fs.readFileSync(csvPath, 'utf8');
   const lines = raw.split(/\r?\n/).filter((line) => line.trim() !== '');
 
   if (lines.length <= 1) {
-    console.error('CSV にデータ行がありません。');
-    process.exit(1);
+    console.warn(`⚠️ CSV にデータ行がありません: ${csvPath}`);
+    return 0;
   }
 
   // 先頭行はヘッダーとしてスキップ
@@ -87,12 +98,29 @@ function main() {
   }
 
   fs.writeFileSync(jsonPath, JSON.stringify(items, null, 2) + '\n', 'utf8');
-  console.log(
-    `✅ ${path.relative(rootDir, csvPath)} から ${items.length} 件を変換し、${path.relative(
-      rootDir,
-      jsonPath
-    )} に出力しました。`
-  );
+  return items.length;
+}
+
+function main() {
+  let totalConverted = 0;
+
+  for (const { csv, json } of files) {
+    const csvPath = path.join(rootDir, 'data', csv);
+    const jsonPath = path.join(rootDir, 'data', json);
+
+    const count = convertCsvToJson(csvPath, jsonPath);
+    if (count > 0) {
+      console.log(`✅ ${csv} から ${count} 件を変換し、${json} に出力しました。`);
+      totalConverted += count;
+    }
+  }
+
+  if (totalConverted === 0) {
+    console.error('❌ 変換されたデータがありません。');
+    process.exit(1);
+  }
+
+  console.log(`\n🎉 合計 ${totalConverted} 件のデータを変換しました。`);
 }
 
 if (require.main === module) {

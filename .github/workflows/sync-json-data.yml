@@ -32,8 +32,8 @@ on:
     branches:
       - main
     paths:
-      - 'data/akyo-data.csv'
-      - 'data/akyo-data-US.csv'
+      - 'data/akyo-data-ja.csv'
+      - 'data/akyo-data-en.csv'
   workflow_dispatch:
 
 concurrency:

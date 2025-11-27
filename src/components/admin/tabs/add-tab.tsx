@@ -635,9 +635,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           </div>
         </div>
 
-        {/* 備考（comment） */}
+        {/* おまけ情報（comment） */}
         <div>
-          <label className="block text-gray-700 text-sm font-medium mb-1">備考</label>
+          <label className="block text-gray-700 text-sm font-medium mb-1">おまけ情報</label>
           <textarea
             value={formData.comment}
             onChange={(e) => handleInputChange('comment', e.target.value)}
@@ -653,7 +653,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             画像（登録時に自動取得）
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
-            <i className="fas fa-magic text-4xl text-blue-400 mb-2"></i>
+            <i className="fas fa-cloud-download-alt text-4xl text-blue-400 mb-2"></i>
             <p className="text-gray-600 font-medium">VRChat URLから自動取得</p>
             <p className="text-sm text-gray-500 mt-1">
               登録ボタンを押すと、VRChatから画像を自動的に取得します
