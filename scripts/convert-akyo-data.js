@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * data/akyo-data.csv → data/akyo-data.json 変換スクリプト
+ * data/akyo-data.csv → data/akyo-data-ja.json 変換スクリプト
  * - CSV の列: ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL
  * - JSON の列: id, nickname, avatarName, category, comment, author, avatarUrl
  */
@@ -11,7 +11,7 @@ const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
 const csvPath = path.join(rootDir, 'data', 'akyo-data.csv');
-const jsonPath = path.join(rootDir, 'data', 'akyo-data.json');
+const jsonPath = path.join(rootDir, 'data', 'akyo-data-ja.json');
 
 /**
  * 1 行ぶんの CSV をパースする簡易パーサ
