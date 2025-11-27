@@ -113,8 +113,8 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
             className="reference-sheet-button"
             title="三面図をダウンロード"
           >
-            <span>📐</span>
-            <span className="hidden sm:inline">三面図</span>
+            <span>�</span>
+            <span className="hidden sm:inline">三面図DL</span>
           </a>
         </div>
 
