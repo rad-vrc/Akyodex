@@ -13,10 +13,14 @@ import path from 'path';
  */
 export const runtime = 'nodejs';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // クエリパラメータから言語を取得（デフォルトは日本語）
+    const { searchParams } = new URL(request.url);
+    const lang = searchParams.get('lang') === 'en' ? 'en' : 'ja';
+
     // CSVファイルのパス
-    const csvPath = path.join(process.cwd(), 'data', 'akyo-data-ja.csv');
+    const csvPath = path.join(process.cwd(), 'data', `akyo-data-${lang}.csv`);
 
     // ファイルを読み込む
     const csvContent = await fs.readFile(csvPath, 'utf-8');
