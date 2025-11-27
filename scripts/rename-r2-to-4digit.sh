@@ -23,27 +23,27 @@ for i in $(seq -w 1 200); do
   # 3桁形式 (001, 002, ..., 200)
   three_digit=$(printf "%03d" $i)
   four_digit=$(printf "%04d" $i)
-  
+
   # HTTPステータスコードを取得
   status=$(curl -s -o /dev/null -w "%{http_code}" "${R2_PUBLIC_URL}/${three_digit}.webp")
-  
+
   if [ "$status" = "200" ]; then
     echo "Found: ${three_digit}.webp → ${four_digit}.webp"
-    
+
     # ダウンロード
     curl -s "${R2_PUBLIC_URL}/${three_digit}.webp" -o "/tmp/${three_digit}.webp"
-    
+
     # wranglerでアップロード（4桁名）
     npx wrangler r2 object put "${BUCKET_NAME}/${four_digit}.webp" \
       --file "/tmp/${three_digit}.webp" \
       --content-type "image/webp" \
       --remote
-    
+
     # 旧ファイル削除
     npx wrangler r2 object delete "${BUCKET_NAME}/${three_digit}.webp" --remote
-    
+
     echo "  Renamed: ${three_digit}.webp → ${four_digit}.webp ✓"
-    
+
     # 一時ファイル削除
     rm -f "/tmp/${three_digit}.webp"
   fi

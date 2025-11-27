@@ -8,9 +8,9 @@
  * - Error handling with retry logic
  */
 
-import { cache } from 'react';
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
+import { cache } from 'react';
 import { parseCsvToAkyoData } from './csv-utils';
 const GITHUB_OWNER = process.env.GITHUB_REPO_OWNER || 'rad-vrc';
 const GITHUB_REPO = process.env.GITHUB_REPO_NAME || 'Akyodex';
@@ -38,9 +38,7 @@ interface FetchResult {
  * @param options - Configuration options
  * @returns Parsed Akyo data with metadata
  */
-async function fetchAkyoData(
-  options: FetchAkyoDataOptions = {}
-): Promise<FetchResult> {
+async function fetchAkyoData(options: FetchAkyoDataOptions = {}): Promise<FetchResult> {
   const { lang = 'ja', bustCache = false } = options;
 
   // Determine CSV filename based on language
@@ -60,13 +58,15 @@ async function fetchAkyoData(
       next: bustCache ? { revalidate: 0 } : { revalidate: 3600 }, // ISR: 1 hour
       headers: {
         'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
+        Pragma: 'no-cache',
       },
     });
 
     // Fallback to Japanese if requested language not found
     if (!response.ok && lang !== 'ja') {
-      console.log(`[fetchAkyoData] ${lang} CSV not found (${response.status}), falling back to Japanese`);
+      console.log(
+        `[fetchAkyoData] ${lang} CSV not found (${response.status}), falling back to Japanese`
+      );
       usedFallback = true;
       actualLang = 'ja';
       url = `${baseUrl}/akyo-data-ja.csv`;
@@ -75,7 +75,7 @@ async function fetchAkyoData(
         next: bustCache ? { revalidate: 0 } : { revalidate: 3600 },
         headers: {
           'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
+          Pragma: 'no-cache',
         },
       });
     }
@@ -104,10 +104,11 @@ async function fetchAkyoData(
       },
     };
 
-    console.log(`[fetchAkyoData] Success: ${rowCount} rows, lang=${actualLang}, fallback=${usedFallback}`);
+    console.log(
+      `[fetchAkyoData] Success: ${rowCount} rows, lang=${actualLang}, fallback=${usedFallback}`
+    );
 
     return result;
-
   } catch (error) {
     console.error('[fetchAkyoData] Error:', error);
     throw new Error(
@@ -123,12 +124,10 @@ async function fetchAkyoData(
  * @param lang - Language code (default: 'ja')
  * @returns Array of Akyo data
  */
-export const getAkyoData = cache(
-  async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
-    const result = await fetchAkyoData({ lang });
-    return result.data;
-  }
-);
+export const getAkyoData = cache(async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
+  const result = await fetchAkyoData({ lang });
+  return result.data;
+});
 
 /**
  * Get all unique categories (formerly attributes) from the dataset
@@ -137,20 +136,21 @@ export const getAkyoData = cache(
  * @param lang - Language code
  * @returns Array of unique categories
  */
-export const getAllCategories = cache(
-  async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
-    const data = await getAkyoData(lang);
-    const categoriesSet = new Set<string>();
+export const getAllCategories = cache(async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
+  const data = await getAkyoData(lang);
+  const categoriesSet = new Set<string>();
 
-    data.forEach((akyo) => {
-      const catStr = akyo.category || akyo.attribute || '';
-      const cats = catStr.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
-      cats.forEach((cat) => categoriesSet.add(cat));
-    });
+  data.forEach((akyo) => {
+    const catStr = akyo.category || akyo.attribute || '';
+    const cats = catStr
+      .split(/[、,]/)
+      .map((c) => c.trim())
+      .filter(Boolean);
+    cats.forEach((cat) => categoriesSet.add(cat));
+  });
 
-    return Array.from(categoriesSet).sort();
-  }
-);
+  return Array.from(categoriesSet).sort();
+});
 
 /**
  * @deprecated Use getAllCategories instead
@@ -166,25 +166,26 @@ export async function getAllAttributes(lang: SupportedLanguage = 'ja'): Promise<
  * @param lang - Language code
  * @returns Array of unique authors
  */
-export const getAllAuthors = cache(
-  async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
-    const data = await getAkyoData(lang);
-    const authorsSet = new Set<string>();
+export const getAllAuthors = cache(async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
+  const data = await getAkyoData(lang);
+  const authorsSet = new Set<string>();
 
-    data.forEach((akyo) => {
-      const authorStr = akyo.author || akyo.creator || '';
-      const authors = authorStr.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
-      authors.forEach((author) => authorsSet.add(author));
-    });
+  data.forEach((akyo) => {
+    const authorStr = akyo.author || akyo.creator || '';
+    const authors = authorStr
+      .split(/[、,]/)
+      .map((a) => a.trim())
+      .filter(Boolean);
+    authors.forEach((author) => authorsSet.add(author));
+  });
 
-    return Array.from(authorsSet).sort();
-  }
-);
+  return Array.from(authorsSet).sort();
+});
 
 /**
  * Get single Akyo by ID
  * Wrapped with React cache() for automatic deduplication within a single request
- * 
+ *
  * @param id - 4-digit ID (e.g., "0001")
  * @param lang - Language code
  * @returns Single Akyo data or null if not found

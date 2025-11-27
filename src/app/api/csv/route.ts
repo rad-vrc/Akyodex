@@ -5,7 +5,7 @@ import path from 'path';
 /**
  * This route requires Node.js runtime because:
  * - Uses fs.readFile for local file system access
- * 
+ *
  * Future Edge Runtime Migration:
  * - Migrate CSV files to R2 public URL (https://images.akyodex.com/data/akyo-data-ja.csv)
  * - Replace fs.readFile with fetch() call

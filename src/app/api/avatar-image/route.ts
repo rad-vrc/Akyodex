@@ -131,13 +131,10 @@ export async function GET(request: Request) {
   try {
     console.log(`[avatar-image] Processing request: id=${id}, avtr=${avtr}, width=${width}`);
 
-
     // Step 1: Try R2 via direct URL (only if a normalized id exists)
     if (normalizedId) {
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
       const r2Url = `${r2BaseUrl}/${normalizedId}.webp`;
-
-
 
       try {
         // Create AbortController for 5-second timeout (shorter for faster fallback)
@@ -164,7 +161,9 @@ export async function GET(request: Request) {
               },
             });
           } else {
-            console.log(`[avatar-image] R2 returned ${r2Response.status} for ${id}, trying VRChat fallback`);
+            console.log(
+              `[avatar-image] R2 returned ${r2Response.status} for ${id}, trying VRChat fallback`
+            );
           }
         } catch (fetchError) {
           clearTimeout(r2TimeoutId);
@@ -209,7 +208,7 @@ export async function GET(request: Request) {
           const pageResponse = await fetch(vrchatPageUrl, {
             headers: {
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-              'Accept': 'text/html',
+              Accept: 'text/html',
             },
             signal: controller.signal,
             next: { revalidate: 21600 }, // Cache page for 6 hours
@@ -245,7 +244,9 @@ export async function GET(request: Request) {
         };
 
         // 1. Try OGP image (with relative URL resolution and domain validation)
-        const ogMatch = html.match(/<meta[^>]+(?:property|name)=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+        const ogMatch = html.match(
+          /<meta[^>]+(?:property|name)=["']og:image["'][^>]+content=["']([^"']+)["']/i
+        );
         if (ogMatch?.[1]) {
           const candidate = ogMatch[1].startsWith('/')
             ? `https://vrchat.com${ogMatch[1]}`
@@ -257,7 +258,9 @@ export async function GET(request: Request) {
 
         // 2. Try VRChat API URL (higher quality)
         if (!imageUrl) {
-          const fileMatch = html.match(/https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/(\d+)\/file/i);
+          const fileMatch = html.match(
+            /https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/(\d+)\/file/i
+          );
           if (fileMatch) {
             const fileId = fileMatch[1];
             imageUrl = `https://api.vrchat.cloud/api/1/image/${fileId}/1/${width}`;
@@ -266,7 +269,9 @@ export async function GET(request: Request) {
 
         // 3. Try VRChat Files URL
         if (!imageUrl) {
-          const filesMatch = html.match(/https?:\/\/files\.vrchat\.cloud\/thumbnails\/(file_[A-Za-z0-9-]+)[^"'\s]+\.thumbnail-\d+\.(png|jpg|webp)/i);
+          const filesMatch = html.match(
+            /https?:\/\/files\.vrchat\.cloud\/thumbnails\/(file_[A-Za-z0-9-]+)[^"'\s]+\.thumbnail-\d+\.(png|jpg|webp)/i
+          );
           if (filesMatch) {
             const fileId = filesMatch[1];
             imageUrl = `https://api.vrchat.cloud/api/1/image/${fileId}/1/${width}`;
@@ -287,7 +292,7 @@ export async function GET(request: Request) {
             const imageResponse = await fetch(imageUrl, {
               headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': 'image/webp,image/png,image/*,*/*',
+                Accept: 'image/webp,image/png,image/*,*/*',
               },
               signal: imageController.signal,
               next: { revalidate: 3600 }, // Cache image for 1 hour
@@ -326,7 +331,6 @@ export async function GET(request: Request) {
     const placeholderUrl = `${url.protocol}//${url.host}/images/placeholder.webp`;
     console.log('[avatar-image] Placeholder URL:', placeholderUrl);
     return Response.redirect(placeholderUrl, 302);
-
   } catch (error) {
     console.error('[avatar-image] Unexpected error:', error);
     console.error('[avatar-image] Error details:', {

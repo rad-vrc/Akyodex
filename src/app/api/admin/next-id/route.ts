@@ -6,7 +6,7 @@
  * Finds the maximum ID in the CSV and returns the next available 4-digit ID.
  */
 
-import { validateSession, jsonError } from '@/lib/api-helpers';
+import { jsonError, validateSession } from '@/lib/api-helpers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
 interface R2TextObject {
@@ -54,7 +54,8 @@ export async function GET() {
       } else {
         // Fallback to GitHub if R2 file missing
         console.warn('[next-id] CSV not found in R2, falling back to GitHub');
-        const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
+        const githubUrl =
+          'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
         const githubResponse = await fetch(githubUrl, {
           next: { revalidate: 0 },
         });
@@ -76,7 +77,8 @@ export async function GET() {
 
         if (!response.ok) {
           // Fallback to GitHub
-          const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
+          const githubUrl =
+            'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
           const githubResponse = await fetch(githubUrl, {
             next: { revalidate: 60 },
           });
@@ -94,7 +96,7 @@ export async function GET() {
         return Response.json({ nextId: '0001' });
       }
     }
-    const lines = csvContent.split('\n').filter(line => line.trim());
+    const lines = csvContent.split('\n').filter((line) => line.trim());
 
     // Skip header
     const dataLines = lines.slice(1);
@@ -116,7 +118,6 @@ export async function GET() {
     const nextId = (maxId + 1).toString().padStart(4, '0');
 
     return Response.json({ nextId });
-
   } catch (error) {
     console.error('[next-id] Error:', error);
     return jsonError('Failed to fetch next ID', 500, { nextId: '0001' });

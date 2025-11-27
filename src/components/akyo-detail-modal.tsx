@@ -2,7 +2,7 @@
 
 /**
  * Akyo Detail Modal Component
- * 
+ *
  * Complete recreation of original modal from index.html
  * Features:
  * - Header with gradient background
@@ -14,11 +14,11 @@
  * - Action buttons (favorite + VRChat link)
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import type { MouseEvent as ReactMouseEvent } from 'react';
-import Image from 'next/image';
-import type { AkyoData } from '@/types/akyo';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import type { AkyoData } from '@/types/akyo';
+import Image from 'next/image';
+import type { MouseEvent as ReactMouseEvent } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface AkyoDetailModalProps {
   akyo: AkyoData | null;
@@ -100,14 +100,17 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
 
   const displayName = localAkyo.nickname || localAkyo.avatarName || '';
   const categories: string[] = categoryStr
-    ? categoryStr.split(/[、,]/).map((a: string) => a.trim()).filter(Boolean)
+    ? categoryStr
+        .split(/[、,]/)
+        .map((a: string) => a.trim())
+        .filter(Boolean)
     : [];
   const categoryColor = getCategoryColor(categoryStr);
-  
+
   // 三面図（PNG）優先、WebPフォールバック
   const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-  const pngUrl = `${r2Base}/${localAkyo.id}.png`;  // 三面図（優先）
-  const webpUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);  // サムネイル（フォールバック）
+  const pngUrl = `${r2Base}/${localAkyo.id}.png`; // 三面図（優先）
+  const webpUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800); // サムネイル（フォールバック）
   const [imageUrl, setImageUrl] = useState(pngUrl);
   const [imageLoadAttempt, setImageLoadAttempt] = useState(0);
 
@@ -172,10 +175,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 overflow-y-auto"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 z-50 overflow-y-auto" onClick={handleBackdropClick}>
       {/* Backdrop - クリックで閉じる */}
       <div
         className="modal-backdrop fixed inset-0"
@@ -203,8 +203,20 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
               }}
               aria-label="閉じる"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 hover:rotate-90">
-                <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="transition-transform duration-300 hover:rotate-90"
+              >
+                <path
+                  d="M18 6L6 18M6 6L18 18"
+                  stroke="white"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
 
@@ -212,7 +224,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             <div
               className="rounded-t-3xl p-6 border-b-4 border-dotted border-purple-200"
               style={{
-                background: 'linear-gradient(to right, rgb(243 232 255), rgb(252 231 243), rgb(219 234 254))',
+                background:
+                  'linear-gradient(to right, rgb(243 232 255), rgb(252 231 243), rgb(219 234 254))',
               }}
             >
               <h2 className="text-3xl font-black flex items-center">
@@ -224,7 +237,9 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   className="w-10 h-10 mr-3 inline-block object-cover rounded-full"
                   unoptimized
                 />
-                <span>#{localAkyo.id} {displayName}</span>
+                <span>
+                  #{localAkyo.id} {displayName}
+                </span>
               </h2>
             </div>
 
@@ -310,9 +325,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 {/* VRChat URL Section */}
                 {localAkyo.avatarUrl && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-500 mb-2">
-                      VRChat アバターURL
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-500 mb-2">VRChat アバターURL</h3>
                     <div className="bg-blue-50 rounded-lg p-4">
                       <a
                         href={localAkyo.avatarUrl}
@@ -348,13 +361,18 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Favorite Button - ピンク色 */}
                   <button
                     onClick={handleFavoriteClick}
-                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${localAkyo.isFavorite
-                      ? 'text-white hover:opacity-90'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    style={localAkyo.isFavorite ? {
-                      background: 'linear-gradient(135deg, #FF6B9D, #FF8FA3)',
-                    } : undefined}
+                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+                      localAkyo.isFavorite
+                        ? 'text-white hover:opacity-90'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                    style={
+                      localAkyo.isFavorite
+                        ? {
+                            background: 'linear-gradient(135deg, #FF6B9D, #FF8FA3)',
+                          }
+                        : undefined
+                    }
                     aria-label={localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
                   >
                     <i className="fas fa-heart"></i>

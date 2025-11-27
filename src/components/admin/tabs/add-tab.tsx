@@ -55,9 +55,6 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
 
-  // Ref for file input (better than document.getElementById)
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   // Image cropping states
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
@@ -96,7 +93,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     const match = url.match(/avtr_[A-Za-z0-9-]+/);
     if (!match) {
-      alert('有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...');
+      alert(
+        '有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...'
+      );
       return;
     }
 
@@ -147,7 +146,11 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       // Process avatar info
       if (!infoResponse.ok) {
         const errorText = await infoResponse.text().catch(() => '');
-        throw new Error(`アバター情報取得に失敗しました (${infoResponse.status})${errorText ? `: ${errorText}` : ''}`);
+        throw new Error(
+          `アバター情報取得に失敗しました (${infoResponse.status})${
+            errorText ? `: ${errorText}` : ''
+          }`
+        );
       }
       const infoData = await infoResponse.json();
       avatarName = infoData.avatarName || '';
@@ -166,7 +169,6 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
       const blob = await imageResponse.blob();
       imageFile = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
-
     } catch (error) {
       clearTimeout(timeoutId);
       console.error('VRChat情報取得エラー:', error);
@@ -177,9 +179,15 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
 
       if (error instanceof Error && error.name === 'AbortError') {
-        alert('❌ 登録に失敗しました\n\nリクエストがタイムアウトしました。\nもう一度お試しください。');
+        alert(
+          '❌ 登録に失敗しました\n\nリクエストがタイムアウトしました。\nもう一度お試しください。'
+        );
       } else {
-        alert(`❌ 登録に失敗しました\n\n${error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'}\n\nURLが正しいか、アバターが公開設定か確認してください。`);
+        alert(
+          `❌ 登録に失敗しました\n\n${
+            error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
+          }\n\nURLが正しいか、アバターが公開設定か確認してください。`
+        );
       }
       return;
     }
@@ -206,7 +214,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     // Generate cropped image
     let croppedImageData: string | null = null;
     // Wait a bit more for the image element to be ready
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     croppedImageData = await generateCroppedImage();
     if (!croppedImageData) {
       // If cropping fails, use original image
@@ -372,64 +380,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     });
   };
 
-  const handleImageFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imgSrc = e.target?.result as string;
-      setOriginalImageSrc(imgSrc);
-      setShowImagePreview(true);
-
-      // Wait for image to load
-      setTimeout(() => {
-        const img = cropImageRef.current;
-        const container = cropContainerRef.current;
-        if (img && container) {
-          img.onload = () => {
-            const containerWidth = container.offsetWidth;
-            const containerHeight = container.offsetHeight;
-            const imgAspect = img.naturalWidth / img.naturalHeight;
-            const containerAspect = containerWidth / containerHeight;
-
-            // Initial scale setting
-            if (imgAspect > containerAspect) {
-              img.style.height = containerHeight + 'px';
-              img.style.width = 'auto';
-            } else {
-              img.style.width = containerWidth + 'px';
-              img.style.height = 'auto';
-            }
-
-            // Center image
-            const imgWidth = img.offsetWidth;
-            const imgHeight = img.offsetHeight;
-            setImageX((containerWidth - imgWidth) / 2);
-            setImageY((containerHeight - imgHeight) / 2);
-            setImageScale(1);
-          };
-        }
-      }, 50);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      handleImageFile(file);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0 && files[0].type.startsWith('image/')) {
-      handleImageFile(files[0]);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+  // Note: handleImageFile, handleFileInputChange, handleDrop, handleDragOver
+  // were removed - images are now automatically fetched from VRChat URL
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -653,7 +605,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
           {/* 作者（登録時に自動取得） */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">作者（登録時に自動取得）</label>
+            <label className="block text-gray-700 text-sm font-medium mb-1">
+              作者（登録時に自動取得）
+            </label>
             <input
               type="text"
               value="登録時にVRChat URLから自動取得"
@@ -693,33 +647,20 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           />
         </div>
 
-        {/* 画像アップロード */}
+        {/* 画像（自動取得） */}
         <div>
-          <label className="block text-gray-700 text-sm font-medium mb-1">画像</label>
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
-          >
-            <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-            <p className="text-gray-600">画像をドラッグ&ドロップ または</p>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileInputChange}
-              accept=".webp,.png,.jpg,.jpeg"
-              className="hidden"
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-            >
-              ファイルを選択
-            </button>
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            画像（登録時に自動取得）
+          </label>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+            <i className="fas fa-magic text-4xl text-blue-400 mb-2"></i>
+            <p className="text-gray-600 font-medium">VRChat URLから自動取得</p>
+            <p className="text-sm text-gray-500 mt-1">
+              登録ボタンを押すと、VRChatから画像を自動的に取得します
+            </p>
           </div>
 
-          {/* Image Cropping Preview (元の実装を完全再現) */}
+          {/* Image Cropping Preview (自動取得後に表示) */}
           {showImagePreview && (
             <div className="mt-4">
               <div className="bg-gray-50 rounded-lg p-4">
@@ -780,8 +721,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           )}
 
           <p className="text-xs text-gray-500 mt-3">
-            登録すると画像も公開環境へ自動でアップロードされ、図鑑でもすぐ表示されます（対応形式:
-            WebP / PNG / JPG）。
+            登録すると画像も公開環境へ自動でアップロードされ、図鑑でもすぐ表示されます。
           </p>
         </div>
 
