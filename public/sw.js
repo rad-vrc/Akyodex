@@ -140,7 +140,7 @@ self.addEventListener('fetch', (event) => {
   }
   
   // Strategy 3: CSV Data - Network First with cache fallback
-  if (url.pathname === '/data/akyo-data.csv' || url.pathname === '/data/akyo-data-US.csv') {
+  if (url.pathname === '/data/akyo-data-ja.csv' || url.pathname === '/data/akyo-data-en.csv') {
     event.respondWith(handleCsvRequest(request));
     return;
   }

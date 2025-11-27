@@ -43,7 +43,7 @@ function getGitHubConfig(): GitHubConfig {
 /**
  * Fetch file content from GitHub repository
  *
- * @param filePath - Path to file in repository (e.g., 'data/akyo-data.csv')
+ * @param filePath - Path to file in repository (e.g., 'data/akyo-data-ja.csv')
  * @param config - GitHub configuration (optional, uses environment variables by default)
  * @param timeoutMs - Request timeout in milliseconds (default: 30000)
  * @returns File content and SHA
@@ -168,12 +168,12 @@ async function commitFileToGitHub(
  * Fetch CSV file from GitHub
  * Convenience wrapper for fetchFileFromGitHub with CSV-specific path
  *
- * @param csvFileName - CSV filename (default: 'akyo-data.csv')
+ * @param csvFileName - CSV filename (default: 'akyo-data-ja.csv')
  * @param config - GitHub configuration (optional)
  * @returns CSV content and SHA
  */
 export async function fetchCSVFromGitHub(
-    csvFileName: string = 'akyo-data.csv',
+    csvFileName: string = 'akyo-data-ja.csv',
     config?: GitHubConfig
 ): Promise<GitHubFileResponse> {
     const filePath = `data/${csvFileName}`;
@@ -187,7 +187,7 @@ export async function fetchCSVFromGitHub(
  * @param content - New CSV content
  * @param sha - Current file SHA
  * @param message - Commit message
- * @param csvFileName - CSV filename (default: 'akyo-data.csv')
+ * @param csvFileName - CSV filename (default: 'akyo-data-ja.csv')
  * @param config - GitHub configuration (optional)
  * @returns Commit information
  */
@@ -195,7 +195,7 @@ export async function commitCSVToGitHub(
     content: string,
     sha: string,
     message: string,
-    csvFileName: string = 'akyo-data.csv',
+    csvFileName: string = 'akyo-data-ja.csv',
     config?: GitHubConfig
 ): Promise<GitHubCommitResponse> {
     const filePath = `data/${csvFileName}`;

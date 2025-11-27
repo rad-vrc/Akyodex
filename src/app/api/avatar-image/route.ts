@@ -32,7 +32,7 @@ function extractAvtrId(url: string): string | null {
 async function getAvtrIdFromCsv(akyoId: string): Promise<string | null> {
   try {
     const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-    const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data.csv`;
+    const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data-ja.csv`;
 
     const response = await fetch(csvUrl, {
       next: { revalidate: 3600 }, // Cache for 1 hour

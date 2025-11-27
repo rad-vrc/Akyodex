@@ -46,7 +46,7 @@ export async function GET() {
 
     if (bucket) {
       // Production: Use R2 bucket
-      const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data.csv';
+      const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data-ja.csv';
       const csvObject = await bucket.get(csvPath);
 
       if (csvObject) {
@@ -54,7 +54,7 @@ export async function GET() {
       } else {
         // Fallback to GitHub if R2 file missing
         console.warn('[next-id] CSV not found in R2, falling back to GitHub');
-        const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data.csv';
+        const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
         const githubResponse = await fetch(githubUrl, {
           next: { revalidate: 0 },
         });
@@ -67,7 +67,7 @@ export async function GET() {
     } else {
       // Development: Fetch from GitHub or R2 public URL
       const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-      const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data.csv`;
+      const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data-ja.csv`;
 
       try {
         const response = await fetch(csvUrl, {
@@ -76,7 +76,7 @@ export async function GET() {
 
         if (!response.ok) {
           // Fallback to GitHub
-          const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data.csv';
+          const githubUrl = 'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
           const githubResponse = await fetch(githubUrl, {
             next: { revalidate: 60 },
           });

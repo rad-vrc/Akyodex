@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
-const csvPath = path.join(rootDir, 'data', 'akyo-data.csv');
+const csvPath = path.join(rootDir, 'data', 'akyo-data-ja.csv');
 const jsonPath = path.join(rootDir, 'data', 'akyo-data-ja.json');
 
 /**

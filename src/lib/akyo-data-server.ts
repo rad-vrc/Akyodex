@@ -44,8 +44,8 @@ async function fetchAkyoData(
   const { lang = 'ja', bustCache = false } = options;
 
   // Determine CSV filename based on language
-  // English uses akyo-data-US.csv (original format)
-  const csvFileName = lang === 'en' ? 'akyo-data-US.csv' : 'akyo-data.csv';
+  // Unified naming: akyo-data-ja.csv, akyo-data-en.csv
+  const csvFileName = lang === 'en' ? 'akyo-data-en.csv' : 'akyo-data-ja.csv';
   const baseUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data`;
 
   let url = `${baseUrl}/${csvFileName}`;
@@ -69,7 +69,7 @@ async function fetchAkyoData(
       console.log(`[fetchAkyoData] ${lang} CSV not found (${response.status}), falling back to Japanese`);
       usedFallback = true;
       actualLang = 'ja';
-      url = `${baseUrl}/akyo-data.csv`;
+      url = `${baseUrl}/akyo-data-ja.csv`;
 
       response = await fetch(url, {
         next: bustCache ? { revalidate: 0 } : { revalidate: 3600 },
