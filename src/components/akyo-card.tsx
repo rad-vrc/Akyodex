@@ -101,9 +101,21 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID */}
-        <div className="text-sm font-bold text-gray-500 mb-1">
-          #{akyo.id}
+        {/* ID と 三面図DLボタン */}
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-sm font-bold text-gray-500">
+            #{akyo.id}
+          </span>
+          <a
+            href={`${process.env.NEXT_PUBLIC_R2_BASE}/images/${akyo.id}.png`}
+            download={`akyo-${akyo.id}-reference.png`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs px-2 py-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md"
+            title="三面図をダウンロード"
+          >
+            <span>📐</span>
+            <span className="hidden sm:inline">三面図</span>
+          </a>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
