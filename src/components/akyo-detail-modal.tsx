@@ -67,10 +67,25 @@ function getCategoryColor(category: string): string {
 export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: AkyoDetailModalProps) {
   const [localAkyo, setLocalAkyo] = useState<AkyoData | null>(akyo);
 
+  // 三面図（PNG）優先、WebPフォールバック用の状態
+  // Note: Hooks はすべて早期リターンの前に配置する必要がある (React Hooks ルール)
+  const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageLoadAttempt, setImageLoadAttempt] = useState(0);
+
   // Sync local state with prop changes
   useEffect(() => {
     setLocalAkyo(akyo);
   }, [akyo]);
+
+  // akyo変更時に画像URLをリセット
+  useEffect(() => {
+    if (localAkyo) {
+      const pngUrl = `${r2Base}/${localAkyo.id}.png`;
+      setImageUrl(pngUrl);
+      setImageLoadAttempt(0);
+    }
+  }, [localAkyo?.id, r2Base, localAkyo]);
 
   useEffect(() => {
     // ESCキーでモーダルを閉じる
@@ -91,6 +106,19 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     };
   }, [isOpen, onClose]);
 
+  // PNG→WebPフォールバック処理
+  const handleImageError = useCallback(() => {
+    if (localAkyo && imageLoadAttempt === 0) {
+      // PNG失敗 → WebPにフォールバック
+      const webpUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
+      console.log(`[detail-modal] PNG not found for ${localAkyo.id}, falling back to WebP`);
+      setImageUrl(webpUrl);
+      setImageLoadAttempt(1);
+    }
+    // WebPも失敗した場合はonErrorのスタイル処理に任せる
+  }, [imageLoadAttempt, localAkyo]);
+
+  // 早期リターン - すべての Hooks 呼び出しの後に配置
   if (!localAkyo || !isOpen) return null;
 
   // 新旧フィールド対応
@@ -106,30 +134,6 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
         .filter(Boolean)
     : [];
   const categoryColor = getCategoryColor(categoryStr);
-
-  // 三面図（PNG）優先、WebPフォールバック
-  const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-  const pngUrl = `${r2Base}/${localAkyo.id}.png`; // 三面図（優先）
-  const webpUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800); // サムネイル（フォールバック）
-  const [imageUrl, setImageUrl] = useState(pngUrl);
-  const [imageLoadAttempt, setImageLoadAttempt] = useState(0);
-
-  // PNG→WebPフォールバック処理
-  const handleImageError = useCallback(() => {
-    if (imageLoadAttempt === 0) {
-      // PNG失敗 → WebPにフォールバック
-      console.log(`[detail-modal] PNG not found for ${localAkyo.id}, falling back to WebP`);
-      setImageUrl(webpUrl);
-      setImageLoadAttempt(1);
-    }
-    // WebPも失敗した場合はonErrorのスタイル処理に任せる
-  }, [imageLoadAttempt, localAkyo.id, webpUrl]);
-
-  // akyo変更時にリセット
-  useEffect(() => {
-    setImageUrl(pngUrl);
-    setImageLoadAttempt(0);
-  }, [localAkyo.id, pngUrl]);
 
   const handleBackdropClick = (e: ReactMouseEvent<HTMLDivElement>) => {
     // モーダル外（backdrop または modal container）をクリックしたら閉じる
