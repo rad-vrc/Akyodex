@@ -73,6 +73,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   const [imageUrl, setImageUrl] = useState('');
   const [imageLoadAttempt, setImageLoadAttempt] = useState(0);
 
+  // ズーム機能の状態
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 }); // パーセンテージ
+
   // Sync local state with prop changes
   useEffect(() => {
     setLocalAkyo(akyo);
@@ -84,6 +88,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       const pngUrl = `${r2Base}/${localAkyo.id}.png`;
       setImageUrl(pngUrl);
       setImageLoadAttempt(0);
+      setIsZoomed(false); // ズーム状態もリセット
     }
   }, [localAkyo?.id, r2Base, localAkyo]);
 
@@ -117,6 +122,22 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     }
     // WebPも失敗した場合はonErrorのスタイル処理に任せる
   }, [imageLoadAttempt, localAkyo]);
+
+  // 画像クリックでズーム切替（クリック位置を中心に）
+  const handleImageClick = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    if (!isZoomed) {
+      // ズームイン：クリック位置を中心に
+      setZoomOrigin({ x, y });
+      setIsZoomed(true);
+    } else {
+      // ズームアウト
+      setIsZoomed(false);
+    }
+  }, [isZoomed]);
 
   // 早期リターン - すべての Hooks 呼び出しの後に配置
   if (!localAkyo || !isOpen) return null;
@@ -250,25 +271,46 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             {/* Modal Content */}
             <div className="p-6 bg-gradient-to-b from-white to-blue-50">
               <div className="space-y-6">
-                {/* Image Section */}
+                {/* Image Section with Zoom */}
                 <div className="relative">
-                  <div className="h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2">
-                    <Image
-                      src={imageUrl}
-                      alt={displayName}
-                      width={800}
-                      height={533}
-                      className="w-full h-full object-contain rounded-2xl"
-                      unoptimized
-                      onError={(e) => {
-                        // PNG→WebPフォールバック
-                        handleImageError();
-                        // 最終フォールバック：グラデーション背景
-                        const target = e.target as HTMLImageElement;
-                        target.style.background = `linear-gradient(135deg, ${categoryColor}, ${categoryColor}66)`;
+                  <div 
+                    className={`overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 cursor-zoom-in transition-all duration-300 ${
+                      isZoomed ? 'h-[70vh] cursor-zoom-out' : 'h-64'
+                    }`}
+                    onClick={handleImageClick}
+                  >
+                    <div 
+                      className="w-full h-full relative transition-transform duration-300 ease-out"
+                      style={{
+                        transform: isZoomed ? 'scale(2.5)' : 'scale(1)',
+                        transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
                       }}
-                    />
+                    >
+                      <Image
+                        src={imageUrl}
+                        alt={displayName}
+                        width={800}
+                        height={533}
+                        className="w-full h-full object-contain rounded-2xl"
+                        unoptimized
+                        draggable={false}
+                        onError={(e) => {
+                          // PNG→WebPフォールバック
+                          handleImageError();
+                          // 最終フォールバック：グラデーション背景
+                          const target = e.target as HTMLImageElement;
+                          target.style.background = `linear-gradient(135deg, ${categoryColor}, ${categoryColor}66)`;
+                        }}
+                      />
+                    </div>
                   </div>
+
+                  {/* Zoom Hint */}
+                  {!isZoomed && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
+                      クリックでズーム 🔍
+                    </div>
+                  )}
 
                   {/* Sparkle Effect */}
                   <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center animate-bounce">
