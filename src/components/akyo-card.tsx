@@ -3,7 +3,6 @@
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
-import { useState } from 'react';
 
 interface AkyoCardProps {
   akyo: AkyoData;
@@ -53,8 +52,6 @@ function getCategoryColor(category: string): string {
 }
 
 export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps) {
-  const [isDownloading, setIsDownloading] = useState(false);
-
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(akyo.id);
@@ -64,45 +61,16 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
     onShowDetail?.(akyo);
   };
 
-  // 三面図ダウンロード（fetch + Blob でクロスオリジン対応）
-  const handleDownloadClick = async (e: React.MouseEvent) => {
+  // 三面図ダウンロード（サーバーサイドプロキシ経由でCORS回避）
+  const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
-    if (isDownloading) return;
-
-    const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-    const imageUrl = `${r2Base}/${akyo.id}.png`;
-    const filename = `akyo-${akyo.id}-reference.png`;
-
-    setIsDownloading(true);
-
-    try {
-      const response = await fetch(imageUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-
-      // 一時的なリンク要素でダウンロードをトリガー
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Blob URL を解放
-      URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('[akyo-card] Download failed:', error);
-      // フォールバック: 新しいタブで開く
-      window.open(imageUrl, '_blank', 'noopener,noreferrer');
-    } finally {
-      setIsDownloading(false);
-    }
+    // APIエンドポイント経由でダウンロード（Content-Disposition: attachment が設定される）
+    const downloadUrl = `/api/download-reference?id=${akyo.id}`;
+    
+    // 新しいウィンドウ/タブで開くとダウンロードがトリガーされる
+    window.location.href = downloadUrl;
   };
 
   // 互換性のため新旧フィールドをチェック
@@ -144,50 +112,24 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
           <button
             onClick={handleDownloadClick}
-            disabled={isDownloading}
             className="reference-sheet-button"
             title="三面図をダウンロード"
           >
-            {isDownloading ? (
-              <svg
-                className="w-4 h-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-            )}
-            <span className="hidden sm:inline">
-              {isDownloading ? 'DL中...' : '三面図DL'}
-            </span>
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            <span className="hidden sm:inline">三面図DL</span>
           </button>
         </div>
 
