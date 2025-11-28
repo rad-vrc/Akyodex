@@ -17,8 +17,8 @@
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
-import type { MouseEvent as ReactMouseEvent } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface AkyoDetailModalProps {
   akyo: AkyoData | null;
@@ -76,6 +76,11 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   // ズーム機能の状態
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 }); // パーセンテージ
+  
+  // ドラッグ機能の状態
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const originStartRef = useRef({ x: 50, y: 50 });
 
   // Sync local state with prop changes
   useEffect(() => {
@@ -125,6 +130,9 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
 
   // 画像クリックでズーム切替（クリック位置を中心に）
   const handleImageClick = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
+    // ドラッグ中はクリックとして扱わない
+    if (isDragging) return;
+    
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -137,7 +145,59 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       // ズームアウト
       setIsZoomed(false);
     }
-  }, [isZoomed]);
+  }, [isZoomed, isDragging]);
+
+  // ドラッグ開始（マウス）
+  const handleDragStart = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
+    if (!isZoomed) return;
+    e.preventDefault();
+    setIsDragging(true);
+    dragStartRef.current = { x: e.clientX, y: e.clientY };
+    originStartRef.current = { ...zoomOrigin };
+  }, [isZoomed, zoomOrigin]);
+
+  // ドラッグ開始（タッチ）
+  const handleTouchStart = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
+    if (!isZoomed || e.touches.length !== 1) return;
+    setIsDragging(true);
+    dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    originStartRef.current = { ...zoomOrigin };
+  }, [isZoomed, zoomOrigin]);
+
+  // ドラッグ中（マウス）
+  const handleDragMove = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !isZoomed) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const deltaX = ((e.clientX - dragStartRef.current.x) / rect.width) * 100;
+    const deltaY = ((e.clientY - dragStartRef.current.y) / rect.height) * 100;
+    
+    // ドラッグ方向と逆に origin を移動（自然な操作感）
+    const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
+    const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
+    
+    setZoomOrigin({ x: newX, y: newY });
+  }, [isDragging, isZoomed]);
+
+  // ドラッグ中（タッチ）
+  const handleTouchMove = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
+    if (!isDragging || !isZoomed || e.touches.length !== 1) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const deltaX = ((e.touches[0].clientX - dragStartRef.current.x) / rect.width) * 100;
+    const deltaY = ((e.touches[0].clientY - dragStartRef.current.y) / rect.height) * 100;
+    
+    const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
+    const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
+    
+    setZoomOrigin({ x: newX, y: newY });
+  }, [isDragging, isZoomed]);
+
+  // ドラッグ終了
+  const handleDragEnd = useCallback(() => {
+    // 少し遅延させてクリックイベントとの競合を防ぐ
+    setTimeout(() => setIsDragging(false), 50);
+  }, []);
 
   // 早期リターン - すべての Hooks 呼び出しの後に配置
   if (!localAkyo || !isOpen) return null;
@@ -271,16 +331,23 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             {/* Modal Content */}
             <div className="p-6 bg-gradient-to-b from-white to-blue-50">
               <div className="space-y-6">
-                {/* Image Section with Zoom */}
+                {/* Image Section with Zoom & Drag */}
                 <div className="relative">
                   <div 
-                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 ${
-                      isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
+                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none ${
+                      isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                     }`}
                     onClick={handleImageClick}
+                    onMouseDown={handleDragStart}
+                    onMouseMove={handleDragMove}
+                    onMouseUp={handleDragEnd}
+                    onMouseLeave={handleDragEnd}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleDragEnd}
                   >
                     <div 
-                      className="w-full h-full relative transition-transform duration-300 ease-out"
+                      className={`w-full h-full relative ${isDragging ? '' : 'transition-transform duration-300 ease-out'}`}
                       style={{
                         transform: isZoomed ? 'scale(2.5)' : 'scale(1)',
                         transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
@@ -305,10 +372,14 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     </div>
                   </div>
 
-                  {/* Zoom Hint */}
-                  {!isZoomed && (
+                  {/* Zoom/Drag Hint */}
+                  {!isZoomed ? (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
                       クリックでズーム 🔍
+                    </div>
+                  ) : (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
+                      ドラッグで移動 ✋ / クリックで戻る
                     </div>
                   )}
 
