@@ -274,8 +274,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 {/* Image Section with Zoom */}
                 <div className="relative">
                   <div 
-                    className={`overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 cursor-zoom-in transition-all duration-300 ${
-                      isZoomed ? 'h-[70vh] cursor-zoom-out' : 'h-64'
+                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 ${
+                      isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
                     }`}
                     onClick={handleImageClick}
                   >
