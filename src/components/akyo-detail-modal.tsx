@@ -161,6 +161,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   // ドラッグ開始（タッチ）
   const handleTouchStart = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
     if (!isZoomed || e.touches.length !== 1) return;
+    // ネイティブスクロールを防止
+    e.preventDefault();
     setIsDragging(true);
     dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     originStartRef.current = { ...zoomOrigin };
@@ -184,6 +186,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   // ドラッグ中（タッチ）
   const handleTouchMove = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
     if (!isDragging || !isZoomed || e.touches.length !== 1) return;
+    
+    // ネイティブスクロールを防止
+    e.preventDefault();
+    e.stopPropagation();
     
     const rect = e.currentTarget.getBoundingClientRect();
     const deltaX = ((e.touches[0].clientX - dragStartRef.current.x) / rect.width) * 100;
@@ -339,6 +345,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none ${
                       isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                     }`}
+                    style={{ touchAction: isZoomed ? 'none' : 'auto' }}
                     onClick={handleImageClick}
                     onDoubleClick={handleImageDoubleClick}
                     onMouseDown={handleDragStart}
