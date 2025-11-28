@@ -128,24 +128,26 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     // WebPも失敗した場合はonErrorのスタイル処理に任せる
   }, [imageLoadAttempt, localAkyo]);
 
-  // 画像クリックでズーム切替（クリック位置を中心に）
+  // シングルクリックでズームイン（クリック位置を中心に）
   const handleImageClick = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
-    // ドラッグ中はクリックとして扱わない
-    if (isDragging) return;
+    // ドラッグ中やズーム中はクリックとして扱わない
+    if (isDragging || isZoomed) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    if (!isZoomed) {
-      // ズームイン：クリック位置を中心に
-      setZoomOrigin({ x, y });
-      setIsZoomed(true);
-    } else {
-      // ズームアウト
+    // ズームイン：クリック位置を中心に
+    setZoomOrigin({ x, y });
+    setIsZoomed(true);
+  }, [isZoomed, isDragging]);
+
+  // ダブルクリックでズームアウト
+  const handleImageDoubleClick = useCallback(() => {
+    if (isZoomed) {
       setIsZoomed(false);
     }
-  }, [isZoomed, isDragging]);
+  }, [isZoomed]);
 
   // ドラッグ開始（マウス）
   const handleDragStart = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
@@ -338,6 +340,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                       isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                     }`}
                     onClick={handleImageClick}
+                    onDoubleClick={handleImageDoubleClick}
                     onMouseDown={handleDragStart}
                     onMouseMove={handleDragMove}
                     onMouseUp={handleDragEnd}
@@ -379,7 +382,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動  / クリックで戻る
+                      ドラッグで移動 ✋ / ダブルクリックで戻る
                     </div>
                   )}
 
