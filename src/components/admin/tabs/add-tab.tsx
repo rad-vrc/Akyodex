@@ -54,13 +54,6 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   }, []);
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
-  const [fetchingName, setFetchingName] = useState(false);
-  const [fetchingImage, setFetchingImage] = useState(false);
-  const [showCreatorSuggestions, setShowCreatorSuggestions] = useState(false);
-  const [creatorSuggestions, setCreatorSuggestions] = useState<string[]>([]);
-
-  // Ref for file input (better than document.getElementById)
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Image cropping states
   const [showImagePreview, setShowImagePreview] = useState(false);
@@ -78,12 +71,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     message: '',
     tone: 'neutral' as 'neutral' | 'success' | 'error',
   });
-  const [avatarNameStatus, setAvatarNameStatus] = useState({
-    message: '',
-    tone: 'neutral' as 'neutral' | 'success' | 'error',
-  });
   const [checkingNickname, setCheckingNickname] = useState(false);
-  const [checkingAvatarName, setCheckingAvatarName] = useState(false);
 
   // Update image transform when position or scale changes
   useEffect(() => {
@@ -96,41 +84,38 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate required fields
-    if (!formData.avatarName.trim()) {
-      alert('アバター名は必須です');
+    // Validate VRChat URL is required
+    const url = formData.avatarUrl.trim();
+    if (!url) {
+      alert('VRChat URLは必須です');
       return;
     }
-    if (!formData.author.trim()) {
-      alert('作者は必須です');
+
+    const match = url.match(/avtr_[A-Za-z0-9-]+/);
+    if (!match) {
+      alert(
+        '有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...'
+      );
       return;
     }
+
+    // Validate categories
     if (formData.categories.length === 0) {
       alert('カテゴリを1つ以上選択してください');
       return;
     }
 
-    // Check for duplicates
-    if (nicknameStatus.tone === 'error' || avatarNameStatus.tone === 'error') {
-      if (!confirm('重複する通称またはアバター名が検出されました。\n登録を続行しますか？')) {
+    // Check for nickname duplicates (if nickname provided)
+    if (nicknameStatus.tone === 'error') {
+      if (!confirm('重複する通称が検出されました。\n登録を続行しますか？')) {
         return;
       }
     }
 
-    // Generate cropped image if available
-    let croppedImageData: string | null = null;
-    if (showImagePreview && originalImageSrc) {
-      croppedImageData = await generateCroppedImage();
-      if (!croppedImageData) {
-        alert('画像の生成に失敗しました');
-        return;
-      }
-    }
+    const avtrId = match[0];
 
     // Show loading state
-
     const formEl = formRef.current;
-
     if (!formEl) {
       console.error('Form element not found on submit');
       return;
@@ -139,30 +124,132 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     const originalText = submitBtn?.innerHTML || '';
     if (submitBtn) {
       submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> VRChat情報取得中...';
+    }
+
+    // ===== Step 1: Fetch avatar info and image from VRChat =====
+    let avatarName = '';
+    let creatorName = '';
+    let imageFile: File | null = null;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+    try {
+      // Fetch avatar info and image in parallel
+      const [infoResponse, imageResponse] = await Promise.all([
+        fetch(`/api/vrc-avatar-info?avtr=${avtrId}`, { signal: controller.signal }),
+        fetch(`/api/vrc-avatar-image?avtr=${avtrId}&w=1024`, { signal: controller.signal }),
+      ]);
+      clearTimeout(timeoutId);
+
+      // Process avatar info
+      if (!infoResponse.ok) {
+        const errorText = await infoResponse.text().catch(() => '');
+        throw new Error(
+          `アバター情報取得に失敗しました (${infoResponse.status})${
+            errorText ? `: ${errorText}` : ''
+          }`
+        );
+      }
+      const infoData = await infoResponse.json();
+      avatarName = infoData.avatarName || '';
+      creatorName = infoData.creatorName || '';
+
+      if (!avatarName) {
+        throw new Error('アバター名を取得できませんでした。URLが正しいか確認してください。');
+      }
+      if (!creatorName) {
+        throw new Error('作者名を取得できませんでした。URLが正しいか確認してください。');
+      }
+
+      // Process image
+      if (!imageResponse.ok) {
+        throw new Error(`画像取得に失敗しました (${imageResponse.status})`);
+      }
+      const blob = await imageResponse.blob();
+      imageFile = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
+    } catch (error) {
+      clearTimeout(timeoutId);
+      console.error('VRChat情報取得エラー:', error);
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+
+      if (error instanceof Error && error.name === 'AbortError') {
+        alert(
+          '❌ 登録に失敗しました\n\nリクエストがタイムアウトしました。\nもう一度お試しください。'
+        );
+      } else {
+        alert(
+          `❌ 登録に失敗しました\n\n${
+            error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
+          }\n\nURLが正しいか、アバターが公開設定か確認してください。`
+        );
+      }
+      return;
+    }
+
+    // Update button text
+    if (submitBtn) {
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 画像処理中...';
+    }
+
+    // ===== Step 2: Process image for cropping preview =====
+    // Load image into cropping preview
+    await new Promise<void>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        const imgSrc = readerEvent.target?.result as string;
+        setOriginalImageSrc(imgSrc);
+        setShowImagePreview(true);
+        // Give time for image to load
+        setTimeout(resolve, 100);
+      };
+      reader.readAsDataURL(imageFile!);
+    });
+
+    // Generate cropped image
+    let croppedImageData: string | null = null;
+    // Wait a bit more for the image element to be ready
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    croppedImageData = await generateCroppedImage();
+    if (!croppedImageData) {
+      // If cropping fails, use original image
+      const reader = new FileReader();
+      croppedImageData = await new Promise<string>((resolve) => {
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(imageFile!);
+      });
+    }
+
+    // Update button text for final submission
+    if (submitBtn) {
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 登録中...';
     }
 
     try {
-      // Prepare form data for submission
+      // Prepare form data for submission (using fetched values)
       const submitData = new FormData();
       submitData.append('id', nextId);
       submitData.append('nickname', formData.nickname);
-      submitData.append('avatarName', formData.avatarName);
+      submitData.append('avatarName', avatarName);
       submitData.append('avatarUrl', formData.avatarUrl);
-      
-      // 新フィールド
-      submitData.append('author', formData.author);
+
+      // 新フィールド (VRChatから取得した作者名を使用)
+      submitData.append('author', creatorName);
       submitData.append('category', formData.categories.join(','));
       submitData.append('comment', formData.comment);
-      
+
       // 旧フィールド (互換性のため)
-      submitData.append('creator', formData.author);
+      submitData.append('creator', creatorName);
       submitData.append('attributes', formData.categories.join(','));
       submitData.append('notes', formData.comment);
-      
-      if (croppedImageData) {
-        submitData.append('imageData', croppedImageData);
-      }
+
+      // Always include image data (fetched from VRChat)
+      submitData.append('imageData', croppedImageData!);
 
       // Submit to API
       const response = await fetch('/api/upload-akyo', {
@@ -179,10 +266,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       // Success!
       alert(
         `✅ ${result.message}\n\n` +
-        `ID: #${nextId}\n` +
-        `アバター名: ${formData.avatarName}\n` +
-        `作者: ${formData.author}\n\n` +
-        (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
+          `ID: #${nextId}\n` +
+          `アバター名: ${avatarName}\n` +
+          `作者: ${creatorName}\n\n` +
+          (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
       );
 
       // Reset form
@@ -197,20 +284,18 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       setShowImagePreview(false);
       setOriginalImageSrc(null);
       setNicknameStatus({ message: '', tone: 'neutral' });
-      setAvatarNameStatus({ message: '', tone: 'neutral' });
 
       // Increment next ID for next registration
       const currentId = parseInt(nextId, 10);
       if (!isNaN(currentId)) {
         setNextId((currentId + 1).toString().padStart(4, '0'));
       }
-
     } catch (error) {
       console.error('Form submission error:', error);
       alert(
         '❌ 登録に失敗しました\n\n' +
-        (error instanceof Error ? error.message : '不明なエラーが発生しました') +
-        '\n\nもう一度お試しください。'
+          (error instanceof Error ? error.message : '不明なエラーが発生しました') +
+          '\n\nもう一度お試しください。'
       );
     } finally {
       // Restore button state
@@ -222,52 +307,30 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   };
 
   const handleInputChange = (field: string, value: string | string[]) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-
-    // 作者フィールドの場合、サジェストを更新
-    if (field === 'author' && typeof value === 'string') {
-      if (value.trim()) {
-        const filtered = allCreators.filter(c =>
-          c.toLowerCase().includes(value.toLowerCase())
-        ).slice(0, 10);
-        setCreatorSuggestions(filtered);
-        setShowCreatorSuggestions(filtered.length > 0);
-      } else {
-        setShowCreatorSuggestions(false);
-      }
-    }
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSelectCreator = (creator: string) => {
-    handleInputChange('author', creator);
-    setShowCreatorSuggestions(false);
-  };
-
-  // Generic duplicate check function
-  const handleCheckDuplicate = async (field: 'nickname' | 'avatarName', value: string) => {
-    const trimmedValue = value.trim();
-
-    const setStatus = field === 'nickname' ? setNicknameStatus : setAvatarNameStatus;
-    const setChecking = field === 'nickname' ? setCheckingNickname : setCheckingAvatarName;
-    const fieldLabel = field === 'nickname' ? '通称' : 'アバター名';
+  // Nickname duplicate check function
+  const handleCheckNicknameDuplicate = async () => {
+    const trimmedValue = formData.nickname.trim();
 
     if (!trimmedValue) {
-      setStatus({
-        message: `${fieldLabel}を入力してください`,
+      setNicknameStatus({
+        message: '通称を入力してください',
         tone: 'neutral',
       });
       return;
     }
 
-    setChecking(true);
-    setStatus({ message: '', tone: 'neutral' });
+    setCheckingNickname(true);
+    setNicknameStatus({ message: '', tone: 'neutral' });
 
     try {
       const response = await fetch('/api/check-duplicate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          field,
+          field: 'nickname',
           value: trimmedValue,
         }),
       });
@@ -277,24 +340,20 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
 
       const data = await response.json();
-      setStatus({
+      setNicknameStatus({
         message: data.message,
         tone: data.isDuplicate ? 'error' : 'success',
       });
     } catch (error) {
-      console.error(`${fieldLabel} duplicate check error:`, error);
-      setStatus({
+      console.error('通称 duplicate check error:', error);
+      setNicknameStatus({
         message: '重複チェックに失敗しました',
         tone: 'error',
       });
     } finally {
-      setChecking(false);
+      setCheckingNickname(false);
     }
   };
-
-  // Wrapper functions for backward compatibility
-  const handleCheckNicknameDuplicate = () => handleCheckDuplicate('nickname', formData.nickname);
-  const handleCheckAvatarNameDuplicate = () => handleCheckDuplicate('avatarName', formData.avatarName);
 
   // Image cropping functions (matching original implementation)
   const resetImagePosition = () => {
@@ -315,70 +374,14 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   };
 
   const zoomImage = (factor: number) => {
-    setImageScale(prev => {
+    setImageScale((prev) => {
       const newScale = prev * factor;
       return Math.max(0.5, Math.min(3, newScale));
     });
   };
 
-  const handleImageFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imgSrc = e.target?.result as string;
-      setOriginalImageSrc(imgSrc);
-      setShowImagePreview(true);
-
-      // Wait for image to load
-      setTimeout(() => {
-        const img = cropImageRef.current;
-        const container = cropContainerRef.current;
-        if (img && container) {
-          img.onload = () => {
-            const containerWidth = container.offsetWidth;
-            const containerHeight = container.offsetHeight;
-            const imgAspect = img.naturalWidth / img.naturalHeight;
-            const containerAspect = containerWidth / containerHeight;
-
-            // Initial scale setting
-            if (imgAspect > containerAspect) {
-              img.style.height = containerHeight + 'px';
-              img.style.width = 'auto';
-            } else {
-              img.style.width = containerWidth + 'px';
-              img.style.height = 'auto';
-            }
-
-            // Center image
-            const imgWidth = img.offsetWidth;
-            const imgHeight = img.offsetHeight;
-            setImageX((containerWidth - imgWidth) / 2);
-            setImageY((containerHeight - imgHeight) / 2);
-            setImageScale(1);
-          };
-        }
-      }, 50);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      handleImageFile(file);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0 && files[0].type.startsWith('image/')) {
-      handleImageFile(files[0]);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+  // Note: handleImageFile, handleFileInputChange, handleDrop, handleDragOver
+  // were removed - images are now automatically fetched from VRChat URL
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -434,11 +437,11 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         const containerAspect = cw / ch;
         const imageAspect = iw / ih;
 
-        const baseScale = imageAspect > containerAspect ? (ch / ih) : (cw / iw);
+        const baseScale = imageAspect > containerAspect ? ch / ih : cw / iw;
         const totalScale = baseScale * imageScale;
 
-        const sx = Math.max(0, (-imageX) / totalScale);
-        const sy = Math.max(0, (-imageY) / totalScale);
+        const sx = Math.max(0, -imageX / totalScale);
+        const sy = Math.max(0, -imageY / totalScale);
         const sw = Math.min(iw - sx, cw / totalScale);
         const sh = Math.min(ih - sy, ch / totalScale);
 
@@ -446,119 +449,23 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         ctx.fillRect(0, 0, canvasW, canvasH);
         ctx.drawImage(image, sx, sy, sw, sh, 0, 0, canvasW, canvasH);
 
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(blob);
-          } else {
-            resolve(null);
-          }
-        }, 'image/webp', 0.9);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(blob);
+            } else {
+              resolve(null);
+            }
+          },
+          'image/webp',
+          0.9
+        );
       };
       image.crossOrigin = 'anonymous';
       image.src = originalImageSrc;
     });
-  };
-
-  // VRChat URLからアバター名を取得
-  const handleFetchAvatarName = async () => {
-    const url = formData.avatarUrl.trim();
-    if (!url) {
-      alert('VRChat URLを入力してください');
-      return;
-    }
-
-    const match = url.match(/avtr_[A-Za-z0-9-]+/);
-    if (!match) {
-      alert('有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...');
-      return;
-    }
-
-    const avtrId = match[0];
-    setFetchingName(true);
-
-    // Add timeout handling with AbortController
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-    try {
-      const response = await fetch(`/api/vrc-avatar-info?avtr=${avtrId}`, {
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`アバター情報取得に失敗しました: ${response.status}`);
-      }
-
-      const data = await response.json();
-      handleInputChange('avatarName', data.avatarName || '');
-
-      // 成功通知
-      setTimeout(() => setFetchingName(false), 1000);
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.error('VRChatアバター名取得エラー:', error);
-
-      if (error instanceof Error && error.name === 'AbortError') {
-        alert('リクエストがタイムアウトしました。\nもう一度お試しください。');
-      } else {
-        alert('VRChatからアバター名を取得できませんでした。\nURLが正しいか、アバターが公開設定か確認してください。');
-      }
-      setFetchingName(false);
-    }
-  };
-
-  // VRChat URLから画像を取得
-  const handleFetchImage = async () => {
-    const url = formData.avatarUrl.trim();
-    if (!url) {
-      alert('VRChat URLを入力してください');
-      return;
-    }
-
-    const match = url.match(/avtr_[A-Za-z0-9-]+/);
-    if (!match) {
-      alert('有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...');
-      return;
-    }
-
-    const avtrId = match[0];
-    setFetchingImage(true);
-
-    // Add timeout handling with AbortController
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-    try {
-      const response = await fetch(`/api/vrc-avatar-image?avtr=${avtrId}&w=1024`, {
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`画像取得に失敗しました: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const file = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
-
-      // Display image in cropping preview
-      handleImageFile(file);
-
-      setTimeout(() => setFetchingImage(false), 1000);
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.error('VRChat画像取得エラー:', error);
-
-      if (error instanceof Error && error.name === 'AbortError') {
-        alert('リクエストがタイムアウトしました。\nもう一度お試しください。');
-      } else {
-        alert('VRChatから画像を取得できませんでした。\nURLが正しいか、アバターが公開設定か確認してください。');
-      }
-      setFetchingImage(false);
-    }
   };
 
   return (
@@ -571,9 +478,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* ID（自動採番） */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">
-              ID（自動採番）
-            </label>
+            <label className="block text-gray-700 text-sm font-medium mb-1">ID（自動採番）</label>
             <input
               type="text"
               value={nextId}
@@ -597,9 +502,25 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
               >
                 {checkingNickname ? (
                   <>
-                    <svg className="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="w-3 h-3 animate-spin"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     確認中...
                   </>
@@ -624,7 +545,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             />
             {nicknameStatus.message && (
               <p
-                className={`mt-2 text-sm ${ 
+                className={`mt-2 text-sm ${
                   nicknameStatus.tone === 'error'
                     ? 'text-red-600'
                     : nicknameStatus.tone === 'success'
@@ -637,59 +558,17 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             )}
           </div>
 
-          {/* アバター名 */}
+          {/* アバター名（登録時にURLから自動取得） */}
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-1">
-              アバター名
+              アバター名（登録時に自動取得）
             </label>
             <input
               type="text"
-              value={formData.avatarName}
-              onChange={(e) => {
-                handleInputChange('avatarName', e.target.value);
-                // Clear status when user changes input
-                setAvatarNameStatus({ message: '', tone: 'neutral' });
-              }}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="例: Akyo origin"
+              value="登録時にVRChat URLから自動取得"
+              disabled
+              className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
             />
-            <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
-              <button
-                type="button"
-                onClick={handleCheckAvatarNameDuplicate}
-                disabled={checkingAvatarName}
-                className="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {checkingAvatarName ? (
-                  <>
-                    <svg className="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    確認中...
-                  </>
-                ) : (
-                  <>
-                    <i className="fas fa-search"></i>
-                    同じアバター名が既に登録されているか確認
-                  </>
-                )}
-              </button>
-              {avatarNameStatus.message && (
-                <p
-                  className={`text-sm ${ 
-                    avatarNameStatus.tone === 'error'
-                      ? 'text-red-600'
-                      : avatarNameStatus.tone === 'success'
-                      ? 'text-green-600'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  {avatarNameStatus.message}
-                </p>
-              )}
-            </div>
           </div>
 
           {/* カテゴリ (旧: 属性) */}
@@ -706,9 +585,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
               </button>
               <div className="border border-dashed border-green-200 rounded-lg bg-white/60 p-3 min-h-[60px]">
                 {formData.categories.length === 0 ? (
-                  <p className="text-sm text-gray-500">
-                    選択されたカテゴリがここに表示されます
-                  </p>
+                  <p className="text-sm text-gray-500">選択されたカテゴリがここに表示されます</p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {formData.categories.map((cat) => (
@@ -726,116 +603,41 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             </div>
           </div>
 
-          {/* 作者 */}
+          {/* 作者（登録時に自動取得） */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">作者</label>
-            <div className="relative">
-              <input
-                type="text"
-                value={formData.author}
-                onChange={(e) => handleInputChange('author', e.target.value)}
-                onFocus={() => {
-                  if (formData.author.trim() && creatorSuggestions.length > 0) {
-                    setShowCreatorSuggestions(true);
-                  }
-                }}
-                onBlur={() => {
-                  // 少し遅延させてクリックイベントを処理できるようにする
-                  setTimeout(() => setShowCreatorSuggestions(false), 200);
-                }}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="例: ugai"
-                autoComplete="off"
-              />
-
-              {/* オートコンプリートサジェスト */}
-              {showCreatorSuggestions && creatorSuggestions.length > 0 && (
-                <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-30">
-                  {creatorSuggestions.map((creator) => (
-                    <button
-                      key={creator}
-                      type="button"
-                      onClick={() => handleSelectCreator(creator)}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
-                    >
-                      <i className="fas fa-user mr-2 text-gray-400"></i>
-                      {creator}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <label className="block text-gray-700 text-sm font-medium mb-1">
+              作者（登録時に自動取得）
+            </label>
+            <input
+              type="text"
+              value="登録時にVRChat URLから自動取得"
+              disabled
+              className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
+            />
           </div>
 
           {/* VRChat URL */}
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1">
-              <label className="text-gray-700 text-sm font-medium">VRChat URL</label>
-              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={handleFetchAvatarName}
-                  disabled={fetchingName}
-                  className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="VRChat URLからアバター名を自動取得"
-                >
-                  {fetchingName ? (
-                    <>
-                      <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span>取得中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                      <span>URLからアバター名を取得</span>
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleFetchImage}
-                  disabled={fetchingImage}
-                  className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="VRChat URLから画像を自動取得"
-                >
-                  {fetchingImage ? (
-                    <>
-                      <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span>取得中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      <span>URLから画像を取得</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
+            <label className="block text-gray-700 text-sm font-medium mb-1">
+              VRChat URL <span className="text-red-500">*</span>
+            </label>
             <input
               type="url"
               value={formData.avatarUrl}
               onChange={(e) => handleInputChange('avatarUrl', e.target.value)}
+              required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="https://vrchat.com/..."
+              placeholder="https://vrchat.com/home/avatar/avtr_..."
             />
+            <p className="mt-2 text-xs text-gray-500 leading-snug">
+              登録ボタンを押すと、このURLからアバター名・作者名・画像が自動的に取得されます。
+            </p>
           </div>
         </div>
 
-        {/* 備考（comment） */}
+        {/* おまけ情報（comment） */}
         <div>
-          <label className="block text-gray-700 text-sm font-medium mb-1">備考</label>
+          <label className="block text-gray-700 text-sm font-medium mb-1">おまけ情報</label>
           <textarea
             value={formData.comment}
             onChange={(e) => handleInputChange('comment', e.target.value)}
@@ -845,33 +647,20 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           />
         </div>
 
-        {/* 画像アップロード */}
+        {/* 画像（自動取得） */}
         <div>
-          <label className="block text-gray-700 text-sm font-medium mb-1">画像</label>
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
-          >
-            <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-            <p className="text-gray-600">画像をドラッグ&ドロップ または</p>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileInputChange}
-              accept=".webp,.png,.jpg,.jpeg"
-              className="hidden"
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-            >
-              ファイルを選択
-            </button>
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            画像（登録時に自動取得）
+          </label>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+            <i className="fas fa-cloud-download-alt text-4xl text-blue-400 mb-2"></i>
+            <p className="text-gray-600 font-medium">VRChat URLから自動取得</p>
+            <p className="text-sm text-gray-500 mt-1">
+              登録ボタンを押すと、VRChatから画像を自動的に取得します
+            </p>
           </div>
 
-          {/* Image Cropping Preview (元の実装を完全再現) */}
+          {/* Image Cropping Preview (自動取得後に表示) */}
           {showImagePreview && (
             <div className="mt-4">
               <div className="bg-gray-50 rounded-lg p-4">
@@ -932,7 +721,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           )}
 
           <p className="text-xs text-gray-500 mt-3">
-            登録すると画像も公開環境へ自動でアップロードされ、図鑑でもすぐ表示されます（対応形式: WebP / PNG / JPG）。
+            登録すると画像も公開環境へ自動でアップロードされ、図鑑でもすぐ表示されます。
           </p>
         </div>
 

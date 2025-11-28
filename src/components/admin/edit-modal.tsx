@@ -819,9 +819,9 @@ export function EditModal({
                 </div>
               </div>
 
-              {/* 備考（comment） */}
+              {/* おまけ情報（comment） */}
               <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">備考</label>
+                <label className="block text-gray-700 text-sm font-medium mb-1">おまけ情報</label>
                 <textarea
                   value={formData.comment}
                   onChange={(e) => handleInputChange('comment', e.target.value)}
@@ -923,7 +923,7 @@ export function EditModal({
               {/* 更新ボタン */}
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
+                className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
               >
                 <i className="fas fa-save mr-2"></i> 更新する
               </button>

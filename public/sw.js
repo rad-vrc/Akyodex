@@ -1,8 +1,8 @@
 /**
  * Akyodex Service Worker - Next.js Version
- * 
+ *
  * Based on the original sw.js with adaptations for Next.js App Router
- * 
+ *
  * Cache Strategy:
  * - HTML/Pages: Network First (always fetch latest)
  * - CSV Data: Network First with fallback
@@ -36,12 +36,12 @@ function getScope() {
  */
 self.addEventListener('install', (event) => {
   console.log('[SW] Installing Service Worker v' + CACHE_VERSION);
-  
+
   event.waitUntil(
     (async () => {
       try {
         const cache = await caches.open(CACHE_NAME);
-        
+
         // Precache core URLs with cache-busting
         // Use absolute URLs to ensure cache key consistency with fallback lookups
         await Promise.allSettled(
@@ -50,7 +50,7 @@ self.addEventListener('install', (event) => {
               const absoluteUrl = new URL(url, self.location.origin).toString();
               const request = new Request(absoluteUrl, { cache: 'reload' });
               const response = await fetch(request);
-              
+
               if (response && response.ok) {
                 await cache.put(request, response.clone());
                 console.log('[SW] Precached:', absoluteUrl);
@@ -60,7 +60,7 @@ self.addEventListener('install', (event) => {
             }
           })
         );
-        
+
         // Skip waiting to activate immediately
         await self.skipWaiting();
         console.log('[SW] Install complete');
@@ -76,7 +76,7 @@ self.addEventListener('install', (event) => {
  */
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating Service Worker v' + CACHE_VERSION);
-  
+
   event.waitUntil(
     (async () => {
       try {
@@ -90,7 +90,7 @@ self.addEventListener('activate', (event) => {
               return caches.delete(name);
             })
         );
-        
+
         // Take control of all clients immediately
         await self.clients.claim();
         console.log('[SW] Activate complete');
@@ -106,58 +106,57 @@ self.addEventListener('activate', (event) => {
  */
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  
+
   // Only handle GET requests
   if (request.method !== 'GET') {
     return;
   }
-  
+
   const url = new URL(request.url);
-  
+
   // Don't intercept cross-origin requests (R2, external APIs, etc.)
   if (url.origin !== self.location.origin) {
     return;
   }
-  
+
   const accept = request.headers.get('accept') || '';
-  
+
   // Let the browser handle navigations to avoid stale SW fallback
   if (request.mode === 'navigate' || accept.includes('text/html')) {
     return;
   }
-  
+
   // Strategy 2a: Image Proxy API routes → treat as images (SWR)
   const IMAGE_API_PATHS = new Set(['/api/avatar-image', '/api/vrc-avatar-image']);
   if (IMAGE_API_PATHS.has(url.pathname)) {
     event.respondWith(handleImageRequest(event, request));
     return;
   }
-  
+
   // Strategy 2b: Other API Routes - Network Only (never cache)
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(handleApiRequest(request));
     return;
   }
-  
+
   // Strategy 3: CSV Data - Network First with cache fallback
-  if (url.pathname === '/data/akyo-data.csv' || url.pathname === '/data/akyo-data-US.csv') {
+  if (url.pathname === '/data/akyo-data-ja.csv' || url.pathname === '/data/akyo-data-en.csv') {
     event.respondWith(handleCsvRequest(request));
     return;
   }
-  
+
   // Strategy 4: Next.js Static Assets - Cache First (immutable)
   if (url.pathname.startsWith('/_next/static/')) {
     event.respondWith(handleStaticAssets(request));
     return;
   }
-  
+
   // Strategy 5: Images - Stale While Revalidate
-  if (url.pathname.startsWith('/images/') || 
-      accept.includes('image/')) {
+  if (url.pathname.startsWith('/images/') || accept.includes('image/')) {
     event.respondWith(handleImageRequest(event, request));
     return;
   }
-  
+
   // Strategy 6: Other Assets (CSS, JS) - Cache First with update
   event.respondWith(handleDefaultRequest(event, request));
 });
@@ -170,9 +169,7 @@ async function handleNavigationRequest(request) {
   try {
     const url = new URL(request.url);
     const wantsFreshNavigation = url.searchParams.has('_akyoFresh');
-    const requestToUse = wantsFreshNavigation
-      ? new Request(request, { cache: 'reload' })
-      : request;
+    const requestToUse = wantsFreshNavigation ? new Request(request, { cache: 'reload' }) : request;
 
     const networkResponse = await fetch(requestToUse);
     if (networkResponse && networkResponse.ok) {
@@ -190,7 +187,7 @@ async function handleNavigationRequest(request) {
 
   return new Response(
     '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Offline - Akyodex</title></head>' +
-    '<body><h1>オフラインです</h1><p>インターネット接続を確認してください。</p></body></html>',
+      '<body><h1>オフラインです</h1><p>インターネット接続を確認してください。</p></body></html>',
     {
       headers: { 'content-type': 'text/html; charset=utf-8' },
       status: 200,
@@ -222,11 +219,11 @@ async function handleApiRequest(request) {
  */
 async function handleCsvRequest(request) {
   const cache = await caches.open(CACHE_NAME);
-  
+
   try {
     // Always fetch fresh CSV data
     const networkResponse = await fetch(new Request(request, { cache: 'no-cache' }));
-    
+
     if (networkResponse && networkResponse.ok) {
       // Update cache with fresh data
       await cache.put(request, networkResponse.clone());
@@ -235,13 +232,13 @@ async function handleCsvRequest(request) {
   } catch (error) {
     console.log('[SW] Network failed for CSV, trying cache:', error.message);
   }
-  
+
   // Fallback to cached CSV
   const cachedResponse = await cache.match(request);
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   // No cache available
   return new Response('', { status: 204 });
 }
@@ -252,17 +249,17 @@ async function handleCsvRequest(request) {
  */
 async function handleStaticAssets(request) {
   const cache = await caches.open(CACHE_NAME);
-  
+
   // Try cache first
   const cachedResponse = await cache.match(request);
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   // Fetch and cache
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
       return networkResponse;
@@ -270,7 +267,7 @@ async function handleStaticAssets(request) {
   } catch (error) {
     console.log('[SW] Network failed for static asset:', error.message);
   }
-  
+
   return new Response('', { status: 404 });
 }
 
@@ -281,7 +278,7 @@ async function handleStaticAssets(request) {
 async function handleImageRequest(event, request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
-  
+
   // If we have cache, return it immediately and refresh in background
   if (cached) {
     event.waitUntil(
@@ -295,7 +292,7 @@ async function handleImageRequest(event, request) {
     );
     return cached;
   }
-  
+
   // No cache → hit network, fallback 404 on failure
   try {
     const resp = await fetch(request);
@@ -315,20 +312,20 @@ async function handleImageRequest(event, request) {
  */
 async function handleDefaultRequest(event, request) {
   const cache = await caches.open(CACHE_NAME);
-  
+
   // Try cache first
   const cachedResponse = await cache.match(request);
-  
+
   if (cachedResponse) {
     // Return cached, update in background
     event.waitUntil(updateCacheInBackground(cache, request));
     return cachedResponse;
   }
-  
+
   // Fetch from network
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
       return networkResponse;
@@ -336,7 +333,7 @@ async function handleDefaultRequest(event, request) {
   } catch (error) {
     console.log('[SW] Network failed for default request:', error.message);
   }
-  
+
   return new Response('', { status: 404 });
 }
 
@@ -347,7 +344,7 @@ async function updateCacheInBackground(cache, request) {
   try {
     const reloadRequest = new Request(request, { cache: 'reload' });
     const response = await fetch(reloadRequest);
-    
+
     if (response && response.ok) {
       await cache.put(request, response.clone());
       console.log('[SW] Background updated:', request.url);

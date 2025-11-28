@@ -5,18 +5,22 @@ import path from 'path';
 /**
  * This route requires Node.js runtime because:
  * - Uses fs.readFile for local file system access
- * 
+ *
  * Future Edge Runtime Migration:
- * - Migrate CSV files to R2 public URL (https://images.akyodex.com/data/akyo-data.csv)
+ * - Migrate CSV files to R2 public URL (https://images.akyodex.com/data/akyo-data-ja.csv)
  * - Replace fs.readFile with fetch() call
  * - Change runtime to 'edge'
  */
 export const runtime = 'nodejs';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // クエリパラメータから言語を取得（デフォルトは日本語）
+    const { searchParams } = new URL(request.url);
+    const lang = searchParams.get('lang') === 'en' ? 'en' : 'ja';
+
     // CSVファイルのパス
-    const csvPath = path.join(process.cwd(), 'data', 'akyo-data.csv');
+    const csvPath = path.join(process.cwd(), 'data', `akyo-data-${lang}.csv`);
 
     // ファイルを読み込む
     const csvContent = await fs.readFile(csvPath, 'utf-8');

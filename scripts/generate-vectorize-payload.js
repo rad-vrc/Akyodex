@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Generate payload for Vectorize Worker `/insert-data`
- * Source: data/akyo-data.json (avatarUrl official)
+ * Source: data/akyo-data-ja.json (avatarUrl official)
  * Output: data/vectorize-payload.json
  *
  * Worker expects:
@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
-const inputPath = path.join(rootDir, 'data', 'akyo-data.json');
+const inputPath = path.join(rootDir, 'data', 'akyo-data-ja.json');
 const outputPath = path.join(rootDir, 'data', 'vectorize-payload.json');
 
 function main() {

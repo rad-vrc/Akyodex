@@ -15,7 +15,7 @@ NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
 GITHUB_REPO_OWNER = "rad-vrc"
 GITHUB_REPO_NAME = "Akyodex"
 GITHUB_BRANCH = "main"
-GITHUB_CSV_PATH_JA = "data/akyo-data.csv"
+GITHUB_CSV_PATH_JA = "data/akyo-data-ja.csv"
 
 # Bindings for Cloudflare Pages Functions runtime
 # Replace the placeholder IDs/names below with the actual ones from your account
@@ -48,7 +48,7 @@ NEXT_PUBLIC_R2_BASE = "https://images.akyodex.com"
 GITHUB_REPO_OWNER = "rad-vrc"
 GITHUB_REPO_NAME = "Akyodex"
 GITHUB_BRANCH = "main"
-GITHUB_CSV_PATH_JA = "data/akyo-data.csv"
+GITHUB_CSV_PATH_JA = "data/akyo-data-ja.csv"
 
 # Secrets (set via wrangler secret or dashboard):
 # - GITHUB_TOKEN
