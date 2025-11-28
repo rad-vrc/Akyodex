@@ -382,7 +382,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動 ✋ / ダブルクリックで戻る
+                      ドラッグで移動  / ダブルクリックで戻る
                     </div>
                   )}
 
