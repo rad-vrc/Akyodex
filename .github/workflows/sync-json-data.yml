@@ -146,7 +146,6 @@ jobs:
           exit 1
 
       - name: Upload JSON to Cloudflare R2
-        if: steps.json-changes.outputs.changed == 'true'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -209,7 +208,6 @@ jobs:
           echo "🎉 R2 upload complete!"
 
       - name: Trigger ISR Revalidation and KV Cache Update
-        if: steps.json-changes.outputs.changed == 'true'
         env:
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
         run: |
