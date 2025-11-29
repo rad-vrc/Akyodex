@@ -84,7 +84,9 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   
   // ダブルタップ検出用（モバイル対応）
   const lastTapRef = useRef<number>(0);
+  const hasDraggedRef = useRef<boolean>(false); // 実際にドラッグ（移動）したか
   const DOUBLE_TAP_DELAY = 300; // ミリ秒
+  const DRAG_THRESHOLD = 5; // ピクセル（これ以上動いたらドラッグとみなす）
 
   // Sync local state with prop changes
   useEffect(() => {
@@ -168,6 +170,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     // ネイティブスクロールを防止
     e.preventDefault();
     setIsDragging(true);
+    hasDraggedRef.current = false; // ドラッグ開始時はまだ移動していない
     dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     originStartRef.current = { ...zoomOrigin };
   }, [isZoomed, zoomOrigin]);
@@ -195,9 +198,19 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     e.preventDefault();
     e.stopPropagation();
     
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    
+    // 移動量がしきい値を超えたらドラッグとみなす
+    const movedX = Math.abs(touchX - dragStartRef.current.x);
+    const movedY = Math.abs(touchY - dragStartRef.current.y);
+    if (movedX > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD) {
+      hasDraggedRef.current = true;
+    }
+    
     const rect = e.currentTarget.getBoundingClientRect();
-    const deltaX = ((e.touches[0].clientX - dragStartRef.current.x) / rect.width) * 100;
-    const deltaY = ((e.touches[0].clientY - dragStartRef.current.y) / rect.height) * 100;
+    const deltaX = ((touchX - dragStartRef.current.x) / rect.width) * 100;
+    const deltaY = ((touchY - dragStartRef.current.y) / rect.height) * 100;
     
     const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
     const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
@@ -216,18 +229,20 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     const now = Date.now();
     const timeSinceLastTap = now - lastTapRef.current;
     
-    // ドラッグしていない場合のみダブルタップを検出
-    if (!isDragging && isZoomed && timeSinceLastTap < DOUBLE_TAP_DELAY) {
+    // 実際にドラッグ（移動）していない場合のみダブルタップを検出
+    if (!hasDraggedRef.current && isZoomed && timeSinceLastTap < DOUBLE_TAP_DELAY) {
       // ダブルタップでズームアウト
       setIsZoomed(false);
       lastTapRef.current = 0;
-    } else {
+    } else if (!hasDraggedRef.current) {
+      // タップのみ（ドラッグなし）の場合、タップ時刻を記録
       lastTapRef.current = now;
     }
     
     // ドラッグ状態をリセット
-    setTimeout(() => setIsDragging(false), 50);
-  }, [isDragging, isZoomed]);
+    setIsDragging(false);
+    hasDraggedRef.current = false;
+  }, [isZoomed]);
 
   // 早期リターン - すべての Hooks 呼び出しの後に配置
   if (!localAkyo || !isOpen) return null;
