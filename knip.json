@@ -3,10 +3,14 @@
   "ignore": [
     "open-next.config.ts",
     "public/sw.js",
-    "sw.js"
+    "sw.js",
+    "scripts/convert-akyo-data.js",
+    "scripts/generate-vectorize-payload.js",
+    "src/lib/blur-data-url.ts",
+    "src/lib/cloudflare-image-loader.ts"
   ],
   "ignoreDependencies": [
-    "eslint-config-next",
-    "tailwindcss"
-  ]
+    "eslint-config-next"
+  ],
+  "ignoreExportsUsedInFile": true
 }
