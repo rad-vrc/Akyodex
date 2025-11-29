@@ -6,8 +6,8 @@ console.log('CSV DATA QUALITY VERIFICATION TEST');
 console.log('============================================================\n');
 
 const testFiles = [
-  { name: 'Japanese CSV', path: 'data/akyo-data.csv' },
-  { name: 'English CSV', path: 'data/akyo-data-US.csv' }
+  { name: 'Japanese CSV', path: 'data/akyo-data-ja.csv' },
+  { name: 'English CSV', path: 'data/akyo-data-en.csv' }
 ];
 
 let allPassed = true;
@@ -28,7 +28,7 @@ testFiles.forEach(({ name, path }) => {
   const header = records[0];
   const dataRecords = records.slice(1);
   
-  const expectedColumns = 8;
+  const expectedColumns = 7;
   const hasCorrectHeaders = header.length === expectedColumns;
   console.log(`  Header columns: ${header.length}/${expectedColumns} ${hasCorrectHeaders ? 'PASS' : 'FAIL'}`);
   
