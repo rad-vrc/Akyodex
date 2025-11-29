@@ -9,15 +9,16 @@ import { useCallback, useEffect, useState } from 'react';
  * @param initialData - サーバーサイドで取得した初期データ
  */
 export function useAkyoData(initialData: AkyoData[] = []) {
-  const [data, setData] = useState<AkyoData[]>([]);
-  const [filteredData, setFilteredData] = useState<AkyoData[]>([]);
-  const [loading, setLoading] = useState(!initialData.length);
+  // 初期状態でSSRデータを直接設定（「見つかりませんでした」の一瞬表示を防止）
+  const [data, setData] = useState<AkyoData[]>(initialData);
+  const [filteredData, setFilteredData] = useState<AkyoData[]>(initialData);
+  const [loading, setLoading] = useState(false);
   const [error] = useState<string | null>(null);
 
-  // 初期データの設定とお気に入り復元
+  // クライアントサイドでお気に入り情報を復元
   useEffect(() => {
     if (initialData.length > 0) {
-      // お気に入り情報を復元
+      // お気に入り情報を復元（localStorageはクライアントのみ）
       const favorites = getFavorites();
       const dataWithFavorites = initialData.map(akyo => ({
         ...akyo,
@@ -26,7 +27,6 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
       setData(dataWithFavorites);
       setFilteredData(dataWithFavorites);
-      setLoading(false);
     }
   }, [initialData]);
 
