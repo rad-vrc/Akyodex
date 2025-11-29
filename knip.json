@@ -10,7 +10,8 @@
     "src/lib/cloudflare-image-loader.ts"
   ],
   "ignoreDependencies": [
-    "eslint-config-next"
+    "eslint-config-next",
+    "tailwindcss"
   ],
   "ignoreExportsUsedInFile": true
 }
