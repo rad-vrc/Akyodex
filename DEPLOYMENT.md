@@ -19,9 +19,9 @@ Akyoずかんでは、アバター画像のメタデータとキャッシュにK
 
 ```bash
 # Wrangler CLIでKVを作成
-npx wrangler kv:namespace create AKYO_KV
+npx wrangler kv namespace create AKYO_KV
 
-# 出力例:
+# 出力例 (wrangler.toml に追加):
 # [[kv_namespaces]]
 # binding = "AKYO_KV"
 # id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -36,7 +36,7 @@ npx wrangler kv:namespace create AKYO_KV
 1. Cloudflare ダッシュボード → R2 → Create bucket
 2. Bucket名: `akyo-images` (**重要**: この名前を使用してください)
 3. Location: Automatic (推奨)
-4. Public access: **オフ** (APIを通じてのみアクセス)
+4. Public access: オン
 
 **バケット内の構造**:
 ```
