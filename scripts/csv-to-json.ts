@@ -82,8 +82,8 @@ async function convertCsvToJson() {
   console.log('🔄 Starting CSV to JSON conversion...\n');
 
   // Convert Japanese CSV
-  console.log('📝 Processing Japanese CSV (akyo-data.csv)...');
-  const csvJaPath = path.join(dataDir, 'akyo-data.csv');
+  console.log('📝 Processing Japanese CSV (akyo-data-ja.csv)...');
+  const csvJaPath = path.join(dataDir, 'akyo-data-ja.csv');
   const csvJa = await fs.readFile(csvJaPath, 'utf-8');
   const dataJa = parseCsvToAkyoData(csvJa);
 
@@ -100,8 +100,8 @@ async function convertCsvToJson() {
   console.log(`   ✅ Japanese: ${dataJa.length} avatars → ${jsonJaPath}`);
 
   // Convert English CSV
-  console.log('📝 Processing English CSV (akyo-data-US.csv)...');
-  const csvEnPath = path.join(dataDir, 'akyo-data-US.csv');
+  console.log('📝 Processing English CSV (akyo-data-en.csv)...');
+  const csvEnPath = path.join(dataDir, 'akyo-data-en.csv');
   const csvEn = await fs.readFile(csvEnPath, 'utf-8');
   const dataEn = parseCsvToAkyoData(csvEn);
 
