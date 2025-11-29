@@ -437,7 +437,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動 ✋ / ダブルタップで戻る
+                      ドラッグで移動  / ダブルタップで戻る
                     </div>
                   )}
 
@@ -468,7 +468,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Categories Card */}
                   <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-orange-600 mb-2">
-                      <i className="fas fa-sparkles mr-1"></i>ぞくせい
+                      <i className="fas fa-sparkles mr-1"></i>カテゴリ
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {categories.map((cat, index) => {
