@@ -81,6 +81,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const originStartRef = useRef({ x: 50, y: 50 });
+  
+  // ダブルタップ検出用（モバイル対応）
+  const lastTapRef = useRef<number>(0);
+  const DOUBLE_TAP_DELAY = 300; // ミリ秒
 
   // Sync local state with prop changes
   useEffect(() => {
@@ -201,11 +205,29 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     setZoomOrigin({ x: newX, y: newY });
   }, [isDragging, isZoomed]);
 
-  // ドラッグ終了
+  // ドラッグ終了（マウス用）
   const handleDragEnd = useCallback(() => {
     // 少し遅延させてクリックイベントとの競合を防ぐ
     setTimeout(() => setIsDragging(false), 50);
   }, []);
+
+  // タッチ終了（ダブルタップ検出付き）
+  const handleTouchEnd = useCallback(() => {
+    const now = Date.now();
+    const timeSinceLastTap = now - lastTapRef.current;
+    
+    // ドラッグしていない場合のみダブルタップを検出
+    if (!isDragging && isZoomed && timeSinceLastTap < DOUBLE_TAP_DELAY) {
+      // ダブルタップでズームアウト
+      setIsZoomed(false);
+      lastTapRef.current = 0;
+    } else {
+      lastTapRef.current = now;
+    }
+    
+    // ドラッグ状態をリセット
+    setTimeout(() => setIsDragging(false), 50);
+  }, [isDragging, isZoomed]);
 
   // 早期リターン - すべての Hooks 呼び出しの後に配置
   if (!localAkyo || !isOpen) return null;
@@ -354,7 +376,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     onMouseLeave={handleDragEnd}
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
-                    onTouchEnd={handleDragEnd}
+                    onTouchEnd={handleTouchEnd}
                   >
                     <div 
                       className={`w-full h-full relative ${isDragging ? '' : 'transition-transform duration-300 ease-out'}`}
@@ -385,11 +407,11 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Zoom/Drag Hint */}
                   {!isZoomed ? (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      クリックでズーム 🔍
+                      タップでズーム 🔍
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動  / ダブルクリックで戻る
+                      ドラッグで移動 ✋ / ダブルタップで戻る
                     </div>
                   )}
 
