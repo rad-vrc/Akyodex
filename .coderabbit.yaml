@@ -1,18 +1,31 @@
-# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
-language: ja-JP
+language: "ja-JP"
+# グローバルな指示（トーンやルールなど）
+instructions: |
+  あなたは経験豊富なシニアエンジニアです。
+  簡潔かつ丁寧にレビューしてください。
+  コードの品質だけでなく、可読性や保守性についても指摘してください。
+
+early_access: true
+
 reviews:
   profile: assertive
   high_level_summary: true
-  high_level_summary_in_walkthrough: true
   auto_review:
     enabled: true
     drafts: false
-  #to auto generate the title of your pull request, put the placeholder when creating it: @coderabbitai, it then follows the auto_title_instructions below:
-  auto_title_instructions: "use conventional commits structure: <type>[optional scope]: <description>"
+  # PRタイトルの自動生成に関する指示はここではなく chat セクションなどが推奨される場合が多いですが、
+  # プロンプトとして認識されるため一旦この位置でも動作する可能性があります。
+  # ただし、明確に指示に含めるのが安全です。
   collapse_walkthrough: true
-  suggested_labels: false
-  poem: false
-  # add linters and other tools, CodeRabbit will run and check these as part of its review process. See a list of supported tools: https://docs.coderabbit.ai/tools/list
-  tools:
-    eslint:
-      enabled: true
+  auto_label:
+    enabled: true
+
+# ツール系は自動検出されるため、明示的に無効化したい場合以外は記述不要なことが多いです。
+# 独自のチェックを強制したい場合は残してください。
+tools:
+  eslint:
+    enabled: true
+  prettier:
+    enabled: true
+  stylelint:
+    enabled: true
