@@ -37,6 +37,7 @@ npx wrangler kv namespace create AKYO_KV
 2. Bucket名: `akyo-images` (**重要**: この名前を使用してください)
 3. Location: Automatic (推奨)
 4. Public access: オン
+
 **バケット内の構造**:
 ```
 akyo-images/
