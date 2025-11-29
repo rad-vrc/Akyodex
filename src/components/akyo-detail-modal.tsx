@@ -85,6 +85,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   // ダブルタップ検出用（モバイル対応）
   const lastTapRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false); // 実際にドラッグ（移動）したか
+  const justZoomedOutRef = useRef<boolean>(false); // ダブルタップでズーム解除した直後か
   const DOUBLE_TAP_DELAY = 300; // ミリ秒
   const DRAG_THRESHOLD = 5; // ピクセル（これ以上動いたらドラッグとみなす）
 
@@ -138,6 +139,12 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   const handleImageClick = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
     // ドラッグ中やズーム中はクリックとして扱わない
     if (isDragging || isZoomed) return;
+    
+    // ダブルタップでズーム解除した直後のclickイベントは無視（再ズーム防止）
+    if (justZoomedOutRef.current) {
+      justZoomedOutRef.current = false;
+      return;
+    }
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -229,15 +236,19 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     const now = Date.now();
     const timeSinceLastTap = now - lastTapRef.current;
     
-    // 実際にドラッグ（移動）していない場合のみダブルタップを検出
-    if (!hasDraggedRef.current && isZoomed && timeSinceLastTap < DOUBLE_TAP_DELAY) {
-      // ダブルタップでズームアウト
-      setIsZoomed(false);
-      lastTapRef.current = 0;
-    } else if (!hasDraggedRef.current) {
-      // タップのみ（ドラッグなし）の場合、タップ時刻を記録
-      lastTapRef.current = now;
+    // ズーム中のみダブルタップ判定を行う
+    if (isZoomed) {
+      if (!hasDraggedRef.current && timeSinceLastTap < DOUBLE_TAP_DELAY) {
+        // ダブルタップでズームアウト
+        setIsZoomed(false);
+        lastTapRef.current = 0;
+        justZoomedOutRef.current = true; // 直後のclickイベントをブロックするためのフラグ
+      } else if (!hasDraggedRef.current) {
+        // ズーム中のタップのみ、タップ時刻を記録
+        lastTapRef.current = now;
+      }
     }
+    // 非ズーム時は lastTapRef を更新しない（ズームイン→即ダブルタップ判定を防ぐ）
     
     // ドラッグ状態をリセット
     setIsDragging(false);
