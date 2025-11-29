@@ -19,9 +19,9 @@ Akyoずかんでは、アバター画像のメタデータとキャッシュにK
 
 ```bash
 # Wrangler CLIでKVを作成
-npx wrangler kv:namespace create AKYO_KV
+npx wrangler kv namespace create AKYO_KV
 
-# 出力例:
+# 出力例 (wrangler.toml に追加):
 # [[kv_namespaces]]
 # binding = "AKYO_KV"
 # id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
