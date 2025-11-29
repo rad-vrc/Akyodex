@@ -81,6 +81,13 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const originStartRef = useRef({ x: 50, y: 50 });
+  
+  // ダブルタップ検出用（モバイル対応）
+  const lastTapRef = useRef<number>(0);
+  const hasDraggedRef = useRef<boolean>(false); // 実際にドラッグ（移動）したか
+  const justZoomedOutRef = useRef<boolean>(false); // ダブルタップでズーム解除した直後か
+  const DOUBLE_TAP_DELAY = 300; // ミリ秒
+  const DRAG_THRESHOLD = 5; // ピクセル（これ以上動いたらドラッグとみなす）
 
   // Sync local state with prop changes
   useEffect(() => {
@@ -133,6 +140,12 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     // ドラッグ中やズーム中はクリックとして扱わない
     if (isDragging || isZoomed) return;
     
+    // ダブルタップでズーム解除した直後のclickイベントは無視（再ズーム防止）
+    if (justZoomedOutRef.current) {
+      justZoomedOutRef.current = false;
+      return;
+    }
+    
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -164,6 +177,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     // ネイティブスクロールを防止
     e.preventDefault();
     setIsDragging(true);
+    hasDraggedRef.current = false; // ドラッグ開始時はまだ移動していない
     dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     originStartRef.current = { ...zoomOrigin };
   }, [isZoomed, zoomOrigin]);
@@ -191,9 +205,19 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     e.preventDefault();
     e.stopPropagation();
     
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    
+    // 移動量がしきい値を超えたらドラッグとみなす
+    const movedX = Math.abs(touchX - dragStartRef.current.x);
+    const movedY = Math.abs(touchY - dragStartRef.current.y);
+    if (movedX > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD) {
+      hasDraggedRef.current = true;
+    }
+    
     const rect = e.currentTarget.getBoundingClientRect();
-    const deltaX = ((e.touches[0].clientX - dragStartRef.current.x) / rect.width) * 100;
-    const deltaY = ((e.touches[0].clientY - dragStartRef.current.y) / rect.height) * 100;
+    const deltaX = ((touchX - dragStartRef.current.x) / rect.width) * 100;
+    const deltaY = ((touchY - dragStartRef.current.y) / rect.height) * 100;
     
     const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
     const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
@@ -201,11 +225,35 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
     setZoomOrigin({ x: newX, y: newY });
   }, [isDragging, isZoomed]);
 
-  // ドラッグ終了
+  // ドラッグ終了（マウス用）
   const handleDragEnd = useCallback(() => {
     // 少し遅延させてクリックイベントとの競合を防ぐ
     setTimeout(() => setIsDragging(false), 50);
   }, []);
+
+  // タッチ終了（ダブルタップ検出付き）
+  const handleTouchEnd = useCallback(() => {
+    const now = Date.now();
+    const timeSinceLastTap = now - lastTapRef.current;
+    
+    // ズーム中のみダブルタップ判定を行う
+    if (isZoomed) {
+      if (!hasDraggedRef.current && timeSinceLastTap < DOUBLE_TAP_DELAY) {
+        // ダブルタップでズームアウト
+        setIsZoomed(false);
+        lastTapRef.current = 0;
+        justZoomedOutRef.current = true; // 直後のclickイベントをブロックするためのフラグ
+      } else if (!hasDraggedRef.current) {
+        // ズーム中のタップのみ、タップ時刻を記録
+        lastTapRef.current = now;
+      }
+    }
+    // 非ズーム時は lastTapRef を更新しない（ズームイン→即ダブルタップ判定を防ぐ）
+    
+    // ドラッグ状態をリセット
+    setIsDragging(false);
+    hasDraggedRef.current = false;
+  }, [isZoomed]);
 
   // 早期リターン - すべての Hooks 呼び出しの後に配置
   if (!localAkyo || !isOpen) return null;
@@ -354,7 +402,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     onMouseLeave={handleDragEnd}
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
-                    onTouchEnd={handleDragEnd}
+                    onTouchEnd={handleTouchEnd}
                   >
                     <div 
                       className={`w-full h-full relative ${isDragging ? '' : 'transition-transform duration-300 ease-out'}`}
@@ -385,11 +433,11 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Zoom/Drag Hint */}
                   {!isZoomed ? (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      クリックでズーム 🔍
+                      タップでズーム 🔍
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動  / ダブルクリックで戻る
+                      ドラッグで移動  / ダブルタップで戻る
                     </div>
                   )}
 
@@ -420,7 +468,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Categories Card */}
                   <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-orange-600 mb-2">
-                      <i className="fas fa-sparkles mr-1"></i>ぞくせい
+                      <i className="fas fa-sparkles mr-1"></i>カテゴリ
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {categories.map((cat, index) => {
