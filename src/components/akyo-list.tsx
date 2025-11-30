@@ -1,8 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import { memo, useMemo, useState, useCallback } from 'react';
 import type { AkyoData } from '@/types/akyo';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import { generateBlurDataURL } from '@/lib/blur-data-url';
 
 interface AkyoListProps {
   data: AkyoData[];
@@ -55,17 +57,142 @@ function getCategoryColor(category: string): string {
   return defaultColors[Math.floor(Math.random() * defaultColors.length)];
 }
 
-export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps) {
-  const handleFavoriteClick = (e: React.MouseEvent, id: string) => {
+// 個別の行コンポーネントをmemo化
+const AkyoListRow = memo(function AkyoListRow({ 
+  akyo, 
+  onToggleFavorite, 
+  onShowDetail 
+}: { 
+  akyo: AkyoData; 
+  onToggleFavorite?: (id: string) => void;
+  onShowDetail?: (akyo: AkyoData) => void;
+}) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  const blurDataURL = useMemo(() => generateBlurDataURL(akyo.id), [akyo.id]);
+  const imageUrl = useMemo(
+    () => buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 96),
+    [akyo.id, akyo.avatarUrl]
+  );
+  
+  const category = akyo.category || akyo.attribute || '';
+  const author = akyo.author || akyo.creator || '';
+  
+  const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    onToggleFavorite?.(id);
-  };
-
-  const handleDetailClick = (e: React.MouseEvent, akyo: AkyoData) => {
+    onToggleFavorite?.(akyo.id);
+  }, [akyo.id, onToggleFavorite]);
+  
+  const handleDetailClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     onShowDetail?.(akyo);
-  };
+  }, [akyo, onShowDetail]);
+  
+  return (
+    <tr>
+      {/* No. */}
+      <td className="font-mono text-sm">#{akyo.id}</td>
 
+      {/* 見た目 */}
+      <td>
+        <div className="list-image-wrapper relative overflow-hidden">
+          <Image
+            src={imageError ? '/images/placeholder.webp' : imageUrl}
+            alt={akyo.avatarName || akyo.nickname}
+            width={48}
+            height={48}
+            className={`object-cover transition-opacity duration-200 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            loading="lazy"
+            unoptimized
+            placeholder="blur"
+            blurDataURL={blurDataURL}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              setImageError(true);
+              setImageLoaded(true);
+            }}
+          />
+          {!imageLoaded && (
+            <div 
+              className="absolute inset-0 animate-pulse"
+              style={{ backgroundImage: `url(${blurDataURL})`, backgroundSize: 'cover' }}
+            />
+          )}
+        </div>
+      </td>
+
+      {/* 名前 */}
+      <td>
+        <div className="font-medium text-[var(--text-primary)]">
+          {akyo.nickname || akyo.avatarName}
+        </div>
+        {akyo.nickname && akyo.avatarName && (
+          <div className="text-xs text-[var(--text-secondary)]">
+            {akyo.avatarName}
+          </div>
+        )}
+      </td>
+
+      {/* カテゴリ */}
+      <td>
+        <div className="flex flex-wrap gap-1">
+          {category.split(/[、,]/).map((cat, index) => {
+            const trimmedCat = cat.trim();
+            const color = getCategoryColor(trimmedCat);
+            return (
+              <span
+                key={index}
+                className="attribute-badge"
+                style={{
+                  background: `${color}20`,
+                  color: color,
+                  boxShadow: `0 6px 12px ${color}20`
+                }}
+              >
+                {trimmedCat}
+              </span>
+            );
+          })}
+        </div>
+      </td>
+
+      {/* 作者 */}
+      <td className="text-sm text-[var(--text-secondary)]">
+        {author}
+      </td>
+
+      {/* アクション */}
+      <td className="text-center">
+        <div className="flex items-center justify-center gap-1">
+          {/* お気に入りボタン */}
+          <button
+            onClick={handleFavoriteClick}
+            className="list-action-btn"
+            aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
+          >
+            <span className="list-favorite-icon">
+              {akyo.isFavorite ? '❤️' : '🤍'}
+            </span>
+          </button>
+
+          {/* 詳細ボタン */}
+          <button
+            onClick={handleDetailClick}
+            className="list-action-btn"
+            aria-label="詳細を見る"
+          >
+            <i className="fas fa-info-circle text-blue-500"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+});
+
+AkyoListRow.displayName = 'AkyoListRow';
+
+export const AkyoList = memo(function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps) {
   return (
     <div className="list-view-container">
       <div className="list-scroll-wrapper">
@@ -81,104 +208,19 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
             </tr>
           </thead>
           <tbody>
-            {data.map((akyo) => {
-              const category = akyo.category || akyo.attribute || '';
-              const author = akyo.author || akyo.creator || '';
-              
-              return (
-                <tr key={akyo.id}>
-                  {/* No. */}
-                  <td className="font-mono text-sm">#{akyo.id}</td>
-
-                  {/* 見た目 */}
-                  <td>
-                    <div className="list-image-wrapper">
-                      <Image
-                        src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 96)}
-                        alt={akyo.avatarName || akyo.nickname}
-                        width={48}
-                        height={48}
-                        className="object-cover"
-                        loading="lazy"
-                        unoptimized
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = '/images/placeholder.webp';
-                        }}
-                      />
-                    </div>
-                  </td>
-
-                  {/* 名前 */}
-                  <td>
-                    <div className="font-medium text-[var(--text-primary)]">
-                      {akyo.nickname || akyo.avatarName}
-                    </div>
-                    {akyo.nickname && akyo.avatarName && (
-                      <div className="text-xs text-[var(--text-secondary)]">
-                        {akyo.avatarName}
-                      </div>
-                    )}
-                  </td>
-
-                  {/* カテゴリ */}
-                  <td>
-                    <div className="flex flex-wrap gap-1">
-                      {category.split(/[、,]/).map((cat, index) => {
-                        const trimmedCat = cat.trim();
-                        const color = getCategoryColor(trimmedCat);
-                        return (
-                          <span
-                            key={index}
-                            className="attribute-badge"
-                            style={{
-                              background: `${color}20`,
-                              color: color,
-                              boxShadow: `0 6px 12px ${color}20`
-                            }}
-                          >
-                            {trimmedCat}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </td>
-
-                  {/* 作者 */}
-                  <td className="text-sm text-[var(--text-secondary)]">
-                    {author}
-                  </td>
-
-                  {/* アクション */}
-                  <td className="text-center">
-                    <div className="flex items-center justify-center gap-1">
-                      {/* お気に入りボタン */}
-                      <button
-                        onClick={(e) => handleFavoriteClick(e, akyo.id)}
-                        className="list-action-btn"
-                        aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
-                      >
-                        <span className="list-favorite-icon">
-                          {akyo.isFavorite ? '❤️' : '🤍'}
-                        </span>
-                      </button>
-
-                      {/* 詳細ボタン */}
-                      <button
-                        onClick={(e) => handleDetailClick(e, akyo)}
-                        className="list-action-btn"
-                        aria-label="詳細を見る"
-                      >
-                        <i className="fas fa-info-circle text-blue-500"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {data.map((akyo) => (
+              <AkyoListRow
+                key={akyo.id}
+                akyo={akyo}
+                onToggleFavorite={onToggleFavorite}
+                onShowDetail={onShowDetail}
+              />
+            ))}
           </tbody>
         </table>
       </div>
     </div>
   );
-}
+});
+
+AkyoList.displayName = 'AkyoList';

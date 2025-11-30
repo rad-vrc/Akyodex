@@ -1,8 +1,10 @@
 'use client';
 
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import { generateBlurDataURL } from '@/lib/blur-data-url';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
+import { memo, useMemo, useState } from 'react';
 
 interface AkyoCardProps {
   akyo: AkyoData;
@@ -51,7 +53,7 @@ function getCategoryColor(category: string): string {
   return defaultColors[Math.floor(Math.random() * defaultColors.length)];
 }
 
-export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps) {
+export const AkyoCard = memo(function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps) {
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(akyo.id);
@@ -77,23 +79,46 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
   const category = akyo.category || akyo.attribute;
   const author = akyo.author || akyo.creator;
 
+  // 画像読み込み状態
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  // Blur placeholder をメモ化（再計算を防止）
+  const blurDataURL = useMemo(() => generateBlurDataURL(akyo.id), [akyo.id]);
+
+  // 画像URLをメモ化
+  const imageUrl = useMemo(
+    () => buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512),
+    [akyo.id, akyo.avatarUrl]
+  );
+
   return (
     <div className="akyo-card cursor-pointer" onClick={handleCardClick}>
       {/* 画像 */}
-      <div className="relative w-full aspect-[3/2] bg-gray-100">
+      <div className="relative w-full aspect-[3/2] bg-gray-100 overflow-hidden">
         <Image
-          src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}
+          src={imageError ? '/images/placeholder.webp' : imageUrl}
           alt={akyo.avatarName || akyo.nickname}
           fill
-          className="object-cover"
+          className={`object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          placeholder="blur"
+          blurDataURL={blurDataURL}
           unoptimized
-          onError={(e) => {
-            // フォールバック画像
-            const target = e.target as HTMLImageElement;
-            target.src = '/images/placeholder.webp';
+          onLoad={() => setImageLoaded(true)}
+          onError={() => {
+            setImageError(true);
+            setImageLoaded(true);
           }}
         />
+        {/* 読み込み中のプレースホルダー */}
+        {!imageLoaded && (
+          <div 
+            className="absolute inset-0 animate-pulse"
+            style={{ backgroundImage: `url(${blurDataURL})`, backgroundSize: 'cover' }}
+          />
+        )}
 
         {/* お気に入りボタン */}
         <button
@@ -184,4 +209,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
       </div>
     </div>
   );
-}
+});
+
+// displayName for debugging
+AkyoCard.displayName = 'AkyoCard';

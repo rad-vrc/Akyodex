@@ -1,5 +1,9 @@
-/* Google Fonts Import - MUST be before Tailwind */
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;900&display=swap');
+/* 
+ * Google Fonts is now loaded via next/font in layout.tsx for better performance
+ * - Automatic font optimization
+ * - No external network requests
+ * - Prevents FOUT/FOIT
+ */
 
 @import 'tailwindcss';
 
@@ -45,7 +49,7 @@
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
 body {
-  font-family: 'M PLUS Rounded 1c', var(--font-kosugi-maru), 'Kosugi Maru', var(--font-noto-sans-jp),
+  font-family: var(--font-mplus-rounded), 'M PLUS Rounded 1c', var(--font-kosugi-maru), 'Kosugi Maru', var(--font-noto-sans-jp),
     'Noto Sans JP', sans-serif !important;
   color: var(--text-primary);
   background-color: var(--bg-gradient-start);

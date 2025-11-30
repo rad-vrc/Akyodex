@@ -1,16 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Kosugi_Maru } from "next/font/google";
+import { Noto_Sans_JP, Kosugi_Maru, M_PLUS_Rounded_1c } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { headers } from "next/headers";
 import "./globals.css";
 
+// Primary font - M PLUS Rounded 1c (丸みを帯びたフォント)
+const mPlusRounded = M_PLUS_Rounded_1c({
+  variable: "--font-mplus-rounded",
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+});
+
 const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   display: "swap",
+  preload: false, // Secondary font - don't preload
 });
 
 const kosugiMaru = Kosugi_Maru({
@@ -18,6 +29,7 @@ const kosugiMaru = Kosugi_Maru({
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
+  preload: false, // Fallback font - don't preload
 });
 
 // Viewport設定（Next.js 15のベストプラクティス）
@@ -120,8 +132,16 @@ export const metadata: Metadata = {
   category: 'entertainment',
 };
 
+// External resources - loaded with preconnect and optimized loading
 const fontAwesomeUrl = "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css";
 const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
+
+// Preconnect domains for faster resource loading
+const preconnectDomains = [
+  "https://cdn.jsdelivr.net",
+  "https://js.sentry-cdn.com",
+  "https://images.akyodex.com",  // R2 images
+];
 
 export default async function RootLayout({
   children,
@@ -136,12 +156,33 @@ export default async function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        <link rel="stylesheet" href={fontAwesomeUrl} />
-        {/* Sentry エラー監視 */}
+        {/* Preconnect to external domains for faster loading */}
+        {preconnectDomains.map((domain) => (
+          <link key={domain} rel="preconnect" href={domain} crossOrigin="anonymous" />
+        ))}
+        
+        {/* DNS Prefetch for CDN domains */}
+        <link rel="dns-prefetch" href="https://vrchat.com" />
+        <link rel="dns-prefetch" href="https://api.vrchat.cloud" />
+        
+        {/* FontAwesome - loaded with low priority (icons are not critical) */}
+        <link 
+          rel="stylesheet" 
+          href={fontAwesomeUrl}
+          media="print"
+          // @ts-expect-error onLoad is valid for link elements
+          onLoad="this.media='all'"
+        />
+        {/* Fallback for JS disabled */}
+        <noscript>
+          <link rel="stylesheet" href={fontAwesomeUrl} />
+        </noscript>
+        
+        {/* Sentry エラー監視 - deferred for better FCP */}
         <script
           src={sentryUrl}
           crossOrigin="anonymous"
-          async
+          defer
           {...(nonce && { nonce })}
         />
         {difyToken ? (
@@ -180,7 +221,7 @@ export default async function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
+        className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
         <WebVitals />
         <ServiceWorkerRegister />
