@@ -1,9 +1,9 @@
 /* 
- * Google Fonts is now loaded via next/font in layout.tsx for better performance
- * - Automatic font optimization
- * - No external network requests
- * - Prevents FOUT/FOIT
+ * M PLUS Rounded 1c - Primary font with Japanese support
+ * Note: next/font doesn't support Japanese subset for this font,
+ * so we use @import with preconnect optimization in layout.tsx
  */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;900&display=swap');
 
 @import 'tailwindcss';
 

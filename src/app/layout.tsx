@@ -1,27 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Kosugi_Maru, M_PLUS_Rounded_1c } from "next/font/google";
+import { Noto_Sans_JP, Kosugi_Maru } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { headers } from "next/headers";
 import "./globals.css";
 
-// Primary font - M PLUS Rounded 1c (丸みを帯びたフォント)
-const mPlusRounded = M_PLUS_Rounded_1c({
-  variable: "--font-mplus-rounded",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  display: "swap",
-  preload: true,
-  adjustFontFallback: true,
-});
+// Note: M PLUS Rounded 1c doesn't have Japanese subset in next/font
+// So we load it via CSS @import in globals.css for Japanese characters
+// These fonts are used as fallbacks and for CSS variable definitions
 
 const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   display: "swap",
-  preload: false, // Secondary font - don't preload
+  preload: false,
 });
 
 const kosugiMaru = Kosugi_Maru({
@@ -29,7 +23,7 @@ const kosugiMaru = Kosugi_Maru({
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
-  preload: false, // Fallback font - don't preload
+  preload: false,
 });
 
 // Viewport設定（Next.js 15のベストプラクティス）
@@ -138,9 +132,11 @@ const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.mi
 
 // Preconnect domains for faster resource loading
 const preconnectDomains = [
+  "https://fonts.googleapis.com",  // Google Fonts CSS
+  "https://fonts.gstatic.com",     // Google Fonts files
   "https://cdn.jsdelivr.net",
   "https://js.sentry-cdn.com",
-  "https://images.akyodex.com",  // R2 images
+  "https://images.akyodex.com",    // R2 images
 ];
 
 export default async function RootLayout({
@@ -221,7 +217,7 @@ export default async function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
+        className={`${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
         <WebVitals />
         <ServiceWorkerRegister />
