@@ -13,6 +13,9 @@
  * - Server-side rendering only when necessary
  */
 
+// Ensure this page is rendered dynamically (not statically) because it reads headers/cookies
+export const dynamic = 'force-dynamic';
+
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { headers, cookies } from 'next/headers';
