@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  // パフォーマンス最適化: バンドルサイズ削減
+  experimental: {
+    // パッケージのTree Shakingを有効化
+    optimizePackageImports: [
+      'react',
+      'react-dom',
+    ],
+  },
   // Cloudflare Pages対応設定
   images: {
     // Image optimization configuration
@@ -83,9 +92,10 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // セキュリティヘッダー
+  // セキュリティヘッダー & パフォーマンスヘッダー
   async headers() {
     return [
+      // 全ページ共通のセキュリティヘッダー
       {
         source: '/:path*',
         headers: [
@@ -115,6 +125,50 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // 静的アセットの長期キャッシュ（Cloudflare CDN最適化）
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // フォントファイルの長期キャッシュ
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Service Worker
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+          {
+            key: 'Service-Worker-Allowed',
+            value: '/',
+          },
+        ],
+      },
+      // APIルートのキャッシュ設定
+      {
+        source: '/api/avatar-image',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
+          },
+        ],
+      },
     ];
   },
 
@@ -133,6 +187,20 @@ const nextConfig: NextConfig = {
   // 本番環境での最適化
   poweredByHeader: false,
   compress: true,
+
+  // パフォーマンス最適化: ソースマップを無効化（本番環境のみ）
+  productionBrowserSourceMaps: false,
+
+  // パフォーマンス最適化: コンソールログを本番で削除
+  compiler: {
+    // 本番環境でconsole.logを削除
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
+  // バンドル分析用（必要時に有効化）
+  // bundleAnalyzer: process.env.ANALYZE === 'true',
 };
 
 export default nextConfig;
