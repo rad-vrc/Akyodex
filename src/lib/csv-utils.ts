@@ -6,7 +6,7 @@
  * Also includes AkyoData type conversion utilities.
  */
 
-import type { AkyoCsvRow, AkyoData } from '@/types/akyo';
+import type { AkyoData } from '@/types/akyo';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
 import type { GitHubCommitResponse, GitHubConfig } from './github-utils';

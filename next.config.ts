@@ -1,15 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ビルド時の型チェックを無視（デプロイ優先）
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  
-  // ビルド時のESLintを無視
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // Cloudflare Pages対応設定
   images: {
     // Image optimization configuration
