@@ -20,13 +20,14 @@ import { LanguageToggle } from '@/components/language-toggle';
 import { MiniAkyoBg } from '@/components/mini-akyo-bg';
 import { SearchBar } from '@/components/search-bar';
 import { useAkyoData } from '@/hooks/use-akyo-data';
+import { useLanguage } from '@/hooks/use-language';
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface ZukanClientProps {
+export interface ZukanClientProps {
   initialData: AkyoData[];
   
   // 新フィールド
@@ -39,7 +40,8 @@ interface ZukanClientProps {
   /** @deprecated use authors */
   creators: string[];
   
-  initialLang: SupportedLanguage;
+  /** Server-rendered language (for static generation) */
+  serverLang: SupportedLanguage;
 }
 
 export function ZukanClient({ 
@@ -48,8 +50,22 @@ export function ZukanClient({
   authors,
   attributes, 
   creators, 
-  initialLang 
+  serverLang 
 }: ZukanClientProps) {
+  // Client-side language detection
+  // If user's language differs from serverLang, the page will reload when they switch languages
+  const { lang, needsRefetch } = useLanguage(serverLang);
+  
+  // If user's detected language differs from server-rendered language, show a prompt
+  // This happens when the page is statically generated in Japanese but user prefers English
+  useEffect(() => {
+    if (needsRefetch && lang !== serverLang) {
+      // The LanguageToggle component handles the actual language switching with page reload
+      // We don't auto-reload to avoid disrupting user experience
+      console.log(`[ZukanClient] Language mismatch detected: server=${serverLang}, client=${lang}`);
+    }
+  }, [needsRefetch, lang, serverLang]);
+  
   const { data, filteredData, error, filterData, toggleFavorite } = useAkyoData(initialData);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
@@ -198,8 +214,8 @@ export function ZukanClient({
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src={initialLang === 'en' ? '/images/logo-US.webp' : '/images/logo.webp'}
-              alt={initialLang === 'en' ? 'Akyodex' : 'Akyoずかん'}
+              src={lang === 'en' ? '/images/logo-US.webp' : '/images/logo.webp'}
+              alt={lang === 'en' ? 'Akyodex' : 'Akyoずかん'}
               width={1980}
               height={305}
               className="logo-animation h-10 sm:h-12 w-auto"
@@ -209,10 +225,10 @@ export function ZukanClient({
           {/* 統計情報 */}
           <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {initialLang === 'en' ? `Total ${stats.total}` : `全${stats.total}体`}
+              {lang === 'en' ? `Total ${stats.total}` : `全${stats.total}体`}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {initialLang === 'en' ? `Showing ${stats.displayed}` : `表示${stats.displayed}体`}
+              {lang === 'en' ? `Showing ${stats.displayed}` : `表示${stats.displayed}体`}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
               ❤️{stats.favorites}
@@ -227,7 +243,7 @@ export function ZukanClient({
         <div className="akyo-card p-4 sm:p-6">
           <SearchBar
             onSearch={setSearchQuery}
-            placeholder={initialLang === 'en' ? 'Search by name, creator, or attribute...' : '名前・作者・属性で検索...'}
+            placeholder={lang === 'en' ? 'Search by name, creator, or attribute...' : '名前・作者・属性で検索...'}
           />
         </div>
 
@@ -247,7 +263,7 @@ export function ZukanClient({
             favoritesOnly={favoritesOnly}
             sortAscending={sortAscending}
             randomMode={randomMode}
-            lang={initialLang}
+            lang={lang}
           />
 
           {/* ビュー切替 */}
@@ -255,14 +271,14 @@ export function ZukanClient({
             <button
               onClick={() => setViewMode('grid')}
               className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              aria-label={initialLang === 'en' ? 'Grid view' : 'グリッド表示'}
+              aria-label={lang === 'en' ? 'Grid view' : 'グリッド表示'}
             >
               <i className="fas fa-th text-xl md:text-2xl"></i>
             </button>
             <button
               onClick={() => setViewMode('list')}
               className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-              aria-label={initialLang === 'en' ? 'List view' : 'リスト表示'}
+              aria-label={lang === 'en' ? 'List view' : 'リスト表示'}
             >
               <i className="fas fa-list text-xl md:text-2xl"></i>
             </button>
@@ -309,7 +325,7 @@ export function ZukanClient({
       />
 
       {/* Language Toggle Button - Top */}
-      <LanguageToggle initialLang={initialLang} />
+      <LanguageToggle initialLang={lang} />
 
       {/* Admin Settings Button - Below Language Toggle (same color as Language Toggle) */}
       <Link
