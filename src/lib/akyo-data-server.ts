@@ -12,6 +12,7 @@ import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
 import { cache } from 'react';
 import { parseCsvToAkyoData } from './csv-utils';
+import { extractCategories, extractAuthors, findAkyoById } from './akyo-data-helpers';
 const GITHUB_OWNER = process.env.GITHUB_REPO_OWNER || 'rad-vrc';
 const GITHUB_REPO = process.env.GITHUB_REPO_NAME || 'Akyodex';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
@@ -138,26 +139,8 @@ export const getAkyoData = cache(async (lang: SupportedLanguage = 'ja'): Promise
  */
 export const getAllCategories = cache(async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
   const data = await getAkyoData(lang);
-  const categoriesSet = new Set<string>();
-
-  data.forEach((akyo) => {
-    const catStr = akyo.category || akyo.attribute || '';
-    const cats = catStr
-      .split(/[、,]/)
-      .map((c) => c.trim())
-      .filter(Boolean);
-    cats.forEach((cat) => categoriesSet.add(cat));
-  });
-
-  return Array.from(categoriesSet).sort();
+  return extractCategories(data);
 });
-
-/**
- * @deprecated Use getAllCategories instead
- */
-export async function getAllAttributes(lang: SupportedLanguage = 'ja'): Promise<string[]> {
-  return getAllCategories(lang);
-}
 
 /**
  * Get all unique authors (formerly creators) from the dataset
@@ -168,18 +151,7 @@ export async function getAllAttributes(lang: SupportedLanguage = 'ja'): Promise<
  */
 export const getAllAuthors = cache(async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
   const data = await getAkyoData(lang);
-  const authorsSet = new Set<string>();
-
-  data.forEach((akyo) => {
-    const authorStr = akyo.author || akyo.creator || '';
-    const authors = authorStr
-      .split(/[、,]/)
-      .map((a) => a.trim())
-      .filter(Boolean);
-    authors.forEach((author) => authorsSet.add(author));
-  });
-
-  return Array.from(authorsSet).sort();
+  return extractAuthors(data);
 });
 
 /**
@@ -193,13 +165,6 @@ export const getAllAuthors = cache(async (lang: SupportedLanguage = 'ja'): Promi
 export const getAkyoById = cache(
   async (id: string, lang: SupportedLanguage = 'ja'): Promise<AkyoData | null> => {
     const data = await getAkyoData(lang);
-    return data.find((akyo) => akyo.id === id) || null;
+    return findAkyoById(data, id);
   }
 );
-
-/**
- * @deprecated Use getAllAuthors instead
- */
-export async function getAllCreators(lang: SupportedLanguage = 'ja'): Promise<string[]> {
-  return getAllAuthors(lang);
-}

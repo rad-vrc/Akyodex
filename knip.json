@@ -7,11 +7,13 @@
     "scripts/convert-akyo-data.js",
     "scripts/generate-vectorize-payload.js",
     "src/lib/blur-data-url.ts",
-    "src/lib/cloudflare-image-loader.ts"
+    "src/lib/cloudflare-image-loader.ts",
+    "src/lib/akyo-data-server.ts",
+    "src/lib/akyo-data-kv.ts",
+    "src/lib/akyo-data.ts"
   ],
   "ignoreDependencies": [
-    "eslint-config-next",
-    "tailwindcss"
+    "eslint-config-next"
   ],
   "ignoreExportsUsedInFile": true
 }
