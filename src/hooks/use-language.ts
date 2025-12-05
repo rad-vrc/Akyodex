@@ -22,14 +22,16 @@ const LANGUAGE_COOKIE = 'AKYO_LANG';
 
 /**
  * Get language from cookie
+ * Uses robust parsing that handles cookies with or without spaces after semicolons
  */
 function getLanguageFromCookie(): SupportedLanguage | null {
   if (typeof document === 'undefined') return null;
   
   const cookieLang = document.cookie
-    .split('; ')
-    .find(row => row.startsWith(`${LANGUAGE_COOKIE}=`))
-    ?.split('=')[1];
+    .split(';')
+    .find(row => row.trim().startsWith(`${LANGUAGE_COOKIE}=`))
+    ?.split('=')[1]
+    ?.trim();
 
   if (cookieLang && SUPPORTED_LANGUAGES.includes(cookieLang as SupportedLanguage)) {
     return cookieLang as SupportedLanguage;
@@ -56,11 +58,14 @@ function detectLanguageFromNavigator(): SupportedLanguage {
 
 /**
  * Set language cookie
+ * Adds Secure flag when running on HTTPS (production)
  */
 function setLanguageCookie(lang: SupportedLanguage): void {
   if (typeof document === 'undefined') return;
   
-  document.cookie = `${LANGUAGE_COOKIE}=${lang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+  const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
+  const secureFlag = isSecure ? '; Secure' : '';
+  document.cookie = `${LANGUAGE_COOKIE}=${lang}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${secureFlag}`;
 }
 
 interface UseLanguageResult {

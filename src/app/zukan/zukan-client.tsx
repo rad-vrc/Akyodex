@@ -53,20 +53,64 @@ export function ZukanClient({
   serverLang 
 }: ZukanClientProps) {
   // Client-side language detection
-  // If user's language differs from serverLang, the page will reload when they switch languages
-  const { lang, needsRefetch } = useLanguage(serverLang);
+  const { lang, needsRefetch, isReady } = useLanguage(serverLang);
   
-  // If user's detected language differs from server-rendered language, show a prompt
-  // This happens when the page is statically generated in Japanese but user prefers English
+  const { 
+    data, 
+    filteredData, 
+    error, 
+    loading,
+    filterData, 
+    toggleFavorite, 
+    refetchWithNewData,
+    setLoading,
+    setError 
+  } = useAkyoData(initialData);
+  
+  // Dynamic categories/authors (may change on language switch)
+  const [currentCategories, setCurrentCategories] = useState(categories);
+  const [currentAuthors, setCurrentAuthors] = useState(authors);
+  
+  // Refetch data when language differs from server-rendered language
   useEffect(() => {
-    if (needsRefetch && lang !== serverLang) {
-      // The LanguageToggle component handles the actual language switching with page reload
-      // We don't auto-reload to avoid disrupting user experience
-      console.log(`[ZukanClient] Language mismatch detected: server=${serverLang}, client=${lang}`);
-    }
-  }, [needsRefetch, lang, serverLang]);
+    if (!isReady || !needsRefetch || lang === serverLang) return;
+    
+    const fetchLanguageData = async () => {
+      setLoading(true);
+      try {
+        // Fetch JSON data for the detected language from CDN
+        const response = await fetch(`https://images.akyodex.com/data/akyo-data-${lang}.json`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        
+        const jsonData = await response.json();
+        if (Array.isArray(jsonData)) {
+          refetchWithNewData(jsonData);
+          
+          // Extract unique categories and authors from data
+          const uniqueCategories = new Set<string>();
+          const uniqueAuthors = new Set<string>();
+          
+          jsonData.forEach((item: AkyoData) => {
+            const cats = (item.category || item.attribute || '').split(/[、,]/).map(s => s.trim()).filter(Boolean);
+            const auths = (item.author || item.creator || '').split(/[、,]/).map(s => s.trim()).filter(Boolean);
+            cats.forEach(c => uniqueCategories.add(c));
+            auths.forEach(a => uniqueAuthors.add(a));
+          });
+          
+          setCurrentCategories(Array.from(uniqueCategories).sort());
+          setCurrentAuthors(Array.from(uniqueAuthors).sort());
+        }
+      } catch (err) {
+        console.error('[ZukanClient] Failed to refetch language data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchLanguageData();
+  }, [isReady, needsRefetch, lang, serverLang, refetchWithNewData, setLoading, setError]);
   
-  const { data, filteredData, error, filterData, toggleFavorite } = useAkyoData(initialData);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -192,9 +236,26 @@ export function ZukanClient({
         <div className="akyo-card p-8 text-center space-y-4">
           <div className="text-6xl">😢</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            エラーが発生しました
+            {lang === 'en' ? 'An error occurred' : 'エラーが発生しました'}
           </h2>
           <p className="text-[var(--text-secondary)]">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading skeleton when refetching data for different language
+  if (loading && needsRefetch) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="akyo-card p-8 text-center space-y-4 animate-pulse">
+          <div className="text-6xl">🔄</div>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)]">
+            {lang === 'en' ? 'Loading...' : '読み込み中...'}
+          </h2>
+          <p className="text-[var(--text-secondary)]">
+            {lang === 'en' ? 'Fetching data for your language' : 'お使いの言語のデータを取得中'}
+          </p>
         </div>
       </div>
     );
@@ -250,9 +311,9 @@ export function ZukanClient({
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
           <FilterPanel
-            // 新旧両方サポート
-            attributes={categories || attributes}
-            creators={authors || creators}
+            // 動的に更新されるカテゴリ/作者を使用
+            attributes={currentCategories || categories || attributes}
+            creators={currentAuthors || authors || creators}
             selectedAttribute={selectedAttribute}
             selectedCreator={selectedCreator}
             onAttributeChange={setSelectedAttribute}
@@ -290,10 +351,10 @@ export function ZukanClient({
           <div className="akyo-card p-12 text-center space-y-4">
             <div className="text-6xl">🔍</div>
             <h3 className="text-2xl font-bold text-[var(--text-primary)]">
-              Akyoが見つかりませんでした
+              {lang === 'en' ? 'No Akyo found' : 'Akyoが見つかりませんでした'}
             </h3>
             <p className="text-[var(--text-secondary)]">
-              検索条件を変更してみてください
+              {lang === 'en' ? 'Try changing your search criteria' : '検索条件を変更してみてください'}
             </p>
           </div>
         ) : viewMode === 'list' ? (

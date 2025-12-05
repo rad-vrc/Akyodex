@@ -47,3 +47,10 @@ globs: *
 - **Virtual Scrolling**: Implement virtual scrolling with libraries like `react-window` or `tanstack-virtual` in components that render large lists to improve performance.
 - **Bundle Splitting**: Use `next/dynamic` to lazy-load large components and improve initial load time.
 - **Service Worker**: Optimize PWA caching strategy to enhance performance.
+
+## GENERAL RULES
+
+- When contributing to the project, always create a pull request from a separate branch instead of committing directly to the main branch.
+- **`use-language.ts` Cookie Handling**:
+    - Use robust parsing that handles cookies with or without spaces after semicolons.
+    - Adds `Secure` flag when running on HTTPS (production).
