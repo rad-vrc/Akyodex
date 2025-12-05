@@ -21,7 +21,7 @@ globs: *
 
 ## WORKSPACE REVIEW AND IMPROVEMENT RULES
 
-- **ESLint Errors**: Convert `require()` statements to ES module format (`import`) or exclude script files from ESLint in `eslint.config.mjs`.
+- **ESLint Errors**: Convert `require()` statements to ES module format (`import`) or exclude script files from ESLint in `eslint.config.mjs`. Scripts using `require()` have been excluded from ESLint.
 - **Code Duplication**: Refactor `upload-akyo` and `update-akyo` to use a common handler.
 - **Unused Exports**: Remove unused exports or add them to the `ignore` list in `knip.json` if they are planned for future use.
 - **`next.config.ts`**: Resolve type errors and linting errors to remove `ignoreBuildErrors` and `ignoreDuringBuilds`. This poses a risk of type errors propagating to production. `ignoreBuildErrors` and `ignoreDuringBuilds` have been removed. The build process now includes type checking and ESLint validation.

@@ -27,6 +27,7 @@
 import { cache } from 'react';
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
+import { extractCategories, extractAuthors, findAkyoById } from './akyo-data-helpers';
 
 /**
  * Check which data source should be used
@@ -95,9 +96,8 @@ export const getAkyoData = cache(
  */
 export const getAkyoById = cache(
   async (id: string, lang: SupportedLanguage = 'ja'): Promise<AkyoData | null> => {
-    // Try KV first (Phase 5b) - use getAkyoData which has proper fallback
     const allData = await getAkyoData(lang);
-    return allData.find((akyo) => akyo.id === id) || null;
+    return findAkyoById(allData, id);
   }
 );
 
@@ -110,17 +110,8 @@ export const getAkyoById = cache(
  */
 export const getAllCategories = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
-    // Use unified getAkyoData which has proper fallback chain
     const data = await getAkyoData(lang);
-    const categoriesSet = new Set<string>();
-    
-    data.forEach((akyo) => {
-      const catStr = akyo.category || akyo.attribute || '';
-      const cats = catStr.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
-      cats.forEach((cat) => categoriesSet.add(cat));
-    });
-    
-    return Array.from(categoriesSet).sort();
+    return extractCategories(data);
   }
 );
 
@@ -133,75 +124,7 @@ export const getAllCategories = cache(
  */
 export const getAllAuthors = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
-    // Use unified getAkyoData which has proper fallback chain
     const data = await getAkyoData(lang);
-    const authorsSet = new Set<string>();
-    
-    data.forEach((akyo) => {
-      const authorStr = akyo.author || akyo.creator || '';
-      const authors = authorStr.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
-      authors.forEach((author) => authorsSet.add(author));
-    });
-    
-    return Array.from(authorsSet).sort();
+    return extractAuthors(data);
   }
 );
-
-/**
- * @deprecated Use getAllCategories instead
- */
-export async function getAllAttributes(lang: SupportedLanguage = 'ja'): Promise<string[]> {
-  return getAllCategories(lang);
-}
-
-/**
- * @deprecated Use getAllAuthors instead
- */
-export async function getAllCreators(lang: SupportedLanguage = 'ja'): Promise<string[]> {
-  return getAllAuthors(lang);
-}
-
-/**
- * Get information about current data source configuration
- * Useful for debugging and monitoring
- */
-export function getDataSourceInfo(): {
-  kvEnabled: boolean;
-  jsonEnabled: boolean;
-  priority: ('kv' | 'json' | 'csv')[];
-  description: string;
-} {
-  const priority: ('kv' | 'json' | 'csv')[] = [];
-  
-  if (USE_KV_DATA) priority.push('kv');
-  if (USE_JSON_DATA) priority.push('json');
-  priority.push('csv'); // CSV is always the final fallback
-  
-  return {
-    kvEnabled: USE_KV_DATA,
-    jsonEnabled: USE_JSON_DATA,
-    priority,
-    description: `Data source priority: ${priority.join(' → ')}`,
-  };
-}
-
-/**
- * Check KV cache status (Phase 5b)
- * Returns information about KV availability and data
- */
-export async function getKVStatus(): Promise<{
-  available: boolean;
-  hasData: boolean;
-  metadata: { lastUpdated: string; countJa: number; countEn: number; version: string } | null;
-} | null> {
-  if (!USE_KV_DATA) {
-    return null;
-  }
-  
-  try {
-    const { checkKVStatus } = await import('./akyo-data-kv');
-    return checkKVStatus();
-  } catch {
-    return null;
-  }
-}

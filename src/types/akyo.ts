@@ -26,19 +26,6 @@ export interface AkyoData {
 }
 
 /**
- * CSVの生データ（ヘッダーに対応）
- */
-export interface AkyoCsvRow {
-  ID: string;
-  Nickname: string;
-  AvatarName: string;
-  Category: string;
-  Comment: string;
-  Author: string;
-  AvatarURL: string;
-}
-
-/**
  * フィルターオプション
  */
 export interface AkyoFilterOptions {
