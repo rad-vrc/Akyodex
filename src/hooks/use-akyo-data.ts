@@ -12,8 +12,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   // 初期状態でSSRデータを直接設定（「見つかりませんでした」の一瞬表示を防止）
   const [data, setData] = useState<AkyoData[]>(initialData);
   const [filteredData, setFilteredData] = useState<AkyoData[]>(initialData);
-  const [loading] = useState(false);
-  const [error] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // クライアントサイドでお気に入り情報を復元
   useEffect(() => {
@@ -29,6 +29,19 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       setFilteredData(dataWithFavorites);
     }
   }, [initialData]);
+
+  /**
+   * 新しいデータでリフレッシュ（言語切り替え時などに使用）
+   */
+  const refetchWithNewData = useCallback((newData: AkyoData[]) => {
+    const favorites = getFavorites();
+    const dataWithFavorites = newData.map(akyo => ({
+      ...akyo,
+      isFavorite: favorites.includes(akyo.id),
+    }));
+    setData(dataWithFavorites);
+    setFilteredData(dataWithFavorites);
+  }, []);
 
   // フィルタリング機能
   const filterData = useCallback((options: AkyoFilterOptions, sortAsc: boolean = true) => {
@@ -121,6 +134,9 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     error,
     filterData,
     toggleFavorite,
+    refetchWithNewData,
+    setLoading,
+    setError,
   };
 }
 
