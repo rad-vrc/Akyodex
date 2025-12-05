@@ -31,6 +31,7 @@ export const runtime = 'nodejs';
 function getKVNamespace(): KVNamespace | null {
   try {
     // Use OpenNext.js Cloudflare helper to get context
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { getCloudflareContext } = require('@opennextjs/cloudflare');
     const { env } = getCloudflareContext();
     

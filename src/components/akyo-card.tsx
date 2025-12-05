@@ -1,5 +1,6 @@
 'use client';
 
+import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -88,6 +89,8 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           className="object-cover"
           loading="lazy"
           unoptimized
+          placeholder="blur"
+          blurDataURL={generateBlurDataURL(akyo.id)}
           onError={(e) => {
             // フォールバック画像
             const target = e.target as HTMLImageElement;

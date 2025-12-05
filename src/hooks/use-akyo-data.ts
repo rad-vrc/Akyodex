@@ -12,7 +12,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   // 初期状態でSSRデータを直接設定（「見つかりませんでした」の一瞬表示を防止）
   const [data, setData] = useState<AkyoData[]>(initialData);
   const [filteredData, setFilteredData] = useState<AkyoData[]>(initialData);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [error] = useState<string | null>(null);
 
   // クライアントサイドでお気に入り情報を復元

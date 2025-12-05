@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
+import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 
 interface AkyoListProps {
@@ -101,6 +102,8 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
                         className="object-cover"
                         loading="lazy"
                         unoptimized
+                        placeholder="blur"
+                        blurDataURL={generateBlurDataURL(akyo.id)}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/images/placeholder.webp';

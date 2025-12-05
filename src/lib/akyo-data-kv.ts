@@ -39,6 +39,7 @@ function getKVNamespace(): KVNamespace | null {
   try {
     // Use OpenNext.js Cloudflare helper to get context
     // This is the correct way to access bindings in @opennextjs/cloudflare
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { getCloudflareContext } = require('@opennextjs/cloudflare');
     const { env } = getCloudflareContext();
     
@@ -48,7 +49,7 @@ function getKVNamespace(): KVNamespace | null {
     
     console.log('[KV] AKYO_KV binding not available in env');
     return null;
-  } catch (error) {
+  } catch {
     // Not in Cloudflare environment or getCloudflareContext failed
     // This is expected during local development or build time
     console.log('[KV] Not in Cloudflare environment or getCloudflareContext failed');

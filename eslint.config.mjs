@@ -22,7 +22,7 @@ const eslintConfig = [
       "public/sw.js",
       "sw.js",
       "next-env.d.ts",
-      "scripts/test-csv-quality.js",
+      "scripts/**",
       "playwright-report/**",
       "test-results/**",
       "coverage/**",

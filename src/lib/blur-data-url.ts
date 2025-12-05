@@ -121,6 +121,7 @@ export function generateSolidColorDataURL(avatarId: string): string {
  * @returns Promise resolving to base64 data URL
  */
 export async function generatePlaceholderFromImage(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _imagePath: string
 ): Promise<string> {
   throw new Error('Not implemented - requires build-time image processing with sharp or similar');

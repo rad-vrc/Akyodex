@@ -21,7 +21,8 @@ interface AddTabProps {
 export function AddTab({ categories, authors, attributes, creators }: AddTabProps) {
   // 新旧フィールドのマージ
   const allAttributes = categories || attributes;
-  const allCreators = authors || creators;
+  // authors/creators は将来の作者フィルター用に保持（現在はVRChatから自動取得）
+  void (authors || creators);
 
   const [nextId, setNextId] = useState('0001');
   const [formData, setFormData] = useState({
