@@ -70,14 +70,6 @@ function createCategoryProcessor(definitions) {
     if (CONFIG.tofuGyozaKeywords.some(k => nickname.includes(k))) {
       const defaultConfig = CONFIG.foodSubCategories['default'];
       addCat(defaultConfig.category);
-      addCat(`${defaultConfig.prefix}${CONFIG.foodPrefixes.find(p => p === 'Dish') || 'Dish'}`); // Fallback to Dish if not found, but usually it is Dish/料理
-      // Actually, the original code hardcoded '食べ物/料理' or 'Food/Dish'.
-      // Let's assume the last element of foodPrefixes is 'Dish'/'料理' or check definitions.
-      // In JA: '料理' is in foodPrefixes. In EN: 'Dish' is in foodPrefixes.
-      // The original code: addCat('食べ物/料理');
-      // So I should probably use the key for 'Dish' in FOOD_KEYWORDS.
-      // Let's just use the last item of foodPrefixes as a heuristic or add it to config.
-      // For now, let's use the key 'Dish' or '料理' which is present in FOOD_KEYWORDS keys.
       const dishKey = Object.keys(FOOD_KEYWORDS).find(k => k === 'Dish' || k === '料理');
       if (dishKey) addCat(`${defaultConfig.prefix}${dishKey}`);
     }
@@ -93,14 +85,14 @@ function createCategoryProcessor(definitions) {
       categories = categories.filter(c => !c.startsWith(CONFIG.foodSubCategories['default'].category));
     }
 
-    // Onion Exception (Fix for previous misclassification in English)
+    // Onion Exception (Fix for previous misclassification)
     if (nickname.match(/Onion/i) && !nickname.match(/\bOni\b/i)) {
-       // console.log(`Fixing Onion for ${nickname}: removing Yokai`);
-       categories = categories.filter(c => c !== 'Fictional Being/Yokai・Ghost');
+       const { remove, checkPrefix, parent } = CONFIG.onionExclusions;
+       categories = categories.filter(c => c !== remove);
        // If no other Fictional Being subcategories remain, remove Fictional Being too
-       const hasOtherFictional = categories.some(c => c.startsWith('Fictional Being/') && c !== 'Fictional Being/Yokai・Ghost');
+       const hasOtherFictional = categories.some(c => c.startsWith(checkPrefix) && c !== remove);
        if (!hasOtherFictional) {
-           categories = categories.filter(c => c !== 'Fictional Being');
+           categories = categories.filter(c => c !== parent);
        }
     }
 
@@ -157,7 +149,8 @@ function createCategoryProcessor(definitions) {
 
     // Special/Effects
     if (matches(CONFIG.specialEffectKeywords, nickname)) {
-      addCat(CONFIG.mergeMappings.find(m => m.to === 'Gimmick・Special' || m.to === 'ギミック・特殊').to);
+      const gimmickMapping = CONFIG.mergeMappings.find(m => m.to === 'Gimmick・Special' || m.to === 'ギミック・特殊');
+      if (gimmickMapping) addCat(gimmickMapping.to);
     }
     if (nickname.includes(CONFIG.rainbowKeyword)) {
       addCat(CONFIG.rainbowCategory);

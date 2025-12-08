@@ -19,7 +19,7 @@ module.exports = {
   FOOD_KEYWORDS: {
     'Vegetable': ['Vegetable', 'Radish', 'Carrot', 'Cabbage', 'Eggplant', 'Tomato', 'Cucumber', 'Onion', 'Corn', 'Chili', 'Potato', 'Sweet Potato', 'Pumpkin', 'Broccoli', 'Asparagus', 'Bean', 'Edamame', 'Pepper', 'Lettuce', 'Spinach', 'Burdock', 'Lotus Root', 'Bamboo Shoot', 'Mushroom', 'Shiitake', 'Enoki', 'Maitake', 'Eringi', 'Truffle', 'Matsutake', 'Wasabi', 'Ginger', 'Garlic'],
     'Fruit': ['Fruit', 'Mandarin', 'Apple', 'Banana', 'Melon', 'Watermelon', 'Peach', 'Grape', 'Lemon', 'Strawberry', 'Cherry', 'Pear', 'Persimmon', 'Chestnut', 'Pineapple', 'Mango', 'Kiwi', 'Yuzu', 'Lime', 'Orange', 'Grapefruit', 'Mikan'],
-    'Sweets': ['Sweets', 'Snack', 'Cake', 'Pudding', 'Ice Cream', 'Chocolate', 'Cookie', 'Donut', 'Macaron', 'Parfait', 'Crepe', 'Wagashi', 'Dango', 'Daifuku', 'Manju', 'Yokan', 'Castella', 'Taiyaki', 'Dorayaki', 'Senbei', 'Candy', 'Gum', 'Gummy', 'Ramune', 'Marshmallow', 'Jelly', 'Pancake', 'Waffle', 'Tart', 'Cream Puff', 'Eclair', 'Mont Blanc', 'Tiramisu', 'Cheesecake', 'Shortcake', 'Apple Pie', 'Melon Pan', 'Anpan', 'Cream Pan', 'Jam Pan', 'Cornet', 'Shaved Ice', 'Oshiruko', 'Zenzai', 'Mochi', 'Shiratama', 'Warabimochi', 'Popcorn', 'Potato Chips', 'Suama', 'Yokan', 'Dango', 'Cornet', 'Pon de'],
+    'Sweets': ['Sweets', 'Snack', 'Cake', 'Pudding', 'Ice Cream', 'Chocolate', 'Cookie', 'Donut', 'Macaron', 'Parfait', 'Crepe', 'Wagashi', 'Dango', 'Daifuku', 'Manju', 'Yokan', 'Castella', 'Taiyaki', 'Dorayaki', 'Senbei', 'Candy', 'Gum', 'Gummy', 'Ramune', 'Marshmallow', 'Jelly', 'Pancake', 'Waffle', 'Tart', 'Cream Puff', 'Eclair', 'Mont Blanc', 'Tiramisu', 'Cheesecake', 'Shortcake', 'Apple Pie', 'Melon Pan', 'Anpan', 'Cream Pan', 'Jam Pan', 'Cornet', 'Shaved Ice', 'Oshiruko', 'Zenzai', 'Mochi', 'Shiratama', 'Warabimochi', 'Popcorn', 'Potato Chips', 'Suama', 'Pon de'],
     'Dish': ['Dish', 'Rice', 'Bread', 'Noodle', 'Bowl', 'Sushi', 'Curry', 'Ramen', 'Udon', 'Soba', 'Pasta', 'Pizza', 'Burger', 'Hot Dog', 'Sandwich', 'Onigiri', 'Bento', 'Lunch', 'Dinner', 'Steak', 'Hamburg', 'Yakiniku', 'Yakitori', 'Karaage', 'Tempura', 'Fry', 'Cutlet', 'Croquette', 'Gratin', 'Stew', 'Soup', 'Miso Soup', 'Pot', 'Oden', 'Sukiyaki', 'Shabu-shabu', 'Omelette Rice', 'Fried Rice', 'Pilaf', 'Risotto', 'Doria', 'Lasagna', 'Gyoza', 'Shumai', 'Spring Roll', 'Meat Bun', 'Takoyaki', 'Okonomiyaki', 'Yakisoba', 'Tenmusu', 'Unaju', 'Red Rice', 'Tororo', 'Kids Lunch', 'Toast', 'Grilled', 'Bonjiri', 'Sushi', 'Chikuwa', 'Burger', 'Baked Potato', 'Inari', 'Fried', 'Fries', 'Natto', 'Omurice', 'Unagi', 'Meal', 'Potato', 'Tail Meat'],
     'Seasoning': ['Seasoning', 'Soy Sauce', 'Miso', 'Salt', 'Sugar', 'Pepper', 'Vinegar', 'Oil', 'Sauce', 'Mayonnaise', 'Ketchup', 'Dressing', 'Spice', 'Herb', 'Butter', 'Jam', 'Honey', 'Mayo', 'Wasabi'],
     'Drink': ['Drink', 'Juice', 'Tea', 'Coffee', 'Alcohol', 'Beer', 'Wine', 'Sake', 'Water', 'Milk', 'Green Tea', 'Tapioca', 'Melon Soda']
@@ -113,6 +113,11 @@ module.exports = {
     artCategory: 'Art',
     realKeyword: 'Real',
     realCategory: 'Real Photo',
-    uncategorized: 'Uncategorized'
+    uncategorized: 'Uncategorized',
+    onionExclusions: {
+      remove: 'Fictional Being/Yokai・Ghost',
+      checkPrefix: 'Fictional Being/',
+      parent: 'Fictional Being'
+    }
   }
 };

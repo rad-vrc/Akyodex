@@ -1,5 +1,4 @@
 const path = require('path');
-console.log("Script started!");
 const { updateCsv } = require('./update-categories-common');
 const definitions = require('./category-definitions-en');
 
