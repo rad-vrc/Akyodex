@@ -12,11 +12,13 @@ globs: *
 ## CODING STANDARDS
 
 ## WORKFLOW & RELEASE RULES
+
 - Always create a pull request from a separate branch instead of committing directly to the main branch.
 
 ## DEBUGGING
 
 ## CLOUDFLARE R2 RULES
+
 - When updating data stored in Cloudflare R2, uploading a file with the same name (key) will overwrite the existing object. It is not necessary to delete the existing file before uploading the new version. See the [Cloudflare R2 upload documentation](https://developers.cloudflare.cloudflare.com/r2/objects/upload-objects/) for more details.
 
 ## WORKSPACE REVIEW AND IMPROVEMENT RULES
@@ -33,10 +35,15 @@ globs: *
 - **Security: CORS Fallback**: Ensure `NEXT_PUBLIC_APP_URL` is set in production to mitigate host header injection risks in `src/lib/api-helpers.ts`.
 - **Blur Placeholders**: Implement blur placeholders in `AkyoCard` and `AkyoList` components using `generateBlurDataURL` for improved user experience during image loading. `generateBlurDataURL` has been implemented with `placeholder="blur"` and `blurDataURL` props in `AkyoCard` and `AkyoList` components.
 - **Unused `setLoading`**: Remove the unused `setLoading` variable from the `use-akyo-data.ts` hook. `setLoading` has been removed from `use-akyo-data.ts`.
-- **Immediately Exclude Scripts from ESLint**: For script files using `require()` exclude them from ESLint to resolve errors practically. Scripts using `require()` have been excluded from ESLint.
+- **Immediately Exclude Scripts from ESLint**: For script files using `require()`, exclude them from ESLint to resolve errors practically. Scripts using `require()` have been excluded from ESLint.
 - **Remove Remaining Unused Variables**: Eliminate any remaining unused variables to improve code clarity. All remaining unused variables have been removed.
 - **Blur Placeholders in AkyoCard and AkyoList**: Use `generateBlurDataURL` with `placeholder="blur"` and `blurDataURL` props in `AkyoCard` and `AkyoList` components to improve image loading UX.
 - **`findAkyoById` Optimization**: While functionally correct, the linear search in `findAkyoById` (in `src/lib/akyo-data-helpers.ts`) should be optimized for large datasets by using a `Map<string, AkyoData>` for constant-time lookups. This optimization should be considered if the dataset size increases significantly in the future.
+- **.github/copilot-instructions.md**: Ensure files end with a single newline character.
+- **.github/copilot-instructions.md**: Files should end with a single newline character.
+- **`use-language.ts` Cookie Handling**:
+    - Use robust parsing that handles cookies with or without spaces after semicolons.
+    - Adds `Secure` flag when running on HTTPS (production).
 
 ## PERFORMANCE RULES
 
@@ -53,4 +60,7 @@ globs: *
 - When contributing to the project, always create a pull request from a separate branch instead of committing directly to the main branch.
 - **`use-language.ts` Cookie Handling**:
     - Use robust parsing that handles cookies with or without spaces after semicolons.
-    - Adds `Secure` flag when running on HTTPS (production).
+    - Adds `Secure` flag to cookies when running on HTTPS (production).
+- **Cookie parsing in use-language.ts must be robust.** It should handle cookies with or without spaces after semicolons.
+- **Secure flag for cookies**: In `use-language.ts`, add the `Secure` flag to cookies when running on HTTPS (production).
+- **/zukan must be Static**: To enable static generation and edge caching for the `/zukan` page, migrate language detection from `headers()` in `src/middleware.ts` to the client-side or use `searchParams`. Client-side detection is the preferred approach. This is because using `headers()` makes the page dynamic and prevents static generation.
