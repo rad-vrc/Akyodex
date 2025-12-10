@@ -65,18 +65,21 @@ for (let i = 1; i < records.length; i++) {
   }
   
   // 4. Clothing & Occupation → 分割（Clothing/Costume と Occupation/Family）
-  // 正規の定義ファイルからキーワードを使用
-  if (categories.includes('Costume & Occupation') || categories.includes('Clothing & Occupation')) {
-    categories = categories.filter(c => c !== 'Costume & Occupation' && c !== 'Clothing & Occupation');
+  // 正規の定義ファイルからキーワードとカテゴリ名を使用
+  const combinedCategoryPatterns = ['Costume & Occupation', 'Clothing & Occupation'];
+  if (combinedCategoryPatterns.some(p => categories.includes(p))) {
+    categories = categories.filter(c => !combinedCategoryPatterns.includes(c));
     const costumeKeywords = definitions.COSTUME_KEYWORDS;
     const occupationKeywords = definitions.OCCUPATION_KEYWORDS;
+    const costumeCategory = definitions.CONFIG.costumeCategory;
+    const occupationCategory = definitions.CONFIG.occupationCategory;
     
     const hasCostume = costumeKeywords.some(k => nickname.toLowerCase().includes(k.toLowerCase()));
     const hasOccupation = occupationKeywords.some(k => nickname.toLowerCase().includes(k.toLowerCase()));
     
-    if (hasCostume) categories.push('Clothing/Costume');
-    if (hasOccupation) categories.push('Occupation/Family');
-    if (!hasCostume && !hasOccupation) categories.push('Occupation/Family');
+    if (hasCostume) categories.push(costumeCategory);
+    if (hasOccupation) categories.push(occupationCategory);
+    if (!hasCostume && !hasOccupation) categories.push(occupationCategory);
   }
   
   // 5. Anubis系を Fictional Being/God に変更

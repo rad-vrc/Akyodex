@@ -45,20 +45,22 @@ for (let i = 1; i < records.length; i++) {
   let categories = oldCategory.replace(/、/g, ',').split(',').map(c => c.trim()).filter(c => c);
   
   // 1. 衣装・職業 → 削除（衣類・衣装と職業・家柄に分割）
-  // 正規の定義ファイルからキーワードを使用
+  // 正規の定義ファイルからキーワードとカテゴリ名を使用
   if (categories.includes('衣装・職業')) {
     categories = categories.filter(c => c !== '衣装・職業');
     // 内容に基づいて適切なカテゴリを追加（正規定義を使用）
     const costumeKeywords = definitions.COSTUME_KEYWORDS;
     const occupationKeywords = definitions.OCCUPATION_KEYWORDS;
+    const costumeCategory = definitions.CONFIG.costumeCategory;
+    const occupationCategory = definitions.CONFIG.occupationCategory;
     
     const hasCostume = costumeKeywords.some(k => nickname.includes(k));
     const hasOccupation = occupationKeywords.some(k => nickname.includes(k));
     
-    if (hasCostume) categories.push('衣類・衣装');
-    if (hasOccupation) categories.push('職業・家柄');
+    if (hasCostume) categories.push(costumeCategory);
+    if (hasOccupation) categories.push(occupationCategory);
     // どちらにも該当しない場合、職業として扱う（デフォルト）
-    if (!hasCostume && !hasOccupation) categories.push('職業・家柄');
+    if (!hasCostume && !hasOccupation) categories.push(occupationCategory);
   }
   
   // 2. 神カテゴリを追加、アヌビス系を架空の存在/神に
