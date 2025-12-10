@@ -39,7 +39,7 @@ const newRecords = [header];
 
 for (let i = 1; i < records.length; i++) {
   const record = records[i];
-  const oldCategory = record[categoryIdx];
+  const oldCategory = record[categoryIdx] || '';
   const nickname = record[nicknameIdx] || '';
   
   let categories = oldCategory.replace(/、/g, ',').split(',').map(c => c.trim()).filter(c => c);
