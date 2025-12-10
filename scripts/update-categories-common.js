@@ -12,6 +12,7 @@ function createCategoryProcessor(definitions) {
     APPLIANCE_KEYWORDS,
     PLANT_KEYWORDS,
     OCCUPATION_KEYWORDS,
+    COSTUME_KEYWORDS,
     SEASON_KEYWORDS,
     ELECTRONIC_KEYWORDS,
     MUSIC_KEYWORDS,
@@ -166,9 +167,14 @@ function createCategoryProcessor(definitions) {
       addCat(CONFIG.plantCategory);
     }
 
-    // Occupation/Costume
+    // Occupation
     if (matches(OCCUPATION_KEYWORDS, nickname)) {
       addCat(CONFIG.occupationCategory);
+    }
+
+    // Costume
+    if (matches(COSTUME_KEYWORDS, nickname)) {
+      addCat(CONFIG.costumeCategory);
     }
 
     // Season/Event
