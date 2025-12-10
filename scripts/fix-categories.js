@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { parse } = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
+const definitions = require('./category-definitions-ja');
 
 const csvPath = process.argv[2] || 'data/akyo-data-ja.csv';
 
@@ -49,12 +50,12 @@ for (let i = 1; i < records.length; i++) {
   let categories = oldCategory.replace(/、/g, ',').split(',').map(c => c.trim()).filter(c => c);
   
   // 1. 衣装・職業 → 削除（衣類・衣装と職業・家柄に分割）
-  // 踊り子は職業、グッチ/じょん/ポンチョ/アロハ/サンタ/バニー/インディアン/マフラーは衣類
+  // 正規の定義ファイルからキーワードを使用
   if (categories.includes('衣装・職業')) {
     categories = categories.filter(c => c !== '衣装・職業');
-    // 内容に基づいて適切なカテゴリを追加
-    const costumeKeywords = ['グッチ', 'じょん', 'ポンチョ', 'アロハ', 'サンタ', 'バニー', 'インディアン', 'マフラー', '水着', '制服', 'スーツ', 'ドレス', '着物', '浴衣', '袴', '法被', 'パジャマ', '衣装', 'キッズ', '新郎', '嫁入り'];
-    const occupationKeywords = ['ナース', '医者', '警察', '消防', '駅員', 'パイロット', 'メイド', '執事', 'シェフ', 'コック', 'パティシエ', 'アイドル', '歌手', 'ダンサー', '踊り子', '学生', '先生', '博士', '探偵', '忍者', 'にんじゃ', '侍', '武士', '騎士', '魔法使い', '僧侶', '神主', '巫女', 'シスター', '海賊', 'かいぞく', '宇宙飛行士', '郵便', 'あしがる', '歩兵', 'せんすい', 'との', 'おじ', '農家', 'おそうじ', 'つり', 'ハンター', 'ストレッチ', 'りきし'];
+    // 内容に基づいて適切なカテゴリを追加（正規定義を使用）
+    const costumeKeywords = definitions.COSTUME_KEYWORDS;
+    const occupationKeywords = definitions.OCCUPATION_KEYWORDS;
     
     const hasCostume = costumeKeywords.some(k => nickname.includes(k));
     const hasOccupation = occupationKeywords.some(k => nickname.includes(k));

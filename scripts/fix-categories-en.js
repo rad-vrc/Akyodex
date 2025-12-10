@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { parse } = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
+const definitions = require('./category-definitions-en');
 
 const csvPath = process.argv[2] || 'data/akyo-data-en.csv';
 
@@ -63,11 +64,12 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('Material & Fabric')) categories.push('Material & Fabric');
   }
   
-  // 4. Clothing & Occupation → 分割（Clothing・Costume と Occupation・Status）
+  // 4. Clothing & Occupation → 分割（Clothing/Costume と Occupation/Family）
+  // 正規の定義ファイルからキーワードを使用
   if (categories.includes('Costume & Occupation') || categories.includes('Clothing & Occupation')) {
     categories = categories.filter(c => c !== 'Costume & Occupation' && c !== 'Clothing & Occupation');
-    const costumeKeywords = ['Gucci', 'John', 'Poncho', 'Aloha', 'Santa', 'Bunny', 'Indian', 'Scarf', 'Swimsuit', 'Uniform', 'Suit', 'Dress', 'Kimono', 'Yukata', 'Hakama', 'Happi', 'Pajama', 'Costume', 'Kids', 'Groom', 'Bride', 'Wedding'];
-    const occupationKeywords = ['Nurse', 'Doctor', 'Police', 'Firefighter', 'Station', 'Pilot', 'Maid', 'Butler', 'Chef', 'Cook', 'Patissier', 'Idol', 'Singer', 'Dancer', 'Student', 'Teacher', 'Professor', 'Detective', 'Ninja', 'Samurai', 'Warrior', 'Knight', 'Wizard', 'Monk', 'Priest', 'Shrine', 'Miko', 'Sister', 'Pirate', 'Astronaut', 'Mail', 'Postal', 'Foot Soldier', 'Infantry', 'Lord', 'Uncle', 'Farmer', 'Cleaner', 'Fisher', 'Hunter', 'Stretch', 'Sumo'];
+    const costumeKeywords = definitions.COSTUME_KEYWORDS;
+    const occupationKeywords = definitions.OCCUPATION_KEYWORDS;
     
     const hasCostume = costumeKeywords.some(k => nickname.toLowerCase().includes(k.toLowerCase()));
     const hasOccupation = occupationKeywords.some(k => nickname.toLowerCase().includes(k.toLowerCase()));
