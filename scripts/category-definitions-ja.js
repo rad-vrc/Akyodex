@@ -68,7 +68,6 @@ module.exports = {
   // Configuration for processing
   CONFIG: {
     mergeMappings: [
-      { from: ['衣装・職業'], to: '' },
       { from: ['ギミック', '特殊'], to: 'ギミック・特殊' },
       { from: ['素材'], to: '素材・材質' },
       { from: ['架空', '妖怪', 'りゅう', 'ドラゴン'], to: '架空の存在' },

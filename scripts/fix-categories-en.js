@@ -23,6 +23,14 @@ if (categoryIdx === -1) {
   console.error('Could not find Category column');
   process.exit(1);
 }
+if (nicknameIdx === -1) {
+  console.error('Could not find Nickname column');
+  process.exit(1);
+}
+if (avatarNameIdx === -1) {
+  console.error('Could not find AvatarName column');
+  process.exit(1);
+}
 
 console.log('Processing records...');
 
@@ -64,9 +72,9 @@ for (let i = 1; i < records.length; i++) {
     const hasCostume = costumeKeywords.some(k => nickname.toLowerCase().includes(k.toLowerCase()));
     const hasOccupation = occupationKeywords.some(k => nickname.toLowerCase().includes(k.toLowerCase()));
     
-    if (hasCostume) categories.push('Clothing・Costume');
-    if (hasOccupation) categories.push('Occupation・Status');
-    if (!hasCostume && !hasOccupation) categories.push('Occupation・Status');
+    if (hasCostume) categories.push('Clothing/Costume');
+    if (hasOccupation) categories.push('Occupation/Family');
+    if (!hasCostume && !hasOccupation) categories.push('Occupation/Family');
   }
   
   // 5. Anubis系を Fictional Being/God に変更

@@ -22,6 +22,10 @@ if (categoryIdx === -1) {
   console.error('Could not find Category column');
   process.exit(1);
 }
+if (nicknameIdx === -1) {
+  console.error('Could not find Nickname column');
+  process.exit(1);
+}
 
 console.log('Processing records...');
 
