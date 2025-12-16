@@ -115,7 +115,6 @@ globs: *
     - 揚げ物 → 食べ物/料理/揚げ物
 - fix(data): 硬い・柔らかいを階層型カテゴリに変換
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-    - 柔らかい → 素材・材質・生地, 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): 複数のAkyoカテゴリを修正
@@ -141,7 +140,7 @@ globs: *
 - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
     - データヘルパーの統合、未使用エクスポートの整理
 - fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
-- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
 - fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
 - fix(data): カテゴリ修正 - 複数のカテゴリ修正
     -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
@@ -153,9 +152,6 @@ globs: *
     -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
     - データヘルパーの統合、未使用エクスポートの整理
-- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
-- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
-- fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
 
 ## APPLIES TO RULES
 
@@ -293,4 +289,25 @@ The following rules apply to specific file patterns:
 - fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
 - fix(data): レッサーパンダを動物カテゴリに修正
     -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-- fix(data): カテゴ
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+
+## APPLIES TO RULES
+
+The following rules apply to specific file patterns:
+
+### Data Modules (`**/akyo-data{,-server,-json,-kv}.ts`)
+- Refactor data modules to reduce redundant logic, especially for functions like `getAllCategories` and `getAllAuthors`.
+
+### Backward Compatibility (`**/akyo-data*.ts`)
+- Remove redundant backward compatibility fields after migration is complete (e.g., `attribute: category` when `category` is the new field).
+
+### Upload/Update Handlers (`**/+({upload,update})-akyo*`)
+- Refactor `upload-akyo` and `update-akyo` to use a common handler to reduce code duplication.
+
+### TypeScript/JavaScript Files (`**/*.{ts,tsx,js,mjs}`)
+- Remove unused exports or add them to the `ignore` list in `knip.json` if planned for future use.
+- Convert `require()` statements to ES module format (`import`) in scripts and other files.
+- Remove all unused variables identified by ESLint warnings.
+
+### ESLint Configuration (`eslint.
