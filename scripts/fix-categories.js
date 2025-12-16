@@ -158,11 +158,11 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('食べ物/パン')) categories.push('食べ物/パン');
   }
   
-  // 10. 寿司を食べ物/寿司に変更
+  // 10. 寿司を食べ物/お寿司に変更
   if (categories.includes('寿司')) {
     categories = categories.filter(c => c !== '寿司');
     if (!categories.includes('食べ物')) categories.push('食べ物');
-    if (!categories.includes('食べ物/寿司')) categories.push('食べ物/寿司');
+    if (!categories.includes('食べ物/お寿司')) categories.push('食べ物/お寿司');
   }
   
   // 11. のみものを飲み物に統一
@@ -214,6 +214,16 @@ for (let i = 1; i < records.length; i++) {
   if (categories.includes('変身')) {
     categories = categories.filter(c => c !== '変身');
     if (!categories.includes('合体・変身')) categories.push('合体・変身');
+  }
+  
+  // 14c. なりきりと仮装をなりきり・仮装に統一
+  if (categories.includes('なりきり')) {
+    categories = categories.filter(c => c !== 'なりきり');
+    if (!categories.includes('なりきり・仮装')) categories.push('なりきり・仮装');
+  }
+  if (categories.includes('仮装')) {
+    categories = categories.filter(c => c !== '仮装');
+    if (!categories.includes('なりきり・仮装')) categories.push('なりきり・仮装');
   }
   
   // 15. 野菜系を食べ物/野菜/○○に階層化
