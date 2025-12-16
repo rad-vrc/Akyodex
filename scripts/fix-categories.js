@@ -34,6 +34,16 @@ console.log('Processing records...');
 // FOOD_KEYWORDS['野菜']の最初の要素'野菜'を除外（カテゴリ名なので）
 const vegetables = definitions.FOOD_KEYWORDS['野菜'].slice(1);
 
+/**
+ * 指定した除外リスト以外の動物サブカテゴリが存在するかチェック
+ * @param {string[]} categories - カテゴリ配列
+ * @param {string[]} excludes - 除外する動物サブカテゴリのリスト（例: ['動物/イカ', '動物/海の生き物']）
+ * @returns {boolean} - 他の動物サブカテゴリが存在すればtrue
+ */
+function hasOtherAnimalCategory(categories, excludes = []) {
+  return categories.some(c => c.startsWith('動物/') && !excludes.includes(c));
+}
+
 let modifiedCount = 0;
 const newRecords = [header];
 
@@ -63,14 +73,14 @@ for (let i = 1; i < records.length; i++) {
     if (!hasCostume && !hasOccupation) categories.push(occupationCategory);
   }
   
-  // 2. 神カテゴリを追加、アヌビス系を架空の存在/神に
+  // 2. 神・天使カテゴリを追加、アヌビス系を架空の存在/天使・神に
   const godKeywords = ['アヌビス', 'バステト', 'ホルス', 'ラー', 'メジェド', 'ゼウス', 'ポセイドン', 'ハデス', 'オーディン', '後光'];
   if (godKeywords.some(k => nickname.includes(k))) {
     categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
     if (!categories.includes('架空の存在')) categories.push('架空の存在');
-    if (!categories.includes('架空の存在/神')) categories.push('架空の存在/神');
-    // 神カテゴリが追加された場合、単独の「神」カテゴリを削除
-    categories = categories.filter(c => c !== '神');
+    if (!categories.includes('架空の存在/天使・神')) categories.push('架空の存在/天使・神');
+    // 旧カテゴリを削除
+    categories = categories.filter(c => c !== '神' && c !== '架空の存在/神' && c !== '架空の存在/天界');
   }
   
   // 3. スイカAkyoから海の生き物カテゴリを削除（スイカはフルーツであってイカではない）
@@ -78,11 +88,8 @@ for (let i = 1; i < records.length; i++) {
   if (/スイカ/.test(nickname)) {
     categories = categories.filter(c => !c.includes('海の生き物') && c !== '動物/イカ');
     // 動物カテゴリも削除（スイカはフルーツなので）
-    if (categories.includes('動物')) {
-      const hasOtherAnimal = categories.some(c => c.startsWith('動物/') && c !== '動物/海の生き物' && c !== '動物/イカ');
-      if (!hasOtherAnimal) {
-        categories = categories.filter(c => c !== '動物');
-      }
+    if (categories.includes('動物') && !hasOtherAnimalCategory(categories, ['動物/海の生き物', '動物/イカ'])) {
+      categories = categories.filter(c => c !== '動物');
     }
   }
   
@@ -96,6 +103,30 @@ for (let i = 1; i < records.length; i++) {
   if (nickname.includes('カーバンクル')) {
     categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
     if (!categories.includes('架空の存在/幻獣・精霊')) categories.push('架空の存在/幻獣・精霊');
+  }
+  
+  // 5b. かっぱまきAkyoから妖怪を削除（かっぱ巻きは河童ではなく寿司）
+  if (nickname.includes('かっぱまき')) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ' && c !== '架空の存在');
+  }
+  
+  // 5c. 精霊がついているのにおばけもついている場合はおばけを削除
+  if (categories.includes('架空の存在/幻獣・精霊') && categories.includes('架空の存在/妖怪・おばけ')) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
+  }
+  
+  // 5d. 天使系はおばけを削除して架空の存在/天使・神を追加
+  if (nickname.includes('天使')) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ' && c !== '架空の存在/天界');
+    if (!categories.includes('架空の存在')) categories.push('架空の存在');
+    if (!categories.includes('架空の存在/天使・神')) categories.push('架空の存在/天使・神');
+  }
+  
+  // 5e. amongAkyoをパロディ/Among Usに変更
+  if (/among/i.test(nickname)) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
+    if (!categories.includes('パロディ')) categories.push('パロディ');
+    if (!categories.includes('パロディ/Among Us')) categories.push('パロディ/Among Us');
   }
   
   // 6. 海を自然/海に変更
@@ -150,6 +181,18 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('素材・材質・生地')) categories.push('素材・材質・生地');
   }
   
+  // 13b. 硬い・柔らかいを素材・材質・生地/硬い、素材・材質・生地/柔らかいに階層化
+  if (categories.includes('硬い')) {
+    categories = categories.filter(c => c !== '硬い');
+    if (!categories.includes('素材・材質・生地')) categories.push('素材・材質・生地');
+    if (!categories.includes('素材・材質・生地/硬い')) categories.push('素材・材質・生地/硬い');
+  }
+  if (categories.includes('柔らかい')) {
+    categories = categories.filter(c => c !== '柔らかい');
+    if (!categories.includes('素材・材質・生地')) categories.push('素材・材質・生地');
+    if (!categories.includes('素材・材質・生地/柔らかい')) categories.push('素材・材質・生地/柔らかい');
+  }
+  
   // 14. 家電と家具の単体カテゴリを削除（家電・家具に統一）
   if (categories.includes('家電')) {
     categories = categories.filter(c => c !== '家電');
@@ -158,6 +201,16 @@ for (let i = 1; i < records.length; i++) {
   if (categories.includes('家具')) {
     categories = categories.filter(c => c !== '家具');
     if (!categories.includes('家電・家具')) categories.push('家電・家具');
+  }
+  
+  // 14b. 合体と変身を合体・変身に統一
+  if (categories.includes('合体')) {
+    categories = categories.filter(c => c !== '合体');
+    if (!categories.includes('合体・変身')) categories.push('合体・変身');
+  }
+  if (categories.includes('変身')) {
+    categories = categories.filter(c => c !== '変身');
+    if (!categories.includes('合体・変身')) categories.push('合体・変身');
   }
   
   // 15. 野菜系を食べ物/野菜/○○に階層化
@@ -204,11 +257,57 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('架空の存在/妖怪・おばけ')) categories.push('架空の存在/妖怪・おばけ');
   }
   
-  // 精霊単体を架空の存在/幻獣・精霊に統合
-  if (categories.includes('精霊') && !categories.includes('架空の存在/幻獣・精霊')) {
+  // 精霊単体を削除（架空の存在/幻獣・精霊に移行済み）
+  // 架空の存在/幻獣・精霊がある場合は精霊単体を削除
+  if (categories.includes('精霊') && categories.includes('架空の存在/幻獣・精霊')) {
+    categories = categories.filter(c => c !== '精霊');
+  }
+  // 精霊単体のみの場合は架空の存在/幻獣・精霊に変換
+  if (categories.includes('精霊') && !categories.includes('架空の存在/幻獣・精霊') && !categories.includes('精霊馬')) {
     categories = categories.filter(c => c !== '精霊');
     if (!categories.includes('架空の存在')) categories.push('架空の存在');
     categories.push('架空の存在/幻獣・精霊');
+  }
+  // 精霊馬がある場合は精霊単体を削除（精霊馬は季節・行事関連）
+  if (categories.includes('精霊馬') && categories.includes('精霊')) {
+    categories = categories.filter(c => c !== '精霊');
+  }
+  
+  // キュウリを食べ物/野菜/きゅうりに変換
+  if (categories.includes('キュウリ')) {
+    categories = categories.filter(c => c !== 'キュウリ');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/野菜')) categories.push('食べ物/野菜');
+    if (!categories.includes('食べ物/野菜/きゅうり')) categories.push('食べ物/野菜/きゅうり');
+  }
+  
+  // ナスビを食べ物/野菜/ナスに変換
+  if (categories.includes('ナスビ')) {
+    categories = categories.filter(c => c !== 'ナスビ');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/野菜')) categories.push('食べ物/野菜');
+    if (!categories.includes('食べ物/野菜/ナス')) categories.push('食べ物/野菜/ナス');
+  }
+  
+  // 揚げ物を食べ物/料理/揚げ物に変換
+  if (categories.includes('揚げ物')) {
+    categories = categories.filter(c => c !== '揚げ物');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/料理')) categories.push('食べ物/料理');
+    if (!categories.includes('食べ物/料理/揚げ物')) categories.push('食べ物/料理/揚げ物');
+  }
+  
+  // タコスを食べ物/料理に変換（タコではない）
+  if (categories.includes('タコス')) {
+    categories = categories.filter(c => c !== 'タコス');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/料理')) categories.push('食べ物/料理');
+    // タコスはタコではないので、動物/タコを削除
+    categories = categories.filter(c => c !== '動物/タコ');
+    // 他の動物カテゴリがなければ動物と海の生き物も削除
+    if (!hasOtherAnimalCategory(categories, ['動物/海の生き物', '動物/タコ'])) {
+      categories = categories.filter(c => c !== '動物' && c !== '動物/海の生き物');
+    }
   }
   
   // りゅう・ドラゴンを架空の存在/りゅう・ドラゴンに統合
