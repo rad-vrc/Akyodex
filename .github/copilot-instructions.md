@@ -76,7 +76,7 @@ globs: *
     - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
     - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
     - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
-- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to preserve existing API while providing O(1) lookups for larger datasets.
+- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to provide O(1) lookups for larger datasets.
 - In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
 - In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
 - In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
@@ -121,7 +121,7 @@ globs: *
     - 揚げ物 → 食べ物/料理/揚げ物
 - fix(data): 硬い・柔らかいを階層型カテゴリに変換
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-    - 柔らかい → 素材・材質・生地, 素材・材質・生地/硬い
+    - 硬い → 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): 複数のAkyoカテゴリを修正
@@ -189,41 +189,7 @@ globs: *
     - 揚げ物 → 食べ物/料理/揚げ物
 - fix(data): 硬い・柔らかいを階層型カテゴリに変換
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-    - 柔らかい → 素材・材質・生地/硬い
-    - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
-- fix(data): サウAkyoをパロディ/人物に修正
-- fix(data): 複数のAkyoカテゴリを修正
-    - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
-    - まめひなたAkyo: 自然を削除
-    - 胴長パグAkyo: 動物/いぬを追加
-    - エプリAkyo: パロディ/VRChatを追加
-- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
-- fix(data): レッサーパンダを動物カテゴリに修正
-    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-- fix(data): サウAkyoをパロディ/人物に修正
-- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
-- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
-- fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
-- fix(data): カテゴリ修正 - 複数のカテゴリ修正
-    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-    -  振袖どらごんAkyo: 季節・行事を追加
-    -  カフェどらごんAkyo: 職業・家柄を追加
-    -  風船きつねAkyo: 自然を削除
-- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
-- fix(data): レッサーパンダを動物カテゴリに修正
-    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
-    - データヘルパーの統合、未使用エクスポートの整理
-- fix(data): カテゴリ修正 - ラー神の誤検出を修正
-    - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
-    - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
-- fix(data): 複数のAkyoカテゴリを修正
-    - キュウリ → 食べ物/野菜/きゅうり
-    - ナスビ → 食べ物/野菜/ナス
-    - 揚げ物 → 食べ物/料理/揚げ物
-- fix(data): 硬い・柔らかいを階層型カテゴリに変換
-    - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-    - 柔らかい → 素材・材質・生地/硬い
+    - 硬い → 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): 複数のAkyoカテゴリを修正
@@ -297,4 +263,47 @@ The following rules apply to specific file patterns:
     - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
 - In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to provide O(1) lookups for larger datasets.
 - In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
-- In `scripts/fix-categories.js` and `scripts
+- In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
+- In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
+- Remove duplicate entries from Dish array in category-definitions-en.js
+- Refactor category update scripts and fix Onion bug:
+    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
+    - Remove duplicate implementations from akyo-data.ts, akyo-data-server.ts, akyo-data-json.ts, akyo-data-kv.ts
+    - Remove unused/deprecated functions: getAllAttributes, getAllCreators, getDataSourceInfo, getKVStatus, checkKVStatus, clearKVCache, getKVMetadata
+    - Remove unused exports: getAkyoByIdFromJSON, getAllCategoriesFromJSON, getAllAuthorsFromJSON, getAkyoByIdFromKV, getAllCategoriesFromKV, getAllAuthorsFromKV, getAkyoDataFromKV
+    - Remove unused AkyoCsvRow interface
+    - Update knip.json: add dynamic import files to ignore, remove tailwindcss from ignoreDependencies
+- Enable static generation for /zukan page:
+    - Add use-language hook for client-side language detection
+    - Modify page.tsx to use force-static with DEFAULT_LANGUAGE
+    - Update zukan-client.tsx to accept serverLang prop
+    - Page now pre-renders at build time (○ Static instead of ƒ Dynamic)
+    - Client detects user language and handles reload if mismatch
+    - Implement client-side data refetching for language mismatch:
+    - Add client-side data refetching when user's language differs from server
+    - Show loading state during language data fetch
+    - Localize error messages and 'no results' text
+    - Update use-language.ts with robust cookie parsing (handles ';' without space)
+    - Add Secure flag to cookies when running on HTTPS (production)
+    - Add refetchWithNewData to use-akyo-data hook
+    - Dynamically update categories/authors on language change
+- Fix: 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+- fix(data): カテゴリ修正 - ラー神の誤検出を修正
+    - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
+    - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
+- fix(data): 複数のAkyoカテゴリを修正
+    - キュウリ → 食べ物/野菜/きゅうり
+    - ナスビ → 食べ物/野菜/ナス
+    - 揚げ物 → 食べ物/料理/揚げ物
+- fix(data): 硬い・柔らかいを階層型カテゴリに変換
+    - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+    - 硬い → 素材・材質・生地/硬い
