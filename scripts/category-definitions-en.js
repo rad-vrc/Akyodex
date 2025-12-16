@@ -41,7 +41,9 @@ module.exports = {
 
   PLANT_KEYWORDS: ['Plant', 'Flower', 'Grass', 'Tree', 'Leaf', 'Seed', 'Sprout', 'Root', 'Stem', 'Fruit', 'Cherry Blossom', 'Plum', 'Peach', 'Pine', 'Bamboo', 'Morning Glory', 'Sunflower', 'Tulip', 'Rose', 'Lily', 'Hydrangea', 'Cosmos', 'Dandelion', 'Clover', 'Cactus', 'Succulent', 'Bonsai', 'Vegetable', 'Fruit', 'Palm', 'Sakura'],
 
-  OCCUPATION_KEYWORDS: ['Occupation', 'Costume', 'Uniform', 'Suit', 'Dress', 'Kimono', 'Yukata', 'Hakama', 'Happi', 'Swimsuit', 'Pajama', 'Nurse', 'Doctor', 'Police', 'Firefighter', 'Station Staff', 'Pilot', 'Cabin Attendant', 'Maid', 'Butler', 'Waitress', 'Chef', 'Cook', 'Patissier', 'Idol', 'Singer', 'Dancer', 'Model', 'Actor', 'Voice Actor', 'Painter', 'Writer', 'Mangaka', 'Engineer', 'Programmer', 'Student', 'Teacher', 'Professor', 'Detective', 'Ninja', 'Samurai', 'Warrior', 'Knight', 'Wizard', 'Monk', 'Priest', 'Shrine Maiden', 'Sister', 'Santa', 'Pirate', 'Astronaut', 'Athlete', 'Baseball', 'Soccer', 'Tennis', 'Basketball', 'Volleyball', 'Swimming', 'Track', 'Judo', 'Kendo', 'Archery', 'Sumo', 'Boxing', 'Wrestling', 'Post', 'Indian', 'Bunny', 'Soldier', 'Diver', 'Lord', 'Uncle', 'Farmer', 'Infantry', 'Hunter', 'Groom', 'Submarine', 'Cleaning', 'Kid', 'Stretch', 'Gucci', 'Jong', 'Poncho', 'Aloha', 'Muffler', 'Fishing'],
+  COSTUME_KEYWORDS: ['Costume', 'Uniform', 'Suit', 'Dress', 'Kimono', 'Yukata', 'Hakama', 'Happi', 'Swimsuit', 'Pajama', 'Poncho', 'Aloha', 'Muffler', 'Gucci', 'Jong', 'Kid', 'Groom', 'Bunny', 'Indian', 'Santa'],
+
+  OCCUPATION_KEYWORDS: ['Occupation', 'Nurse', 'Doctor', 'Police', 'Firefighter', 'Station Staff', 'Pilot', 'Cabin Attendant', 'Maid', 'Butler', 'Waitress', 'Chef', 'Cook', 'Patissier', 'Idol', 'Singer', 'Dancer', 'Model', 'Actor', 'Voice Actor', 'Painter', 'Writer', 'Mangaka', 'Engineer', 'Programmer', 'Student', 'Teacher', 'Professor', 'Detective', 'Ninja', 'Samurai', 'Warrior', 'Knight', 'Wizard', 'Monk', 'Priest', 'Shrine Maiden', 'Sister', 'Pirate', 'Astronaut', 'Athlete', 'Baseball', 'Soccer', 'Tennis', 'Basketball', 'Volleyball', 'Swimming', 'Track', 'Judo', 'Kendo', 'Archery', 'Sumo', 'Boxing', 'Wrestling', 'Post', 'Soldier', 'Diver', 'Lord', 'Uncle', 'Farmer', 'Infantry', 'Hunter', 'Submarine', 'Cleaning', 'Stretch', 'Fishing'],
 
   SEASON_KEYWORDS: ['Season', 'Event', 'Spring', 'Summer', 'Autumn', 'Winter', 'New Year', 'Setsubun', 'Hinamatsuri', 'Hanami', 'Children\'s Day', 'Tanabata', 'Obon', 'Halloween', 'Christmas', 'New Year\'s Eve', 'Valentine', 'White Day', 'Graduation', 'Entrance', 'Summer Vacation', 'Winter Vacation', 'Spring Vacation', 'Golden Week', 'Silver Week', 'Festival', 'Fireworks', 'Beach', 'Autumn Leaves', 'Snow', 'Carp Streamer', 'Lion Dance', 'Harvest', 'Koinobori', 'Teru Teru', 'Tropical', 'Fall'],
 
@@ -100,7 +102,8 @@ module.exports = {
     rainbowCategory: 'Color',
     applianceCategory: 'Appliances・Furniture',
     plantCategory: 'Plant',
-    occupationCategory: 'Costume・Occupation',
+    costumeCategory: 'Clothing/Costume',
+    occupationCategory: 'Occupation/Family',
     seasonCategory: 'Season・Event',
     electronicCategory: 'Electronic',
     musicCategory: 'Music・Instrument',
