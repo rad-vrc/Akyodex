@@ -98,6 +98,30 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('架空の存在/幻獣・精霊')) categories.push('架空の存在/幻獣・精霊');
   }
   
+  // 5b. かっぱまきAkyoから妖怪を削除（かっぱ巻きは河童ではなく寿司）
+  if (nickname.includes('かっぱまき')) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ' && c !== '架空の存在');
+  }
+  
+  // 5c. 精霊がついているのにおばけもついている場合はおばけを削除
+  if (categories.includes('架空の存在/幻獣・精霊') && categories.includes('架空の存在/妖怪・おばけ')) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
+  }
+  
+  // 5d. 天使系はおばけを削除して架空の存在/天界を追加
+  if (nickname.includes('天使')) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
+    if (!categories.includes('架空の存在')) categories.push('架空の存在');
+    if (!categories.includes('架空の存在/天界')) categories.push('架空の存在/天界');
+  }
+  
+  // 5e. amongAkyoをパロディ/Among Usに変更
+  if (/among/i.test(nickname)) {
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
+    if (!categories.includes('パロディ')) categories.push('パロディ');
+    if (!categories.includes('パロディ/Among Us')) categories.push('パロディ/Among Us');
+  }
+  
   // 6. 海を自然/海に変更
   if (categories.includes('海')) {
     categories = categories.filter(c => c !== '海');
