@@ -64,8 +64,6 @@ globs: *
 - In `scripts/fix-categories.js` around lines 40 to 46, the code calls oldCategory.replace(...) which throws if oldCategory is null/undefined/empty; guard against that by treating missing category as an empty string or skipping the row: check if oldCategory is truthy before calling replace, and set categories = [] (or use (oldCategory || '').replace(...)) so empty-category rows do not cause a TypeError and are handled safely.
 - In scripts/fix-categories-en.js around lines 67 to 80, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift and ensure that the code correctly handles the Costume & Occupation categories, and also include the same fix in  `scripts/fix-categories.js`.
 - In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded array in `scripts/fix-categories.js` with an import of that named export and remove the local declaration. Ensure the import path is correct and run tests/lint to verify no unused variables or import errors.
-- Add a single newline character at the end of files.
-- In `src/hooks/use-language.ts` use robust parsing that handles cookies with or without spaces after semicolons and adds `Secure` flag to cookies when running on HTTPS (production).
 - Fix a bug in the English categorizer that causes fictional tags to be added based on substring matches. Because FICTIONAL_KEYWORDS contains the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
 - In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
     - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
@@ -117,6 +115,7 @@ globs: *
     - 揚げ物 → 食べ物/料理/揚げ物
 - fix(data): 硬い・柔らかいを階層型カテゴリに変換
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+    - 柔らかい → 素材・材質・生地, 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): 複数のAkyoカテゴリを修正
@@ -126,6 +125,7 @@ globs: *
     - エプリAkyo: パロディ/VRChatを追加
 - fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
 - fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16 07:26Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
 - fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
@@ -140,12 +140,14 @@ globs: *
     -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
     - データヘルパーの統合、未使用エクスポートの整理
-- From 2025-12-03_14-56Z-ワークスペースのレビューと改善提案.md (82765f10-4121-4eb5-ba62-f726efc644e3):
-    - ワークスペースをレビューして改善余地を洗い出してください。
-    - 良い点: 堅牢なアーキテクチャ、セキュリティ対策、React cache() の活用、ISR対応、詳細なドキュメント
-    - 高優先度の改善点: ESLintエラー、upload-akyo と update-akyo のコード重複、未使用のエクスポート
-    - 中優先度の改善点: next.config.ts の設定、未使用変数、データモジュールの重複
-    - 低優先度の改善点: 後方互換フィールドの冗長性、knip.json の不要な設定、add-tab.tsx のDOM直接操作、セキュリティ: CORSフォールバック
+- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
+- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
+- fix(data): カテゴリ修正 - 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
 
 ## APPLIES TO RULES
 
@@ -198,6 +200,12 @@ The following rules apply to specific file patterns:
 - In scripts/fix-categories-en.js around lines 67 to 80, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift and ensure that the code correctly handles the Costume & Occupation categories, and also include the same fix in  `scripts/fix-categories.js`.
 - In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded array in `scripts/fix-categories.js` with an import of that named export and remove the local declaration. Ensure the import path is correct and run tests/lint to verify no unused variables or import errors.
 - Fix a bug in the English categorizer that causes fictional tags to be added based on substring matches. Because FICTIONAL_KEYWORDS contains the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
+    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
+    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
+    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to preserve existing API while providing O(1) lookups for larger datasets.
 - In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
 - In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
 - In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
@@ -242,6 +250,7 @@ The following rules apply to specific file patterns:
     - 揚げ物 → 食べ物/料理/揚げ物
 - fix(data): 硬い・柔らかいを階層型カテゴリに変換
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+    - 柔らかい → 素材・材質・生地, 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): 複数のAkyoカテゴリを修正
@@ -251,8 +260,9 @@ The following rules apply to specific file patterns:
     - エプリAkyo: パロディ/VRChatを追加
 - fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
 - fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): サウAkyoをパロディ/人物に修正
-- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16 07:26Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
+- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
 - fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
 - fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
 - fix(data): カテゴリ修正 - 複数のカテゴリ修正
@@ -265,8 +275,8 @@ The following rules apply to specific file patterns:
     -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
     - データヘルパーの統合、未使用エクスポートの整理
-- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16 07:26Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
-- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
+- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
 - fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
 - fix(data): カテゴリ修正 - 複数のカテゴリ修正
     -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
@@ -278,50 +288,17 @@ The following rules apply to specific file patterns:
     -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
     - データヘルパーの統合、未使用エクスポートの整理
-- fix(data): カテゴリ修正 - 複数のカテゴリ修正
-    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-    -  振袖どらごんAkyo: 季節・行事を追加
-    -  カフェどらごんAkyo: 職業・家柄を追加
-    -  風船きつねAkyo: 自然を削除
-- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
-- fix(data): レッサーパンダを動物カテゴリに修正
-    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
-    - データヘルパーの統合、未使用エクスポートの整理
-- fix(data): カテゴリ修正 - 複数のカテゴリ修正
-    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-    -  振袖どらごんAkyo: 季節・行事を追加
-    -  カフェどらごんAkyo: 職業・家柄を追加
-    -  風船きつねAkyo: 自然を削除
+- From 2025-12-03_14-56Z-ワークスペースのレビューと改善提案.md (82765f10-4121-4eb5-ba62-f726efc644e3):
+    - ワークスペースをレビューして改善余地を洗い出してください。
+    - 良い点: 堅牢なアーキテクチャ、セキュリティ対策、React cache() の活用、ISR対応、詳細なドキュメント
+    - 高優先度の改善点: ESLintエラー、upload-akyo と update-akyo のコード重複、未使用のエクスポート
+    - 中優先度の改善点: next.config.ts の設定、未使用変数、データモジュールの重複
+    - 低優先度の改善点: 後方互換フィールドの冗長性、knip.json の不要な設定、add-tab.tsx のDOM直接操作、セキュリティ: CORSフォールバック
+- Always create a pull request from a separate branch instead of committing directly to the main branch.
 
 ## APPLIES TO RULES
 
 The following rules apply to specific file patterns:
 
 ### Data Modules (`**/akyo-data{,-server,-json,-kv}.ts`)
-- Refactor data modules to reduce redundant logic, especially for functions like `getAllCategories` and `getAllAuthors`.
-
-### Backward Compatibility (`**/akyo-data*.ts`)
-- Remove redundant backward compatibility fields after migration is complete (e.g., `attribute: category` when `category` is the new field).
-
-### Upload/Update Handlers (`**/+({upload,update})-akyo*`)
-- Refactor `upload-akyo` and `update-akyo` to use a common handler to reduce code duplication.
-
-### TypeScript/JavaScript Files (`**/*.{ts,tsx,js,mjs}`)
-- Remove unused exports or add them to the `ignore` list in `knip.json` if planned for future use.
-- Convert `require()` statements to ES module format (`import`) in scripts and other files.
-- Remove all unused variables identified by ESLint warnings.
-
-### ESLint Configuration (`eslint.config.mjs`)
-- Exclude script files using `require()` from ESLint.
-
-### Next.js Configuration (`next.config.ts`)
-- Resolve type errors and linting errors to remove `ignoreBuildErrors` and `ignoreDuringBuilds` flags.
-
-## SCRIPT REFACTORING RULES
-
-- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
-    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
-    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
-    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
-    - Either remove `relax_quotes
+- Refactor data modules to reduce redundant logic, especially
