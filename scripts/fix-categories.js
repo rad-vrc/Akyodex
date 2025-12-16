@@ -34,6 +34,16 @@ console.log('Processing records...');
 // FOOD_KEYWORDS['野菜']の最初の要素'野菜'を除外（カテゴリ名なので）
 const vegetables = definitions.FOOD_KEYWORDS['野菜'].slice(1);
 
+/**
+ * 指定した除外リスト以外の動物サブカテゴリが存在するかチェック
+ * @param {string[]} categories - カテゴリ配列
+ * @param {string[]} excludes - 除外する動物サブカテゴリのリスト（例: ['動物/イカ', '動物/海の生き物']）
+ * @returns {boolean} - 他の動物サブカテゴリが存在すればtrue
+ */
+function hasOtherAnimalCategory(categories, excludes = []) {
+  return categories.some(c => c.startsWith('動物/') && !excludes.includes(c));
+}
+
 let modifiedCount = 0;
 const newRecords = [header];
 
@@ -78,11 +88,8 @@ for (let i = 1; i < records.length; i++) {
   if (/スイカ/.test(nickname)) {
     categories = categories.filter(c => !c.includes('海の生き物') && c !== '動物/イカ');
     // 動物カテゴリも削除（スイカはフルーツなので）
-    if (categories.includes('動物')) {
-      const hasOtherAnimal = categories.some(c => c.startsWith('動物/') && c !== '動物/海の生き物' && c !== '動物/イカ');
-      if (!hasOtherAnimal) {
-        categories = categories.filter(c => c !== '動物');
-      }
+    if (categories.includes('動物') && !hasOtherAnimalCategory(categories, ['動物/海の生き物', '動物/イカ'])) {
+      categories = categories.filter(c => c !== '動物');
     }
   }
   
@@ -298,8 +305,7 @@ for (let i = 1; i < records.length; i++) {
     // タコスはタコではないので、動物/タコを削除
     categories = categories.filter(c => c !== '動物/タコ');
     // 他の動物カテゴリがなければ動物と海の生き物も削除
-    const hasOtherAnimal = categories.some(c => c.startsWith('動物/') && c !== '動物/海の生き物' && c !== '動物/タコ');
-    if (!hasOtherAnimal) {
+    if (!hasOtherAnimalCategory(categories, ['動物/海の生き物', '動物/タコ'])) {
       categories = categories.filter(c => c !== '動物' && c !== '動物/海の生き物');
     }
   }
