@@ -156,7 +156,7 @@
     "id": "0018",
     "nickname": "ヒューマノイドAkyo",
     "avatarName": "Humanoid Akyo v1․71 Multi Clothes",
-    "category": "人類",
+    "category": "動物,動物/人間・人類",
     "comment": "",
     "author": "ugai",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4ddbe005-72e1-478d-848a-25bf5e4972c0"
@@ -219,7 +219,7 @@
     "id": "0025",
     "nickname": "アキョスAkyo",
     "avatarName": "Akyosu",
-    "category": "ギミック・特殊",
+    "category": "パロディ,パロディ/エヴァ",
     "comment": "",
     "author": "bbbbb_himiko",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_37ccdd47-0bf3-4ea5-b279-4fcff01f3c51"
@@ -561,7 +561,7 @@
     "id": "0063",
     "nickname": "ワイルズAkyo",
     "avatarName": "ワイルズAkyo",
-    "category": "チョコミント類",
+    "category": "チョコミント類,ローポリ",
     "comment": "",
     "author": "long-potato",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_78e8ae99-4c21-428b-9e05-1ec42a74102a"
@@ -939,7 +939,7 @@
     "id": "0105",
     "nickname": "サウAkyo",
     "avatarName": "SauAkyo",
-    "category": "未分類",
+    "category": "パロディ,パロディ/人物",
     "comment": "",
     "author": "Sau-AU",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_987cc6da-2d65-4cc3-881b-e0f528fd0ac2"
@@ -1938,7 +1938,7 @@
     "id": "0216",
     "nickname": "ローポリきつねAkyo",
     "avatarName": "akyo_狐ローポリ",
-    "category": "動物/きつね,動物",
+    "category": "動物/きつね,動物,ローポリ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_298de4f3-d106-4742-a795-7442cd7bd5cd"
@@ -2091,7 +2091,7 @@
     "id": "0233",
     "nickname": "メガネAkyo",
     "avatarName": "akyo__papipo 1․01",
-    "category": "家電・家具",
+    "category": "メガネ,パロディ,パロディ/人物",
     "comment": "元ネタがある？",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f68c924d-b93d-4d59-ba31-5d12abfe5a0f"
@@ -2136,7 +2136,7 @@
     "id": "0238",
     "nickname": "おばけきつねAkyo",
     "avatarName": "ローポリきつねyu-rei",
-    "category": "動物/きつね,ハロウィン,季節・行事,動物,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "動物/きつね,ハロウィン,季節・行事,動物,架空の存在,架空の存在/妖怪・おばけ,ローポリ",
     "comment": "生死不明、要確認",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bd6c9d1b-c6da-4d2a-9ebc-ce4453c94dd5"
@@ -3018,7 +3018,7 @@
     "id": "0336",
     "nickname": "はにわAkyo",
     "avatarName": "akyo_haniwa",
-    "category": "歴史",
+    "category": "歴史,像・埴輪",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2ab8f808-f666-4974-b2f2-af7065463b09"
@@ -3909,7 +3909,7 @@
     "id": "0435",
     "nickname": "りょうしAkyo",
     "avatarName": "akyo_猟師",
-    "category": "動物,動物/うし",
+    "category": "職業・家柄",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_997f4267-2f36-4d6c-9ebe-1b96f6592291"
@@ -4125,7 +4125,7 @@
     "id": "0459",
     "nickname": "うまはにわAkyo",
     "avatarName": "akyo_はにわうま",
-    "category": "動物,動物/うま,歴史",
+    "category": "動物,動物/うま,歴史,像・埴輪",
     "comment": "はにわとうまにも派生誕生",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa880970-2d3b-4cda-85f6-e1aee46b8e09"
@@ -4143,7 +4143,7 @@
     "id": "0461",
     "nickname": "はにわぶしAkyo",
     "avatarName": "akyo_はにわぶし",
-    "category": "歴史",
+    "category": "歴史,像・埴輪",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5c9ea1b2-1145-4c6d-bd24-54a8543fb4ef"
@@ -4305,7 +4305,7 @@
     "id": "0479",
     "nickname": "フェス気分のヤギAkyo",
     "avatarName": "フェス気分のヤギAkyo",
-    "category": "動物/ヤギ,ギミック・特殊,動物",
+    "category": "動物/ヤギ,ギミック・特殊,動物,季節・行事",
     "comment": "『Akyoのぱーりない』にてHowToMakeSushiさんのDJを待望するヤギAkyoが変化した姿",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_897563b1-f2a5-4c1a-a3ad-30b3ef964bcf"
@@ -4602,7 +4602,7 @@
     "id": "0512",
     "nickname": "にせムルルAkyo",
     "avatarName": "nisemururuAkyo",
-    "category": "パロディ/ムルル,パロディ",
+    "category": "パロディ,パロディ/VRChat",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_11aa9bc1-8682-4046-88c6-03b8bbaec49f"
@@ -4611,7 +4611,7 @@
     "id": "0513",
     "nickname": "まめひなたAkyo",
     "avatarName": "MamehinatAkyo",
-    "category": "パロディ/まめひなた,パロディ,自然",
+    "category": "パロディ,パロディ/VRChat",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_3f569570-9a19-4fed-b269-38ee69d5cde4"
@@ -4620,7 +4620,7 @@
     "id": "0514",
     "nickname": "VketちゃんAkyo",
     "avatarName": "Akyoketchan",
-    "category": "パロディ/Vketちゃん,パロディ",
+    "category": "パロディ,パロディ/VRChat",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0b080c7d-2c10-49be-ac2b-97d1601dda93"
@@ -4647,7 +4647,7 @@
     "id": "0517",
     "nickname": "キプフェルAkyo",
     "avatarName": "akyofel",
-    "category": "パロディ/キプフェル,パロディ",
+    "category": "パロディ,パロディ/VRChat",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_17630088-cb8e-4060-9a9c-08cc2d1a259e"
@@ -4674,7 +4674,7 @@
     "id": "0520",
     "nickname": "ヒューマノイドもどきAkyo",
     "avatarName": "NothumanoidAkyo",
-    "category": "ギミック・特殊",
+    "category": "なりきり・仮装,パロディ,パロディ/VRChat",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7672bbc5-b0aa-4062-b389-0faadf382bd0"
@@ -5286,7 +5286,7 @@
     "id": "0588",
     "nickname": "胴長パグAkyo",
     "avatarName": "胴長パグakyo",
-    "category": "パロディ,動物",
+    "category": "パロディ,パロディ/VRChat,動物,動物/いぬ",
     "comment": "",
     "author": "polf",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_92462918-6f82-4065-9233-8ac3bee80f5c"
@@ -5295,7 +5295,7 @@
     "id": "0589",
     "nickname": "ハウスネイルAkyo",
     "avatarName": "Akyothehousnail",
-    "category": "貝,建物,パロディ,動物",
+    "category": "貝,建物,パロディ,パロディ/ジャム・ザ・ハウスネイル,動物",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_54cc51a2-32a7-42ee-bec5-a67990cd7edb"
@@ -5448,7 +5448,7 @@
     "id": "0606",
     "nickname": "タコ皮Akyo",
     "avatarName": "タコ皮",
-    "category": "タコ乳類,動物,動物/海の生き物,動物/タコ",
+    "category": "動物/タコ乳類,動物,動物/海の生き物,動物/タコ",
     "comment": "タコ乳類",
     "author": "甘水あみ",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b96f7d86-62c3-4cd8-bae0-baea0e950c08"
@@ -5745,7 +5745,7 @@
     "id": "0639",
     "nickname": "自由のAkyo",
     "avatarName": "FreedomAkyo",
-    "category": "像,芸術・アート",
+    "category": "像・埴輪,芸術・アート",
     "comment": "",
     "author": "すいしょー",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7ec41427-1e99-4d5c-87c1-20d7e1d68b88"
@@ -5772,7 +5772,7 @@
     "id": "0642",
     "nickname": "エプリAkyo",
     "avatarName": "epliもどき",
-    "category": "パロディ",
+    "category": "パロディ,パロディ/VRChat",
     "comment": "",
     "author": "Rio_'",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_91bab6d5-ca89-491e-a862-f926000102e4"
