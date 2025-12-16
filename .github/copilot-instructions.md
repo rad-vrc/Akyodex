@@ -56,6 +56,9 @@ globs: *
 - In `scripts/fix-categories.js`, guard against null/undefined/empty `oldCategory` to prevent TypeError. Use `(oldCategory || '').replace(...)` or check if `oldCategory` is truthy before calling replace.
 - In `scripts/fix-categories-en.js`, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift.
 - キウイはフルーツ、キーウィは鳥として分類する。
+- Ensure the `needsRefetch` flag is leveraged to fully support multi-language data, and if a language mismatch is detected, data should be re-fetched client-side.
+- Store CDN URLs as environment variables for flexibility.
+- For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
 
 ## APPLIES TO RULES
 
@@ -88,6 +91,7 @@ The following rules apply to specific file patterns:
     - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
     - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
     - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+- Ensure all code adheres to a single responsibility principle and remove all duplicate code by creating new methods.
 
 ## SPECIFIC DATA FIXES
 
@@ -95,3 +99,8 @@ The following rules apply to specific file patterns:
 - Designate "ヒョウモントカゲモドキ" as "Animal/Dog".
 - Designate "DDT" as "パロディ/どんどん亭".
 - In cases where a category is hierarchical, create the individual categories also.
+- Remove the single categories for "揚げ物", "きゅうり", and "ナスビ" (use hierarchical versions instead).
+- Designate "ヒョウモントカゲモドキ" as "Animal/Dog".
+- Designate "DDT" as "パロディ/どんどん亭".
+- In cases where a category is hierarchical, create the individual categories also.
+- Ensure files end with a single newline character.
