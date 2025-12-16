@@ -172,6 +172,16 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('家電・家具')) categories.push('家電・家具');
   }
   
+  // 14b. 合体と変身を合体・変身に統一
+  if (categories.includes('合体')) {
+    categories = categories.filter(c => c !== '合体');
+    if (!categories.includes('合体・変身')) categories.push('合体・変身');
+  }
+  if (categories.includes('変身')) {
+    categories = categories.filter(c => c !== '変身');
+    if (!categories.includes('合体・変身')) categories.push('合体・変身');
+  }
+  
   // 15. 野菜系を食べ物/野菜/○○に階層化
   vegetables.forEach(veg => {
     if (categories.includes(veg)) {
