@@ -66,7 +66,8 @@ for (let i = 1; i < records.length; i++) {
   
   // 4. Clothing & Occupation → 分割（Clothing/Costume と Occupation/Family）
   // 正規の定義ファイルからキーワードとカテゴリ名を使用
-  const combinedCategoryPatterns = ['Costume & Occupation', 'Clothing & Occupation'];
+  // CSVデータでは中黒（・）を使用しているため、両方のパターンに対応
+  const combinedCategoryPatterns = ['Costume & Occupation', 'Clothing & Occupation', 'Costume・Occupation', 'Clothing・Occupation'];
   if (combinedCategoryPatterns.some(p => categories.includes(p))) {
     categories = categories.filter(c => !combinedCategoryPatterns.includes(c));
     const costumeKeywords = definitions.COSTUME_KEYWORDS;

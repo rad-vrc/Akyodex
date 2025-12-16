@@ -63,14 +63,14 @@ for (let i = 1; i < records.length; i++) {
     if (!hasCostume && !hasOccupation) categories.push(occupationCategory);
   }
   
-  // 2. 神カテゴリを追加、アヌビス系を架空の存在/神に
+  // 2. 神・天使カテゴリを追加、アヌビス系を架空の存在/天使・神に
   const godKeywords = ['アヌビス', 'バステト', 'ホルス', 'ラー', 'メジェド', 'ゼウス', 'ポセイドン', 'ハデス', 'オーディン', '後光'];
   if (godKeywords.some(k => nickname.includes(k))) {
     categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
     if (!categories.includes('架空の存在')) categories.push('架空の存在');
-    if (!categories.includes('架空の存在/神')) categories.push('架空の存在/神');
-    // 神カテゴリが追加された場合、単独の「神」カテゴリを削除
-    categories = categories.filter(c => c !== '神');
+    if (!categories.includes('架空の存在/天使・神')) categories.push('架空の存在/天使・神');
+    // 旧カテゴリを削除
+    categories = categories.filter(c => c !== '神' && c !== '架空の存在/神' && c !== '架空の存在/天界');
   }
   
   // 3. スイカAkyoから海の生き物カテゴリを削除（スイカはフルーツであってイカではない）
@@ -108,11 +108,11 @@ for (let i = 1; i < records.length; i++) {
     categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
   }
   
-  // 5d. 天使系はおばけを削除して架空の存在/天界を追加
+  // 5d. 天使系はおばけを削除して架空の存在/天使・神を追加
   if (nickname.includes('天使')) {
-    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
+    categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ' && c !== '架空の存在/天界');
     if (!categories.includes('架空の存在')) categories.push('架空の存在');
-    if (!categories.includes('架空の存在/天界')) categories.push('架空の存在/天界');
+    if (!categories.includes('架空の存在/天使・神')) categories.push('架空の存在/天使・神');
   }
   
   // 5e. amongAkyoをパロディ/Among Usに変更
