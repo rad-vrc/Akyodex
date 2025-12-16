@@ -354,7 +354,7 @@
     "id": "0040",
     "nickname": "ローストAkyo",
     "avatarName": "Roast_Akyo",
-    "category": "お肉,食べ物",
+    "category": "食べ物,食べ物/お肉",
     "comment": "",
     "author": "teramo",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_39d3a34e-ac77-44ef-8023-cb890f79cc5b"
@@ -480,7 +480,7 @@
     "id": "0054",
     "nickname": "チーズ牛丼Akyo",
     "avatarName": "cheese_gyuakyo_v0․9",
-    "category": "お肉,食べ物,食べ物/料理",
+    "category": "食べ物,食べ物/料理,食べ物/お肉",
     "comment": "",
     "author": "Hawawa9",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c2ba2bf3-942b-49c1-b22a-ff1dbd041d04"
@@ -498,7 +498,7 @@
     "id": "0056",
     "nickname": "肉Akyo",
     "avatarName": "肉Akyo",
-    "category": "動物/きつね,お肉,食べ物,動物",
+    "category": "動物/きつね,食べ物,動物,食べ物/お肉",
     "comment": "",
     "author": "甘水あみ",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_189e56d5-4ce0-4d9a-b965-e3b0f8056fb5"
@@ -615,7 +615,7 @@
     "id": "0069",
     "nickname": "エラーAkyo",
     "avatarName": "errorAkyo",
-    "category": "ギミック・特殊,架空の存在,架空の存在/神",
+    "category": "ギミック・特殊,架空の存在,架空の存在/天使・神",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c784d244-57e3-4cd8-8cde-62c6438ee161"
@@ -660,7 +660,7 @@
     "id": "0074",
     "nickname": "ゆるめのアヌビスAkyo",
     "avatarName": "Yurumeno_Akyobis",
-    "category": "架空の存在,架空の存在/神",
+    "category": "架空の存在,架空の存在/天使・神",
     "comment": "葱さん式アヌビスAkyo",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1d8a7298-ac5c-4a47-91db-0ff2f6f2e07a"
@@ -723,7 +723,7 @@
     "id": "0081",
     "nickname": "カーバンクルAkyo",
     "avatarName": "カーバンクルAkyo",
-    "category": "精霊,架空の存在,架空の存在/幻獣・精霊",
+    "category": "架空の存在,架空の存在/幻獣・精霊",
     "comment": "",
     "author": "幻遊童子",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_386955dc-f23f-47e6-aefd-5a51871b64d2"
@@ -759,7 +759,7 @@
     "id": "0085",
     "nickname": "タコスAkyo",
     "avatarName": "タコスAkyo",
-    "category": "タコス,食べ物,動物,動物/海の生き物,動物/タコ",
+    "category": "食べ物,食べ物/料理",
     "comment": "",
     "author": "スケタ_",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7deaf4fd-fb4d-4e53-8471-b84d2ce584a4"
@@ -993,7 +993,7 @@
     "id": "0111",
     "nickname": "天使Akyo",
     "avatarName": "Akyo Angel",
-    "category": "架空の存在,架空の存在/妖怪・おばけ",
+    "category": "架空の存在,架空の存在/天使・神",
     "comment": "",
     "author": "ElzharWP1／アレゾー",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5bcb4d80-7826-4a40-ba70-7e020504497a"
@@ -1047,7 +1047,7 @@
     "id": "0117",
     "nickname": "メジェドAkyo",
     "avatarName": "メジェドAkyo",
-    "category": "架空の存在,架空の存在/神",
+    "category": "架空の存在,架空の存在/天使・神",
     "comment": "",
     "author": "arukaH․",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_102d48b3-a841-47b1-ba93-042901dc84ac"
@@ -1092,7 +1092,7 @@
     "id": "0122",
     "nickname": "後光がなんかすごいAkyo",
     "avatarName": "後光がなんかすごいAkyo",
-    "category": "架空の存在,架空の存在/神",
+    "category": "架空の存在,架空の存在/天使・神",
     "comment": "",
     "author": "zhoney666",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6505171c-e680-4ef8-8845-b7a7ac342d68"
@@ -1587,7 +1587,7 @@
     "id": "0177",
     "nickname": "マフラーAkyo",
     "avatarName": "akyo_マフラー",
-    "category": "架空の存在,衣類・衣装,架空の存在/神",
+    "category": "架空の存在,衣類・衣装,架空の存在/天使・神",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b0dd2e0a-012c-4867-99c8-22a7e4b0ee79"
@@ -1947,7 +1947,7 @@
     "id": "0217",
     "nickname": "amongAkyo",
     "avatarName": "akyo_among",
-    "category": "架空の存在,架空の存在/妖怪・おばけ",
+    "category": "架空の存在,パロディ,パロディ/Among Us",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1e9aed2c-daed-4b61-a2c0-71a5f6805432"
@@ -2469,7 +2469,7 @@
     "id": "0275",
     "nickname": "ラーメンAkyo",
     "avatarName": "akyo_ramen",
-    "category": "食べ物,食べ物/料理,架空の存在,架空の存在/神",
+    "category": "食べ物,食べ物/料理,架空の存在,架空の存在/天使・神",
     "comment": "カップヌードルAkyo？",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ed372625-8a2f-434d-a1b3-bf79322e74a6"
@@ -3153,7 +3153,7 @@
     "id": "0351",
     "nickname": "天使きつねAkyo",
     "avatarName": "akyo engel",
-    "category": "動物/きつね,動物,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "動物/きつね,動物,架空の存在,架空の存在/天使・神",
     "comment": "別作者の天使Akyoも追加予定",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b600825f-8da6-462a-bb17-0e932ed01354"
@@ -4152,7 +4152,7 @@
     "id": "0462",
     "nickname": "アヌビスAkyo",
     "avatarName": "akyo_あぬびす",
-    "category": "架空の存在,架空の存在/神",
+    "category": "架空の存在,架空の存在/天使・神",
     "comment": "ささのきさん式アヌビスAkyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4ded4fea-bf3c-455d-b369-45ba7b30b63a"
@@ -4782,7 +4782,7 @@
     "id": "0532",
     "nickname": "ミャクミャクAkyo",
     "avatarName": "akyo akyoakyo",
-    "category": "パロディ/ミャクミャク,パロディ,神",
+    "category": "パロディ/ミャクミャク,パロディ,架空の存在,架空の存在/天使・神",
     "comment": "あきょあきょしてきた",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c28a2612-7037-4bf9-a04d-31ce7e3c1cb1"
@@ -5007,7 +5007,7 @@
     "id": "0557",
     "nickname": "カツサンドAkyo",
     "avatarName": "akyo カツサンド",
-    "category": "食べ物,揚げ物,食べ物/料理",
+    "category": "食べ物,食べ物/料理,食べ物/料理/揚げ物",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f4c46fd4-4770-4d08-93a5-f0917b798891"
@@ -5124,7 +5124,7 @@
     "id": "0570",
     "nickname": "AkyoチキンAkyo",
     "avatarName": "akyo チキ",
-    "category": "食べ物,揚げ物,食べ物/料理,パロディ/ファミリーマート,パロディ",
+    "category": "食べ物,食べ物/料理,パロディ/ファミリーマート,パロディ,食べ物/料理/揚げ物",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2e1f580d-3835-4ec8-9faa-33a6096e2a7a"
@@ -5313,7 +5313,7 @@
     "id": "0591",
     "nickname": "鯨肉Akyo",
     "avatarName": "鯨肉Akyo",
-    "category": "お肉,食べ物,動物",
+    "category": "食べ物,動物,食べ物/お肉",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"
@@ -5331,7 +5331,7 @@
     "id": "0593",
     "nickname": "ブレイドごっこAkyo",
     "avatarName": "bladegokkoAkyo",
-    "category": "変身,パロディ/仮面ライダー,パロディ",
+    "category": "パロディ/仮面ライダー,パロディ,合体・変身",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7306d8e6-9518-4337-b739-c8ddbbf65c95"
@@ -5412,7 +5412,7 @@
     "id": "0602",
     "nickname": "ギャレンごっこAkyo",
     "avatarName": "gyarengokkoAkyo",
-    "category": "変身,パロディ/仮面ライダー,パロディ",
+    "category": "パロディ/仮面ライダー,パロディ,合体・変身",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aae617bf-de58-4d95-ba31-b0a171dedd2d"
@@ -5484,7 +5484,7 @@
     "id": "0610",
     "nickname": "ゆめかわユニコーンAkyo",
     "avatarName": "yumekawaunicornAkyo",
-    "category": "架空の存在,動物,架空の存在/妖怪・おばけ,架空の存在/幻獣・精霊",
+    "category": "架空の存在,動物,架空の存在/幻獣・精霊",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b424082-6158-4f8c-ba09-93228245d37d"
@@ -5538,7 +5538,7 @@
     "id": "0616",
     "nickname": "精霊うまきょ",
     "avatarName": "精霊うまきょ",
-    "category": "精霊馬,キュウリ,ナスビ,食べ物/野菜,食べ物,動物,動物/うま,架空の存在,架空の存在/妖怪・おばけ,架空の存在/幻獣・精霊",
+    "category": "精霊馬,食べ物/野菜,食べ物,動物,動物/うま,架空の存在,架空の存在/幻獣・精霊,食べ物/野菜/きゅうり,食べ物/野菜/ナス",
     "comment": "精霊うまきょ。Android対応。",
     "author": "kuro5963",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b44829ee-239b-4121-bb0f-a9ee032b0634"
@@ -5592,7 +5592,7 @@
     "id": "0622",
     "nickname": "柔らかいAkyo",
     "avatarName": "柔らかいAkyo",
-    "category": "柔らかい",
+    "category": "素材・材質・生地,素材・材質・生地/柔らかい",
     "comment": "柔らかいAkyo",
     "author": "Holimond.jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7f76d4fe-6694-4ecb-95fc-7c88e09e79d3"
@@ -5601,7 +5601,7 @@
     "id": "0623",
     "nickname": "ミミックAkyo",
     "avatarName": "mimicAkyo",
-    "category": "変身,動物,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "動物,架空の存在,架空の存在/妖怪・おばけ,合体・変身",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffbda8f5-5b26-4501-ad7e-ef2bff74d143"
@@ -5781,7 +5781,7 @@
     "id": "0643",
     "nickname": "かっぱまきAkyo",
     "avatarName": "akyo かっぱまき",
-    "category": "キュウリ,食べ物,食べ物/料理,架空の存在,架空の存在/妖怪・おばけ,食べ物/寿司",
+    "category": "食べ物,食べ物/料理,食べ物/寿司,食べ物/野菜,食べ物/野菜/きゅうり",
     "comment": "新鮮なキュウリを使用しているらしい。",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7f39082b-0a33-414c-8a19-41c116b86f7f"
@@ -5997,7 +5997,7 @@
     "id": "0667",
     "nickname": "ランチャームAkyo",
     "avatarName": "akyo_ランチャーム",
-    "category": "調味料,お弁当,食べ物,食べ物/料理",
+    "category": "調味料,食べ物,食べ物/料理,食べ物/お弁当",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f1df92b1-52ff-4cd9-a47b-3ee5385a9af6"
@@ -6051,7 +6051,7 @@
     "id": "0673",
     "nickname": "Agyo",
     "avatarName": "agyo",
-    "category": "チョコミント類,合体,ギミック・特殊",
+    "category": "チョコミント類,ギミック・特殊,合体・変身",
     "comment": "",
     "author": "․reiki",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_349aeb2b-df20-4499-9729-fb818392a97f"
@@ -6060,7 +6060,7 @@
     "id": "0674",
     "nickname": "ウミガメAkyo",
     "avatarName": "akyo_うみがめ",
-    "category": "硬い,動物",
+    "category": "動物,素材・材質・生地,素材・材質・生地/硬い",
     "comment": "暖かい海に住み、サンゴ礁の周りを泳いでいる姿がよく見られる。また陸に上がり、砂浜を散歩することもあるようだ",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0a92e521-0723-4dc7-9dd8-23fe4724dc86"
