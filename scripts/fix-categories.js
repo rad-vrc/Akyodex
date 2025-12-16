@@ -317,6 +317,27 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('架空の存在/りゅう・ドラゴン')) categories.push('架空の存在/りゅう・ドラゴン');
   }
   
+  // お肉を食べ物/お肉に階層化
+  if (categories.includes('お肉')) {
+    categories = categories.filter(c => c !== 'お肉');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/お肉')) categories.push('食べ物/お肉');
+  }
+  
+  // お弁当を食べ物/お弁当に階層化
+  if (categories.includes('お弁当')) {
+    categories = categories.filter(c => c !== 'お弁当');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/お弁当')) categories.push('食べ物/お弁当');
+  }
+  
+  // ミャクミャクの神を架空の存在/天使・神に変換
+  if (nickname.includes('ミャクミャク') && categories.includes('神')) {
+    categories = categories.filter(c => c !== '神');
+    if (!categories.includes('架空の存在')) categories.push('架空の存在');
+    if (!categories.includes('架空の存在/天使・神')) categories.push('架空の存在/天使・神');
+  }
+  
   // 重複削除
   categories = [...new Set(categories)];
   
