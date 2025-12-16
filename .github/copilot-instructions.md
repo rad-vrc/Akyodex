@@ -59,6 +59,12 @@ globs: *
 - Ensure the `needsRefetch` flag is leveraged to fully support multi-language data, and if a language mismatch is detected, data should be re-fetched client-side.
 - Store CDN URLs as environment variables for flexibility.
 - For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
+- To prevent the English categorizer from adding fictional tags based on substring matches for "Oni," use a regular expression to restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion".
+- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js` ensure that:
+    - Language-specific keyword objects are extracted into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+    - Shared `processCategories` logic is moved into a common module (`scripts/update-categories-common.js`).
+    - Unnecessary `async` keyword is removed from `main()` functions if no `await` is used.
+    - Either `relax_quotes` and `relax_column_count` options are removed to enforce strict CSV parsing, or comments are added explaining why they are needed and post-parse validation is implemented.
 
 ## APPLIES TO RULES
 
@@ -91,7 +97,6 @@ The following rules apply to specific file patterns:
     - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
     - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
     - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
-- Ensure all code adheres to a single responsibility principle and remove all duplicate code by creating new methods.
 
 ## SPECIFIC DATA FIXES
 
@@ -99,8 +104,24 @@ The following rules apply to specific file patterns:
 - Designate "ヒョウモントカゲモドキ" as "Animal/Dog".
 - Designate "DDT" as "パロディ/どんどん亭".
 - In cases where a category is hierarchical, create the individual categories also.
-- Remove the single categories for "揚げ物", "きゅうり", and "ナスビ" (use hierarchical versions instead).
-- Designate "ヒョウモントカゲモドキ" as "Animal/Dog".
-- Designate "DDT" as "パロディ/どんどん亭".
-- In cases where a category is hierarchical, create the individual categories also.
 - Ensure files end with a single newline character.
+- If oldCategory is null/undefined/empty, guard against that in `scripts/fix-categories.js`. Use `(oldCategory || '').replace(...)` or check if `oldCategory` is truthy before calling replace.
+- In `scripts/fix-categories-en.js`, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift.
+- キウイはフルーツ、キーウィは鳥として分類する。
+- Ensure the `needsRefetch` flag is leveraged to fully support multi-language data, and if a language mismatch is detected, data should be re-fetched client-side.
+- Store CDN URLs as environment variables for flexibility.
+- For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
+- In `scripts/fix-categories-en.js` around lines 67 to 80, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift and ensure that the code correctly handles the Costume & Occupation categories, and also include the same fix in  `scripts/fix-categories.js`.
+- In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded array in `scripts/fix-categories.js` with an import of that named export and remove the local declaration. Ensure the import path is correct and run tests/lint to verify no unused variables or import errors.
+- Add a single newline character at the end of files.
+- In `src/hooks/use-language.ts` use robust parsing that handles cookies with or without spaces after semicolons and adds `Secure` flag to cookies when running on HTTPS (production).
+- Fix a bug in the English categorizer that causes fictional tags to be added based on substring matches. Because FICTIONAL_KEYWORDS contains the term "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
+    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
+    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
+    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to preserve existing API while providing O(1) lookups for larger datasets.
+- In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
+- In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
+- In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
