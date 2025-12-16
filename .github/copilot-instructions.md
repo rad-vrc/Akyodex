@@ -59,12 +59,61 @@ globs: *
 - Ensure the `needsRefetch` flag is leveraged to fully support multi-language data, and if a language mismatch is detected, data should be re-fetched client-side.
 - Store CDN URLs as environment variables for flexibility.
 - For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
-- To prevent the English categorizer from adding fictional tags based on substring matches for "Oni," use a regular expression to restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion".
+- To prevent the English categorizer from adding fictional tags based on substring matches for "Oni," use a regular expression to restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
 - In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js` ensure that:
     - Language-specific keyword objects are extracted into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
     - Shared `processCategories` logic is moved into a common module (`scripts/update-categories-common.js`).
-    - Unnecessary `async` keyword is removed from `main()` functions if no `await` is used.
-    - Either `relax_quotes` and `relax_column_count` options are removed to enforce strict CSV parsing, or comments are added explaining why they are needed and post-parse validation is implemented.
+    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
+    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+- In `scripts/fix-categories-en.js` around lines 67 to 80, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift and ensure that the code correctly handles the Costume & Occupation categories, and also include the same fix in  `scripts/fix-categories.js`.
+- In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded array in `scripts/fix-categories.js` with an import of that named export and remove the local declaration. Ensure the import path is correct and run tests/lint to verify no unused variables or import errors.
+- Add a single newline character at the end of files.
+- In `src/hooks/use-language.ts` use robust parsing that handles cookies with or without spaces after semicolons and adds `Secure` flag to cookies when running on HTTPS (production).
+- Fix a bug in the English categorizer that causes fictional tags to be added based on substring matches. Because FICTIONAL_KEYWORDS contains the term "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
+    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
+    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
+    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to preserve existing API while providing O(1) lookups for larger datasets.
+- In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
+- In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
+- In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
+- Remove duplicate entries from Dish array in category-definitions-en.js
+- Refactor category update scripts and fix Onion bug:
+    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
+    - Remove duplicate implementations from akyo-data.ts, akyo-data-server.ts, akyo-data-json.ts, akyo-data-kv.ts
+    - Remove unused/deprecated functions: getAllAttributes, getAllCreators, getDataSourceInfo, getKVStatus, checkKVStatus, clearKVCache, getKVMetadata
+    - Remove unused exports: getAkyoByIdFromJSON, getAllCategoriesFromJSON, getAllAuthorsFromJSON, getAkyoByIdFromKV, getAllCategoriesFromKV, getAllAuthorsFromKV, getAkyoDataFromKV
+    - Remove unused AkyoCsvRow interface
+    - Update knip.json: add dynamic import files to ignore, remove tailwindcss from ignoreDependencies
+    - Reduces code duplication and improves maintainability
+- Enable static generation for /zukan page:
+    - Add use-language hook for client-side language detection
+    - Modify page.tsx to use force-static with DEFAULT_LANGUAGE
+    - Update zukan-client.tsx to accept serverLang prop
+    - Page now pre-renders at build time (○ Static instead of ƒ Dynamic)
+    - Client detects user language and handles reload if mismatch
+    - ISR configured: 1 hour revalidation, 1 year cache
+- Implemented client-side data refetch for language mismatch:
+    - Add client-side data refetching when user's language differs from server
+    - Show loading state during language data fetch
+    - Localize error messages and 'no results' text
+    - Update use-language.ts with robust cookie parsing (handles ';' without space)
+    - Add Secure flag to cookies when running on HTTPS (production)
+    - Add refetchWithNewData to use-akyo-data hook
+    - Dynamically update categories/authors on language change
+    - Add trailing newline to copilot-instructions.md
+- Fix: 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+-   fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
 
 ## APPLIES TO RULES
 
@@ -101,8 +150,8 @@ The following rules apply to specific file patterns:
 ## SPECIFIC DATA FIXES
 
 - Remove the single categories for "揚げ物", "きゅうり", and "ナスビ" (use hierarchical versions instead).
-- Designate "ヒョウモントカゲモドキ" as "Animal/Dog".
-- Designate "DDT" as "パロディ/どんどん亭".
+- Designate \"ヒョウモントカゲモドキ\" as \"Animal/Dog\".
+- Designate \"DDT\" as \"パロディ/どんどん亭\".
 - In cases where a category is hierarchical, create the individual categories also.
 - Ensure files end with a single newline character.
 - If oldCategory is null/undefined/empty, guard against that in `scripts/fix-categories.js`. Use `(oldCategory || '').replace(...)` or check if `oldCategory` is truthy before calling replace.
@@ -125,3 +174,230 @@ The following rules apply to specific file patterns:
 - In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
 - In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
 - In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
+- Remove duplicate entries from Dish array in category-definitions-en.js
+- Refactor category update scripts and fix Onion bug:
+    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
+    - Remove duplicate implementations from akyo-data.ts, akyo-data-server.ts, akyo-data-json.ts, akyo-data-kv.ts
+    - Remove unused/deprecated functions: getAllAttributes, getAllCreators, getDataSourceInfo, getKVStatus, checkKVStatus, clearKVCache, getKVMetadata
+    - Remove unused exports: getAkyoByIdFromJSON, getAllCategoriesFromJSON, getAllAuthorsFromJSON, getAkyoByIdFromKV, getAllCategoriesFromKV, getAllAuthorsFromKV, getAkyoDataFromKV
+    - Remove unused AkyoCsvRow interface
+    - Update knip.json: add dynamic import files to ignore, remove tailwindcss from ignoreDependencies
+    - Reduces code duplication and improves maintainability
+- Enable static generation for /zukan page:
+    - Pre-renders with default language (Japanese)
+    - Parallel data fetching with Promise.all()
+    - React cache() prevents duplicate fetches
+    - ISR ensures CDN can cache this page for 1 hour
+    - Client handles language detection and refetching if needed
+- Implement client-side data refetch for language mismatch:
+    - Add client-side data refetching when user's language differs from server
+    - Show loading state during language data fetch
+    - Localize error messages and 'no results' text
+    - Update use-language.ts with robust cookie parsing (handles ';' without space)
+    - Add Secure flag to cookies when running on HTTPS (production)
+    - Add refetchWithNewData to use-akyo-data hook
+    - Dynamically update categories/authors on language change
+- Fix: 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+- fix(data): カテゴリ修正 - ラー神の誤検出を修正
+    - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
+    - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
+- fix(data): 複数のAkyoカテゴリを修正
+    - キュウリ → 食べ物/野菜/きゅうり
+    - ナスビ → 食べ物/野菜/ナス
+    - 揚げ物 → 食べ物/料理/揚げ物
+- fix(data): 硬い・柔らかいを階層型カテゴリに変換
+    - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+    - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
+- fix(data): サウAkyoをパロディ/人物に修正
+- In `scripts/fix-categories-en.js` around lines 66 to 78, the local costumeKeywords and occupationKeywords arrays are out of sync with the canonical lists in category-definitions-en.js; replace the hardcoded arrays with the canonical definitions (or import/require the arrays from category-definitions-en.js) and correct typos (e.g., change "John" to "Jong"/"John" per canonical, normalize "Kids" → "Kid", add missing entries like "Muffler" and the 22+ missing occupation keywords such as Athlete, Baseball, Soccer, Model, Actor, Painter, Writer, Mangaka, Engineer, Programmer, Cabin Attendant, Waitress, Diver, etc., and remove/replace extras like "Mail", "Postal", "Foot Soldier", "Miko", "Shrine" with the canonical forms "Station Staff" and "Shrine Maiden"); ensure comparisons use normalized lowercase forms and consider centralizing the keyword lists so future changes occur in one place.
+- In `scripts/fix-categories.js` around lines 56-57, the local costumeKeywords and occupationKeywords arrays are out of sync with scripts/category-definitions-ja.js causing missing replacements; update them to match the canonical COSTUME_KEYWORDS and OCCUPATION_KEYWORDS by either importing those arrays from scripts/category-definitions-ja.js or copying the missing entries into this file — specifically add 'ゆかた' and 'スク水' to costumeKeywords and add '職業', 'キャビンアテンダント', 'ウェイトレス', 'モデル', '俳優', '声優', '画家', '作家', '漫画家', 'エンジニア', 'プログラマー', 'スポーツ選手', '野球', 'サッカー', 'テニス', 'バスケ', 'バレー', '水泳', '陸上', '柔道', '剣道', '弓道', '相撲', 'ボクシング', 'プロレス' to occupationKeywords (prefer importing to avoid future drift).
+- In `scripts/fix-categories.js` around lines 40 to 46, the code calls oldCategory.replace(...) which throws if oldCategory is null/undefined/empty; guard against that by treating missing category as an empty string or skipping the row: check if oldCategory is truthy before calling replace, and set categories = [] (or use (oldCategory || '').replace(...)) so empty-category rows do not cause a TypeError and are handled safely.
+- In scripts/fix-categories-en.js around lines 67 to 80, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift and ensure that the code correctly handles the Costume & Occupation categories, and also include the same fix in  `scripts/fix-categories.js`.
+- In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded array in `scripts/fix-categories.js` with an import of that named export and remove the local declaration. Ensure the import path is correct and run tests/lint to verify no unused variables or import errors.
+- Add a single newline character at the end of files.
+- In `src/hooks/use-language.ts` use robust parsing that handles cookies with or without spaces after semicolons and adds `Secure` flag to cookies when running on HTTPS (production).
+- Fix a bug in the English categorizer that causes fictional tags to be added based on substring matches. Because FICTIONAL_KEYWORDS contains the term "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
+    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
+    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
+    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to preserve existing API while providing O(1) lookups for larger datasets.
+- In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
+- In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
+- In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
+- Remove duplicate entries from Dish array in category-definitions-en.js
+- Refactor category update scripts and fix Onion bug:
+    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
+    - Remove duplicate implementations from akyo-data.ts, akyo-data-server.ts, akyo-data-json.ts, akyo-data-kv.ts
+    - Remove unused/deprecated functions: getAllAttributes, getAllCreators, getDataSourceInfo, getKVStatus, checkKVStatus, clearKVCache, getKVMetadata
+    - Remove unused exports: getAkyoByIdFromJSON, getAllCategoriesFromJSON, getAllAuthorsFromJSON, getAkyoByIdFromKV, getAllCategoriesFromKV, getAllAuthorsFromKV, getAkyoDataFromKV
+    - Remove unused AkyoCsvRow interface
+    - Update knip.json: add dynamic import files to ignore, remove tailwindcss from ignoreDependencies
+- Enable static generation for /zukan page:
+    - Add use-language hook for client-side language detection
+    - Modify page.tsx to use force-static with DEFAULT_LANGUAGE
+    - Update zukan-client.tsx to accept serverLang prop
+    - Page now pre-renders at build time (○ Static instead of ƒ Dynamic)
+    - Client detects user language and handles reload if mismatch
+- Implement client-side data refetch for language mismatch:
+    - Add client-side data refetching when user's language differs from server
+    - Show loading state during language data fetch
+    - Localize error messages and 'no results' text
+    - Update use-language.ts with robust cookie parsing (handles ';' without space)
+    - Add Secure flag to cookies when running on HTTPS (production)
+    - Add refetchWithNewData to use-akyo-data hook
+    - Dynamically update categories/authors on language change
+- Fix: 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+- fix(data): カテゴリ修正 - ラー神の誤検出を修正
+    - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
+    - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
+- fix(data): 複数のAkyoカテゴリを修正
+    - キュウリ → 食べ物/野菜/きゅうり
+    - ナスビ → 食べ物/野菜/ナス
+    - 揚げ物 → 食べ物/料理/揚げ物
+- fix(data): 硬い・柔らかいを階層型カテゴリに変換
+    - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+    - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
+- fix(data): サウAkyoをパロディ/人物に修正
+
+---
+
+_**User (2025-12-16 13:58Z)**_
+
+PRのレビュー内容を反映して、特に"Onion"問題の修正が多言語で機能しているか確認してください。
+
+---
+
+_**Agent (model copilot/gemini-3-pro-preview)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="run_in_terminal">
+<details>
+<summary>Tool use: **run_in_terminal**</summary>
+
+
+Parameters:
+
+```json
+{
+  "kind": "terminal",
+  "terminalToolSessionId": "60a56c6e-f667-4f8a-8d5a-4205301087c9",
+  "terminalCommandId": "tool-110722b0-48a0-42a3-9a08-582a8c89862e",
+  "commandLine": {
+    "original": "gh pr view 211 --json comments --jq '.comments | map({author: .author.login, body: .body})'"
+  },
+  "language": "sh",
+  "terminalCommandState": {
+    "exitCode": 0,
+    "timestamp": 1765865965888,
+    "duration": 3415
+  },
+  "terminalCommandUri": {
+    "$mid": 1,
+    "path": "/ce770979071c8045fb6731c2efba5920/2",
+    "scheme": "vscode-terminal",
+    "query": "command=tool-110722b0-48a0-42a3-9a08-582a8c89862e"
+  },
+  "terminalTheme": {
+    "background": "#181818",
+    "foreground": "#cccccc"
+  }
+}
+```
+Additional data:
+
+```json
+{
+  "vscodeToolId": "run_in_terminal",
+  "isHidden": false
+}
+```
+Result:
+
+```json
+{
+  "invocationMessage": "\"ターミナルで実行\" を使用しています",
+  "isConfirmed": {
+    "type": 2,
+    "id": "chat.tools.global.autoApprove"
+  },
+  "content": "",
+  "textEditContent": "",
+  "toolCallResult": null
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="run_in_terminal">
+<details>
+<summary>Tool use: **run_in_terminal**</summary>
+
+
+Parameters:
+
+```json
+{
+  "kind": "terminal",
+  "terminalToolSessionId": "7d487066-f880-477e-b042-8616a4a0f25c",
+  "terminalCommandId": "tool-c4f34d9e-b02b-4453-9c6e-0a58f244a410",
+  "commandLine": {
+    "original": "cd /home/dorad/Akyodex &amp;&amp; gh pr view 211 2&gt;&amp;1 | head -20"
+  },
+  "language": "sh",
+  "terminalCommandState": {
+    "exitCode": 0,
+    "timestamp": 1765865014128,
+    "duration": 3280
+  },
+  "terminalCommandUri": {
+    "$mid": 1,
+    "path": "/ce770979071c8045fb6731c2efba5920/2",
+    "scheme": "vscode-terminal",
+    "query": "command=tool-c4f34d9e-b02b-4453-9c6e-0a58f244a410"
+  },
+  "terminalTheme": {
+    "background": "#181818",
+    "foreground": "#cccccc"
+  }
+}
+```
+Additional data:
+
+```json
+{
+  "vscodeToolId": "run_in_terminal",
+  "isHidden": false
+}
+```
+Result:
+
+```json
+{
+  "invocationMessage": "\"ターミナルで実行\" を使用しています",
+  "isConfirmed": {
+    "type": 2,
+    "id": "chat.tools.global
