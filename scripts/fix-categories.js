@@ -74,8 +74,11 @@ for (let i = 1; i < records.length; i++) {
   }
   
   // 2. 神・天使カテゴリを追加、アヌビス系を架空の存在/天使・神に
-  const godKeywords = ['アヌビス', 'バステト', 'ホルス', 'ラー', 'メジェド', 'ゼウス', 'ポセイドン', 'ハデス', 'オーディン', '後光'];
-  if (godKeywords.some(k => nickname.includes(k))) {
+  // 「ラー」は部分一致で誤検出するため（マフラー、エラー、ラーメン等）、除外パターンを設定
+  const godKeywords = ['アヌビス', 'バステト', 'ホルス', 'メジェド', 'ゼウス', 'ポセイドン', 'ハデス', 'オーディン', '後光'];
+  const raExcludePatterns = ['マフラー', 'エラー', 'ラーメン', 'カラー', 'ドラー', 'コーラ'];
+  const isRaGod = nickname.includes('ラー') && !raExcludePatterns.some(p => nickname.includes(p));
+  if (godKeywords.some(k => nickname.includes(k)) || isRaGod) {
     categories = categories.filter(c => c !== '架空の存在/妖怪・おばけ');
     if (!categories.includes('架空の存在')) categories.push('架空の存在');
     if (!categories.includes('架空の存在/天使・神')) categories.push('架空の存在/天使・神');
