@@ -150,6 +150,16 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('素材・材質・生地')) categories.push('素材・材質・生地');
   }
   
+  // 13b. 硬い・柔らかいを素材・材質・生地に変更（質感なので）
+  if (categories.includes('硬い')) {
+    categories = categories.filter(c => c !== '硬い');
+    if (!categories.includes('素材・材質・生地')) categories.push('素材・材質・生地');
+  }
+  if (categories.includes('柔らかい')) {
+    categories = categories.filter(c => c !== '柔らかい');
+    if (!categories.includes('素材・材質・生地')) categories.push('素材・材質・生地');
+  }
+  
   // 14. 家電と家具の単体カテゴリを削除（家電・家具に統一）
   if (categories.includes('家電')) {
     categories = categories.filter(c => c !== '家電');
