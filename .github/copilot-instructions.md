@@ -59,11 +59,6 @@ globs: *
 - Ensure the `needsRefetch` flag is leveraged to fully support multi-language data, and if a language mismatch is detected, data should be re-fetched client-side.
 - Store CDN URLs as environment variables for flexibility.
 - For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
-- In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js` ensure that:
-    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
-    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
-    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
-    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
 - In `scripts/fix-categories-en.js` around lines 66 to 78, the local costumeKeywords and occupationKeywords arrays are out of sync with the canonical lists in category-definitions-en.js; replace the hardcoded arrays with the canonical definitions (or import/require the arrays from category-definitions-en.js) and correct typos (e.g., change "John" to "Jong"/"John" per canonical, normalize "Kids" → "Kid", add missing entries like "Muffler" and the 22+ missing occupation keywords such as Athlete, Baseball, Soccer, Model, Actor, Painter, Writer, Mangaka, Engineer, Programmer, Cabin Attendant, Waitress, Diver, etc., and remove/replace extras like "Mail", "Postal", "Foot Soldier", "Miko", "Shrine" with the canonical forms "Station Staff" and "Shrine Maiden"); ensure comparisons use normalized lowercase forms and consider centralizing the keyword lists so future changes occur in one place.
 - In `scripts/fix-categories.js` around lines 56-57, the local costumeKeywords and occupationKeywords arrays are out of sync with scripts/category-definitions-ja.js causing missing replacements; update them to match the canonical COSTUME_KEYWORDS and OCCUPATION_KEYWORDS by either importing those arrays from scripts/category-definitions-ja.js or copying the missing entries into this file — specifically add 'ゆかた' and 'スク水' to costumeKeywords and add '職業', 'キャビンアテンダント', 'ウェイトレス', 'モデル', '俳優', '声優', '画家', '作家', '漫画家', 'エンジニア', 'プログラマー', 'スポーツ選手', '野球', 'サッカー', 'テニス', 'バスケ', 'バレー', '水泳', '陸上', '柔道', '剣道', '弓道', '相撲', 'ボクシング', 'プロレス' to occupationKeywords (prefer importing to avoid future drift).
 - In `scripts/fix-categories.js` around lines 40 to 46, the code calls oldCategory.replace(...) which throws if oldCategory is null/undefined/empty; guard against that by treating missing category as an empty string or skipping the row: check if oldCategory is truthy before calling replace, and set categories = [] (or use (oldCategory || '').replace(...)) so empty-category rows do not cause a TypeError and are handled safely.
@@ -134,6 +129,23 @@ globs: *
 - fix(data): サウAkyoをパロディ/人物に修正
 - fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16 07:26Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
 - fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
+- fix(data): カテゴリ修正 - 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+- From 2025-12-03_14-56Z-ワークスペースのレビューと改善提案.md (82765f10-4121-4eb5-ba62-f726efc644e3):
+    - ワークスペースをレビューして改善余地を洗い出してください。
+    - 良い点: 堅牢なアーキテクチャ、セキュリティ対策、React cache() の活用、ISR対応、詳細なドキュメント
+    - 高優先度の改善点: ESLintエラー、upload-akyo と update-akyo のコード重複、未使用のエクスポート
+    - 中優先度の改善点: next.config.ts の設定、未使用変数、データモジュールの重複
+    - 低優先度の改善点: 後方互換フィールドの冗長性、knip.json の不要な設定、add-tab.tsx のDOM直接操作、セキュリティ: CORSフォールバック
 
 ## APPLIES TO RULES
 
@@ -253,6 +265,34 @@ The following rules apply to specific file patterns:
     -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
 - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
     - データヘルパーの統合、未使用エクスポートの整理
+- fix(data): .github/copilot-instructions.md lines 63-165: the file contains many repeated rule blocks (e.g., multiple "From 2025-12-16 07:26Z" sections, repeated "Applies to" lists and duplicated categorization rules) making it redundant; remove all duplicate occurrences and keep one canonical instance of each distinct rule or section, merge identical "Applies to" entries into a single consolidated list, deduplicate repeated timestamps/entries so each rule appears only once, and reorder/renumber remaining lines if needed to maintain a clear, single authoritative sequence.
+- fix(data): Because the FICTIONAL_KEYWORDS contained the term "Oni", any nickname containing "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
+- fix(data): Remove duplicate entries from Dish array in category-definitions-en.js
+- fix(data): カテゴリ修正 - 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+- fix(data): カテゴリ修正 - 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+    -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+- fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
+    - データヘルパーの統合、未使用エクスポートの整理
+- fix(data): カテゴリ修正 - 複数のカテゴリ修正
+    -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    -  振袖どらごんAkyo: 季節・行事を追加
+    -  カフェどらごんAkyo: 職業・家柄を追加
+    -  風船きつねAkyo: 自然を削除
 
 ## APPLIES TO RULES
 
@@ -284,23 +324,4 @@ The following rules apply to specific file patterns:
     - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
     - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
     - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
-    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
-
-## SPECIFIC DATA FIXES
-
-- Remove the single categories for "揚げ物", "きゅうり", and "ナスビ" (use hierarchical versions instead).
-- Designate \"ヒョウモントカゲモドキ\" as \"Animal/Dog\".
-- Designate \"DDT\" as \"パロディ/どんどん亭\".
-- In cases where a category is hierarchical, create the individual categories also.
-- Ensure files end with a single newline character.
-- If oldCategory is null/undefined/empty, guard against that in `scripts/fix-categories.js`. Use `(oldCategory || '').replace(...)` or check if `oldCategory` is truthy before calling replace.
-- In `scripts/fix-categories-en.js`, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift.
-- キウイはフルーツ、キーウィは鳥として分類する。
-- Ensure the `needsRefetch` flag is leveraged to fully support multi-language data, and if a language mismatch is detected, data should be re-fetched client-side.
-- Store CDN URLs as environment variables for flexibility.
-- For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
-- In `scripts/fix-categories-en.js` around lines 66 to 78, the local costumeKeywords and occupationKeywords arrays are out of sync with the canonical lists in category-definitions-en.js; replace the hardcoded arrays with the canonical definitions (or import/require the arrays from category-definitions-en.js) and correct typos (e.g., change "John" to "Jong"/"John" per canonical, normalize "Kids" → "Kid", add missing entries like "Muffler" and the 22+ missing occupation keywords such as Athlete, Baseball, Soccer, Model, Actor, Painter, Writer, Mangaka, Engineer, Programmer, Cabin Attendant, Waitress, Diver, etc., and remove/replace extras like "Mail", "Postal", "Foot Soldier", "Miko", "Shrine" with the canonical forms "Station Staff" and "Shrine Maiden"); ensure comparisons use normalized lowercase forms and consider centralizing the keyword lists so future changes occur in one place.
-- In `scripts/fix-categories.js` around lines 56-57, the local costumeKeywords and occupationKeywords arrays are out of sync with scripts/category-definitions-ja.js causing missing replacements; update them to match the canonical COSTUME_KEYWORDS and OCCUPATION_KEYWORDS by either importing those arrays from scripts/category-definitions-ja.js or copying the missing entries into this file — specifically add 'ゆかた' and 'スク水' to costumeKeywords and add '職業', 'キャビンアテンダント', 'ウェイトレス', 'モデル', '俳優', '声優', '画家', '作家', '漫画家', 'エンジニア', 'プログラマー', 'スポーツ選手', '野球', 'サッカー', 'テニス', 'バスケ', 'バレー', '水泳', '陸上', '柔道', '剣道', '弓道', '相撲', 'ボクシング', 'プロレス' to occupationKeywords (prefer importing to avoid future drift).
-- In `scripts/fix-categories.js` around lines 40 to 46, the code calls oldCategory.replace(...) which throws if oldCategory is null/undefined/empty; guard against that by treating missing category as an empty string or skipping the row: check if oldCategory is truthy before calling replace, and set categories = [] (or use (oldCategory || '').replace(...)) so empty-category rows do not cause a TypeError and are handled safely.
-- In scripts/fix-categories-en.js around lines 67 to 80, replace hard-coded split-category string literals with the canonical names from the definitions CONFIG to avoid drift and ensure that the code correctly handles the Costume & Occupation categories, and also include the same fix in  `scripts/fix-categories.js`.
-- In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded
+    - Either remove `relax_quotes
