@@ -552,7 +552,7 @@
     "id": "0062",
     "nickname": "マンボーAkyo",
     "avatarName": "ManbowAkyo",
-    "category": "動物/魚,動物",
+    "category": "動物/魚,動物,動物/海の生き物",
     "comment": "",
     "author": "long-potato",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1063161d-4535-4896-b797-0f5ba63042b8"
@@ -714,7 +714,7 @@
     "id": "0080",
     "nickname": "ルネAkyo",
     "avatarName": "Rene_MAkyoritte",
-    "category": "動物/魚,芸術・アート,動物",
+    "category": "動物/魚,芸術・アート,動物,動物/海の生き物",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4bbdb42f-e1ff-4609-94df-bdf905b830fc"
@@ -786,7 +786,7 @@
     "id": "0088",
     "nickname": "チンアナゴAkyo",
     "avatarName": "ちんあきょー",
-    "category": "動物/魚,動物",
+    "category": "動物/魚,動物,動物/海の生き物",
     "comment": "",
     "author": "syuninn39",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f1d2dab-b56a-456c-87ab-bf1d22913e41"
@@ -1137,7 +1137,7 @@
     "id": "0127",
     "nickname": "ヤンバルクイナAkyo",
     "avatarName": "ヤンバルクイナAkyo",
-    "category": "動物,動物/ヤンバルクイナ",
+    "category": "動物,動物/鳥",
     "comment": "",
     "author": "まーほん（marhon）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8f7cb0a2-1711-459b-84fd-0582fb296e26"
@@ -1596,7 +1596,7 @@
     "id": "0178",
     "nickname": "ペンギンAkyo",
     "avatarName": "akyo_ペンギン",
-    "category": "動物,動物/海の生き物,動物/ペンギン,家電・家具",
+    "category": "動物,動物/海の生き物,動物/ペンギン,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8cf07106-3ca2-4e95-9997-ca9351395ebc"
@@ -1839,7 +1839,7 @@
     "id": "0205",
     "nickname": "ひよこAkyo",
     "avatarName": "akyo_hiyoko",
-    "category": "動物,動物/ひよこ",
+    "category": "動物,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1215c40a-e4af-4dfe-9787-57907e610c41"
@@ -2190,7 +2190,7 @@
     "id": "0244",
     "nickname": "ハスキーAkyo",
     "avatarName": "akyo_husky",
-    "category": "動物,動物/ハスキー",
+    "category": "動物,動物/いぬ",
     "comment": "いぬAkyoに分類していいか要確認",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_889f3ebc-bd9d-4cff-bdee-1ceea7fe2485"
@@ -2397,7 +2397,7 @@
     "id": "0267",
     "nickname": "ポンデAkyo",
     "avatarName": "akyo_ponde",
-    "category": "食べ物,食べ物/スイーツ",
+    "category": "食べ物,食べ物/スイーツ,パロディ,パロディ/ミスタードーナツ",
     "comment": "ポンデの部分は食べられるとのこと",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2e8b058d-2b4b-47c7-bd7b-7088cb5435aa"
@@ -2433,7 +2433,7 @@
     "id": "0271",
     "nickname": "タコさんAkyo",
     "avatarName": "akyo_takosan",
-    "category": "動物,動物/海の生き物,動物/タコ",
+    "category": "食べ物,食べ物/お弁当",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_afaee0d9-533e-4c9a-82f7-48e630981436"
@@ -2721,7 +2721,7 @@
     "id": "0303",
     "nickname": "キーウイAkyo",
     "avatarName": "akyo_キーウイ",
-    "category": "食べ物,食べ物/フルーツ",
+    "category": "動物,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5856dde7-2961-47af-8fa7-2ad9b70a9864"
@@ -2757,7 +2757,7 @@
     "id": "0307",
     "nickname": "すずめAkyo",
     "avatarName": "akyo_すずめ",
-    "category": "動物,動物/すずめ",
+    "category": "動物,動物/すずめ,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_55c87e14-ca61-41a9-a154-5e84a84c4fe7"
@@ -2973,7 +2973,7 @@
     "id": "0331",
     "nickname": "おじぞうAkyo",
     "avatarName": "akyo_ozizou",
-    "category": "動物,動物/ぞう,職業・家柄",
+    "category": "像・埴輪",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ece4276d-b611-428d-b51e-d7b5fb193348"
@@ -3549,7 +3549,7 @@
     "id": "0395",
     "nickname": "カラス天狗Akyo",
     "avatarName": "akyo_からすてんぐ",
-    "category": "架空の存在,架空の存在/妖怪・おばけ",
+    "category": "架空の存在,架空の存在/妖怪・おばけ,動物,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a2f5f8e3-d59e-45e5-8076-6798a7bad99a"
@@ -3675,7 +3675,7 @@
     "id": "0409",
     "nickname": "白鳥Akyo",
     "avatarName": "akyo_はくちょう",
-    "category": "動物,動物/白鳥",
+    "category": "動物,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_989dec92-536f-40bf-8d91-ca02f71b13e1"
@@ -3954,7 +3954,7 @@
     "id": "0440",
     "nickname": "かにAkyo",
     "avatarName": "akyo_kani",
-    "category": "動物,動物/海の生き物",
+    "category": "動物,動物/カニ,動物/海の生き物",
     "comment": "エビカニモード付き",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_50a5f466-4c46-4822-b219-8fdc0d630267"
@@ -4197,7 +4197,7 @@
     "id": "0467",
     "nickname": "にわとりAkyo",
     "avatarName": "akyo_にわとり",
-    "category": "動物,動物/とり",
+    "category": "動物,動物/鳥",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ac178f7-81b7-4f4d-af4f-8e55c5e1173a"
@@ -4422,7 +4422,7 @@
     "id": "0492",
     "nickname": "アマダイAkyo",
     "avatarName": "AmadaiAkyo",
-    "category": "動物/魚,動物",
+    "category": "動物/魚,動物,動物/海の生き物",
     "comment": "",
     "author": "ふらっと（flat）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e8b4b2ed-d735-48dc-b1f8-4350dc5fd7ef"
@@ -4944,7 +4944,7 @@
     "id": "0550",
     "nickname": "キリン装備きつねAkyo",
     "avatarName": "akyo キリン装備",
-    "category": "動物/きつね,職業・家柄,パロディ/モンハン,パロディ,動物,動物/キリン",
+    "category": "動物/きつね,職業・家柄,パロディ/モンハン,パロディ,動物",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e7a25fa3-d00f-4d5a-96ef-ad07a650f21c"
@@ -5160,7 +5160,7 @@
     "id": "0574",
     "nickname": "たこAkyo",
     "avatarName": "たこAkyo",
-    "category": "動物",
+    "category": "動物,動物/タコ,動物/海の生き物",
     "comment": "かわいい",
     "author": "ふらっと（flat）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a32c423c-45ee-416d-aad4-fcaf17e5d18e"
@@ -5295,7 +5295,7 @@
     "id": "0589",
     "nickname": "ハウスネイルAkyo",
     "avatarName": "Akyothehousnail",
-    "category": "貝,建物,パロディ,パロディ/ジャム・ザ・ハウスネイル,動物",
+    "category": "貝,建物,パロディ,パロディ/ジャム・ザ・ハウスネイル,動物,動物/かたつむり",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_54cc51a2-32a7-42ee-bec5-a67990cd7edb"
@@ -5493,7 +5493,7 @@
     "id": "0611",
     "nickname": "着ぐるみお頭Akyo",
     "avatarName": "kigurumiokashirakun",
-    "category": "動物/魚,職業・家柄,動物",
+    "category": "動物/魚,職業・家柄,動物,動物/海の生き物",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_70171281-584d-4036-9f2d-040493b699aa"
@@ -5565,7 +5565,7 @@
     "id": "0619",
     "nickname": "ヒョウモンダコAkyo",
     "avatarName": "ヒョウモンダコAkyo",
-    "category": "動物/タコ,動物/ヒョウモンダコ,動物/軟体,動物",
+    "category": "動物/タコ,動物/軟体,動物,動物/海の生き物",
     "comment": "悪くなったバナナじゃないよ。「たこAkyo」の改変だよ。https˸⁄⁄booth․pm⁄ja⁄items⁄6780828",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6d753be0-c587-4007-ba5d-4f44bf243314"
@@ -5574,7 +5574,7 @@
     "id": "0620",
     "nickname": "まめAkyo（ヤギ）",
     "avatarName": "まめAkyo（ヤギ）",
-    "category": "まめ,まめAkyo",
+    "category": "まめ,まめAkyo,動物,動物/ヤギ",
     "comment": "ぼさぼさ様による愛らしすぎる【無料】まめAkyo （Bean Akyo）【VRC向けアバター】（https˸⁄⁄booth․pm⁄ja⁄items⁄7385278）、のヤギAkyo改変。なんとなく耐久力が上がった気になっている。",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d5c02dcd-84d7-434e-a252-93525e918ca2"
@@ -5835,7 +5835,7 @@
     "id": "0649",
     "nickname": "しゃけAkyo",
     "avatarName": "akyo_しゃけ",
-    "category": "食べ物,動物/魚,動物",
+    "category": "食べ物,動物/魚,動物,動物/海の生き物",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_07d0cc53-5165-45a1-aabb-d769d325c66a"
@@ -6060,7 +6060,7 @@
     "id": "0674",
     "nickname": "ウミガメAkyo",
     "avatarName": "akyo_うみがめ",
-    "category": "動物,素材・材質・生地,素材・材質・生地/硬い",
+    "category": "動物,動物/かめ,素材・材質・生地,素材・材質・生地/硬い",
     "comment": "暖かい海に住み、サンゴ礁の周りを泳いでいる姿がよく見られる。また陸に上がり、砂浜を散歩することもあるようだ",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0a92e521-0723-4dc7-9dd8-23fe4724dc86"
