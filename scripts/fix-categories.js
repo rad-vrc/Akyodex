@@ -204,11 +204,58 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('架空の存在/妖怪・おばけ')) categories.push('架空の存在/妖怪・おばけ');
   }
   
-  // 精霊単体を架空の存在/幻獣・精霊に統合
-  if (categories.includes('精霊') && !categories.includes('架空の存在/幻獣・精霊')) {
+  // 精霊単体を削除（架空の存在/幻獣・精霊に移行済み）
+  // 架空の存在/幻獣・精霊がある場合は精霊単体を削除
+  if (categories.includes('精霊') && categories.includes('架空の存在/幻獣・精霊')) {
+    categories = categories.filter(c => c !== '精霊');
+  }
+  // 精霊単体のみの場合は架空の存在/幻獣・精霊に変換
+  if (categories.includes('精霊') && !categories.includes('架空の存在/幻獣・精霊') && !categories.includes('精霊馬')) {
     categories = categories.filter(c => c !== '精霊');
     if (!categories.includes('架空の存在')) categories.push('架空の存在');
     categories.push('架空の存在/幻獣・精霊');
+  }
+  // 精霊馬がある場合は精霊単体を削除（精霊馬は季節・行事関連）
+  if (categories.includes('精霊馬') && categories.includes('精霊')) {
+    categories = categories.filter(c => c !== '精霊');
+  }
+  
+  // キュウリを食べ物/野菜/きゅうりに変換
+  if (categories.includes('キュウリ')) {
+    categories = categories.filter(c => c !== 'キュウリ');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/野菜')) categories.push('食べ物/野菜');
+    if (!categories.includes('食べ物/野菜/きゅうり')) categories.push('食べ物/野菜/きゅうり');
+  }
+  
+  // ナスビを食べ物/野菜/ナスに変換
+  if (categories.includes('ナスビ')) {
+    categories = categories.filter(c => c !== 'ナスビ');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/野菜')) categories.push('食べ物/野菜');
+    if (!categories.includes('食べ物/野菜/ナス')) categories.push('食べ物/野菜/ナス');
+  }
+  
+  // 揚げ物を食べ物/料理/揚げ物に変換
+  if (categories.includes('揚げ物')) {
+    categories = categories.filter(c => c !== '揚げ物');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/料理')) categories.push('食べ物/料理');
+    if (!categories.includes('食べ物/料理/揚げ物')) categories.push('食べ物/料理/揚げ物');
+  }
+  
+  // タコスを食べ物/料理に変換（タコではない）
+  if (categories.includes('タコス')) {
+    categories = categories.filter(c => c !== 'タコス');
+    if (!categories.includes('食べ物')) categories.push('食べ物');
+    if (!categories.includes('食べ物/料理')) categories.push('食べ物/料理');
+    // タコスはタコではないので、動物/タコを削除
+    categories = categories.filter(c => c !== '動物/タコ');
+    // 他の動物カテゴリがなければ動物と海の生き物も削除
+    const hasOtherAnimal = categories.some(c => c.startsWith('動物/') && c !== '動物/海の生き物' && c !== '動物/タコ');
+    if (!hasOtherAnimal) {
+      categories = categories.filter(c => c !== '動物' && c !== '動物/海の生き物');
+    }
   }
   
   // りゅう・ドラゴンを架空の存在/りゅう・ドラゴンに統合
