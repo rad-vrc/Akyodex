@@ -354,7 +354,7 @@
     "id": "0040",
     "nickname": "ローストAkyo",
     "avatarName": "Roast_Akyo",
-    "category": "お肉,食べ物",
+    "category": "食べ物,食べ物/お肉",
     "comment": "",
     "author": "teramo",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_39d3a34e-ac77-44ef-8023-cb890f79cc5b"
@@ -480,7 +480,7 @@
     "id": "0054",
     "nickname": "チーズ牛丼Akyo",
     "avatarName": "cheese_gyuakyo_v0․9",
-    "category": "お肉,食べ物,食べ物/料理",
+    "category": "食べ物,食べ物/料理,食べ物/お肉",
     "comment": "",
     "author": "Hawawa9",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c2ba2bf3-942b-49c1-b22a-ff1dbd041d04"
@@ -498,7 +498,7 @@
     "id": "0056",
     "nickname": "肉Akyo",
     "avatarName": "肉Akyo",
-    "category": "動物/きつね,お肉,食べ物,動物",
+    "category": "動物/きつね,食べ物,動物,食べ物/お肉",
     "comment": "",
     "author": "甘水あみ",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_189e56d5-4ce0-4d9a-b965-e3b0f8056fb5"
@@ -4782,7 +4782,7 @@
     "id": "0532",
     "nickname": "ミャクミャクAkyo",
     "avatarName": "akyo akyoakyo",
-    "category": "パロディ/ミャクミャク,パロディ,神",
+    "category": "パロディ/ミャクミャク,パロディ,架空の存在,架空の存在/天使・神",
     "comment": "あきょあきょしてきた",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c28a2612-7037-4bf9-a04d-31ce7e3c1cb1"
@@ -5313,7 +5313,7 @@
     "id": "0591",
     "nickname": "鯨肉Akyo",
     "avatarName": "鯨肉Akyo",
-    "category": "お肉,食べ物,動物",
+    "category": "食べ物,動物,食べ物/お肉",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"
@@ -5997,7 +5997,7 @@
     "id": "0667",
     "nickname": "ランチャームAkyo",
     "avatarName": "akyo_ランチャーム",
-    "category": "調味料,お弁当,食べ物,食べ物/料理",
+    "category": "調味料,食べ物,食べ物/料理,食べ物/お弁当",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f1df92b1-52ff-4cd9-a47b-3ee5385a9af6"
