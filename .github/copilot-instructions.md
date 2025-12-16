@@ -60,7 +60,7 @@ globs: *
 - Store CDN URLs as environment variables for flexibility.
 - For view toggle buttons, always include the `type="button"` attribute to avoid accidental form submissions.
 - In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js` ensure that:
-    - Language-specific keyword objects are extracted into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
     - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
     - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
     - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
@@ -124,6 +124,11 @@ globs: *
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
+- fix(data): カテゴリ修正 - ハウスネイルAkyo、まめひなたAkyoなど
+    -  ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
+    -  まめひなたAkyo: 自然を削除
+    -  胴長パグAkyo: 動物/いぬを追加
+    -  エプリAkyo: パロディ/VRChatを追加
 
 ## APPLIES TO RULES
 
@@ -230,6 +235,14 @@ The following rules apply to specific file patterns:
     - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
     - 柔らかい → 素材・材質・生地, 素材・材質・生地/柔らかい
 - fix(data): サウAkyoをパロディ/人物に修正
+- fix(data): 複数のAkyoカテゴリを修正
+    - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
+    - まめひなたAkyo: 自然を削除
+    - 胴長パグAkyo: 動物/いぬを追加
+    - エプリAkyo: パロディ/VRChatを追加
+- fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
+- fix(data): レッサーパンダを動物カテゴリに修正
+- fix(data): サウAkyoをパロディ/人物に修正
 
 ## APPLIES TO RULES
 
@@ -289,10 +302,4 @@ The following rules apply to specific file patterns:
     - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
     - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
     - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
-- In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to preserve existing API while providing O(1) lookups for larger datasets.
-- In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
-- In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
-- In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
-- Remove duplicate entries from Dish array in category-definitions-en.js
-- Refactor category update scripts and fix Onion bug:
-    -
+- In `scripts/fix-categories.js` around lines 59 to 61, the current find
