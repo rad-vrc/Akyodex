@@ -158,11 +158,11 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('食べ物/パン')) categories.push('食べ物/パン');
   }
   
-  // 10. 寿司を食べ物/寿司に変更
+  // 10. 寿司を食べ物/お寿司に変更
   if (categories.includes('寿司')) {
     categories = categories.filter(c => c !== '寿司');
     if (!categories.includes('食べ物')) categories.push('食べ物');
-    if (!categories.includes('食べ物/寿司')) categories.push('食べ物/寿司');
+    if (!categories.includes('食べ物/お寿司')) categories.push('食べ物/お寿司');
   }
   
   // 11. のみものを飲み物に統一
