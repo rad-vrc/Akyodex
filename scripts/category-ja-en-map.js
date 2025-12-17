@@ -149,6 +149,8 @@ module.exports = {
   '武器・機械': 'Military・Weapons',
   '歴史': 'History',
   '国': 'Country',
+  '国/エジプト': 'Country/Egypt',
+  '国/日本': 'Country/Japan',
   '頂に立つ者': 'Ruler',
   '囚われの身': 'Captive',
   '死': 'Death',
@@ -236,4 +238,6 @@ module.exports = {
   '毛並み/ふわふわ': 'Fur/Fluffy',
   '毛並み/モサモサ': 'Fur/Shaggy',
   '髪型': 'Hair Style',
+  'ひげ': 'Beard',
+  'ちょんまげ': 'Chonmage',
 };

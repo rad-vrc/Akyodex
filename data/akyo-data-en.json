@@ -1956,7 +1956,7 @@
     "id": "0218",
     "nickname": "Egyptian Pharaoh Akyo",
     "avatarName": "akyo_ファラオ",
-    "category": "History,Country,Occupation/Status,Occupation/Status/Royalty,Ruler",
+    "category": "History,Country,Country/Egypt,Occupation/Status,Occupation/Status/Royalty,Ruler",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e08913-bd24-4e64-9175-5eefc0d5cf32"
@@ -3225,7 +3225,7 @@
     "id": "0359",
     "nickname": "King Akyo",
     "avatarName": "akyo_king",
-    "category": "History,Occupation/Status,Occupation/Status/Royalty,Ruler",
+    "category": "Occupation/Status,Occupation/Status/Royalty,Ruler,Beard",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_86a2c20a-370f-41b1-9ae8-92c37231dc6d"
@@ -3531,7 +3531,7 @@
     "id": "0393",
     "nickname": "Lord Akyo",
     "avatarName": "akyo_tono",
-    "category": "Occupation/Status,Ruler",
+    "category": "Occupation/Status,Ruler,Country,Country/Japan,History,Chonmage",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
