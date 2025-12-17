@@ -426,7 +426,7 @@
     "id": "0048",
     "nickname": "UFOAkyo",
     "avatarName": "UFAkyo",
-    "category": "乗り物,UMA,環境・天候,環境・天候/外宇宙",
+    "category": "乗り物,乗り物/航空,UMAkyo,環境・天候,環境・天候/外宇宙,技能・特性,技能・特性/酸素欠乏耐性,技能・特性/無重力耐性,ギミック・特殊",
     "comment": "",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -930,7 +930,7 @@
     "id": "0104",
     "nickname": "レインボーAkyo",
     "avatarName": "RainbowAkyo",
-    "category": "色",
+    "category": "色,チョコミント類",
     "comment": "",
     "author": "Sau-AU",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1d9cb50f-6080-4aa5-a62d-109dc2602794"
@@ -1218,7 +1218,7 @@
     "id": "0136",
     "nickname": "しいたけAkyo",
     "avatarName": "akyo_poopake",
-    "category": "食べ物,食べ物/野菜",
+    "category": "食べ物,食べ物/野菜,菌類",
     "comment": "",
     "author": "qchan949",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c63f638-d475-4c56-b1c5-3d9540cab7b4"
@@ -1956,7 +1956,7 @@
     "id": "0218",
     "nickname": "エジプトAkyo/ファラオAkyo",
     "avatarName": "akyo_ファラオ",
-    "category": "歴史,国,職業・身分,職業・身分/王族,頂に立つ者",
+    "category": "歴史,国,国/エジプト,職業・身分,職業・身分/王族,頂に立つ者",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e08913-bd24-4e64-9175-5eefc0d5cf32"
@@ -3225,7 +3225,7 @@
     "id": "0359",
     "nickname": "キングAkyo",
     "avatarName": "akyo_king",
-    "category": "歴史,職業・身分,職業・身分/王族,頂に立つ者",
+    "category": "職業・身分,職業・身分/王族,頂に立つ者,ひげ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_86a2c20a-370f-41b1-9ae8-92c37231dc6d"
@@ -3531,7 +3531,7 @@
     "id": "0393",
     "nickname": "とのAkyo",
     "avatarName": "akyo_tono",
-    "category": "職業・身分,頂に立つ者",
+    "category": "職業・身分,頂に立つ者,国,国/日本,歴史,ちょんまげ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"

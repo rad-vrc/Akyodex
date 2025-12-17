@@ -426,7 +426,7 @@
     "id": "0048",
     "nickname": "UFO Akyo",
     "avatarName": "UFAkyo",
-    "category": "Vehicle,UMA,Environment・Weather,Environment・Weather/Outer Space",
+    "category": "Vehicle,Vehicle/Aviation,UMAkyo,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Hypoxia Resistance,Skill・Trait/Zero-G Resistance,Gimmick・Special",
     "comment": "",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -930,7 +930,7 @@
     "id": "0104",
     "nickname": "Rainbow Akyo",
     "avatarName": "RainbowAkyo",
-    "category": "Color",
+    "category": "Color,Mint Chocolate",
     "comment": "",
     "author": "Sau-AU",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1d9cb50f-6080-4aa5-a62d-109dc2602794"
@@ -1218,7 +1218,7 @@
     "id": "0136",
     "nickname": "Shiitake Mushroom Akyo",
     "avatarName": "akyo_poopake",
-    "category": "Food,Food/Vegetable",
+    "category": "Food,Food/Vegetable,Fungus",
     "comment": "",
     "author": "qchan949",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c63f638-d475-4c56-b1c5-3d9540cab7b4"
@@ -1956,7 +1956,7 @@
     "id": "0218",
     "nickname": "Egyptian Pharaoh Akyo",
     "avatarName": "akyo_ファラオ",
-    "category": "History,Country,Occupation/Status,Occupation/Status/Royalty,Ruler",
+    "category": "History,Country,Country/Egypt,Occupation/Status,Occupation/Status/Royalty,Ruler",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e08913-bd24-4e64-9175-5eefc0d5cf32"
@@ -3225,7 +3225,7 @@
     "id": "0359",
     "nickname": "King Akyo",
     "avatarName": "akyo_king",
-    "category": "History,Occupation/Status,Occupation/Status/Royalty,Ruler",
+    "category": "Occupation/Status,Occupation/Status/Royalty,Ruler,Beard",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_86a2c20a-370f-41b1-9ae8-92c37231dc6d"
@@ -3531,7 +3531,7 @@
     "id": "0393",
     "nickname": "Lord Akyo",
     "avatarName": "akyo_tono",
-    "category": "Occupation/Status,Ruler",
+    "category": "Occupation/Status,Ruler,Country,Country/Japan,History,Chonmage",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
