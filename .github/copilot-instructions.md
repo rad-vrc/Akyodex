@@ -45,6 +45,8 @@ globs: *
 - Remove all unused variables identified by ESLint warnings.
 - Resolve type errors and linting errors to remove &#96;ignoreBuildErrors&#96; and &#96;ignoreDuringBuilds&#96;.
 - Refactor data modules (&#96;akyo-data.ts&#96;, &#96;akyo-data-server.ts&#96;, &#96;akyo-data-json.ts&#96;, &#96;akyo-data-kv.ts&#96;) to reduce redundant logic, especially for functions like &#96;getAllCategories&#96; and &#96;getAllAuthors&#96;.
+- Refactor category update scripts and fix Onion bug:
+    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
 
 ## DATA CATEGORIZATION RULES
 
@@ -81,8 +83,6 @@ globs: *
 - In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
 - In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
 - Remove duplicate entries from Dish array in category-definitions-en.js
-- Refactor category update scripts and fix Onion bug:
-    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
 - The following data categorization fixes have been applied:
     - 複数のカテゴリ修正
         -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
@@ -172,4 +172,22 @@ globs: *
         -  風船きつねAkyo: 自然を削除
         -  食べ物/寿司 → 食べ物/お寿司に変更
         -  レッサーパンダを動物カテゴリに修正
-            -   誤って食べ物/料理に分類されていたため、正しく動物/
+            -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+        - カテゴリ修正 - なりきり・仮装統合、個別修正
+            - データヘルパーの統合、未使用エクスポートの整理
+        -  カテゴリ修正 - ラー神の誤検出を修正
+            - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
+            - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
+        - 複数のAkyoカテゴリを修正
+            - キュウリ → 食べ物/野菜/きゅうり
+            - ナスビ → 食べ物/野菜/ナス
+            - 揚げ物 → 食べ物/料理/揚げ物
+        - 硬い・柔らかいを階層型カテゴリに変換
+            - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+            - 硬い → 素材・材質・生地/硬い
+        - サウAkyoをパロディ/人物に修正
+        - 複数のAkyoカテゴリを修正
+            - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
+            - まめひなたAkyo: 自然を削除
+            - 胴長パグAkyo: 動物/いぬを追加
+            - エプリAkyo: パロディ/VRChatを追加
