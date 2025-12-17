@@ -1641,7 +1641,7 @@
     "id": "0183",
     "nickname": "Fox Sister Akyo",
     "avatarName": "akyo_狐シスター",
-    "category": "Occupation/Status",
+    "category": "Animal/Fox,Animal,Occupation/Status",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_475416d0-6e42-402b-b5e0-129cc8d8a071"
@@ -1731,7 +1731,7 @@
     "id": "0193",
     "nickname": "Ninja Akyo",
     "avatarName": "akyo_ninja",
-    "category": "Occupation/Status",
+    "category": "Occupation/Status,Country,Country/Japan",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bfb73e94-4acf-4401-80fc-e8175486e0f6"
@@ -1857,7 +1857,7 @@
     "id": "0207",
     "nickname": "Foot Soldier Akyo",
     "avatarName": "akyo_asigaru2",
-    "category": "Occupation/Status,Occupation/Status/Soldier,Military・Weapons",
+    "category": "Occupation/Status,Occupation/Status/Soldier,Military・Weapons,Country,Country/Japan",
     "comment": "Asigaru1 is a rejected proposal",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_711b3c52-9f3d-479b-abdc-6c1b3f639cbd"
@@ -2982,7 +2982,7 @@
     "id": "0332",
     "nickname": "Samurai Akyo",
     "avatarName": "akyo_samurai",
-    "category": "History,Occupation/Status,Occupation/Status/Soldier",
+    "category": "History,Occupation/Status,Occupation/Status/Soldier,Military・Weapons,Country,Country/Japan",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b457017-3fd0-4fd7-bb8e-172f35487c34"
@@ -2991,7 +2991,7 @@
     "id": "0333",
     "nickname": "Fox Samurai Akyo",
     "avatarName": "akyo_きつね侍",
-    "category": "Animal/Fox,Animal,History,Occupation/Status,Occupation/Status/Soldier",
+    "category": "Animal/Fox,Animal,History,Occupation/Status,Occupation/Status/Soldier,Military・Weapons,Country,Country/Japan",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_32c0de34-9e10-4537-85fb-97aa19c20a15"
@@ -3513,7 +3513,7 @@
     "id": "0391",
     "nickname": "Uncle Akyo/Akyo Oji",
     "avatarName": "akyo_ozi",
-    "category": "Occupation/Status,Occupation/Status/Farmer,Elderly",
+    "category": "Occupation/Status,Occupation/Status/Farmer,Elderly,Beard",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e21d1394-394f-4bc3-a68a-55462ec730b6"
@@ -3540,7 +3540,7 @@
     "id": "0394",
     "nickname": "Submarine Akyo",
     "avatarName": "akyo_せんすい",
-    "category": "Occupation/Status",
+    "category": "Occupation/Status,Skill・Trait/Diving,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_131de112-3d4a-48a7-a9d5-c3f723091a78"
@@ -3594,7 +3594,7 @@
     "id": "0400",
     "nickname": "Sumo Wrestler Akyo",
     "avatarName": "akyo_rikishi",
-    "category": "Occupation/Status",
+    "category": "Occupation/Status,Country,Country/Japan",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_16421321-cee6-4ae4-8546-6ce4c435a2e8"
@@ -4296,7 +4296,7 @@
     "id": "0478",
     "nickname": "Akyo Train",
     "avatarName": "Akyonotesen",
-    "category": "Mint Chocolate,Vehicle,Occupation/Status",
+    "category": "Mint Chocolate,Vehicle,Vehicle/Land,Occupation/Status",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b4e941cc-6921-47ae-a3ef-9caf6d714062"

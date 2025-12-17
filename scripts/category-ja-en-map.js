@@ -70,6 +70,7 @@ module.exports = {
   'ローポリ': 'Low-poly',
   '乗り物': 'Vehicle',
   '乗り物/航空': 'Vehicle/Aviation',
+  '乗り物/陸上': 'Vehicle/Land',
   '体型': 'Body Type',
   '像・埴輪': 'Statue',
   '動物': 'Animal',
