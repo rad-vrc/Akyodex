@@ -390,7 +390,7 @@
     "id": "0044",
     "nickname": "苔Akyo",
     "avatarName": "Moss",
-    "category": "苔,植物",
+    "category": "植物,植物/苔",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7e4418e8-a734-4072-99c3-8653c755aaa8"
@@ -543,7 +543,7 @@
     "id": "0061",
     "nickname": "スギゴケAkyo",
     "avatarName": "sugigokeakyo",
-    "category": "苔,植物",
+    "category": "植物,植物/苔",
     "comment": "",
     "author": "long-potato",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d486c325-a03c-4e3f-8162-62b49a2ef279"
@@ -1947,7 +1947,7 @@
     "id": "0217",
     "nickname": "amongAkyo",
     "avatarName": "akyo_among",
-    "category": "架空の存在,パロディ,パロディ/Among Us",
+    "category": "パロディ,パロディ/Among Us",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1e9aed2c-daed-4b61-a2c0-71a5f6805432"
@@ -2964,7 +2964,7 @@
     "id": "0330",
     "nickname": "フルーツきつねAkyo",
     "avatarName": "akyo_fox fruits",
-    "category": "動物/きつね,動物,食べ物,食べ物/フルーツ,植物",
+    "category": "動物/きつね,動物,食べ物,食べ物/フルーツ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6b4cd56e-dbc2-4be1-bcd5-4f80cbd49fd2"
@@ -3648,7 +3648,7 @@
     "id": "0406",
     "nickname": "アキョベロス/ケルベロスAkyo",
     "avatarName": "アキョベロス",
-    "category": "架空の存在,架空の存在/幻獣・精霊",
+    "category": "動物,動物/いぬ,架空の存在,架空の存在/幻獣・精霊",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c287cc25-1e14-4312-b662-7a89c4c4358d"
@@ -3819,7 +3819,7 @@
     "id": "0425",
     "nickname": "サキュAkyo",
     "avatarName": "akyo_サキュ",
-    "category": "架空の存在,架空の存在/妖怪・おばけ",
+    "category": "架空の存在,架空の存在/悪魔・淫魔",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aba979b9-7a75-40a7-988b-89772726edc5"
@@ -4089,7 +4089,7 @@
     "id": "0455",
     "nickname": "木彫りきつねAkyo",
     "avatarName": "akyo_木彫りきつね",
-    "category": "動物/きつね,動物,植物,素材・材質・生地",
+    "category": "動物/きつね,動物,素材・材質・生地,芸術・アート",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_706f8cad-a7cd-4fa0-b9eb-2a7f47c7bb04"
@@ -4953,7 +4953,7 @@
     "id": "0551",
     "nickname": "デンタルAkyo",
     "avatarName": "akyo dental",
-    "category": "歯",
+    "category": "器官/歯",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4e10c1c4-f406-4d2d-9eaa-a97b41248f90"
@@ -5034,7 +5034,7 @@
     "id": "0560",
     "nickname": "でかちちサキュバスAkyo",
     "avatarName": "bigboinsuccubusAkyo",
-    "category": "チョコミント類,架空の存在,架空の存在/悪魔・淫魔,架空の存在/妖怪・おばけ",
+    "category": "チョコミント類,架空の存在,架空の存在/悪魔・淫魔",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_850b20aa-4552-44a4-9181-a8f57de72dcf"
@@ -5754,7 +5754,7 @@
     "id": "0640",
     "nickname": "まめがっぱあきょ",
     "avatarName": "まめがっぱあきょ",
-    "category": "架空の存在,まめ,まめAkyo",
+    "category": "架空の存在,架空の存在/妖怪・おばけ,まめ,まめAkyo",
     "comment": "きゅうりください",
     "author": "kuro5963",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b0bb887f-de8e-4d7b-a8ab-7284544351e6"
