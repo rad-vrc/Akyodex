@@ -426,7 +426,7 @@
     "id": "0048",
     "nickname": "UFO Akyo",
     "avatarName": "UFAkyo",
-    "category": "Vehicle,UMA",
+    "category": "Vehicle,UMA,Environment・Weather,Environment・Weather/Outer Space",
     "comment": "",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -3108,7 +3108,7 @@
     "id": "0346",
     "nickname": "Magical Fox Akyo",
     "avatarName": "akyo_FoxMagic",
-    "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Magic,Animal,Roleplay",
+    "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Animal,Roleplay,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_88494bab-d2bc-43f2-ae26-e886b86d9dae"
@@ -3126,7 +3126,7 @@
     "id": "0348",
     "nickname": "Magical Dragon Akyo",
     "avatarName": "akyo_DragonMagic",
-    "category": "Fictional Being,Skill・Trait/Flying,Season・Event/Halloween,Season・Event,Magic,Animal,Fictional Being/Dragon,Roleplay,Skill・Trait",
+    "category": "Fictional Being,Skill・Trait/Flying,Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Animal,Fictional Being/Dragon,Roleplay,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3972,7 +3972,7 @@
     "id": "0442",
     "nickname": "Magical Green Onion AkyoAkyo",
     "avatarName": "akyo_ねぎまほう",
-    "category": "Season・Event/Halloween,Season・Event,Magic,Food,Food/Vegetable,Roleplay",
+    "category": "Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Food,Food/Vegetable,Roleplay,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb18a90b-8452-4702-b24a-5cd9abd5d22a"
@@ -4836,7 +4836,7 @@
     "id": "0538",
     "nickname": "Magical Girl Fox Akyo",
     "avatarName": "akyo fox 魔法少女",
-    "category": "Animal/Fox,Occupation/Status,Season・Event/Halloween,Season・Event,Magic,Animal,Roleplay,Pretty",
+    "category": "Animal/Fox,Occupation/Status,Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Animal,Roleplay,Pretty,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
