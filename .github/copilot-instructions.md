@@ -43,7 +43,7 @@ globs: *
 - Convert &#96;require()&#96; statements to ES module format (&#96;import&#96;) or exclude script files from ESLint in &#96;eslint.config.mjs&#96;. Scripts using &#96;require()&#96; have been excluded from ESLint.
 - Remove unused exports or add them to the &#96;ignore&#96; list in &#96;knip.json&#96; if planned for future use.
 - Remove all unused variables identified by ESLint warnings.
-- Resolve type errors and linting errors to remove &#96;ignoreBuildErrors&#96; and &#96;ignoreDuringBuilds&#96; flags.
+- Resolve type errors and linting errors to remove &#96;ignoreBuildErrors&#96; and &#96;ignoreDuringBuilds&#96;.
 - Refactor data modules (&#96;akyo-data.ts&#96;, &#96;akyo-data-server.ts&#96;, &#96;akyo-data-json.ts&#96;, &#96;akyo-data-kv.ts&#96;) to reduce redundant logic, especially for functions like &#96;getAllCategories&#96; and &#96;getAllAuthors&#96;.
 
 ## DATA CATEGORIZATION RULES
@@ -101,16 +101,16 @@ globs: *
         - キュウリ → 食べ物/野菜/きゅうり
         - ナスビ → 食べ物/野菜/ナス
         - 揚げ物 → 食べ物/料理/揚げ物
-    - fix(data): 硬い・柔らかいを階層型カテゴリに変換
-        - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-        - 硬い → 素材・材質・生地/硬い
+        - 硬い・柔らかいを階層型カテゴリに変換
+            - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+            - 硬い → 素材・材質・生地/硬い
         - サウAkyoをパロディ/人物に修正
         - 複数のAkyoカテゴリを修正
             - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
             - まめひなたAkyo: 自然を削除
             - 胴長パグAkyo: 動物/いぬを追加
             - エプリAkyo: パロディ/VRChatを追加
--The following data categorization fixes have been applied:
+- The following data categorization fixes have been applied:
     - 複数のカテゴリ修正
         -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
         -  振袖どらごんAkyo: 季節・行事を追加
