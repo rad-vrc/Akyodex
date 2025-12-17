@@ -1038,7 +1038,7 @@
     "id": "0116",
     "nickname": "ひなたAkyo",
     "avatarName": "HinataAkyo",
-    "category": "自然",
+    "category": "自然・天候",
     "comment": "",
     "author": "ヒーハー ObamaSonic",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7fa2c48e-693e-4130-93a4-ca054a4ccb36"
@@ -1848,7 +1848,7 @@
     "id": "0206",
     "nickname": "海辺Akyo",
     "avatarName": "akyo_sea",
-    "category": "自然",
+    "category": "自然・天候",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_90e8e6ec-c455-4a45-b778-89651e4baec3"
@@ -3162,7 +3162,7 @@
     "id": "0352",
     "nickname": "エゾAkyo",
     "avatarName": "akyo_エゾ",
-    "category": "自然",
+    "category": "自然・天候",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -4008,7 +4008,7 @@
     "id": "0446",
     "nickname": "宇宙ノーマルAkyo",
     "avatarName": "akyo_うちゅう",
-    "category": "自然",
+    "category": "自然・天候",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7da3b3-0e5c-44a1-89fc-a9a89da3961f"
@@ -4179,7 +4179,7 @@
     "id": "0465",
     "nickname": "ゆきだるまきつねAkyo",
     "avatarName": "akyo_ゆきだるま",
-    "category": "動物/きつね,動物,家電・家具,歴史",
+    "category": "動物/きつね,動物,季節・行事,歴史",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9ba51df3-046a-4272-a755-61d651548875"
@@ -4368,7 +4368,7 @@
     "id": "0486",
     "nickname": "風邪ひきAkyo",
     "avatarName": "KazehikiAkyo",
-    "category": "チョコミント類,病気,自然・天候",
+    "category": "チョコミント類,病気・ウイルス,自然・天候",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -4791,7 +4791,7 @@
     "id": "0533",
     "nickname": "R.I.P.Akyo",
     "avatarName": "RestInAkyo",
-    "category": "チョコミント類,建物,ハロウィン,季節・行事,なりきり・仮装",
+    "category": "チョコミント類,建物,ハロウィン,季節・行事,なりきり・仮装,死",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ce6a950b-22e0-45b8-9407-e27476b1d595"
@@ -4800,7 +4800,7 @@
     "id": "0534",
     "nickname": "墓石Akyo",
     "avatarName": "bosekiAkyo",
-    "category": "チョコミント類,建物,ハロウィン,季節・行事,素材・材質・生地,素材・材質・生地/石,なりきり・仮装",
+    "category": "チョコミント類,建物,ハロウィン,季節・行事,素材・材質・生地,素材・材質・生地/石,なりきり・仮装,死",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4db2f6fb-ae17-4cc8-89ac-6306e161c9dc"
@@ -5025,7 +5025,7 @@
     "id": "0559",
     "nickname": "コロナAkyo",
     "avatarName": "coronakyo",
-    "category": "ウイルス",
+    "category": "病気・ウイルス",
     "comment": "",
     "author": "long-potato",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_965d33db-14b6-4435-8b35-a8e62af118e0"
@@ -5304,7 +5304,7 @@
     "id": "0590",
     "nickname": "川Akyo",
     "avatarName": "川Akyo",
-    "category": "自然",
+    "category": "自然・天候",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_56504c0b-cc0f-4e0f-b9ff-ee3172eb0191"
@@ -5358,7 +5358,7 @@
     "id": "0596",
     "nickname": "どんぐりAkyo",
     "avatarName": "DonguriAkyo",
-    "category": "木の実",
+    "category": "植物,植物/木の実",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4449f2ed-0c7a-4238-8893-28ed6527d04a"
@@ -5511,7 +5511,7 @@
     "id": "0613",
     "nickname": "どんぐりあきょー",
     "avatarName": "どんぐりあきょー",
-    "category": "どんぐり",
+    "category": "植物,植物/木の実",
     "comment": "Android対応",
     "author": "kuro5963",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c189474a-f4fa-4a2b-8c1f-8f57684d6f39"
@@ -6006,7 +6006,7 @@
     "id": "0668",
     "nickname": "風邪Akyo",
     "avatarName": "kazeakyo",
-    "category": "病気,チョコミント類,自然・天候",
+    "category": "病気・ウイルス,チョコミント類,自然・天候",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
@@ -6033,7 +6033,7 @@
     "id": "0671",
     "nickname": "多耳症Akyo",
     "avatarName": "多耳症あきょう",
-    "category": "器官,病気",
+    "category": "器官,病気・ウイルス",
     "comment": "",
     "author": "Kaiiiiiiiii",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8ea393a8-e6fa-4745-845e-974aa3fcf610"
