@@ -103,7 +103,7 @@ module.exports = {
     applianceCategory: 'Appliances・Furniture',
     plantCategory: 'Plant',
     costumeCategory: 'Clothing/Costume',
-    occupationCategory: 'Occupation/Family',
+    occupationCategory: 'Occupation/Status',
     seasonCategory: 'Season・Event',
     electronicCategory: 'Electronic',
     musicCategory: 'Music・Instrument',
