@@ -54,7 +54,7 @@ for (let i = 1; i < records.length; i++) {
   
   let categories = oldCategory.replace(/、/g, ',').split(',').map(c => c.trim()).filter(c => c);
   
-  // 1. 衣装・職業 → 削除（衣類・衣装と職業・家柄に分割）
+  // 1. 衣装・職業 → 削除（衣類・衣装と職業・身分に分割）
   // 正規の定義ファイルからキーワードとカテゴリ名を使用
   if (categories.includes('衣装・職業')) {
     categories = categories.filter(c => c !== '衣装・職業');

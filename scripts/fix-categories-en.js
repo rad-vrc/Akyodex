@@ -64,7 +64,7 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('Material & Fabric')) categories.push('Material & Fabric');
   }
   
-  // 4. Clothing & Occupation → 分割（Clothing/Costume と Occupation/Family）
+  // 4. Clothing & Occupation → 分割（Clothing/Costume と Occupation/Status）
   // 正規の定義ファイルからキーワードとカテゴリ名を使用
   // CSVデータでは中黒（・）を使用しているため、両方のパターンに対応
   const combinedCategoryPatterns = ['Costume & Occupation', 'Clothing & Occupation', 'Costume・Occupation', 'Clothing・Occupation'];

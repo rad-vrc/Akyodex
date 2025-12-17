@@ -201,7 +201,7 @@
     "id": "0023",
     "nickname": "ウーガーイーツAkyo",
     "avatarName": "Uuga Eats",
-    "category": "チョコミント類,職業・家柄",
+    "category": "チョコミント類,職業・身分,職業・身分/配達員",
     "comment": "",
     "author": "bbbbb_himiko",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9f160901-c9cf-4329-b021-e29b7dbffd0e"
@@ -237,7 +237,7 @@
     "id": "0027",
     "nickname": "スプーンフォークAkyo",
     "avatarName": "spoon_fork_akyo",
-    "category": "道具",
+    "category": "道具・文房具・生活用品",
     "comment": "",
     "author": "bbbbb_himiko",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_800ba63a-2ac7-4f4c-80da-16a2880e7972"
@@ -399,7 +399,7 @@
     "id": "0045",
     "nickname": "木目Akyo",
     "avatarName": "Wood",
-    "category": "植物,素材・材質・生地",
+    "category": "植物,素材・材質・生地,素材・材質・生地/植物/木,素材・材質・生地/硬い",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_415137aa-5cbf-4027-b9b9-668303cc2f70"
@@ -408,7 +408,7 @@
     "id": "0046",
     "nickname": "大理石Akyo",
     "avatarName": "Marble",
-    "category": "素材・材質・生地,素材・材質・生地/石",
+    "category": "素材・材質・生地,素材・材質・生地/石,素材・材質・生地/硬い",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1501f28e-a6db-4a5e-8968-1da53a1a961d"
@@ -489,7 +489,7 @@
     "id": "0055",
     "nickname": "皮Akyo",
     "avatarName": "皮Akyo",
-    "category": "動物/きつね,動物,素材・材質・生地,実写",
+    "category": "動物/きつね,動物,素材・材質・生地,素材・材質・生地/柔らかい,素材・材質・生地/動物,実写",
     "comment": "リアル狐Akyoとのこと",
     "author": "甘水あみ",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ccddd5fd-df57-47fa-b7ab-a3e0c868a4e7"
@@ -525,7 +525,7 @@
     "id": "0059",
     "nickname": "陸自Akyo",
     "avatarName": "陸自Akyo",
-    "category": "職業・家柄",
+    "category": "職業・身分,職業・身分/兵士,職業・身分/公務員,衣類・衣装,衣類・衣装/迷彩",
     "comment": "",
     "author": "long-potato",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2d80cf2e-afd4-464a-824e-27f38d4165de"
@@ -534,7 +534,7 @@
     "id": "0060",
     "nickname": "農kyo",
     "avatarName": "NOKYO",
-    "category": "職業・家柄",
+    "category": "職業・身分,職業・身分/農家,道具・文房具・生活用品",
     "comment": "",
     "author": "long-potato",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb7a3393-d5e0-4580-9ab3-de2f34a25ee3"
@@ -570,7 +570,7 @@
     "id": "0064",
     "nickname": "デニムAkyo",
     "avatarName": "Akyo_Denim",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/柔らかい",
     "comment": "",
     "author": "らど/rado1031",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4b4a1951-c15d-4adf-833f-dbe11d3e0752"
@@ -579,7 +579,7 @@
     "id": "0065",
     "nickname": "マグマAkyo",
     "avatarName": "Akyo_Magma",
-    "category": "素材・材質・生地,素材・材質・生地/石",
+    "category": "素材・材質・生地,素材・材質・生地/石,素材・材質・生地/硬い",
     "comment": "",
     "author": "らど/rado1031",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e85e82-5f1e-4557-a957-bed11f0c9f7a"
@@ -597,7 +597,7 @@
     "id": "0067",
     "nickname": "ステルスAkyo",
     "avatarName": "Akyo_Stealth",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/柔らかい,衣類・衣装,衣類・衣装/迷彩",
     "comment": "",
     "author": "らど/rado1031",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8f0a7c2d-4c8f-47ff-98cd-479a99b155d4"
@@ -813,7 +813,7 @@
     "id": "0091",
     "nickname": "ステンドグラスAkyo",
     "avatarName": "StainedGlassAkyo",
-    "category": "芸術・アート,素材・材質・生地,素材・材質・生地/石",
+    "category": "芸術・アート,素材・材質・生地,素材・材質・生地/ガラス,素材・材質・生地/硬い",
     "comment": "",
     "author": "Sau-AU",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_56f36a30-a80a-4bb4-a528-00432c10fa5d"
@@ -921,7 +921,7 @@
     "id": "0103",
     "nickname": "ボクセルAkyo",
     "avatarName": "BoxelAkyo",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,次元,次元/3D",
     "comment": "",
     "author": "Sau-AU",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_466a40fb-5aeb-4a7d-831b-5d815ddaa43e"
@@ -1020,7 +1020,7 @@
     "id": "0114",
     "nickname": "ふわふわAkyo",
     "avatarName": "ふわふわAkyo",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/柔らかい,毛並み,毛並み/ふわふわ",
     "comment": "472番は別作者バージョン",
     "author": "雨音さかな",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_74cec706-10c1-4bb2-9f3d-6d829dbd182a"
@@ -1038,7 +1038,7 @@
     "id": "0116",
     "nickname": "ひなたAkyo",
     "avatarName": "HinataAkyo",
-    "category": "自然・天候",
+    "category": "プリティ,季節・行事,季節・行事/VRChat",
     "comment": "",
     "author": "ヒーハー ObamaSonic",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7fa2c48e-693e-4130-93a4-ca054a4ccb36"
@@ -1110,7 +1110,7 @@
     "id": "0124",
     "nickname": "回折格子Akyo",
     "avatarName": "回折格子Akyo",
-    "category": "素材・材質・生地,素材・材質・生地/石",
+    "category": "素材・材質・生地,素材・材質・生地/ガラス",
     "comment": "",
     "author": "ふらっと（flat）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a24f37ec-7d3a-4537-85a9-a58c18080737"
@@ -1173,7 +1173,7 @@
     "id": "0131",
     "nickname": "踊り子Akyo",
     "avatarName": "踊り子Akyo",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "YukiYukiVirtual",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b200729e-1158-43a5-9ff8-0a84fbca061f"
@@ -1200,7 +1200,7 @@
     "id": "0134",
     "nickname": "アメジストAkyo",
     "avatarName": "AmethystAkyo",
-    "category": "素材・材質・生地,素材・材質・生地/石",
+    "category": "素材・材質・生地,素材・材質・生地/石,素材・材質・生地/硬い",
     "comment": "",
     "author": "しみずあきら",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffad6923-877f-4a5d-83b1-d4c2bb8d66b1"
@@ -1245,7 +1245,7 @@
     "id": "0139",
     "nickname": "雪だるまAkyo",
     "avatarName": "akyo_orf",
-    "category": "季節・行事,自然・天候,歴史",
+    "category": "季節・行事,環境・天候,素材・材質・生地,素材・材質・生地/冷たい,季節・行事/冬",
     "comment": "",
     "author": "qchan949",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4a34a656-b5f0-4367-890f-019196f6613a"
@@ -1308,7 +1308,7 @@
     "id": "0146",
     "nickname": "ベニスAkyo",
     "avatarName": "Venice Akyo",
-    "category": "歴史",
+    "category": "歴史,パロディ,パロディ/VRChat",
     "comment": "",
     "author": "Kageji_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ff63b39-3991-419a-a5ee-285c328a0771"
@@ -1371,7 +1371,7 @@
     "id": "0153",
     "nickname": "ハロウィンAkyo",
     "avatarName": "akyo__________コスプレ",
-    "category": "ハロウィン,季節・行事",
+    "category": "季節・行事/ハロウィン,季節・行事",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c73ed86-4a38-444e-b322-a6e02bca900c"
@@ -1380,7 +1380,7 @@
     "id": "0154",
     "nickname": "工事Akyo",
     "avatarName": "akyo____安全",
-    "category": "チョコミント類,職業・家柄",
+    "category": "チョコミント類,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cc69727b-9d2b-4e74-b874-3235df98c67f"
@@ -1389,7 +1389,7 @@
     "id": "0155",
     "nickname": "タオルAkyo",
     "avatarName": "akyo____タオル",
-    "category": "道具・文房具・生活用品,お風呂",
+    "category": "道具・文房具・生活用品,設備/お風呂,設備",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_969d3c87-669c-475a-8721-41e691ec6aef"
@@ -1515,7 +1515,7 @@
     "id": "0169",
     "nickname": "どらごんAkyo",
     "avatarName": "akyo_どらごん 1․52",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a197978a-19f3-4282-95f9-884320ef57c7"
@@ -1578,7 +1578,7 @@
     "id": "0176",
     "nickname": "ナースAkyo",
     "avatarName": "akyo_ナース",
-    "category": "職業・家柄",
+    "category": "職業・身分,職業・身分/医療従事者",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_90058d68-5c07-4632-a4e0-ee53b0344a55"
@@ -1632,7 +1632,7 @@
     "id": "0182",
     "nickname": "シスターAkyo",
     "avatarName": "akyo_シスター",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_3b3feea7-e6ec-414b-b4b3-83152f02954a"
@@ -1641,7 +1641,7 @@
     "id": "0183",
     "nickname": "狐シスターAkyo",
     "avatarName": "akyo_狐シスター",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_475416d0-6e42-402b-b5e0-129cc8d8a071"
@@ -1650,7 +1650,7 @@
     "id": "0184",
     "nickname": "郵便Akyo",
     "avatarName": "akyo_郵便",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cd62208e-db35-4573-9454-c5b18d9392a5"
@@ -1731,7 +1731,7 @@
     "id": "0193",
     "nickname": "にんじゃAkyo",
     "avatarName": "akyo_ninja",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bfb73e94-4acf-4401-80fc-e8175486e0f6"
@@ -1848,7 +1848,7 @@
     "id": "0206",
     "nickname": "海辺Akyo",
     "avatarName": "akyo_sea",
-    "category": "自然・天候",
+    "category": "環境・天候,技能・特性/せんすい,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_90e8e6ec-c455-4a45-b778-89651e4baec3"
@@ -1857,7 +1857,7 @@
     "id": "0207",
     "nickname": "あしがるAkyo",
     "avatarName": "akyo_asigaru2",
-    "category": "職業・家柄",
+    "category": "職業・身分,職業・身分/兵士,武器・機械",
     "comment": "asigaru1は没案",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_711b3c52-9f3d-479b-abdc-6c1b3f639cbd"
@@ -1875,7 +1875,7 @@
     "id": "0209",
     "nickname": "フランケンAkyo",
     "avatarName": "akyo_フランケン",
-    "category": "ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "季節・行事/ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c86e679-6d0e-4a64-8aec-a666c0bb3127"
@@ -1884,7 +1884,7 @@
     "id": "0210",
     "nickname": "ミイラAkyo",
     "avatarName": "akyo_ミイラ",
-    "category": "ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "季節・行事/ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c1a939ff-b601-46ad-8041-49948e8d04f9"
@@ -1920,7 +1920,7 @@
     "id": "0214",
     "nickname": "巫女きつねAkyo",
     "avatarName": "akyo_miko",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0c16e22-fb58-4040-b58b-bcce4ce9ffa1"
@@ -1956,7 +1956,7 @@
     "id": "0218",
     "nickname": "エジプトAkyo/ファラオAkyo",
     "avatarName": "akyo_ファラオ",
-    "category": "歴史",
+    "category": "歴史,国,職業・身分,職業・身分/王族,頂に立つ者",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e08913-bd24-4e64-9175-5eefc0d5cf32"
@@ -1992,7 +1992,7 @@
     "id": "0222",
     "nickname": "かいぞくAkyo",
     "avatarName": "akyo_kaizoku",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f02535d3-5b8a-4589-a468-a129f002c45b"
@@ -2019,7 +2019,7 @@
     "id": "0225",
     "nickname": "おそうじAkyo",
     "avatarName": "akyo___おそうじ 0․303",
-    "category": "職業・家柄",
+    "category": "職業・身分,道具・文房具・生活用品",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4aa294f8-df3e-447b-b5d1-9753663a69e3"
@@ -2064,7 +2064,7 @@
     "id": "0230",
     "nickname": "メイドきつねAkyo",
     "avatarName": "akyo___メイド 1․74",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分,プリティ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b6d06215-a01a-44f7-abfe-f9ef5d57b1db"
@@ -2082,7 +2082,7 @@
     "id": "0232",
     "nickname": "歩兵Akyo",
     "avatarName": "akyo__歩兵",
-    "category": "職業・家柄",
+    "category": "職業・身分,職業・身分/兵士",
     "comment": "緑はチョコミント類？",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_44db453a-6048-4c21-b993-4dd3717bfc1d"
@@ -2127,7 +2127,7 @@
     "id": "0237",
     "nickname": "ドラキュラAkyo",
     "avatarName": "akyo__Helloween",
-    "category": "ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "季節・行事/ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_839891c0-f3a2-4338-b071-a25a423d2567"
@@ -2136,7 +2136,7 @@
     "id": "0238",
     "nickname": "おばけきつねAkyo",
     "avatarName": "ローポリきつねyu-rei",
-    "category": "動物/きつね,ハロウィン,季節・行事,動物,架空の存在,架空の存在/妖怪・おばけ,ローポリ",
+    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,動物,架空の存在,架空の存在/妖怪・おばけ,ローポリ",
     "comment": "生死不明、要確認",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bd6c9d1b-c6da-4d2a-9ebc-ce4453c94dd5"
@@ -2145,7 +2145,7 @@
     "id": "0239",
     "nickname": "アイドルきつねAkyo",
     "avatarName": "akyo きつねidol",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分,プリティ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bb0395-8436-4dd9-b753-1d3555ebf798"
@@ -2361,7 +2361,7 @@
     "id": "0263",
     "nickname": "ペーパーAkyo",
     "avatarName": "akyo_paper",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/植物/木",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2ad9aca-efab-4ea1-a4f3-f34ef46bfa12"
@@ -2496,7 +2496,7 @@
     "id": "0278",
     "nickname": "LpackAkyo",
     "avatarName": "akyo_Lpack",
-    "category": "道具",
+    "category": "おくりもの",
     "comment": "レターパックAkyo？",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2434121e-3e7d-4595-b57d-c5bdffb56fb9"
@@ -2559,7 +2559,7 @@
     "id": "0285",
     "nickname": "消しゴムAkyo",
     "avatarName": "akyo_kesigomu",
-    "category": "道具・文房具・生活用品,学校,素材・材質・生地",
+    "category": "道具・文房具・生活用品,学校,素材・材質・生地,素材・材質・生地/柔らかい",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5c5210ce-ba4a-495b-a620-f843847a61d9"
@@ -2568,7 +2568,7 @@
     "id": "0286",
     "nickname": "キョンシーAkyo",
     "avatarName": "akyo_キョンシー",
-    "category": "ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
+    "category": "季節・行事/ハロウィン,季節・行事,架空の存在,架空の存在/妖怪・おばけ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_99abe0dd-2e1f-424a-bd8c-84f93c0294bf"
@@ -2577,7 +2577,7 @@
     "id": "0287",
     "nickname": "シャンプーAkyo",
     "avatarName": "akyo_シャンプー",
-    "category": "道具・文房具・生活用品,お風呂",
+    "category": "道具・文房具・生活用品,設備/お風呂,設備",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c41de7a4-73f5-49bd-bc9b-7318aea4a628"
@@ -2703,7 +2703,7 @@
     "id": "0301",
     "nickname": "コックきつねAkyo",
     "avatarName": "akyo_コックさん",
-    "category": "動物,動物/きつね,職業・家柄",
+    "category": "動物,動物/きつね,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a5b5fb92-581d-45c8-98ab-4b8abf668aa9"
@@ -2712,7 +2712,7 @@
     "id": "0302",
     "nickname": "警察きつねAkyo",
     "avatarName": "akyo_foxKeikan 1․3",
-    "category": "動物,動物/きつね,職業・家柄",
+    "category": "動物,動物/きつね,職業・身分,職業・身分/公務員",
     "comment": "きみ、たいほ。",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef434fa8-5f77-4a1d-beaa-fbfc10e506ec"
@@ -2748,7 +2748,7 @@
     "id": "0306",
     "nickname": "宇宙きつねAkyo",
     "avatarName": "akyo_fox space 1․07",
-    "category": "動物,動物/きつね,自然・天候",
+    "category": "動物,動物/きつね,環境・天候,職業・身分,環境・天候/外宇宙,技能・特性,技能・特性/無重力耐性,技能・特性/酸素欠乏耐性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b3112b5-a594-46d3-a5da-74c3be8b8ba0"
@@ -2766,7 +2766,7 @@
     "id": "0308",
     "nickname": "消防きつねAkyo",
     "avatarName": "akyo_fox syoubou 0․4",
-    "category": "動物,動物/きつね,職業・家柄",
+    "category": "動物,動物/きつね,職業・身分,職業・身分/公務員",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4fc01e6a-ae87-4ea9-8a17-34160c89b36f"
@@ -2811,7 +2811,7 @@
     "id": "0313",
     "nickname": "医者きつねAkyo",
     "avatarName": "akyo_きつねいしゃ",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分,職業・身分/医療従事者",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_19b1c941-7da8-42f8-af18-25c8689dbb58"
@@ -2946,7 +2946,7 @@
     "id": "0328",
     "nickname": "ワイバーンAkyo",
     "avatarName": "akyo_わいばーん 0․9",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_609ce6a5-44c6-4086-8598-5409e8355283"
@@ -2982,7 +2982,7 @@
     "id": "0332",
     "nickname": "足軽Akyo2／侍Akyo",
     "avatarName": "akyo_samurai",
-    "category": "歴史,職業・家柄",
+    "category": "歴史,職業・身分,職業・身分/兵士",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b457017-3fd0-4fd7-bb8e-172f35487c34"
@@ -2991,7 +2991,7 @@
     "id": "0333",
     "nickname": "きつね侍Akyo",
     "avatarName": "akyo_きつね侍",
-    "category": "動物/きつね,動物,歴史,職業・家柄",
+    "category": "動物/きつね,動物,歴史,職業・身分,職業・身分/兵士",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_32c0de34-9e10-4537-85fb-97aa19c20a15"
@@ -3000,7 +3000,7 @@
     "id": "0334",
     "nickname": "きつね探偵Akyo",
     "avatarName": "akyo_fox探偵",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_41736927-28e7-4914-8b5c-6155c04291b4"
@@ -3036,7 +3036,7 @@
     "id": "0338",
     "nickname": "りゅうAkyo",
     "avatarName": "akyo_ryuu",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4d6dc03d-98c2-4475-977a-fe1300f65be1"
@@ -3063,7 +3063,7 @@
     "id": "0341",
     "nickname": "富士山Akyo",
     "avatarName": "akyo_huzisan",
-    "category": "自然・天候,自然・天候/山",
+    "category": "環境・天候,環境・天候/山",
     "comment": "Akyoも積もれば山となる",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f43b4b71-3e5c-4ef8-a71c-29171bf1ef02"
@@ -3108,7 +3108,7 @@
     "id": "0346",
     "nickname": "まほうきつねAkyo",
     "avatarName": "akyo_FoxMagic",
-    "category": "動物/きつね,ハロウィン,季節・行事,まほう,動物,なりきり・仮装",
+    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,まほう,動物,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_88494bab-d2bc-43f2-ae26-e886b86d9dae"
@@ -3117,7 +3117,7 @@
     "id": "0347",
     "nickname": "ハロウィンカボチャAkyo",
     "avatarName": "akyo_ハロウィンカボチャ",
-    "category": "ハロウィン,季節・行事",
+    "category": "季節・行事/ハロウィン,季節・行事",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_62d7d050-c40e-4c60-936e-6dfc4809e646"
@@ -3126,7 +3126,7 @@
     "id": "0348",
     "nickname": "まほうどらごんAkyo",
     "avatarName": "akyo_DragonMagic",
-    "category": "架空の存在,ひこう,ハロウィン,季節・行事,まほう,動物,架空の存在/りゅう・ドラゴン,なりきり・仮装",
+    "category": "架空の存在,技能・特性/ひこう,季節・行事/ハロウィン,季節・行事,まほう,動物,架空の存在/りゅう・ドラゴン,なりきり・仮装,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3135,7 +3135,7 @@
     "id": "0349",
     "nickname": "セットどらごんAkyo",
     "avatarName": "akyo_どらごんセット",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_58d857fa-4105-4d0e-98e5-60e8fd7cafd8"
@@ -3144,7 +3144,7 @@
     "id": "0350",
     "nickname": "探偵どらごんAkyo",
     "avatarName": "akyo_どらごん探偵",
-    "category": "架空の存在,ひこう,動物,職業・家柄,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,動物,職業・身分,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5cec5888-b04c-4bad-8bf3-67c043daa73b"
@@ -3162,7 +3162,7 @@
     "id": "0352",
     "nickname": "エゾAkyo",
     "avatarName": "akyo_エゾ",
-    "category": "自然・天候",
+    "category": "動物",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -3207,7 +3207,7 @@
     "id": "0357",
     "nickname": "ないとどらごんAkyo",
     "avatarName": "akyo_どらごんないと",
-    "category": "架空の存在,ひこう,ハロウィン,季節・行事,動物,架空の存在/りゅう・ドラゴン,なりきり・仮装,職業・家柄,武器・機械",
+    "category": "架空の存在,技能・特性/ひこう,季節・行事/ハロウィン,季節・行事,動物,架空の存在/りゅう・ドラゴン,なりきり・仮装,職業・身分,武器・機械,職業・身分/兵士,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eec93a2a-cc5f-4106-bd3b-35969990009b"
@@ -3216,7 +3216,7 @@
     "id": "0358",
     "nickname": "風呂きつねAkyo",
     "avatarName": "akyo_foxBath",
-    "category": "動物/きつね,動物,自然・天候",
+    "category": "動物/きつね,動物,環境・天候,衣類・衣装,設備,設備/お風呂",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f5ff713f-0094-45b2-97b6-90f5722308eb"
@@ -3225,7 +3225,7 @@
     "id": "0359",
     "nickname": "キングAkyo",
     "avatarName": "akyo_king",
-    "category": "歴史",
+    "category": "歴史,職業・身分,職業・身分/王族,頂に立つ者",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_86a2c20a-370f-41b1-9ae8-92c37231dc6d"
@@ -3234,7 +3234,7 @@
     "id": "0360",
     "nickname": "振袖どらごんAkyo",
     "avatarName": "akyo_どらごん振袖",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン,季節・行事",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,季節・行事,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0458f77-35e9-4656-aaa5-ff622d81c619"
@@ -3441,7 +3441,7 @@
     "id": "0383",
     "nickname": "和メイドきつねAkyo",
     "avatarName": "akyo_きつね和メイド",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分,プリティ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2ebe0457-ed55-4618-96d4-dfde88bee666"
@@ -3513,7 +3513,7 @@
     "id": "0391",
     "nickname": "アーキョおじさん/おじAkyo",
     "avatarName": "akyo_ozi",
-    "category": "職業・家柄",
+    "category": "職業・身分,職業・身分/農家,お年寄り",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e21d1394-394f-4bc3-a68a-55462ec730b6"
@@ -3531,7 +3531,7 @@
     "id": "0393",
     "nickname": "とのAkyo",
     "avatarName": "akyo_tono",
-    "category": "職業・家柄",
+    "category": "職業・身分,頂に立つ者",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
@@ -3540,7 +3540,7 @@
     "id": "0394",
     "nickname": "せんすいAkyo",
     "avatarName": "akyo_せんすい",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_131de112-3d4a-48a7-a9d5-c3f723091a78"
@@ -3594,7 +3594,7 @@
     "id": "0400",
     "nickname": "りきしAkyo",
     "avatarName": "akyo_rikishi",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_16421321-cee6-4ae4-8546-6ce4c435a2e8"
@@ -3612,7 +3612,7 @@
     "id": "0402",
     "nickname": "つりAkyo",
     "avatarName": "akyo_つり",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e6c065ac-bfbd-451c-bc4a-9a14a34e9055"
@@ -3621,7 +3621,7 @@
     "id": "0403",
     "nickname": "モサモサAkyo",
     "avatarName": "akyo_モサモサ",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/柔らかい,毛並み,毛並み/モサモサ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_574728ce-c4c4-4410-a1df-4a4ae377411b"
@@ -3837,7 +3837,7 @@
     "id": "0427",
     "nickname": "八百屋ねぎAkyo",
     "avatarName": "akyo_ねぎ八百屋",
-    "category": "食べ物,食べ物/野菜,職業・家柄",
+    "category": "食べ物,食べ物/野菜,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ad9eb708-8fcc-43bd-9011-dd2e0eab93c7"
@@ -3846,7 +3846,7 @@
     "id": "0428",
     "nickname": "農家ねぎAkyo",
     "avatarName": "akyo_ねぎ農家",
-    "category": "食べ物,食べ物/野菜,職業・家柄",
+    "category": "食べ物,食べ物/野菜,職業・身分,職業・身分/農家",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7042dcef-edbf-4c68-b182-51d5aa0b0ee9"
@@ -3873,7 +3873,7 @@
     "id": "0431",
     "nickname": "駅員きつねAkyo",
     "avatarName": "akyo_きつね駅員",
-    "category": "動物/きつね,動物,職業・家柄",
+    "category": "動物/きつね,動物,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffd524f1-ea73-4338-8d2c-2d9d75d3ae82"
@@ -3882,7 +3882,7 @@
     "id": "0432",
     "nickname": "バニーきつねAkyo",
     "avatarName": "akyo_BunnyFox",
-    "category": "ハロウィン,季節・行事,動物,動物/きつね,衣類・衣装,なりきり・仮装",
+    "category": "季節・行事/ハロウィン,季節・行事,動物,動物/きつね,衣類・衣装,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_542c948a-4a80-4226-9f7b-8a7fe2c0049d"
@@ -3891,7 +3891,7 @@
     "id": "0433",
     "nickname": "ストレッチAkyo",
     "avatarName": "akyo_ストレッチ",
-    "category": "職業・家柄",
+    "category": "パロディ,パロディ/ストレッチマン,体育会系",
     "comment": "生涯健康、生涯Akyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_189d434f-2982-4b77-b6a2-d04aaaf62d05"
@@ -3900,7 +3900,7 @@
     "id": "0434",
     "nickname": "あかずきんきつねAkyo",
     "avatarName": "akyo_きつね赤ずきん",
-    "category": "動物/きつね,ハロウィン,季節・行事,動物,なりきり・仮装",
+    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,動物,なりきり・仮装",
     "comment": "おおかみAkyoに要注意",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea9e6901-c9c8-47e8-a90b-d55ce222b870"
@@ -3909,7 +3909,7 @@
     "id": "0435",
     "nickname": "りょうしAkyo",
     "avatarName": "akyo_猟師",
-    "category": "職業・家柄",
+    "category": "職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_997f4267-2f36-4d6c-9ebe-1b96f6592291"
@@ -3972,7 +3972,7 @@
     "id": "0442",
     "nickname": "まほうねぎAkyo",
     "avatarName": "akyo_ねぎまほう",
-    "category": "ハロウィン,季節・行事,まほう,食べ物,食べ物/野菜,なりきり・仮装",
+    "category": "季節・行事/ハロウィン,季節・行事,まほう,食べ物,食べ物/野菜,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb18a90b-8452-4702-b24a-5cd9abd5d22a"
@@ -4008,7 +4008,7 @@
     "id": "0446",
     "nickname": "宇宙ノーマルAkyo",
     "avatarName": "akyo_うちゅう",
-    "category": "自然・天候",
+    "category": "環境・天候,職業・身分,環境・天候/外宇宙,技能・特性,技能・特性/無重力耐性,技能・特性/酸素欠乏耐性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7da3b3-0e5c-44a1-89fc-a9a89da3961f"
@@ -4026,7 +4026,7 @@
     "id": "0448",
     "nickname": "カボチャハロウィンAkyo",
     "avatarName": "akyo_かぼちゃHW",
-    "category": "ハロウィン,季節・行事,なりきり・仮装",
+    "category": "季節・行事/ハロウィン,季節・行事,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7b2e4467-0cff-4a97-80ce-be816e05d345"
@@ -4035,7 +4035,7 @@
     "id": "0449",
     "nickname": "ハロウィンポンチョきつねAkyo",
     "avatarName": "akyo_foxHW",
-    "category": "動物/きつね,ハロウィン,季節・行事,動物,衣類・衣装,なりきり・仮装",
+    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,動物,衣類・衣装,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cec68cad-1972-4a81-8289-4adb9988d5cf"
@@ -4044,7 +4044,7 @@
     "id": "0450",
     "nickname": "キョンシーきつねAkyo",
     "avatarName": "akyo_きつねキョンシー",
-    "category": "動物/きつね,ハロウィン,季節・行事,動物,架空の存在,架空の存在/妖怪・おばけ,なりきり・仮装",
+    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,動物,架空の存在,架空の存在/妖怪・おばけ,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e407374-de0c-42d1-af14-a7b5ff7ebf07"
@@ -4080,7 +4080,7 @@
     "id": "0454",
     "nickname": "どらごんAkyoSP",
     "avatarName": "akyo_老どらごん",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "SPはサブスタのこと？",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_682931f3-e166-4f62-a626-2a1f39a9505e"
@@ -4089,7 +4089,7 @@
     "id": "0455",
     "nickname": "木彫りきつねAkyo",
     "avatarName": "akyo_木彫りきつね",
-    "category": "動物/きつね,動物,素材・材質・生地,芸術・アート",
+    "category": "動物/きつね,動物,素材・材質・生地,素材・材質・生地/植物/木,素材・材質・生地/硬い,芸術・アート",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_706f8cad-a7cd-4fa0-b9eb-2a7f47c7bb04"
@@ -4098,7 +4098,7 @@
     "id": "0456",
     "nickname": "ハロウィンだいこんAkyo",
     "avatarName": "akyo_だいこんHW",
-    "category": "食べ物/野菜,ハロウィン,季節・行事,食べ物,食べ物/野菜/だいこん,なりきり・仮装",
+    "category": "食べ物/野菜,季節・行事/ハロウィン,季節・行事,食べ物,食べ物/野菜/だいこん,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c9eda5f8-c8cb-4f2f-8797-375583500552"
@@ -4179,7 +4179,7 @@
     "id": "0465",
     "nickname": "ゆきだるまきつねAkyo",
     "avatarName": "akyo_ゆきだるま",
-    "category": "動物/きつね,動物,季節・行事,歴史",
+    "category": "動物/きつね,動物,季節・行事,素材・材質・生地,素材・材質・生地/冷たい",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9ba51df3-046a-4272-a755-61d651548875"
@@ -4242,7 +4242,7 @@
     "id": "0472",
     "nickname": "ふわふわAkyo",
     "avatarName": "Fuwafuwa_Akyo",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/柔らかい,毛並み,毛並み/ふわふわ",
     "comment": "114番は別作者様ver.",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f50c2f5-89b6-4cda-9799-fa674a38a20c"
@@ -4269,7 +4269,7 @@
     "id": "0475",
     "nickname": "囚人Akyo",
     "avatarName": "PrisonerAkyo",
-    "category": "チョコミント類,職業・家柄",
+    "category": "チョコミント類,職業・身分,職業・身分/受刑者,囚われの身",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8bb19cf9-83f2-4b67-9fe2-81a800704ba9"
@@ -4296,7 +4296,7 @@
     "id": "0478",
     "nickname": "あきょのてせん",
     "avatarName": "Akyonotesen",
-    "category": "チョコミント類,乗り物,職業・家柄",
+    "category": "チョコミント類,乗り物,職業・身分",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b4e941cc-6921-47ae-a3ef-9caf6d714062"
@@ -4314,7 +4314,7 @@
     "id": "0480",
     "nickname": "すし水勤務のAkyo",
     "avatarName": "すし水勤務のAkyo",
-    "category": "チョコミント類,職業・家柄,飲み物",
+    "category": "チョコミント類,職業・身分",
     "comment": "",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b38aeb2a-bb50-470a-82b6-ab977a023530"
@@ -4350,7 +4350,7 @@
     "id": "0484",
     "nickname": "水兵きつねAkyo",
     "avatarName": "akyo Fox すいへい",
-    "category": "動物/きつね,職業・家柄,動物,飲み物",
+    "category": "動物/きつね,職業・身分,動物",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e5aa01d-59a8-4631-8b48-46803c1d982a"
@@ -4368,7 +4368,7 @@
     "id": "0486",
     "nickname": "風邪ひきAkyo",
     "avatarName": "KazehikiAkyo",
-    "category": "チョコミント類,病気・ウイルス,自然・天候",
+    "category": "チョコミント類,病気・ウイルス,マスク,お大事に,お布団",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -4521,7 +4521,7 @@
     "id": "0503",
     "nickname": "銅像Akyo",
     "avatarName": "ブロンズAKyo リターンズ",
-    "category": "像・埴輪,素材・材質・生地,素材・材質・生地/金属",
+    "category": "像・埴輪,素材・材質・生地,素材・材質・生地/金属,素材・材質・生地/硬い",
     "comment": "",
     "author": "huyumusi",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_fefc7e4b-6b16-4488-8fb1-5049e12e99fc"
@@ -4701,7 +4701,7 @@
     "id": "0523",
     "nickname": "布ゴーストAkyo",
     "avatarName": "nunoghostAkyo",
-    "category": "チョコミント類,架空の存在,架空の存在/妖怪・おばけ,素材・材質・生地",
+    "category": "チョコミント類,架空の存在,架空の存在/妖怪・おばけ,素材・材質・生地,素材・材質・生地/柔らかい",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_520589a3-4c83-4ac7-a6f9-4ad24ab082db"
@@ -4737,7 +4737,7 @@
     "id": "0527",
     "nickname": "カフェどらごんAkyo",
     "avatarName": "akyo どらごんcefe",
-    "category": "架空の存在,ひこう,動物,架空の存在/りゅう・ドラゴン,職業・家柄",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,職業・身分,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a1f578c-cfb6-49bb-8833-aec0969cd2a5"
@@ -4791,7 +4791,7 @@
     "id": "0533",
     "nickname": "R.I.P.Akyo",
     "avatarName": "RestInAkyo",
-    "category": "チョコミント類,建物,ハロウィン,季節・行事,なりきり・仮装,死",
+    "category": "チョコミント類,建物,季節・行事/ハロウィン,季節・行事,なりきり・仮装,死",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ce6a950b-22e0-45b8-9407-e27476b1d595"
@@ -4800,7 +4800,7 @@
     "id": "0534",
     "nickname": "墓石Akyo",
     "avatarName": "bosekiAkyo",
-    "category": "チョコミント類,建物,ハロウィン,季節・行事,素材・材質・生地,素材・材質・生地/石,なりきり・仮装,死",
+    "category": "チョコミント類,建物,季節・行事/ハロウィン,季節・行事,素材・材質・生地,素材・材質・生地/石,素材・材質・生地/硬い,なりきり・仮装,死",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4db2f6fb-ae17-4cc8-89ac-6306e161c9dc"
@@ -4827,7 +4827,7 @@
     "id": "0537",
     "nickname": "ひなまつりおおかみAkyo",
     "avatarName": "akyo おおかみひなまつり",
-    "category": "季節・行事,動物,動物/おおかみ,職業・家柄",
+    "category": "季節・行事,動物,動物/おおかみ,職業・身分",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_fc1a94f3-8340-4b5c-9ead-3a768e95791b"
@@ -4836,7 +4836,7 @@
     "id": "0538",
     "nickname": "魔法少女きつねAkyo",
     "avatarName": "akyo fox 魔法少女",
-    "category": "動物/きつね,職業・家柄,ハロウィン,季節・行事,まほう,動物,なりきり・仮装",
+    "category": "動物/きつね,職業・身分,季節・行事/ハロウィン,季節・行事,まほう,動物,なりきり・仮装,プリティ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
@@ -4845,7 +4845,7 @@
     "id": "0539",
     "nickname": "うにAkyo",
     "avatarName": "akyo uni",
-    "category": "動物,自然・天候,自然・天候/海",
+    "category": "動物,動物/海の生き物,素材・材質・生地,素材・材質・生地/トゲトゲ",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b877aa1d-2fbc-497e-85e2-c7683ced3fe3"
@@ -4863,7 +4863,7 @@
     "id": "0541",
     "nickname": "オトモきつねAkyo",
     "avatarName": "akyo きつねオトモ",
-    "category": "動物/きつね,職業・家柄,パロディ/モンハン,パロディ,動物",
+    "category": "動物/きつね,職業・身分,パロディ/モンハン,パロディ,動物,武器・機械",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7e3f6a6d-83da-4f06-8e7e-274943b93199"
@@ -4872,7 +4872,7 @@
     "id": "0542",
     "nickname": "山笠Akyo",
     "avatarName": "Akyo_yamakasa",
-    "category": "チョコミント類,季節・行事,自然・天候",
+    "category": "チョコミント類,季節・行事",
     "comment": "",
     "author": "Masami.S",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_320c2cd3-0a4f-45ce-9e7a-09a55062ed0d"
@@ -4908,7 +4908,7 @@
     "id": "0546",
     "nickname": "Akyo魔博士",
     "avatarName": "akyo魔博士",
-    "category": "パロディ/ファンタスティック・フォー,パロディ,ハロウィン,季節・行事,職業・家柄,なりきり・仮装",
+    "category": "パロディ/ファンタスティック・フォー,パロディ,季節・行事/ハロウィン,季節・行事,職業・身分,なりきり・仮装",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0e4bd90-0cad-40ec-ab4c-759de355b9d4"
@@ -4944,7 +4944,7 @@
     "id": "0550",
     "nickname": "キリン装備きつねAkyo",
     "avatarName": "akyo キリン装備",
-    "category": "動物/きつね,職業・家柄,パロディ/モンハン,パロディ,動物",
+    "category": "動物/きつね,職業・身分,パロディ/モンハン,パロディ,動物,武器・機械",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_e7a25fa3-d00f-4d5a-96ef-ad07a650f21c"
@@ -4971,7 +4971,7 @@
     "id": "0553",
     "nickname": "RRどらごんAkyo",
     "avatarName": "どらごんRR",
-    "category": "架空の存在,ひこう,パロディ/ポケモン,パロディ,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,パロディ/ポケモン,パロディ,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eaf31613-4202-48bd-bb01-e587b45f038a"
@@ -5043,7 +5043,7 @@
     "id": "0561",
     "nickname": "コンクリートAkyo",
     "avatarName": "ConcreteAkyo",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/硬い",
     "comment": "",
     "author": "ふらっと（flat）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_9fd0ba74-53d8-4430-ae21-c8d897c10b19"
@@ -5052,7 +5052,7 @@
     "id": "0562",
     "nickname": "コンクリートAkyo2",
     "avatarName": "ConcreteAkyo",
-    "category": "素材・材質・生地",
+    "category": "素材・材質・生地,素材・材質・生地/硬い",
     "comment": "",
     "author": "ふらっと（flat）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aaa0fc29-6e51-4dfa-a332-649aff9e1483"
@@ -5079,7 +5079,7 @@
     "id": "0565",
     "nickname": "お姫様Akyo",
     "avatarName": "ohimesamaAkyo",
-    "category": "チョコミント類,職業・家柄,歴史",
+    "category": "チョコミント類,職業・身分,職業・身分/王族,歴史,プリティ",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c672232d-9fd0-40a8-8bce-8593db0699c9"
@@ -5196,7 +5196,7 @@
     "id": "0578",
     "nickname": "レインコートどらごんAkyo",
     "avatarName": "akyo どらごんレインコート",
-    "category": "架空の存在,ひこう,衣類・衣装,動物,架空の存在/りゅう・ドラゴン",
+    "category": "架空の存在,技能・特性/ひこう,衣類・衣装,動物,架空の存在/りゅう・ドラゴン,技能・特性",
     "comment": "雨の日のお出かけどらごんakyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d86a3dcc-cc1a-4947-afa8-05fa4f841e77"
@@ -5304,7 +5304,7 @@
     "id": "0590",
     "nickname": "川Akyo",
     "avatarName": "川Akyo",
-    "category": "自然・天候",
+    "category": "環境・天候",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_56504c0b-cc0f-4e0f-b9ff-ee3172eb0191"
@@ -5340,7 +5340,7 @@
     "id": "0594",
     "nickname": "ガンナーAkyo",
     "avatarName": "gunner akyo",
-    "category": "武器・機械,職業・家柄",
+    "category": "武器・機械,職業・身分,職業・身分/兵士",
     "comment": "",
     "author": "Fuganbya",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0adb324-619c-43c8-af9e-2ed4d98f8a2a"
@@ -5349,7 +5349,7 @@
     "id": "0595",
     "nickname": "アーミーAkyo",
     "avatarName": "akyo_army",
-    "category": "武器・機械,職業・家柄",
+    "category": "武器・機械,職業・身分,職業・身分/兵士",
     "comment": "",
     "author": "kazakami okenu",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f47c6214-6daf-4d40-9e6b-274a59662d2a"
@@ -5421,7 +5421,7 @@
     "id": "0603",
     "nickname": "着ぐるみAkyoくん",
     "avatarName": "kigurumiAkyokun",
-    "category": "チョコミント類,職業・家柄",
+    "category": "チョコミント類,職業・身分",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f1bf652f-164f-4f00-98a6-bb6db5be81ee"
@@ -5493,7 +5493,7 @@
     "id": "0611",
     "nickname": "着ぐるみお頭Akyo",
     "avatarName": "kigurumiokashirakun",
-    "category": "動物/魚,職業・家柄,動物,動物/海の生き物",
+    "category": "動物/魚,職業・身分,動物,動物/海の生き物,武器・機械,道具・文房具・生活用品",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_70171281-584d-4036-9f2d-040493b699aa"
@@ -5502,7 +5502,7 @@
     "id": "0612",
     "nickname": "風船きつねAkyo",
     "avatarName": "akyo 風船きつね",
-    "category": "動物/きつね,ひこう,動物",
+    "category": "動物/きつね,技能・特性/ひこう,動物,技能・特性",
     "comment": "風船でふよふよと漂うきつねakyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b53f9a0-2f30-406b-9f18-17466d95be44"
@@ -5637,7 +5637,7 @@
     "id": "0627",
     "nickname": "箱Akyoダム",
     "avatarName": "hakoAkyodam",
-    "category": "チョコミント類,素材・材質・生地",
+    "category": "チョコミント類,素材・材質・生地,素材・材質・生地/植物,素材・材質・生地/植物/木,パロディ,パロディ/ガンダム",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_23becd0a-c416-48c2-8cd5-cba021fe8237"
@@ -5673,7 +5673,7 @@
     "id": "0631",
     "nickname": "段ボールナイトAkyo",
     "avatarName": "danbouruKnightAkyo",
-    "category": "職業・家柄,素材・材質・生地",
+    "category": "職業・身分,素材・材質・生地,素材・材質・生地/植物,素材・材質・生地/植物/木,職業・身分/兵士,武器・機械",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d285ea6a-07b5-4a63-b8f5-9f5053281d5c"
@@ -5691,7 +5691,7 @@
     "id": "0633",
     "nickname": "たれ耳うさぎAkyo",
     "avatarName": "lopearedrabbitAkyo",
-    "category": "動物/うさぎ,動物",
+    "category": "動物/うさぎ,動物,器官,器官/耳",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_92434578-9723-41b7-b092-f1fe424aba27"
@@ -5700,7 +5700,7 @@
     "id": "0634",
     "nickname": "たれ耳うさぎバニーAkyo",
     "avatarName": "lopearedrabbitbunnyAkyo",
-    "category": "動物/うさぎ,衣類・衣装,動物",
+    "category": "動物/うさぎ,衣類・衣装,動物,器官,器官/耳",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d73a53f5-1abe-462a-ab3f-fb9ffac341d2"
@@ -5952,7 +5952,7 @@
     "id": "0662",
     "nickname": "ハロウィンメイドきつねAkyo",
     "avatarName": "akyo_メイド_ハロウィン",
-    "category": "動物/きつね,季節・行事,動物,職業・家柄,なりきり・仮装",
+    "category": "動物/きつね,季節・行事,動物,職業・身分,なりきり・仮装,プリティ,季節・行事/ハロウィン",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d9c07422-e074-487b-b565-f2ea1f6c0254"
@@ -5961,7 +5961,7 @@
     "id": "0663",
     "nickname": "医者どらごんAkyo",
     "avatarName": "akyo 医者どらごんakyo",
-    "category": "職業・家柄,架空の存在,架空の存在/りゅう・ドラゴン",
+    "category": "職業・身分,架空の存在,架空の存在/りゅう・ドラゴン,職業・身分/医療従事者,技能・特性/ひこう,動物,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c3441277-1558-433c-aa75-8bcd9469dc9c"
@@ -6006,7 +6006,7 @@
     "id": "0668",
     "nickname": "風邪Akyo",
     "avatarName": "kazeakyo",
-    "category": "病気・ウイルス,チョコミント類,自然・天候",
+    "category": "病気・ウイルス,チョコミント類,マスク,お大事に,お布団,枕,点滴",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
@@ -6024,7 +6024,7 @@
     "id": "0670",
     "nickname": "耳Akyo",
     "avatarName": "Vacanti Akyo",
-    "category": "器官",
+    "category": "器官,器官/耳",
     "comment": "",
     "author": "Kaiiiiiiiii",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b327e7d0-79ee-4b37-8e2c-3fa6db836cb0"
@@ -6033,7 +6033,7 @@
     "id": "0671",
     "nickname": "多耳症Akyo",
     "avatarName": "多耳症あきょう",
-    "category": "器官,病気・ウイルス",
+    "category": "器官,病気・ウイルス,器官/耳",
     "comment": "",
     "author": "Kaiiiiiiiii",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8ea393a8-e6fa-4745-845e-974aa3fcf610"
@@ -6087,7 +6087,7 @@
     "id": "0677",
     "nickname": "虹Akyo",
     "avatarName": "量産型ななきょう",
-    "category": "色,自然・天候",
+    "category": "色,環境・天候,レア",
     "comment": "とある雨の日、TVクルーが撮影したビデオに映り込んでおりその存在が公に晒されることとなった。",
     "author": "nanairoshikibu",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea5ee448-52f5-4684-9a5f-4113ba29bc4b"
@@ -6096,7 +6096,7 @@
     "id": "0678",
     "nickname": "雨Akyo",
     "avatarName": "amekyo",
-    "category": "自然・天候",
+    "category": "環境・天候,液体",
     "comment": "雨の日に現れるという噂がある。信憑性はかなり低い。",
     "author": "ameno-hisui",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ad6c464-645d-4b3d-b48b-8b173b9d1b6c"
