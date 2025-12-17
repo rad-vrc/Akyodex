@@ -1038,7 +1038,7 @@
     "id": "0116",
     "nickname": "Hinata Akyo",
     "avatarName": "HinataAkyo",
-    "category": "Nature",
+    "category": "Pretty,Season・Event,Season・Event/VRChat",
     "comment": "",
     "author": "ヒーハー ObamaSonic",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_7fa2c48e-693e-4130-93a4-ca054a4ccb36"
@@ -1245,7 +1245,7 @@
     "id": "0139",
     "nickname": "Olaf Akyo",
     "avatarName": "akyo_orf",
-    "category": "Season・Event,Nature,Material・Texture,Cold",
+    "category": "Season・Event,Environment・Weather,Material・Texture,Cold,Season・Event/Winter",
     "comment": "",
     "author": "qchan949",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4a34a656-b5f0-4367-890f-019196f6613a"
@@ -1389,7 +1389,7 @@
     "id": "0155",
     "nickname": "Towel Akyo",
     "avatarName": "akyo____タオル",
-    "category": "Daily Necessities,Bath",
+    "category": "Daily Necessities,Equipment/Bath,Equipment",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_969d3c87-669c-475a-8721-41e691ec6aef"
@@ -1515,7 +1515,7 @@
     "id": "0169",
     "nickname": "Dragon Akyo",
     "avatarName": "akyo_どらごん 1․52",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a197978a-19f3-4282-95f9-884320ef57c7"
@@ -1848,7 +1848,7 @@
     "id": "0206",
     "nickname": "Seaside Akyo",
     "avatarName": "akyo_sea",
-    "category": "Nature",
+    "category": "Environment・Weather,Skill・Trait/Diving,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_90e8e6ec-c455-4a45-b778-89651e4baec3"
@@ -2577,7 +2577,7 @@
     "id": "0287",
     "nickname": "Shampoo Akyo",
     "avatarName": "akyo_シャンプー",
-    "category": "Daily Necessities,Bath",
+    "category": "Daily Necessities,Equipment/Bath,Equipment",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c41de7a4-73f5-49bd-bc9b-7318aea4a628"
@@ -2748,7 +2748,7 @@
     "id": "0306",
     "nickname": "Space Fox Akyo",
     "avatarName": "akyo_fox space 1․07",
-    "category": "Animal,Animal/Fox,Nature",
+    "category": "Animal,Animal/Fox,Environment・Weather,Occupation/Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b3112b5-a594-46d3-a5da-74c3be8b8ba0"
@@ -2946,7 +2946,7 @@
     "id": "0328",
     "nickname": "Wyvern Akyo",
     "avatarName": "akyo_わいばーん 0․9",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_609ce6a5-44c6-4086-8598-5409e8355283"
@@ -3036,7 +3036,7 @@
     "id": "0338",
     "nickname": "Lon Akyo",
     "avatarName": "akyo_ryuu",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_4d6dc03d-98c2-4475-977a-fe1300f65be1"
@@ -3063,7 +3063,7 @@
     "id": "0341",
     "nickname": "Mount Fuji Akyo",
     "avatarName": "akyo_huzisan",
-    "category": "Nature,Nature/Mountain",
+    "category": "Environment・Weather,Environment・Weather/Mountain",
     "comment": "Akyo, little by little, makes a mountain.",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f43b4b71-3e5c-4ef8-a71c-29171bf1ef02"
@@ -3126,7 +3126,7 @@
     "id": "0348",
     "nickname": "Magical Dragon Akyo",
     "avatarName": "akyo_DragonMagic",
-    "category": "Fictional Being,Flying,Season・Event/Halloween,Season・Event,Magic,Animal,Fictional Being/Dragon,Roleplay",
+    "category": "Fictional Being,Skill・Trait/Flying,Season・Event/Halloween,Season・Event,Magic,Animal,Fictional Being/Dragon,Roleplay,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3135,7 +3135,7 @@
     "id": "0349",
     "nickname": "Dragon Set Akyo",
     "avatarName": "akyo_どらごんセット",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_58d857fa-4105-4d0e-98e5-60e8fd7cafd8"
@@ -3144,7 +3144,7 @@
     "id": "0350",
     "nickname": "Detective Dragon Akyo",
     "avatarName": "akyo_どらごん探偵",
-    "category": "Fictional Being,Flying,Animal,Occupation/Status,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Occupation/Status,Fictional Being/Dragon,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5cec5888-b04c-4bad-8bf3-67c043daa73b"
@@ -3162,7 +3162,7 @@
     "id": "0352",
     "nickname": "Ezo Akyo",
     "avatarName": "akyo_エゾ",
-    "category": "Nature",
+    "category": "Animal",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -3207,7 +3207,7 @@
     "id": "0357",
     "nickname": "Knight Dragon Akyo",
     "avatarName": "akyo_どらごんないと",
-    "category": "Fictional Being,Flying,Season・Event/Halloween,Season・Event,Animal,Fictional Being/Dragon,Roleplay,Occupation/Status,Military・Weapons,Occupation/Status/Soldier",
+    "category": "Fictional Being,Skill・Trait/Flying,Season・Event/Halloween,Season・Event,Animal,Fictional Being/Dragon,Roleplay,Occupation/Status,Military・Weapons,Occupation/Status/Soldier,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eec93a2a-cc5f-4106-bd3b-35969990009b"
@@ -3216,7 +3216,7 @@
     "id": "0358",
     "nickname": "Bath Fox Akyo",
     "avatarName": "akyo_foxBath",
-    "category": "Animal/Fox,Animal,Nature",
+    "category": "Animal/Fox,Animal,Environment・Weather,Clothing/Costume,Equipment,Equipment/Bath",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f5ff713f-0094-45b2-97b6-90f5722308eb"
@@ -3234,7 +3234,7 @@
     "id": "0360",
     "nickname": "Wedding Dragon Akyo",
     "avatarName": "akyo_どらごん振袖",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon,Season・Event",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Season・Event,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0458f77-35e9-4656-aaa5-ff622d81c619"
@@ -4008,7 +4008,7 @@
     "id": "0446",
     "nickname": "Space Normal Akyo",
     "avatarName": "akyo_うちゅう",
-    "category": "Nature",
+    "category": "Environment・Weather,Occupation/Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7da3b3-0e5c-44a1-89fc-a9a89da3961f"
@@ -4080,7 +4080,7 @@
     "id": "0454",
     "nickname": "Dragon Akyo SP",
     "avatarName": "akyo_老どらごん",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "SP stands for Substance Painter, right?",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_682931f3-e166-4f62-a626-2a1f39a9505e"
@@ -4368,7 +4368,7 @@
     "id": "0486",
     "nickname": "Sick Akyo",
     "avatarName": "KazehikiAkyo",
-    "category": "Mint Chocolate,Illness",
+    "category": "Mint Chocolate,Illness,Mask,Get Well Soon,Futon",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -4737,7 +4737,7 @@
     "id": "0527",
     "nickname": "Cafe Dragon Akyo",
     "avatarName": "akyo どらごんcefe",
-    "category": "Fictional Being,Flying,Animal,Fictional Being/Dragon,Occupation/Status",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Occupation/Status,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a1f578c-cfb6-49bb-8833-aec0969cd2a5"
@@ -4845,7 +4845,7 @@
     "id": "0539",
     "nickname": "Sea Urchin Akyo",
     "avatarName": "akyo uni",
-    "category": "Animal,Nature,Nature/Sea",
+    "category": "Animal,Animal/Marine Life,Material・Texture,Spiky",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b877aa1d-2fbc-497e-85e2-c7683ced3fe3"
@@ -4872,7 +4872,7 @@
     "id": "0542",
     "nickname": "Yamakasa Float Akyo",
     "avatarName": "Akyo_yamakasa",
-    "category": "Mint Chocolate,Season・Event,Nature",
+    "category": "Mint Chocolate,Season・Event",
     "comment": "",
     "author": "Masami.S",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_320c2cd3-0a4f-45ce-9e7a-09a55062ed0d"
@@ -4971,7 +4971,7 @@
     "id": "0553",
     "nickname": "RR Dragon Akyo",
     "avatarName": "どらごんRR",
-    "category": "Fictional Being,Flying,Parody/Pokemon,Parody,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Parody/Pokemon,Parody,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eaf31613-4202-48bd-bb01-e587b45f038a"
@@ -5196,7 +5196,7 @@
     "id": "0578",
     "nickname": "Raincoat Dragon Akyo",
     "avatarName": "akyo どらごんレインコート",
-    "category": "Fictional Being,Flying,Clothing/Costume,Animal,Fictional Being/Dragon",
+    "category": "Fictional Being,Skill・Trait/Flying,Clothing/Costume,Animal,Fictional Being/Dragon,Skill・Trait",
     "comment": "Rainy Day Outing Dragon Akyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d86a3dcc-cc1a-4947-afa8-05fa4f841e77"
@@ -5304,7 +5304,7 @@
     "id": "0590",
     "nickname": "River Akyo",
     "avatarName": "川Akyo",
-    "category": "Nature",
+    "category": "Environment・Weather",
     "comment": "",
     "author": "カヤ（kaya）",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_56504c0b-cc0f-4e0f-b9ff-ee3172eb0191"
@@ -5502,7 +5502,7 @@
     "id": "0612",
     "nickname": "Balloon Fox Akyo",
     "avatarName": "akyo 風船きつね",
-    "category": "Animal/Fox,Flying,Animal",
+    "category": "Animal/Fox,Skill・Trait/Flying,Animal,Skill・Trait",
     "comment": "Fox Akyo drifting gently on a balloon",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b53f9a0-2f30-406b-9f18-17466d95be44"
@@ -5961,7 +5961,7 @@
     "id": "0663",
     "nickname": "Doctor Dragon Akyo",
     "avatarName": "akyo 医者どらごんakyo",
-    "category": "Occupation/Status,Fictional Being,Fictional Being/Dragon,Occupation/Status/Healthcare Worker,Flying,Animal",
+    "category": "Occupation/Status,Fictional Being,Fictional Being/Dragon,Occupation/Status/Healthcare Worker,Skill・Trait/Flying,Animal,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c3441277-1558-433c-aa75-8bcd9469dc9c"
@@ -6006,7 +6006,7 @@
     "id": "0668",
     "nickname": "Cold Akyo",
     "avatarName": "kazeakyo",
-    "category": "Illness,Mint Chocolate",
+    "category": "Illness,Mint Chocolate,Mask,Get Well Soon,Futon,Pillow,IV Drip",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
@@ -6087,7 +6087,7 @@
     "id": "0677",
     "nickname": "Rainbow Akyo",
     "avatarName": "量産型ななきょう",
-    "category": "Color,Nature",
+    "category": "Color,Environment・Weather,Rare",
     "comment": "On a rainy day, it was captured on video by a TV crew, bringing its existence into the public eye.",
     "author": "nanairoshikibu",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea5ee448-52f5-4684-9a5f-4113ba29bc4b"
@@ -6096,7 +6096,7 @@
     "id": "0678",
     "nickname": "Rain Akyo",
     "avatarName": "amekyo",
-    "category": "Nature",
+    "category": "Environment・Weather,Liquid",
     "comment": "There's a rumor it appears on rainy days. The credibility is quite low.",
     "author": "ameno-hisui",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ad6c464-645d-4b3d-b48b-8b173b9d1b6c"
