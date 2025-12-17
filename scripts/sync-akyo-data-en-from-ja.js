@@ -84,6 +84,10 @@ const overridesById = {
 
 function parseCsv(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
+
+  // These CSVs are frequently hand-edited in spreadsheets/editors; we use relaxed parsing to avoid
+  // cryptic parser failures from minor formatting issues, then validate the column count ourselves
+  // to fail fast with a high-signal error message.
   const records = parse(content, {
     columns: false,
     relax_quotes: true,
@@ -92,7 +96,38 @@ function parseCsv(filePath) {
     trim: false,
     record_delimiter: ['\r\n', '\n', '\r'],
   });
-  return { header: records[0], rows: records.slice(1) };
+
+  if (!records.length) throw new Error(`Empty CSV: ${filePath}`);
+
+  const header = records[0];
+  const expectedColumns = header.length;
+
+  for (let i = 0; i < records.length; i += 1) {
+    const record = records[i];
+    if (record.length !== expectedColumns) {
+      throw new Error(
+        `CSV column count mismatch in ${filePath} at record index ${i} (expected ${expectedColumns}, got ${record.length}). Record: ${JSON.stringify(
+          record,
+        )}`,
+      );
+    }
+  }
+
+  return { header, rows: records.slice(1) };
+}
+
+function assertCsvRowLengthsMatchHeader({ header, rows }, filePath) {
+  const expectedColumns = header.length;
+  for (let i = 0; i < rows.length; i += 1) {
+    const row = rows[i];
+    if (row.length !== expectedColumns) {
+      throw new Error(
+        `CSV row has unexpected column count in ${filePath} at data row #${i + 1} (expected ${expectedColumns}, got ${
+          row.length
+        }). Row: ${JSON.stringify(row)}`,
+      );
+    }
+  }
 }
 
 function indexOfHeader(header, name) {
@@ -115,6 +150,10 @@ function main() {
 
   const ja = parseCsv(jaPath);
   const en = parseCsv(enPath);
+
+  // Fail fast if the CSV shapes are inconsistent.
+  assertCsvRowLengthsMatchHeader(ja, jaPath);
+  assertCsvRowLengthsMatchHeader(en, enPath);
 
   const outHeader = en.header;
   const idx = {
@@ -205,4 +244,3 @@ function main() {
 }
 
 if (require.main === module) main();
-

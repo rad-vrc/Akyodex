@@ -37,16 +37,11 @@ globs: *
 - **`findAkyoById` Optimization**: While functionally correct, the linear search in `findAkyoById` (in `src/lib/akyo-data-helpers.ts`) should be optimized for large datasets by using a `Map<string, AkyoData>` for constant-time lookups. This optimization should be considered if the dataset size increases significantly in the future.
 - **.github/copilot-instructions.md**: Ensure files end with a single newline character.
 - **`use-language.ts` Cookie Handling**:
-    - Use robust parsing that handles cookies with or without spaces after semicolons.
-    - Adds `Secure` flag to cookies when running on HTTPS (production).
+  - Use robust parsing that handles cookies with or without spaces after semicolons.
+  - Adds `Secure` flag to cookies when running on HTTPS (production).
 - **/zukan now static**
-- Convert &#96;require()&#96; statements to ES module format (&#96;import&#96;) or exclude script files from ESLint in &#96;eslint.config.mjs&#96;. Scripts using &#96;require()&#96; have been excluded from ESLint.
-- Remove unused exports or add them to the &#96;ignore&#96; list in &#96;knip.json&#96; if planned for future use.
-- Remove all unused variables identified by ESLint warnings.
-- Resolve type errors and linting errors to remove &#96;ignoreBuildErrors&#96; and &#96;ignoreDuringBuilds&#96;.
-- Refactor data modules (&#96;akyo-data.ts&#96;, &#96;akyo-data-server.ts&#96;, &#96;akyo-data-json.ts&#96;, &#96;akyo-data-kv.ts&#96;) to reduce redundant logic, especially for functions like &#96;getAllCategories&#96; and &#96;getAllAuthors&#96;.
 - Refactor category update scripts and fix Onion bug:
-    - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
+  - Create akyo-data-helpers.ts with common extractCategories, extractAuthors, findAkyoById
 
 ## DATA CATEGORIZATION RULES
 
@@ -74,120 +69,39 @@ globs: *
 - In `scripts/fix-categories.js` around lines 33 to 40, move the vegetables array into `category-definitions-ja.js` as a named export (e.g., vegetables or vegetableKeywords), update `category-definitions-ja.js` to export it, then replace the hardcoded array in `scripts/fix-categories.js` with an import of that named export and remove the local declaration. Ensure the import path is correct and run tests/lint to verify no unused variables or import errors.
 - Fix a bug in the English categorizer that causes fictional tags to be added based on substring matches. Because FICTIONAL_KEYWORDS contains the term "Oni", any nickname containing "Onion" now matches and is labeled as Yokai (e.g., IDs 0427 and 0428 "Grocer/Farmer Green Onion Akyo"). Restrict matching to whole words or adjust the keyword list so "Oni" does not hit "Onion."
 - In `scripts/update-categories-en-v3.js` and `scripts/update-categories-v3.js`:
-    - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
-    - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
-    - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
-    - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
+  - Extract language-specific keyword objects into separate modules (`scripts/category-definitions-en.js`, `scripts/category-definitions-ja.js`).
+  - Move shared `processCategories` logic into a common module (`scripts/update-categories-common.js`).
+  - Remove unnecessary `async` keyword from `main()` functions if no `await` is used.
+  - Either remove `relax_quotes` and `relax_column_count` options to enforce strict CSV parsing, or add comments explaining why they are needed and implement post-parse validation.
 - In `scripts/fix-categories.js` around lines 59 to 61, the current findAkyoById uses a linear search which is functionally correct but can be optimized for large datasets; to fix, change the data structure to a Map<string, AkyoData> (or maintain a cached Map alongside the array) and update callers to use map.get(id) returning null when undefined, or implement a small helper that builds and caches the Map on first lookup to provide O(1) lookups for larger datasets.
 - In `scripts/category-definitions-en.js` and `scripts/category-definitions-ja.js` ensure that the learnings from the CodeRabbit tool are incorporated in the code.
 - In `scripts/fix-categories.js` and `scripts/fix-categories-en.js` ensure that all high priority issues are addressed.
 - In `src/app/zukan/page.tsx` use `searchParams` to support language switching.
 - Remove duplicate entries from Dish array in category-definitions-en.js
 - The following data categorization fixes have been applied:
-    - 複数のカテゴリ修正
-        -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-        -  振袖どらごんAkyo: 季節・行事を追加
-        -  カフェどらごんAkyo: 職業・家柄を追加
-        -  風船きつねAkyo: 自然を削除
-    - fix(data): 食べ物/寿司 → 食べ物/お寿司に変更
-    - fix(data): レッサーパンダを動物カテゴリに修正
-        -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-    - fix(data): カテゴリ修正 - なりきり・仮装統合、個別修正
-        - データヘルパーの統合、未使用エクスポートの整理
-    - fix(data): カテゴリ修正 - ラー神の誤検出を修正
-        - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
-        - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
-    - fix(data): 複数のAkyoカテゴリを修正
-        - キュウリ → 食べ物/野菜/きゅうり
-        - ナスビ → 食べ物/野菜/ナス
-        - 揚げ物 → 食べ物/料理/揚げ物
-        - 硬い・柔らかいを階層型カテゴリに変換
-            - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-            - 硬い → 素材・材質・生地/硬い
-        - サウAkyoをパロディ/人物に修正
-        - 複数のAkyoカテゴリを修正
-            - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
-            - まめひなたAkyo: 自然を削除
-            - 胴長パグAkyo: 動物/いぬを追加
-            - エプリAkyo: パロディ/VRChatを追加
-- The following data categorization fixes have been applied:
-    - 複数のカテゴリ修正
-        -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-        -  振袖どらごんAkyo: 季節・行事を追加
-        -  カフェどらごんAkyo: 職業・家柄を追加
-        -  風船きつねAkyo: 自然を削除
-        -  食べ物/寿司 → 食べ物/お寿司に変更
-        -  レッサーパンダを動物カテゴリに修正
-            -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-        - カテゴリ修正 - なりきり・仮装統合、個別修正
-            - データヘルパーの統合、未使用エクスポートの整理
-        -  カテゴリ修正 - ラー神の誤検出を修正
-            - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
-            - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
-        - 複数のAkyoカテゴリを修正
-            - キュウリ → 食べ物/野菜/きゅうり
-            - ナスビ → 食べ物/野菜/ナス
-            - 揚げ物 → 食べ物/料理/揚げ物
-        - 硬い・柔らかいを階層型カテゴリに変換
-            - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-            - 硬い → 素材・材質・生地/硬い
-        - サウAkyoをパロディ/人物に修正
-        - 複数のAkyoカテゴリを修正
-            - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
-            - まめひなたAkyo: 自然を削除
-            - 胴長パグAkyo: 動物/いぬを追加
-            - エプリAkyo: パロディ/VRChatを追加
-- The following data categorization fixes have been applied:
-    - 複数のカテゴリ修正
-        -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-        -  振袖どらごんAkyo: 季節・行事を追加
-        -  カフェどらごんAkyo: 職業・家柄を追加
-        -  風船きつねAkyo: 自然を削除
-        -  食べ物/寿司 → 食べ物/お寿司に変更
-        -  レッサーパンダを動物カテゴリに修正
-            -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-        - カテゴリ修正 - なりきり・仮装統合、個別修正
-            - データヘルパーの統合、未使用エクスポートの整理
-        -  カテゴリ修正 - ラー神の誤検出を修正
-            - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
-            - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
-        - 複数のAkyoカテゴリを修正
-            - キュウリ → 食べ物/野菜/きゅうり
-            - ナスビ → 食べ物/野菜/ナス
-            - 揚げ物 → 食べ物/料理/揚げ物
-        - 硬い・柔らかいを階層型カテゴリに変換
-            - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-            - 硬い → 素材・材質・生地/硬い
-        - サウAkyoをパロディ/人物に修正
-        - 複数のAkyoカテゴリを修正
-            - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
-            - まめひなたAkyo: 自然を削除
-            - 胴長パグAkyo: 動物/いぬを追加
-            - エプリAkyo: パロディ/VRChatを追加
-- The following data categorization fixes have been applied:
-    - 複数のカテゴリ修正
-        -  ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
-        -  振袖どらごんAkyo: 季節・行事を追加
-        -  カフェどらごんAkyo: 職業・家柄を追加
-        -  風船きつねAkyo: 自然を削除
-        -  食べ物/寿司 → 食べ物/お寿司に変更
-        -  レッサーパンダを動物カテゴリに修正
-            -   誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
-        - カテゴリ修正 - なりきり・仮装統合、個別修正
-            - データヘルパーの統合、未使用エクスポートの整理
-        -  カテゴリ修正 - ラー神の誤検出を修正
-            - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
-            - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
-        - 複数のAkyoカテゴリを修正
-            - キュウリ → 食べ物/野菜/きゅうり
-            - ナスビ → 食べ物/野菜/ナス
-            - 揚げ物 → 食べ物/料理/揚げ物
-        - 硬い・柔らかいを階層型カテゴリに変換
-            - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
-            - 硬い → 素材・材質・生地/硬い
-        - サウAkyoをパロディ/人物に修正
-        - 複数のAkyoカテゴリを修正
-            - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
-            - まめひなたAkyo: 自然を削除
-            - 胴長パグAkyo: 動物/いぬを追加
-            - エプリAkyo: パロディ/VRChatを追加
+  - 複数のカテゴリ修正
+    - ないとどらごんAkyo: 職業・家柄、武器・軍事を追加
+    - 振袖どらごんAkyo: 季節・行事を追加
+    - カフェどらごんAkyo: 職業・家柄を追加
+    - 風船きつねAkyo: 自然を削除
+    - 食べ物/寿司 → 食べ物/お寿司に変更
+    - レッサーパンダを動物カテゴリに修正
+      - 誤って食べ物/料理に分類されていたため、正しく動物/レッサーパンダに修正
+    - カテゴリ修正 - なりきり・仮装統合、個別修正
+      - データヘルパーの統合、未使用エクスポートの整理
+    - カテゴリ修正 - ラー神の誤検出を修正
+      - マフラー、エラー、ラーメン等が「ラー」（太陽神）にマッチして架空の存在に分類されていたバグを修正
+      - 除外パターン（マフラー、エラー、ラーメン、カラー、ドラー、コーラ）を追加
+    - 複数のAkyoカテゴリを修正
+      - キュウリ → 食べ物/野菜/きゅうり
+      - ナスビ → 食べ物/野菜/ナス
+      - 揚げ物 → 食べ物/料理/揚げ物
+    - 硬い・柔らかいを階層型カテゴリに変換
+      - 硬い → 素材・材質・生地, 素材・材質・生地/硬い
+      - 硬い → 素材・材質・生地/硬い
+    - サウAkyoをパロディ/人物に修正
+    - 複数のAkyoカテゴリを修正
+      - ハウスネイルAkyo: パロディ/ジャム・ザ・ハウスネイルを追加
+      - まめひなたAkyo: 自然を削除
+      - 胴長パグAkyo: 動物/いぬを追加
+      - エプリAkyo: パロディ/VRChatを追加

@@ -142,7 +142,7 @@ module.exports = {
   '架空の存在/天使・神': 'Fictional Being/God',
   '架空の存在/妖怪・おばけ': 'Fictional Being/Yokai・Ghost',
   '架空の存在/幻獣・精霊': 'Fictional Being/Mythical Beast・Spirit',
-  '架空の存在/悪魔・淫魔': 'Devil・Saccubus',
+  '架空の存在/悪魔・淫魔': 'Devil・Succubus',
   '植物': 'Plant',
   '植物/木の実': 'Nuts',
   '植物/苔': 'Moss',
