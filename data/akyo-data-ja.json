@@ -426,7 +426,7 @@
     "id": "0048",
     "nickname": "UFOAkyo",
     "avatarName": "UFAkyo",
-    "category": "乗り物,UMA",
+    "category": "乗り物,UMA,環境・天候,環境・天候/外宇宙",
     "comment": "",
     "author": "nekononomicon",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -1650,7 +1650,7 @@
     "id": "0184",
     "nickname": "郵便Akyo",
     "avatarName": "akyo_郵便",
-    "category": "職業・身分",
+    "category": "職業・身分,職業・身分/配達員",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cd62208e-db35-4573-9454-c5b18d9392a5"
@@ -1963,7 +1963,7 @@
   },
   {
     "id": "0219",
-    "nickname": "きつねたいやきAkyo",
+    "nickname": "たいやききつねAkyo",
     "avatarName": "akyo_taiyaki",
     "category": "動物/きつね,動物,食べ物,食べ物/料理",
     "comment": "",
@@ -3108,7 +3108,7 @@
     "id": "0346",
     "nickname": "まほうきつねAkyo",
     "avatarName": "akyo_FoxMagic",
-    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,まほう,動物,なりきり・仮装",
+    "category": "動物/きつね,季節・行事/ハロウィン,季節・行事,技能・特性/まほう,動物,なりきり・仮装,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_88494bab-d2bc-43f2-ae26-e886b86d9dae"
@@ -3126,7 +3126,7 @@
     "id": "0348",
     "nickname": "まほうどらごんAkyo",
     "avatarName": "akyo_DragonMagic",
-    "category": "架空の存在,技能・特性/ひこう,季節・行事/ハロウィン,季節・行事,まほう,動物,架空の存在/りゅう・ドラゴン,なりきり・仮装,技能・特性",
+    "category": "架空の存在,技能・特性/ひこう,季節・行事/ハロウィン,季節・行事,技能・特性/まほう,動物,架空の存在/りゅう・ドラゴン,なりきり・仮装,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3972,7 +3972,7 @@
     "id": "0442",
     "nickname": "まほうねぎAkyo",
     "avatarName": "akyo_ねぎまほう",
-    "category": "季節・行事/ハロウィン,季節・行事,まほう,食べ物,食べ物/野菜,なりきり・仮装",
+    "category": "季節・行事/ハロウィン,季節・行事,技能・特性/まほう,食べ物,食べ物/野菜,なりきり・仮装,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb18a90b-8452-4702-b24a-5cd9abd5d22a"
@@ -4006,7 +4006,7 @@
   },
   {
     "id": "0446",
-    "nickname": "宇宙ノーマルAkyo",
+    "nickname": "宇宙Akyo",
     "avatarName": "akyo_うちゅう",
     "category": "環境・天候,職業・身分,環境・天候/外宇宙,技能・特性,技能・特性/無重力耐性,技能・特性/酸素欠乏耐性",
     "comment": "",
@@ -4836,7 +4836,7 @@
     "id": "0538",
     "nickname": "魔法少女きつねAkyo",
     "avatarName": "akyo fox 魔法少女",
-    "category": "動物/きつね,職業・身分,季節・行事/ハロウィン,季節・行事,まほう,動物,なりきり・仮装,プリティ",
+    "category": "動物/きつね,職業・身分,季節・行事/ハロウィン,季節・行事,技能・特性/まほう,動物,なりきり・仮装,プリティ,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
@@ -4962,7 +4962,7 @@
     "id": "0552",
     "nickname": "シャトルAkyo",
     "avatarName": "Akyo シャトル",
-    "category": "航空,乗り物",
+    "category": "乗り物,乗り物/航空,環境・天候,環境・天候/外宇宙,技能・特性,技能・特性/無重力耐性,技能・特性/酸素欠乏耐性",
     "comment": "",
     "author": "katsuya 9366",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f5dff5a-82ee-4d4b-8b17-b57f8c6fe857"
