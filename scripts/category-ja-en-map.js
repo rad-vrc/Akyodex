@@ -205,6 +205,7 @@ module.exports = {
   '自然・天候': 'Environment・Weather',
   '自然・天候/山': 'Environment・Weather/Mountain',
   '自然・天候/海': 'Environment・Weather/Sea',
+  '四足歩行': 'Quadruped',
   '次元': 'Dimension',
   '次元/3D': 'Dimension/3D',
   '色': 'Color',
