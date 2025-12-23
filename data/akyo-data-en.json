@@ -1785,7 +1785,7 @@
     "id": "0199",
     "nickname": "Alpaca Akyo",
     "avatarName": "akyo_アルパカ",
-    "category": "Animal,Animal/Alpaca",
+    "category": "Animal,Animal/Alpaca,Quadruped",
     "comment": "Not Mint Chocolate",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_36b0ccac-72c6-4f68-9474-4898a7355329"
@@ -1929,7 +1929,7 @@
     "id": "0215",
     "nickname": "Sheep Akyo",
     "avatarName": "akyo_sheep",
-    "category": "Animal,Animal/Sheep",
+    "category": "Animal,Animal/Sheep,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d70abf49-48d4-47aa-ba54-018671093563"
@@ -2253,7 +2253,7 @@
     "id": "0251",
     "nickname": "HorseAkyo",
     "avatarName": "akyo_uma",
-    "category": "Animal,Animal/Horse",
+    "category": "Animal,Animal/Horse,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2134f6da-1d71-4c56-9061-3a3f9d9f445e"
@@ -2289,7 +2289,7 @@
     "id": "0255",
     "nickname": "Triceratops Akyo",
     "avatarName": "akyo_トリケラ",
-    "category": "Animal/Dinosaur,Animal",
+    "category": "Animal/Dinosaur,Animal,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7aed34-d6f0-42d1-bd93-bf97447e3c06"
@@ -2298,7 +2298,7 @@
     "id": "0256",
     "nickname": "Stegosaurus Akyo",
     "avatarName": "akyo_sutego",
-    "category": "Animal/Dinosaur,Animal",
+    "category": "Animal/Dinosaur,Animal,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a1b7da99-1ac6-4374-9d2f-40d896dd8722"
@@ -2586,7 +2586,7 @@
     "id": "0288",
     "nickname": "Brachiosaurus Akyo",
     "avatarName": "akyo_ブラキオ",
-    "category": "Animal/Dinosaur,Animal",
+    "category": "Animal/Dinosaur,Animal,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6928d36e-778f-492e-b6f8-bd257734b4da"
@@ -2613,7 +2613,7 @@
     "id": "0291",
     "nickname": "Plesiosaurus Akyo",
     "avatarName": "akyo_プレシオ",
-    "category": "Animal/Dinosaur,Animal",
+    "category": "Animal/Dinosaur,Animal,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f24f0b20-f2b0-473f-b740-251916488e6c"
@@ -2856,7 +2856,7 @@
     "id": "0318",
     "nickname": "Elephant Akyo",
     "avatarName": "akyo_ぞう",
-    "category": "Animal,Animal/Elephant",
+    "category": "Animal,Animal/Elephant,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef619ead-45bc-4512-8b51-2ff383572dc2"
@@ -3360,7 +3360,7 @@
     "id": "0374",
     "nickname": "Giraffe Akyo",
     "avatarName": "akyo_キリン",
-    "category": "Animal,Animal/Giraffe",
+    "category": "Animal,Animal/Giraffe,Quadruped",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_929c267d-e891-4bae-bbb1-bf44b5e98575"
@@ -4125,7 +4125,7 @@
     "id": "0459",
     "nickname": "Horse Haniwa Akyo",
     "avatarName": "akyo_はにわうま",
-    "category": "Animal,Animal/Horse,History,Statue",
+    "category": "Animal,Animal/Horse,History,Statue,Quadruped",
     "comment": "Haniwa and horse Also Gave Birth to Derivatives",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa880970-2d3b-4cda-85f6-e1aee46b8e09"

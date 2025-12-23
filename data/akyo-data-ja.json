@@ -1785,7 +1785,7 @@
     "id": "0199",
     "nickname": "アルパカAkyo",
     "avatarName": "akyo_アルパカ",
-    "category": "動物,動物/アルパカ",
+    "category": "動物,動物/アルパカ,四足歩行",
     "comment": "チョコミント類ではない",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_36b0ccac-72c6-4f68-9474-4898a7355329"
@@ -1929,7 +1929,7 @@
     "id": "0215",
     "nickname": "ひつじAkyo",
     "avatarName": "akyo_sheep",
-    "category": "動物,動物/ひつじ",
+    "category": "動物,動物/ひつじ,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_d70abf49-48d4-47aa-ba54-018671093563"
@@ -2253,7 +2253,7 @@
     "id": "0251",
     "nickname": "うまAkyo",
     "avatarName": "akyo_uma",
-    "category": "動物,動物/うま",
+    "category": "動物,動物/うま,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2134f6da-1d71-4c56-9061-3a3f9d9f445e"
@@ -2289,7 +2289,7 @@
     "id": "0255",
     "nickname": "トリケラAkyo",
     "avatarName": "akyo_トリケラ",
-    "category": "動物/恐竜,動物",
+    "category": "動物/恐竜,動物,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7aed34-d6f0-42d1-bd93-bf97447e3c06"
@@ -2298,7 +2298,7 @@
     "id": "0256",
     "nickname": "ステゴAkyo",
     "avatarName": "akyo_sutego",
-    "category": "動物/恐竜,動物",
+    "category": "動物/恐竜,動物,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a1b7da99-1ac6-4374-9d2f-40d896dd8722"
@@ -2586,7 +2586,7 @@
     "id": "0288",
     "nickname": "ブラキオAkyo",
     "avatarName": "akyo_ブラキオ",
-    "category": "動物/恐竜,動物",
+    "category": "動物/恐竜,動物,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6928d36e-778f-492e-b6f8-bd257734b4da"
@@ -2613,7 +2613,7 @@
     "id": "0291",
     "nickname": "プレシオAkyo",
     "avatarName": "akyo_プレシオ",
-    "category": "動物/恐竜,動物",
+    "category": "動物/恐竜,動物,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f24f0b20-f2b0-473f-b740-251916488e6c"
@@ -2856,7 +2856,7 @@
     "id": "0318",
     "nickname": "ぞうAkyo",
     "avatarName": "akyo_ぞう",
-    "category": "動物,動物/ぞう",
+    "category": "動物,動物/ぞう,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef619ead-45bc-4512-8b51-2ff383572dc2"
@@ -3360,7 +3360,7 @@
     "id": "0374",
     "nickname": "キリンAkyo",
     "avatarName": "akyo_キリン",
-    "category": "動物,動物/キリン",
+    "category": "動物,動物/キリン,四足歩行",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_929c267d-e891-4bae-bbb1-bf44b5e98575"
@@ -4125,7 +4125,7 @@
     "id": "0459",
     "nickname": "うまはにわAkyo",
     "avatarName": "akyo_はにわうま",
-    "category": "動物,動物/うま,歴史,像・埴輪",
+    "category": "動物,動物/うま,歴史,像・埴輪,四足歩行",
     "comment": "はにわとうまにも派生誕生",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa880970-2d3b-4cda-85f6-e1aee46b8e09"
