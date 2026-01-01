@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 
 interface AddTabProps {
@@ -35,24 +35,28 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   });
   const formRef = useRef<HTMLFormElement | null>(null);
 
+  const fetchNextId = useCallback(async (): Promise<string | null> => {
+    try {
+      const response = await fetch('/api/admin/next-id');
+      if (response.ok) {
+        const data = await response.json();
+        if (data?.nextId) {
+          setNextId(data.nextId);
+          return data.nextId as string;
+        }
+      } else {
+        console.error('Failed to fetch next ID, using default');
+      }
+    } catch (error) {
+      console.error('Error fetching next ID:', error);
+    }
+    return null;
+  }, []);
+
   // Fetch next available ID on component mount
   useEffect(() => {
-    const fetchNextId = async () => {
-      try {
-        const response = await fetch('/api/admin/next-id');
-        if (response.ok) {
-          const data = await response.json();
-          setNextId(data.nextId);
-        } else {
-          console.error('Failed to fetch next ID, using default');
-        }
-      } catch (error) {
-        console.error('Error fetching next ID:', error);
-      }
-    };
-
-    fetchNextId();
-  }, []);
+    void fetchNextId();
+  }, [fetchNextId]);
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
 
@@ -111,6 +115,13 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       if (!confirm('重複する通称が検出されました。\n登録を続行しますか？')) {
         return;
       }
+    }
+
+    // Refresh next ID at submission time
+    let submitId = nextId;
+    const refreshedId = await fetchNextId();
+    if (refreshedId) {
+      submitId = refreshedId;
     }
 
     const avtrId = match[0];
@@ -234,7 +245,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     try {
       // Prepare form data for submission (using fetched values)
       const submitData = new FormData();
-      submitData.append('id', nextId);
+      submitData.append('id', submitId);
       submitData.append('nickname', formData.nickname);
       submitData.append('avatarName', avatarName);
       submitData.append('avatarUrl', formData.avatarUrl);
@@ -267,7 +278,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       // Success!
       alert(
         `✅ ${result.message}\n\n` +
-          `ID: #${nextId}\n` +
+          `ID: #${submitId}\n` +
           `アバター名: ${avatarName}\n` +
           `作者: ${creatorName}\n\n` +
           (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
@@ -287,7 +298,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       setNicknameStatus({ message: '', tone: 'neutral' });
 
       // Increment next ID for next registration
-      const currentId = parseInt(nextId, 10);
+      const currentId = parseInt(submitId, 10);
       if (!isNaN(currentId)) {
         setNextId((currentId + 1).toString().padStart(4, '0'));
       }
