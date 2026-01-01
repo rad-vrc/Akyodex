@@ -1479,7 +1479,7 @@
     "id": "0165",
     "nickname": "かがみもちAkyo",
     "avatarName": "akyo__もち",
-    "category": "食べ物,食べ物/スイーツ",
+    "category": "食べ物,食べ物/スイーツ,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2a1886a-4a24-4d55-ba0f-af69f877728f"
@@ -2037,7 +2037,7 @@
     "id": "0227",
     "nickname": "ふりそできつねAkyo",
     "avatarName": "きつねkyo_振袖",
-    "category": "動物/きつね,動物",
+    "category": "動物/きつね,動物,季節・行事,季節・行事/お正月",
     "comment": "Aがない",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0d6f6089-2fda-4125-86ce-30d53ac2e548"
@@ -2253,7 +2253,7 @@
     "id": "0251",
     "nickname": "うまAkyo",
     "avatarName": "akyo_uma",
-    "category": "動物,動物/うま,四足歩行",
+    "category": "動物,動物/うま,四足歩行,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2134f6da-1d71-4c56-9061-3a3f9d9f445e"
@@ -2631,7 +2631,7 @@
     "id": "0293",
     "nickname": "ちょうちんAkyo",
     "avatarName": "akyo_tyoutin",
-    "category": "季節・行事",
+    "category": "動物,動物/海の生き物,動物/魚",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_759551f7-91be-42c0-b129-1cf046076d21"
@@ -3180,7 +3180,7 @@
     "id": "0354",
     "nickname": "ツリーAkyo",
     "avatarName": "akyo_ツリー",
-    "category": "植物",
+    "category": "植物,季節・行事,季節・行事/クリスマス",
     "comment": "正確にはクリスマスツリー",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a6304b4-1da8-4eac-8bcc-1203f5fcb574"
@@ -3234,7 +3234,7 @@
     "id": "0360",
     "nickname": "振袖どらごんAkyo",
     "avatarName": "akyo_どらごん振袖",
-    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,季節・行事,技能・特性",
+    "category": "架空の存在,技能・特性/ひこう,動物,架空の存在/りゅう・ドラゴン,季節・行事,季節・行事/お正月,技能・特性",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0458f77-35e9-4656-aaa5-ff622d81c619"
@@ -3243,7 +3243,7 @@
     "id": "0361",
     "nickname": "だるまAkyo",
     "avatarName": "akyo_daruma",
-    "category": "家電・家具,歴史",
+    "category": "家電・家具,歴史,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bac120a2-3c1d-427e-9ce7-3a8ab9169074"
@@ -3963,7 +3963,7 @@
     "id": "0441",
     "nickname": "もちAkyo",
     "avatarName": "akyo_もち",
-    "category": "食べ物,食べ物/スイーツ",
+    "category": "食べ物,食べ物/スイーツ,季節・行事,季節・行事/お正月",
     "comment": "2代目もちAkyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_209684dd-dca1-415d-a747-af883a896756"
@@ -4116,7 +4116,7 @@
     "id": "0458",
     "nickname": "こたつきつねAkyo",
     "avatarName": "akyo_きつねこたつ",
-    "category": "動物/きつね,動物,家電・家具",
+    "category": "動物/きつね,動物,家電・家具,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cf0aabab-d449-469c-9f2c-ae49663c78d1"
@@ -4125,7 +4125,7 @@
     "id": "0459",
     "nickname": "うまはにわAkyo",
     "avatarName": "akyo_はにわうま",
-    "category": "動物,動物/うま,歴史,像・埴輪,四足歩行",
+    "category": "動物,動物/うま,歴史,像・埴輪,四足歩行,季節・行事,季節・行事/お正月",
     "comment": "はにわとうまにも派生誕生",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa880970-2d3b-4cda-85f6-e1aee46b8e09"
@@ -4224,7 +4224,7 @@
     "id": "0470",
     "nickname": "ふりそでおおかみAkyo",
     "avatarName": "おおかみふりそで",
-    "category": "動物,動物/おおかみ",
+    "category": "動物,動物/おおかみ,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2e9f07a1-9908-49b6-a2f6-766f446e6525"
@@ -4233,7 +4233,7 @@
     "id": "0471",
     "nickname": "ふりそでたぬきAkyo",
     "avatarName": "たぬきふりそで",
-    "category": "動物,動物/たぬき",
+    "category": "動物,動物/たぬき,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5c2dfd30-1bf4-42ce-ac64-949a5db80407"
@@ -4251,7 +4251,7 @@
     "id": "0473",
     "nickname": "こたつAkyo",
     "avatarName": "kotatsu_akyo",
-    "category": "家電・家具",
+    "category": "家電・家具,季節・行事,季節・行事/お正月",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bd03fb43-7ea7-4be5-bc9c-bcc9d9dc9007"
@@ -5538,7 +5538,7 @@
     "id": "0616",
     "nickname": "精霊うまきょ",
     "avatarName": "精霊うまきょ",
-    "category": "精霊馬,食べ物/野菜,食べ物,動物,動物/うま,架空の存在,架空の存在/幻獣・精霊,食べ物/野菜/きゅうり,食べ物/野菜/ナス",
+    "category": "精霊馬,食べ物/野菜,食べ物,動物,動物/うま,架空の存在,架空の存在/幻獣・精霊,食べ物/野菜/きゅうり,食べ物/野菜/ナス,季節・行事,季節・行事/お正月",
     "comment": "精霊うまきょ。Android対応。",
     "author": "kuro5963",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b44829ee-239b-4121-bb0f-a9ee032b0634"
@@ -6112,9 +6112,9 @@
   },
   {
     "id": "0680",
-    "nickname": "まめあきょだるま",
+    "nickname": "まめあきょだるま/だるままめAkyo",
     "avatarName": "まめあきょだるま",
-    "category": "季節・行事",
+    "category": "季節・行事,季節・行事/お正月,まめ,まめAkyo,家電・家具,歴史",
     "comment": "android、ios対応",
     "author": "kuro5963",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1c932500-1039-4f08-b801-b3f277241d0d"
