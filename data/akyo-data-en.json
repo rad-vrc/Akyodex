@@ -777,7 +777,7 @@
     "id": "0087",
     "nickname": "School Swimsuit Akyo",
     "avatarName": "スク水あきょう",
-    "category": "Clothing/Costume,Clothing/Costume/Swimsuit,Drink,School",
+    "category": "Clothing/Costume,Clothing/Costume/Swimsuit,School",
     "comment": "",
     "author": "syuninn39",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f95048d-98e0-4b42-91fc-6c011037166f"
@@ -984,7 +984,7 @@
     "id": "0110",
     "nickname": "Chubby Akyo",
     "avatarName": "Akyo_debu",
-    "category": "Body Type",
+    "category": "Body Type,Body Type/Plump",
     "comment": "",
     "author": "kumax9",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_edc3a97f-5745-4a44-9cba-21f064f87617"
@@ -3351,7 +3351,7 @@
     "id": "0373",
     "nickname": "Loader Akyo",
     "avatarName": "akyo_ローダー",
-    "category": "Electronic",
+    "category": "Mint Chocolate,Military・Weapons",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_21924bf1-925d-4940-a687-9d25c8377f89"
@@ -3369,7 +3369,7 @@
     "id": "0375",
     "nickname": "Loader Akyo 2/Loader Fox Akyo",
     "avatarName": "akyo_ローダー2",
-    "category": "Animal/Fox,Animal,Electronic",
+    "category": "Animal/Fox,Animal,Mint Chocolate,Military・Weapons",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_fcfb1c55-baf9-45ec-a14e-0e8a224e6ffd"
@@ -3567,7 +3567,7 @@
     "id": "0397",
     "nickname": "Loader Akyo 3/Loader Black Cat Akyo",
     "avatarName": "akyoローダー3",
-    "category": "Animal,Animal/Cat,Electronic",
+    "category": "Animal,Animal/Cat,Mint Chocolate,Military・Weapons",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5fecb105-9e64-4c7f-864b-3a4c87da0fdb"
@@ -4062,7 +4062,7 @@
     "id": "0452",
     "nickname": "Beer Shop Tanuki Akyo",
     "avatarName": "akyo_たぬき酒屋",
-    "category": "Animal,Animal/Tanuki,Drink",
+    "category": "Animal,Animal/Tanuki",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6fc43531-97bb-43cf-8f63-3381422a470f"
@@ -4368,7 +4368,7 @@
     "id": "0486",
     "nickname": "Sick Akyo",
     "avatarName": "KazehikiAkyo",
-    "category": "Mint Chocolate,Illness,Mask,Get Well Soon,Futon",
+    "category": "Mint Chocolate,Illness,Clothing/Costume,Clothing/Costume/Mask,Get Well Soon,Futon",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -5610,7 +5610,7 @@
     "id": "0624",
     "nickname": "Nightcap Akyo",
     "avatarName": "nightcapAkyo",
-    "category": "Mint Chocolate,Clothing/Costume,Sleep,Pillow",
+    "category": "Mint Chocolate,Clothing/Costume,Sleep,Appliances・Furniture,Appliances・Furniture/Pillow",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5"
@@ -5619,7 +5619,7 @@
     "id": "0625",
     "nickname": "Big Boobs Cow Print Akyo",
     "avatarName": "bigboinushigaraAkyo",
-    "category": "Plump,Animal",
+    "category": "Body Type,Body Type/Plump,Animal",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -5934,7 +5934,7 @@
     "id": "0660",
     "nickname": "Masked Wolf Akyo",
     "avatarName": "akyo_おおかみマスク",
-    "category": "Animal/Wolf,Clothing/Costume,Animal,Mask",
+    "category": "Animal/Wolf,Clothing/Costume,Animal,Clothing/Costume/Mask,Season・Event,Season・Event/Halloween",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_05eacbfe-57a5-4d51-9ef5-51034d95a29c"
@@ -6006,7 +6006,7 @@
     "id": "0668",
     "nickname": "Cold Akyo",
     "avatarName": "kazeakyo",
-    "category": "Illness,Mint Chocolate,Mask,Get Well Soon,Futon,Pillow,IV Drip",
+    "category": "Illness,Mint Chocolate,Clothing/Costume,Clothing/Costume/Mask,Get Well Soon,Futon,Appliances・Furniture,Appliances・Furniture/Pillow,IV Drip",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"

@@ -777,7 +777,7 @@
     "id": "0087",
     "nickname": "スク水Akyo",
     "avatarName": "スク水あきょう",
-    "category": "衣類・衣装,衣類・衣装/水着,飲み物,学校",
+    "category": "衣類・衣装,衣類・衣装/水着,学校",
     "comment": "",
     "author": "syuninn39",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f95048d-98e0-4b42-91fc-6c011037166f"
@@ -984,7 +984,7 @@
     "id": "0110",
     "nickname": "デブAkyo",
     "avatarName": "Akyo_debu",
-    "category": "体型",
+    "category": "体型,体型/豊満",
     "comment": "",
     "author": "kumax9",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_edc3a97f-5745-4a44-9cba-21f064f87617"
@@ -1326,7 +1326,7 @@
     "id": "0148",
     "nickname": "J2m3Akyo",
     "avatarName": "J2m3",
-    "category": "電子",
+    "category": "",
     "comment": "",
     "author": "Rat_San",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0a67b533-a60c-4ee3-8965-cd850220c76b"
@@ -3351,7 +3351,7 @@
     "id": "0373",
     "nickname": "ローダーAkyo",
     "avatarName": "akyo_ローダー",
-    "category": "電子",
+    "category": "チョコミント類,武器・機械",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_21924bf1-925d-4940-a687-9d25c8377f89"
@@ -3369,7 +3369,7 @@
     "id": "0375",
     "nickname": "ローダーAkyo2/ローダーきつねAkyo",
     "avatarName": "akyo_ローダー2",
-    "category": "動物/きつね,動物,電子",
+    "category": "動物/きつね,動物,チョコミント類,武器・機械",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_fcfb1c55-baf9-45ec-a14e-0e8a224e6ffd"
@@ -3567,7 +3567,7 @@
     "id": "0397",
     "nickname": "ローダーAkyo3/ローダーくろねこAkyo",
     "avatarName": "akyoローダー3",
-    "category": "動物,動物/ねこ,電子",
+    "category": "動物,動物/ねこ,チョコミント類,武器・機械",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5fecb105-9e64-4c7f-864b-3a4c87da0fdb"
@@ -4062,7 +4062,7 @@
     "id": "0452",
     "nickname": "酒屋たぬきAkyo",
     "avatarName": "akyo_たぬき酒屋",
-    "category": "動物,動物/たぬき,飲み物",
+    "category": "動物,動物/たぬき",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6fc43531-97bb-43cf-8f63-3381422a470f"
@@ -4368,7 +4368,7 @@
     "id": "0486",
     "nickname": "風邪ひきAkyo",
     "avatarName": "KazehikiAkyo",
-    "category": "チョコミント類,病気・ウイルス,マスク,お大事に,お布団",
+    "category": "チョコミント類,病気・ウイルス,衣類・衣装,衣類・衣装/マスク,お大事に,お布団",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -5610,7 +5610,7 @@
     "id": "0624",
     "nickname": "ナイトキャップAkyo",
     "avatarName": "nightcapAkyo",
-    "category": "チョコミント類,衣類・衣装,睡眠,枕",
+    "category": "チョコミント類,衣類・衣装,睡眠,家電・家具,家電・家具/枕",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5"
@@ -5619,7 +5619,7 @@
     "id": "0625",
     "nickname": "ビッグボイン牛柄Akyo",
     "avatarName": "bigboinushigaraAkyo",
-    "category": "豊満,動物",
+    "category": "体型,体型/豊満,動物",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -5934,7 +5934,7 @@
     "id": "0660",
     "nickname": "マスクおおかみAkyo",
     "avatarName": "akyo_おおかみマスク",
-    "category": "動物/おおかみ,衣類・衣装,動物,マスク",
+    "category": "動物/おおかみ,衣類・衣装,動物,衣類・衣装/マスク,季節・行事,季節・行事/ハロウィン",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_05eacbfe-57a5-4d51-9ef5-51034d95a29c"
@@ -6006,7 +6006,7 @@
     "id": "0668",
     "nickname": "風邪Akyo",
     "avatarName": "kazeakyo",
-    "category": "病気・ウイルス,チョコミント類,マスク,お大事に,お布団,枕,点滴",
+    "category": "病気・ウイルス,チョコミント類,衣類・衣装,衣類・衣装/マスク,お大事に,お布団,家電・家具,家電・家具/枕,点滴",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
