@@ -101,21 +101,25 @@ export async function GET() {
     // Skip header
     const dataLines = lines.slice(1);
 
-    // Find maximum ID
-    let maxId = 0;
+    // Collect used IDs
+    const usedIds = new Set<number>();
     for (const line of dataLines) {
       // Extract ID from first column (handle quoted fields)
       const match = line.match(/^"?(\d+)"?/);
       if (match) {
         const id = parseInt(match[1], 10);
-        if (!isNaN(id) && id > maxId) {
-          maxId = id;
+        if (!isNaN(id)) {
+          usedIds.add(id);
         }
       }
     }
 
-    // Return next ID with 4-digit padding
-    const nextId = (maxId + 1).toString().padStart(4, '0');
+    // Return smallest available ID with 4-digit padding
+    let nextIdNum = 1;
+    while (usedIds.has(nextIdNum)) {
+      nextIdNum += 1;
+    }
+    const nextId = nextIdNum.toString().padStart(4, '0');
 
     return Response.json({ nextId });
   } catch (error) {
