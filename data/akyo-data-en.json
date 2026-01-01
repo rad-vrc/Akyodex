@@ -777,7 +777,7 @@
     "id": "0087",
     "nickname": "School Swimsuit Akyo",
     "avatarName": "スク水あきょう",
-    "category": "Clothing/Costume,Clothing/Costume/Swimsuit,Drink,School",
+    "category": "Clothing/Costume,Clothing/Costume/Swimsuit,School",
     "comment": "",
     "author": "syuninn39",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f95048d-98e0-4b42-91fc-6c011037166f"
@@ -984,7 +984,7 @@
     "id": "0110",
     "nickname": "Chubby Akyo",
     "avatarName": "Akyo_debu",
-    "category": "Body Type",
+    "category": "Body Type,Body Type/Plump",
     "comment": "",
     "author": "kumax9",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_edc3a97f-5745-4a44-9cba-21f064f87617"
@@ -1479,7 +1479,7 @@
     "id": "0165",
     "nickname": "Kagami Mochi Akyo",
     "avatarName": "akyo__もち",
-    "category": "Food,Food/Sweets",
+    "category": "Food,Food/Sweets,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2a1886a-4a24-4d55-ba0f-af69f877728f"
@@ -2037,7 +2037,7 @@
     "id": "0227",
     "nickname": "Furisode Fox Akyo",
     "avatarName": "きつねkyo_振袖",
-    "category": "Animal/Fox,Animal",
+    "category": "Animal/Fox,Animal,Season・Event,Season・Event/New Year",
     "comment": "A is not present",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_0d6f6089-2fda-4125-86ce-30d53ac2e548"
@@ -2253,7 +2253,7 @@
     "id": "0251",
     "nickname": "HorseAkyo",
     "avatarName": "akyo_uma",
-    "category": "Animal,Animal/Horse,Quadruped",
+    "category": "Animal,Animal/Horse,Quadruped,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2134f6da-1d71-4c56-9061-3a3f9d9f445e"
@@ -2631,7 +2631,7 @@
     "id": "0293",
     "nickname": "Paper Lantern Akyo",
     "avatarName": "akyo_tyoutin",
-    "category": "Season・Event",
+    "category": "Animal,Animal/Marine Life,Animal/Fish",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_759551f7-91be-42c0-b129-1cf046076d21"
@@ -3180,7 +3180,7 @@
     "id": "0354",
     "nickname": "Christmas Tree Akyo",
     "avatarName": "akyo_ツリー",
-    "category": "Plant",
+    "category": "Plant,Season・Event,Season・Event/Christmas",
     "comment": "To be precise, a Christmas tree",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a6304b4-1da8-4eac-8bcc-1203f5fcb574"
@@ -3234,7 +3234,7 @@
     "id": "0360",
     "nickname": "Wedding Dragon Akyo",
     "avatarName": "akyo_どらごん振袖",
-    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Season・Event,Skill・Trait",
+    "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Season・Event,Season・Event/New Year,Skill・Trait",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0458f77-35e9-4656-aaa5-ff622d81c619"
@@ -3243,7 +3243,7 @@
     "id": "0361",
     "nickname": "Daruma Akyo",
     "avatarName": "akyo_daruma",
-    "category": "Appliances・Furniture,History",
+    "category": "Appliances・Furniture,History,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bac120a2-3c1d-427e-9ce7-3a8ab9169074"
@@ -3351,7 +3351,7 @@
     "id": "0373",
     "nickname": "Loader Akyo",
     "avatarName": "akyo_ローダー",
-    "category": "Electronic",
+    "category": "Mint Chocolate,Military・Weapons",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_21924bf1-925d-4940-a687-9d25c8377f89"
@@ -3369,7 +3369,7 @@
     "id": "0375",
     "nickname": "Loader Akyo 2/Loader Fox Akyo",
     "avatarName": "akyo_ローダー2",
-    "category": "Animal/Fox,Animal,Electronic",
+    "category": "Animal/Fox,Animal,Mint Chocolate,Military・Weapons",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_fcfb1c55-baf9-45ec-a14e-0e8a224e6ffd"
@@ -3567,7 +3567,7 @@
     "id": "0397",
     "nickname": "Loader Akyo 3/Loader Black Cat Akyo",
     "avatarName": "akyoローダー3",
-    "category": "Animal,Animal/Cat,Electronic",
+    "category": "Animal,Animal/Cat,Mint Chocolate,Military・Weapons",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5fecb105-9e64-4c7f-864b-3a4c87da0fdb"
@@ -3963,7 +3963,7 @@
     "id": "0441",
     "nickname": "Mochi Akyo",
     "avatarName": "akyo_もち",
-    "category": "Food,Food/Sweets",
+    "category": "Food,Food/Sweets,Season・Event,Season・Event/New Year",
     "comment": "Second-Generation Mochi Akyo",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_209684dd-dca1-415d-a747-af883a896756"
@@ -4062,7 +4062,7 @@
     "id": "0452",
     "nickname": "Beer Shop Tanuki Akyo",
     "avatarName": "akyo_たぬき酒屋",
-    "category": "Animal,Animal/Tanuki,Drink",
+    "category": "Animal,Animal/Tanuki",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_6fc43531-97bb-43cf-8f63-3381422a470f"
@@ -4116,7 +4116,7 @@
     "id": "0458",
     "nickname": "Kotatsu Fox Akyo",
     "avatarName": "akyo_きつねこたつ",
-    "category": "Animal/Fox,Animal,Appliances・Furniture",
+    "category": "Animal/Fox,Animal,Appliances・Furniture,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_cf0aabab-d449-469c-9f2c-ae49663c78d1"
@@ -4125,7 +4125,7 @@
     "id": "0459",
     "nickname": "Horse Haniwa Akyo",
     "avatarName": "akyo_はにわうま",
-    "category": "Animal,Animal/Horse,History,Statue,Quadruped",
+    "category": "Animal,Animal/Horse,History,Statue,Quadruped,Season・Event,Season・Event/New Year",
     "comment": "Haniwa and horse Also Gave Birth to Derivatives",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa880970-2d3b-4cda-85f6-e1aee46b8e09"
@@ -4224,7 +4224,7 @@
     "id": "0470",
     "nickname": "Furisode Wolf Akyo",
     "avatarName": "おおかみふりそで",
-    "category": "Animal,Animal/Wolf",
+    "category": "Animal,Animal/Wolf,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_2e9f07a1-9908-49b6-a2f6-766f446e6525"
@@ -4233,7 +4233,7 @@
     "id": "0471",
     "nickname": "Furisode Tanuki Akyo",
     "avatarName": "たぬきふりそで",
-    "category": "Animal,Animal/Tanuki",
+    "category": "Animal,Animal/Tanuki,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_5c2dfd30-1bf4-42ce-ac64-949a5db80407"
@@ -4251,7 +4251,7 @@
     "id": "0473",
     "nickname": "Kotatsu Akyo",
     "avatarName": "kotatsu_akyo",
-    "category": "Appliances・Furniture",
+    "category": "Appliances・Furniture,Season・Event,Season・Event/New Year",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_bd03fb43-7ea7-4be5-bc9c-bcc9d9dc9007"
@@ -4368,7 +4368,7 @@
     "id": "0486",
     "nickname": "Sick Akyo",
     "avatarName": "KazehikiAkyo",
-    "category": "Mint Chocolate,Illness,Mask,Get Well Soon,Futon",
+    "category": "Mint Chocolate,Illness,Clothing/Costume,Clothing/Costume/Mask,Get Well Soon,Futon",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -5538,7 +5538,7 @@
     "id": "0616",
     "nickname": "Spirit Horse Akyo",
     "avatarName": "精霊うまきょ",
-    "category": "Spirit Horse,Food/Vegetable,Food,Animal,Animal/Horse,Fictional Being,Fictional Being/Mythical Beast・Spirit,Cucumber,Eggplant",
+    "category": "Spirit Horse,Food/Vegetable,Food,Animal,Animal/Horse,Fictional Being,Fictional Being/Mythical Beast・Spirit,Cucumber,Eggplant,Season・Event,Season・Event/New Year",
     "comment": "Spirit Horse Akyo. Android compatible.",
     "author": "kuro5963",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_b44829ee-239b-4121-bb0f-a9ee032b0634"
@@ -5610,7 +5610,7 @@
     "id": "0624",
     "nickname": "Nightcap Akyo",
     "avatarName": "nightcapAkyo",
-    "category": "Mint Chocolate,Clothing/Costume,Sleep,Pillow",
+    "category": "Mint Chocolate,Clothing/Costume,Sleep,Appliances・Furniture,Appliances・Furniture/Pillow",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5"
@@ -5619,7 +5619,7 @@
     "id": "0625",
     "nickname": "Big Boobs Cow Print Akyo",
     "avatarName": "bigboinushigaraAkyo",
-    "category": "Plump,Animal",
+    "category": "Body Type,Body Type/Plump,Animal",
     "comment": "",
     "author": "葱 potipoti93",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -5934,7 +5934,7 @@
     "id": "0660",
     "nickname": "Masked Wolf Akyo",
     "avatarName": "akyo_おおかみマスク",
-    "category": "Animal/Wolf,Clothing/Costume,Animal,Mask",
+    "category": "Animal/Wolf,Clothing/Costume,Animal,Clothing/Costume/Mask,Season・Event,Season・Event/Halloween",
     "comment": "",
     "author": "ささのき",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_05eacbfe-57a5-4d51-9ef5-51034d95a29c"
@@ -6006,7 +6006,7 @@
     "id": "0668",
     "nickname": "Cold Akyo",
     "avatarName": "kazeakyo",
-    "category": "Illness,Mint Chocolate,Mask,Get Well Soon,Futon,Pillow,IV Drip",
+    "category": "Illness,Mint Chocolate,Clothing/Costume,Clothing/Costume/Mask,Get Well Soon,Futon,Appliances・Furniture,Appliances・Furniture/Pillow,IV Drip",
     "comment": "",
     "author": "nezu_jp",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
@@ -6109,5 +6109,14 @@
     "comment": "Seeking information.",
     "author": "ウロVRC",
     "avatarUrl": "https://vrchat.com/home/avatar/avtr_697acb61-6b9e-4ede-8276-735695375010"
+  },
+  {
+    "id": "0680",
+    "nickname": "Bean Daruma Akyo / Daruma Bean Akyo",
+    "avatarName": "まめあきょだるま",
+    "category": "Season・Event,Season・Event/New Year,Bean,Bean Akyo,Appliances・Furniture,History",
+    "comment": "Android, iOS compatible",
+    "author": "kuro5963",
+    "avatarUrl": "https://vrchat.com/home/avatar/avtr_1c932500-1039-4f08-b801-b3f277241d0d"
   }
 ]
