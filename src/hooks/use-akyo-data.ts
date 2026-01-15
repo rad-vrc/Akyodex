@@ -19,10 +19,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   useEffect(() => {
     if (initialData.length > 0) {
       // お気に入り情報を復元（localStorageはクライアントのみ）
-      const favorites = getFavorites();
+      // Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
+      const favoritesSet = new Set(getFavorites());
       const dataWithFavorites = initialData.map(akyo => ({
         ...akyo,
-        isFavorite: favorites.includes(akyo.id),
+        isFavorite: favoritesSet.has(akyo.id),
       }));
 
       setData(dataWithFavorites);
@@ -34,10 +35,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
    * 新しいデータでリフレッシュ（言語切り替え時などに使用）
    */
   const refetchWithNewData = useCallback((newData: AkyoData[]) => {
-    const favorites = getFavorites();
+    // Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
+    const favoritesSet = new Set(getFavorites());
     const dataWithFavorites = newData.map(akyo => ({
       ...akyo,
-      isFavorite: favorites.includes(akyo.id),
+      isFavorite: favoritesSet.has(akyo.id),
     }));
     setData(dataWithFavorites);
     setFilteredData(dataWithFavorites);
@@ -141,23 +143,35 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 }
 
 /**
- * お気に入りIDを取得
+ * localStorage キャッシュ (React Best Practices 7.5)
+ * localStorage の読み書きは同期的で高コストなため、メモリ内にキャッシュして
+ * 頻繁なアクセス時のパフォーマンスを改善
+ */
+let favoritesCache: string[] | null = null;
+
+/**
+ * お気に入りIDを取得（キャッシュ対応）
  */
 function getFavorites(): string[] {
+  if (favoritesCache !== null) return favoritesCache;
   try {
     const stored = localStorage.getItem('akyoFavorites');
-    return stored ? JSON.parse(stored) : [];
+    const parsed: string[] = stored ? JSON.parse(stored) : [];
+    favoritesCache = parsed;
+    return parsed;
   } catch {
+    favoritesCache = [];
     return [];
   }
 }
 
 /**
- * お気に入りIDを保存
+ * お気に入りIDを保存（キャッシュも同時に更新）
  */
 function saveFavorites(ids: string[]): void {
   try {
     localStorage.setItem('akyoFavorites', JSON.stringify(ids));
+    favoritesCache = ids; // キャッシュも更新
   } catch (e) {
     console.warn('Failed to save favorites:', e);
   }
