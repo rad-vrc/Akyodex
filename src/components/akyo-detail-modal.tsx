@@ -14,6 +14,7 @@
  * - Action buttons (favorite + VRChat link)
  */
 
+import { getCategoryColor } from '@/lib/akyo-data-helpers';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -25,43 +26,6 @@ interface AkyoDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onToggleFavorite?: (id: string) => void;
-}
-
-// カテゴリ色マッピング (元の実装と完全一致)
-function getCategoryColor(category: string): string {
-  const colorMap: Record<string, string> = {
-    チョコミント: '#00bfa5',
-    動物: '#ff6f61',
-    きつね: '#ff9800',
-    おばけ: '#9c27b0',
-    人類: '#2196f3',
-    ギミック: '#4caf50',
-    特殊: '#e91e63',
-    ネコ: '#795548',
-    イヌ: '#607d8b',
-    うさぎ: '#ff4081',
-    ドラゴン: '#673ab7',
-    ロボット: '#757575',
-    食べ物: '#ffc107',
-    植物: '#8bc34a',
-    宇宙: '#3f51b5',
-    和風: '#d32f2f',
-    洋風: '#1976d2',
-    ファンタジー: '#ab47bc',
-    SF: '#00acc1',
-    ホラー: '#424242',
-    かわいい: '#ec407a',
-    クール: '#5c6bc0',
-    シンプル: '#78909c',
-  };
-
-  for (const [key, color] of Object.entries(colorMap)) {
-    if (category && category.includes(key)) {
-      return color;
-    }
-  }
-
-  return '#667eea';
 }
 
 export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: AkyoDetailModalProps) {
@@ -336,6 +300,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
           >
             {/* Close Button */}
             <button
+              type="button"
               onClick={onClose}
               className="absolute top-4 right-4 w-14 h-14 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110"
               style={{
@@ -535,6 +500,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 <div className="flex gap-3 pt-4 border-t">
                   {/* Favorite Button - ピンク色 */}
                   <button
+                    type="button"
                     onClick={handleFavoriteClick}
                     className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
                       localAkyo.isFavorite
@@ -557,6 +523,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* VRChat Button - Orange Gradient (not purple!) */}
                   {localAkyo.avatarUrl && (
                     <button
+                      type="button"
                       onClick={handleVRChatOpen}
                       className="flex-1 py-3 rounded-lg font-medium transition-opacity flex items-center justify-center gap-2"
                       style={{
