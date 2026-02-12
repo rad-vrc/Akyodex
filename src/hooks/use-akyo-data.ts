@@ -3,6 +3,9 @@
 import type { AkyoData, AkyoFilterOptions } from '@/types/akyo';
 import { useCallback, useEffect, useState } from 'react';
 
+/** localStorage のキー名 */
+const FAVORITES_STORAGE_KEY = 'akyoFavorites';
+
 /**
  * Akyoデータを管理するカスタムフック (SSR対応版)
  *
@@ -23,6 +26,19 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       setFilteredData(dataWithFavorites);
     }
   }, [initialData]);
+
+  // 別タブからの localStorage 変更を検知してお気に入り状態を同期する
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key !== FAVORITES_STORAGE_KEY) return;
+      // キャッシュを無効化して最新の値を取得
+      favoritesCache = null;
+      setData(prev => applyFavorites(prev));
+      setFilteredData(prev => applyFavorites(prev));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   /**
    * 新しいデータでリフレッシュ（言語切り替え時などに使用）
@@ -143,7 +159,7 @@ let favoritesCache: string[] | null = null;
 function getFavorites(): string[] {
   if (favoritesCache !== null) return favoritesCache;
   try {
-    const stored = localStorage.getItem('akyoFavorites');
+    const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
     if (!stored) {
       favoritesCache = [];
       return [];
@@ -174,7 +190,7 @@ function saveFavorites(ids: string[]): void {
   // (localStorage.setItem が容量超過等で失敗しても UI は正しく動作する)
   favoritesCache = idsCopy;
   try {
-    localStorage.setItem('akyoFavorites', JSON.stringify(idsCopy));
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(idsCopy));
   } catch (e) {
     console.warn('Failed to save favorites to localStorage:', e);
   }

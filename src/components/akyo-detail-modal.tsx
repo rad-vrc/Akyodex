@@ -59,6 +59,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   }, [akyo]);
 
   // akyo変更時に画像URLをリセット
+  // Note: localAkyo?.id のみを依存にすることで、同一IDのプロパティ変更（isFavoriteなど）で
+  // 画像URLがリセットされるのを防ぐ
   useEffect(() => {
     if (localAkyo) {
       const pngUrl = `${r2Base}/${localAkyo.id}.png`;
@@ -66,7 +68,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       setImageLoadAttempt(0);
       setIsZoomed(false); // ズーム状態もリセット
     }
-  }, [localAkyo?.id, r2Base, localAkyo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- localAkyo.id の変更時のみ発火させたい
+  }, [localAkyo?.id, r2Base]);
 
   useEffect(() => {
     // ESCキーでモーダルを閉じる
