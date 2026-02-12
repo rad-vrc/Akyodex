@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Service Worker Registration Component
@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 export function ServiceWorkerRegister() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
+  const updateIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     // Check if service workers are supported
@@ -46,8 +47,8 @@ export function ServiceWorkerRegister() {
           });
         });
 
-        // Check for updates every hour
-        setInterval(() => {
+        // Check for updates every hour (ref で保持してクリーンアップ可能にする)
+        updateIntervalRef.current = setInterval(() => {
           reg.update();
         }, 60 * 60 * 1000);
 
@@ -74,8 +75,15 @@ export function ServiceWorkerRegister() {
       registerServiceWorker();
     } else {
       window.addEventListener('load', registerServiceWorker);
-      return () => window.removeEventListener('load', registerServiceWorker);
     }
+
+    return () => {
+      window.removeEventListener('load', registerServiceWorker);
+      if (updateIntervalRef.current) {
+        clearInterval(updateIntervalRef.current);
+        updateIntervalRef.current = null;
+      }
+    };
   }, []);
 
   // Handle update click

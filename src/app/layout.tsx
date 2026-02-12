@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Kosugi_Maru } from "next/font/google";
+import { Noto_Sans_JP, Kosugi_Maru, M_PLUS_Rounded_1c } from "next/font/google";
 import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
@@ -18,6 +18,14 @@ const kosugiMaru = Kosugi_Maru({
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
+});
+
+const mPlusRounded = M_PLUS_Rounded_1c({
+  variable: "--font-m-plus-rounded",
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  preload: false, // 日本語サブセット未対応のため preload を無効化
 });
 
 // Viewport設定（Next.js 15のベストプラクティス）
@@ -180,7 +188,7 @@ export default async function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
+        className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
         <WebVitals />
         <ServiceWorkerRegister />
