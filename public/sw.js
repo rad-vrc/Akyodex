@@ -264,11 +264,12 @@ async function handleStaticAssets(event, request) {
 
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
+      return networkResponse;
     }
 
-    return networkResponse;
+    throw new Error(`[SW] Non-OK static asset response: ${networkResponse.status} ${networkResponse.statusText}`);
   } catch (error) {
-    console.log('[SW] Network failed for static asset:', error.message);
+    console.log('[SW] Network failed for static asset:', error?.message || error);
     throw error;
   }
 }
@@ -330,11 +331,12 @@ async function handleDefaultRequest(event, request) {
 
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
+      return networkResponse;
     }
 
-    return networkResponse;
+    throw new Error(`[SW] Non-OK default asset response: ${networkResponse.status} ${networkResponse.statusText}`);
   } catch (error) {
-    console.log('[SW] Network failed for default request:', error.message);
+    console.log('[SW] Network failed for default request:', error?.message || error);
     throw error;
   }
 }
