@@ -94,12 +94,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     const result: {
       deletedKeys: string[];
       newKeysCreated: string[];
-      dataCount: { ja: number; en: number };
+      dataCount: { ja: number; en: number; ko: number };
       errors: string[];
     } = {
       deletedKeys: [],
       newKeysCreated: [],
-      dataCount: { ja: 0, en: 0 },
+      dataCount: { ja: 0, en: 0, ko: 0 },
       errors: [],
     };
 
@@ -143,16 +143,18 @@ export async function POST(request: NextRequest): Promise<Response> {
         const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
         
         // Fetch fresh data from JSON
-        const [dataJa, dataEn] = await Promise.all([
+        const [dataJa, dataEn, dataKo] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
+          getAkyoDataFromJSON('ko'),
         ]);
         
         result.dataCount.ja = dataJa.length;
         result.dataCount.en = dataEn.length;
+        result.dataCount.ko = dataKo.length;
         
         // Update KV atomically to avoid metadata race condition
-        const kvResult = await updateKVCacheBoth(dataJa, dataEn);
+        const kvResult = await updateKVCacheBoth(dataJa, dataEn, dataKo);
         
         // Track successful updates
         if (kvResult.ja) {
@@ -171,16 +173,24 @@ export async function POST(request: NextRequest): Promise<Response> {
           result.errors.push(errMsg);
         }
         
+        if (kvResult.ko) {
+          result.newKeysCreated.push('akyo-data-ko');
+        } else {
+          const errMsg = 'Failed to update KV cache for Korean data';
+          console.error(`[kv-migrate] ${errMsg}`);
+          result.errors.push(errMsg);
+        }
+        
         if (kvResult.metadata) {
           result.newKeysCreated.push('akyo-data-meta');
-        } else if (kvResult.ja || kvResult.en) {
+        } else if (kvResult.ja || kvResult.en || kvResult.ko) {
           // Data was written but metadata failed
           const errMsg = 'Data written but metadata update failed';
           console.error(`[kv-migrate] ${errMsg}`);
           result.errors.push(errMsg);
         }
         
-        console.log(`[kv-migrate] Initialization complete: ja=${kvResult.ja}, en=${kvResult.en}, meta=${kvResult.metadata}`);
+        console.log(`[kv-migrate] Initialization complete: ja=${kvResult.ja}, en=${kvResult.en}, ko=${kvResult.ko}, meta=${kvResult.metadata}`);
       } catch (error) {
         const errMsg = `Initialization failed: ${error}`;
         console.error(`[kv-migrate] ${errMsg}`);

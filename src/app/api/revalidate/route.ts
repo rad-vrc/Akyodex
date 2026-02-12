@@ -120,7 +120,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Phase 5b: Update KV cache if requested
     let kvUpdated = false;
-    let kvUpdateDetails: { ja: boolean; en: boolean; metadata: boolean } | null = null;
+    let kvUpdateDetails: { ja: boolean; en: boolean; ko: boolean; metadata: boolean } | null = null;
     let kvError: string | null = null;
     
     if (updateKV) {
@@ -129,21 +129,22 @@ export async function POST(request: NextRequest): Promise<Response> {
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
         const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
         
-        // Fetch fresh data from JSON for both languages
-        const [dataJa, dataEn] = await Promise.all([
+        // Fetch fresh data from JSON for all languages
+        const [dataJa, dataEn, dataKo] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
+          getAkyoDataFromJSON('ko'),
         ]);
         
-        // Update both languages atomically to avoid metadata race condition
-        kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn);
-        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata;
+        // Update all languages atomically to avoid metadata race condition
+        kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn, dataKo);
+        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.ko && kvUpdateDetails.metadata;
         
         if (!kvUpdated) {
-          kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`;
+          kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`;
           console.error(`[revalidate] ${kvError}`);
         } else {
-          console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`);
+          console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`);
         }
       } catch (error) {
         kvError = `KV update failed: ${error}`;

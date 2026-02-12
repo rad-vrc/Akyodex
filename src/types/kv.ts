@@ -58,6 +58,7 @@ export interface KVMetadata {
   lastUpdated: string;
   countJa: number;
   countEn: number;
+  countKo: number;
   version: string;
 }
 
@@ -67,5 +68,6 @@ export interface KVMetadata {
 export const KV_KEYS = {
   DATA_JA: 'akyo-data-ja',
   DATA_EN: 'akyo-data-en',
+  DATA_KO: 'akyo-data-ko',
   META: 'akyo-data-meta',
 } as const;

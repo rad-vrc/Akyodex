@@ -61,7 +61,11 @@ function getKVNamespace(): KVNamespace | null {
  * Get the KV key for a specific language
  */
 function getKVKey(lang: SupportedLanguage): string {
-  return lang === 'en' ? KV_KEYS.DATA_EN : KV_KEYS.DATA_JA;
+  switch (lang) {
+    case 'en': return KV_KEYS.DATA_EN;
+    case 'ko': return KV_KEYS.DATA_KO;
+    default: return KV_KEYS.DATA_JA;
+  }
 }
 
 /**
@@ -212,12 +216,13 @@ export async function updateKVCache(
       lastUpdated: new Date().toISOString(),
       countJa: lang === 'ja' ? data.length : (existingMeta?.countJa ?? 0),
       countEn: lang === 'en' ? data.length : (existingMeta?.countEn ?? 0),
+      countKo: lang === 'ko' ? data.length : (existingMeta?.countKo ?? 0),
       version: '5b',
     };
     
     try {
       await kv.put(KV_KEYS.META, JSON.stringify(meta));
-      console.log(`[KV] Updated metadata: ja=${meta.countJa}, en=${meta.countEn}`);
+      console.log(`[KV] Updated metadata: ja=${meta.countJa}, en=${meta.countEn}, ko=${meta.countKo}`);
     } catch (metaWriteError) {
       console.error('[KV] Failed to update metadata:', metaWriteError);
     }
@@ -230,42 +235,48 @@ export async function updateKVCache(
 }
 
 /**
- * Update KV cache for both languages atomically
+ * Update KV cache for all languages atomically
  * 
- * This function updates both Japanese and English data, then writes
- * metadata once with both counts. This avoids race conditions that
+ * This function updates Japanese, English, and Korean data, then writes
+ * metadata once with all counts. This avoids race conditions that
  * occur when calling updateKVCache() in parallel.
  * 
  * @param dataJa - Japanese Akyo data array
  * @param dataEn - English Akyo data array
+ * @param dataKo - Korean Akyo data array (optional for backward compatibility)
  * @returns Object with success status for each language
  */
 export async function updateKVCacheBoth(
   dataJa: AkyoData[],
-  dataEn: AkyoData[]
-): Promise<{ ja: boolean; en: boolean; metadata: boolean }> {
+  dataEn: AkyoData[],
+  dataKo?: AkyoData[]
+): Promise<{ ja: boolean; en: boolean; ko: boolean; metadata: boolean }> {
   const kv = getKVNamespace();
   
   if (!kv) {
     console.warn('[KV] Cannot update KV: namespace not available');
-    return { ja: false, en: false, metadata: false };
+    return { ja: false, en: false, ko: false, metadata: false };
   }
   
-  const result = { ja: false, en: false, metadata: false };
+  const result = { ja: false, en: false, ko: false, metadata: false };
   
   try {
-    // Update both data stores in parallel (without metadata)
-    const [jaResult, enResult] = await Promise.all([
-      updateKVCache(dataJa, 'ja', true),  // skipMetadata = true
-      updateKVCache(dataEn, 'en', true),  // skipMetadata = true
-    ]);
+    // Update all data stores in parallel (without metadata)
+    const updates: Promise<boolean>[] = [
+      updateKVCache(dataJa, 'ja', true),
+      updateKVCache(dataEn, 'en', true),
+    ];
+    if (dataKo) {
+      updates.push(updateKVCache(dataKo, 'ko', true));
+    }
     
-    result.ja = jaResult;
-    result.en = enResult;
+    const results = await Promise.all(updates);
+    result.ja = results[0];
+    result.en = results[1];
+    result.ko = results[2] ?? false;
     
-    // Update metadata once with both counts
-    // Read existing metadata first to preserve counts for failed updates
-    if (jaResult || enResult) {
+    // Update metadata once with all counts
+    if (result.ja || result.en || result.ko) {
       let existingMeta: KVMetadata | null = null;
       try {
         existingMeta = await kv.get<KVMetadata>(KV_KEYS.META, { type: 'json' });
@@ -273,17 +284,17 @@ export async function updateKVCacheBoth(
         console.warn('[KV] Failed to read existing metadata:', metaReadError);
       }
       
-      // Build metadata preserving previous counts for failed updates
       const meta: KVMetadata = {
         lastUpdated: new Date().toISOString(),
-        countJa: jaResult ? dataJa.length : (existingMeta?.countJa ?? 0),
-        countEn: enResult ? dataEn.length : (existingMeta?.countEn ?? 0),
+        countJa: result.ja ? dataJa.length : (existingMeta?.countJa ?? 0),
+        countEn: result.en ? dataEn.length : (existingMeta?.countEn ?? 0),
+        countKo: result.ko && dataKo ? dataKo.length : (existingMeta?.countKo ?? 0),
         version: '5b',
       };
       
       try {
         await kv.put(KV_KEYS.META, JSON.stringify(meta));
-        console.log(`[KV] Updated metadata atomically: ja=${meta.countJa}, en=${meta.countEn}`);
+        console.log(`[KV] Updated metadata atomically: ja=${meta.countJa}, en=${meta.countEn}, ko=${meta.countKo}`);
         result.metadata = true;
       } catch (metaWriteError) {
         console.error('[KV] Failed to update metadata:', metaWriteError);
