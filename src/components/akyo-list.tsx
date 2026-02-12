@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import type { AkyoData } from '@/types/akyo';
 import { getCategoryColor } from '@/lib/akyo-data-helpers';
+import { IconInfoCircle } from '@/components/icons';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 
@@ -130,7 +131,7 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
                         className="list-action-btn"
                         aria-label="詳細を見る"
                       >
-                        <i className="fas fa-info-circle text-blue-500"></i>
+                        <IconInfoCircle size="w-5 h-5" className="text-blue-500" />
                       </button>
                     </div>
                   </td>

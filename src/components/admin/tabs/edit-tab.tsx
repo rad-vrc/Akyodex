@@ -1,5 +1,6 @@
 'use client';
 
+import { IconEdit, IconInfoCircle, IconSearch, IconTrash } from '@/components/icons';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AdminRole, AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -97,13 +98,13 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
   return (
     <div>
       <h2 className="text-xl font-bold text-gray-800 mb-6">
-        <i className="fas fa-edit text-red-500 mr-2" aria-hidden="true"></i> Akyoを編集・削除
+        <IconEdit size="w-5 h-5" className="text-red-500 mr-2" /> Akyoを編集・削除
       </h2>
 
       {/* 検索 */}
       <div className="mb-6">
         <div className="relative">
-          <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true"></i>
+          <IconSearch size="w-4 h-4" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="search"
             value={searchQuery}
@@ -149,7 +150,7 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
               {filteredData.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                    <i className="fas fa-search text-4xl mb-2 block" aria-hidden="true"></i>
+                    <IconSearch size="w-10 h-10" className="mb-2 mx-auto block" />
                     {searchQuery ? '検索結果がありません' : 'データがありません'}
                   </td>
                 </tr>
@@ -203,7 +204,7 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
                           onClick={() => handleEdit(akyo)}
                           className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                         >
-                          <i className="fas fa-edit mr-1" aria-hidden="true"></i>
+                          <IconEdit size="w-3.5 h-3.5" className="mr-1" />
                           編集
                         </button>
                         {userRole === 'owner' && (
@@ -211,7 +212,7 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
                             onClick={() => handleDelete(akyo)}
                             className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                           >
-                            <i className="fas fa-trash mr-1" aria-hidden="true"></i>
+                            <IconTrash size="w-3.5 h-3.5" className="mr-1" />
                             削除
                           </button>
                         )}
@@ -226,7 +227,7 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
       </div>
 
       <p className="mt-4 text-sm text-gray-600">
-        <i className="fas fa-info-circle mr-1" aria-hidden="true"></i>
+        <IconInfoCircle size="w-4 h-4" className="mr-1" />
         {userRole === 'owner' ? '編集・削除機能が利用可能です' : '編集機能が利用可能です（削除は上位管理者のみ）'}
       </p>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { IconExclamationCircle, IconLock, IconSignIn } from '@/components/icons';
 import type { AdminRole } from '@/types/akyo';
 import { FormEvent, useState } from 'react';
 
@@ -47,7 +48,7 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i className="fas fa-lock text-white text-3xl"></i>
+            <IconLock size="w-8 h-8" className="text-white" />
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">ファインダー認証</h2>
           <p className="text-gray-600 text-sm">Akyoワードを入力してファインダー機能にアクセス</p>
@@ -73,12 +74,12 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
             type="submit"
             className="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
           >
-            <i className="fas fa-sign-in-alt mr-2"></i> ログイン
+            <IconSignIn size="w-4 h-4" className="mr-2" /> ログイン
           </button>
 
           {error && (
             <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm" role="alert">
-              <i className="fas fa-exclamation-circle mr-1"></i> Akyoワードが正しくありません
+              <IconExclamationCircle size="w-4 h-4" className="mr-1" /> Akyoワードが正しくありません
             </div>
           )}
         </form>

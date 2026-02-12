@@ -43,10 +43,10 @@ export function middleware(request: NextRequest) {
   // Note: 'unsafe-inline' and 'unsafe-eval' are required for Dify chatbot to function properly
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' *.dify.dev *.dify.ai *.udify.app udify.app cdn.jsdelivr.net js.sentry-cdn.com browser.sentry-cdn.com *.sentry.io https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com https://paulrosen.github.io https://cdn-cookieyes.com fonts.googleapis.com;
-    style-src 'self' 'unsafe-inline' cdn.jsdelivr.net udify.app *.udify.app fonts.googleapis.com;
+    script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' *.dify.dev *.dify.ai *.udify.app udify.app js.sentry-cdn.com browser.sentry-cdn.com *.sentry.io https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com https://paulrosen.github.io https://cdn-cookieyes.com fonts.googleapis.com;
+    style-src 'self' 'unsafe-inline' udify.app *.udify.app fonts.googleapis.com;
     img-src 'self' data: blob: https: *.akyodex.com *.vrchat.com *.r2.cloudflarestorage.com udify.app *.udify.app;
-    font-src 'self' data: cdn.jsdelivr.net udify.app *.udify.app fonts.gstatic.com;
+    font-src 'self' data: udify.app *.udify.app fonts.gstatic.com;
     connect-src 'self' *.dify.dev *.dify.ai *.udify.app udify.app *.r2.cloudflarestorage.com *.sentry.io https://analytics.google.com https://images.akyodex.com;
     frame-src 'self' udify.app *.udify.app;
     worker-src 'self' blob:;

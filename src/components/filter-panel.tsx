@@ -1,5 +1,7 @@
 'use client';
 
+import { IconDice, IconHeart, IconSortAsc, IconSortDesc } from '@/components/icons';
+
 interface FilterPanelProps {
   // 新フィールド（オプショナル）
   categories?: string[];
@@ -101,7 +103,7 @@ export function FilterPanel({
               : 'bg-blue-200 text-blue-800 hover:bg-blue-300'
           }`}
         >
-          <i className={`fas fa-arrow-${sortAscending ? 'up' : 'down'}-${sortAscending ? '1-9' : '9-1'}`}></i>{' '}
+          {sortAscending ? <IconSortAsc size="w-4 h-4" /> : <IconSortDesc size="w-4 h-4" />}{' '}
           {lang === 'en' ? (sortAscending ? 'Ascending' : 'Descending') : (sortAscending ? '昇順' : '降順')}
         </button>
         
@@ -116,7 +118,7 @@ export function FilterPanel({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <i className="fas fa-dice"></i> {lang === 'en' ? 'Random' : 'ランダム表示'}
+          <IconDice size="w-4 h-4" /> {lang === 'en' ? 'Random' : 'ランダム表示'}
         </button>
         
         <button
@@ -130,7 +132,7 @@ export function FilterPanel({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <i className="fas fa-heart"></i> {lang === 'en' ? 'Favorites Only' : 'お気に入りのみ'}
+          <IconHeart size="w-4 h-4" /> {lang === 'en' ? 'Favorites Only' : 'お気に入りのみ'}
         </button>
       </div>
     </div>

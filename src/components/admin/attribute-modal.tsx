@@ -1,5 +1,6 @@
 'use client';
 
+import { IconCheckCircle, IconCircle, IconClose, IconPlusCircle, IconSearch, IconTags } from '@/components/icons';
 import { useState, useEffect } from 'react';
 
 interface AttributeModalProps {
@@ -122,7 +123,7 @@ export function AttributeModal({
               id="attributeModalTitle"
               className="text-lg font-bold text-gray-800 flex items-center gap-2"
             >
-              <i className="fas fa-tags text-green-500" aria-hidden="true"></i>
+              <IconTags size="w-5 h-5" className="text-green-500" />
               カテゴリを管理
             </h3>
             <button
@@ -131,7 +132,7 @@ export function AttributeModal({
               className="text-gray-500 hover:text-gray-700"
             >
               <span className="sr-only">閉じる</span>
-              <i className="fas fa-times text-xl" aria-hidden="true"></i>
+              <IconClose size="w-5 h-5" />
             </button>
           </div>
 
@@ -140,7 +141,7 @@ export function AttributeModal({
             {/* Search and Create Button */}
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
-                <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true"></i>
+                <IconSearch size="w-4 h-4" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="search"
                   value={searchQuery}
@@ -154,7 +155,7 @@ export function AttributeModal({
                 onClick={() => setShowCreateForm(!showCreateForm)}
                 className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-green-100 text-green-800 hover:bg-green-200 transition-colors"
               >
-                <i className="fas fa-plus-circle" aria-hidden="true"></i>
+                <IconPlusCircle size="w-4 h-4" />
                 新しいカテゴリを作成
               </button>
             </div>
@@ -222,12 +223,10 @@ export function AttributeModal({
                             : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100'
                         }`}
                       >
-                        <i
-                          className={`fas ${
-                            isSelected ? 'fa-check-circle' : 'fa-circle'
-                          } mr-2`}
-                          aria-hidden="true"
-                        ></i>
+                        {isSelected
+                          ? <IconCheckCircle size="w-4 h-4" className="mr-2 inline-block" />
+                          : <IconCircle size="w-4 h-4" className="mr-2 inline-block" />
+                        }
                         {attr}
                       </button>
                     );

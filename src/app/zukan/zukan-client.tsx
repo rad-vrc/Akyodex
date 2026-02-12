@@ -23,6 +23,7 @@ import { useAkyoData } from '@/hooks/use-akyo-data';
 import { useLanguage } from '@/hooks/use-language';
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
+import { IconCog, IconGrid, IconList } from '@/components/icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -345,7 +346,7 @@ export function ZukanClient({
               className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
               aria-label={lang === 'en' ? 'Grid view' : 'グリッド表示'}
             >
-              <i className="fas fa-th text-xl md:text-2xl"></i>
+              <IconGrid size="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <button
               type="button"
@@ -353,7 +354,7 @@ export function ZukanClient({
               className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
               aria-label={lang === 'en' ? 'List view' : 'リスト表示'}
             >
-              <i className="fas fa-list text-xl md:text-2xl"></i>
+              <IconList size="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         </div>
@@ -407,7 +408,7 @@ export function ZukanClient({
         aria-label="管理画面"
         title="管理画面"
       >
-        <i className="fas fa-cog text-lg sm:text-xl group-hover:rotate-90 transition-transform duration-300"></i>
+        <IconCog size="w-5 h-5 sm:w-6 sm:h-6" className="group-hover:rotate-90 transition-transform duration-300" />
       </Link>
 
       {/* AI Chat Assistant (Dify embed) */}
