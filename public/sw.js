@@ -11,7 +11,7 @@
  * - Images: Stale While Revalidate
  */
 
-const CACHE_VERSION = 'akyodex-nextjs-v7';
+const CACHE_VERSION = 'akyodex-nextjs-v8';
 const CACHE_NAME = `akyodex-cache-${CACHE_VERSION}`;
 
 // Core files to precache on install
@@ -152,6 +152,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Strategy 4b: Scripts/Styles - Network First with offline cache fallback
+  // Prioritize this before /_next/static/ so JS/CSS are always fetched fresh first.
+  if (request.destination === 'script' || request.destination === 'style') {
+    event.respondWith(handleScriptStyleRequest(request));
+    return;
+  }
+
   // Strategy 4: Next.js Static Assets - Cache First (immutable)
   if (url.pathname.startsWith('/_next/static/')) {
     event.respondWith(handleStaticAssets(event, request));
@@ -200,6 +207,33 @@ async function handleNavigationRequest(request) {
       status: 200,
     }
   );
+}
+
+/**
+ * Strategy 4b: Scripts/Styles - Network First with offline cache fallback
+ * Always try network first; fallback to cache only on network errors.
+ */
+async function handleScriptStyleRequest(request) {
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const networkResponse = await fetch(request, { cache: 'no-cache' });
+
+    if (networkResponse && networkResponse.ok) {
+      await cache.put(request, networkResponse.clone());
+    }
+
+    return networkResponse;
+  } catch (error) {
+    console.log('[SW] Network failed for script/style request:', error?.message || error);
+
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    throw error;
+  }
 }
 
 /**
