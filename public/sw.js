@@ -11,7 +11,7 @@
  * - Images: Stale While Revalidate
  */
 
-const CACHE_VERSION = 'akyodex-nextjs-v4';
+const CACHE_VERSION = 'akyodex-nextjs-v5';
 const CACHE_NAME = `akyodex-cache-${CACHE_VERSION}`;
 
 // Core files to precache on install
@@ -147,7 +147,7 @@ self.addEventListener('fetch', (event) => {
 
   // Strategy 4: Next.js Static Assets - Cache First (immutable)
   if (url.pathname.startsWith('/_next/static/')) {
-    event.respondWith(handleStaticAssets(request));
+    event.respondWith(handleStaticAssets(event, request));
     return;
   }
 
@@ -247,12 +247,14 @@ async function handleCsvRequest(request) {
  * Strategy 4: Next.js Static Assets - Cache First (immutable)
  * Next.js static assets have content hashes, so they're immutable
  */
-async function handleStaticAssets(request) {
+async function handleStaticAssets(event, request) {
   const cache = await caches.open(CACHE_NAME);
 
   // Try cache first
   const cachedResponse = await cache.match(request);
   if (cachedResponse) {
+    // Return cached, update in background
+    event.waitUntil(updateCacheInBackground(cache, request));
     return cachedResponse;
   }
 
@@ -262,13 +264,13 @@ async function handleStaticAssets(request) {
 
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
-      return networkResponse;
     }
+
+    return networkResponse;
   } catch (error) {
     console.log('[SW] Network failed for static asset:', error.message);
+    throw error;
   }
-
-  return new Response('', { status: 404 });
 }
 
 /**
@@ -328,13 +330,13 @@ async function handleDefaultRequest(event, request) {
 
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
-      return networkResponse;
     }
+
+    return networkResponse;
   } catch (error) {
     console.log('[SW] Network failed for default request:', error.message);
+    throw error;
   }
-
-  return new Response('', { status: 404 });
 }
 
 /**
