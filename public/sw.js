@@ -217,7 +217,7 @@ async function handleScriptStyleRequest(request) {
   const cache = await caches.open(CACHE_NAME);
 
   try {
-    const networkResponse = await fetch(request);
+    const networkResponse = await fetch(request, { cache: 'no-cache' });
 
     if (networkResponse && networkResponse.ok) {
       await cache.put(request, networkResponse.clone());
