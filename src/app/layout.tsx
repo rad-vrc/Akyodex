@@ -4,6 +4,7 @@ import { StructuredData } from "@/components/structured-data";
 import { WebVitals } from "@/components/web-vitals";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { headers } from "next/headers";
+import Script from "next/script";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -145,30 +146,8 @@ export default async function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <head suppressHydrationWarning>
         <link rel="stylesheet" href={fontAwesomeUrl} />
-        {/* Sentry エラー監視 */}
-        <script
-          src={sentryUrl}
-          crossOrigin="anonymous"
-          async
-          {...(nonce && { nonce })}
-        />
-        {difyToken ? (
-          <>
-            {/* Dify AI Chatbot - Config must be set before loading embed script */}
-            <script
-              nonce={nonce}
-              dangerouslySetInnerHTML={{
-                __html: `window.difyChatbotConfig = { token: '${difyToken}' };`,
-              }}
-            />
-            <script
-              src="https://udify.app/embed.min.js"
-              id={difyToken}
-              defer
-              nonce={nonce}
-            />
-          </>
-        ) : null}
+        <StructuredData />
+        {/* Dify chatbot custom styles (must be in <head>) */}
         <style
           nonce={nonce}
           dangerouslySetInnerHTML={{
@@ -185,11 +164,37 @@ export default async function RootLayout({
             `,
           }}
         />
-        <StructuredData />
       </head>
       <body
         className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
       >
+        {/* Sentry エラー監視 — beforeInteractive でハイドレーション前にロードし、
+            ブートストラップ失敗やハイドレーション例外も確実にキャプチャする */}
+        <Script
+          src={sentryUrl}
+          strategy="beforeInteractive"
+          {...(nonce && { nonce })}
+        />
+        {/* Dify AI Chatbot — lazyOnload の単一スクリプトで config → embed の実行順序を保証。
+            2つの lazyOnload スクリプトに分割すると独立して遅延されるため、
+            embed が config より先に実行される可能性がある (Codex P2 feedback) */}
+        {difyToken ? (
+          <Script
+            id="dify-chatbot-init"
+            strategy="lazyOnload"
+            nonce={nonce}
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.difyChatbotConfig = { token: '${difyToken}' };
+                var s = document.createElement('script');
+                s.src = 'https://udify.app/embed.min.js';
+                s.id = 'dify-chatbot-embed';
+                s.defer = true;
+                document.body.appendChild(s);
+              `,
+            }}
+          />
+        ) : null}
         <WebVitals />
         <ServiceWorkerRegister />
         {children}
