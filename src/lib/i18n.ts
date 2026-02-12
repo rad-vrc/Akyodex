@@ -29,7 +29,7 @@ export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
 export const LANGUAGE_TOGGLE_LABELS: Record<SupportedLanguage, string> = {
   ja: 'EN', // Shows "EN" when current is Japanese (next: English)
   en: 'KO', // Shows "KO" when current is English (next: Korean)
-  ko: 'JP', // Shows "JP" when current is Korean (next: Japanese)
+  ko: 'JA', // Shows "JA" when current is Korean (next: Japanese)
 };
 
 /**
@@ -158,15 +158,15 @@ export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
     en: 'Akyodex Logo',
     ko: 'Akyo도감 로고',
   },
-  'total.count': {
-    ja: '体',
-    en: ' total',
-    ko: '마리',
+  'stats.total': {
+    ja: '全{count}体',
+    en: 'Total {count}',
+    ko: '전체 {count}마리',
   },
-  'showing.count': {
-    ja: '件表示',
-    en: ' shown',
-    ko: '건 표시',
+  'stats.displayed': {
+    ja: '表示{count}体',
+    en: 'Showing {count}',
+    ko: '{count}건 표시',
   },
   'search.placeholder': {
     ja: '名前・通称・作者で検索...',

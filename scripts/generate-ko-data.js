@@ -462,6 +462,15 @@ function main() {
     headerMap[h.trim().replace(/^\ufeff/, '')] = i;
   });
   
+  // Validate required headers exist
+  const REQUIRED_HEADERS = ['ID', 'Nickname', 'AvatarName', 'Category', 'Comment', 'Author', 'AvatarURL'];
+  const missingHeaders = REQUIRED_HEADERS.filter(h => !(h in headerMap));
+  if (missingHeaders.length > 0) {
+    console.error(`\u274C Missing required CSV headers: ${missingHeaders.join(', ')}`);
+    console.error(`   Found headers: ${Object.keys(headerMap).join(', ')}`);
+    process.exit(1);
+  }
+  
   // === Translate rows ===
   console.log('🔄 Translating to Korean...');
   const koRows = dataRows.map(row => {

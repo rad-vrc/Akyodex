@@ -296,10 +296,10 @@ export function ZukanClient({
           {/* 統計情報 */}
           <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {lang === 'en' ? `Total ${stats.total}` : lang === 'ko' ? `전체 ${stats.total}마리` : `全${stats.total}体`}
+              {t('stats.total', lang).replace('{count}', String(stats.total))}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {lang === 'en' ? `Showing ${stats.displayed}` : lang === 'ko' ? `${stats.displayed}건 표시` : `表示${stats.displayed}体`}
+              {t('stats.displayed', lang).replace('{count}', String(stats.displayed))}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
               ❤️{stats.favorites}

@@ -81,66 +81,41 @@ async function convertCsvToJson() {
 
   console.log('🔄 Starting CSV to JSON conversion...\n');
 
-  // Convert Japanese CSV
-  console.log('📝 Processing Japanese CSV (akyo-data-ja.csv)...');
-  const csvJaPath = path.join(dataDir, 'akyo-data-ja.csv');
-  const csvJa = await fs.readFile(csvJaPath, 'utf-8');
-  const dataJa = parseCsvToAkyoData(csvJa);
+  // Language definitions
+  const languages = [
+    { code: 'ja', file: 'akyo-data-ja.csv' },
+    { code: 'en', file: 'akyo-data-en.csv' },
+    { code: 'ko', file: 'akyo-data-ko.csv' },
+  ] as const;
 
-  const jsonJa: AkyoJsonOutput = {
-    version: '1.0',
-    language: 'ja',
-    updatedAt: new Date().toISOString(),
-    count: dataJa.length,
-    data: dataJa,
-  };
+  const jsonPaths: string[] = [];
 
-  const jsonJaPath = path.join(dataDir, 'akyo-data-ja.json');
-  await fs.writeFile(jsonJaPath, JSON.stringify(jsonJa.data, null, 2), 'utf-8');
-  console.log(`   ✅ Japanese: ${dataJa.length} avatars → ${jsonJaPath}`);
+  for (const { code, file } of languages) {
+    console.log(`📝 Processing ${code.toUpperCase()} CSV (${file})...`);
+    const csvPath = path.join(dataDir, file);
+    const csv = await fs.readFile(csvPath, 'utf-8');
+    const data = parseCsvToAkyoData(csv);
 
-  // Convert English CSV
-  console.log('📝 Processing English CSV (akyo-data-en.csv)...');
-  const csvEnPath = path.join(dataDir, 'akyo-data-en.csv');
-  const csvEn = await fs.readFile(csvEnPath, 'utf-8');
-  const dataEn = parseCsvToAkyoData(csvEn);
+    const akyoJsonOutput: AkyoJsonOutput = {
+      version: '1.0',
+      language: code,
+      updatedAt: new Date().toISOString(),
+      count: data.length,
+      data,
+    };
 
-  const jsonEn: AkyoJsonOutput = {
-    version: '1.0',
-    language: 'en',
-    updatedAt: new Date().toISOString(),
-    count: dataEn.length,
-    data: dataEn,
-  };
-
-  const jsonEnPath = path.join(dataDir, 'akyo-data-en.json');
-  await fs.writeFile(jsonEnPath, JSON.stringify(jsonEn.data, null, 2), 'utf-8');
-  console.log(`   ✅ English: ${dataEn.length} avatars → ${jsonEnPath}`);
-
-  // Convert Korean CSV
-  console.log('📝 Processing Korean CSV (akyo-data-ko.csv)...');
-  const csvKoPath = path.join(dataDir, 'akyo-data-ko.csv');
-  const csvKo = await fs.readFile(csvKoPath, 'utf-8');
-  const dataKo = parseCsvToAkyoData(csvKo);
-
-  const jsonKo: AkyoJsonOutput = {
-    version: '1.0',
-    language: 'ko',
-    updatedAt: new Date().toISOString(),
-    count: dataKo.length,
-    data: dataKo,
-  };
-
-  const jsonKoPath = path.join(dataDir, 'akyo-data-ko.json');
-  await fs.writeFile(jsonKoPath, JSON.stringify(jsonKo.data, null, 2), 'utf-8');
-  console.log(`   ✅ Korean: ${dataKo.length} avatars → ${jsonKoPath}`);
+    const jsonPath = path.join(dataDir, `akyo-data-${code}.json`);
+    await fs.writeFile(jsonPath, JSON.stringify(akyoJsonOutput, null, 2), 'utf-8');
+    console.log(`   ✅ ${code.toUpperCase()}: ${data.length} avatars → ${jsonPath}`);
+    jsonPaths.push(jsonPath);
+  }
 
   // Summary
   console.log('\n✨ Conversion complete!');
   console.log('\nGenerated files:');
-  console.log(`   - ${jsonJaPath}`);
-  console.log(`   - ${jsonEnPath}`);
-  console.log(`   - ${jsonKoPath}`);
+  for (const p of jsonPaths) {
+    console.log(`   - ${p}`);
+  }
   console.log('\nTo use JSON data, set environment variable:');
   console.log('   NEXT_PUBLIC_USE_JSON_DATA=true');
 }

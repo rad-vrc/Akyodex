@@ -15,6 +15,8 @@
     "scripts/fix-categories-en.js",
     "scripts/fix-categories.js",
     "scripts/sync-akyo-data-en-from-ja.js",
+    "scripts/generate-ko-data.js",
+    "scripts/nickname-map-ko.js",
     "src/lib/blur-data-url.ts",
     "src/lib/cloudflare-image-loader.ts",
     "src/lib/akyo-data-server.ts",
