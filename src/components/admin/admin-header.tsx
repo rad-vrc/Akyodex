@@ -1,5 +1,6 @@
 'use client';
 
+import { IconHome, IconShield, IconSignOut } from '@/components/icons';
 import type { AuthRole } from '@/types/akyo';
 import Link from 'next/link';
 
@@ -22,7 +23,7 @@ export function AdminHeader({ isAuthenticated, userRole, onLogout }: AdminHeader
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center" aria-hidden="true">
-              <i className="fas fa-shield-alt text-white" aria-hidden="true"></i>
+              <IconShield size="w-5 h-5" className="text-white" />
             </div>
             <h1 className="text-2xl font-bold">Akyoずかん ファインダーモード</h1>
           </div>
@@ -37,14 +38,14 @@ export function AdminHeader({ isAuthenticated, userRole, onLogout }: AdminHeader
               href="/zukan"
               className="px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm transition-colors"
             >
-              <i className="fas fa-home mr-1" aria-hidden="true"></i> 図鑑に戻る
+              <IconHome size="w-4 h-4" className="mr-1" /> 図鑑に戻る
             </Link>
             {isAuthenticated && (
               <button
                 onClick={onLogout}
                 className="px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm transition-colors"
               >
-                <i className="fas fa-sign-out-alt mr-1" aria-hidden="true"></i> ログアウト
+                <IconSignOut size="w-4 h-4" className="mr-1" /> ログアウト
               </button>
             )}
           </div>

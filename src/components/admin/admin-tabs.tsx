@@ -1,5 +1,6 @@
 'use client';
 
+import { IconEdit, IconPlusCircle, IconTools } from '@/components/icons';
 import { useState } from 'react';
 import { AddTab } from './tabs/add-tab';
 import { EditTab } from './tabs/edit-tab';
@@ -42,7 +43,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
                 : 'hover:bg-gray-50'
             }`}
           >
-            <i className="fas fa-plus-circle mr-2" aria-hidden="true"></i>
+            <IconPlusCircle size="w-4 h-4" className="mr-2" />
             新規登録
           </button>
           <button
@@ -53,7 +54,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
                 : 'hover:bg-gray-50'
             }`}
           >
-            <i className="fas fa-edit mr-2" aria-hidden="true"></i>
+            <IconEdit size="w-4 h-4" className="mr-2" />
             編集・削除
           </button>
           <button
@@ -64,7 +65,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
                 : 'hover:bg-gray-50'
             }`}
           >
-            <i className="fas fa-tools mr-2" aria-hidden="true"></i>
+            <IconTools size="w-4 h-4" className="mr-2" />
             ツール
           </button>
         </div>

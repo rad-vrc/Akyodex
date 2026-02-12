@@ -15,6 +15,7 @@
  */
 
 import { getCategoryColor } from '@/lib/akyo-data-helpers';
+import { IconExternalLink, IconGift, IconHeart, IconPalette, IconSparkles, IconTag, IconUserAstronaut } from '@/components/icons';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -420,7 +421,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Name Card */}
                   <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold mb-2" style={{ color: '#FF6B9D' }}>
-                      <i className="fas fa-tag mr-1"></i>なまえ
+                      <IconTag size="w-3.5 h-3.5" className="mr-1" />なまえ
                     </h3>
                     <p className="text-xl font-black">{localAkyo.nickname || '-'}</p>
                   </div>
@@ -428,7 +429,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Avatar Name Card */}
                   <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-blue-600 mb-2">
-                      <i className="fas fa-user-astronaut mr-1"></i>アバター名
+                      <IconUserAstronaut size="w-3.5 h-3.5" className="mr-1" />アバター名
                     </h3>
                     <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
                   </div>
@@ -436,7 +437,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Categories Card */}
                   <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-orange-600 mb-2">
-                      <i className="fas fa-sparkles mr-1"></i>カテゴリ
+                      <IconSparkles size="w-3.5 h-3.5" className="mr-1" />カテゴリ
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {categories.map((cat, index) => {
@@ -459,7 +460,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Author Card */}
                   <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-green-600 mb-2">
-                      <i className="fas fa-palette mr-1"></i>つくったひと
+                      <IconPalette size="w-3.5 h-3.5" className="mr-1" />つくったひと
                     </h3>
                     <p className="text-xl font-black">{authorStr || ''}</p>
                   </div>
@@ -478,7 +479,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                         }}
                         className="text-blue-600 hover:text-blue-800 text-sm break-all cursor-pointer"
                       >
-                        <i className="fas fa-external-link-alt mr-1"></i>
+                        <IconExternalLink size="w-3.5 h-3.5" className="mr-1" />
                         {localAkyo.avatarUrl}
                       </a>
                     </div>
@@ -489,7 +490,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 {commentStr && (
                   <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5">
                     <h3 className="text-lg font-bold text-gray-900 mb-3">
-                      <i className="fas fa-gift mr-2"></i>おまけじょうほう
+                      <IconGift size="w-4 h-4" className="mr-2" />おまけじょうほう
                     </h3>
                     <div className="bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner">
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
@@ -519,7 +520,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     }
                     aria-label={localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
                   >
-                    <i className="fas fa-heart"></i>
+                    <IconHeart size="w-4 h-4" />
                     {localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
                   </button>
 
@@ -535,7 +536,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                       }}
                       aria-label="VRChatで見る"
                     >
-                      <i className="fas fa-external-link-alt"></i>
+                      <IconExternalLink size="w-4 h-4" />
                       VRChatで見る
                     </button>
                   )}

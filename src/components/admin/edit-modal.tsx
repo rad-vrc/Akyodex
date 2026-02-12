@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
+import { IconClose, IconCloudUpload, IconCrop, IconEdit, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
 import type { AkyoData } from '@/types/akyo';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from './attribute-modal';
@@ -510,7 +511,7 @@ export function EditModal({
     // Show loading state
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 更新中...';
+      submitBtn.textContent = '⛳ 更新中...';
     }
 
     try {
@@ -580,11 +581,11 @@ export function EditModal({
         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center z-10">
             <h2 className="text-2xl font-bold flex items-center">
-              <i className="fas fa-edit text-blue-500 mr-2"></i>
+              <IconEdit size="w-5 h-5" className="text-blue-500 mr-2" />
               Akyoを編集
             </h2>
             <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-              <i className="fas fa-times text-2xl"></i>
+              <IconClose size="w-6 h-6" />
             </button>
           </div>
 
@@ -622,7 +623,7 @@ export function EditModal({
                         </>
                       ) : (
                         <>
-                          <i className="fas fa-search"></i>
+                          <IconSearch size="w-4 h-4" />
                           同じ通称が既に登録されているか確認
                         </>
                       )}
@@ -686,7 +687,7 @@ export function EditModal({
                         </>
                       ) : (
                         <>
-                          <i className="fas fa-search"></i>
+                          <IconSearch size="w-4 h-4" />
                           同じアバター名が既に登録されているか確認
                         </>
                       )}
@@ -716,7 +717,7 @@ export function EditModal({
                       onClick={() => setShowAttributeModal(true)}
                       className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
                     >
-                      <i className="fas fa-tags"></i>
+                      <IconTags size="w-4 h-4" />
                       カテゴリを管理
                     </button>
                     <div className="border border-dashed border-green-200 rounded-lg bg-white/60 p-3 min-h-[60px]">
@@ -731,7 +732,7 @@ export function EditModal({
                               key={cat}
                               className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full"
                             >
-                              <i className="fas fa-tag text-xs"></i>
+                              <IconTag size="w-3 h-3" />
                               {cat}
                             </span>
                           ))}
@@ -839,7 +840,7 @@ export function EditModal({
                   onDragOver={handleDragOver}
                   className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
                 >
-                  <i className="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                  <IconCloudUpload size="w-10 h-10" className="text-gray-400 mb-2 mx-auto" />
                   <p className="text-gray-600">画像をドラッグ&ドロップ または</p>
                   <input
                     type="file"
@@ -862,7 +863,7 @@ export function EditModal({
                   <div className="mt-4">
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h3 className="text-sm font-medium text-gray-700 mb-3">
-                        <i className="fas fa-crop mr-2"></i>画像のトリミング調整
+                        <IconCrop size="w-4 h-4" className="mr-2" />画像のトリミング調整
                       </h3>
 
                       <div
@@ -894,21 +895,21 @@ export function EditModal({
                           onClick={resetImagePosition}
                           className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
                         >
-                          <i className="fas fa-redo mr-1"></i> リセット
+                          <IconRedo size="w-3.5 h-3.5" className="mr-1" /> リセット
                         </button>
                         <button
                           type="button"
                           onClick={() => zoomImage(1.1)}
                           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                         >
-                          <i className="fas fa-search-plus mr-1"></i> 拡大
+                          <IconZoomIn size="w-3.5 h-3.5" className="mr-1" /> 拡大
                         </button>
                         <button
                           type="button"
                           onClick={() => zoomImage(0.9)}
                           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                         >
-                          <i className="fas fa-search-minus mr-1"></i> 縮小
+                          <IconZoomOut size="w-3.5 h-3.5" className="mr-1" /> 縮小
                         </button>
                       </div>
                     </div>
@@ -925,7 +926,7 @@ export function EditModal({
                 type="submit"
                 className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
               >
-                <i className="fas fa-save mr-2"></i> 更新する
+                <IconSave size="w-4 h-4" className="mr-2" /> 更新する
               </button>
             </form>
           </div>

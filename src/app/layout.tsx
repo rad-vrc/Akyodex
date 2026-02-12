@@ -129,7 +129,6 @@ export const metadata: Metadata = {
   category: 'entertainment',
 };
 
-const fontAwesomeUrl = "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css";
 const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
 
 export default async function RootLayout({
@@ -145,7 +144,6 @@ export default async function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <head suppressHydrationWarning>
-        <link rel="stylesheet" href={fontAwesomeUrl} />
         <StructuredData />
         {/* Dify chatbot custom styles (must be in <head>) */}
         <style

@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
+import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 
@@ -136,7 +137,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     const originalText = submitBtn?.innerHTML || '';
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> VRChat情報取得中...';
+      submitBtn.textContent = '⛳ VRChat情報取得中...';
     }
 
     // ===== Step 1: Fetch avatar info and image from VRChat =====
@@ -206,7 +207,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     // Update button text
     if (submitBtn) {
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 画像処理中...';
+      submitBtn.textContent = '⛳ 画像処理中...';
     }
 
     // ===== Step 2: Process image for cropping preview =====
@@ -239,7 +240,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     // Update button text for final submission
     if (submitBtn) {
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 登録中...';
+      submitBtn.textContent = '⛳ 登録中...';
     }
 
     try {
@@ -483,7 +484,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   return (
     <div>
       <h2 className="text-xl font-bold text-gray-800 mb-6">
-        <i className="fas fa-plus-circle text-red-500 mr-2"></i> 新しいAkyoを登録
+        <IconPlusCircle size="w-5 h-5" className="text-red-500 mr-2" /> 新しいAkyoを登録
       </h2>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -538,7 +539,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-search"></i>
+                    <IconSearch size="w-4 h-4" />
                     同じ通称が既に登録されているか確認
                   </>
                 )}
@@ -592,7 +593,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
                 onClick={() => setShowAttributeModal(true)}
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-800 border border-green-300 rounded-lg hover:bg-green-200 transition-colors"
               >
-                <i className="fas fa-tags"></i>
+                <IconTags size="w-4 h-4" />
                 カテゴリを管理
               </button>
               <div className="border border-dashed border-green-200 rounded-lg bg-white/60 p-3 min-h-[60px]">
@@ -605,7 +606,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
                         key={cat}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full"
                       >
-                        <i className="fas fa-tag text-xs"></i>
+                        <IconTag size="w-3 h-3" />
                         {cat}
                       </span>
                     ))}
@@ -665,7 +666,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             画像（登録時に自動取得）
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
-            <i className="fas fa-cloud-download-alt text-4xl text-blue-400 mb-2"></i>
+            <IconCloudDownload size="w-10 h-10" className="text-blue-400 mb-2 mx-auto" />
             <p className="text-gray-600 font-medium">VRChat URLから自動取得</p>
             <p className="text-sm text-gray-500 mt-1">
               登録ボタンを押すと、VRChatから画像を自動的に取得します
@@ -677,7 +678,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             <div className="mt-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
-                  <i className="fas fa-crop mr-2"></i>画像のトリミング調整
+                  <IconCrop size="w-4 h-4" className="mr-2" />画像のトリミング調整
                 </h3>
 
                 {/* Crop Container */}
@@ -711,21 +712,21 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
                     onClick={resetImagePosition}
                     className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
                   >
-                    <i className="fas fa-redo mr-1"></i> リセット
+                    <IconRedo size="w-3.5 h-3.5" className="mr-1" /> リセット
                   </button>
                   <button
                     type="button"
                     onClick={() => zoomImage(1.1)}
                     className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                   >
-                    <i className="fas fa-search-plus mr-1"></i> 拡大
+                    <IconZoomIn size="w-3.5 h-3.5" className="mr-1" /> 拡大
                   </button>
                   <button
                     type="button"
                     onClick={() => zoomImage(0.9)}
                     className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
                   >
-                    <i className="fas fa-search-minus mr-1"></i> 縮小
+                    <IconZoomOut size="w-3.5 h-3.5" className="mr-1" /> 縮小
                   </button>
                 </div>
               </div>
@@ -742,7 +743,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           type="submit"
           className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
         >
-          <i className="fas fa-save mr-2"></i> 登録する
+          <IconSave size="w-4 h-4" className="mr-2" /> 登録する
         </button>
       </form>
 
