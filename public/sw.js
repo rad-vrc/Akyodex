@@ -11,7 +11,7 @@
  * - Images: Stale While Revalidate
  */
 
-const CACHE_VERSION = 'akyodex-nextjs-v5';
+const CACHE_VERSION = 'akyodex-nextjs-v7';
 const CACHE_NAME = `akyodex-cache-${CACHE_VERSION}`;
 
 // Core files to precache on install
@@ -145,6 +145,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+
+  // Strategy 4a: App Icon/Manifest Assets - Network First with cache fallback
+  if (isAppIconRequest(url, request)) {
+    event.respondWith(handleIconRequest(request));
+    return;
+  }
+
   // Strategy 4: Next.js Static Assets - Cache First (immutable)
   if (url.pathname.startsWith('/_next/static/')) {
     event.respondWith(handleStaticAssets(event, request));
@@ -243,6 +250,56 @@ async function handleCsvRequest(request) {
   return new Response('', { status: 204 });
 }
 
+
+function isAppIconRequest(url, request) {
+  const pathname = url.pathname;
+
+  if (
+    pathname === '/favicon.ico' ||
+    pathname === '/favicon.svg' ||
+    pathname === '/site.webmanifest' ||
+    pathname === '/manifest.webmanifest' ||
+    pathname === '/manifest.json'
+  ) {
+    return true;
+  }
+
+  if (pathname.startsWith('/images/')) {
+    return /icon|apple-touch|favicon/i.test(pathname);
+  }
+
+  return request.destination === 'manifest' || pathname.endsWith('.webmanifest');
+}
+
+/**
+ * Strategy 4a: App Icon/Manifest Assets - Network First
+ * Keep tab/bookmark icons fresh, fallback to cache only when offline.
+ */
+async function handleIconRequest(request) {
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const networkResponse = await fetch(new Request(request, { cache: 'reload' }));
+
+    if (networkResponse && networkResponse.ok) {
+      await cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+
+    // Preserve actual HTTP status responses and fallback to cache only on true network failures.
+    return networkResponse;
+  } catch (error) {
+    console.log('[SW] Network failed for icon/manifest request:', error?.message || error);
+
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    throw error;
+  }
+}
+
 /**
  * Strategy 4: Next.js Static Assets - Cache First (immutable)
  * Next.js static assets have content hashes, so they're immutable
@@ -267,7 +324,8 @@ async function handleStaticAssets(event, request) {
       return networkResponse;
     }
 
-    throw new Error(`[SW] Non-OK static asset response: ${networkResponse.status} ${networkResponse.statusText}`);
+    // Preserve actual HTTP status responses (e.g., 404/500) instead of converting to network errors.
+    return networkResponse;
   } catch (error) {
     console.log('[SW] Network failed for static asset:', error?.message || error);
     throw error;
@@ -334,7 +392,8 @@ async function handleDefaultRequest(event, request) {
       return networkResponse;
     }
 
-    throw new Error(`[SW] Non-OK default asset response: ${networkResponse.status} ${networkResponse.statusText}`);
+    // Preserve actual HTTP status responses (e.g., 404/500) instead of converting to network errors.
+    return networkResponse;
   } catch (error) {
     console.log('[SW] Network failed for default request:', error?.message || error);
     throw error;
