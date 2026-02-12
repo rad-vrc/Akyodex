@@ -27,7 +27,7 @@ import type { AkyoData } from '@/types/akyo';
  */
 function getJsonUrl(lang: SupportedLanguage): string {
   const r2Base = process.env.NEXT_PUBLIC_R2_BASE;
-  const jsonFileName = lang === 'en' ? 'akyo-data-en.json' : 'akyo-data-ja.json';
+  const jsonFileName = `akyo-data-${lang}.json`;
   
   // If R2 base is configured, use R2 for JSON data
   if (r2Base) {

@@ -21,7 +21,7 @@ import { MiniAkyoBg } from '@/components/mini-akyo-bg';
 import { SearchBar } from '@/components/search-bar';
 import { useAkyoData } from '@/hooks/use-akyo-data';
 import { useLanguage } from '@/hooks/use-language';
-import type { SupportedLanguage } from '@/lib/i18n';
+import { t, type SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
 import { IconCog, IconGrid, IconList } from '@/components/icons';
 import Image from 'next/image';
@@ -246,7 +246,7 @@ export function ZukanClient({
         <div className="akyo-card p-8 text-center space-y-4">
           <div className="text-6xl">😢</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            {lang === 'en' ? 'An error occurred' : 'エラーが発生しました'}
+            {t('error.title', lang)}
           </h2>
           <p className="text-[var(--text-secondary)]">{error}</p>
         </div>
@@ -261,10 +261,10 @@ export function ZukanClient({
         <div className="akyo-card p-8 text-center space-y-4 animate-pulse">
           <div className="text-6xl">🔄</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            {lang === 'en' ? 'Loading...' : '読み込み中...'}
+            {t('loading.text', lang)}
           </h2>
           <p className="text-[var(--text-secondary)]">
-            {lang === 'en' ? 'Fetching data for your language' : 'お使いの言語のデータを取得中'}
+            {t('loading.subtext', lang)}
           </p>
         </div>
       </div>
@@ -286,7 +286,7 @@ export function ZukanClient({
           <Link href="/" className="flex-shrink-0">
             <Image
               src={lang === 'en' ? '/images/logo-US.webp' : '/images/logo.webp'}
-              alt={lang === 'en' ? 'Akyodex' : 'Akyoずかん'}
+              alt={t('logo.alt', lang)}
               width={1980}
               height={305}
               className="logo-animation h-10 sm:h-12 w-auto"
@@ -296,10 +296,10 @@ export function ZukanClient({
           {/* 統計情報 */}
           <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {lang === 'en' ? `Total ${stats.total}` : `全${stats.total}体`}
+              {lang === 'en' ? `Total ${stats.total}` : lang === 'ko' ? `전체 ${stats.total}마리` : `全${stats.total}体`}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {lang === 'en' ? `Showing ${stats.displayed}` : `表示${stats.displayed}体`}
+              {lang === 'en' ? `Showing ${stats.displayed}` : lang === 'ko' ? `${stats.displayed}건 표시` : `表示${stats.displayed}体`}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
               ❤️{stats.favorites}
@@ -315,7 +315,7 @@ export function ZukanClient({
           <SearchBar
             onSearch={setSearchQuery}
             value={searchQuery}
-            placeholder={lang === 'en' ? 'Search by name, creator, or attribute...' : '名前・作者・属性で検索...'}
+            placeholder={t('search.placeholder', lang)}
           />
         </div>
 
@@ -344,7 +344,7 @@ export function ZukanClient({
               type="button"
               onClick={() => setViewMode('grid')}
               className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              aria-label={lang === 'en' ? 'Grid view' : 'グリッド表示'}
+              aria-label={t('view.grid', lang)}
             >
               <IconGrid size="w-5 h-5 md:w-6 md:h-6" />
             </button>
@@ -352,7 +352,7 @@ export function ZukanClient({
               type="button"
               onClick={() => setViewMode('list')}
               className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-              aria-label={lang === 'en' ? 'List view' : 'リスト表示'}
+              aria-label={t('view.list', lang)}
             >
               <IconList size="w-5 h-5 md:w-6 md:h-6" />
             </button>
@@ -364,10 +364,10 @@ export function ZukanClient({
           <div className="akyo-card p-12 text-center space-y-4">
             <div className="text-6xl">🔍</div>
             <h3 className="text-2xl font-bold text-[var(--text-primary)]">
-              {lang === 'en' ? 'No Akyo found' : 'Akyoが見つかりませんでした'}
+              {t('notfound.title', lang)}
             </h3>
             <p className="text-[var(--text-secondary)]">
-              {lang === 'en' ? 'Try changing your search criteria' : '検索条件を変更してみてください'}
+              {t('notfound.message', lang)}
             </p>
           </div>
         ) : viewMode === 'list' ? (
