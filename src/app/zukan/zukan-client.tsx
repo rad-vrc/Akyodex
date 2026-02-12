@@ -25,7 +25,7 @@ import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface ZukanClientProps {
   initialData: AkyoData[];
@@ -150,6 +150,15 @@ export function ZukanClient({
     }
   };
 
+  // data が更新された際（cross-tab sync 等）、モーダルが開いていれば selectedAkyo を最新に同期
+  useEffect(() => {
+    if (!selectedAkyo || !isModalOpen) return;
+    const latest = data.find(a => a.id === selectedAkyo.id);
+    if (latest && latest.isFavorite !== selectedAkyo.isFavorite) {
+      setSelectedAkyo(latest);
+    }
+  }, [data, selectedAkyo, isModalOpen]);
+
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
     setRenderLimit(INITIAL_RENDER_COUNT);
@@ -223,12 +232,12 @@ export function ZukanClient({
     setFavoritesOnly(!favoritesOnly);
   };
 
-  // 統計情報
-  const stats = {
+  // 統計情報（useMemo で再計算を抑制 — data/filteredData が変わらない限りキャッシュ）
+  const stats = useMemo(() => ({
     total: data.length,
     displayed: filteredData.length,
     favorites: data.filter(a => a.isFavorite).length,
-  };
+  }), [data, filteredData]);
 
   if (error) {
     return (
@@ -304,6 +313,7 @@ export function ZukanClient({
         <div className="akyo-card p-4 sm:p-6">
           <SearchBar
             onSearch={setSearchQuery}
+            value={searchQuery}
             placeholder={lang === 'en' ? 'Search by name, creator, or attribute...' : '名前・作者・属性で検索...'}
           />
         </div>
@@ -330,6 +340,7 @@ export function ZukanClient({
           {/* ビュー切替 */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
+              type="button"
               onClick={() => setViewMode('grid')}
               className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
               aria-label={lang === 'en' ? 'Grid view' : 'グリッド表示'}
@@ -337,6 +348,7 @@ export function ZukanClient({
               <i className="fas fa-th text-xl md:text-2xl"></i>
             </button>
             <button
+              type="button"
               onClick={() => setViewMode('list')}
               className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
               aria-label={lang === 'en' ? 'List view' : 'リスト表示'}

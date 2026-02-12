@@ -34,6 +34,56 @@ const CANDIDATES = [
 // Golden ratio for low-discrepancy sequence
 const PHI = 0.6180339887498949; // (sqrt(5)-1)/2
 
+/** 値をクランプする純粋関数（コンポーネント外に配置して不要な再生成を防止） */
+function clamp(v: number, min: number, max: number): number {
+  return v < min ? min : v > max ? max : v;
+}
+
+/** 画像の読み込み可否を確認するプローブ */
+function probeImage(url: string, timeout = 8000): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    let settled = false;
+
+    const finalize = (ok: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      img.onload = img.onerror = null;
+      img.src = '';
+      if (ok) { resolve(url); } else { reject(new Error('load failed')); }
+    };
+
+    const timer = setTimeout(() => finalize(false), timeout);
+    img.decoding = 'async';
+    img.loading = 'eager';
+    img.onload = () => finalize(true);
+    img.onerror = () => finalize(false);
+    img.src = url;
+  });
+}
+
+/** miniakyo.webp の URL をフォールバック付きで解決 */
+async function resolveMiniAkyoUrl(): Promise<string | null> {
+  let fallback: string | null = null;
+  const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
+
+  for (const path of CANDIDATES) {
+    if (!fallback) fallback = path;
+
+    try {
+      const r = await fetch(path, { cache: 'no-cache' });
+      if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
+        return path;
+      }
+      try { await probeImage(path); return path; } catch { /* next */ }
+    } catch {
+      try { await probeImage(path); return path; } catch { /* next */ }
+    }
+  }
+  return fallback;
+}
+
 interface MiniAkyoProps {
   className?: string;
 }
@@ -51,74 +101,6 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
     seqU.current = (seqU.current + PHI) % 1;
     return seqU.current;
   }, []);
-
-  const clamp = useCallback((v: number, min: number, max: number) => {
-    return v < min ? min : v > max ? max : v;
-  }, []);
-
-  // Probe image availability
-  const probeImage = useCallback((url: string, timeout = 8000): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      let settled = false;
-
-      const finalize = (ok: boolean) => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
-        img.onload = img.onerror = null;
-        img.src = '';
-        if (ok) {
-          resolve(url);
-        } else {
-          reject(new Error('load failed'));
-        }
-      };
-
-      const timer = setTimeout(() => finalize(false), timeout);
-      img.decoding = 'async';
-      img.loading = 'eager';
-      img.onload = () => finalize(true);
-      img.onerror = () => finalize(false);
-      img.src = url;
-    });
-  }, []);
-
-  // Resolve miniakyo.webp URL with fallback cascade
-  const resolveMiniAkyoUrl = useCallback(async (): Promise<string | null> => {
-    // Try fetch with fallback to image probe
-    let fallback: string | null = null;
-    const ACCEPTABLE = new Set([200, 203, 204, 206, 304]);
-
-    for (const path of CANDIDATES) {
-      if (!fallback) fallback = path;
-
-      try {
-        const r = await fetch(path, { cache: 'no-cache' });
-        if (r.ok || ACCEPTABLE.has(r.status) || (r.type === 'opaque' && !r.status)) {
-          return path;
-        }
-
-        // Try image probe as fallback
-        try {
-          await probeImage(path);
-          return path;
-        } catch {
-          // Continue to next candidate
-        }
-      } catch {
-        // Fetch failed, try image probe
-        try {
-          await probeImage(path);
-          return path;
-        } catch {
-          // Continue to next candidate
-        }
-      }
-    }
-
-    return fallback;
-  }, [probeImage]);
 
   // Spawn single mini Akyo element
   const spawnOne = useCallback((container: HTMLDivElement, url: string, uOverride?: number) => {
@@ -150,15 +132,15 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
     });
 
     container.appendChild(el);
-  }, [clamp, nextUniform]);
+  }, [nextUniform]);
 
-  // Initialize background animation
+  // Initialize background animation（一度だけ実行）
   useEffect(() => {
     const init = async () => {
       const container = containerRef.current;
       if (!container) return;
 
-      // Resolve image URL
+      // Resolve image URL (module-level pure function)
       const url = await resolveMiniAkyoUrl();
       if (!url) return;
 
@@ -230,7 +212,7 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
         window.removeEventListener('resize', resizeHandler.current);
       }
     };
-  }, [resolveMiniAkyoUrl, spawnOne]);
+  }, [spawnOne]);
 
   return (
     <>
@@ -255,7 +237,7 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
           width: var(--size, 96px);
           height: var(--size, 96px);
           left: var(--left, 50vw);
-          animation: akyo-float-up var(--duration, 22s) linear infinite;
+          animation: akyo-float-up var(--duration, 22s) linear forwards;
           will-change: transform, opacity;
           filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.35));
         }
@@ -283,9 +265,9 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
         id="miniAkyoBg"
         ref={containerRef}
         aria-hidden="true"
-  className={className}
-  data-image-url={imageUrl}
-  data-density={density}
+        className={className}
+        data-image-url={imageUrl}
+        data-density={density}
       />
     </>
   );

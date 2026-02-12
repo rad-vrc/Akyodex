@@ -34,10 +34,12 @@ export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' 
 
   // Read language from cookie on mount (client-side only)
   useEffect(() => {
+    // ロバストなパース: セミコロン後のスペース有無に関わらず対応
     const cookieLang = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('AKYO_LANG='))
-      ?.split('=')[1] as SupportedLanguage | undefined;
+      .split(';')
+      .find(row => row.trim().startsWith('AKYO_LANG='))
+      ?.split('=')[1]
+      ?.trim() as SupportedLanguage | undefined;
 
     if (cookieLang && SUPPORTED_LANGUAGES.includes(cookieLang as SupportedLanguage)) {
       setCurrentLang(cookieLang as SupportedLanguage);
@@ -49,8 +51,10 @@ export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' 
 
     setIsChanging(true);
     try {
-      // Set cookie with immediate effect
-      document.cookie = `AKYO_LANG=${nextLanguage}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+      // Set cookie with immediate effect (Secure flag on HTTPS)
+      const isSecure = window.location.protocol === 'https:';
+      const secureFlag = isSecure ? '; Secure' : '';
+      document.cookie = `AKYO_LANG=${nextLanguage}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${secureFlag}`;
 
       // Update state immediately
       setCurrentLang(nextLanguage);
@@ -65,6 +69,7 @@ export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' 
 
   return (
     <button
+      type="button"
       onClick={handleToggle}
       disabled={isChanging}
       className={`

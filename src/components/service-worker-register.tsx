@@ -136,12 +136,14 @@ export function ServiceWorkerRegister() {
           {/* Actions */}
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={handleUpdate}
               className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-medium py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
             >
               今すぐ更新
             </button>
             <button
+              type="button"
               onClick={() => setUpdateAvailable(false)}
               className="px-3 text-gray-500 hover:text-gray-700 transition-colors text-sm"
               aria-label="閉じる"

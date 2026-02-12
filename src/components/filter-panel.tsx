@@ -89,6 +89,7 @@ export function FilterPanel({
       {/* クイックフィルターボタン */}
       <div className="flex flex-wrap gap-2 items-center">
         <button
+          type="button"
           onClick={onSortToggle}
           aria-pressed={sortAscending}
           aria-label={lang === 'en'
@@ -105,6 +106,7 @@ export function FilterPanel({
         </button>
         
         <button
+          type="button"
           onClick={onRandomClick}
           aria-pressed={randomMode}
           aria-label={lang === 'en' ? 'Toggle random mode' : 'ランダム表示の切り替え'}
@@ -118,6 +120,7 @@ export function FilterPanel({
         </button>
         
         <button
+          type="button"
           onClick={onFavoritesClick}
           aria-pressed={favoritesOnly}
           aria-label={lang === 'en' ? 'Show favorites only' : 'お気に入りのみ表示'}
