@@ -1,9 +1,7 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: "ja-JP"
 # グローバルな指示（トーンやルールなど）
-instructions: |
-  あなたは経験豊富なシニアエンジニアです。
-  簡潔かつ丁寧にレビューしてください。
-  コードの品質だけでなく、可読性や保守性についても指摘してください。
+tone_instructions: "経験豊富なシニアエンジニアとして、簡潔かつ丁寧にレビューしてください。コードの品質だけでなく、可読性や保守性についても指摘してください。"
 
 early_access: true
 
@@ -13,19 +11,10 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-  # PRタイトルの自動生成に関する指示はここではなく chat セクションなどが推奨される場合が多いですが、
-  # プロンプトとして認識されるため一旦この位置でも動作する可能性があります。
-  # ただし、明確に指示に含めるのが安全です。
   collapse_walkthrough: true
-  auto_label:
-    enabled: true
-
-# ツール系は自動検出されるため、明示的に無効化したい場合以外は記述不要なことが多いです。
-# 独自のチェックを強制したい場合は残してください。
-tools:
-  eslint:
-    enabled: true
-  prettier:
-    enabled: true
-  stylelint:
-    enabled: true
+  auto_apply_labels: true
+  # ツール系は自動検出されるため、明示的に無効化したい場合以外は記述不要なことが多いです。
+  # 独自のチェックを強制したい場合は残してください。
+  tools:
+    eslint:
+      enabled: true
