@@ -18,13 +18,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   // クライアントサイドでお気に入り情報を復元
   useEffect(() => {
     if (initialData.length > 0) {
-      // お気に入り情報を復元（localStorageはクライアントのみ）
-      const favorites = getFavorites();
-      const dataWithFavorites = initialData.map(akyo => ({
-        ...akyo,
-        isFavorite: favorites.includes(akyo.id),
-      }));
-
+      const dataWithFavorites = applyFavorites(initialData);
       setData(dataWithFavorites);
       setFilteredData(dataWithFavorites);
     }
@@ -34,11 +28,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
    * 新しいデータでリフレッシュ（言語切り替え時などに使用）
    */
   const refetchWithNewData = useCallback((newData: AkyoData[]) => {
-    const favorites = getFavorites();
-    const dataWithFavorites = newData.map(akyo => ({
-      ...akyo,
-      isFavorite: favorites.includes(akyo.id),
-    }));
+    const dataWithFavorites = applyFavorites(newData);
     setData(dataWithFavorites);
     setFilteredData(dataWithFavorites);
   }, []);
@@ -141,24 +131,63 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 }
 
 /**
- * お気に入りIDを取得
+ * localStorage キャッシュ (React Best Practices 7.5)
+ * localStorage の読み書きは同期的で高コストなため、メモリ内にキャッシュして
+ * 頻繁なアクセス時のパフォーマンスを改善
+ */
+let favoritesCache: string[] | null = null;
+
+/**
+ * お気に入りIDを取得（キャッシュ対応）
  */
 function getFavorites(): string[] {
+  if (favoritesCache !== null) return favoritesCache;
   try {
     const stored = localStorage.getItem('akyoFavorites');
-    return stored ? JSON.parse(stored) : [];
+    if (!stored) {
+      favoritesCache = [];
+      return [];
+    }
+    const parsed: unknown = JSON.parse(stored);
+    // バリデーション: 配列かつ全要素が文字列であることを確認
+    if (Array.isArray(parsed) && parsed.every((item): item is string => typeof item === 'string')) {
+      favoritesCache = parsed;
+      return parsed;
+    }
+    // 不正なデータ形式の場合はリセット
+    console.warn('Invalid favorites data in localStorage, resetting');
+    favoritesCache = [];
+    return [];
   } catch {
+    favoritesCache = [];
     return [];
   }
 }
 
 /**
- * お気に入りIDを保存
+ * お気に入りIDを保存（キャッシュも同時に更新）
  */
 function saveFavorites(ids: string[]): void {
+  // 防御的コピー: 呼び出し元による配列の変更からキャッシュを保護
+  const idsCopy = [...ids];
+  // キャッシュを先に更新してセッション内の一貫性を保つ
+  // (localStorage.setItem が容量超過等で失敗しても UI は正しく動作する)
+  favoritesCache = idsCopy;
   try {
-    localStorage.setItem('akyoFavorites', JSON.stringify(ids));
+    localStorage.setItem('akyoFavorites', JSON.stringify(idsCopy));
   } catch (e) {
-    console.warn('Failed to save favorites:', e);
+    console.warn('Failed to save favorites to localStorage:', e);
   }
+}
+
+/**
+ * データ配列にお気に入り情報を付与する共通ヘルパー
+ * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
+ */
+function applyFavorites(items: AkyoData[]): AkyoData[] {
+  const favoritesSet = new Set(getFavorites());
+  return items.map(akyo => ({
+    ...akyo,
+    isFavorite: favoritesSet.has(akyo.id),
+  }));
 }

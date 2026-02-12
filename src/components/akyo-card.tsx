@@ -1,5 +1,6 @@
 'use client';
 
+import { getCategoryColor } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
@@ -9,47 +10,6 @@ interface AkyoCardProps {
   akyo: AkyoData;
   onToggleFavorite?: (id: string) => void;
   onShowDetail?: (akyo: AkyoData) => void;
-}
-
-// カテゴリに対応する色を取得（元の実装のgetAttributeColorを再現）
-function getCategoryColor(category: string): string {
-  const colorMap: Record<string, string> = {
-    チョコミント: '#00bfa5',
-    動物: '#ff6f61',
-    きつね: '#ff9800',
-    おばけ: '#9c27b0',
-    人類: '#2196f3',
-    ギミック: '#4caf50',
-    特殊: '#e91e63',
-    ネコ: '#795548',
-    イヌ: '#607d8b',
-    うさぎ: '#ff4081',
-    ドラゴン: '#673ab7',
-    ロボット: '#757575',
-    食べ物: '#ffc107',
-    植物: '#8bc34a',
-    宇宙: '#3f51b5',
-    和風: '#d32f2f',
-    洋風: '#1976d2',
-    ファンタジー: '#ab47bc',
-    SF: '#00acc1',
-    ホラー: '#424242',
-    かわいい: '#ec407a',
-    クール: '#5c6bc0',
-    シンプル: '#78909c',
-  };
-
-  // 最初にマッチする属性の色を返す
-  for (const [key, color] of Object.entries(colorMap)) {
-    if (category && category.includes(key)) {
-      return color;
-    }
-  }
-
-  // デフォルト色
-  const defaultColors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'];
-
-  return defaultColors[Math.floor(Math.random() * defaultColors.length)];
 }
 
 export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps) {
@@ -100,6 +60,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
 
         {/* お気に入りボタン */}
         <button
+          type="button"
           onClick={handleFavoriteClick}
           className="favorite-btn absolute top-2 right-2 z-10"
           aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
@@ -114,6 +75,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         <div className="flex items-center justify-between mb-1">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
           <button
+            type="button"
             onClick={handleDownloadClick}
             className="reference-sheet-button"
             title="三面図をダウンロード"
@@ -177,6 +139,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
 
         {/* くわしく見るボタン */}
         <button
+          type="button"
           onClick={handleCardClick}
           className="detail-button w-full flex items-center justify-center gap-2"
         >
