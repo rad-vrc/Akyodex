@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
+const { NICKNAME_MAP } = require('./nickname-map-ko');
 
 // ============================================================
 // Category translation map: Japanese → Korean
@@ -383,12 +384,18 @@ function translateCategory(jaCategory) {
 
 /**
  * Translate nickname from Japanese to Korean
- * Keep "Akyo" as-is, translate common patterns
+ * Uses NICKNAME_MAP for exact matches, keeps original as fallback
  */
 function translateNickname(jaNickname) {
   if (!jaNickname) return jaNickname;
-  // Nicknames are kept as-is (proper nouns / avatar names)
-  // They contain the Japanese creativity and are recognizable across languages
+  
+  // Exact match from map
+  if (NICKNAME_MAP[jaNickname]) {
+    return NICKNAME_MAP[jaNickname];
+  }
+  
+  // If no mapping found, keep original
+  console.warn(`[WARN] No Korean translation for nickname: "${jaNickname}"`);
   return jaNickname;
 }
 

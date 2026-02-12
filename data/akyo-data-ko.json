@@ -1,7 +1,7 @@
 [
   {
     "id": "0001",
-    "nickname": "オリジンAkyo",
+    "nickname": "오리진 Akyo",
     "avatarName": "Akyo origin",
     "category": "초코민트류",
     "comment": "모든 것의 시작",
@@ -10,7 +10,7 @@
   },
   {
     "id": "0002",
-    "nickname": "チョコミントAkyo",
+    "nickname": "초코민트 Akyo",
     "avatarName": "Akyo alt",
     "category": "초코민트류",
     "comment": "Quest 지원〇",
@@ -19,7 +19,7 @@
   },
   {
     "id": "0003",
-    "nickname": "赤チョコミントAkyo",
+    "nickname": "빨간 초코민트 Akyo",
     "avatarName": "Red basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -28,7 +28,7 @@
   },
   {
     "id": "0004",
-    "nickname": "緑チョコミントAkyo",
+    "nickname": "초록 초코민트 Akyo",
     "avatarName": "Green basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -37,7 +37,7 @@
   },
   {
     "id": "0005",
-    "nickname": "青チョコミントAkyo",
+    "nickname": "파란 초코민트 Akyo",
     "avatarName": "Blue basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -46,7 +46,7 @@
   },
   {
     "id": "0006",
-    "nickname": "黄チョコミントAkyo",
+    "nickname": "노란 초코민트 Akyo",
     "avatarName": "Yellow basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -55,7 +55,7 @@
   },
   {
     "id": "0007",
-    "nickname": "黒チョコミントAkyo",
+    "nickname": "검정 초코민트 Akyo",
     "avatarName": "Black basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -64,7 +64,7 @@
   },
   {
     "id": "0008",
-    "nickname": "白チョコミントAkyo",
+    "nickname": "하얀 초코민트 Akyo",
     "avatarName": "White basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -73,7 +73,7 @@
   },
   {
     "id": "0009",
-    "nickname": "灰チョコミントAkyo",
+    "nickname": "회색 초코민트 Akyo",
     "avatarName": "Gray basic Akyo",
     "category": "초코민트류",
     "comment": "チョコミントAkyoの色違い",
@@ -82,7 +82,7 @@
   },
   {
     "id": "0010",
-    "nickname": "ミニチョコミントAkyo",
+    "nickname": "미니 초코민트 Akyo",
     "avatarName": "ミニミニAkyoAkyo",
     "category": "초코민트류",
     "comment": "小さくなったチョコミントAkyo",
@@ -91,7 +91,7 @@
   },
   {
     "id": "0011",
-    "nickname": "スーパー汎用Akyo",
+    "nickname": "슈퍼 범용 Akyo",
     "avatarName": "スーパー汎用Akyo",
     "category": "초코민트류,기믹・특수",
     "comment": "デフォルトAkyo普及への思いから生まれた便利機能もりもりのAkyoで、表情、ペン、飛行、睡眠、おんぶ等多彩な機能が使用可能",
@@ -100,7 +100,7 @@
   },
   {
     "id": "0012",
-    "nickname": "スーパースタッフAkyo",
+    "nickname": "슈퍼 스태프 Akyo",
     "avatarName": "スーパースタッフAkyo",
     "category": "초코민트류,기믹・특수",
     "comment": "Akyoイベントスタッフ用のAkyoで、セキュリティ上スタッフ機能は通常ロックされている。",
@@ -109,7 +109,7 @@
   },
   {
     "id": "0013",
-    "nickname": "スーパーワープAkyo",
+    "nickname": "슈퍼 워프 Akyo",
     "avatarName": "スーパーワープAkyo",
     "category": "초코민트류,기믹・특수",
     "comment": "ワープを覚えたAkyo。Questの場合はPCユーザーにおんぶしてもらうとワープできる",
@@ -118,7 +118,7 @@
   },
   {
     "id": "0014",
-    "nickname": "スーパーフライング運送Akyo",
+    "nickname": "슈퍼 플라잉 운송 Akyo",
     "avatarName": "スーパーフライング運送Akyo",
     "category": "초코민트류,기믹・특수",
     "comment": "フライング運送を覚えたAkyo。箱のふたは開け閉めできる。スーパー運送Akyoもいるとのこと",
@@ -127,7 +127,7 @@
   },
   {
     "id": "0015",
-    "nickname": "ランAkyo",
+    "nickname": "달리기 Akyo",
     "avatarName": "Akyo Run",
     "category": "초코민트류",
     "comment": "",
@@ -136,7 +136,7 @@
   },
   {
     "id": "0016",
-    "nickname": "バルブAkyo",
+    "nickname": "밸브 Akyo",
     "avatarName": "Akyo Valve",
     "category": "초코민트류",
     "comment": "",
@@ -154,7 +154,7 @@
   },
   {
     "id": "0018",
-    "nickname": "ヒューマノイドAkyo",
+    "nickname": "휴머노이드 Akyo",
     "avatarName": "Humanoid Akyo v1․71 Multi Clothes",
     "category": "동물,동물/인간",
     "comment": "",
@@ -163,7 +163,7 @@
   },
   {
     "id": "0019",
-    "nickname": "キツネツキ式狐Akyo",
+    "nickname": "키츠네츠키식 여우 Akyo",
     "avatarName": "KTNTK_Akyo",
     "category": "동물/여우,동물",
     "comment": "",
@@ -172,7 +172,7 @@
   },
   {
     "id": "0020",
-    "nickname": "キツネツキ式幽霊狐Akyo",
+    "nickname": "키츠네츠키식 유령 여우 Akyo",
     "avatarName": "sAKYOn_Ghost",
     "category": "동물/여우,동물,가상의 존재,가상의 존재/요괴・유령",
     "comment": "",
@@ -181,7 +181,7 @@
   },
   {
     "id": "0021",
-    "nickname": "キツネツキ式溶け狐Akyo",
+    "nickname": "키츠네츠키식 녹은 여우 Akyo",
     "avatarName": "Melt_sakyon",
     "category": "동물/여우,동물",
     "comment": "",
@@ -190,7 +190,7 @@
   },
   {
     "id": "0022",
-    "nickname": "キツネツキ式足長狐Akyo",
+    "nickname": "키츠네츠키식 다리긴 여우 Akyo",
     "avatarName": "sAKYOn_？",
     "category": "동물/여우,동물",
     "comment": "",
@@ -199,7 +199,7 @@
   },
   {
     "id": "0023",
-    "nickname": "ウーガーイーツAkyo",
+    "nickname": "우가이츠 Akyo",
     "avatarName": "Uuga Eats",
     "category": "초코민트류,직업・신분,직업・신분/배달원",
     "comment": "",
@@ -208,7 +208,7 @@
   },
   {
     "id": "0024",
-    "nickname": "アキョンゲリヲンAkyo",
+    "nickname": "아쿄엔겔리온 Akyo",
     "avatarName": "Akyongelion Type-08",
     "category": "탈것,무기・기계",
     "comment": "",
@@ -217,7 +217,7 @@
   },
   {
     "id": "0025",
-    "nickname": "アキョスAkyo",
+    "nickname": "아쿄스 Akyo",
     "avatarName": "Akyosu",
     "category": "패러디,패러디/에반게리온",
     "comment": "",
@@ -226,7 +226,7 @@
   },
   {
     "id": "0026",
-    "nickname": "冬虫Akyo",
+    "nickname": "동충하초 Akyo",
     "avatarName": "Toutyuakyo_冬虫亜京",
     "category": "동물/벌레,동물,계절・행사",
     "comment": "",
@@ -235,7 +235,7 @@
   },
   {
     "id": "0027",
-    "nickname": "スプーンフォークAkyo",
+    "nickname": "숟가락포크 Akyo",
     "avatarName": "spoon_fork_akyo",
     "category": "도구・문구・생활용품",
     "comment": "",
@@ -244,7 +244,7 @@
   },
   {
     "id": "0028",
-    "nickname": "ロボットAkyo（サンプル）",
+    "nickname": "로봇 Akyo（샘플）",
     "avatarName": "AkyoRobotSample",
     "category": "무기・기계,전자",
     "comment": "",
@@ -253,7 +253,7 @@
   },
   {
     "id": "0029",
-    "nickname": "ダッフルコートAkyo",
+    "nickname": "더플코트 Akyo",
     "avatarName": "Duffel coat_Akyo",
     "category": "초코민트류,의류・액세서리,의류・액세서리/두꺼운 옷",
     "comment": "",
@@ -262,7 +262,7 @@
   },
   {
     "id": "0030",
-    "nickname": "ダウンベストAkyo",
+    "nickname": "다운조끼 Akyo",
     "avatarName": "Downvest_Akyo",
     "category": "초코민트류,의류・액세서리,의류・액세서리/두꺼운 옷",
     "comment": "",
@@ -271,7 +271,7 @@
   },
   {
     "id": "0031",
-    "nickname": "レイマーチAkyo",
+    "nickname": "레이마치 Akyo",
     "avatarName": "RaymarchAkyo",
     "category": "초코민트류",
     "comment": "",
@@ -280,7 +280,7 @@
   },
   {
     "id": "0032",
-    "nickname": "ルックAkyo",
+    "nickname": "룩 Akyo",
     "avatarName": "LookAkyo",
     "category": "초코민트류,기믹・특수",
     "comment": "",
@@ -289,7 +289,7 @@
   },
   {
     "id": "0033",
-    "nickname": "神秘のAkyo",
+    "nickname": "신비의 Akyo",
     "avatarName": "akyo_mystic",
     "category": "기믹・특수",
     "comment": "",
@@ -298,7 +298,7 @@
   },
   {
     "id": "0034",
-    "nickname": "ウミウシAkyo",
+    "nickname": "갯민숭달팽이 Akyo",
     "avatarName": "UMIUSHI_AKYO_BLUE",
     "category": "동물/바다민달팽이,동물,동물/해양생물",
     "comment": "",
@@ -307,7 +307,7 @@
   },
   {
     "id": "0035",
-    "nickname": "神秘のウミウシAkyo",
+    "nickname": "신비의 갯민숭달팽이 Akyo",
     "avatarName": "akyo_mystic_umiushi",
     "category": "동물/바다민달팽이,기믹・특수,동물,동물/해양생물",
     "comment": "",
@@ -316,7 +316,7 @@
   },
   {
     "id": "0036",
-    "nickname": "ねおウミウシAkyo",
+    "nickname": "네오 갯민숭달팽이 Akyo",
     "avatarName": "neo_umiushi_akyo",
     "category": "동물/바다민달팽이,동물,동물/해양생물",
     "comment": "",
@@ -325,7 +325,7 @@
   },
   {
     "id": "0037",
-    "nickname": "ウツボカズラAkyo",
+    "nickname": "벌레잡이통풀 Akyo",
     "avatarName": "ウツボカズラAkyo",
     "category": "식물",
     "comment": "",
@@ -334,7 +334,7 @@
   },
   {
     "id": "0038",
-    "nickname": "トゥーンAkyo",
+    "nickname": "툰 Akyo",
     "avatarName": "Toon Akyo!",
     "category": "기믹・특수,패러디/디즈니,패러디",
     "comment": "",
@@ -343,7 +343,7 @@
   },
   {
     "id": "0039",
-    "nickname": "サボテンAkyo",
+    "nickname": "선인장 Akyo",
     "avatarName": "アキョテン",
     "category": "식물",
     "comment": "",
@@ -352,7 +352,7 @@
   },
   {
     "id": "0040",
-    "nickname": "ローストAkyo",
+    "nickname": "로스트 Akyo",
     "avatarName": "Roast_Akyo",
     "category": "음식,음식/고기",
     "comment": "",
@@ -361,7 +361,7 @@
   },
   {
     "id": "0041",
-    "nickname": "キヌガサAkyo",
+    "nickname": "망태버섯 Akyo",
     "avatarName": "キヌガサAkyo",
     "category": "균류",
     "comment": "",
@@ -370,7 +370,7 @@
   },
   {
     "id": "0042",
-    "nickname": "64ポリゴンAkyo",
+    "nickname": "64 폴리곤 Akyo",
     "avatarName": "64Akyo",
     "category": "로우폴리,기믹・특수",
     "comment": "色変更可能",
@@ -379,7 +379,7 @@
   },
   {
     "id": "0043",
-    "nickname": "ミナミコアリクイAkyo",
+    "nickname": "작은개미핥기 Akyo",
     "avatarName": "ミナミコアリクイAkyo",
     "category": "동물/개미핥기,동물",
     "comment": "",
@@ -388,7 +388,7 @@
   },
   {
     "id": "0044",
-    "nickname": "苔Akyo",
+    "nickname": "이끼 Akyo",
     "avatarName": "Moss",
     "category": "식물,식물/이끼",
     "comment": "",
@@ -397,7 +397,7 @@
   },
   {
     "id": "0045",
-    "nickname": "木目Akyo",
+    "nickname": "나뭇결 Akyo",
     "avatarName": "Wood",
     "category": "식물,소재・재질,소재・재질/식물/나무,소재・재질/단단한",
     "comment": "",
@@ -406,7 +406,7 @@
   },
   {
     "id": "0046",
-    "nickname": "大理石Akyo",
+    "nickname": "대리석 Akyo",
     "avatarName": "Marble",
     "category": "소재・재질,소재・재질/돌,소재・재질/단단한",
     "comment": "",
@@ -415,7 +415,7 @@
   },
   {
     "id": "0047",
-    "nickname": "こんにゃくAkyo",
+    "nickname": "곤약 Akyo",
     "avatarName": "konjacAkyo",
     "category": "음식",
     "comment": "首が動く",
@@ -424,7 +424,7 @@
   },
   {
     "id": "0048",
-    "nickname": "UFOAkyo",
+    "nickname": "UFO Akyo",
     "avatarName": "UFAkyo",
     "category": "탈것,탈것/항공,UMAkyo,환경・날씨,환경・날씨/우주,기능・특성,기능・특성/산소결핍 내성,기능・특성/무중력 내성,기믹・특수",
     "comment": "",
@@ -433,7 +433,7 @@
   },
   {
     "id": "0049",
-    "nickname": "調査船MU-KYO",
+    "nickname": "조사선 MU-KYO",
     "avatarName": "調査船MU-KYO",
     "category": "탈것,패러디/Muy,패러디",
     "comment": "",
@@ -442,7 +442,7 @@
   },
   {
     "id": "0050",
-    "nickname": "JustやきいもAkyo",
+    "nickname": "Just 군고구마 Akyo",
     "avatarName": "JustやきいもAkyo",
     "category": "음식,기믹・특수,음식/요리",
     "comment": "",
@@ -451,7 +451,7 @@
   },
   {
     "id": "0051",
-    "nickname": "レモンAkyo",
+    "nickname": "레몬 Akyo",
     "avatarName": "レモンAkyo",
     "category": "음식,음식/과일",
     "comment": "",
@@ -460,7 +460,7 @@
   },
   {
     "id": "0052",
-    "nickname": "ヤギAkyo",
+    "nickname": "염소 Akyo",
     "avatarName": "％＆＠＄＃ヤギAkyo",
     "category": "동물/염소,동물",
     "comment": "",
@@ -469,7 +469,7 @@
   },
   {
     "id": "0053",
-    "nickname": "デビルヤギAkyo",
+    "nickname": "데빌 염소 Akyo",
     "avatarName": "デビルヤギAkyo",
     "category": "동물/염소,가상의 존재,가상의 존재/악마,동물",
     "comment": "",
@@ -478,7 +478,7 @@
   },
   {
     "id": "0054",
-    "nickname": "チーズ牛丼Akyo",
+    "nickname": "치즈규동 Akyo",
     "avatarName": "cheese_gyuakyo_v0․9",
     "category": "음식,음식/요리,음식/고기",
     "comment": "",
@@ -487,7 +487,7 @@
   },
   {
     "id": "0055",
-    "nickname": "皮Akyo",
+    "nickname": "가죽 Akyo",
     "avatarName": "皮Akyo",
     "category": "동물/여우,동물,소재・재질,소재・재질/부드러운,소재・재질/동물,실사",
     "comment": "リアル狐Akyoとのこと",
@@ -496,7 +496,7 @@
   },
   {
     "id": "0056",
-    "nickname": "肉Akyo",
+    "nickname": "고기 Akyo",
     "avatarName": "肉Akyo",
     "category": "동물/여우,음식,동물,음식/고기,실사",
     "comment": "",
@@ -505,7 +505,7 @@
   },
   {
     "id": "0057",
-    "nickname": "トピアリーAkyo",
+    "nickname": "토피어리 Akyo",
     "avatarName": "トピアリーAkyo",
     "category": "식물",
     "comment": "",
@@ -514,7 +514,7 @@
   },
   {
     "id": "0058",
-    "nickname": "サイバーAkyo",
+    "nickname": "사이버 Akyo",
     "avatarName": "CyberAkyo",
     "category": "초코민트류,패러디/Cyberpunk,패러디,전자",
     "comment": "",
@@ -523,7 +523,7 @@
   },
   {
     "id": "0059",
-    "nickname": "陸自Akyo",
+    "nickname": "육자대 Akyo",
     "avatarName": "陸自Akyo",
     "category": "직업・신분,직업・신분/병사,직업・신분/공무원,의류・액세서리,의류・액세서리/위장",
     "comment": "",
@@ -532,7 +532,7 @@
   },
   {
     "id": "0060",
-    "nickname": "農kyo",
+    "nickname": "농kyo",
     "avatarName": "NOKYO",
     "category": "직업・신분,직업・신분/농부,도구・문구・생활용품",
     "comment": "",
@@ -541,7 +541,7 @@
   },
   {
     "id": "0061",
-    "nickname": "スギゴケAkyo",
+    "nickname": "삼나무이끼 Akyo",
     "avatarName": "sugigokeakyo",
     "category": "식물,식물/이끼",
     "comment": "",
@@ -550,7 +550,7 @@
   },
   {
     "id": "0062",
-    "nickname": "マンボーAkyo",
+    "nickname": "개복치 Akyo",
     "avatarName": "ManbowAkyo",
     "category": "동물/물고기,동물,동물/해양생물",
     "comment": "",
@@ -559,7 +559,7 @@
   },
   {
     "id": "0063",
-    "nickname": "ワイルズAkyo",
+    "nickname": "와일즈 Akyo",
     "avatarName": "ワイルズAkyo",
     "category": "초코민트류,로우폴리",
     "comment": "",
@@ -568,7 +568,7 @@
   },
   {
     "id": "0064",
-    "nickname": "デニムAkyo",
+    "nickname": "데님 Akyo",
     "avatarName": "Akyo_Denim",
     "category": "소재・재질,소재・재질/부드러운",
     "comment": "",
@@ -577,7 +577,7 @@
   },
   {
     "id": "0065",
-    "nickname": "マグマAkyo",
+    "nickname": "마그마 Akyo",
     "avatarName": "Akyo_Magma",
     "category": "소재・재질,소재・재질/돌,소재・재질/단단한",
     "comment": "",
@@ -586,7 +586,7 @@
   },
   {
     "id": "0066",
-    "nickname": "監視者Akyo",
+    "nickname": "감시자 Akyo",
     "avatarName": "Akyo_Watcher",
     "category": "기믹・특수",
     "comment": "",
@@ -595,7 +595,7 @@
   },
   {
     "id": "0067",
-    "nickname": "ステルスAkyo",
+    "nickname": "스텔스 Akyo",
     "avatarName": "Akyo_Stealth",
     "category": "소재・재질,소재・재질/부드러운,의류・액세서리,의류・액세서리/위장",
     "comment": "",
@@ -604,7 +604,7 @@
   },
   {
     "id": "0068",
-    "nickname": "TIAシャツAkyo",
+    "nickname": "TIA 셔츠 Akyo",
     "avatarName": "Akyo_Shirt_TIA",
     "category": "초코민트류,기믹・특수",
     "comment": "『THIS IS AKYO!』のシャツを着たAkyo",
@@ -613,7 +613,7 @@
   },
   {
     "id": "0069",
-    "nickname": "エラーAkyo",
+    "nickname": "에러 Akyo",
     "avatarName": "errorAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -622,7 +622,7 @@
   },
   {
     "id": "0070",
-    "nickname": "ねこですAkyo",
+    "nickname": "고양이입니다 Akyo",
     "avatarName": "AKYo-040-jp",
     "category": "패러디/SCP,패러디,동물,동물/고양이",
     "comment": "",
@@ -631,7 +631,7 @@
   },
   {
     "id": "0071",
-    "nickname": "モナリザAkyo",
+    "nickname": "모나리자 Akyo",
     "avatarName": "monAkyoriza",
     "category": "초코민트류,예술・아트",
     "comment": "",
@@ -640,7 +640,7 @@
   },
   {
     "id": "0072",
-    "nickname": "テレビAkyo",
+    "nickname": "TV Akyo",
     "avatarName": "TVideoAkyo",
     "category": "초코민트류,무기・기계,가전・가구",
     "comment": "",
@@ -649,7 +649,7 @@
   },
   {
     "id": "0073",
-    "nickname": "ずんだもんAkyo",
+    "nickname": "즌다몬 Akyo",
     "avatarName": "Akyodamon_yousei",
     "category": "패러디/즌다몬,패러디",
     "comment": "",
@@ -658,7 +658,7 @@
   },
   {
     "id": "0074",
-    "nickname": "ゆるめのアヌビスAkyo",
+    "nickname": "느긋한 아누비스 Akyo",
     "avatarName": "Yurumeno_Akyobis",
     "category": "가상의 존재,가상의 존재/천사・신",
     "comment": "葱さん式アヌビスAkyo",
@@ -667,7 +667,7 @@
   },
   {
     "id": "0075",
-    "nickname": "選挙ポスターAkyo",
+    "nickname": "선거포스터 Akyo",
     "avatarName": "senAkyoposter",
     "category": "초코민트류,예술・아트",
     "comment": "",
@@ -676,7 +676,7 @@
   },
   {
     "id": "0076",
-    "nickname": "おさとうAkyo",
+    "nickname": "설탕 Akyo",
     "avatarName": "SugarpotAkyo",
     "category": "조미료",
     "comment": "",
@@ -685,7 +685,7 @@
   },
   {
     "id": "0077",
-    "nickname": "ベクシンスキーAkyo",
+    "nickname": "벡신스키 Akyo",
     "avatarName": "BeksinskiAkyo",
     "category": "예술・아트",
     "comment": "",
@@ -694,7 +694,7 @@
   },
   {
     "id": "0078",
-    "nickname": "タレットAkyo",
+    "nickname": "터렛 Akyo",
     "avatarName": "TurretAkyo",
     "category": "무기・기계",
     "comment": "",
@@ -703,7 +703,7 @@
   },
   {
     "id": "0079",
-    "nickname": "カニになりたいAkyo",
+    "nickname": "게가 되고 싶은 Akyo",
     "avatarName": "KanininaritaiAkyo",
     "category": "동물/게,동물,동물/해양생물",
     "comment": "",
@@ -712,7 +712,7 @@
   },
   {
     "id": "0080",
-    "nickname": "ルネAkyo",
+    "nickname": "르네 Akyo",
     "avatarName": "Rene_MAkyoritte",
     "category": "동물/물고기,예술・아트,동물,동물/해양생물",
     "comment": "",
@@ -721,7 +721,7 @@
   },
   {
     "id": "0081",
-    "nickname": "カーバンクルAkyo",
+    "nickname": "카벙클 Akyo",
     "avatarName": "カーバンクルAkyo",
     "category": "가상의 존재,가상의 존재/환수・정령",
     "comment": "",
@@ -739,7 +739,7 @@
   },
   {
     "id": "0083",
-    "nickname": "もぐらAkyo",
+    "nickname": "두더지 Akyo",
     "avatarName": "もぐらAkyo",
     "category": "동물/두더지,동물",
     "comment": "",
@@ -748,7 +748,7 @@
   },
   {
     "id": "0084",
-    "nickname": "ゾウクラゲAkyo",
+    "nickname": "코끼리해파리 Akyo",
     "avatarName": "ゾウクラゲAkyo",
     "category": "동물/해파리,동물,동물/해양생물",
     "comment": "",
@@ -757,7 +757,7 @@
   },
   {
     "id": "0085",
-    "nickname": "タコスAkyo",
+    "nickname": "타코스 Akyo",
     "avatarName": "タコスAkyo",
     "category": "음식,음식/요리",
     "comment": "",
@@ -766,7 +766,7 @@
   },
   {
     "id": "0086",
-    "nickname": "もしもピアノになれたならAkyo",
+    "nickname": "만약 피아노가 될 수 있다면 Akyo",
     "avatarName": "もしもピアノになれたならAkyo",
     "category": "음악・악기,소원",
     "comment": "",
@@ -775,7 +775,7 @@
   },
   {
     "id": "0087",
-    "nickname": "スク水Akyo",
+    "nickname": "스쿨미즈 Akyo",
     "avatarName": "スク水あきょう",
     "category": "의류・액세서리,의류・액세서리/수영복,학교",
     "comment": "",
@@ -784,7 +784,7 @@
   },
   {
     "id": "0088",
-    "nickname": "チンアナゴAkyo",
+    "nickname": "가든일 Akyo",
     "avatarName": "ちんあきょー",
     "category": "동물/물고기,동물,동물/해양생물",
     "comment": "",
@@ -793,7 +793,7 @@
   },
   {
     "id": "0089",
-    "nickname": "うねAkyo",
+    "nickname": "물결 Akyo",
     "avatarName": "UneAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -802,7 +802,7 @@
   },
   {
     "id": "0090",
-    "nickname": "分身Akyo",
+    "nickname": "분신 Akyo",
     "avatarName": "BunshinAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -811,7 +811,7 @@
   },
   {
     "id": "0091",
-    "nickname": "ステンドグラスAkyo",
+    "nickname": "스테인드글라스 Akyo",
     "avatarName": "StainedGlassAkyo",
     "category": "예술・아트,소재・재질,소재・재질/유리,소재・재질/단단한",
     "comment": "",
@@ -820,7 +820,7 @@
   },
   {
     "id": "0092",
-    "nickname": "消えるAkyo",
+    "nickname": "사라지는 Akyo",
     "avatarName": "KieruAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -829,7 +829,7 @@
   },
   {
     "id": "0093",
-    "nickname": "UV展開Akyo",
+    "nickname": "UV 전개 Akyo",
     "avatarName": "UVtenkaiAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -838,7 +838,7 @@
   },
   {
     "id": "0094",
-    "nickname": "色変更Akyo",
+    "nickname": "색 변경 Akyo",
     "avatarName": "ColorChangeAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -847,7 +847,7 @@
   },
   {
     "id": "0095",
-    "nickname": "ランダムノイズAkyo",
+    "nickname": "랜덤 노이즈 Akyo",
     "avatarName": "RandomNoiseAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -856,7 +856,7 @@
   },
   {
     "id": "0096",
-    "nickname": "ゆがむAkyo",
+    "nickname": "왜곡 Akyo",
     "avatarName": "DistortionAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -865,7 +865,7 @@
   },
   {
     "id": "0097",
-    "nickname": "モザイクAkyo",
+    "nickname": "모자이크 Akyo",
     "avatarName": "MosaicAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -874,7 +874,7 @@
   },
   {
     "id": "0098",
-    "nickname": "落ちそうAkyo",
+    "nickname": "떨어질 것 같은 Akyo",
     "avatarName": "OtisouAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -883,7 +883,7 @@
   },
   {
     "id": "0099",
-    "nickname": "波動Akyo",
+    "nickname": "파동 Akyo",
     "avatarName": "HadouAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -892,7 +892,7 @@
   },
   {
     "id": "0100",
-    "nickname": "ヒプノシスAkyo",
+    "nickname": "히프노시스 Akyo",
     "avatarName": "HypnosisAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -901,7 +901,7 @@
   },
   {
     "id": "0101",
-    "nickname": "吸い込まれるAkyo",
+    "nickname": "빨려드는 Akyo",
     "avatarName": "SuikomareruAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -910,7 +910,7 @@
   },
   {
     "id": "0102",
-    "nickname": "グリッチAkyo",
+    "nickname": "글리치 Akyo",
     "avatarName": "GlitchAKyo",
     "category": "전자",
     "comment": "",
@@ -919,7 +919,7 @@
   },
   {
     "id": "0103",
-    "nickname": "ボクセルAkyo",
+    "nickname": "복셀 Akyo",
     "avatarName": "BoxelAkyo",
     "category": "소재・재질,차원,차원/3D",
     "comment": "",
@@ -928,7 +928,7 @@
   },
   {
     "id": "0104",
-    "nickname": "レインボーAkyo",
+    "nickname": "레인보우 Akyo",
     "avatarName": "RainbowAkyo",
     "category": "색상,초코민트류",
     "comment": "",
@@ -937,7 +937,7 @@
   },
   {
     "id": "0105",
-    "nickname": "サウAkyo",
+    "nickname": "사우 Akyo",
     "avatarName": "SauAkyo",
     "category": "패러디,패러디/인물",
     "comment": "",
@@ -946,7 +946,7 @@
   },
   {
     "id": "0106",
-    "nickname": "消えるAkyo3.0",
+    "nickname": "사라지는 Akyo 3.0",
     "avatarName": "KieruAkyo3․0",
     "category": "기믹・특수",
     "comment": "",
@@ -955,7 +955,7 @@
   },
   {
     "id": "0107",
-    "nickname": "サラマンダーAkyo",
+    "nickname": "샐러맨더 Akyo",
     "avatarName": "SalamanderAkyo",
     "category": "가상의 존재,가상의 존재/환수・정령",
     "comment": "うぱAkyoと呼んだりもする",
@@ -964,7 +964,7 @@
   },
   {
     "id": "0108",
-    "nickname": "メルトAkyo",
+    "nickname": "멜트 Akyo",
     "avatarName": "MeltedAkyo",
     "category": "기믹・특수",
     "comment": "スライムAkyoかも",
@@ -973,7 +973,7 @@
   },
   {
     "id": "0109",
-    "nickname": "リアルAkyo",
+    "nickname": "리얼 Akyo",
     "avatarName": "RealAlyo_Light",
     "category": "예술・아트,실사",
     "comment": "",
@@ -982,7 +982,7 @@
   },
   {
     "id": "0110",
-    "nickname": "デブAkyo",
+    "nickname": "뚱뚱 Akyo",
     "avatarName": "Akyo_debu",
     "category": "체형,체형/풍만",
     "comment": "",
@@ -991,7 +991,7 @@
   },
   {
     "id": "0111",
-    "nickname": "天使Akyo",
+    "nickname": "천사 Akyo",
     "avatarName": "Akyo Angel",
     "category": "가상의 존재,가상의 존재/천사・신",
     "comment": "",
@@ -1000,7 +1000,7 @@
   },
   {
     "id": "0112",
-    "nickname": "さいばーあきょう",
+    "nickname": "사이버 아쿄",
     "avatarName": "さいばーあきょう",
     "category": "전자",
     "comment": "",
@@ -1009,7 +1009,7 @@
   },
   {
     "id": "0113",
-    "nickname": "テルミンAkyo",
+    "nickname": "테르민 Akyo",
     "avatarName": "テルミンAkyo",
     "category": "음악・악기",
     "comment": "",
@@ -1018,7 +1018,7 @@
   },
   {
     "id": "0114",
-    "nickname": "ふわふわAkyo",
+    "nickname": "폭신폭신 Akyo",
     "avatarName": "ふわふわAkyo",
     "category": "소재・재질,소재・재질/부드러운,털결,털결/폭신폭신",
     "comment": "472番は別作者バージョン",
@@ -1027,7 +1027,7 @@
   },
   {
     "id": "0115",
-    "nickname": "お祭りAkyo",
+    "nickname": "축제 Akyo",
     "avatarName": "matsuri akyo ＋pen",
     "category": "계절・행사",
     "comment": "",
@@ -1036,7 +1036,7 @@
   },
   {
     "id": "0116",
-    "nickname": "ひなたAkyo",
+    "nickname": "히나타 Akyo",
     "avatarName": "HinataAkyo",
     "category": "프리티,계절・행사,계절・행사/VRChat",
     "comment": "",
@@ -1045,7 +1045,7 @@
   },
   {
     "id": "0117",
-    "nickname": "メジェドAkyo",
+    "nickname": "메제드 Akyo",
     "avatarName": "メジェドAkyo",
     "category": "가상의 존재,가상의 존재/천사・신",
     "comment": "",
@@ -1054,7 +1054,7 @@
   },
   {
     "id": "0118",
-    "nickname": "アマゴを背負うAkyo",
+    "nickname": "아마고를 짊어진 Akyo",
     "avatarName": "AMAGOAkyo",
     "category": "동물,동물/해양생물",
     "comment": "",
@@ -1063,7 +1063,7 @@
   },
   {
     "id": "0119",
-    "nickname": "カツオを背負うAkyo",
+    "nickname": "가다랑어를 짊어진 Akyo",
     "avatarName": "KATUO＿Akyo",
     "category": "동물,동물/해양생물",
     "comment": "",
@@ -1072,7 +1072,7 @@
   },
   {
     "id": "0120",
-    "nickname": "草Akyo",
+    "nickname": "풀 Akyo",
     "avatarName": "KUSAAkyo",
     "category": "식물",
     "comment": "",
@@ -1081,7 +1081,7 @@
   },
   {
     "id": "0121",
-    "nickname": "キラキラAkyo",
+    "nickname": "반짝반짝 Akyo",
     "avatarName": "KIRAKIRAAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -1090,7 +1090,7 @@
   },
   {
     "id": "0122",
-    "nickname": "後光がなんかすごいAkyo",
+    "nickname": "후광이 뭔가 대단한 Akyo",
     "avatarName": "後光がなんかすごいAkyo",
     "category": "가상의 존재,가상의 존재/천사・신",
     "comment": "",
@@ -1099,7 +1099,7 @@
   },
   {
     "id": "0123",
-    "nickname": "泡Akyo",
+    "nickname": "거품 Akyo",
     "avatarName": "泡Akyo",
     "category": "기믹・특수",
     "comment": "泡Akyo1体目",
@@ -1108,7 +1108,7 @@
   },
   {
     "id": "0124",
-    "nickname": "回折格子Akyo",
+    "nickname": "회절격자 Akyo",
     "avatarName": "回折格子Akyo",
     "category": "소재・재질,소재・재질/유리",
     "comment": "",
@@ -1117,7 +1117,7 @@
   },
   {
     "id": "0125",
-    "nickname": "色胞光学迷彩Akyo",
+    "nickname": "색소포 광학미채 Akyo",
     "avatarName": "色胞光学迷彩Akyo",
     "category": "기믹・특수",
     "comment": "",
@@ -1126,7 +1126,7 @@
   },
   {
     "id": "0126",
-    "nickname": "ヒョウモントカゲモドキAkyo",
+    "nickname": "레오파드 게코 Akyo",
     "avatarName": "ヒョウモントカゲモドキAkyo",
     "category": "동물/도마뱀붙이,동물",
     "comment": "",
@@ -1135,7 +1135,7 @@
   },
   {
     "id": "0127",
-    "nickname": "ヤンバルクイナAkyo",
+    "nickname": "얀바루쿠이나 Akyo",
     "avatarName": "ヤンバルクイナAkyo",
     "category": "동물,동물/새",
     "comment": "",
@@ -1144,7 +1144,7 @@
   },
   {
     "id": "0128",
-    "nickname": "パーティクルAkyo",
+    "nickname": "파티클 Akyo",
     "avatarName": "Akyo",
     "category": "기믹・특수",
     "comment": "",
@@ -1153,7 +1153,7 @@
   },
   {
     "id": "0129",
-    "nickname": "焼きAkyo",
+    "nickname": "구운 Akyo",
     "avatarName": "yaki AKYO",
     "category": "음식,음식/요리",
     "comment": "",
@@ -1162,7 +1162,7 @@
   },
   {
     "id": "0130",
-    "nickname": "ぼんじりAkyo",
+    "nickname": "봉지리 Akyo",
     "avatarName": "ぼんじり（お徳用）",
     "category": "음식,음식/요리",
     "comment": "",
@@ -1171,7 +1171,7 @@
   },
   {
     "id": "0131",
-    "nickname": "踊り子Akyo",
+    "nickname": "무용수 Akyo",
     "avatarName": "踊り子Akyo",
     "category": "직업・신분",
     "comment": "",
@@ -1180,7 +1180,7 @@
   },
   {
     "id": "0132",
-    "nickname": "グッチAkyo",
+    "nickname": "구찌 Akyo",
     "avatarName": "Gucci Akyo",
     "category": "의류・액세서리",
     "comment": "柄はフリーのため権利的にはセーフ",
@@ -1189,7 +1189,7 @@
   },
   {
     "id": "0133",
-    "nickname": "すあまAkyo",
+    "nickname": "스아마 Akyo",
     "avatarName": "akyo_suama",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -1198,7 +1198,7 @@
   },
   {
     "id": "0134",
-    "nickname": "アメジストAkyo",
+    "nickname": "자수정 Akyo",
     "avatarName": "AmethystAkyo",
     "category": "소재・재질,소재・재질/돌,소재・재질/단단한",
     "comment": "",
@@ -1207,7 +1207,7 @@
   },
   {
     "id": "0135",
-    "nickname": "段ボールAkyo",
+    "nickname": "골판지 Akyo",
     "avatarName": "akyo snake",
     "category": "패러디/Metal Gear Solid,패러디",
     "comment": "",
@@ -1216,7 +1216,7 @@
   },
   {
     "id": "0136",
-    "nickname": "しいたけAkyo",
+    "nickname": "표고버섯 Akyo",
     "avatarName": "akyo_poopake",
     "category": "음식,음식/채소,균류",
     "comment": "",
@@ -1225,7 +1225,7 @@
   },
   {
     "id": "0137",
-    "nickname": "それんAkyo",
+    "nickname": "소련 Akyo",
     "avatarName": "akyo_soren",
     "category": "역사",
     "comment": "",
@@ -1234,7 +1234,7 @@
   },
   {
     "id": "0138",
-    "nickname": "じょんAkyo",
+    "nickname": "종 Akyo",
     "avatarName": "akyo_jon",
     "category": "패러디,패러디/인물",
     "comment": "",
@@ -1243,7 +1243,7 @@
   },
   {
     "id": "0139",
-    "nickname": "雪だるまAkyo",
+    "nickname": "눈사람 Akyo",
     "avatarName": "akyo_orf",
     "category": "계절・행사,환경・날씨,소재・재질,소재・재질/차가운,계절・행사/겨울",
     "comment": "",
@@ -1252,7 +1252,7 @@
   },
   {
     "id": "0140",
-    "nickname": "窓Akyo",
+    "nickname": "창문 Akyo",
     "avatarName": "akyo_window",
     "category": "가전・가구",
     "comment": "",
@@ -1261,7 +1261,7 @@
   },
   {
     "id": "0141",
-    "nickname": "ケーキAkyo",
+    "nickname": "케이크 Akyo",
     "avatarName": "cake",
     "category": "음식,음식/디저트",
     "comment": "qchan949式ケーキAkyo",
@@ -1270,7 +1270,7 @@
   },
   {
     "id": "0142",
-    "nickname": "みかんAkyo",
+    "nickname": "귤 Akyo",
     "avatarName": "sau",
     "category": "음식,음식/과일",
     "comment": "",
@@ -1279,7 +1279,7 @@
   },
   {
     "id": "0143",
-    "nickname": "おんがくAkyo",
+    "nickname": "음악 Akyo",
     "avatarName": "akyo_music_01",
     "category": "음악・악기",
     "comment": "",
@@ -1288,7 +1288,7 @@
   },
   {
     "id": "0144",
-    "nickname": "かたつむりAkyo",
+    "nickname": "달팽이 Akyo",
     "avatarName": "snileakyo",
     "category": "동물,동물/달팽이",
     "comment": "",
@@ -1297,7 +1297,7 @@
   },
   {
     "id": "0145",
-    "nickname": "めんしすAkyo？",
+    "nickname": "멘시스 Akyo？",
     "avatarName": "メンシス学派",
     "category": "기믹・특수",
     "comment": "",
@@ -1306,7 +1306,7 @@
   },
   {
     "id": "0146",
-    "nickname": "ベニスAkyo",
+    "nickname": "베니스 Akyo",
     "avatarName": "Venice Akyo",
     "category": "역사,패러디,패러디/VRChat",
     "comment": "",
@@ -1315,7 +1315,7 @@
   },
   {
     "id": "0147",
-    "nickname": "νAkyo",
+    "nickname": "ν Akyo",
     "avatarName": "νAkyo",
     "category": "전자",
     "comment": "",
@@ -1324,7 +1324,7 @@
   },
   {
     "id": "0148",
-    "nickname": "J2m3Akyo",
+    "nickname": "J2m3 Akyo",
     "avatarName": "J2m3",
     "category": "",
     "comment": "",
@@ -1333,7 +1333,7 @@
   },
   {
     "id": "0149",
-    "nickname": "virtual bayroi4Akyo",
+    "nickname": "virtual bayroi4 Akyo",
     "avatarName": "virtual bayroi 4",
     "category": "전자",
     "comment": "",
@@ -1342,7 +1342,7 @@
   },
   {
     "id": "0150",
-    "nickname": "HinyoAkyo",
+    "nickname": "Hinyo Akyo",
     "avatarName": "Hinyo",
     "category": "기믹・특수",
     "comment": "",
@@ -1351,7 +1351,7 @@
   },
   {
     "id": "0151",
-    "nickname": "うしAkyo",
+    "nickname": "소 Akyo",
     "avatarName": "Akyo Cow 256",
     "category": "동물,동물/소",
     "comment": "海外の方が作られたうしAkyo",
@@ -1360,7 +1360,7 @@
   },
   {
     "id": "0152",
-    "nickname": "ポンチョAkyo",
+    "nickname": "판초 Akyo",
     "avatarName": "akyo___________雨",
     "category": "의류・액세서리,환경・날씨,환경・날씨/비",
     "comment": "初期は_が長い",
@@ -1369,7 +1369,7 @@
   },
   {
     "id": "0153",
-    "nickname": "ハロウィンAkyo",
+    "nickname": "할로윈 Akyo",
     "avatarName": "akyo__________コスプレ",
     "category": "계절・행사/할로윈,계절・행사",
     "comment": "",
@@ -1378,7 +1378,7 @@
   },
   {
     "id": "0154",
-    "nickname": "工事Akyo",
+    "nickname": "공사 Akyo",
     "avatarName": "akyo____安全",
     "category": "초코민트류,직업・신분",
     "comment": "",
@@ -1387,7 +1387,7 @@
   },
   {
     "id": "0155",
-    "nickname": "タオルAkyo",
+    "nickname": "타월 Akyo",
     "avatarName": "akyo____タオル",
     "category": "도구・문구・생활용품,설비/욕실,설비",
     "comment": "",
@@ -1396,7 +1396,7 @@
   },
   {
     "id": "0156",
-    "nickname": "アロハAkyo",
+    "nickname": "알로하 Akyo",
     "avatarName": "akyo____アロハ",
     "category": "의류・액세서리",
     "comment": "",
@@ -1405,7 +1405,7 @@
   },
   {
     "id": "0157",
-    "nickname": "トナカイAkyo",
+    "nickname": "순록 Akyo",
     "avatarName": "akyo___トナカイ",
     "category": "동물,동물/순록",
     "comment": "",
@@ -1414,7 +1414,7 @@
   },
   {
     "id": "0158",
-    "nickname": "サンタAkyo",
+    "nickname": "산타 Akyo",
     "avatarName": "akyo___サンタ",
     "category": "의류・액세서리,계절・행사,계절・행사/크리스마스",
     "comment": "",
@@ -1423,7 +1423,7 @@
   },
   {
     "id": "0159",
-    "nickname": "きつねAkyo",
+    "nickname": "여우 Akyo",
     "avatarName": "akyo__fox",
     "category": "동물/여우,동물",
     "comment": "",
@@ -1432,7 +1432,7 @@
   },
   {
     "id": "0160",
-    "nickname": "オコジョAkyo",
+    "nickname": "족제비 Akyo",
     "avatarName": "akyo__fox2",
     "category": "동물,동물/족제비",
     "comment": "なぜかfox2",
@@ -1441,7 +1441,7 @@
   },
   {
     "id": "0161",
-    "nickname": "きつねAkyo2",
+    "nickname": "여우 Akyo 2",
     "avatarName": "akyo__fox3",
     "category": "동물/여우,동물",
     "comment": "",
@@ -1450,7 +1450,7 @@
   },
   {
     "id": "0162",
-    "nickname": "すしAkyo",
+    "nickname": "초밥 Akyo",
     "avatarName": "akyo__すし",
     "category": "음식,음식/요리,음식/초밥",
     "comment": "初代すしAkyo",
@@ -1459,7 +1459,7 @@
   },
   {
     "id": "0163",
-    "nickname": "くまAkyo",
+    "nickname": "곰 Akyo",
     "avatarName": "akyo__くま",
     "category": "동물,동물/곰",
     "comment": "",
@@ -1468,7 +1468,7 @@
   },
   {
     "id": "0164",
-    "nickname": "くまAkyo2",
+    "nickname": "곰 Akyo 2",
     "avatarName": "akyo__くま２",
     "category": "동물,동물/곰",
     "comment": "この色は‥",
@@ -1477,7 +1477,7 @@
   },
   {
     "id": "0165",
-    "nickname": "かがみもちAkyo",
+    "nickname": "거울떡 Akyo",
     "avatarName": "akyo__もち",
     "category": "음식,음식/디저트,계절・행사,계절・행사/설날",
     "comment": "",
@@ -1486,7 +1486,7 @@
   },
   {
     "id": "0166",
-    "nickname": "ねずみAkyo",
+    "nickname": "쥐 Akyo",
     "avatarName": "akyo__rat",
     "category": "동물,동물/쥐",
     "comment": "",
@@ -1495,7 +1495,7 @@
   },
   {
     "id": "0167",
-    "nickname": "ナスAkyo",
+    "nickname": "가지 Akyo",
     "avatarName": "akyo__ナス",
     "category": "음식,음식/채소",
     "comment": "",
@@ -1504,7 +1504,7 @@
   },
   {
     "id": "0168",
-    "nickname": "みかんちゃんAkyo",
+    "nickname": "귤쨩 Akyo",
     "avatarName": "akyo__mikan",
     "category": "음식,음식/과일",
     "comment": "",
@@ -1513,7 +1513,7 @@
   },
   {
     "id": "0169",
-    "nickname": "どらごんAkyo",
+    "nickname": "드래곤 Akyo",
     "avatarName": "akyo_どらごん 1․52",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,기능・특성",
     "comment": "",
@@ -1522,7 +1522,7 @@
   },
   {
     "id": "0170",
-    "nickname": "おにAkyo",
+    "nickname": "도깨비 Akyo",
     "avatarName": "skyo__oni",
     "category": "가상의 존재,가상의 존재/요괴・유령",
     "comment": "skyoなのはミス？",
@@ -1531,7 +1531,7 @@
   },
   {
     "id": "0171",
-    "nickname": "はーふAkyo",
+    "nickname": "하프 Akyo",
     "avatarName": "akyo_half",
     "category": "체형",
     "comment": "",
@@ -1540,7 +1540,7 @@
   },
   {
     "id": "0172",
-    "nickname": "かっぱAkyo",
+    "nickname": "갓파 Akyo",
     "avatarName": "akyo_kappa",
     "category": "가상의 존재,가상의 존재/요괴・유령",
     "comment": "会えたらラッキー",
@@ -1549,7 +1549,7 @@
   },
   {
     "id": "0173",
-    "nickname": "たぬきAkyo",
+    "nickname": "너구리 Akyo",
     "avatarName": "akyo_tanuki",
     "category": "동물,동물/너구리",
     "comment": "",
@@ -1558,7 +1558,7 @@
   },
   {
     "id": "0174",
-    "nickname": "バーガーAkyo",
+    "nickname": "버거 Akyo",
     "avatarName": "akyoバーガー",
     "category": "음식,음식/요리",
     "comment": "",
@@ -1567,7 +1567,7 @@
   },
   {
     "id": "0175",
-    "nickname": "ちくわAkyo",
+    "nickname": "치쿠와 Akyo",
     "avatarName": "akyo_ちくわ",
     "category": "음식,음식/요리",
     "comment": "内側が気になる",
@@ -1576,7 +1576,7 @@
   },
   {
     "id": "0176",
-    "nickname": "ナースAkyo",
+    "nickname": "간호사 Akyo",
     "avatarName": "akyo_ナース",
     "category": "직업・신분,직업・신분/의료종사자",
     "comment": "",
@@ -1585,7 +1585,7 @@
   },
   {
     "id": "0177",
-    "nickname": "マフラーAkyo",
+    "nickname": "목도리 Akyo",
     "avatarName": "akyo_マフラー",
     "category": "의류・액세서리",
     "comment": "",
@@ -1594,7 +1594,7 @@
   },
   {
     "id": "0178",
-    "nickname": "ペンギンAkyo",
+    "nickname": "펭귄 Akyo",
     "avatarName": "akyo_ペンギン",
     "category": "동물,동물/해양생물,동물/펭귄,동물/새",
     "comment": "",
@@ -1603,7 +1603,7 @@
   },
   {
     "id": "0179",
-    "nickname": "サメAkyo",
+    "nickname": "상어 Akyo",
     "avatarName": "akyo_shark",
     "category": "동물,동물/해양생물,동물/상어",
     "comment": "初代サメAkyo",
@@ -1612,7 +1612,7 @@
   },
   {
     "id": "0180",
-    "nickname": "うさぎAkyo",
+    "nickname": "토끼 Akyo",
     "avatarName": "akyo_うさぎ",
     "category": "동물,동물/토끼",
     "comment": "",
@@ -1621,7 +1621,7 @@
   },
   {
     "id": "0181",
-    "nickname": "たんぽぽAkyo",
+    "nickname": "민들레 Akyo",
     "avatarName": "akyo_たんぽぽ",
     "category": "식물",
     "comment": "",
@@ -1630,7 +1630,7 @@
   },
   {
     "id": "0182",
-    "nickname": "シスターAkyo",
+    "nickname": "수녀 Akyo",
     "avatarName": "akyo_シスター",
     "category": "직업・신분",
     "comment": "",
@@ -1639,7 +1639,7 @@
   },
   {
     "id": "0183",
-    "nickname": "シスターきつねAkyo",
+    "nickname": "수녀 여우 Akyo",
     "avatarName": "akyo_狐シスター",
     "category": "동물/여우,동물,직업・신분",
     "comment": "",
@@ -1648,7 +1648,7 @@
   },
   {
     "id": "0184",
-    "nickname": "郵便Akyo",
+    "nickname": "우편 Akyo",
     "avatarName": "akyo_郵便",
     "category": "직업・신분,직업・신분/배달원",
     "comment": "",
@@ -1657,7 +1657,7 @@
   },
   {
     "id": "0185",
-    "nickname": "プリンAkyo",
+    "nickname": "푸딩 Akyo",
     "avatarName": "akyo_プリン",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -1666,7 +1666,7 @@
   },
   {
     "id": "0186",
-    "nickname": "だいこんAkyo",
+    "nickname": "무 Akyo",
     "avatarName": "akyo_だいこん",
     "category": "음식,음식/채소",
     "comment": "",
@@ -1675,7 +1675,7 @@
   },
   {
     "id": "0187",
-    "nickname": "うしAkyo",
+    "nickname": "소 Akyo",
     "avatarName": "akyo_うし",
     "category": "동물,동물/소",
     "comment": "",
@@ -1684,7 +1684,7 @@
   },
   {
     "id": "0188",
-    "nickname": "コーヒーAkyo",
+    "nickname": "커피 Akyo",
     "avatarName": "akyo_coffee",
     "category": "음료",
     "comment": "",
@@ -1693,7 +1693,7 @@
   },
   {
     "id": "0189",
-    "nickname": "インディアンAkyo",
+    "nickname": "인디언 Akyo",
     "avatarName": "akyo_いんでぃあん",
     "category": "의류・액세서리",
     "comment": "",
@@ -1702,7 +1702,7 @@
   },
   {
     "id": "0190",
-    "nickname": "トロピカルAkyo1",
+    "nickname": "트로피컬 Akyo 1",
     "avatarName": "akyo_トロピカル",
     "category": "계절・행사",
     "comment": "",
@@ -1711,7 +1711,7 @@
   },
   {
     "id": "0191",
-    "nickname": "トロピカルAkyo2",
+    "nickname": "트로피컬 Akyo 2",
     "avatarName": "akyoトロピカル２",
     "category": "계절・행사",
     "comment": "",
@@ -1720,7 +1720,7 @@
   },
   {
     "id": "0192",
-    "nickname": "トロピカルAkyo3",
+    "nickname": "트로피컬 Akyo 3",
     "avatarName": "akyo_トロピカル３",
     "category": "계절・행사",
     "comment": "",
@@ -1729,7 +1729,7 @@
   },
   {
     "id": "0193",
-    "nickname": "にんじゃAkyo",
+    "nickname": "닌자 Akyo",
     "avatarName": "akyo_ninja",
     "category": "직업・신분,나라,나라/일본",
     "comment": "",
@@ -1738,7 +1738,7 @@
   },
   {
     "id": "0194",
-    "nickname": "ばななAkyo",
+    "nickname": "바나나 Akyo",
     "avatarName": "akyo_banana",
     "category": "음식,음식/과일",
     "comment": "",
@@ -1747,7 +1747,7 @@
   },
   {
     "id": "0195",
-    "nickname": "ハリネズミAkyo",
+    "nickname": "고슴도치 Akyo",
     "avatarName": "akyo_ハリネズミ",
     "category": "동물,동물/고슴도치",
     "comment": "",
@@ -1756,7 +1756,7 @@
   },
   {
     "id": "0196",
-    "nickname": "朝顔Akyo",
+    "nickname": "나팔꽃 Akyo",
     "avatarName": "akyo_asagao",
     "category": "식물",
     "comment": "",
@@ -1765,7 +1765,7 @@
   },
   {
     "id": "0197",
-    "nickname": "赤飯Akyo",
+    "nickname": "팥밥 Akyo",
     "avatarName": "akyo_sekihan",
     "category": "음식,음식/요리",
     "comment": "",
@@ -1774,7 +1774,7 @@
   },
   {
     "id": "0198",
-    "nickname": "バニーAkyo",
+    "nickname": "버니 Akyo",
     "avatarName": "akyo_バニー",
     "category": "의류・액세서리,프리티",
     "comment": "",
@@ -1783,7 +1783,7 @@
   },
   {
     "id": "0199",
-    "nickname": "アルパカAkyo",
+    "nickname": "알파카 Akyo",
     "avatarName": "akyo_アルパカ",
     "category": "동물,동물/알파카,네발걸음",
     "comment": "チョコミント類ではない",
@@ -1792,7 +1792,7 @@
   },
   {
     "id": "0200",
-    "nickname": "アルパカAkyo2",
+    "nickname": "알파카 Akyo 2",
     "avatarName": "akyo_アルパカ2",
     "category": "동물,동물/알파카",
     "comment": "",
@@ -1801,7 +1801,7 @@
   },
   {
     "id": "0201",
-    "nickname": "とろろAkyo",
+    "nickname": "토로로 Akyo",
     "avatarName": "akyo_TORORO",
     "category": "패러디,패러디/이웃집 토토로",
     "comment": "トロロ‥",
@@ -1810,7 +1810,7 @@
   },
   {
     "id": "0202",
-    "nickname": "とろろAkyo2",
+    "nickname": "토로로 Akyo 2",
     "avatarName": "akyo_TORORO2",
     "category": "패러디,패러디/이웃집 토토로",
     "comment": "腕がある",
@@ -1819,7 +1819,7 @@
   },
   {
     "id": "0203",
-    "nickname": "ゆかたAkyo",
+    "nickname": "유카타 Akyo",
     "avatarName": "akyo_yukata1",
     "category": "의류・액세서리",
     "comment": "",
@@ -1828,7 +1828,7 @@
   },
   {
     "id": "0204",
-    "nickname": "ふぉーるAkyo",
+    "nickname": "폴 Akyo",
     "avatarName": "akyo_fall",
     "category": "패러디,패러디/Fall Guys",
     "comment": "",
@@ -1837,7 +1837,7 @@
   },
   {
     "id": "0205",
-    "nickname": "ひよこAkyo",
+    "nickname": "병아리 Akyo",
     "avatarName": "akyo_hiyoko",
     "category": "동물,동물/새",
     "comment": "",
@@ -1846,7 +1846,7 @@
   },
   {
     "id": "0206",
-    "nickname": "海辺Akyo",
+    "nickname": "해변 Akyo",
     "avatarName": "akyo_sea",
     "category": "환경・날씨,기능・특성/잠수,기능・특성",
     "comment": "",
@@ -1855,7 +1855,7 @@
   },
   {
     "id": "0207",
-    "nickname": "あしがるAkyo",
+    "nickname": "아시가루 Akyo",
     "avatarName": "akyo_asigaru2",
     "category": "직업・신분,직업・신분/병사,무기・기계,나라,나라/일본",
     "comment": "asigaru1は没案",
@@ -1864,7 +1864,7 @@
   },
   {
     "id": "0208",
-    "nickname": "ゆうれいAkyo/ゴーストAkyo",
+    "nickname": "유령 Akyo/고스트 Akyo",
     "avatarName": "akyo_ghost 3․0",
     "category": "가상의 존재,가상의 존재/요괴・유령",
     "comment": "おばけシリーズの始祖",
@@ -1873,7 +1873,7 @@
   },
   {
     "id": "0209",
-    "nickname": "フランケンAkyo",
+    "nickname": "프랑켄 Akyo",
     "avatarName": "akyo_フランケン",
     "category": "계절・행사/할로윈,계절・행사,가상의 존재,가상의 존재/요괴・유령",
     "comment": "",
@@ -1882,7 +1882,7 @@
   },
   {
     "id": "0210",
-    "nickname": "ミイラAkyo",
+    "nickname": "미라 Akyo",
     "avatarName": "akyo_ミイラ",
     "category": "계절・행사/할로윈,계절・행사,가상의 존재,가상의 존재/요괴・유령",
     "comment": "",
@@ -1891,7 +1891,7 @@
   },
   {
     "id": "0211",
-    "nickname": "さつまいもAkyo",
+    "nickname": "고구마 Akyo",
     "avatarName": "akyo_サツマイモ",
     "category": "음식,음식/채소",
     "comment": "",
@@ -1900,7 +1900,7 @@
   },
   {
     "id": "0212",
-    "nickname": "コートきつねAkyo",
+    "nickname": "코트 여우 Akyo",
     "avatarName": "akyo_coat",
     "category": "동물/여우,동물",
     "comment": "",
@@ -1909,7 +1909,7 @@
   },
   {
     "id": "0213",
-    "nickname": "ししまいAkyo",
+    "nickname": "사자춤 Akyo",
     "avatarName": "akyo_sisimai",
     "category": "계절・행사",
     "comment": "わるいキッズAkyoを襲う",
@@ -1918,7 +1918,7 @@
   },
   {
     "id": "0214",
-    "nickname": "巫女きつねAkyo",
+    "nickname": "무녀 여우 Akyo",
     "avatarName": "akyo_miko",
     "category": "동물/여우,동물,직업・신분",
     "comment": "",
@@ -1927,7 +1927,7 @@
   },
   {
     "id": "0215",
-    "nickname": "ひつじAkyo",
+    "nickname": "양 Akyo",
     "avatarName": "akyo_sheep",
     "category": "동물,동물/양,네발걸음",
     "comment": "",
@@ -1936,7 +1936,7 @@
   },
   {
     "id": "0216",
-    "nickname": "ローポリきつねAkyo",
+    "nickname": "로우폴리 여우 Akyo",
     "avatarName": "akyo_狐ローポリ",
     "category": "동물/여우,동물,로우폴리",
     "comment": "",
@@ -1945,7 +1945,7 @@
   },
   {
     "id": "0217",
-    "nickname": "amongAkyo",
+    "nickname": "among Akyo",
     "avatarName": "akyo_among",
     "category": "패러디,패러디/Among Us",
     "comment": "",
@@ -1954,7 +1954,7 @@
   },
   {
     "id": "0218",
-    "nickname": "エジプトAkyo/ファラオAkyo",
+    "nickname": "이집트 Akyo/파라오 Akyo",
     "avatarName": "akyo_ファラオ",
     "category": "역사,나라,나라/이집트,직업・신분,직업・신분/왕족,정상에 서는 자",
     "comment": "",
@@ -1963,7 +1963,7 @@
   },
   {
     "id": "0219",
-    "nickname": "たいやききつねAkyo",
+    "nickname": "붕어빵 여우 Akyo",
     "avatarName": "akyo_taiyaki",
     "category": "동물/여우,동물,음식,음식/요리",
     "comment": "",
@@ -1972,7 +1972,7 @@
   },
   {
     "id": "0220",
-    "nickname": "いぬAkyo",
+    "nickname": "개 Akyo",
     "avatarName": "akyo_dog",
     "category": "동물,동물/개",
     "comment": "",
@@ -1981,7 +1981,7 @@
   },
   {
     "id": "0221",
-    "nickname": "とうもろこしAkyo",
+    "nickname": "옥수수 Akyo",
     "avatarName": "akyo_Corn",
     "category": "음식,음식/채소",
     "comment": "",
@@ -1990,7 +1990,7 @@
   },
   {
     "id": "0222",
-    "nickname": "かいぞくAkyo",
+    "nickname": "해적 Akyo",
     "avatarName": "akyo_kaizoku",
     "category": "직업・신분",
     "comment": "",
@@ -1999,7 +1999,7 @@
   },
   {
     "id": "0223",
-    "nickname": "きつねAkyoV2",
+    "nickname": "여우 Akyo V2",
     "avatarName": "akyo_fox V2",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2008,7 +2008,7 @@
   },
   {
     "id": "0224",
-    "nickname": "にんじんAkyo",
+    "nickname": "당근 Akyo",
     "avatarName": "akyo_にんじん",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2017,7 +2017,7 @@
   },
   {
     "id": "0225",
-    "nickname": "おそうじAkyo",
+    "nickname": "청소 Akyo",
     "avatarName": "akyo___おそうじ 0․303",
     "category": "직업・신분,도구・문구・생활용품",
     "comment": "",
@@ -2026,7 +2026,7 @@
   },
   {
     "id": "0226",
-    "nickname": "とらAkyo",
+    "nickname": "호랑이 Akyo",
     "avatarName": "akyo_tora",
     "category": "동물,동물/호랑이",
     "comment": "",
@@ -2035,7 +2035,7 @@
   },
   {
     "id": "0227",
-    "nickname": "ふりそできつねAkyo",
+    "nickname": "후리소데 여우 Akyo",
     "avatarName": "きつねkyo_振袖",
     "category": "동물/여우,동물,계절・행사,계절・행사/설날",
     "comment": "Aがない",
@@ -2044,7 +2044,7 @@
   },
   {
     "id": "0228",
-    "nickname": "九尾きつねAkyo",
+    "nickname": "구미호 Akyo",
     "avatarName": "akyo_fox9 1․55",
     "category": "동물/여우,동물",
     "comment": "浴衣も着ている",
@@ -2053,7 +2053,7 @@
   },
   {
     "id": "0229",
-    "nickname": "フライAkyo",
+    "nickname": "튀김 Akyo",
     "avatarName": "akyo_Fried 1․4",
     "category": "음식,음식/요리",
     "comment": "えびフライ？",
@@ -2062,7 +2062,7 @@
   },
   {
     "id": "0230",
-    "nickname": "メイドきつねAkyo",
+    "nickname": "메이드 여우 Akyo",
     "avatarName": "akyo___メイド 1․74",
     "category": "동물/여우,동물,직업・신분,프리티",
     "comment": "",
@@ -2071,7 +2071,7 @@
   },
   {
     "id": "0231",
-    "nickname": "かき氷Akyo",
+    "nickname": "빙수 Akyo",
     "avatarName": "akyo_かき氷 1․061",
     "category": "음식,음식/디저트",
     "comment": "色変更可能",
@@ -2080,7 +2080,7 @@
   },
   {
     "id": "0232",
-    "nickname": "歩兵Akyo",
+    "nickname": "보병 Akyo",
     "avatarName": "akyo__歩兵",
     "category": "직업・신분,직업・신분/병사",
     "comment": "緑はチョコミント類？",
@@ -2089,7 +2089,7 @@
   },
   {
     "id": "0233",
-    "nickname": "メガネAkyo",
+    "nickname": "안경 Akyo",
     "avatarName": "akyo__papipo 1․01",
     "category": "의류・액세서리,의류・액세서리/안경,패러디,패러디/인물",
     "comment": "元ネタがある？",
@@ -2098,7 +2098,7 @@
   },
   {
     "id": "0234",
-    "nickname": "白菜Akyo",
+    "nickname": "배추 Akyo",
     "avatarName": "akyo_hakusai 1․03",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2107,7 +2107,7 @@
   },
   {
     "id": "0235",
-    "nickname": "たけのこAkyo",
+    "nickname": "죽순 Akyo",
     "avatarName": "akyo_たけのこ",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2116,7 +2116,7 @@
   },
   {
     "id": "0236",
-    "nickname": "ピザAkyo",
+    "nickname": "피자 Akyo",
     "avatarName": "akyo__pizza",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2125,7 +2125,7 @@
   },
   {
     "id": "0237",
-    "nickname": "ドラキュラAkyo",
+    "nickname": "드라큘라 Akyo",
     "avatarName": "akyo__Helloween",
     "category": "계절・행사/할로윈,계절・행사,가상의 존재,가상의 존재/요괴・유령",
     "comment": "",
@@ -2134,7 +2134,7 @@
   },
   {
     "id": "0238",
-    "nickname": "おばけきつねAkyo",
+    "nickname": "유령 여우 Akyo",
     "avatarName": "ローポリきつねyu-rei",
     "category": "동물/여우,계절・행사/할로윈,계절・행사,동물,가상의 존재,가상의 존재/요괴・유령,로우폴리",
     "comment": "生死不明、要確認",
@@ -2143,7 +2143,7 @@
   },
   {
     "id": "0239",
-    "nickname": "アイドルきつねAkyo",
+    "nickname": "아이돌 여우 Akyo",
     "avatarName": "akyo きつねidol",
     "category": "동물/여우,동물,직업・신분,프리티",
     "comment": "",
@@ -2152,7 +2152,7 @@
   },
   {
     "id": "0240",
-    "nickname": "焼き芋Akyo",
+    "nickname": "군고구마 Akyo",
     "avatarName": "akyo_yakiimo",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2161,7 +2161,7 @@
   },
   {
     "id": "0241",
-    "nickname": "イスAkyo",
+    "nickname": "의자 Akyo",
     "avatarName": "akyo_isu",
     "category": "가전・가구",
     "comment": "キッズAkyo！？",
@@ -2170,7 +2170,7 @@
   },
   {
     "id": "0242",
-    "nickname": "旅きつねAkyo/ポンチョきつねAkyo",
+    "nickname": "여행 여우 Akyo/판초 여우 Akyo",
     "avatarName": "fox pontyo 0․4",
     "category": "동물/여우,동물,의류・액세서리,환경・날씨,환경・날씨/비",
     "comment": "",
@@ -2179,7 +2179,7 @@
   },
   {
     "id": "0243",
-    "nickname": "ねこAkyo",
+    "nickname": "고양이 Akyo",
     "avatarName": "akyo_cat 1․07",
     "category": "동물,동물/고양이",
     "comment": "",
@@ -2188,7 +2188,7 @@
   },
   {
     "id": "0244",
-    "nickname": "ハスキーAkyo",
+    "nickname": "허스키 Akyo",
     "avatarName": "akyo_husky",
     "category": "동물,동물/개",
     "comment": "いぬAkyoに分類していいか要確認",
@@ -2197,7 +2197,7 @@
   },
   {
     "id": "0245",
-    "nickname": "おしるこAkyo",
+    "nickname": "단팥죽 Akyo",
     "avatarName": "akyo_osiruko",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2206,7 +2206,7 @@
   },
   {
     "id": "0246",
-    "nickname": "きつねうどんAkyo",
+    "nickname": "유부우동 Akyo",
     "avatarName": "akyo_fox_udon",
     "category": "동물/여우,동물,음식,음식/요리",
     "comment": "",
@@ -2215,7 +2215,7 @@
   },
   {
     "id": "0247",
-    "nickname": "さくらきつねAkyo",
+    "nickname": "벚꽃 여우 Akyo",
     "avatarName": "akyo fox sakura",
     "category": "동물/여우,동물,식물",
     "comment": "",
@@ -2224,7 +2224,7 @@
   },
   {
     "id": "0248",
-    "nickname": "夏きつねAkyo",
+    "nickname": "여름 여우 Akyo",
     "avatarName": "akyo fox summer",
     "category": "동물/여우,동물,계절・행사",
     "comment": "",
@@ -2233,7 +2233,7 @@
   },
   {
     "id": "0249",
-    "nickname": "キャベツAkyo",
+    "nickname": "양배추 Akyo",
     "avatarName": "akyo_kyabetu",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2242,7 +2242,7 @@
   },
   {
     "id": "0250",
-    "nickname": "スイカAkyo",
+    "nickname": "수박 Akyo",
     "avatarName": "akyo_スイカ",
     "category": "음식,음식/과일",
     "comment": "",
@@ -2251,7 +2251,7 @@
   },
   {
     "id": "0251",
-    "nickname": "うまAkyo",
+    "nickname": "말 Akyo",
     "avatarName": "akyo_uma",
     "category": "동물,동물/말,네발걸음,계절・행사,계절・행사/설날",
     "comment": "",
@@ -2260,7 +2260,7 @@
   },
   {
     "id": "0252",
-    "nickname": "ホットドッグAkyo",
+    "nickname": "핫도그 Akyo",
     "avatarName": "akyo_hotdog",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2269,7 +2269,7 @@
   },
   {
     "id": "0253",
-    "nickname": "現場ねこAkyo",
+    "nickname": "현장 고양이 Akyo",
     "avatarName": "akyo_ねこG",
     "category": "동물,동물/고양이",
     "comment": "",
@@ -2278,7 +2278,7 @@
   },
   {
     "id": "0254",
-    "nickname": "とうがらしAkyo",
+    "nickname": "고추 Akyo",
     "avatarName": "akyo_tougarasi",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2287,7 +2287,7 @@
   },
   {
     "id": "0255",
-    "nickname": "トリケラAkyo",
+    "nickname": "트리케라 Akyo",
     "avatarName": "akyo_トリケラ",
     "category": "동물/공룡,동물,네발걸음",
     "comment": "",
@@ -2296,7 +2296,7 @@
   },
   {
     "id": "0256",
-    "nickname": "ステゴAkyo",
+    "nickname": "스테고 Akyo",
     "avatarName": "akyo_sutego",
     "category": "동물/공룡,동물,네발걸음",
     "comment": "",
@@ -2305,7 +2305,7 @@
   },
   {
     "id": "0257",
-    "nickname": "プテラAkyo",
+    "nickname": "프테라 Akyo",
     "avatarName": "akyo_putera",
     "category": "동물/공룡,동물",
     "comment": "",
@@ -2314,7 +2314,7 @@
   },
   {
     "id": "0258",
-    "nickname": "ホットきつねAkyo",
+    "nickname": "핫 여우 Akyo",
     "avatarName": "akyo_hotfox",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2323,7 +2323,7 @@
   },
   {
     "id": "0259",
-    "nickname": "ティラノAkyo",
+    "nickname": "티라노 Akyo",
     "avatarName": "akyo_ティラノ",
     "category": "동물/공룡,동물",
     "comment": "",
@@ -2332,7 +2332,7 @@
   },
   {
     "id": "0260",
-    "nickname": "パンダAkyo",
+    "nickname": "판다 Akyo",
     "avatarName": "akyo_panda",
     "category": "동물,동물/판다",
     "comment": "",
@@ -2341,7 +2341,7 @@
   },
   {
     "id": "0261",
-    "nickname": "パインAkyo",
+    "nickname": "파인애플 Akyo",
     "avatarName": "akyo_pain",
     "category": "음식,음식/과일",
     "comment": "",
@@ -2350,7 +2350,7 @@
   },
   {
     "id": "0262",
-    "nickname": "へびAkyo",
+    "nickname": "뱀 Akyo",
     "avatarName": "akyo_hebi",
     "category": "동물,동물/뱀",
     "comment": "",
@@ -2359,7 +2359,7 @@
   },
   {
     "id": "0263",
-    "nickname": "ペーパーAkyo",
+    "nickname": "페이퍼 Akyo",
     "avatarName": "akyo_paper",
     "category": "소재・재질,소재・재질/식물/나무",
     "comment": "",
@@ -2368,7 +2368,7 @@
   },
   {
     "id": "0264",
-    "nickname": "ねまききつねAkyo",
+    "nickname": "잠옷 여우 Akyo",
     "avatarName": "akyo_fox nemaki",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2377,7 +2377,7 @@
   },
   {
     "id": "0265",
-    "nickname": "ホットケーキAkyo",
+    "nickname": "핫케이크 Akyo",
     "avatarName": "akyo_hotcake",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2386,7 +2386,7 @@
   },
   {
     "id": "0266",
-    "nickname": "白玉Akyo",
+    "nickname": "시라타마 Akyo",
     "avatarName": "akyo_siratama",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2395,7 +2395,7 @@
   },
   {
     "id": "0267",
-    "nickname": "ポンデAkyo",
+    "nickname": "폰데 Akyo",
     "avatarName": "akyo_ponde",
     "category": "음식,음식/디저트,패러디,패러디/미스터도넛",
     "comment": "ポンデの部分は食べられるとのこと",
@@ -2404,7 +2404,7 @@
   },
   {
     "id": "0268",
-    "nickname": "ようかんAkyo",
+    "nickname": "양갱 Akyo",
     "avatarName": "akyo_youkan",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2413,7 +2413,7 @@
   },
   {
     "id": "0269",
-    "nickname": "ねまきねこAkyo",
+    "nickname": "잠옷 고양이 Akyo",
     "avatarName": "akyo_neko nemaki",
     "category": "동물,동물/고양이",
     "comment": "",
@@ -2422,7 +2422,7 @@
   },
   {
     "id": "0270",
-    "nickname": "カステラAkyo",
+    "nickname": "카스테라 Akyo",
     "avatarName": "akyo_kasutera",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2431,7 +2431,7 @@
   },
   {
     "id": "0271",
-    "nickname": "タコさんAkyo",
+    "nickname": "문어씨 Akyo",
     "avatarName": "akyo_takosan",
     "category": "음식,음식/도시락",
     "comment": "",
@@ -2440,7 +2440,7 @@
   },
   {
     "id": "0272",
-    "nickname": "マヨAkyo",
+    "nickname": "마요 Akyo",
     "avatarName": "akyo_mayo",
     "category": "조미료",
     "comment": "",
@@ -2449,7 +2449,7 @@
   },
   {
     "id": "0273",
-    "nickname": "ギョーザAkyo",
+    "nickname": "만두 Akyo",
     "avatarName": "akyo_ギョーザ",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2458,7 +2458,7 @@
   },
   {
     "id": "0274",
-    "nickname": "アイスAkyo",
+    "nickname": "아이스크림 Akyo",
     "avatarName": "akyo_cup ice",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2467,7 +2467,7 @@
   },
   {
     "id": "0275",
-    "nickname": "ラーメンAkyo",
+    "nickname": "라면 Akyo",
     "avatarName": "akyo_ramen",
     "category": "음식,음식/요리",
     "comment": "カップヌードルAkyo？",
@@ -2476,7 +2476,7 @@
   },
   {
     "id": "0276",
-    "nickname": "バッテリーAkyo",
+    "nickname": "배터리 Akyo",
     "avatarName": "akyo_battery",
     "category": "전자",
     "comment": "",
@@ -2485,7 +2485,7 @@
   },
   {
     "id": "0277",
-    "nickname": "だんごAkyo",
+    "nickname": "경단 Akyo",
     "avatarName": "akyo_dango",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2494,7 +2494,7 @@
   },
   {
     "id": "0278",
-    "nickname": "LpackAkyo",
+    "nickname": "Lpack Akyo",
     "avatarName": "akyo_Lpack",
     "category": "선물",
     "comment": "レターパックAkyo？",
@@ -2503,7 +2503,7 @@
   },
   {
     "id": "0279",
-    "nickname": "フライドポテトAkyo",
+    "nickname": "감자튀김 Akyo",
     "avatarName": "akyo_フライドポテト",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2512,7 +2512,7 @@
   },
   {
     "id": "0280",
-    "nickname": "サメAkyo2",
+    "nickname": "상어 Akyo 2",
     "avatarName": "akyo サメ 1․5",
     "category": "동물,동물/해양생물,동물/상어",
     "comment": "",
@@ -2521,7 +2521,7 @@
   },
   {
     "id": "0281",
-    "nickname": "あざらしAkyo",
+    "nickname": "물개 Akyo",
     "avatarName": "akyo_あざらし",
     "category": "동물,동물/해양생물,동물/물범",
     "comment": "",
@@ -2530,7 +2530,7 @@
   },
   {
     "id": "0282",
-    "nickname": "キッズAkyo",
+    "nickname": "키즈 Akyo",
     "avatarName": "akyo_kids",
     "category": "의류・액세서리,의류・액세서리/모자,반창고,연령층,연령층/어린이",
     "comment": "Akyoも青かった",
@@ -2539,7 +2539,7 @@
   },
   {
     "id": "0283",
-    "nickname": "納豆Akyo",
+    "nickname": "낫토 Akyo",
     "avatarName": "akyo_nattou",
     "category": "음식,음식/채소,음식/요리",
     "comment": "",
@@ -2548,7 +2548,7 @@
   },
   {
     "id": "0284",
-    "nickname": "クラゲAkyo",
+    "nickname": "해파리 Akyo",
     "avatarName": "akyo_kurage",
     "category": "동물,동물/해양생물,동물/해파리",
     "comment": "深海からのメッセージ",
@@ -2557,7 +2557,7 @@
   },
   {
     "id": "0285",
-    "nickname": "消しゴムAkyo",
+    "nickname": "지우개 Akyo",
     "avatarName": "akyo_kesigomu",
     "category": "도구・문구・생활용품,학교,소재・재질,소재・재질/부드러운",
     "comment": "",
@@ -2566,7 +2566,7 @@
   },
   {
     "id": "0286",
-    "nickname": "キョンシーAkyo",
+    "nickname": "강시 Akyo",
     "avatarName": "akyo_キョンシー",
     "category": "계절・행사/할로윈,계절・행사,가상의 존재,가상의 존재/요괴・유령",
     "comment": "",
@@ -2575,7 +2575,7 @@
   },
   {
     "id": "0287",
-    "nickname": "シャンプーAkyo",
+    "nickname": "샴푸 Akyo",
     "avatarName": "akyo_シャンプー",
     "category": "도구・문구・생활용품,설비/욕실,설비",
     "comment": "",
@@ -2584,7 +2584,7 @@
   },
   {
     "id": "0288",
-    "nickname": "ブラキオAkyo",
+    "nickname": "브라키오 Akyo",
     "avatarName": "akyo_ブラキオ",
     "category": "동물/공룡,동물,네발걸음",
     "comment": "",
@@ -2593,7 +2593,7 @@
   },
   {
     "id": "0289",
-    "nickname": "こいのぼりAkyo",
+    "nickname": "잉어깃발 Akyo",
     "avatarName": "akyo_こいのぼり",
     "category": "계절・행사",
     "comment": "",
@@ -2602,7 +2602,7 @@
   },
   {
     "id": "0290",
-    "nickname": "かしわもちAkyo",
+    "nickname": "카시와모치 Akyo",
     "avatarName": "akyo_かしわもち",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2611,7 +2611,7 @@
   },
   {
     "id": "0291",
-    "nickname": "プレシオAkyo",
+    "nickname": "플레시오 Akyo",
     "avatarName": "akyo_プレシオ",
     "category": "동물/공룡,동물,네발걸음",
     "comment": "",
@@ -2620,7 +2620,7 @@
   },
   {
     "id": "0292",
-    "nickname": "てるてるAkyo",
+    "nickname": "테루테루 Akyo",
     "avatarName": "akyo_teruteru",
     "category": "계절・행사",
     "comment": "",
@@ -2629,7 +2629,7 @@
   },
   {
     "id": "0293",
-    "nickname": "ちょうちんAkyo",
+    "nickname": "초롱 Akyo",
     "avatarName": "akyo_tyoutin",
     "category": "동물,동물/해양생물,동물/물고기",
     "comment": "",
@@ -2638,7 +2638,7 @@
   },
   {
     "id": "0294",
-    "nickname": "いのししAkyo",
+    "nickname": "멧돼지 Akyo",
     "avatarName": "akyo_いのしし",
     "category": "동물,동물/멧돼지",
     "comment": "",
@@ -2647,7 +2647,7 @@
   },
   {
     "id": "0295",
-    "nickname": "ひまわりAkyo",
+    "nickname": "해바라기 Akyo",
     "avatarName": "akyo_himawari",
     "category": "식물",
     "comment": "",
@@ -2656,7 +2656,7 @@
   },
   {
     "id": "0296",
-    "nickname": "トーストきつねAkyo",
+    "nickname": "토스트 여우 Akyo",
     "avatarName": "akyo_きつねトースト",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2665,7 +2665,7 @@
   },
   {
     "id": "0297",
-    "nickname": "カンガルーAkyo",
+    "nickname": "캥거루 Akyo",
     "avatarName": "akyo_カンガルー",
     "category": "동물,동물/캥거루",
     "comment": "",
@@ -2674,7 +2674,7 @@
   },
   {
     "id": "0298",
-    "nickname": "村Akyo",
+    "nickname": "마을 Akyo",
     "avatarName": "akyo_house",
     "category": "초코민트류,건물",
     "comment": "",
@@ -2683,7 +2683,7 @@
   },
   {
     "id": "0299",
-    "nickname": "うさぎAkyo2",
+    "nickname": "토끼 Akyo 2",
     "avatarName": "akyo_usagi2",
     "category": "동물,동물/토끼",
     "comment": "色が変わり服を着た",
@@ -2692,7 +2692,7 @@
   },
   {
     "id": "0300",
-    "nickname": "冒険きつねAkyo",
+    "nickname": "모험 여우 Akyo",
     "avatarName": "akyo_きつねぼうけん",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2701,7 +2701,7 @@
   },
   {
     "id": "0301",
-    "nickname": "コックきつねAkyo",
+    "nickname": "요리사 여우 Akyo",
     "avatarName": "akyo_コックさん",
     "category": "동물,동물/여우,직업・신분",
     "comment": "",
@@ -2710,7 +2710,7 @@
   },
   {
     "id": "0302",
-    "nickname": "警察きつねAkyo",
+    "nickname": "경찰 여우 Akyo",
     "avatarName": "akyo_foxKeikan 1․3",
     "category": "동물,동물/여우,직업・신분,직업・신분/공무원",
     "comment": "きみ、たいほ。",
@@ -2719,7 +2719,7 @@
   },
   {
     "id": "0303",
-    "nickname": "キーウイAkyo",
+    "nickname": "키위새 Akyo",
     "avatarName": "akyo_キーウイ",
     "category": "동물,동물/새",
     "comment": "",
@@ -2728,7 +2728,7 @@
   },
   {
     "id": "0304",
-    "nickname": "換毛期きつねAkyo",
+    "nickname": "환모기 여우 Akyo",
     "avatarName": "akyo_きつね換毛期",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2737,7 +2737,7 @@
   },
   {
     "id": "0305",
-    "nickname": "プリンアイスAkyo",
+    "nickname": "푸딩 아이스 Akyo",
     "avatarName": "akyo_プリンアイス",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2746,7 +2746,7 @@
   },
   {
     "id": "0306",
-    "nickname": "宇宙きつねAkyo",
+    "nickname": "우주 여우 Akyo",
     "avatarName": "akyo_fox space 1․07",
     "category": "동물,동물/여우,환경・날씨,직업・신분,환경・날씨/우주,기능・특성,기능・특성/무중력 내성,기능・특성/산소결핍 내성",
     "comment": "",
@@ -2755,7 +2755,7 @@
   },
   {
     "id": "0307",
-    "nickname": "すずめAkyo",
+    "nickname": "참새 Akyo",
     "avatarName": "akyo_すずめ",
     "category": "동물,동물/참새,동물/새",
     "comment": "",
@@ -2764,7 +2764,7 @@
   },
   {
     "id": "0308",
-    "nickname": "消防きつねAkyo",
+    "nickname": "소방 여우 Akyo",
     "avatarName": "akyo_fox syoubou 0․4",
     "category": "동물,동물/여우,직업・신분,직업・신분/공무원",
     "comment": "",
@@ -2773,7 +2773,7 @@
   },
   {
     "id": "0309",
-    "nickname": "サカバンAkyo",
+    "nickname": "사카반 Akyo",
     "avatarName": "akyo_sakaban 0․7",
     "category": "동물,동물/해양생물",
     "comment": "フライになる機能付き",
@@ -2782,7 +2782,7 @@
   },
   {
     "id": "0310",
-    "nickname": "わらびもちAkyo",
+    "nickname": "와라비모치 Akyo",
     "avatarName": "akyo_warabimoti",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -2791,7 +2791,7 @@
   },
   {
     "id": "0311",
-    "nickname": "あじさいAkyo",
+    "nickname": "수국 Akyo",
     "avatarName": "akyo_azisai",
     "category": "식물",
     "comment": "",
@@ -2800,7 +2800,7 @@
   },
   {
     "id": "0312",
-    "nickname": "ブロッコリーAkyo",
+    "nickname": "브로콜리 Akyo",
     "avatarName": "akyo_ブロッコリー",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2809,7 +2809,7 @@
   },
   {
     "id": "0313",
-    "nickname": "医者きつねAkyo",
+    "nickname": "의사 여우 Akyo",
     "avatarName": "akyo_きつねいしゃ",
     "category": "동물/여우,동물,직업・신분,직업・신분/의료종사자",
     "comment": "",
@@ -2818,7 +2818,7 @@
   },
   {
     "id": "0314",
-    "nickname": "英国きつねAkyo",
+    "nickname": "영국 여우 Akyo",
     "avatarName": "akyo_きつね英国",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2827,7 +2827,7 @@
   },
   {
     "id": "0315",
-    "nickname": "黒板消しAkyo",
+    "nickname": "칠판지우개 Akyo",
     "avatarName": "akyo_こくばんけし",
     "category": "도구・문구・생활용품,학교",
     "comment": "",
@@ -2836,7 +2836,7 @@
   },
   {
     "id": "0316",
-    "nickname": "すしAkyo2",
+    "nickname": "초밥 Akyo 2",
     "avatarName": "akyo_sushi",
     "category": "음식,음식/요리,음식/초밥",
     "comment": "",
@@ -2845,7 +2845,7 @@
   },
   {
     "id": "0317",
-    "nickname": "オムライスAkyo",
+    "nickname": "오므라이스 Akyo",
     "avatarName": "akyo_オムライス",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2854,7 +2854,7 @@
   },
   {
     "id": "0318",
-    "nickname": "ぞうAkyo",
+    "nickname": "코끼리 Akyo",
     "avatarName": "akyo_ぞう",
     "category": "동물,동물/코끼리,네발걸음",
     "comment": "",
@@ -2863,7 +2863,7 @@
   },
   {
     "id": "0319",
-    "nickname": "JKきつねAkyo",
+    "nickname": "JK 여우 Akyo",
     "avatarName": "akyo_きつねjk",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2872,7 +2872,7 @@
   },
   {
     "id": "0320",
-    "nickname": "JKチアきつねAkyo",
+    "nickname": "JK 치어 여우 Akyo",
     "avatarName": "akyo_チアきつね",
     "category": "동물/여우,동물",
     "comment": "",
@@ -2881,7 +2881,7 @@
   },
   {
     "id": "0321",
-    "nickname": "ねぎAkyo",
+    "nickname": "파 Akyo",
     "avatarName": "akyo_ねぎ",
     "category": "음식,음식/채소",
     "comment": "",
@@ -2890,7 +2890,7 @@
   },
   {
     "id": "0322",
-    "nickname": "たぬきそばAkyo",
+    "nickname": "너구리소바 Akyo",
     "avatarName": "akyo_たぬきそば",
     "category": "음식,음식/요리,동물,동물/너구리",
     "comment": "",
@@ -2899,7 +2899,7 @@
   },
   {
     "id": "0323",
-    "nickname": "うな重Akyo",
+    "nickname": "장어덮밥 Akyo",
     "avatarName": "akyo_うな重",
     "category": "음식,음식/요리",
     "comment": "",
@@ -2908,7 +2908,7 @@
   },
   {
     "id": "0324",
-    "nickname": "スイカアイスAkyo",
+    "nickname": "수박 아이스 Akyo",
     "avatarName": "akyo_スイカアイス",
     "category": "음식,음식/과일,음식/디저트",
     "comment": "",
@@ -2917,7 +2917,7 @@
   },
   {
     "id": "0325",
-    "nickname": "レッサーパンダAkyo",
+    "nickname": "레서판다 Akyo",
     "avatarName": "akyo_レッサーパンダ",
     "category": "동물,동물/레서판다",
     "comment": "",
@@ -2926,7 +2926,7 @@
   },
   {
     "id": "0326",
-    "nickname": "レッサーパンダAkyo2",
+    "nickname": "레서판다 Akyo 2",
     "avatarName": "akyo_レッサパンダ2",
     "category": "동물,동물/레서판다",
     "comment": "",
@@ -2935,7 +2935,7 @@
   },
   {
     "id": "0327",
-    "nickname": "ようせつAkyo",
+    "nickname": "용접 Akyo",
     "avatarName": "akyo_yousetu",
     "category": "초코민트류",
     "comment": "",
@@ -2944,7 +2944,7 @@
   },
   {
     "id": "0328",
-    "nickname": "ワイバーンAkyo",
+    "nickname": "와이번 Akyo",
     "avatarName": "akyo_わいばーん 0․9",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,기능・특성",
     "comment": "",
@@ -2953,7 +2953,7 @@
   },
   {
     "id": "0329",
-    "nickname": "冬きつねAkyo",
+    "nickname": "겨울 여우 Akyo",
     "avatarName": "akyo_きつね冬",
     "category": "동물/여우,동물,계절・행사",
     "comment": "",
@@ -2962,7 +2962,7 @@
   },
   {
     "id": "0330",
-    "nickname": "フルーツきつねAkyo",
+    "nickname": "과일 여우 Akyo",
     "avatarName": "akyo_fox fruits",
     "category": "동물/여우,동물,음식,음식/과일",
     "comment": "",
@@ -2971,7 +2971,7 @@
   },
   {
     "id": "0331",
-    "nickname": "おじぞうAkyo",
+    "nickname": "지장보살 Akyo",
     "avatarName": "akyo_ozizou",
     "category": "상・하니와",
     "comment": "",
@@ -2980,7 +2980,7 @@
   },
   {
     "id": "0332",
-    "nickname": "足軽Akyo2／侍Akyo",
+    "nickname": "아시가루 Akyo 2／사무라이 Akyo",
     "avatarName": "akyo_samurai",
     "category": "역사,직업・신분,직업・신분/병사,무기・기계,나라,나라/일본",
     "comment": "",
@@ -2989,7 +2989,7 @@
   },
   {
     "id": "0333",
-    "nickname": "侍きつねAkyo",
+    "nickname": "사무라이 여우 Akyo",
     "avatarName": "akyo_きつね侍",
     "category": "동물/여우,동물,역사,직업・신분,직업・신분/병사,무기・기계,나라,나라/일본",
     "comment": "",
@@ -2998,7 +2998,7 @@
   },
   {
     "id": "0334",
-    "nickname": "探偵きつねAkyo",
+    "nickname": "탐정 여우 Akyo",
     "avatarName": "akyo_fox探偵",
     "category": "동물/여우,동물,직업・신분",
     "comment": "",
@@ -3007,7 +3007,7 @@
   },
   {
     "id": "0335",
-    "nickname": "ケーキAkyo",
+    "nickname": "케이크 Akyo",
     "avatarName": "akyo_cake",
     "category": "음식,음식/디저트",
     "comment": "ささのき式ケーキAkyo",
@@ -3016,7 +3016,7 @@
   },
   {
     "id": "0336",
-    "nickname": "はにわAkyo",
+    "nickname": "하니와 Akyo",
     "avatarName": "akyo_haniwa",
     "category": "역사,상・하니와",
     "comment": "",
@@ -3025,7 +3025,7 @@
   },
   {
     "id": "0337",
-    "nickname": "ライオンAkyo",
+    "nickname": "사자 Akyo",
     "avatarName": "akyo_ライオン",
     "category": "동물,동물/사자",
     "comment": "",
@@ -3034,7 +3034,7 @@
   },
   {
     "id": "0338",
-    "nickname": "りゅうAkyo",
+    "nickname": "용 Akyo",
     "avatarName": "akyo_ryuu",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,기능・특성",
     "comment": "",
@@ -3043,7 +3043,7 @@
   },
   {
     "id": "0339",
-    "nickname": "おきつねAkyo",
+    "nickname": "오키츠네 Akyo",
     "avatarName": "akyo_fox okitune",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3052,7 +3052,7 @@
   },
   {
     "id": "0340",
-    "nickname": "コロネAkyo",
+    "nickname": "코로네 Akyo",
     "avatarName": "akyo_コロネ",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -3061,7 +3061,7 @@
   },
   {
     "id": "0341",
-    "nickname": "富士山Akyo",
+    "nickname": "후지산 Akyo",
     "avatarName": "akyo_huzisan",
     "category": "환경・날씨,환경・날씨/산",
     "comment": "Akyoも積もれば山となる",
@@ -3070,7 +3070,7 @@
   },
   {
     "id": "0342",
-    "nickname": "弁当きつねAkyo",
+    "nickname": "도시락 여우 Akyo",
     "avatarName": "akyo_foxBENTOU",
     "category": "동물/여우,동물,음식,음식/요리",
     "comment": "",
@@ -3079,7 +3079,7 @@
   },
   {
     "id": "0343",
-    "nickname": "サンドきつねAkyo",
+    "nickname": "샌드위치 여우 Akyo",
     "avatarName": "akyo_きつねサンド",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3088,7 +3088,7 @@
   },
   {
     "id": "0344",
-    "nickname": "お子様ランチAkyo",
+    "nickname": "어린이런치 Akyo",
     "avatarName": "akyo_お子様ランチ",
     "category": "음식,음식/요리",
     "comment": "",
@@ -3097,7 +3097,7 @@
   },
   {
     "id": "0345",
-    "nickname": "ダウンきつねAkyo",
+    "nickname": "패딩 여우 Akyo",
     "avatarName": "akyo_きつねダウン",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3106,7 +3106,7 @@
   },
   {
     "id": "0346",
-    "nickname": "まほうきつねAkyo",
+    "nickname": "마법 여우 Akyo",
     "avatarName": "akyo_FoxMagic",
     "category": "동물/여우,계절・행사/할로윈,계절・행사,기능・특성/마법,동물,코스프레,기능・특성",
     "comment": "",
@@ -3115,7 +3115,7 @@
   },
   {
     "id": "0347",
-    "nickname": "ハロウィンカボチャAkyo",
+    "nickname": "할로윈 호박 Akyo",
     "avatarName": "akyo_ハロウィンカボチャ",
     "category": "계절・행사/할로윈,계절・행사",
     "comment": "",
@@ -3124,7 +3124,7 @@
   },
   {
     "id": "0348",
-    "nickname": "まほうどらごんAkyo",
+    "nickname": "마법 드래곤 Akyo",
     "avatarName": "akyo_DragonMagic",
     "category": "가상의 존재,기능・특성/비행,계절・행사/할로윈,계절・행사,기능・특성/마법,동물,가상의 존재/용・드래곤,코스프레,기능・특성",
     "comment": "",
@@ -3133,7 +3133,7 @@
   },
   {
     "id": "0349",
-    "nickname": "セットどらごんAkyo",
+    "nickname": "세트 드래곤 Akyo",
     "avatarName": "akyo_どらごんセット",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,기능・특성",
     "comment": "",
@@ -3142,7 +3142,7 @@
   },
   {
     "id": "0350",
-    "nickname": "探偵どらごんAkyo",
+    "nickname": "탐정 드래곤 Akyo",
     "avatarName": "akyo_どらごん探偵",
     "category": "가상의 존재,기능・특성/비행,동물,직업・신분,가상의 존재/용・드래곤,기능・특성",
     "comment": "",
@@ -3151,7 +3151,7 @@
   },
   {
     "id": "0351",
-    "nickname": "天使きつねAkyo",
+    "nickname": "천사 여우 Akyo",
     "avatarName": "akyo engel",
     "category": "동물/여우,동물,가상의 존재,가상의 존재/천사・신",
     "comment": "別作者の天使Akyoも追加予定",
@@ -3160,7 +3160,7 @@
   },
   {
     "id": "0352",
-    "nickname": "エゾAkyo",
+    "nickname": "에조 Akyo",
     "avatarName": "akyo_エゾ",
     "category": "동물",
     "comment": "",
@@ -3169,7 +3169,7 @@
   },
   {
     "id": "0353",
-    "nickname": "コートきつねAkyo4",
+    "nickname": "코트 여우 Akyo 4",
     "avatarName": "akyo_foxCoat4",
     "category": "동물/여우,동물",
     "comment": "2と3がいないのは故意とのこと",
@@ -3178,7 +3178,7 @@
   },
   {
     "id": "0354",
-    "nickname": "ツリーAkyo",
+    "nickname": "트리 Akyo",
     "avatarName": "akyo_ツリー",
     "category": "식물,계절・행사,계절・행사/크리스마스",
     "comment": "正確にはクリスマスツリー",
@@ -3187,7 +3187,7 @@
   },
   {
     "id": "0355",
-    "nickname": "じゃがいもAkyo",
+    "nickname": "감자 Akyo",
     "avatarName": "akyo_じゃがいも",
     "category": "음식,음식/채소",
     "comment": "",
@@ -3196,7 +3196,7 @@
   },
   {
     "id": "0356",
-    "nickname": "シャチAkyo",
+    "nickname": "범고래 Akyo",
     "avatarName": "akyo_シャチ",
     "category": "동물,동물/해양생물,동물/범고래",
     "comment": "",
@@ -3205,7 +3205,7 @@
   },
   {
     "id": "0357",
-    "nickname": "ないとどらごんAkyo",
+    "nickname": "나이트 드래곤 Akyo",
     "avatarName": "akyo_どらごんないと",
     "category": "가상의 존재,기능・특성/비행,계절・행사/할로윈,계절・행사,동물,가상의 존재/용・드래곤,코스프레,직업・신분,무기・기계,직업・신분/병사,기능・특성",
     "comment": "",
@@ -3214,7 +3214,7 @@
   },
   {
     "id": "0358",
-    "nickname": "風呂きつねAkyo",
+    "nickname": "목욕 여우 Akyo",
     "avatarName": "akyo_foxBath",
     "category": "동물/여우,동물,의류・액세서리,설비,설비/욕실",
     "comment": "",
@@ -3223,7 +3223,7 @@
   },
   {
     "id": "0359",
-    "nickname": "キングAkyo",
+    "nickname": "킹 Akyo",
     "avatarName": "akyo_king",
     "category": "직업・신분,직업・신분/왕족,정상에 서는 자,수염",
     "comment": "",
@@ -3232,7 +3232,7 @@
   },
   {
     "id": "0360",
-    "nickname": "振袖どらごんAkyo",
+    "nickname": "후리소데 드래곤 Akyo",
     "avatarName": "akyo_どらごん振袖",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,계절・행사,계절・행사/설날,기능・특성",
     "comment": "",
@@ -3241,7 +3241,7 @@
   },
   {
     "id": "0361",
-    "nickname": "だるまAkyo",
+    "nickname": "달마 Akyo",
     "avatarName": "akyo_daruma",
     "category": "가전・가구,역사,계절・행사,계절・행사/설날",
     "comment": "",
@@ -3250,7 +3250,7 @@
   },
   {
     "id": "0362",
-    "nickname": "トマトAkyo",
+    "nickname": "토마토 Akyo",
     "avatarName": "akyo_とまと",
     "category": "음식,음식/채소",
     "comment": "",
@@ -3259,7 +3259,7 @@
   },
   {
     "id": "0363",
-    "nickname": "リスAkyo",
+    "nickname": "다람쥐 Akyo",
     "avatarName": "akyo_リス",
     "category": "동물,동물/다람쥐",
     "comment": "",
@@ -3268,7 +3268,7 @@
   },
   {
     "id": "0364",
-    "nickname": "メロンソーダAkyo",
+    "nickname": "멜론소다 Akyo",
     "avatarName": "akyo_メロンソーダ 1․1",
     "category": "음식,음식/과일,음료",
     "comment": "",
@@ -3277,7 +3277,7 @@
   },
   {
     "id": "0365",
-    "nickname": "赤べこAkyo",
+    "nickname": "아카베코 Akyo",
     "avatarName": "akyo_赤べこ",
     "category": "가전・가구,역사",
     "comment": "",
@@ -3286,7 +3286,7 @@
   },
   {
     "id": "0366",
-    "nickname": "嫁入りきつねAkyo",
+    "nickname": "시집가는 여우 Akyo",
     "avatarName": "akyo_きつねの嫁入り",
     "category": "동물/여우,동물,의류・액세서리,계절・행사,계절・행사/연애,프리티",
     "comment": "",
@@ -3295,7 +3295,7 @@
   },
   {
     "id": "0367",
-    "nickname": "メロンAkyo",
+    "nickname": "멜론 Akyo",
     "avatarName": "akyo_メロン",
     "category": "음식,음식/과일",
     "comment": "",
@@ -3304,7 +3304,7 @@
   },
   {
     "id": "0368",
-    "nickname": "嫁入り婿きつねAkyo",
+    "nickname": "장가가는 여우 Akyo",
     "avatarName": "akyo_狐の嫁入り2",
     "category": "동물/여우,동물,의류・액세서리,계절・행사,계절・행사/연애",
     "comment": "",
@@ -3313,7 +3313,7 @@
   },
   {
     "id": "0369",
-    "nickname": "つきそいきつねAkyo",
+    "nickname": "들러리 여우 Akyo",
     "avatarName": "akyo_きつね つきそい",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3322,7 +3322,7 @@
   },
   {
     "id": "0370",
-    "nickname": "チョコAkyo",
+    "nickname": "초코 Akyo",
     "avatarName": "akyo_choco",
     "category": "음식,음식/디저트",
     "comment": "バレンタインにはこれ",
@@ -3331,7 +3331,7 @@
   },
   {
     "id": "0371",
-    "nickname": "バナナAkyo",
+    "nickname": "바나나 Akyo",
     "avatarName": "akyo_バナナ",
     "category": "음식,음식/과일",
     "comment": "",
@@ -3340,7 +3340,7 @@
   },
   {
     "id": "0372",
-    "nickname": "緑茶Akyo",
+    "nickname": "녹차 Akyo",
     "avatarName": "akyo_緑茶",
     "category": "음료",
     "comment": "",
@@ -3349,7 +3349,7 @@
   },
   {
     "id": "0373",
-    "nickname": "ローダーAkyo",
+    "nickname": "로더 Akyo",
     "avatarName": "akyo_ローダー",
     "category": "초코민트류,무기・기계",
     "comment": "",
@@ -3358,7 +3358,7 @@
   },
   {
     "id": "0374",
-    "nickname": "キリンAkyo",
+    "nickname": "기린 Akyo",
     "avatarName": "akyo_キリン",
     "category": "동물,동물/기린,네발걸음",
     "comment": "",
@@ -3367,7 +3367,7 @@
   },
   {
     "id": "0375",
-    "nickname": "ローダーAkyo2/ローダーきつねAkyo",
+    "nickname": "로더 Akyo 2/로더 여우 Akyo",
     "avatarName": "akyo_ローダー2",
     "category": "동물/여우,동물,초코민트류,무기・기계",
     "comment": "",
@@ -3376,7 +3376,7 @@
   },
   {
     "id": "0376",
-    "nickname": "天むすAkyo",
+    "nickname": "텐무스 Akyo",
     "avatarName": "akyo_天むす",
     "category": "음식,음식/요리",
     "comment": "",
@@ -3385,7 +3385,7 @@
   },
   {
     "id": "0377",
-    "nickname": "ハムスターAkyo",
+    "nickname": "햄스터 Akyo",
     "avatarName": "akyo_ハムスター",
     "category": "동물,동물/햄스터",
     "comment": "",
@@ -3394,7 +3394,7 @@
   },
   {
     "id": "0378",
-    "nickname": "スカーフきつねAkyo",
+    "nickname": "스카프 여우 Akyo",
     "avatarName": "akyo_きつねスカーフ",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3403,7 +3403,7 @@
   },
   {
     "id": "0379",
-    "nickname": "トーストきつねAkyo2",
+    "nickname": "토스트 여우 Akyo 2",
     "avatarName": "akyo_foxトースト2",
     "category": "동물/여우,동물",
     "comment": "一体化に失敗した",
@@ -3412,7 +3412,7 @@
   },
   {
     "id": "0380",
-    "nickname": "いかAkyo",
+    "nickname": "오징어 Akyo",
     "avatarName": "akyo_イカ",
     "category": "동물,동물/해양생물",
     "comment": "",
@@ -3421,7 +3421,7 @@
   },
   {
     "id": "0381",
-    "nickname": "くじらAkyo",
+    "nickname": "고래 Akyo",
     "avatarName": "akyo_くじら",
     "category": "동물,동물/해양생물",
     "comment": "",
@@ -3430,7 +3430,7 @@
   },
   {
     "id": "0382",
-    "nickname": "カエルAkyo",
+    "nickname": "개구리 Akyo",
     "avatarName": "akyo_カエル",
     "category": "동물,동물/개구리,동물/양서류",
     "comment": "",
@@ -3439,7 +3439,7 @@
   },
   {
     "id": "0383",
-    "nickname": "和メイドきつねAkyo",
+    "nickname": "화풍 메이드 여우 Akyo",
     "avatarName": "akyo_きつね和メイド",
     "category": "동물/여우,동물,직업・신분,프리티",
     "comment": "",
@@ -3448,7 +3448,7 @@
   },
   {
     "id": "0384",
-    "nickname": "オコジョAkyo3.0",
+    "nickname": "족제비 Akyo 3.0",
     "avatarName": "akyo_オコジョ3․0",
     "category": "동물,동물/족제비",
     "comment": "Avatar3.0化の意",
@@ -3457,7 +3457,7 @@
   },
   {
     "id": "0385",
-    "nickname": "食パンAkyo",
+    "nickname": "식빵 Akyo",
     "avatarName": "akyo_to-st",
     "category": "음식,음식/요리",
     "comment": "完全に一体化",
@@ -3466,7 +3466,7 @@
   },
   {
     "id": "0386",
-    "nickname": "食パンきつねAkyo",
+    "nickname": "식빵 여우 Akyo",
     "avatarName": "akyo_to-st fox",
     "category": "동물/여우,동물,음식,음식/요리",
     "comment": "同上",
@@ -3475,7 +3475,7 @@
   },
   {
     "id": "0387",
-    "nickname": "でんきゅうAkyo",
+    "nickname": "전구 Akyo",
     "avatarName": "akyo_電球",
     "category": "가전・가구",
     "comment": "",
@@ -3484,7 +3484,7 @@
   },
   {
     "id": "0388",
-    "nickname": "メロンパンAkyo",
+    "nickname": "멜론빵 Akyo",
     "avatarName": "akyo_メロンパン",
     "category": "음식,음식/과일,음식/디저트,음식/요리",
     "comment": "",
@@ -3493,7 +3493,7 @@
   },
   {
     "id": "0389",
-    "nickname": "カステラAkyo2",
+    "nickname": "카스테라 Akyo 2",
     "avatarName": "akyo_カステラt",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -3502,7 +3502,7 @@
   },
   {
     "id": "0390",
-    "nickname": "やきAkyo",
+    "nickname": "구이 Akyo",
     "avatarName": "akyo_yaki",
     "category": "음식,음식/요리",
     "comment": "",
@@ -3511,7 +3511,7 @@
   },
   {
     "id": "0391",
-    "nickname": "アーキョおじさん/おじAkyo",
+    "nickname": "아쿄 아저씨/아저씨 Akyo",
     "avatarName": "akyo_ozi",
     "category": "직업・신분,직업・신분/농부,연령층,연령층/노인,수염",
     "comment": "",
@@ -3520,7 +3520,7 @@
   },
   {
     "id": "0392",
-    "nickname": "ラムネAkyo",
+    "nickname": "라무네 Akyo",
     "avatarName": "akyo_ラムネ",
     "category": "음식,음식/디저트,음료",
     "comment": "",
@@ -3529,7 +3529,7 @@
   },
   {
     "id": "0393",
-    "nickname": "とのAkyo",
+    "nickname": "영주 Akyo",
     "avatarName": "akyo_tono",
     "category": "직업・신분,정상에 서는 자,나라,나라/일본,역사,상투",
     "comment": "",
@@ -3538,7 +3538,7 @@
   },
   {
     "id": "0394",
-    "nickname": "せんすいAkyo",
+    "nickname": "잠수 Akyo",
     "avatarName": "akyo_せんすい",
     "category": "직업・신분,기능・특성/잠수,기능・특성",
     "comment": "",
@@ -3547,7 +3547,7 @@
   },
   {
     "id": "0395",
-    "nickname": "カラス天狗Akyo",
+    "nickname": "까마귀 텐구 Akyo",
     "avatarName": "akyo_からすてんぐ",
     "category": "가상의 존재,가상의 존재/요괴・유령,동물,동물/새",
     "comment": "",
@@ -3556,7 +3556,7 @@
   },
   {
     "id": "0396",
-    "nickname": "くろねこAkyo",
+    "nickname": "검은고양이 Akyo",
     "avatarName": "akyo_kuroneko",
     "category": "동물,동물/고양이",
     "comment": "",
@@ -3565,7 +3565,7 @@
   },
   {
     "id": "0397",
-    "nickname": "ローダーAkyo3/ローダーくろねこAkyo",
+    "nickname": "로더 Akyo 3/로더 검은고양이 Akyo",
     "avatarName": "akyoローダー3",
     "category": "동물,동물/고양이,초코민트류,무기・기계",
     "comment": "",
@@ -3574,7 +3574,7 @@
   },
   {
     "id": "0398",
-    "nickname": "さくらAkyo",
+    "nickname": "벚꽃 Akyo",
     "avatarName": "akyo_sakura",
     "category": "식물",
     "comment": "",
@@ -3583,7 +3583,7 @@
   },
   {
     "id": "0399",
-    "nickname": "おめんAkyo",
+    "nickname": "가면 Akyo",
     "avatarName": "akyo_omen",
     "category": "패러디/이상한 집,패러디",
     "comment": "このAkyo、何か変？",
@@ -3592,7 +3592,7 @@
   },
   {
     "id": "0400",
-    "nickname": "りきしAkyo",
+    "nickname": "스모선수 Akyo",
     "avatarName": "akyo_rikishi",
     "category": "직업・신분,나라,나라/일본",
     "comment": "",
@@ -3601,7 +3601,7 @@
   },
   {
     "id": "0401",
-    "nickname": "なつAkyo",
+    "nickname": "여름 Akyo",
     "avatarName": "akyo_なつ",
     "category": "계절・행사",
     "comment": "",
@@ -3610,7 +3610,7 @@
   },
   {
     "id": "0402",
-    "nickname": "つりAkyo",
+    "nickname": "낚시 Akyo",
     "avatarName": "akyo_つり",
     "category": "직업・신분",
     "comment": "",
@@ -3619,7 +3619,7 @@
   },
   {
     "id": "0403",
-    "nickname": "モサモサAkyo",
+    "nickname": "텁수룩 Akyo",
     "avatarName": "akyo_モサモサ",
     "category": "소재・재질,소재・재질/부드러운,털결,털결/복슬복슬",
     "comment": "",
@@ -3628,7 +3628,7 @@
   },
   {
     "id": "0404",
-    "nickname": "プリンきつねAkyo",
+    "nickname": "푸딩 여우 Akyo",
     "avatarName": "akyo_きつねプリン",
     "category": "동물/여우,동물,음식,음식/디저트",
     "comment": "",
@@ -3637,7 +3637,7 @@
   },
   {
     "id": "0405",
-    "nickname": "水まんじゅうAkyo",
+    "nickname": "미즈만쥬 Akyo",
     "avatarName": "akyo_水まんじゅう",
     "category": "음식,음식/디저트,음료",
     "comment": "",
@@ -3646,7 +3646,7 @@
   },
   {
     "id": "0406",
-    "nickname": "アキョベロス/ケルベロスAkyo",
+    "nickname": "아쿄베로스/케르베로스 Akyo",
     "avatarName": "アキョベロス",
     "category": "동물,동물/개,가상의 존재,가상의 존재/환수・정령",
     "comment": "",
@@ -3655,7 +3655,7 @@
   },
   {
     "id": "0407",
-    "nickname": "カフェきつねAkyo",
+    "nickname": "카페 여우 Akyo",
     "avatarName": "akyo_きつねcafe",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3664,7 +3664,7 @@
   },
   {
     "id": "0408",
-    "nickname": "がかきつねAkyo",
+    "nickname": "화가 여우 Akyo",
     "avatarName": "akyo_fox art",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3673,7 +3673,7 @@
   },
   {
     "id": "0409",
-    "nickname": "白鳥Akyo",
+    "nickname": "백조 Akyo",
     "avatarName": "akyo_はくちょう",
     "category": "동물,동물/새",
     "comment": "",
@@ -3682,7 +3682,7 @@
   },
   {
     "id": "0410",
-    "nickname": "陸戦型きつねAkyo",
+    "nickname": "육전형 여우 Akyo",
     "avatarName": "陸戦型きつねakyo",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3691,7 +3691,7 @@
   },
   {
     "id": "0411",
-    "nickname": "アカギツネAkyo",
+    "nickname": "붉은여우 Akyo",
     "avatarName": "赤きつねakyo 1․1",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3700,7 +3700,7 @@
   },
   {
     "id": "0412",
-    "nickname": "チベスナきつねAkyo",
+    "nickname": "티베트여우 Akyo",
     "avatarName": "チベスナきつねakyo",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3709,7 +3709,7 @@
   },
   {
     "id": "0413",
-    "nickname": "わさびAkyo",
+    "nickname": "와사비 Akyo",
     "avatarName": "わさびakyo",
     "category": "음식,음식/채소,조미료",
     "comment": "",
@@ -3718,7 +3718,7 @@
   },
   {
     "id": "0414",
-    "nickname": "ビキニきつねAkyo",
+    "nickname": "비키니 여우 Akyo",
     "avatarName": "きつねビキニ",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3727,7 +3727,7 @@
   },
   {
     "id": "0415",
-    "nickname": "フリル水着きつねAkyo",
+    "nickname": "프릴 수영복 여우 Akyo",
     "avatarName": "きつねakyoフリル水着",
     "category": "동물/여우,동물,의류・액세서리,의류・액세서리/수영복,프리티",
     "comment": "",
@@ -3736,7 +3736,7 @@
   },
   {
     "id": "0416",
-    "nickname": "豆腐AkyoA",
+    "nickname": "두부 Akyo A",
     "avatarName": "akyo_touhu",
     "category": "음식,음식/채소,음식/요리",
     "comment": "",
@@ -3745,7 +3745,7 @@
   },
   {
     "id": "0417",
-    "nickname": "豆腐AkyoB",
+    "nickname": "두부 Akyo B",
     "avatarName": "akyoBOXtouhu",
     "category": "음식,음식/채소,음식/요리",
     "comment": "",
@@ -3754,7 +3754,7 @@
   },
   {
     "id": "0418",
-    "nickname": "みそしるAkyo",
+    "nickname": "된장국 Akyo",
     "avatarName": "akyo_‚isosiru",
     "category": "음식,음식/요리",
     "comment": "豆腐AkyoBとのコラボ",
@@ -3763,7 +3763,7 @@
   },
   {
     "id": "0419",
-    "nickname": "タピオカAkyo",
+    "nickname": "타피오카 Akyo",
     "avatarName": "akyo_タピオカ",
     "category": "음료",
     "comment": "分類はのみもの系",
@@ -3772,7 +3772,7 @@
   },
   {
     "id": "0420",
-    "nickname": "収穫祭Akyo",
+    "nickname": "수확제 Akyo",
     "avatarName": "アキョおじ収穫祭",
     "category": "계절・행사",
     "comment": "野菜Akyoオールスターズ",
@@ -3781,7 +3781,7 @@
   },
   {
     "id": "0421",
-    "nickname": "はっぱAkyo",
+    "nickname": "나뭇잎 Akyo",
     "avatarName": "akyo_happa",
     "category": "식물,패러디,패러디/Pikmin",
     "comment": "",
@@ -3790,7 +3790,7 @@
   },
   {
     "id": "0422",
-    "nickname": "ポンチョきつねAkyo",
+    "nickname": "판초 여우 Akyo",
     "avatarName": "きつねポンチョ",
     "category": "동물/여우,동물,의류・액세서리,환경・날씨,환경・날씨/비",
     "comment": "ささのきさんの原点回帰",
@@ -3799,7 +3799,7 @@
   },
   {
     "id": "0423",
-    "nickname": "かき氷きつねAkyo",
+    "nickname": "빙수 여우 Akyo",
     "avatarName": "akyo_きつねかき氷",
     "category": "동물/여우,동물,음식,음식/디저트",
     "comment": "",
@@ -3808,7 +3808,7 @@
   },
   {
     "id": "0424",
-    "nickname": "りんごあめAkyo",
+    "nickname": "사과사탕 Akyo",
     "avatarName": "akyo_りんごあめ",
     "category": "음식,음식/과일,음식/디저트",
     "comment": "",
@@ -3817,7 +3817,7 @@
   },
   {
     "id": "0425",
-    "nickname": "サキュAkyo",
+    "nickname": "서큐 Akyo",
     "avatarName": "akyo_サキュ",
     "category": "가상의 존재,가상의 존재/악마",
     "comment": "",
@@ -3826,7 +3826,7 @@
   },
   {
     "id": "0426",
-    "nickname": "いなりAkyo",
+    "nickname": "유부초밥 Akyo",
     "avatarName": "akyo_いなりずし",
     "category": "음식,음식/요리,음식/초밥",
     "comment": "すしシリーズ3体目",
@@ -3835,7 +3835,7 @@
   },
   {
     "id": "0427",
-    "nickname": "八百屋ねぎAkyo",
+    "nickname": "채소가게 파 Akyo",
     "avatarName": "akyo_ねぎ八百屋",
     "category": "음식,음식/채소,직업・신분",
     "comment": "",
@@ -3844,7 +3844,7 @@
   },
   {
     "id": "0428",
-    "nickname": "農家ねぎAkyo",
+    "nickname": "농가 파 Akyo",
     "avatarName": "akyo_ねぎ農家",
     "category": "음식,음식/채소,직업・신분,직업・신분/농부",
     "comment": "",
@@ -3853,7 +3853,7 @@
   },
   {
     "id": "0429",
-    "nickname": "ヤシAkyo",
+    "nickname": "야자 Akyo",
     "avatarName": "akyo_ヤシの木",
     "category": "식물",
     "comment": "木シリーズ3体目",
@@ -3862,7 +3862,7 @@
   },
   {
     "id": "0430",
-    "nickname": "レースきつねAkyo",
+    "nickname": "레이스 여우 Akyo",
     "avatarName": "akyo_レーシングきつね",
     "category": "동물/여우,동물",
     "comment": "",
@@ -3871,7 +3871,7 @@
   },
   {
     "id": "0431",
-    "nickname": "駅員きつねAkyo",
+    "nickname": "역무원 여우 Akyo",
     "avatarName": "akyo_きつね駅員",
     "category": "동물/여우,동물,직업・신분",
     "comment": "",
@@ -3880,7 +3880,7 @@
   },
   {
     "id": "0432",
-    "nickname": "バニーきつねAkyo",
+    "nickname": "버니 여우 Akyo",
     "avatarName": "akyo_BunnyFox",
     "category": "계절・행사/할로윈,계절・행사,동물,동물/여우,의류・액세서리,코스프레,프리티",
     "comment": "",
@@ -3889,7 +3889,7 @@
   },
   {
     "id": "0433",
-    "nickname": "ストレッチAkyo",
+    "nickname": "스트레치 Akyo",
     "avatarName": "akyo_ストレッチ",
     "category": "패러디,패러디/스트레치맨,체육회계",
     "comment": "生涯健康、生涯Akyo",
@@ -3898,7 +3898,7 @@
   },
   {
     "id": "0434",
-    "nickname": "あかずきんきつねAkyo",
+    "nickname": "빨간모자 여우 Akyo",
     "avatarName": "akyo_きつね赤ずきん",
     "category": "동물/여우,계절・행사/할로윈,계절・행사,동물,코스프레",
     "comment": "おおかみAkyoに要注意",
@@ -3907,7 +3907,7 @@
   },
   {
     "id": "0435",
-    "nickname": "りょうしAkyo",
+    "nickname": "사냥꾼 Akyo",
     "avatarName": "akyo_猟師",
     "category": "직업・신분",
     "comment": "",
@@ -3916,7 +3916,7 @@
   },
   {
     "id": "0436",
-    "nickname": "しかAkyo",
+    "nickname": "사슴 Akyo",
     "avatarName": "akyo_シカ",
     "category": "동물,동물/사슴",
     "comment": "",
@@ -3925,7 +3925,7 @@
   },
   {
     "id": "0437",
-    "nickname": "うたねぎAkyo",
+    "nickname": "노래 파 Akyo",
     "avatarName": "akyo_ねぎうた",
     "category": "음식,음식/채소,패러디,패러디/보컬로이드",
     "comment": "ねぎシリーズも増加中",
@@ -3934,7 +3934,7 @@
   },
   {
     "id": "0438",
-    "nickname": "うきょきつねAkyo",
+    "nickname": "우쿄 여우 Akyo",
     "avatarName": "akyo_foxUkyo",
     "category": "동물/여우,패러디/AIBOU,패러디,동물",
     "comment": "",
@@ -3943,7 +3943,7 @@
   },
   {
     "id": "0439",
-    "nickname": "食パンたぬきAkyo",
+    "nickname": "식빵 너구리 Akyo",
     "avatarName": "akyo_to-stTANUKI",
     "category": "음식,음식/요리,동물,동물/너구리",
     "comment": "",
@@ -3952,7 +3952,7 @@
   },
   {
     "id": "0440",
-    "nickname": "かにAkyo",
+    "nickname": "게 Akyo",
     "avatarName": "akyo_kani",
     "category": "동물,동물/게,동물/해양생물",
     "comment": "エビカニモード付き",
@@ -3961,7 +3961,7 @@
   },
   {
     "id": "0441",
-    "nickname": "もちAkyo",
+    "nickname": "떡 Akyo",
     "avatarName": "akyo_もち",
     "category": "음식,음식/디저트,계절・행사,계절・행사/설날",
     "comment": "2代目もちAkyo",
@@ -3970,7 +3970,7 @@
   },
   {
     "id": "0442",
-    "nickname": "まほうねぎAkyo",
+    "nickname": "마법 파 Akyo",
     "avatarName": "akyo_ねぎまほう",
     "category": "계절・행사/할로윈,계절・행사,기능・특성/마법,음식,음식/채소,코스프레,기능・특성",
     "comment": "",
@@ -3979,7 +3979,7 @@
   },
   {
     "id": "0443",
-    "nickname": "モンブランAkyo",
+    "nickname": "몽블랑 Akyo",
     "avatarName": "akyo_モンブラン",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -3988,7 +3988,7 @@
   },
   {
     "id": "0444",
-    "nickname": "モンブランきつねAkyo",
+    "nickname": "몽블랑 여우 Akyo",
     "avatarName": "akyo_きつねモンブラン",
     "category": "동물/여우,동물,음식,음식/디저트",
     "comment": "",
@@ -3997,7 +3997,7 @@
   },
   {
     "id": "0445",
-    "nickname": "おおかみAkyo",
+    "nickname": "늑대 Akyo",
     "avatarName": "akyo_おおかみ",
     "category": "동물,동물/늑대",
     "comment": "",
@@ -4006,7 +4006,7 @@
   },
   {
     "id": "0446",
-    "nickname": "宇宙Akyo",
+    "nickname": "우주 Akyo",
     "avatarName": "akyo_うちゅう",
     "category": "환경・날씨,직업・신분,환경・날씨/우주,기능・특성,기능・특성/무중력 내성,기능・특성/산소결핍 내성",
     "comment": "",
@@ -4015,7 +4015,7 @@
   },
   {
     "id": "0447",
-    "nickname": "ないときつねAkyo",
+    "nickname": "나이트 여우 Akyo",
     "avatarName": "akyo_きつねないと",
     "category": "동물/여우,동물",
     "comment": "",
@@ -4024,7 +4024,7 @@
   },
   {
     "id": "0448",
-    "nickname": "カボチャハロウィンAkyo",
+    "nickname": "호박 할로윈 Akyo",
     "avatarName": "akyo_かぼちゃHW",
     "category": "계절・행사/할로윈,계절・행사,코스프레",
     "comment": "",
@@ -4033,7 +4033,7 @@
   },
   {
     "id": "0449",
-    "nickname": "ハロウィンポンチョきつねAkyo",
+    "nickname": "할로윈 판초 여우 Akyo",
     "avatarName": "akyo_foxHW",
     "category": "동물/여우,계절・행사/할로윈,계절・행사,동물,의류・액세서리,코스프레",
     "comment": "",
@@ -4042,7 +4042,7 @@
   },
   {
     "id": "0450",
-    "nickname": "キョンシーきつねAkyo",
+    "nickname": "강시 여우 Akyo",
     "avatarName": "akyo_きつねキョンシー",
     "category": "동물/여우,계절・행사/할로윈,계절・행사,동물,가상의 존재,가상의 존재/요괴・유령,코스프레",
     "comment": "",
@@ -4051,7 +4051,7 @@
   },
   {
     "id": "0451",
-    "nickname": "ちゃがまたぬきAkyo",
+    "nickname": "찻주전자 너구리 Akyo",
     "avatarName": "akyo_たぬきちゃがま",
     "category": "동물,동물/너구리",
     "comment": "",
@@ -4060,7 +4060,7 @@
   },
   {
     "id": "0452",
-    "nickname": "酒屋たぬきAkyo",
+    "nickname": "주점 너구리 Akyo",
     "avatarName": "akyo_たぬき酒屋",
     "category": "동물,동물/너구리",
     "comment": "",
@@ -4069,7 +4069,7 @@
   },
   {
     "id": "0453",
-    "nickname": "カフェおおかみAkyo",
+    "nickname": "카페 늑대 Akyo",
     "avatarName": "akyo_おおかみカフェ",
     "category": "동물,동물/늑대",
     "comment": "",
@@ -4078,7 +4078,7 @@
   },
   {
     "id": "0454",
-    "nickname": "どらごんAkyoSP",
+    "nickname": "드래곤 Akyo SP",
     "avatarName": "akyo_老どらごん",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,기능・특성",
     "comment": "SPはサブスタのこと？",
@@ -4087,7 +4087,7 @@
   },
   {
     "id": "0455",
-    "nickname": "木彫りきつねAkyo",
+    "nickname": "목조 여우 Akyo",
     "avatarName": "akyo_木彫りきつね",
     "category": "동물/여우,동물,소재・재질,소재・재질/식물/나무,소재・재질/단단한,예술・아트",
     "comment": "",
@@ -4096,7 +4096,7 @@
   },
   {
     "id": "0456",
-    "nickname": "ハロウィンだいこんAkyo",
+    "nickname": "할로윈 무 Akyo",
     "avatarName": "akyo_だいこんHW",
     "category": "음식/채소,계절・행사/할로윈,계절・행사,음식,음식/채소/무,코스프레",
     "comment": "",
@@ -4105,7 +4105,7 @@
   },
   {
     "id": "0457",
-    "nickname": "オコジョAkyo2024",
+    "nickname": "족제비 Akyo 2024",
     "avatarName": "akyo_オコジョ24",
     "category": "동물,동물/족제비",
     "comment": "3代目オコジョAkyo",
@@ -4114,7 +4114,7 @@
   },
   {
     "id": "0458",
-    "nickname": "こたつきつねAkyo",
+    "nickname": "코타츠 여우 Akyo",
     "avatarName": "akyo_きつねこたつ",
     "category": "동물/여우,동물,가전・가구,계절・행사,계절・행사/설날",
     "comment": "",
@@ -4123,7 +4123,7 @@
   },
   {
     "id": "0459",
-    "nickname": "うまはにわAkyo",
+    "nickname": "말 하니와 Akyo",
     "avatarName": "akyo_はにわうま",
     "category": "동물,동물/말,역사,상・하니와,네발걸음,계절・행사,계절・행사/설날",
     "comment": "はにわとうまにも派生誕生",
@@ -4132,7 +4132,7 @@
   },
   {
     "id": "0460",
-    "nickname": "太陽の塔Akyo",
+    "nickname": "태양의 탑 Akyo",
     "avatarName": "akyo_taiyou",
     "category": "예술・아트",
     "comment": "JPSTにはいない",
@@ -4141,7 +4141,7 @@
   },
   {
     "id": "0461",
-    "nickname": "はにわぶしAkyo",
+    "nickname": "하니와 무사 Akyo",
     "avatarName": "akyo_はにわぶし",
     "category": "역사,상・하니와",
     "comment": "",
@@ -4150,7 +4150,7 @@
   },
   {
     "id": "0462",
-    "nickname": "アヌビスAkyo",
+    "nickname": "아누비스 Akyo",
     "avatarName": "akyo_あぬびす",
     "category": "가상의 존재,가상의 존재/천사・신",
     "comment": "ささのきさん式アヌビスAkyo",
@@ -4159,7 +4159,7 @@
   },
   {
     "id": "0463",
-    "nickname": "プリンカップAkyo",
+    "nickname": "푸딩컵 Akyo",
     "avatarName": "akyo_プリンカップ",
     "category": "음식,음식/디저트",
     "comment": "",
@@ -4168,7 +4168,7 @@
   },
   {
     "id": "0464",
-    "nickname": "えきいんおおかみAkyo",
+    "nickname": "역무원 늑대 Akyo",
     "avatarName": "akyo_おおかみえきいん",
     "category": "동물,동물/늑대",
     "comment": "",
@@ -4177,7 +4177,7 @@
   },
   {
     "id": "0465",
-    "nickname": "ゆきだるまきつねAkyo",
+    "nickname": "눈사람 여우 Akyo",
     "avatarName": "akyo_ゆきだるま",
     "category": "동물/여우,동물,계절・행사,소재・재질,소재・재질/차가운",
     "comment": "",
@@ -4186,7 +4186,7 @@
   },
   {
     "id": "0466",
-    "nickname": "まつのきAkyo",
+    "nickname": "소나무 Akyo",
     "avatarName": "akyo_まつ",
     "category": "식물",
     "comment": "",
@@ -4195,7 +4195,7 @@
   },
   {
     "id": "0467",
-    "nickname": "にわとりAkyo",
+    "nickname": "닭 Akyo",
     "avatarName": "akyo_にわとり",
     "category": "동물,동물/새",
     "comment": "",
@@ -4204,7 +4204,7 @@
   },
   {
     "id": "0468",
-    "nickname": "カレーAkyo",
+    "nickname": "카레 Akyo",
     "avatarName": "akyo_curry",
     "category": "음식,음식/요리",
     "comment": "",
@@ -4213,7 +4213,7 @@
   },
   {
     "id": "0469",
-    "nickname": "サンタきつねAkyo",
+    "nickname": "산타 여우 Akyo",
     "avatarName": "akyo_きつねサンタ",
     "category": "동물/여우,동물,의류・액세서리,계절・행사,계절・행사/크리스마스",
     "comment": "",
@@ -4222,7 +4222,7 @@
   },
   {
     "id": "0470",
-    "nickname": "ふりそでおおかみAkyo",
+    "nickname": "후리소데 늑대 Akyo",
     "avatarName": "おおかみふりそで",
     "category": "동물,동물/늑대,계절・행사,계절・행사/설날",
     "comment": "",
@@ -4231,7 +4231,7 @@
   },
   {
     "id": "0471",
-    "nickname": "ふりそでたぬきAkyo",
+    "nickname": "후리소데 너구리 Akyo",
     "avatarName": "たぬきふりそで",
     "category": "동물,동물/너구리,계절・행사,계절・행사/설날",
     "comment": "",
@@ -4240,7 +4240,7 @@
   },
   {
     "id": "0472",
-    "nickname": "ふわふわAkyo",
+    "nickname": "폭신폭신 Akyo",
     "avatarName": "Fuwafuwa_Akyo",
     "category": "소재・재질,소재・재질/부드러운,털결,털결/폭신폭신",
     "comment": "114番は別作者様ver.",
@@ -4249,7 +4249,7 @@
   },
   {
     "id": "0473",
-    "nickname": "こたつAkyo",
+    "nickname": "코타츠 Akyo",
     "avatarName": "kotatsu_akyo",
     "category": "가전・가구,계절・행사,계절・행사/설날",
     "comment": "",
@@ -4258,7 +4258,7 @@
   },
   {
     "id": "0474",
-    "nickname": "くまさん着ぐるみAkyo",
+    "nickname": "곰 인형옷 Akyo",
     "avatarName": "bigkumasankigurumiAkyo",
     "category": "동물,동물/곰",
     "comment": "",
@@ -4267,7 +4267,7 @@
   },
   {
     "id": "0475",
-    "nickname": "囚人Akyo",
+    "nickname": "죄수 Akyo",
     "avatarName": "PrisonerAkyo",
     "category": "초코민트류,직업・신분,직업・신분/수형자,갇힌 몸",
     "comment": "",
@@ -4276,7 +4276,7 @@
   },
   {
     "id": "0476",
-    "nickname": "なんかやばいAkyo",
+    "nickname": "뭔가 위험한 Akyo",
     "avatarName": "nankayabaiAkyo",
     "category": "예술・아트",
     "comment": "",
@@ -4285,7 +4285,7 @@
   },
   {
     "id": "0477",
-    "nickname": "キュクロープスAkyo",
+    "nickname": "키클롭스 Akyo",
     "avatarName": "RedonCyclopeAkyo",
     "category": "예술・아트",
     "comment": "",
@@ -4294,7 +4294,7 @@
   },
   {
     "id": "0478",
-    "nickname": "あきょのてせん",
+    "nickname": "아쿄의 철도",
     "avatarName": "Akyonotesen",
     "category": "초코민트류,탈것,탈것/육상,직업・신분",
     "comment": "",
@@ -4303,7 +4303,7 @@
   },
   {
     "id": "0479",
-    "nickname": "フェス気分のヤギAkyo",
+    "nickname": "페스 기분의 염소 Akyo",
     "avatarName": "フェス気分のヤギAkyo",
     "category": "동물/염소,기믹・특수,동물,계절・행사",
     "comment": "『Akyoのぱーりない』にてHowToMakeSushiさんのDJを待望するヤギAkyoが変化した姿",
@@ -4312,7 +4312,7 @@
   },
   {
     "id": "0480",
-    "nickname": "すし水勤務のAkyo",
+    "nickname": "초밥수족관 근무 Akyo",
     "avatarName": "すし水勤務のAkyo",
     "category": "초코민트류,직업・신분",
     "comment": "",
@@ -4321,7 +4321,7 @@
   },
   {
     "id": "0481",
-    "nickname": "ココナッツAkyo",
+    "nickname": "코코넛 Akyo",
     "avatarName": "ココナッツakyo",
     "category": "음식,음식/과일",
     "comment": "",
@@ -4330,7 +4330,7 @@
   },
   {
     "id": "0482",
-    "nickname": "アスパラAkyo",
+    "nickname": "아스파라거스 Akyo",
     "avatarName": "アスパラakyo",
     "category": "식물,음식,음식/채소",
     "comment": "",
@@ -4339,7 +4339,7 @@
   },
   {
     "id": "0483",
-    "nickname": "コーギーAkyo",
+    "nickname": "코기 Akyo",
     "avatarName": "akyo コーギー",
     "category": "동물/개,동물",
     "comment": "",
@@ -4348,7 +4348,7 @@
   },
   {
     "id": "0484",
-    "nickname": "水兵きつねAkyo",
+    "nickname": "수병 여우 Akyo",
     "avatarName": "akyo Fox すいへい",
     "category": "동물/여우,직업・신분,동물",
     "comment": "",
@@ -4357,7 +4357,7 @@
   },
   {
     "id": "0485",
-    "nickname": "ねぶくろAkyo",
+    "nickname": "침낭 Akyo",
     "avatarName": "akyo ねぶくろ",
     "category": "초코민트류,의류・액세서리,수면",
     "comment": "発想の由来が気になります",
@@ -4366,7 +4366,7 @@
   },
   {
     "id": "0486",
-    "nickname": "風邪ひきAkyo",
+    "nickname": "감기걸린 Akyo",
     "avatarName": "KazehikiAkyo",
     "category": "초코민트류,질병・바이러스,의류・액세서리,의류・액세서리/마스크,쾌차를 빕니다,가전・가구,가전・가구/이불",
     "comment": "",
@@ -4375,7 +4375,7 @@
   },
   {
     "id": "0487",
-    "nickname": "ピカチュウAkyo",
+    "nickname": "피카츄 Akyo",
     "avatarName": "Akyochu",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4384,7 +4384,7 @@
   },
   {
     "id": "0488",
-    "nickname": "ヒトカゲAkyo",
+    "nickname": "파이리 Akyo",
     "avatarName": "ヒトカゲあきょ",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4393,7 +4393,7 @@
   },
   {
     "id": "0489",
-    "nickname": "ゼニガメAkyo",
+    "nickname": "꼬부기 Akyo",
     "avatarName": "ゼニガメあきょ",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4402,7 +4402,7 @@
   },
   {
     "id": "0490",
-    "nickname": "フシギダネAkyo",
+    "nickname": "이상해씨 Akyo",
     "avatarName": "フシギダネあきょ",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4411,7 +4411,7 @@
   },
   {
     "id": "0491",
-    "nickname": "NEET式泡Akyo",
+    "nickname": "NEET식 거품 Akyo",
     "avatarName": "Bubble Akyo",
     "category": "기믹・특수",
     "comment": "泡Akyo2体目。1体目はふらっとさん",
@@ -4420,7 +4420,7 @@
   },
   {
     "id": "0492",
-    "nickname": "アマダイAkyo",
+    "nickname": "옥돔 Akyo",
     "avatarName": "AmadaiAkyo",
     "category": "동물/물고기,동물,동물/해양생물",
     "comment": "",
@@ -4429,7 +4429,7 @@
   },
   {
     "id": "0493",
-    "nickname": "ビードルAkyo",
+    "nickname": "뿔충이 Akyo",
     "avatarName": "ビーきょ",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4438,7 +4438,7 @@
   },
   {
     "id": "0494",
-    "nickname": "ヌオーAkyo",
+    "nickname": "누오 Akyo",
     "avatarName": "ぬあきょ",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4447,7 +4447,7 @@
   },
   {
     "id": "0495",
-    "nickname": "コダックAkyo",
+    "nickname": "고라파덕 Akyo",
     "avatarName": "あきょダック",
     "category": "패러디/포켓몬,패러디",
     "comment": "VRCポケ改変集会用のAkyo",
@@ -4456,7 +4456,7 @@
   },
   {
     "id": "0496",
-    "nickname": "りんごAkyo",
+    "nickname": "사과 Akyo",
     "avatarName": "apple_Akyo",
     "category": "음식,음식/과일",
     "comment": "",
@@ -4465,7 +4465,7 @@
   },
   {
     "id": "0497",
-    "nickname": "柿Akyo",
+    "nickname": "감 Akyo",
     "avatarName": "柿Akyo",
     "category": "음식,음식/과일",
     "comment": "数年の時を経てPublic化",
@@ -4474,7 +4474,7 @@
   },
   {
     "id": "0498",
-    "nickname": "ラテアートAkyo",
+    "nickname": "라떼아트 Akyo",
     "avatarName": "LatteArtAkyo",
     "category": "예술・아트,음료",
     "comment": "",
@@ -4483,7 +4483,7 @@
   },
   {
     "id": "0499",
-    "nickname": "リボンきつねAkyo",
+    "nickname": "리본 여우 Akyo",
     "avatarName": "リボンきつねakyo",
     "category": "동물/여우,의류・액세서리,동물",
     "comment": "",
@@ -4492,7 +4492,7 @@
   },
   {
     "id": "0500",
-    "nickname": "うたねぎAkyoB",
+    "nickname": "노래 파 Akyo B",
     "avatarName": "ねぎうたB",
     "category": "음식/채소,음식,패러디/보컬로이드,패러디,음식/채소/파",
     "comment": "",
@@ -4501,7 +4501,7 @@
   },
   {
     "id": "0501",
-    "nickname": "ねぶくろAkyo2",
+    "nickname": "침낭 Akyo 2",
     "avatarName": "akyo ねぶくろ2",
     "category": "초코민트류,의류・액세서리,수면",
     "comment": "",
@@ -4510,7 +4510,7 @@
   },
   {
     "id": "0502",
-    "nickname": "ねぶくろきつねAkyo",
+    "nickname": "침낭 여우 Akyo",
     "avatarName": "akyo_fox ねぶくろ",
     "category": "동물/여우,의류・액세서리,동물,수면",
     "comment": "うさぎと虎の寝袋に変更可能",
@@ -4519,7 +4519,7 @@
   },
   {
     "id": "0503",
-    "nickname": "銅像Akyo",
+    "nickname": "동상 Akyo",
     "avatarName": "ブロンズAKyo リターンズ",
     "category": "상・하니와,소재・재질,소재・재질/금속,소재・재질/단단한",
     "comment": "",
@@ -4528,7 +4528,7 @@
   },
   {
     "id": "0504",
-    "nickname": "おきんきんAkyo",
+    "nickname": "금빛 Akyo",
     "avatarName": "A金yo",
     "category": "색상",
     "comment": "",
@@ -4537,7 +4537,7 @@
   },
   {
     "id": "0505",
-    "nickname": "おきんきん蝶Akyo",
+    "nickname": "금빛 나비 Akyo",
     "avatarName": "ア蝶",
     "category": "색상,동물/벌레/나비,동물/벌레,동물",
     "comment": "",
@@ -4546,7 +4546,7 @@
   },
   {
     "id": "0506",
-    "nickname": "色彩反転Akyo",
+    "nickname": "색채반전 Akyo",
     "avatarName": "色彩反転Akyo",
     "category": "기믹・특수",
     "comment": "",
@@ -4555,7 +4555,7 @@
   },
   {
     "id": "0507",
-    "nickname": "うさぎAkyo",
+    "nickname": "토끼 Akyo",
     "avatarName": "usagi-akyo",
     "category": "동물/토끼,동물",
     "comment": "あとち式うさぎAkyo",
@@ -4564,7 +4564,7 @@
   },
   {
     "id": "0508",
-    "nickname": "もふだいこんAkyo",
+    "nickname": "폭신 무 Akyo",
     "avatarName": "akyo だいこんモフ",
     "category": "음식/채소,음식,음식/채소/무",
     "comment": "",
@@ -4573,7 +4573,7 @@
   },
   {
     "id": "0509",
-    "nickname": "シナモAkyo",
+    "nickname": "시나모 Akyo",
     "avatarName": "akyo siro",
     "category": "패러디/시나모롤,패러디",
     "comment": "",
@@ -4582,7 +4582,7 @@
   },
   {
     "id": "0510",
-    "nickname": "ミサイルAkyo",
+    "nickname": "미사일 Akyo",
     "avatarName": "AKYO S400 Missile system",
     "category": "초코민트류,무기・기계",
     "comment": "",
@@ -4591,7 +4591,7 @@
   },
   {
     "id": "0511",
-    "nickname": "モーターAkyo",
+    "nickname": "모터 Akyo",
     "avatarName": "81mm_morter_AKYO",
     "category": "초코민트류,무기・기계",
     "comment": "",
@@ -4600,7 +4600,7 @@
   },
   {
     "id": "0512",
-    "nickname": "にせムルルAkyo",
+    "nickname": "가짜 무루루 Akyo",
     "avatarName": "nisemururuAkyo",
     "category": "패러디,패러디/VRChat",
     "comment": "",
@@ -4609,7 +4609,7 @@
   },
   {
     "id": "0513",
-    "nickname": "まめひなたAkyo",
+    "nickname": "마메히나타 Akyo",
     "avatarName": "MamehinatAkyo",
     "category": "패러디,패러디/VRChat",
     "comment": "",
@@ -4618,7 +4618,7 @@
   },
   {
     "id": "0514",
-    "nickname": "VketちゃんAkyo",
+    "nickname": "Vket쨩 Akyo",
     "avatarName": "Akyoketchan",
     "category": "패러디,패러디/VRChat",
     "comment": "",
@@ -4627,7 +4627,7 @@
   },
   {
     "id": "0515",
-    "nickname": "イーブイAkyo",
+    "nickname": "이브이 Akyo",
     "avatarName": "noteeveeAkyo",
     "category": "패러디/포켓몬,패러디",
     "comment": "",
@@ -4636,7 +4636,7 @@
   },
   {
     "id": "0516",
-    "nickname": "モクリもどきAkyo",
+    "nickname": "모쿠리 모방 Akyo",
     "avatarName": "mokurimodokiakyo",
     "category": "패러디/Mokuri,패러디",
     "comment": "",
@@ -4645,7 +4645,7 @@
   },
   {
     "id": "0517",
-    "nickname": "キプフェルAkyo",
+    "nickname": "킵펠 Akyo",
     "avatarName": "akyofel",
     "category": "패러디,패러디/VRChat",
     "comment": "",
@@ -4654,7 +4654,7 @@
   },
   {
     "id": "0518",
-    "nickname": "ワイトAkyo",
+    "nickname": "와이트 Akyo",
     "avatarName": "Akyomosouomoimasu",
     "category": "패러디/유희왕,패러디",
     "comment": "",
@@ -4663,7 +4663,7 @@
   },
   {
     "id": "0519",
-    "nickname": "ズバットAkyo",
+    "nickname": "주뱃 Akyo",
     "avatarName": "notzubattoAkyo",
     "category": "패러디/포켓몬,패러디",
     "comment": "",
@@ -4672,7 +4672,7 @@
   },
   {
     "id": "0520",
-    "nickname": "ヒューマノイドもどきAkyo",
+    "nickname": "휴머노이드 모방 Akyo",
     "avatarName": "NothumanoidAkyo",
     "category": "코스프레,패러디,패러디/VRChat",
     "comment": "",
@@ -4681,7 +4681,7 @@
   },
   {
     "id": "0521",
-    "nickname": "ワーミ―Akyo",
+    "nickname": "워미 Akyo",
     "avatarName": "WormiesockAkyo",
     "category": "패러디/Wormiesock,패러디",
     "comment": "",
@@ -4690,7 +4690,7 @@
   },
   {
     "id": "0522",
-    "nickname": "義理チョコAkyo",
+    "nickname": "의리초코 Akyo",
     "avatarName": "girichocoAkyo",
     "category": "음식/디저트,음식,계절・행사",
     "comment": "",
@@ -4699,7 +4699,7 @@
   },
   {
     "id": "0523",
-    "nickname": "布ゴーストAkyo",
+    "nickname": "천 고스트 Akyo",
     "avatarName": "nunoghostAkyo",
     "category": "초코민트류,가상의 존재,가상의 존재/요괴・유령,소재・재질,소재・재질/부드러운",
     "comment": "",
@@ -4708,7 +4708,7 @@
   },
   {
     "id": "0524",
-    "nickname": "ロボアームAkyo",
+    "nickname": "로봇팔 Akyo",
     "avatarName": "RoboArmAkyo",
     "category": "초코민트류,무기・기계",
     "comment": "",
@@ -4717,7 +4717,7 @@
   },
   {
     "id": "0525",
-    "nickname": "二等辺三角形Akyo",
+    "nickname": "이등변삼각형 Akyo",
     "avatarName": "二等辺三角形",
     "category": "초코민트류,기믹・특수",
     "comment": "",
@@ -4726,7 +4726,7 @@
   },
   {
     "id": "0526",
-    "nickname": "キティAkyo",
+    "nickname": "키티 Akyo",
     "avatarName": "akyo siro2",
     "category": "패러디/헬로키티,패러디",
     "comment": "",
@@ -4735,7 +4735,7 @@
   },
   {
     "id": "0527",
-    "nickname": "カフェどらごんAkyo",
+    "nickname": "카페 드래곤 Akyo",
     "avatarName": "akyo どらごんcefe",
     "category": "가상의 존재,기능・특성/비행,동물,가상의 존재/용・드래곤,직업・신분,기능・특성",
     "comment": "",
@@ -4744,7 +4744,7 @@
   },
   {
     "id": "0528",
-    "nickname": "サルAkyo",
+    "nickname": "원숭이 Akyo",
     "avatarName": "akyo saru",
     "category": "동물",
     "comment": "",
@@ -4753,7 +4753,7 @@
   },
   {
     "id": "0529",
-    "nickname": "うしAkyo2",
+    "nickname": "소 Akyo 2",
     "avatarName": "akyo うし2",
     "category": "동물,동물/소",
     "comment": "",
@@ -4762,7 +4762,7 @@
   },
   {
     "id": "0530",
-    "nickname": "ティラノAkyo2",
+    "nickname": "티라노 Akyo 2",
     "avatarName": "ティラノ2",
     "category": "동물/공룡,동물",
     "comment": "",
@@ -4771,7 +4771,7 @@
   },
   {
     "id": "0531",
-    "nickname": "ウェディングきつねAkyo",
+    "nickname": "웨딩 여우 Akyo",
     "avatarName": "akyo foxウェディング",
     "category": "동물/여우,계절・행사,계절・행사/연애,의류・액세서리,동물,프리티",
     "comment": "",
@@ -4780,7 +4780,7 @@
   },
   {
     "id": "0532",
-    "nickname": "ミャクミャクAkyo",
+    "nickname": "먀쿠먀쿠 Akyo",
     "avatarName": "akyo akyoakyo",
     "category": "패러디/먀쿠먀쿠,패러디,가상의 존재,가상의 존재/천사・신",
     "comment": "あきょあきょしてきた",
@@ -4789,7 +4789,7 @@
   },
   {
     "id": "0533",
-    "nickname": "R.I.P.Akyo",
+    "nickname": "R.I.P. Akyo",
     "avatarName": "RestInAkyo",
     "category": "초코민트류,건물,계절・행사/할로윈,계절・행사,코스프레,죽음",
     "comment": "",
@@ -4798,7 +4798,7 @@
   },
   {
     "id": "0534",
-    "nickname": "墓石Akyo",
+    "nickname": "묘비 Akyo",
     "avatarName": "bosekiAkyo",
     "category": "초코민트류,건물,계절・행사/할로윈,계절・행사,소재・재질,소재・재질/돌,소재・재질/단단한,코스프레,죽음",
     "comment": "",
@@ -4807,7 +4807,7 @@
   },
   {
     "id": "0535",
-    "nickname": "リアル猫Akyo",
+    "nickname": "리얼 고양이 Akyo",
     "avatarName": "Akyoxwell",
     "category": "동물/고양이,실사,동물,예술・아트,패러디,패러디/밈",
     "comment": "",
@@ -4816,7 +4816,7 @@
   },
   {
     "id": "0536",
-    "nickname": "BackRoomAkyo",
+    "nickname": "BackRoom Akyo",
     "avatarName": "kiiroibougohukuAkyo",
     "category": "패러디/Backrooms,패러디,호러",
     "comment": "",
@@ -4825,7 +4825,7 @@
   },
   {
     "id": "0537",
-    "nickname": "ひなまつりおおかみAkyo",
+    "nickname": "히나마츠리 늑대 Akyo",
     "avatarName": "akyo おおかみひなまつり",
     "category": "계절・행사,동물,동물/늑대,직업・신분",
     "comment": "",
@@ -4834,7 +4834,7 @@
   },
   {
     "id": "0538",
-    "nickname": "魔法少女きつねAkyo",
+    "nickname": "마법소녀 여우 Akyo",
     "avatarName": "akyo fox 魔法少女",
     "category": "동물/여우,직업・신분,계절・행사/할로윈,계절・행사,기능・특성/마법,동물,코스프레,프리티,기능・특성",
     "comment": "",
@@ -4843,7 +4843,7 @@
   },
   {
     "id": "0539",
-    "nickname": "うにAkyo",
+    "nickname": "성게 Akyo",
     "avatarName": "akyo uni",
     "category": "동물,동물/해양생물,소재・재질,소재・재질/가시투성이",
     "comment": "",
@@ -4852,7 +4852,7 @@
   },
   {
     "id": "0540",
-    "nickname": "どら焼きAkyo",
+    "nickname": "도라야키 Akyo",
     "avatarName": "akyo dorayaki",
     "category": "음식,음식/디저트,음식/요리",
     "comment": "",
@@ -4861,7 +4861,7 @@
   },
   {
     "id": "0541",
-    "nickname": "オトモきつねAkyo",
+    "nickname": "오토모 여우 Akyo",
     "avatarName": "akyo きつねオトモ",
     "category": "동물/여우,직업・신분,패러디/몬스터 헌터,패러디,동물,무기・기계",
     "comment": "",
@@ -4870,7 +4870,7 @@
   },
   {
     "id": "0542",
-    "nickname": "山笠Akyo",
+    "nickname": "야마카사 Akyo",
     "avatarName": "Akyo_yamakasa",
     "category": "초코민트류,계절・행사",
     "comment": "",
@@ -4879,7 +4879,7 @@
   },
   {
     "id": "0543",
-    "nickname": "ダンシングアフロAkyo",
+    "nickname": "댄싱 아프로 Akyo",
     "avatarName": "Akyo_Dancing Afro",
     "category": "헤어스타일,음악・악기",
     "comment": "",
@@ -4888,7 +4888,7 @@
   },
   {
     "id": "0544",
-    "nickname": "OrinaAkyon",
+    "nickname": "Orina Akyon",
     "avatarName": "orinakyon",
     "category": "패러디",
     "comment": "",
@@ -4897,7 +4897,7 @@
   },
   {
     "id": "0545",
-    "nickname": "アイルーもどきAkyo",
+    "nickname": "아이루 모방 Akyo",
     "avatarName": "airoumodokiAkyo",
     "category": "동물/고양이,패러디/몬스터 헌터,패러디,동물",
     "comment": "",
@@ -4906,7 +4906,7 @@
   },
   {
     "id": "0546",
-    "nickname": "Akyo魔博士",
+    "nickname": "Akyo마박사",
     "avatarName": "akyo魔博士",
     "category": "패러디/판타스틱 4,패러디,계절・행사/할로윈,계절・행사,직업・신분,코스프레",
     "comment": "",
@@ -4915,7 +4915,7 @@
   },
   {
     "id": "0547",
-    "nickname": "手Akyo",
+    "nickname": "손 Akyo",
     "avatarName": "tekyo_test",
     "category": "초코민트류",
     "comment": "",
@@ -4924,7 +4924,7 @@
   },
   {
     "id": "0548",
-    "nickname": "17HzAkyo",
+    "nickname": "17Hz Akyo",
     "avatarName": "17Hz",
     "category": "기믹・특수",
     "comment": "",
@@ -4933,7 +4933,7 @@
   },
   {
     "id": "0549",
-    "nickname": "応力Akyo",
+    "nickname": "응력 Akyo",
     "avatarName": "応力Akyo",
     "category": "기믹・특수",
     "comment": "",
@@ -4942,7 +4942,7 @@
   },
   {
     "id": "0550",
-    "nickname": "キリン装備きつねAkyo",
+    "nickname": "기린 장비 여우 Akyo",
     "avatarName": "akyo キリン装備",
     "category": "동물/여우,직업・신분,패러디/몬스터 헌터,패러디,동물,무기・기계",
     "comment": "",
@@ -4951,7 +4951,7 @@
   },
   {
     "id": "0551",
-    "nickname": "デンタルAkyo",
+    "nickname": "덴탈 Akyo",
     "avatarName": "akyo dental",
     "category": "기관/이빨",
     "comment": "",
@@ -4960,7 +4960,7 @@
   },
   {
     "id": "0552",
-    "nickname": "シャトルAkyo",
+    "nickname": "셔틀 Akyo",
     "avatarName": "Akyo シャトル",
     "category": "탈것,탈것/항공,환경・날씨,환경・날씨/우주,기능・특성,기능・특성/무중력 내성,기능・특성/산소결핍 내성",
     "comment": "",
@@ -4969,7 +4969,7 @@
   },
   {
     "id": "0553",
-    "nickname": "RRどらごんAkyo",
+    "nickname": "RR 드래곤 Akyo",
     "avatarName": "どらごんRR",
     "category": "가상의 존재,기능・특성/비행,패러디/포켓몬,패러디,동물,가상의 존재/용・드래곤,기능・특성",
     "comment": "",
@@ -4978,7 +4978,7 @@
   },
   {
     "id": "0554",
-    "nickname": "ノワールAkyo",
+    "nickname": "누아르 Akyo",
     "avatarName": "akyo ノワール",
     "category": "음식/디저트,음식",
     "comment": "",
@@ -4987,7 +4987,7 @@
   },
   {
     "id": "0555",
-    "nickname": "VRCTVAkyo",
+    "nickname": "VRCTV Akyo",
     "avatarName": "VRCTVAkyo",
     "category": "초코민트류,기믹・특수,전자",
     "comment": "",
@@ -4996,7 +4996,7 @@
   },
   {
     "id": "0556",
-    "nickname": "ソーダAkyo2",
+    "nickname": "소다 Akyo 2",
     "avatarName": "akyo ソーダ2",
     "category": "음료",
     "comment": "",
@@ -5005,7 +5005,7 @@
   },
   {
     "id": "0557",
-    "nickname": "カツサンドAkyo",
+    "nickname": "돈까스 샌드 Akyo",
     "avatarName": "akyo カツサンド",
     "category": "음식,음식/요리,음식/요리/튀김",
     "comment": "",
@@ -5014,7 +5014,7 @@
   },
   {
     "id": "0558",
-    "nickname": "アキョウノトモシビ",
+    "nickname": "아쿄의 불빛",
     "avatarName": "アキョウノトモシビ",
     "category": "균류",
     "comment": "",
@@ -5023,7 +5023,7 @@
   },
   {
     "id": "0559",
-    "nickname": "コロナAkyo",
+    "nickname": "코로나 Akyo",
     "avatarName": "coronakyo",
     "category": "질병・바이러스",
     "comment": "",
@@ -5032,7 +5032,7 @@
   },
   {
     "id": "0560",
-    "nickname": "でかちちサキュバスAkyo",
+    "nickname": "거유 서큐버스 Akyo",
     "avatarName": "bigboinsuccubusAkyo",
     "category": "초코민트류,가상의 존재,가상의 존재/악마",
     "comment": "",
@@ -5041,7 +5041,7 @@
   },
   {
     "id": "0561",
-    "nickname": "コンクリートAkyo",
+    "nickname": "콘크리트 Akyo",
     "avatarName": "ConcreteAkyo",
     "category": "소재・재질,소재・재질/단단한",
     "comment": "",
@@ -5050,7 +5050,7 @@
   },
   {
     "id": "0562",
-    "nickname": "コンクリートAkyo2",
+    "nickname": "콘크리트 Akyo 2",
     "avatarName": "ConcreteAkyo",
     "category": "소재・재질,소재・재질/단단한",
     "comment": "",
@@ -5059,7 +5059,7 @@
   },
   {
     "id": "0563",
-    "nickname": "オニフスベAkyo",
+    "nickname": "말불버섯 Akyo",
     "avatarName": "AKYOFUSUBE",
     "category": "균류",
     "comment": "",
@@ -5068,7 +5068,7 @@
   },
   {
     "id": "0564",
-    "nickname": "ミニぐるみAkyo",
+    "nickname": "미니 인형 Akyo",
     "avatarName": "ミニぐるみAkyo",
     "category": "초코민트류,디포르메",
     "comment": "",
@@ -5077,7 +5077,7 @@
   },
   {
     "id": "0565",
-    "nickname": "お姫様Akyo",
+    "nickname": "공주 Akyo",
     "avatarName": "ohimesamaAkyo",
     "category": "초코민트류,직업・신분,직업・신분/왕족,역사,프리티",
     "comment": "",
@@ -5086,7 +5086,7 @@
   },
   {
     "id": "0566",
-    "nickname": "フルフルAkyo",
+    "nickname": "후르후르 Akyo",
     "avatarName": "huruhuruAkyo",
     "category": "가상의 존재,가상의 존재/몬스터,패러디/몬스터 헌터,패러디",
     "comment": "",
@@ -5095,7 +5095,7 @@
   },
   {
     "id": "0567",
-    "nickname": "消火器Akyo",
+    "nickname": "소화기 Akyo",
     "avatarName": "syoukakiAkyo",
     "category": "초코민트류,설비",
     "comment": "",
@@ -5104,7 +5104,7 @@
   },
   {
     "id": "0568",
-    "nickname": "頭文字Akyo",
+    "nickname": "이니셜 Akyo",
     "avatarName": "Akyoutouhuten86",
     "category": "초코민트류,탈것,패러디/이니셜 D,패러디",
     "comment": "",
@@ -5113,7 +5113,7 @@
   },
   {
     "id": "0569",
-    "nickname": "ワープスターAkyo",
+    "nickname": "워프스타 Akyo",
     "avatarName": "Warpakyoster",
     "category": "초코민트류,탈것,패러디/커비,패러디",
     "comment": "",
@@ -5122,7 +5122,7 @@
   },
   {
     "id": "0570",
-    "nickname": "AkyoチキンAkyo",
+    "nickname": "Akyo 치킨 Akyo",
     "avatarName": "akyo チキ",
     "category": "음식,음식/요리,패러디/패밀리마트,패러디,음식/요리/튀김",
     "comment": "",
@@ -5131,7 +5131,7 @@
   },
   {
     "id": "0571",
-    "nickname": "トーストきつねAkyo2",
+    "nickname": "토스트 여우 Akyo 2",
     "avatarName": "akyo to-stFox2",
     "category": "동물/여우,음식,동물,음식/요리,음식/빵",
     "comment": "",
@@ -5140,7 +5140,7 @@
   },
   {
     "id": "0572",
-    "nickname": "りんごAkyo",
+    "nickname": "사과 Akyo",
     "avatarName": "akyo りんご",
     "category": "음식,음식/과일",
     "comment": "",
@@ -5149,7 +5149,7 @@
   },
   {
     "id": "0573",
-    "nickname": "はちAkyo",
+    "nickname": "벌 Akyo",
     "avatarName": "akyo はち",
     "category": "동물/벌레,동물",
     "comment": "花の蜜を集めるよ",
@@ -5158,7 +5158,7 @@
   },
   {
     "id": "0574",
-    "nickname": "たこAkyo",
+    "nickname": "문어 Akyo",
     "avatarName": "たこAkyo",
     "category": "동물,동물/문어,동물/해양생물",
     "comment": "かわいい",
@@ -5167,7 +5167,7 @@
   },
   {
     "id": "0575",
-    "nickname": "ありAkyo",
+    "nickname": "개미 Akyo",
     "avatarName": "akyo あり",
     "category": "동물/벌레,동물",
     "comment": "兄弟がたくさんいる",
@@ -5176,7 +5176,7 @@
   },
   {
     "id": "0576",
-    "nickname": "メロンパンかめAkyo",
+    "nickname": "멜론빵 거북이 Akyo",
     "avatarName": "akyp かめメロンパン",
     "category": "음식,동물,음식/과일,음식/디저트,음식/요리,동물/거북이,음식/빵",
     "comment": "甘い香りを振りまくakyo。無果汁",
@@ -5185,7 +5185,7 @@
   },
   {
     "id": "0577",
-    "nickname": "フランスパンAkyo",
+    "nickname": "바게트 Akyo",
     "avatarName": "akyo フランスパン",
     "category": "음식,음식/요리,음식/빵",
     "comment": "香ばしい香りを漂わせる",
@@ -5194,7 +5194,7 @@
   },
   {
     "id": "0578",
-    "nickname": "レインコートどらごんAkyo",
+    "nickname": "우비 드래곤 Akyo",
     "avatarName": "akyo どらごんレインコート",
     "category": "가상의 존재,기능・특성/비행,의류・액세서리,동물,가상의 존재/용・드래곤,기능・특성,환경・날씨,환경・날씨/비",
     "comment": "雨の日のお出かけどらごんakyo",
@@ -5203,7 +5203,7 @@
   },
   {
     "id": "0579",
-    "nickname": "もふひつじAkyo",
+    "nickname": "폭신 양 Akyo",
     "avatarName": "mofumofusheepAkyo",
     "category": "동물,동물/양",
     "comment": "",
@@ -5212,7 +5212,7 @@
   },
   {
     "id": "0580",
-    "nickname": "ギャルAkyo",
+    "nickname": "갸루 Akyo",
     "avatarName": "galAkyo",
     "category": "초코민트류,의류・액세서리,학교,프리티",
     "comment": "",
@@ -5221,7 +5221,7 @@
   },
   {
     "id": "0581",
-    "nickname": "霊夢Akyo",
+    "nickname": "레이무 Akyo",
     "avatarName": "rakuennosutekinaAkyo",
     "category": "패러디/동방 프로젝트,패러디",
     "comment": "",
@@ -5230,7 +5230,7 @@
   },
   {
     "id": "0582",
-    "nickname": "魔理沙Akyo",
+    "nickname": "마리사 Akyo",
     "avatarName": "hutsuunoAkyotsukai",
     "category": "패러디/동방 프로젝트,패러디",
     "comment": "",
@@ -5248,7 +5248,7 @@
   },
   {
     "id": "0584",
-    "nickname": "骨Akyo",
+    "nickname": "뼈 Akyo",
     "avatarName": "骨Akyo",
     "category": "뼈",
     "comment": "",
@@ -5266,7 +5266,7 @@
   },
   {
     "id": "0586",
-    "nickname": "ピーマンAkyo",
+    "nickname": "피망 Akyo",
     "avatarName": "akyo ピーマン",
     "category": "음식/채소,음식",
     "comment": "カラフルなピーマンakyo",
@@ -5275,7 +5275,7 @@
   },
   {
     "id": "0587",
-    "nickname": "コーヒーAkyo2",
+    "nickname": "커피 Akyo 2",
     "avatarName": "akyo coffee2",
     "category": "음료",
     "comment": "お持ち帰りされるコーヒーakyo",
@@ -5284,7 +5284,7 @@
   },
   {
     "id": "0588",
-    "nickname": "胴長パグAkyo",
+    "nickname": "긴몸 퍼그 Akyo",
     "avatarName": "胴長パグakyo",
     "category": "패러디,패러디/VRChat,동물,동물/개",
     "comment": "",
@@ -5293,7 +5293,7 @@
   },
   {
     "id": "0589",
-    "nickname": "ハウスネイルAkyo",
+    "nickname": "하우스네일 Akyo",
     "avatarName": "Akyothehousnail",
     "category": "조개,건물,패러디,패러디/잼 더 하우스네일,동물,동물/달팽이",
     "comment": "",
@@ -5302,7 +5302,7 @@
   },
   {
     "id": "0590",
-    "nickname": "川Akyo",
+    "nickname": "강 Akyo",
     "avatarName": "川Akyo",
     "category": "환경・날씨",
     "comment": "",
@@ -5311,7 +5311,7 @@
   },
   {
     "id": "0591",
-    "nickname": "鯨肉Akyo",
+    "nickname": "고래고기 Akyo",
     "avatarName": "鯨肉Akyo",
     "category": "음식,동물,음식/고기",
     "comment": "",
@@ -5320,7 +5320,7 @@
   },
   {
     "id": "0592",
-    "nickname": "スイカAkyo",
+    "nickname": "수박 Akyo",
     "avatarName": "suika_akyo",
     "category": "음식,음식/과일",
     "comment": "",
@@ -5329,7 +5329,7 @@
   },
   {
     "id": "0593",
-    "nickname": "ブレイドごっこAkyo",
+    "nickname": "블레이드 놀이 Akyo",
     "avatarName": "bladegokkoAkyo",
     "category": "패러디/가면라이더,패러디,합체・변신,히어로",
     "comment": "",
@@ -5338,7 +5338,7 @@
   },
   {
     "id": "0594",
-    "nickname": "ガンナーAkyo",
+    "nickname": "거너 Akyo",
     "avatarName": "gunner akyo",
     "category": "무기・기계,직업・신분,직업・신분/병사",
     "comment": "",
@@ -5347,7 +5347,7 @@
   },
   {
     "id": "0595",
-    "nickname": "アーミーAkyo",
+    "nickname": "아미 Akyo",
     "avatarName": "akyo_army",
     "category": "무기・기계,직업・신분,직업・신분/병사",
     "comment": "",
@@ -5356,7 +5356,7 @@
   },
   {
     "id": "0596",
-    "nickname": "どんぐりAkyo",
+    "nickname": "도토리 Akyo",
     "avatarName": "DonguriAkyo",
     "category": "식물,식물/열매",
     "comment": "",
@@ -5365,7 +5365,7 @@
   },
   {
     "id": "0597",
-    "nickname": "こころAkyo",
+    "nickname": "마음 Akyo",
     "avatarName": "Akyou ［kokoro］",
     "category": "초코민트류",
     "comment": "",
@@ -5374,7 +5374,7 @@
   },
   {
     "id": "0598",
-    "nickname": "亜魚",
+    "nickname": "아어",
     "avatarName": "亜魚",
     "category": "동물/물고기,동물,동물/해양생물",
     "comment": "",
@@ -5383,7 +5383,7 @@
   },
   {
     "id": "0599",
-    "nickname": "亜魚露とル",
+    "nickname": "아어로틀",
     "avatarName": "亜魚露とル",
     "category": "동물/양서류,동물,동물/해양생물",
     "comment": "",
@@ -5392,7 +5392,7 @@
   },
   {
     "id": "0600",
-    "nickname": "ミルクAkyo",
+    "nickname": "밀크 Akyo",
     "avatarName": "akyo milk",
     "category": "음료",
     "comment": "新鮮な牛乳の入ったakyo。銭湯で大人気",
@@ -5401,7 +5401,7 @@
   },
   {
     "id": "0601",
-    "nickname": "ウイスキーAkyo",
+    "nickname": "위스키 Akyo",
     "avatarName": "akyo ウイスキー",
     "category": "음료",
     "comment": "柔らかな芳香、深みのあるコクで人々を魅了する",
@@ -5410,7 +5410,7 @@
   },
   {
     "id": "0602",
-    "nickname": "ギャレンごっこAkyo",
+    "nickname": "갸렌 놀이 Akyo",
     "avatarName": "gyarengokkoAkyo",
     "category": "패러디/가면라이더,패러디,합체・변신,히어로",
     "comment": "",
@@ -5419,7 +5419,7 @@
   },
   {
     "id": "0603",
-    "nickname": "着ぐるみAkyoくん",
+    "nickname": "인형옷 Akyo군",
     "avatarName": "kigurumiAkyokun",
     "category": "초코민트류,직업・신분",
     "comment": "",
@@ -5428,7 +5428,7 @@
   },
   {
     "id": "0604",
-    "nickname": "救急車ごっこAkyo",
+    "nickname": "구급차 놀이 Akyo",
     "avatarName": "kyuukyuuAkyo",
     "category": "초코민트류,탈것",
     "comment": "",
@@ -5437,7 +5437,7 @@
   },
   {
     "id": "0605",
-    "nickname": "ウーパールーパーAkyo",
+    "nickname": "우파루파 Akyo",
     "avatarName": "akyo uparupa",
     "category": "동물/양서류,동물",
     "comment": "JPSTの川岸で良く見つかる",
@@ -5446,7 +5446,7 @@
   },
   {
     "id": "0606",
-    "nickname": "タコ皮Akyo",
+    "nickname": "문어 가죽 Akyo",
     "avatarName": "タコ皮",
     "category": "동물/문어류,동물,동물/해양생물,동물/문어",
     "comment": "タコ乳類",
@@ -5455,7 +5455,7 @@
   },
   {
     "id": "0607",
-    "nickname": "ナナチもどきAkyo",
+    "nickname": "나나치 모방 Akyo",
     "avatarName": "nanachimodokiAkyo",
     "category": "패러디/메이드 인 어비스,패러디",
     "comment": "",
@@ -5464,7 +5464,7 @@
   },
   {
     "id": "0608",
-    "nickname": "あきょざきしおり",
+    "nickname": "아쿄자키 시오리",
     "avatarName": "Akyozakishiori",
     "category": "패러디",
     "comment": "",
@@ -5473,7 +5473,7 @@
   },
   {
     "id": "0609",
-    "nickname": "ボンバーマンAkyo",
+    "nickname": "봄버맨 Akyo",
     "avatarName": "bomberAkyon",
     "category": "패러디/봄버맨,패러디",
     "comment": "",
@@ -5482,7 +5482,7 @@
   },
   {
     "id": "0610",
-    "nickname": "ゆめかわユニコーンAkyo",
+    "nickname": "꿈꾸는 유니콘 Akyo",
     "avatarName": "yumekawaunicornAkyo",
     "category": "가상의 존재,동물,가상의 존재/환수・정령",
     "comment": "",
@@ -5491,7 +5491,7 @@
   },
   {
     "id": "0611",
-    "nickname": "着ぐるみお頭Akyo",
+    "nickname": "인형옷 물고기머리 Akyo",
     "avatarName": "kigurumiokashirakun",
     "category": "동물/물고기,직업・신분,동물,동물/해양생물,무기・기계,도구・문구・생활용품",
     "comment": "",
@@ -5500,7 +5500,7 @@
   },
   {
     "id": "0612",
-    "nickname": "風船きつねAkyo",
+    "nickname": "풍선 여우 Akyo",
     "avatarName": "akyo 風船きつね",
     "category": "동물/여우,기능・특성/비행,동물,기능・특성",
     "comment": "風船でふよふよと漂うきつねakyo",
@@ -5509,7 +5509,7 @@
   },
   {
     "id": "0613",
-    "nickname": "どんぐりあきょー",
+    "nickname": "도토리 아쿄",
     "avatarName": "どんぐりあきょー",
     "category": "식물,식물/열매",
     "comment": "Android対応",
@@ -5518,7 +5518,7 @@
   },
   {
     "id": "0614",
-    "nickname": "珈琲豆あきょ",
+    "nickname": "커피콩 아쿄",
     "avatarName": "珈琲豆あきょ",
     "category": "마메,마메Akyo,음식,음식/채소,음료",
     "comment": "挽いちゃうんですか․․․ Android対応",
@@ -5527,7 +5527,7 @@
   },
   {
     "id": "0615",
-    "nickname": "らむねあきょ",
+    "nickname": "라무네 아쿄",
     "avatarName": "らむねあきょ",
     "category": "음식,음식/디저트,음료",
     "comment": "あきょも満足ǃ シェイプキーにラベルはついてこないので、変形の際はラベルは消してください。Android対応。",
@@ -5536,7 +5536,7 @@
   },
   {
     "id": "0616",
-    "nickname": "精霊うまきょ",
+    "nickname": "정령 말쿄",
     "avatarName": "精霊うまきょ",
     "category": "정령마,음식/채소,음식,동물,동물/말,가상의 존재,가상의 존재/환수・정령,음식/채소/오이,음식/채소/가지,계절・행사,계절・행사/설날",
     "comment": "精霊うまきょ。Android対応。",
@@ -5545,7 +5545,7 @@
   },
   {
     "id": "0617",
-    "nickname": "あきょりん・のーむ・ほーん",
+    "nickname": "아쿄린・노움・호른",
     "avatarName": "あきょりん・のーむ・ほーん",
     "category": "패러디/고블린 노움 혼,패러디",
     "comment": "下剋上。Android対応。",
@@ -5554,7 +5554,7 @@
   },
   {
     "id": "0618",
-    "nickname": "鉛筆あきょ",
+    "nickname": "연필 아쿄",
     "avatarName": "鉛筆あきょ",
     "category": "도구・문구・생활용품,학교",
     "comment": "ハードなやつさ,Android対応。",
@@ -5563,7 +5563,7 @@
   },
   {
     "id": "0619",
-    "nickname": "ヒョウモンダコAkyo",
+    "nickname": "파란고리문어 Akyo",
     "avatarName": "ヒョウモンダコAkyo",
     "category": "동물/문어,동물/연체동물,동물,동물/해양생물",
     "comment": "悪くなったバナナじゃないよ。「たこAkyo」の改変だよ。https˸⁄⁄booth․pm⁄ja⁄items⁄6780828",
@@ -5572,7 +5572,7 @@
   },
   {
     "id": "0620",
-    "nickname": "まめAkyo（ヤギ）",
+    "nickname": "콩 Akyo（염소）",
     "avatarName": "まめAkyo（ヤギ）",
     "category": "마메,마메Akyo,동물,동물/염소",
     "comment": "ぼさぼさ様による愛らしすぎる【無料】まめAkyo （Bean Akyo）【VRC向けアバター】（https˸⁄⁄booth․pm⁄ja⁄items⁄7385278）、のヤギAkyo改変。なんとなく耐久力が上がった気になっている。",
@@ -5581,7 +5581,7 @@
   },
   {
     "id": "0621",
-    "nickname": "そらまめAkyo",
+    "nickname": "잠두콩 Akyo",
     "avatarName": "そらまめAkyo",
     "category": "마메,마메Akyo",
     "comment": "まめ",
@@ -5590,7 +5590,7 @@
   },
   {
     "id": "0622",
-    "nickname": "柔らかいAkyo",
+    "nickname": "부드러운 Akyo",
     "avatarName": "柔らかいAkyo",
     "category": "소재・재질,소재・재질/부드러운",
     "comment": "柔らかいAkyo",
@@ -5599,7 +5599,7 @@
   },
   {
     "id": "0623",
-    "nickname": "ミミックAkyo",
+    "nickname": "미믹 Akyo",
     "avatarName": "mimicAkyo",
     "category": "가상의 존재,가상의 존재/몬스터,합체・변신",
     "comment": "",
@@ -5608,7 +5608,7 @@
   },
   {
     "id": "0624",
-    "nickname": "ナイトキャップAkyo",
+    "nickname": "나이트캡 Akyo",
     "avatarName": "nightcapAkyo",
     "category": "초코민트류,의류・액세서리,수면,가전・가구,가전・가구/베개",
     "comment": "",
@@ -5617,7 +5617,7 @@
   },
   {
     "id": "0625",
-    "nickname": "ビッグボイン牛柄Akyo",
+    "nickname": "빅붕 젖소무늬 Akyo",
     "avatarName": "bigboinushigaraAkyo",
     "category": "체형,체형/풍만,동물",
     "comment": "",
@@ -5626,7 +5626,7 @@
   },
   {
     "id": "0626",
-    "nickname": "牛乳を注ぐAkyo",
+    "nickname": "우유를 따르는 Akyo",
     "avatarName": "gyuunyuuwososoguAkyo",
     "category": "예술・아트,음료",
     "comment": "",
@@ -5635,7 +5635,7 @@
   },
   {
     "id": "0627",
-    "nickname": "箱Akyoダム",
+    "nickname": "상자 Akyo 댐",
     "avatarName": "hakoAkyodam",
     "category": "초코민트류,소재・재질,소재・재질/식물,소재・재질/식물/나무,패러디,패러디/건담",
     "comment": "",
@@ -5644,7 +5644,7 @@
   },
   {
     "id": "0628",
-    "nickname": "シャルベもどきAkyo",
+    "nickname": "샤루베 모방 Akyo",
     "avatarName": "syarubemodokiAkyo",
     "category": "패러디/Syarube,패러디",
     "comment": "",
@@ -5653,7 +5653,7 @@
   },
   {
     "id": "0629",
-    "nickname": "ラビットホールAkyo",
+    "nickname": "래빗홀 Akyo",
     "avatarName": "RabbitHoleAkyo",
     "category": "동물/토끼,의류・액세서리,패러디/보컬로이드,패러디,동물,기관,기관/귀,프리티",
     "comment": "",
@@ -5662,7 +5662,7 @@
   },
   {
     "id": "0630",
-    "nickname": "歯磨き粉Akyo",
+    "nickname": "치약 Akyo",
     "avatarName": "hamigakikoAkyo",
     "category": "초코민트류,도구・문구・생활용품",
     "comment": "",
@@ -5671,7 +5671,7 @@
   },
   {
     "id": "0631",
-    "nickname": "段ボールナイトAkyo",
+    "nickname": "골판지 나이트 Akyo",
     "avatarName": "danbouruKnightAkyo",
     "category": "직업・신분,소재・재질,소재・재질/식물,소재・재질/식물/나무,직업・신분/병사,무기・기계",
     "comment": "",
@@ -5680,7 +5680,7 @@
   },
   {
     "id": "0632",
-    "nickname": "冷蔵庫Akyo",
+    "nickname": "냉장고 Akyo",
     "avatarName": "reizoukoAkyo",
     "category": "가전・가구",
     "comment": "",
@@ -5689,7 +5689,7 @@
   },
   {
     "id": "0633",
-    "nickname": "たれ耳うさぎAkyo",
+    "nickname": "늘어진귀 토끼 Akyo",
     "avatarName": "lopearedrabbitAkyo",
     "category": "동물/토끼,동물,기관,기관/귀",
     "comment": "",
@@ -5698,7 +5698,7 @@
   },
   {
     "id": "0634",
-    "nickname": "たれ耳うさぎバニーAkyo",
+    "nickname": "늘어진귀 버니 Akyo",
     "avatarName": "lopearedrabbitbunnyAkyo",
     "category": "동물/토끼,의류・액세서리,동물,기관,기관/귀,프리티",
     "comment": "",
@@ -5707,7 +5707,7 @@
   },
   {
     "id": "0635",
-    "nickname": "遺影ごっこAkyo",
+    "nickname": "영정사진 놀이 Akyo",
     "avatarName": "ieigokkoAkyo",
     "category": "초코민트류,죽음,가전・가구,코스프레",
     "comment": "",
@@ -5716,7 +5716,7 @@
   },
   {
     "id": "0636",
-    "nickname": "もふもふライオンAkyo",
+    "nickname": "폭신폭신 사자 Akyo",
     "avatarName": "mofumofulionAkyo",
     "category": "동물/사자,동물",
     "comment": "",
@@ -5725,7 +5725,7 @@
   },
   {
     "id": "0637",
-    "nickname": "マホロアもどきAkyo",
+    "nickname": "마호로아 모방 Akyo",
     "avatarName": "magolormodokiAkyo",
     "category": "패러디/커비,패러디",
     "comment": "",
@@ -5734,7 +5734,7 @@
   },
   {
     "id": "0638",
-    "nickname": "マルクもどきAkyo",
+    "nickname": "마르크 모방 Akyo",
     "avatarName": "marxmodokiAkyo",
     "category": "패러디/커비,패러디",
     "comment": "",
@@ -5743,7 +5743,7 @@
   },
   {
     "id": "0639",
-    "nickname": "自由のAkyo",
+    "nickname": "자유의 Akyo",
     "avatarName": "FreedomAkyo",
     "category": "상・하니와,예술・아트",
     "comment": "",
@@ -5752,7 +5752,7 @@
   },
   {
     "id": "0640",
-    "nickname": "まめがっぱあきょ",
+    "nickname": "콩 갓파 아쿄",
     "avatarName": "まめがっぱあきょ",
     "category": "가상의 존재,가상의 존재/요괴・유령,마메,마메Akyo",
     "comment": "きゅうりください",
@@ -5761,7 +5761,7 @@
   },
   {
     "id": "0641",
-    "nickname": "まめAkyo",
+    "nickname": "콩 Akyo",
     "avatarName": "Bean Akyo",
     "category": "마메,마메Akyo",
     "comment": "",
@@ -5770,7 +5770,7 @@
   },
   {
     "id": "0642",
-    "nickname": "エプリAkyo",
+    "nickname": "에프리 Akyo",
     "avatarName": "epliもどき",
     "category": "패러디,패러디/VRChat",
     "comment": "",
@@ -5779,7 +5779,7 @@
   },
   {
     "id": "0643",
-    "nickname": "かっぱまきAkyo",
+    "nickname": "갓파마키 Akyo",
     "avatarName": "akyo かっぱまき",
     "category": "음식,음식/요리,음식/초밥,음식/채소,음식/채소/오이",
     "comment": "新鮮なキュウリを使用しているらしい。",
@@ -5788,7 +5788,7 @@
   },
   {
     "id": "0644",
-    "nickname": "キウイAkyo2",
+    "nickname": "키위 Akyo 2",
     "avatarName": "akyo_キウイ2",
     "category": "음식,음식/과일",
     "comment": "",
@@ -5797,7 +5797,7 @@
   },
   {
     "id": "0645",
-    "nickname": "ワンピースきつねAkyo2025",
+    "nickname": "원피스 여우 Akyo 2025",
     "avatarName": "akyo_きつね25ワンピ",
     "category": "동물/여우,계절・행사,계절・행사/여름,의류・액세서리,동물,프리티",
     "comment": "",
@@ -5806,7 +5806,7 @@
   },
   {
     "id": "0646",
-    "nickname": "スポッティングルックAkyo",
+    "nickname": "스포팅 룩 Akyo",
     "avatarName": "SpottingLookAkyo",
     "category": "초코민트류,기믹・특수",
     "comment": "",
@@ -5815,7 +5815,7 @@
   },
   {
     "id": "0647",
-    "nickname": "ウエスタンきつねAkyo",
+    "nickname": "웨스턴 여우 Akyo",
     "avatarName": "akyo_きつねウエスタン",
     "category": "동물/여우,동물,코스프레",
     "comment": "",
@@ -5824,7 +5824,7 @@
   },
   {
     "id": "0648",
-    "nickname": "まつぼっくりAkyo",
+    "nickname": "솔방울 Akyo",
     "avatarName": "akyo まつぼっくり",
     "category": "음식,음식/과일",
     "comment": "",
@@ -5833,7 +5833,7 @@
   },
   {
     "id": "0649",
-    "nickname": "しゃけAkyo",
+    "nickname": "연어 Akyo",
     "avatarName": "akyo_しゃけ",
     "category": "음식,동물/물고기,동물,동물/해양생물",
     "comment": "",
@@ -5842,7 +5842,7 @@
   },
   {
     "id": "0650",
-    "nickname": "うAkyo",
+    "nickname": "우 Akyo",
     "avatarName": "う",
     "category": "초코민트류,기믹・특수",
     "comment": "",
@@ -5851,7 +5851,7 @@
   },
   {
     "id": "0651",
-    "nickname": "エイAkyo",
+    "nickname": "가오리 Akyo",
     "avatarName": "akyo_エイ",
     "category": "동물/물고기,동물,동물/해양생물",
     "comment": "",
@@ -5860,7 +5860,7 @@
   },
   {
     "id": "0652",
-    "nickname": "ももAkyo",
+    "nickname": "복숭아 Akyo",
     "avatarName": "akyo_もも",
     "category": "음식,음식/과일",
     "comment": "",
@@ -5869,7 +5869,7 @@
   },
   {
     "id": "0653",
-    "nickname": "ハッシュAkyo",
+    "nickname": "해시 Akyo",
     "avatarName": "HashAkyo",
     "category": "기믹・특수",
     "comment": "",
@@ -5878,7 +5878,7 @@
   },
   {
     "id": "0654",
-    "nickname": "アンチ浮動小数点Akyo",
+    "nickname": "안티 부동소수점 Akyo",
     "avatarName": "おい！浮動小数点浮動するな！",
     "category": "기믹・특수",
     "comment": "",
@@ -5887,7 +5887,7 @@
   },
   {
     "id": "0655",
-    "nickname": "クリオネAkyo",
+    "nickname": "클리오네 Akyo",
     "avatarName": "akyo クリオネ",
     "category": "동물/연체동물,조개,동물,동물/해양생물",
     "comment": "",
@@ -5896,7 +5896,7 @@
   },
   {
     "id": "0656",
-    "nickname": "蘇我高原Akyo",
+    "nickname": "소가고원 Akyo",
     "avatarName": "蘇我高原",
     "category": "기믹・특수",
     "comment": "",
@@ -5905,7 +5905,7 @@
   },
   {
     "id": "0657",
-    "nickname": "わにAkyo",
+    "nickname": "악어 Akyo",
     "avatarName": "akyo わに",
     "category": "동물/악어,동물",
     "comment": "",
@@ -5914,7 +5914,7 @@
   },
   {
     "id": "0658",
-    "nickname": "ルーンAkyo",
+    "nickname": "룬 Akyo",
     "avatarName": "akyo ルーン",
     "category": "기믹・특수",
     "comment": "",
@@ -5923,7 +5923,7 @@
   },
   {
     "id": "0659",
-    "nickname": "ハロウィンきつねAkyo2025",
+    "nickname": "할로윈 여우 Akyo 2025",
     "avatarName": "akyo_きつねハロウィン25",
     "category": "계절・행사,동물/여우,동물,코스프레",
     "comment": "",
@@ -5932,7 +5932,7 @@
   },
   {
     "id": "0660",
-    "nickname": "マスクおおかみAkyo",
+    "nickname": "마스크 늑대 Akyo",
     "avatarName": "akyo_おおかみマスク",
     "category": "동물/늑대,의류・액세서리,동물,의류・액세서리/마스크,계절・행사,계절・행사/할로윈",
     "comment": "",
@@ -5941,7 +5941,7 @@
   },
   {
     "id": "0661",
-    "nickname": "ベニテングタケAkyo",
+    "nickname": "광대버섯 Akyo",
     "avatarName": "akyo_ベニテングタケ",
     "category": "균류",
     "comment": "",
@@ -5950,7 +5950,7 @@
   },
   {
     "id": "0662",
-    "nickname": "ハロウィンメイドきつねAkyo",
+    "nickname": "할로윈 메이드 여우 Akyo",
     "avatarName": "akyo_メイド_ハロウィン",
     "category": "동물/여우,계절・행사,동물,직업・신분,코스프레,프리티,계절・행사/할로윈",
     "comment": "",
@@ -5959,7 +5959,7 @@
   },
   {
     "id": "0663",
-    "nickname": "医者どらごんAkyo",
+    "nickname": "의사 드래곤 Akyo",
     "avatarName": "akyo 医者どらごんakyo",
     "category": "직업・신분,가상의 존재,가상의 존재/용・드래곤,직업・신분/의료종사자,기능・특성/비행,동물,기능・특성",
     "comment": "",
@@ -5968,7 +5968,7 @@
   },
   {
     "id": "0664",
-    "nickname": "ハロウィンにんじんAkyo",
+    "nickname": "할로윈 당근 Akyo",
     "avatarName": "akyo_にんじんハロウィン",
     "category": "음식/채소,계절・행사,음식,음식/채소/당근,코스프레",
     "comment": "",
@@ -5977,7 +5977,7 @@
   },
   {
     "id": "0665",
-    "nickname": "たまねぎAkyo",
+    "nickname": "양파 Akyo",
     "avatarName": "akyo_たまねぎ",
     "category": "음식/채소,음식",
     "comment": "",
@@ -5986,7 +5986,7 @@
   },
   {
     "id": "0666",
-    "nickname": "ルックAkyo？",
+    "nickname": "룩 Akyo？",
     "avatarName": "Look? Akyo",
     "category": "초코민트류,기믹・특수",
     "comment": "",
@@ -5995,7 +5995,7 @@
   },
   {
     "id": "0667",
-    "nickname": "ランチャームAkyo",
+    "nickname": "런치참 Akyo",
     "avatarName": "akyo_ランチャーム",
     "category": "조미료,음식,음식/요리,음식/도시락",
     "comment": "",
@@ -6004,7 +6004,7 @@
   },
   {
     "id": "0668",
-    "nickname": "風邪Akyo",
+    "nickname": "감기 Akyo",
     "avatarName": "kazeakyo",
     "category": "질병・바이러스,초코민트류,의류・액세서리,의류・액세서리/마스크,쾌차를 빕니다,가전・가구,가전・가구/이불,가전・가구/베개,점적",
     "comment": "",
@@ -6013,7 +6013,7 @@
   },
   {
     "id": "0669",
-    "nickname": "人面Akyo",
+    "nickname": "인면 Akyo",
     "avatarName": "Akyo",
     "category": "기믹・특수,코스프레",
     "comment": "",
@@ -6022,7 +6022,7 @@
   },
   {
     "id": "0670",
-    "nickname": "耳Akyo",
+    "nickname": "귀 Akyo",
     "avatarName": "Vacanti Akyo",
     "category": "기관,기관/귀",
     "comment": "",
@@ -6031,7 +6031,7 @@
   },
   {
     "id": "0671",
-    "nickname": "多耳症Akyo",
+    "nickname": "다이증 Akyo",
     "avatarName": "多耳症あきょう",
     "category": "기관,질병・바이러스,기관/귀",
     "comment": "",
@@ -6040,7 +6040,7 @@
   },
   {
     "id": "0672",
-    "nickname": "顔Akyo",
+    "nickname": "얼굴 Akyo",
     "avatarName": "Face",
     "category": "기관",
     "comment": "",
@@ -6058,7 +6058,7 @@
   },
   {
     "id": "0674",
-    "nickname": "ウミガメAkyo",
+    "nickname": "바다거북 Akyo",
     "avatarName": "akyo_うみがめ",
     "category": "동물,동물/거북이,소재・재질,소재・재질/단단한",
     "comment": "暖かい海に住み、サンゴ礁の周りを泳いでいる姿がよく見られる。また陸に上がり、砂浜を散歩することもあるようだ",
@@ -6085,7 +6085,7 @@
   },
   {
     "id": "0677",
-    "nickname": "虹Akyo",
+    "nickname": "무지개 Akyo",
     "avatarName": "量産型ななきょう",
     "category": "색상,환경・날씨,환경・날씨/비,레어",
     "comment": "とある雨の日、TVクルーが撮影したビデオに映り込んでおりその存在が公に晒されることとなった。",
@@ -6094,7 +6094,7 @@
   },
   {
     "id": "0678",
-    "nickname": "雨Akyo",
+    "nickname": "비 Akyo",
     "avatarName": "amekyo",
     "category": "환경・날씨,환경・날씨/비,액체",
     "comment": "雨の日に現れるという噂がある。信憑性はかなり低い。",
@@ -6103,7 +6103,7 @@
   },
   {
     "id": "0679",
-    "nickname": "うろAkyo",
+    "nickname": "우로 Akyo",
     "avatarName": "urokyo",
     "category": "의류・액세서리,의류・액세서리/안경",
     "comment": "情報提供募集中",
@@ -6112,7 +6112,7 @@
   },
   {
     "id": "0680",
-    "nickname": "まめあきょだるま/だるままめAkyo",
+    "nickname": "콩 아쿄 달마/달마 콩 Akyo",
     "avatarName": "まめあきょだるま",
     "category": "계절・행사,계절・행사/설날,마메,마메Akyo,가전・가구,역사",
     "comment": "android、ios対応",
@@ -6121,7 +6121,7 @@
   },
   {
     "id": "0681",
-    "nickname": "こまAkyo",
+    "nickname": "팽이 Akyo",
     "avatarName": "komakyo-test",
     "category": "털결/폭신폭신,털결",
     "comment": "",
@@ -6130,7 +6130,7 @@
   },
   {
     "id": "0682",
-    "nickname": "ジンジャーブレッドAkyo",
+    "nickname": "진저브레드 Akyo",
     "avatarName": "GingerbreadAkyo",
     "category": "음식,소재・재질,소재・재질/얇은,음식/디저트",
     "comment": "動くと横に揺れるよ！",
@@ -6139,7 +6139,7 @@
   },
   {
     "id": "0683",
-    "nickname": "触れてはならないAkyo",
+    "nickname": "만져서는 안 되는 Akyo",
     "avatarName": "donttoushAkyo",
     "category": "설비,패러디,패러디/Lobotomy Corporation",
     "comment": "",
@@ -6148,7 +6148,7 @@
   },
   {
     "id": "0684",
-    "nickname": "マッスルキツネツキ式狐Akyo",
+    "nickname": "머슬 키츠네츠키식 여우 Akyo",
     "avatarName": "muscle_sakyon",
     "category": "예술・아트,동물/여우,동물,체육회계",
     "comment": "",
@@ -6157,7 +6157,7 @@
   },
   {
     "id": "0685",
-    "nickname": "たこやきAkyo",
+    "nickname": "타코야키 Akyo",
     "avatarName": "akyoyaki",
     "category": "음식,음식/요리",
     "comment": "",
@@ -6166,7 +6166,7 @@
   },
   {
     "id": "0686",
-    "nickname": "Skyo/空Akyo",
+    "nickname": "Skyo/하늘 Akyo",
     "avatarName": "Skyo",
     "category": "실사,환경・날씨",
     "comment": "",
@@ -6175,7 +6175,7 @@
   },
   {
     "id": "0687",
-    "nickname": "aaaaAkyo",
+    "nickname": "aaaa Akyo",
     "avatarName": "aaaa",
     "category": "기믹・특수",
     "comment": "",
@@ -6184,7 +6184,7 @@
   },
   {
     "id": "0688",
-    "nickname": "空虚のAkyo",
+    "nickname": "공허의 Akyo",
     "avatarName": "Void Akyo",
     "category": "차원",
     "comment": "",
@@ -6193,7 +6193,7 @@
   },
   {
     "id": "0689",
-    "nickname": "ボムAkyo",
+    "nickname": "폭탄 Akyo",
     "avatarName": "bomb-akyo",
     "category": "위험물,위험물/폭발물",
     "comment": "",
@@ -6202,7 +6202,7 @@
   },
   {
     "id": "0690",
-    "nickname": "えだまめAkyo",
+    "nickname": "에다마메 Akyo",
     "avatarName": "枝豆Akyo",
     "category": "마메,마메Akyo,음식,음식/채소",
     "comment": "",
@@ -6211,7 +6211,7 @@
   },
   {
     "id": "0691",
-    "nickname": "キバナヘイシソウAkyo",
+    "nickname": "노란환엽란 Akyo",
     "avatarName": "Sarraceniakyo flava",
     "category": "식물",
     "comment": "",
@@ -6220,7 +6220,7 @@
   },
   {
     "id": "0692",
-    "nickname": "ゴッドまめAkyo/後光がなんかすごいまめAkyo",
+    "nickname": "갓 콩 Akyo/후광이 뭔가 대단한 콩 Akyo",
     "avatarName": "GODまめAkyo",
     "category": "마메,마메Akyo,가상의 존재/천사・신,가상의 존재",
     "comment": "",
@@ -6229,7 +6229,7 @@
   },
   {
     "id": "0693",
-    "nickname": "後光がなんかヤバいAkyoULTIMATEエクストリームエディション",
+    "nickname": "후광이 뭔가 심상찮은 Akyo ULTIMATE 익스트림 에디션",
     "avatarName": "後光がなんかヤバいAkyoULTIMATEエクストリームエディション",
     "category": "가상의 존재,가상의 존재/천사・신,동물,동물/해양생물,동물/물고기",
     "comment": "神威の力、後光の前にすべてのAkyoとGyotoが集う。願い事を聞いてくれるかもしれないし、聞き流されるかもしれない・・・",
@@ -6238,7 +6238,7 @@
   },
   {
     "id": "0694",
-    "nickname": "鮎Akyo太郎",
+    "nickname": "은어 Akyo 타로",
     "avatarName": "鮎Akyo太郎",
     "category": "동물,동물/물고기,동물/해양생물",
     "comment": "",
@@ -6247,7 +6247,7 @@
   },
   {
     "id": "0695",
-    "nickname": "フィッシュボーンAkyo",
+    "nickname": "피시본 Akyo",
     "avatarName": "akyo_フィッシュボーン",
     "category": "뼈,동물,동물/해양생물,동물/물고기",
     "comment": "魚の骨がついたakyo。かぶっているだけなのか体から生えているのか？",
@@ -6256,7 +6256,7 @@
   },
   {
     "id": "0696",
-    "nickname": "おおかみセーターAkyo",
+    "nickname": "늑대 스웨터 Akyo",
     "avatarName": "akyo_おおかみセーター",
     "category": "의류・액세서리,의류・액세서리/두꺼운 옷,계절・행사/겨울,계절・행사,동물,동물/늑대,의류・액세서리/모자,의류・액세서리/장갑",
     "comment": "もこもこセーターを着たおおかみakyo。これで寒い日も安心！",
@@ -6265,7 +6265,7 @@
   },
   {
     "id": "0697",
-    "nickname": "かぶとむしAkyo",
+    "nickname": "장수풍뎅이 Akyo",
     "avatarName": "akyo_kabuto",
     "category": "동물,동물/벌레",
     "comment": "角の生えたakyo。ささのきさんによると本人は「かぶとむしです」と言っているらしい。",
@@ -6274,7 +6274,7 @@
   },
   {
     "id": "0698",
-    "nickname": "セーターぞうAkyo",
+    "nickname": "스웨터 코끼리 Akyo",
     "avatarName": "akyo_ぞうセーター",
     "category": "의류・액세서리,의류・액세서리/모자,의류・액세서리/두꺼운 옷,계절・행사,계절・행사/겨울,동물,동물/코끼리,네발걸음",
     "comment": "セーターを着た冬仕様のぞうakyo。あったかいぞう",
@@ -6283,7 +6283,7 @@
   },
   {
     "id": "0699",
-    "nickname": "うまどしAkyo/正月うまAkyo",
+    "nickname": "말띠 Akyo/설날 말 Akyo",
     "avatarName": "akyo_うまどし",
     "category": "네발걸음,동물/말,동물,계절・행사,계절・행사/설날,의류・액세서리",
     "comment": "お正月衣装に着替えたうまakyo。うきうきしているらしい。",
@@ -6292,7 +6292,7 @@
   },
   {
     "id": "0700",
-    "nickname": "かもねぎAkyo",
+    "nickname": "오리파 Akyo",
     "avatarName": "akyo_かも＆ねぎ",
     "category": "동물,동물/새,계절・행사,계절・행사/설날,기능・특성/비행,기능・특성,음식,음식/채소,음식/채소/파",
     "comment": "ねぎakyoを背負った、かもakyo。どこで出会ったのだろう？",
@@ -6301,7 +6301,7 @@
   },
   {
     "id": "0701",
-    "nickname": "ダイヤAkyo",
+    "nickname": "다이아 Akyo",
     "avatarName": "DaiAkyo",
     "category": "소재・재질/돌,소재・재질/단단한",
     "comment": "",
@@ -6310,7 +6310,7 @@
   },
   {
     "id": "0702",
-    "nickname": "きつねまめAkyo",
+    "nickname": "여우콩 Akyo",
     "avatarName": "akyo mameFox",
     "category": "마메,마메Akyo,디포르메,체형/풍만,체형,동물,동물/여우,소재・재질/부드러운,소재・재질",
     "comment": "",
