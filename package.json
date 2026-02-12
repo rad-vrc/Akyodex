@@ -17,10 +17,10 @@
     "data:convert": "npx tsx scripts/csv-to-json.ts"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.11.0",
+    "@opennextjs/cloudflare": "^1.16.4",
     "csv-parse": "^6.1.0",
     "csv-stringify": "^6.6.0",
-    "next": "15.5.9",
+    "next": "15.5.10",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sanitize-html": "^2.17.0"
@@ -39,6 +39,6 @@
     "tailwindcss": "^4",
     "tsx": "^4.19.0",
     "typescript": "5.9.3",
-    "wrangler": "^4.44.0"
+    "wrangler": "^4.64.0"
   }
 }
