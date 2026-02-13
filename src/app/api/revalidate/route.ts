@@ -45,11 +45,15 @@ interface RevalidateRequest {
 const DEFAULT_PATHS = [
   '/',      // Japanese home
   '/en',    // English home
+  '/ko',    // Korean home
 ];
 
 // Default tags to revalidate
 const DEFAULT_TAGS = [
   'akyo-data',
+  'akyo-data-ja',
+  'akyo-data-en',
+  'akyo-data-ko',
 ];
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -126,8 +130,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (updateKV) {
       try {
         console.log('[revalidate] Updating KV cache...');
-        const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
-        const { getAkyoDataFromJSONIfExists } = await import('@/lib/akyo-data-json');
+        const { getAkyoDataFromJSON, getAkyoDataFromJSONIfExists } = await import('@/lib/akyo-data-json');
         const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
         
         // Fetch fresh data from JSON for all languages (ko is optional)

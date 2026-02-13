@@ -277,11 +277,10 @@ export async function updateKVCacheAll(
       tasks.ko = updateKVCache(dataKo, 'ko', true);
     }
     
-    const entries = Object.entries(tasks);
+    const entries = Object.entries(tasks) as [string, Promise<boolean>][];
     const settled = await Promise.all(entries.map(([, p]) => p));
-    for (let i = 0; i < entries.length; i++) {
-      const lang = entries[i][0] as keyof typeof result;
-      result[lang] = settled[i];
+    for (const [idx, [lang]] of entries.entries()) {
+      result[lang as keyof typeof result] = settled[idx];
     }
     // Ensure ko is explicitly false when not requested
     if (!dataKo) {

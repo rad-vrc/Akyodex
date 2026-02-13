@@ -43,6 +43,30 @@ function getJsonUrl(lang: SupportedLanguage): string {
 }
 
 /**
+ * Shared helper: fetch a JSON URL with ISR headers/tags, parse and normalize.
+ * Returns AkyoData[] on success or null when the response is not ok.
+ */
+async function fetchAndNormalizeAkyoJson(
+  url: string,
+  lang: SupportedLanguage
+): Promise<AkyoData[] | null> {
+  const response = await fetch(url, {
+    next: {
+      revalidate: 3600, // ISR: 1 hour (fallback)
+      tags: ['akyo-data', `akyo-data-${lang}`],
+    },
+    headers: { 'Accept': 'application/json' },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const json = await response.json();
+  return normalizeJsonData(json);
+}
+
+/**
  * Fetch Akyo data from JSON with ISR support
  * Wrapped with React cache() for automatic deduplication within a single request
  * 
@@ -56,51 +80,26 @@ export const getAkyoDataFromJSON = cache(
     console.log(`[getAkyoDataFromJSON] Fetching ${lang} JSON from: ${url}`);
     
     try {
-      const response = await fetch(url, {
-        next: { 
-          revalidate: 3600, // ISR: 1 hour (fallback)
-          tags: ['akyo-data', `akyo-data-${lang}`], // On-demand revalidation tags
-        },
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+      const data = await fetchAndNormalizeAkyoJson(url, lang);
       
-      // Fallback to Japanese if requested language not found
-      if (!response.ok && lang !== 'ja') {
-        console.log(`[getAkyoDataFromJSON] ${lang} JSON not found (${response.status}), falling back to Japanese`);
-        const jaUrl = getJsonUrl('ja');
-        
-        const jaResponse = await fetch(jaUrl, {
-          next: { 
-            revalidate: 3600,
-            tags: ['akyo-data', 'akyo-data-ja'],
-          },
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-        
-        if (!jaResponse.ok) {
-          throw new Error(`HTTP ${jaResponse.status}: ${jaResponse.statusText}`);
-        }
-        
-        const json = await jaResponse.json();
-        const data: AkyoData[] = normalizeJsonData(json);
-        
-        console.log(`[getAkyoDataFromJSON] Fallback success: ${data.length} avatars (ja)`);
+      if (data) {
+        console.log(`[getAkyoDataFromJSON] Success: ${data.length} avatars (${lang})`);
         return data;
       }
       
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      // Fallback to Japanese if requested language not found
+      if (lang !== 'ja') {
+        console.log(`[getAkyoDataFromJSON] ${lang} JSON not found, falling back to Japanese`);
+        const jaUrl = getJsonUrl('ja');
+        const jaData = await fetchAndNormalizeAkyoJson(jaUrl, 'ja');
+        
+        if (jaData) {
+          console.log(`[getAkyoDataFromJSON] Fallback success: ${jaData.length} avatars (ja)`);
+          return jaData;
+        }
       }
       
-      const json = await response.json();
-      const data: AkyoData[] = normalizeJsonData(json);
-      
-      console.log(`[getAkyoDataFromJSON] Success: ${data.length} avatars (${lang})`);
-      return data;
+      throw new Error(`HTTP response not ok for ${lang}`);
       
     } catch (error) {
       console.error('[getAkyoDataFromJSON] Error:', error);
@@ -132,21 +131,12 @@ export async function getAkyoDataFromJSONIfExists(
   console.log(`[getAkyoDataFromJSONIfExists] Checking ${lang} JSON at: ${url}`);
 
   try {
-    const response = await fetch(url, {
-      next: {
-        revalidate: 3600,
-        tags: ['akyo-data', `akyo-data-${lang}`],
-      },
-      headers: { 'Accept': 'application/json' },
-    });
+    const data = await fetchAndNormalizeAkyoJson(url, lang);
 
-    if (!response.ok) {
-      console.log(`[getAkyoDataFromJSONIfExists] ${lang} JSON not found (${response.status})`);
+    if (!data) {
+      console.log(`[getAkyoDataFromJSONIfExists] ${lang} JSON not found`);
       return null;
     }
-
-    const json = await response.json();
-    const data: AkyoData[] = normalizeJsonData(json);
 
     console.log(`[getAkyoDataFromJSONIfExists] Success: ${data.length} avatars (${lang})`);
     return data;
