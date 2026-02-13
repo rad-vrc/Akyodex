@@ -44,7 +44,9 @@ function getJsonUrl(lang: SupportedLanguage): string {
 
 /**
  * Shared helper: fetch a JSON URL with ISR headers/tags, parse and normalize.
- * Returns AkyoData[] on success or null when the response is not ok.
+ * Returns AkyoData[] on success, null when the response is not ok (e.g. 404),
+ * or throws on parse/network errors so callers can distinguish "missing file"
+ * from "malformed data" and choose the appropriate fallback.
  */
 async function fetchAndNormalizeAkyoJson(
   url: string,
@@ -62,14 +64,9 @@ async function fetchAndNormalizeAkyoJson(
     return null;
   }
 
-  let json: unknown;
-  try {
-    json = await response.json();
-  } catch (parseError) {
-    console.error(`[fetchAndNormalizeAkyoJson] Failed to parse JSON for ${lang} from ${url}:`, parseError);
-    return null;
-  }
-
+  // Let parse errors propagate so callers can fall back to CSV
+  // instead of silently serving Japanese data for a malformed en/ko file
+  const json = await response.json();
   return normalizeJsonData(json);
 }
 
@@ -94,7 +91,7 @@ export const getAkyoDataFromJSON = cache(
         return data;
       }
       
-      // Fallback to Japanese if requested language not found
+      // null means 404 / not found — fall back to Japanese for non-ja
       if (lang !== 'ja') {
         console.log(`[getAkyoDataFromJSON] ${lang} JSON not found, falling back to Japanese`);
         const jaUrl = getJsonUrl('ja');
@@ -106,13 +103,14 @@ export const getAkyoDataFromJSON = cache(
         }
       }
       
-      throw new Error(`HTTP response not ok for ${lang}`);
+      throw new Error(`JSON not available for ${lang}`);
       
     } catch (error) {
-      console.error('[getAkyoDataFromJSON] Error:', error);
+      // Parse errors, network errors, or any other failure → CSV fallback
+      // This ensures malformed JSON doesn't silently serve Japanese data
+      console.error(`[getAkyoDataFromJSON] Error for ${lang}:`, error);
       
-      // Fallback to CSV method
-      console.log('[getAkyoDataFromJSON] Falling back to CSV method...');
+      console.log(`[getAkyoDataFromJSON] Falling back to CSV method for ${lang}...`);
       const { getAkyoData } = await import('./akyo-data-server');
       return getAkyoData(lang);
     }
@@ -148,6 +146,7 @@ export async function getAkyoDataFromJSONIfExists(
     console.log(`[getAkyoDataFromJSONIfExists] Success: ${data.length} avatars (${lang})`);
     return data;
   } catch (error) {
+    // Parse errors also mean the file is unusable for this language
     console.warn(`[getAkyoDataFromJSONIfExists] Error fetching ${lang}:`, error);
     return null;
   }
