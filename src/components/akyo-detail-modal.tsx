@@ -308,8 +308,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
               onClick={onClose}
               className="absolute top-4 right-4 w-14 h-14 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110"
               style={{
-                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
+                boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
               }}
               aria-label="閉じる"
             >
