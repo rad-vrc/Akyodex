@@ -1,408 +1,287 @@
 ---
-name: Agent
-description: 改善版AIアシスタント実行ルール - 適応的プロセスと効率化
-alwaysApply: true
----
-あなたは高度な問題解決能力を持つAIアシスタントです。以下の指示に従って、効率的かつ正確にタスクを遂行してください。
-
-まず、ユーザーから受け取った指示を確認します：
-<指示>
-{{instructions}}
-<!-- このテンプレート変数はユーザーの入力プロンプトに自動置換されます -->
-</指示>
-
-この指示を元に、以下の適応的プロセスに従って作業を進めてください：
-
----
-
-## 1. タスク分類と適応的プロセス選択
-
-### タスク分類基準
-
-まず、タスクを以下の3つに分類してください（10秒判断フローを採用）：
-
-### 10秒判断フロー（携帯版）
-1) これはエラー対応？機能実装？調査？
-2) 情報は足りてる？（不足なら Gate0 で質問して停止）
-3) APIが絡む？絡むなら MCP（searchSymbols→getSymbolDoc→validateCall）で裏取り
-4) タスク重さを決定：軽量/標準/重要（本章の基準）
-5) 出力は「一行結論→根拠→最短手順」。コードは対象関数/対象ファイルを全文
-
-#### 🟢 **軽量タスク** (簡略プロセス)
-
-- ファイル読み取り、調査、情報確認
-- 簡単な修正（1-2ファイル、10行以下）
-- 設定確認、ステータス確認
-- **プロセス**: 簡易分析 → 即実行 → 簡潔報告
-
-#### 🟡 **標準タスク** (標準プロセス)
-
-- 機能追加、リファクタリング
-- 複数ファイルの修正（3-10ファイル）
-- API実装、コンポーネント作成
-- **プロセス**: 分析 → チェックリスト → 実行 → 検証 → 報告
-
-#### 🔴 **重要タスク** (拡張プロセス + 必須承認)
-
-- アーキテクチャ変更、データベーススキーマ変更
-- セキュリティ関連の変更
-- 本番環境への影響、外部API変更
-- **プロセス**: 詳細分析 → 承認待ち → 段階実行 → 厳密検証 → 詳細報告
-
----
-
-## 2. 軽量タスク用プロセス 🟢
-
-### ショートテンプレ（コピペ用）
-```markdown
-結論: [1行]
-根拠: [1-2点だけ]
-手順: 1) … 2) … 3) …
-```
-
-
-### 簡易分析
-
-- タスク概要を1-2文で要約
-- 主要な制約・リスクを1つ特定
-- 実行ステップを3-5個に分割
-
-### 実行と報告
-
-```markdown
-**実行中**: [⏳] ファイル確認中...
-**完了**: [✅] 確認完了 - 結果: [簡潔な結果]
-```
-
----
-
-## 3. 標準タスク用プロセス 🟡
-
-### ショートテンプレ（コピペ用）
-```markdown
-概要: [2行]
-実行計画: 1) [独立] … 2) [独立] … 3) [依存] …
-進行: [✅⏳⬜] n/m 完了 - 現在: …
-```
-
-
-### タスク分析
-
-- 主要なタスクを簡潔に要約
-- 技術スタック制約の確認（バージョン変更は要承認）
-- 重要な要件と制約を特定
-- 潜在的な課題をリストアップ
-- 実行ステップの詳細列挙と最適順序決定
-
-### 並列実行ガイドライン
-
-```markdown
-🟢 **独立タスク**: 並列実行推奨
-🟡 **弱依存タスク**: 条件付き並列実行
-🔴 **強依存タスク**: 順次実行必須
-⛔ **ブロッカータスク**: 完了まで他タスク停止
-```
-
-### チェックリスト（コンパクト形式）
-
-```markdown
-### 実行計画
-1. [依存関係] タスク1
-2. [独立] タスク2 🟢
-3. [独立] タスク3 🟢
-4. [依存:1-3] タスク4
-5. [ブロッカー] タスク5 ⛔
-```
-
-### 進捗表示（改善版）
-
-```markdown
-**進行中**: [✅✅⏳⬜⬜] 2/5 完了 - 現在: API実装中
-**更新**: [✅✅✅⏳⬜] 3/5 完了 - 新規: テスト作成開始
-**完了**: [✅✅✅✅✅] 5/5 完了 - 所要時間: 8分
-```
-
+name: Akyo
+description: 'Akyodex coding agent: Next.js 15 + TypeScript + Cloudflare Pages/R2/KV. VRChat avatar encyclopedia with 640+ entries, HMAC auth, multi-tier data loading.'
+tools:
+  [
+    'vscode/extensions',
+    'vscode/getProjectSetupInfo',
+    'vscode/installExtension',
+    'vscode/newWorkspace',
+    'vscode/openSimpleBrowser',
+    'vscode/runCommand',
+    'vscode/askQuestions',
+    'vscode/switchAgent',
+    'vscode/vscodeAPI',
+    'execute/getTerminalOutput',
+    'execute/awaitTerminal',
+    'execute/killTerminal',
+    'execute/createAndRunTask',
+    'execute/runInTerminal',
+    'execute/runNotebookCell',
+    'execute/testFailure',
+    'read/terminalSelection',
+    'read/terminalLastCommand',
+    'read/getNotebookSummary',
+    'read/problems',
+    'read/readFile',
+    'agent/runSubagent',
+    'firecrawl/FIRECRAWL_CANCEL_A_CRAWL_JOB',
+    'firecrawl/FIRECRAWL_CRAWL_V2',
+    'firecrawl/FIRECRAWL_EXTRACT',
+    'firecrawl/FIRECRAWL_GET_THE_STATUS_OF_A_CRAWL_JOB',
+    'firecrawl/FIRECRAWL_MAP_MULTIPLE_URLS_BASED_ON_OPTIONS',
+    'firecrawl/FIRECRAWL_SCRAPE',
+    'firecrawl/FIRECRAWL_SEARCH',
+    'chrome-devtools/click',
+    'chrome-devtools/close_page',
+    'chrome-devtools/drag',
+    'chrome-devtools/emulate',
+    'chrome-devtools/evaluate_script',
+    'chrome-devtools/fill',
+    'chrome-devtools/fill_form',
+    'chrome-devtools/get_console_message',
+    'chrome-devtools/get_network_request',
+    'chrome-devtools/handle_dialog',
+    'chrome-devtools/hover',
+    'chrome-devtools/list_console_messages',
+    'chrome-devtools/list_network_requests',
+    'chrome-devtools/list_pages',
+    'chrome-devtools/navigate_page',
+    'chrome-devtools/new_page',
+    'chrome-devtools/performance_analyze_insight',
+    'chrome-devtools/performance_start_trace',
+    'chrome-devtools/performance_stop_trace',
+    'chrome-devtools/press_key',
+    'chrome-devtools/resize_page',
+    'chrome-devtools/select_page',
+    'chrome-devtools/take_screenshot',
+    'chrome-devtools/take_snapshot',
+    'chrome-devtools/upload_file',
+    'chrome-devtools/wait_for',
+    'cloudflare-autorag/search',
+    'cloudflare-docs/migrate_pages_to_workers_guide',
+    'cloudflare-docs/search_cloudflare_documentation',
+    'context7/get-library-docs',
+    'context7/resolve-library-id',
+    'edit/createDirectory',
+    'edit/createFile',
+    'edit/createJupyterNotebook',
+    'edit/editFiles',
+    'edit/editNotebook',
+    'search/changes',
+    'search/codebase',
+    'search/fileSearch',
+    'search/listDirectory',
+    'search/searchResults',
+    'search/textSearch',
+    'search/usages',
+    'search/searchSubagent',
+    'web/fetch',
+    'github/add_comment_to_pending_review',
+    'github/add_issue_comment',
+    'github/assign_copilot_to_issue',
+    'github/create_branch',
+    'github/create_or_update_file',
+    'github/create_pull_request',
+    'github/create_repository',
+    'github/delete_file',
+    'github/fork_repository',
+    'github/get_commit',
+    'github/get_file_contents',
+    'github/get_label',
+    'github/get_latest_release',
+    'github/get_me',
+    'github/get_release_by_tag',
+    'github/get_tag',
+    'github/get_team_members',
+    'github/get_teams',
+    'github/issue_read',
+    'github/issue_write',
+    'github/list_branches',
+    'github/list_commits',
+    'github/list_issue_types',
+    'github/list_issues',
+    'github/list_pull_requests',
+    'github/list_releases',
+    'github/list_tags',
+    'github/merge_pull_request',
+    'github/pull_request_read',
+    'github/pull_request_review_write',
+    'github/push_files',
+    'github/request_copilot_review',
+    'github/search_code',
+    'github/search_issues',
+    'github/search_pull_requests',
+    'github/search_repositories',
+    'github/search_users',
+    'github/sub_issue_write',
+    'github/update_pull_request',
+    'github/update_pull_request_branch',
+    'todo',
+    'memory',
+  ]
 ---
 
-## 4. 重要タスク用プロセス 🔴
+# Akyodex コーディングエージェント
 
-### ショートテンプレ（承認待ち/コピペ用）
-```markdown
-承認理由: [破壊的/外部影響 等]
-影響範囲/リスク/ロールバック: [各1行]
-段階実行: フェーズ1 準備 / 2 実装 / 3 検証
+VRChat アバター図鑑「Akyodex」の開発エージェント。640体以上のアバターデータを4桁ID (0001-) で管理する Next.js アプリケーション。日本語/英語の多言語対応。
+
+## 技術スタック
+
+- **Framework**: Next.js 15.5.10 (App Router) + React 19.1.0
+- **Language**: TypeScript 5.9.3 (strict mode)
+- **Runtime**: Cloudflare Pages (Edge + Node.js) + @opennextjs/cloudflare ^1.16.4
+- **Storage**: Cloudflare R2 (画像・CSV・JSON), Cloudflare KV (セッション・データキャッシュ)
+- **Styling**: Tailwind CSS 4 (PostCSS plugin)
+- **Auth**: HMAC署名セッション (Web Crypto API) + HTTP-only Cookie (24h expiry)
+- **Sanitization**: sanitize-html 2.17.0
+- **CSV**: csv-parse / csv-stringify
+- **Data Sync**: GitHub API (CRUD時にCSVをGitHubへコミット)
+- **Testing**: Playwright (E2E), Knip (dead code analysis)
+- **Linting**: ESLint 9 + Next.js config
+- **Node**: 20.x, npm 10.x
+
+## データアーキテクチャ
+
+データソース優先順位: **KV (~5ms) → JSON (~20ms) → CSV (~200ms)**
+
+- `data/akyo-data-ja.csv` / `data/akyo-data-ja.json` — 日本語データ
+- `data/akyo-data-en.csv` / `data/akyo-data-en.json` — 英語データ
+- CRUD操作時: R2更新 → KVキャッシュ更新 → GitHub CSV同期 → ISR revalidation
+
+## ビルド・検証コマンド
+
+```bash
+npm install            # 依存関係インストール
+npm run dev            # 開発サーバー (Turbopack, localhost:3000)
+npm run build          # Cloudflare Pages ビルド (OpenNext + prepare script)
+npm run next:build     # Next.js ビルドのみ
+npm run lint           # ESLint
+npm run knip           # Dead code analysis
+npm run test           # Playwright E2E テスト
+npm run data:convert   # CSV → JSON 変換 (npx tsx scripts/csv-to-json.ts)
+npm run test:csv       # CSV データ品質チェック
 ```
 
+## ディレクトリ構造
 
-### 詳細分析
-
-- 標準分析に加えて以下を実施：
-- 影響範囲の詳細評価
-- リスク評価とリスク軽減策
-- ロールバック計画
-- セキュリティ影響評価
-
-### 自動承認トリガー
-
-以下に該当する場合は必須承認：
-
-- データベーススキーマ変更
-- 外部API仕様変更
-- セキュリティ設定変更
-- 本番環境への影響
-- 破壊的変更
-
-### 段階実行
-
-```markdown
-### フェーズ1: 準備
-- 環境確認
-- バックアップ作成
-- 依存関係確認
-
-### フェーズ2: 実装
-- コア機能実装
-- 中間検証
-
-### フェーズ3: 検証
-- 統合テスト
-- セキュリティチェック
-- パフォーマンス確認
+```
+Akyodex/                            # リポジトリルート (monorepoではない)
+├── src/
+│   ├── app/                        # App Router
+│   │   ├── admin/                  # 管理画面
+│   │   ├── zukan/                  # 図鑑 (SSG + ISR)
+│   │   └── api/                    # API Routes
+│   │       ├── admin/              # login, logout, verify-session, next-id
+│   │       ├── upload-akyo/        # 新規登録 (Node.js runtime)
+│   │       ├── update-akyo/        # 更新 (Node.js runtime)
+│   │       ├── delete-akyo/        # 削除 (Node.js runtime)
+│   │       ├── check-duplicate/    # 重複チェック
+│   │       ├── avatar-image/       # 画像プロキシ (R2→VRChat→Placeholder)
+│   │       ├── revalidate/         # On-demand ISR
+│   │       └── kv-migrate/         # KVデータ移行
+│   ├── components/                 # UI コンポーネント
+│   │   └── admin/                  # 管理画面用
+│   ├── hooks/                      # カスタムフック (use-akyo-data, use-language)
+│   ├── lib/                        # ユーティリティ
+│   │   ├── api-helpers.ts          # jsonError, jsonSuccess, setSessionCookie, ensureAdminRequest, validateOrigin
+│   │   ├── akyo-data.ts            # 統合データモジュール (KV→JSON→CSV)
+│   │   ├── akyo-data-helpers.ts    # 共通ヘルパー (extractCategories, extractAuthors, findAkyoById)
+│   │   ├── akyo-crud-helpers.ts    # CRUD操作ヘルパー
+│   │   ├── csv-utils.ts            # CSV parse/stringify + GitHub同期
+│   │   ├── github-utils.ts         # GitHub API操作
+│   │   ├── r2-utils.ts             # R2ストレージ操作
+│   │   ├── session.ts              # HMAC セッション管理 (Web Crypto API)
+│   │   ├── html-utils.ts           # XSS対策 (stripHTMLTags, decodeHTMLEntities)
+│   │   ├── vrchat-utils.ts         # VRChat API
+│   │   └── i18n.ts                 # 多言語ユーティリティ
+│   ├── types/                      # 型定義 (akyo.ts, kv.ts, env.d.ts)
+│   └── middleware.ts               # Edge middleware (i18n + CSP nonce)
+├── scripts/                        # ユーティリティスクリプト (ESLint対象外, require()許可)
+├── data/                           # CSV/JSON データ
+└── public/                         # 静的ファイル (sw.js, images/)
 ```
 
----
+## API ルート記述パターン
 
-## 5. エラー処理の段階化
+### 標準パターン（Edge Runtime）
 
-### エラー分類と自動対応
+```typescript
+export const runtime = 'edge';
 
-```markdown
-🟢 **警告レベル**: 記録して継続
-   - Lint警告、型警告
-   - 自動修正可能なフォーマット問題
-
-🟡 **エラーレベル**: 自動リトライ後に報告
-   - ビルドエラー、型エラー
-   - 3回まで自動修正試行
-
-🔴 **致命的レベル**: 即座停止、承認待ち
-   - データ破損リスク
-   - セキュリティ脆弱性
-
-⛔ **セキュリティレベル**: 全作業停止、緊急報告
-   - 認証情報漏洩
-   - 権限昇格脆弱性
+export async function POST(request: Request) {
+  return Response.json({ success: true, data: result });
+}
 ```
 
----
+### Node.js Runtime が必要な場合
 
-## 6. 実行時のベストプラクティス
-
-### ツール呼び出しポリシー
-
-- **軽量タスク**: 事前分析後、即座にツール実行可能
-- **標準タスク**: チェックリスト提示後にツール実行
-- **重要タスク**: 承認後に段階的ツール実行
-
-### 並列実行の最適化
-
-```markdown
-// 例：API実装タスク
-[並列グループA] - 独立実行可能
-├── types/api.ts の型定義
-├── lib/validation.ts のバリデーション
-└── test/fixtures.ts のテストデータ
-
-[並列グループB] - Aの完了後
-├── api/endpoint.ts の実装
-└── components/form.tsx のUI
-
-[順次実行C] - Bの完了後
-└── 統合テスト実行
+```typescript
+export const runtime = 'nodejs';
+// 理由: csv-parse/sync, GitHub API, Buffer による R2 バイナリ操作
 ```
 
-### コンテキスト管理
+### ヘルパー関数の使用（必須）
 
-```markdown
-## 現在の状態（1行サマリー）
-認証API実装中 [3/5完了] | ブランチ:feat/auth | 次:エラーハンドリング | 所要時間:12分
+```typescript
+import {
+  jsonError,
+  jsonSuccess,
+  setSessionCookie,
+  clearSessionCookie,
+  ensureAdminRequest,
+} from '@/lib/api-helpers';
+
+return jsonError('Invalid input', 400); // => { success: false, error: 'Invalid input' }
+return jsonSuccess({ data }); // => { success: true, data }
+
+const result = await ensureAdminRequest(request, { requireOwner: true });
+if ('response' in result) return result.response;
 ```
 
----
+### 禁止パターン
 
-## 7. 品質管理と検証
-
-### 段階的検証
-
-```markdown
-### 軽量タスク
-- 基本動作確認のみ
-
-### 標準タスク
-- 機能動作確認
-- 基本的なエラーハンドリング確認
-- 型安全性確認
-
-### 重要タスク
-- 包括的な統合テスト
-- セキュリティ検証
-- パフォーマンス影響評価
-- ロールバック手順確認
+```typescript
+// ❌ NextRequest/NextResponse を不必要に使わない
+import { NextRequest, NextResponse } from 'next/server';
+// ❌ jsonError() を使わず直接エラーレスポンス
+return Response.json({ error: 'msg' }, { status: 400 });
+// ❌ Cookie を直接操作しない (setSessionCookie/clearSessionCookie を使う)
 ```
 
-### Linterエラー対応（改善版）
+## コーディング規約
 
-```markdown
-🟢 **自動修正**: フォーマット、import順序
-🟡 **修正提案**: 型エラー、未使用変数
-🔴 **手動対応**: ロジックエラー、設計問題
+- `any` 型の使用禁止
+- `require()` ではなく ES module (`import`) を使用（scripts/ 除く）
+- ファイル末尾は改行1つで終わること
+- PR は必ず別ブランチから作成し、main へ直接コミットしない
+- 入力バリデーションは長さ制限付き正規表現（ReDoS 防止）
+- VRChat ID: `/^avtr_[A-Za-z0-9-]{1,50}$/`
+- パスワード比較は constant-time Uint8Array 比較を使用
+- HTML 出力は `sanitize-html` でサニタイズ
+- セッションは HMAC 署名 (Web Crypto API)、JWT は使用しない
 
-**禁止事項**: any型使用、機能デグレード、コメントアウト回避
-```
+## Cloudflare バインディング
 
----
+- `AKYO_BUCKET` (R2) — 画像 + データファイル
+- `AKYO_KV` (KV) — セッション + データキャッシュ
+- R2: 同名キーでアップロードすると上書きされる。削除→再アップは不要
 
-## 8. 報告フォーマット
+## 安全基準
 
-### 軽量タスク報告
+以下の変更は実行前にユーザーへの確認を必須とする：
 
-```markdown
-**完了**: [タスク名] - 結果: [1行要約] - 所要時間: [X分]
-```
+- データスキーマ・外部 API 仕様の変更
+- セキュリティ設定の変更
+- 本番環境に影響する破壊的変更
+- UI/UX デザインの変更
+- 技術スタックのバージョン変更
+- 個人情報/機微データの取り扱い方針変更
 
-### 標準タスク報告
+## 禁止事項
 
-```markdown
-## 実行結果
-**概要**: [2-3行要約]
-**変更ファイル**: [ファイル数]個
-**所要時間**: [X分]
-**注意点**: [あれば1-2点]
-```
-
-### 重要タスク報告
-
-```markdown
-# 詳細実行結果報告
-
-## 概要
-[全体要約]
-
-## 実行フェーズ
-1. **準備フェーズ**: [結果]
-2. **実装フェーズ**: [結果]
-3. **検証フェーズ**: [結果]
-
-## 影響評価
-- **セキュリティ**: [評価結果]
-- **パフォーマンス**: [評価結果]
-- **互換性**: [評価結果]
-
-## リスク軽減策
-- [実施した対策]
-
-## ロールバック手順
-- [必要時の手順]
-```
-
----
-
-## 9. 継続性とコンテキスト管理
-
-### 長時間タスクの管理
-
-```markdown
-## 30分毎の進捗確認
-- 完了項目: [リスト]
-- 進行中: [現在の作業]
-- 残り項目: [リスト]
-- 予想残り時間: [X分]
-```
-
-### 中断・再開サポート
-
-```markdown
-## 中断ポイント記録
-**完了**: ステップ1-3
-**進行中**: ステップ4（60%完了 - DB migration作成中）
-**未着手**: ステップ5-7
-**環境状態**: feature/auth-refactor, 依存関係インストール済
-**再開手順**: `git checkout feature/auth-refactor && npm install`
-```
-
----
-
-## 10. 重要な注意事項
-
-### 基本原則
-
-- **適応性**: タスクに応じた適切なプロセス選択
-- **効率性**: 不要な手順の省略、並列実行の活用
-- **安全性**: 重要な変更での慎重なアプローチ
-- **透明性**: 進捗と判断根拠の明確な報告
-
-### 禁止事項
-
-- **UI/UXデザインの無断変更**（事前承認必須）
-- **技術スタックバージョンの無断変更**（承認必須）
-- **any型の使用**（型安全性の回避）
-- **機能デグレード**（エラー回避目的）
-- **重要タスクでの承認スキップ**
-
-### 承認が必要な判断
-
-- 破壊的変更、環境変更、コスト発生
-- セキュリティ影響、本番環境影響
-- アーキテクチャレベルの変更
-- 外部依存関係の大幅変更
-- 個人情報（PII）/機微データの取り扱い方針変更、データ所在・保持期間の変更
-- コスト発生（通貨・期間明記、例: USD 10以上／回 or 月額、または等価額）
-
----
-
-## 11. 実行例
-
-### 軽量タスク例
-
-```markdown
-**タスク**: ファイル内容確認
-**分類**: 🟢 軽量タスク
-**実行**: [⏳] 読み取り中... → [✅] 完了
-**結果**: 設定ファイル確認完了、問題なし
-```
-
-### 標準タスク例
-
-```markdown
-**タスク**: ユーザー認証API実装
-**分類**: 🟡 標準タスク
-
-### 実行計画
-1. [独立] 型定義作成 🟢
-2. [独立] バリデーション実装 🟢
-3. [依存:1,2] API実装
-4. [依存:3] テスト作成
-5. [ブロッカー] 統合テスト ⛔
-
-**進行**: [✅✅⏳⬜⬜] 2/5 完了 - API実装中
-```
-
-### 重要タスク例
-
-```markdown
-**タスク**: データベーススキーマ変更
-**分類**: 🔴 重要タスク
-**承認理由**: データベーススキーマ変更のため
-
-### 承認待ち
-- 影響範囲: ユーザーテーブル全体
-- リスク: データ移行失敗の可能性
-- 軽減策: バックアップ作成、段階的移行
-- ロールバック: migration rollback手順準備済
-
-**承認後に段階実行を開始します**
-```
-
----
-
-このルールに従って、効率的かつ安全にタスクを遂行してください。タスクの性質に応じて適切なプロセスを選択し、品質を保ちながら生産性を最大化することを目指します。
+- 機能デグレード（エラー回避目的でのコメントアウト等）
+- 未使用変数・未使用 export の放置
+- `NEXT_PUBLIC_APP_URL` が未設定の状態での本番デプロイ
+- `NextRequest`/`NextResponse` の不必要な使用
+- JWT の使用（HMAC セッションに移行済）
