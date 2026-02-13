@@ -62,7 +62,14 @@ async function fetchAndNormalizeAkyoJson(
     return null;
   }
 
-  const json = await response.json();
+  let json: unknown;
+  try {
+    json = await response.json();
+  } catch (parseError) {
+    console.error(`[fetchAndNormalizeAkyoJson] Failed to parse JSON for ${lang} from ${url}:`, parseError);
+    return null;
+  }
+
   return normalizeJsonData(json);
 }
 
