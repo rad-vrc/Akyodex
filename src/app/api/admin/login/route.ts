@@ -8,7 +8,7 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Use Edge Runtime for optimal performance
+// Node.js runtime required for cookie operations via next/headers
 export const runtime = 'nodejs';
 
 import { createSessionToken } from '@/lib/session';

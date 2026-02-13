@@ -7,7 +7,7 @@
 
 // Phase 4: Using unified data module with JSON support
 import { getAkyoData } from '@/lib/akyo-data';
-import { validateOrigin } from '@/lib/api-helpers';
+import { jsonError, validateOrigin } from '@/lib/api-helpers';
 
 export const runtime = 'nodejs';
 
@@ -15,10 +15,7 @@ export async function POST(request: Request) {
   try {
     // CSRF Protection: Validate Origin/Referer
     if (!validateOrigin(request)) {
-      return Response.json(
-        { error: '不正なリクエスト元です' },
-        { status: 403 }
-      );
+      return jsonError('不正なリクエスト元です', 403);
     }
 
     const body = await request.json();
@@ -26,17 +23,11 @@ export async function POST(request: Request) {
 
     // Validate input
     if (!field || !value || typeof value !== 'string') {
-      return Response.json(
-        { error: 'Invalid request. field and value are required.' },
-        { status: 400 }
-      );
+      return jsonError('Invalid request. field and value are required.', 400);
     }
 
     if (field !== 'nickname' && field !== 'avatarName') {
-      return Response.json(
-        { error: 'Invalid field. Must be "nickname" or "avatarName".' },
-        { status: 400 }
-      );
+      return jsonError('Invalid field. Must be "nickname" or "avatarName".', 400);
     }
 
     // Get all avatar data
@@ -91,9 +82,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Duplicate check error:', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return jsonError('Internal server error', 500);
   }
 }
