@@ -1,6 +1,6 @@
 ---
 description: Akyodex project coding guidelines and AI assistant rules
-globs: *
+applyTo: '**'
 ---
 
 # Akyodex Copilot Instructions
