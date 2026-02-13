@@ -1,5 +1,5 @@
 ---
-name: Agent
+name: Akyo
 description: 改善版AIアシスタント実行ルール - 適応的プロセスと効率化
 alwaysApply: true
 ---
