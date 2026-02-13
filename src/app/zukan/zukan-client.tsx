@@ -80,7 +80,8 @@ export function ZukanClient({
       setLoading(true);
       try {
         // Fetch JSON data for the detected language from CDN
-        const response = await fetch(`https://images.akyodex.com/data/akyo-data-${lang}.json`);
+        const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
+        const response = await fetch(`${r2Base}/data/akyo-data-${lang}.json`);
         if (!response.ok) throw new Error('Failed to fetch data');
         
         const jsonData = await response.json();
