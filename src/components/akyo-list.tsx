@@ -6,14 +6,16 @@ import { getCategoryColor } from '@/lib/akyo-data-helpers';
 import { IconInfoCircle } from '@/components/icons';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import { t, type SupportedLanguage } from '@/lib/i18n';
 
 interface AkyoListProps {
   data: AkyoData[];
+  lang?: SupportedLanguage;
   onToggleFavorite?: (id: string) => void;
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
-export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps) {
+export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoListProps) {
   const handleFavoriteClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     onToggleFavorite?.(id);
@@ -31,11 +33,11 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
           <thead>
             <tr>
               <th>No.</th>
-              <th>見た目</th>
-              <th>名前</th>
-              <th>カテゴリ</th>
-              <th>作者</th>
-              <th>アクション</th>
+              <th>{t('list.appearance', lang)}</th>
+              <th>{t('list.name', lang)}</th>
+              <th>{t('list.category', lang)}</th>
+              <th>{t('card.author', lang)}</th>
+              <th>{t('list.action', lang)}</th>
             </tr>
           </thead>
           <tbody>
@@ -117,7 +119,7 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
                         type="button"
                         onClick={(e) => handleFavoriteClick(e, akyo.id)}
                         className="list-action-btn"
-                        aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
+                        aria-label={akyo.isFavorite ? t('card.favorite.remove', lang) : t('card.favorite.add', lang)}
                       >
                         <span className="list-favorite-icon">
                           {akyo.isFavorite ? '❤️' : '🤍'}
@@ -129,7 +131,7 @@ export function AkyoList({ data, onToggleFavorite, onShowDetail }: AkyoListProps
                         type="button"
                         onClick={(e) => handleDetailClick(e, akyo)}
                         className="list-action-btn"
-                        aria-label="詳細を見る"
+                        aria-label={t('card.detail', lang)}
                       >
                         <IconInfoCircle size="w-5 h-5" className="text-blue-500" />
                       </button>

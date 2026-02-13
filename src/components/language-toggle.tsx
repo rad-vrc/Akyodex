@@ -5,7 +5,8 @@
  *
  * Features:
  * - Floating button (like original site)
- * - Toggle between Japanese and English
+ * - Cycle through Japanese, English, and Korean
+ * - Toggle order: ja → en → ko → ja
  * - Persistent via cookie
  * - Smooth transition
  */

@@ -43,8 +43,8 @@ async function fetchAkyoData(options: FetchAkyoDataOptions = {}): Promise<FetchR
   const { lang = 'ja', bustCache = false } = options;
 
   // Determine CSV filename based on language
-  // Unified naming: akyo-data-ja.csv, akyo-data-en.csv
-  const csvFileName = lang === 'en' ? 'akyo-data-en.csv' : 'akyo-data-ja.csv';
+  // Unified naming: akyo-data-{lang}.csv (ja, en, ko)
+  const csvFileName = `akyo-data-${lang}.csv`;
   const baseUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data`;
 
   let url = `${baseUrl}/${csvFileName}`;

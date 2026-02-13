@@ -17,7 +17,8 @@ export async function GET(request: Request) {
   try {
     // クエリパラメータから言語を取得（デフォルトは日本語）
     const { searchParams } = new URL(request.url);
-    const lang = searchParams.get('lang') === 'en' ? 'en' : 'ja';
+    const rawLang = searchParams.get('lang');
+    const lang = rawLang === 'en' ? 'en' : rawLang === 'ko' ? 'ko' : 'ja';
 
     // CSVファイルのパス
     const csvPath = path.join(process.cwd(), 'data', `akyo-data-${lang}.csv`);

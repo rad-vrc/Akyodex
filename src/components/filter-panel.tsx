@@ -1,6 +1,7 @@
 'use client';
 
 import { IconDice, IconHeart, IconSortAsc, IconSortDesc } from '@/components/icons';
+import { t, type SupportedLanguage } from '@/lib/i18n';
 
 interface FilterPanelProps {
   // 新フィールド（オプショナル）
@@ -21,7 +22,7 @@ interface FilterPanelProps {
   favoritesOnly: boolean;
   sortAscending: boolean;
   randomMode: boolean;
-  lang?: 'ja' | 'en';
+  lang?: SupportedLanguage;
 }
 
 export function FilterPanel({
@@ -62,9 +63,9 @@ export function FilterPanel({
           value={selectedAttribute ?? ''}
           onChange={handleAttributeChange}
           className="w-full"
-          aria-label={lang === 'en' ? 'Filter by category' : 'カテゴリで絞り込み'}
+          aria-label={t('filter.category', lang)}
         >
-          <option value="">{lang === 'en' ? 'All Categories' : 'すべてのカテゴリ'}</option>
+          <option value="">{t('filter.allCategories', lang)}</option>
           {displayCategories.map(attr => (
             <option key={attr} value={attr}>
               {attr}
@@ -77,9 +78,9 @@ export function FilterPanel({
           value={selectedCreator ?? ''}
           onChange={handleCreatorChange}
           className="w-full"
-          aria-label={lang === 'en' ? 'Filter by author' : '作者で絞り込み'}
+          aria-label={t('filter.author', lang)}
         >
-          <option value="">{lang === 'en' ? 'All Authors' : 'すべての作者'}</option>
+          <option value="">{t('filter.allAuthors', lang)}</option>
           {displayAuthors.map(creator => (
             <option key={creator} value={creator}>
               {creator}
@@ -94,9 +95,7 @@ export function FilterPanel({
           type="button"
           onClick={onSortToggle}
           aria-pressed={sortAscending}
-          aria-label={lang === 'en'
-            ? (sortAscending ? 'Sort ascending' : 'Sort descending')
-            : (sortAscending ? '昇順に並び替え' : '降順に並び替え')}
+          aria-label={t('filter.sortToggle', lang)}
           className={`attribute-badge quick-filter-badge transition-colors ${
             sortAscending
               ? 'bg-green-200 text-green-800 hover:bg-green-300'
@@ -104,35 +103,35 @@ export function FilterPanel({
           }`}
         >
           {sortAscending ? <IconSortAsc size="w-4 h-4" /> : <IconSortDesc size="w-4 h-4" />}{' '}
-          {lang === 'en' ? (sortAscending ? 'Ascending' : 'Descending') : (sortAscending ? '昇順' : '降順')}
+          {sortAscending ? t('filter.ascending', lang) : t('filter.descending', lang)}
         </button>
         
         <button
           type="button"
           onClick={onRandomClick}
           aria-pressed={randomMode}
-          aria-label={lang === 'en' ? 'Toggle random mode' : 'ランダム表示の切り替え'}
+          aria-label={t('filter.randomToggle', lang)}
           className={`attribute-badge quick-filter-badge transition-colors ${
             randomMode
               ? 'bg-yellow-200 text-yellow-800 hover:bg-yellow-300'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <IconDice size="w-4 h-4" /> {lang === 'en' ? 'Random' : 'ランダム表示'}
+          <IconDice size="w-4 h-4" /> {t('filter.random', lang)}
         </button>
         
         <button
           type="button"
           onClick={onFavoritesClick}
           aria-pressed={favoritesOnly}
-          aria-label={lang === 'en' ? 'Show favorites only' : 'お気に入りのみ表示'}
+          aria-label={t('filter.favoritesToggle', lang)}
           className={`attribute-badge quick-filter-badge transition-colors ${
             favoritesOnly
               ? 'bg-pink-200 text-pink-800 hover:bg-pink-300'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          <IconHeart size="w-4 h-4" /> {lang === 'en' ? 'Favorites Only' : 'お気に入りのみ'}
+          <IconHeart size="w-4 h-4" /> {t('filter.favorites', lang)}
         </button>
       </div>
     </div>

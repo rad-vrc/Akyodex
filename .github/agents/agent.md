@@ -1,10 +1,125 @@
 ---
 name: Akyo
-description: "Akyodex coding agent: Next.js 15 + TypeScript + Cloudflare Pages/R2/KV. VRChat avatar encyclopedia with 640+ entries, HMAC auth, multi-tier data loading."
+description: 'Akyodex coding agent: Next.js 15 + TypeScript + Cloudflare Pages/R2/KV. VRChat avatar encyclopedia with 640+ entries, HMAC auth, multi-tier data loading.'
 tools:
-  - read
-  - edit
-  - search
+  [
+    'vscode/extensions',
+    'vscode/getProjectSetupInfo',
+    'vscode/installExtension',
+    'vscode/newWorkspace',
+    'vscode/openSimpleBrowser',
+    'vscode/runCommand',
+    'vscode/askQuestions',
+    'vscode/switchAgent',
+    'vscode/vscodeAPI',
+    'execute/getTerminalOutput',
+    'execute/awaitTerminal',
+    'execute/killTerminal',
+    'execute/createAndRunTask',
+    'execute/runInTerminal',
+    'execute/runNotebookCell',
+    'execute/testFailure',
+    'read/terminalSelection',
+    'read/terminalLastCommand',
+    'read/getNotebookSummary',
+    'read/problems',
+    'read/readFile',
+    'agent/runSubagent',
+    'firecrawl/FIRECRAWL_CANCEL_A_CRAWL_JOB',
+    'firecrawl/FIRECRAWL_CRAWL_V2',
+    'firecrawl/FIRECRAWL_EXTRACT',
+    'firecrawl/FIRECRAWL_GET_THE_STATUS_OF_A_CRAWL_JOB',
+    'firecrawl/FIRECRAWL_MAP_MULTIPLE_URLS_BASED_ON_OPTIONS',
+    'firecrawl/FIRECRAWL_SCRAPE',
+    'firecrawl/FIRECRAWL_SEARCH',
+    'chrome-devtools/click',
+    'chrome-devtools/close_page',
+    'chrome-devtools/drag',
+    'chrome-devtools/emulate',
+    'chrome-devtools/evaluate_script',
+    'chrome-devtools/fill',
+    'chrome-devtools/fill_form',
+    'chrome-devtools/get_console_message',
+    'chrome-devtools/get_network_request',
+    'chrome-devtools/handle_dialog',
+    'chrome-devtools/hover',
+    'chrome-devtools/list_console_messages',
+    'chrome-devtools/list_network_requests',
+    'chrome-devtools/list_pages',
+    'chrome-devtools/navigate_page',
+    'chrome-devtools/new_page',
+    'chrome-devtools/performance_analyze_insight',
+    'chrome-devtools/performance_start_trace',
+    'chrome-devtools/performance_stop_trace',
+    'chrome-devtools/press_key',
+    'chrome-devtools/resize_page',
+    'chrome-devtools/select_page',
+    'chrome-devtools/take_screenshot',
+    'chrome-devtools/take_snapshot',
+    'chrome-devtools/upload_file',
+    'chrome-devtools/wait_for',
+    'cloudflare-autorag/search',
+    'cloudflare-docs/migrate_pages_to_workers_guide',
+    'cloudflare-docs/search_cloudflare_documentation',
+    'context7/get-library-docs',
+    'context7/resolve-library-id',
+    'edit/createDirectory',
+    'edit/createFile',
+    'edit/createJupyterNotebook',
+    'edit/editFiles',
+    'edit/editNotebook',
+    'search/changes',
+    'search/codebase',
+    'search/fileSearch',
+    'search/listDirectory',
+    'search/searchResults',
+    'search/textSearch',
+    'search/usages',
+    'search/searchSubagent',
+    'web/fetch',
+    'github/add_comment_to_pending_review',
+    'github/add_issue_comment',
+    'github/assign_copilot_to_issue',
+    'github/create_branch',
+    'github/create_or_update_file',
+    'github/create_pull_request',
+    'github/create_repository',
+    'github/delete_file',
+    'github/fork_repository',
+    'github/get_commit',
+    'github/get_file_contents',
+    'github/get_label',
+    'github/get_latest_release',
+    'github/get_me',
+    'github/get_release_by_tag',
+    'github/get_tag',
+    'github/get_team_members',
+    'github/get_teams',
+    'github/issue_read',
+    'github/issue_write',
+    'github/list_branches',
+    'github/list_commits',
+    'github/list_issue_types',
+    'github/list_issues',
+    'github/list_pull_requests',
+    'github/list_releases',
+    'github/list_tags',
+    'github/merge_pull_request',
+    'github/pull_request_read',
+    'github/pull_request_review_write',
+    'github/push_files',
+    'github/request_copilot_review',
+    'github/search_code',
+    'github/search_issues',
+    'github/search_pull_requests',
+    'github/search_repositories',
+    'github/search_users',
+    'github/sub_issue_write',
+    'github/update_pull_request',
+    'github/update_pull_request_branch',
+    'todo',
+    'memory',
+  ]
 ---
 
 # Akyodex コーディングエージェント
@@ -109,10 +224,16 @@ export const runtime = 'nodejs';
 ### ヘルパー関数の使用（必須）
 
 ```typescript
-import { jsonError, jsonSuccess, setSessionCookie, clearSessionCookie, ensureAdminRequest } from '@/lib/api-helpers';
+import {
+  jsonError,
+  jsonSuccess,
+  setSessionCookie,
+  clearSessionCookie,
+  ensureAdminRequest,
+} from '@/lib/api-helpers';
 
-return jsonError('Invalid input', 400);    // => { success: false, error: 'Invalid input' }
-return jsonSuccess({ data });              // => { success: true, data }
+return jsonError('Invalid input', 400); // => { success: false, error: 'Invalid input' }
+return jsonSuccess({ data }); // => { success: true, data }
 
 const result = await ensureAdminRequest(request, { requireOwner: true });
 if ('response' in result) return result.response;
@@ -149,6 +270,7 @@ return Response.json({ error: 'msg' }, { status: 400 });
 ## 安全基準
 
 以下の変更は実行前にユーザーへの確認を必須とする：
+
 - データスキーマ・外部 API 仕様の変更
 - セキュリティ設定の変更
 - 本番環境に影響する破壊的変更

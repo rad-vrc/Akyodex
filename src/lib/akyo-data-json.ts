@@ -7,7 +7,7 @@
  * This module handles JSON data fetching with:
  * - ISR (Incremental Static Regeneration) every hour as fallback
  * - On-demand revalidation via cache tags ('akyo-data')
- * - Automatic language fallback (en -> ja)
+ * - Automatic language fallback (en/ko -> ja)
  * - React cache() for request deduplication
  * - Fallback to CSV method on error
  * 
@@ -27,7 +27,7 @@ import type { AkyoData } from '@/types/akyo';
  */
 function getJsonUrl(lang: SupportedLanguage): string {
   const r2Base = process.env.NEXT_PUBLIC_R2_BASE;
-  const jsonFileName = lang === 'en' ? 'akyo-data-en.json' : 'akyo-data-ja.json';
+  const jsonFileName = `akyo-data-${lang}.json`;
   
   // If R2 base is configured, use R2 for JSON data
   if (r2Base) {
@@ -40,6 +40,34 @@ function getJsonUrl(lang: SupportedLanguage): string {
   const githubBranch = process.env.GITHUB_BRANCH || 'main';
   
   return `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}/data/${jsonFileName}`;
+}
+
+/**
+ * Shared helper: fetch a JSON URL with ISR headers/tags, parse and normalize.
+ * Returns AkyoData[] on success, null when the response is not ok (e.g. 404),
+ * or throws on parse/network errors so callers can distinguish "missing file"
+ * from "malformed data" and choose the appropriate fallback.
+ */
+async function fetchAndNormalizeAkyoJson(
+  url: string,
+  lang: SupportedLanguage
+): Promise<AkyoData[] | null> {
+  const response = await fetch(url, {
+    next: {
+      revalidate: 3600, // ISR: 1 hour (fallback)
+      tags: ['akyo-data', `akyo-data-${lang}`],
+    },
+    headers: { 'Accept': 'application/json' },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  // Let parse errors propagate so callers can fall back to CSV
+  // instead of silently serving Japanese data for a malformed en/ko file
+  const json = await response.json();
+  return normalizeJsonData(json);
 }
 
 /**
@@ -56,62 +84,73 @@ export const getAkyoDataFromJSON = cache(
     console.log(`[getAkyoDataFromJSON] Fetching ${lang} JSON from: ${url}`);
     
     try {
-      const response = await fetch(url, {
-        next: { 
-          revalidate: 3600, // ISR: 1 hour (fallback)
-          tags: ['akyo-data', `akyo-data-${lang}`], // On-demand revalidation tags
-        },
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+      const data = await fetchAndNormalizeAkyoJson(url, lang);
       
-      // Fallback to Japanese if requested language not found
-      if (!response.ok && lang !== 'ja') {
-        console.log(`[getAkyoDataFromJSON] ${lang} JSON not found (${response.status}), falling back to Japanese`);
-        const jaUrl = getJsonUrl('ja');
-        
-        const jaResponse = await fetch(jaUrl, {
-          next: { 
-            revalidate: 3600,
-            tags: ['akyo-data', 'akyo-data-ja'],
-          },
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-        
-        if (!jaResponse.ok) {
-          throw new Error(`HTTP ${jaResponse.status}: ${jaResponse.statusText}`);
-        }
-        
-        const json = await jaResponse.json();
-        const data: AkyoData[] = normalizeJsonData(json);
-        
-        console.log(`[getAkyoDataFromJSON] Fallback success: ${data.length} avatars (ja)`);
+      if (data) {
+        console.log(`[getAkyoDataFromJSON] Success: ${data.length} avatars (${lang})`);
         return data;
       }
       
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      // null means 404 / not found — fall back to Japanese for non-ja
+      if (lang !== 'ja') {
+        console.log(`[getAkyoDataFromJSON] ${lang} JSON not found, falling back to Japanese`);
+        const jaUrl = getJsonUrl('ja');
+        const jaData = await fetchAndNormalizeAkyoJson(jaUrl, 'ja');
+        
+        if (jaData) {
+          console.log(`[getAkyoDataFromJSON] Fallback success: ${jaData.length} avatars (ja)`);
+          return jaData;
+        }
       }
       
-      const json = await response.json();
-      const data: AkyoData[] = normalizeJsonData(json);
-      
-      console.log(`[getAkyoDataFromJSON] Success: ${data.length} avatars (${lang})`);
-      return data;
+      throw new Error(`JSON not available for ${lang}`);
       
     } catch (error) {
-      console.error('[getAkyoDataFromJSON] Error:', error);
+      // Parse errors, network errors, or any other failure → CSV fallback
+      // This ensures malformed JSON doesn't silently serve Japanese data
+      console.error(`[getAkyoDataFromJSON] Error for ${lang}:`, error);
       
-      // Fallback to CSV method
-      console.log('[getAkyoDataFromJSON] Falling back to CSV method...');
+      console.log(`[getAkyoDataFromJSON] Falling back to CSV method for ${lang}...`);
       const { getAkyoData } = await import('./akyo-data-server');
       return getAkyoData(lang);
     }
   }
 );
+
+/**
+ * Fetch Akyo data from JSON only if the requested language file actually exists.
+ * Returns null instead of silently falling back to Japanese.
+ *
+ * Use this when you need to distinguish between "real data for this language"
+ * and "fell back to Japanese" — e.g. during KV migration/revalidation where
+ * writing Japanese data under a Korean key would be incorrect.
+ *
+ * @param lang - Language code
+ * @returns Array of Akyo data, or null if the requested language is unavailable
+ */
+export async function getAkyoDataFromJSONIfExists(
+  lang: SupportedLanguage
+): Promise<AkyoData[] | null> {
+  const url = getJsonUrl(lang);
+
+  console.log(`[getAkyoDataFromJSONIfExists] Checking ${lang} JSON at: ${url}`);
+
+  try {
+    const data = await fetchAndNormalizeAkyoJson(url, lang);
+
+    if (!data) {
+      console.log(`[getAkyoDataFromJSONIfExists] ${lang} JSON not found`);
+      return null;
+    }
+
+    console.log(`[getAkyoDataFromJSONIfExists] Success: ${data.length} avatars (${lang})`);
+    return data;
+  } catch (error) {
+    // Parse errors also mean the file is unusable for this language
+    console.warn(`[getAkyoDataFromJSONIfExists] Error fetching ${lang}:`, error);
+    return null;
+  }
+}
 
 /**
  * Normalize JSON data to ensure consistent AkyoData structure

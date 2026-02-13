@@ -15,7 +15,7 @@
  */
 
 import { getCategoryColor } from '@/lib/akyo-data-helpers';
-import { IconExternalLink, IconGift, IconHeart, IconPalette, IconSparkles, IconTag, IconUserAstronaut } from '@/components/icons';
+import { IconExternalLink, IconGift, IconHeart, IconPalette, IconSparkles, IconTag, IconUser } from '@/components/icons';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -306,24 +306,24 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 w-14 h-14 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110"
+              className="absolute top-4 right-4 w-12 h-12 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white/60 backdrop-blur-md border border-white/30"
               style={{
-                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                background: 'rgba(255, 255, 255, 0.45)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
               }}
               aria-label="閉じる"
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 className="transition-transform duration-300 hover:rotate-90"
               >
                 <path
                   d="M18 6L6 18M6 6L18 18"
-                  stroke="white"
-                  strokeWidth="3"
+                  stroke="#6b5b7b"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
@@ -429,7 +429,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Avatar Name Card */}
                   <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-blue-600 mb-2">
-                      <IconUserAstronaut size="w-3.5 h-3.5" className="mr-1" />アバター名
+                      <IconUser size="w-3.5 h-3.5" className="mr-1" />アバター名
                     </h3>
                     <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
                   </div>
@@ -529,7 +529,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     <button
                       type="button"
                       onClick={handleVRChatOpen}
-                      className="flex-1 py-3 rounded-lg font-medium transition-opacity flex items-center justify-center gap-2"
+                      className="flex-1 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 hover:brightness-110 hover:shadow-md"
                       style={{
                         background: 'linear-gradient(135deg, #f97316, #fb923c)',
                         color: 'white',

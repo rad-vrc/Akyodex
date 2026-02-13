@@ -1,13 +1,14 @@
 'use client';
 
 import { IconDownload, IconTools } from '@/components/icons';
+import type { SupportedLanguage } from '@/lib/i18n';
 
 /**
  * Tools Tab Component
  * ツールタブ
  */
 export function ToolsTab() {
-  const handleDownloadCsv = async (lang: 'ja' | 'en') => {
+  const handleDownloadCsv = async (lang: SupportedLanguage) => {
     try {
       const response = await fetch(`/api/csv?lang=${lang}`);
       if (!response.ok) {
@@ -62,6 +63,13 @@ export function ToolsTab() {
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
             >
               <IconDownload size="w-4 h-4" className="mr-2" /> English
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDownloadCsv('ko')}
+              className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+            >
+              <IconDownload size="w-4 h-4" className="mr-2" /> 한국어
             </button>
           </div>
         </div>

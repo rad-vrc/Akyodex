@@ -7,9 +7,10 @@
  * - localStorage persistence
  */
 
-export type SupportedLanguage = 'ja' | 'en';
+export type SupportedLanguage = 'ja' | 'en' | 'ko';
 
-export const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['ja', 'en'];
+// Toggle order: ja → en → ko → ja
+export const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['ja', 'en', 'ko'];
 
 export const DEFAULT_LANGUAGE: SupportedLanguage = 'ja';
 
@@ -19,14 +20,16 @@ export const DEFAULT_LANGUAGE: SupportedLanguage = 'ja';
 export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
   ja: '日本語',
   en: 'English',
+  ko: '한국어',
 };
 
 /**
  * Language toggle labels
  */
 export const LANGUAGE_TOGGLE_LABELS: Record<SupportedLanguage, string> = {
-  ja: 'EN', // Shows "EN" when current is Japanese
-  en: 'JP', // Shows "JP" when current is English
+  ja: 'EN', // Shows "EN" when current is Japanese (next: English)
+  en: 'KO', // Shows "KO" when current is English (next: Korean)
+  ko: 'JA', // Shows "JA" when current is Korean (next: Japanese)
 };
 
 /**
@@ -88,6 +91,11 @@ export function getLanguageFromCountry(countryCode: string | null): SupportedLan
     return 'en';
   }
 
+  // Korea
+  if (country === 'KR') {
+    return 'ko';
+  }
+
   // Japan
   if (country === 'JP') {
     return 'ja';
@@ -112,3 +120,193 @@ export function getNextLanguage(current: SupportedLanguage): SupportedLanguage {
   const nextIndex = (currentIndex + 1) % SUPPORTED_LANGUAGES.length;
   return SUPPORTED_LANGUAGES[nextIndex];
 }
+
+// ============================================================
+// UI Text Dictionary (i18n strings)
+// ============================================================
+
+/**
+ * Translate a UI string key for the given language.
+ * Falls back to Japanese if key is missing.
+ */
+export function t(key: string, lang: SupportedLanguage): string {
+  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.['ja'] ?? key;
+}
+
+/**
+ * UI text dictionary: key → { ja, en, ko }
+ */
+export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
+  // === Zukan page ===
+  'error.title': {
+    ja: 'データの読み込みに失敗しました',
+    en: 'Failed to load data',
+    ko: '데이터 로딩에 실패했습니다',
+  },
+  'loading.text': {
+    ja: 'データを読み込んでいます...',
+    en: 'Loading data...',
+    ko: '데이터를 불러오는 중...',
+  },
+  'loading.subtext': {
+    ja: '言語データを切り替え中...',
+    en: 'Switching language data...',
+    ko: '언어 데이터를 전환 중...',
+  },
+  'logo.alt': {
+    ja: 'Akyoずかんロゴ',
+    en: 'Akyodex Logo',
+    ko: 'Akyo도감 로고',
+  },
+  'stats.total': {
+    ja: '全{count}体',
+    en: 'Total {count}',
+    ko: '전체 {count}마리',
+  },
+  'stats.displayed': {
+    ja: '表示{count}体',
+    en: 'Showing {count}',
+    ko: '{count}건 표시',
+  },
+  'search.placeholder': {
+    ja: '名前・通称・作者で検索...',
+    en: 'Search by name, nickname, author...',
+    ko: '이름・별명・작자로 검색...',
+  },
+  'view.grid': {
+    ja: 'グリッド表示',
+    en: 'Grid view',
+    ko: '그리드 보기',
+  },
+  'view.list': {
+    ja: 'リスト表示',
+    en: 'List view',
+    ko: '리스트 보기',
+  },
+  'notfound.title': {
+    ja: '見つかりません',
+    en: 'No results found',
+    ko: '결과를 찾을 수 없습니다',
+  },
+  'notfound.message': {
+    ja: '検索条件を変更してみてください',
+    en: 'Try changing your search criteria',
+    ko: '검색 조건을 변경해 보세요',
+  },
+
+  // === Filter panel ===
+  'filter.category': {
+    ja: 'カテゴリで絞り込み',
+    en: 'Filter by category',
+    ko: '카테고리로 필터',
+  },
+  'filter.allCategories': {
+    ja: 'すべてのカテゴリ',
+    en: 'All Categories',
+    ko: '모든 카테고리',
+  },
+  'filter.author': {
+    ja: '作者で絞り込み',
+    en: 'Filter by author',
+    ko: '작자로 필터',
+  },
+  'filter.allAuthors': {
+    ja: 'すべての作者',
+    en: 'All Authors',
+    ko: '모든 작자',
+  },
+  'filter.sortToggle': {
+    ja: 'ソート順の切り替え',
+    en: 'Toggle sort order',
+    ko: '정렬 순서 전환',
+  },
+  'filter.ascending': {
+    ja: '昇順',
+    en: 'Ascending',
+    ko: '오름차순',
+  },
+  'filter.descending': {
+    ja: '降順',
+    en: 'Descending',
+    ko: '내림차순',
+  },
+  'filter.randomToggle': {
+    ja: 'ランダム表示の切り替え',
+    en: 'Toggle random mode',
+    ko: '랜덤 표시 전환',
+  },
+  'filter.random': {
+    ja: 'ランダム表示',
+    en: 'Random',
+    ko: '랜덤 표시',
+  },
+  'filter.favoritesToggle': {
+    ja: 'お気に入りのみ表示',
+    en: 'Show favorites only',
+    ko: '즐겨찾기만 표시',
+  },
+  'filter.favorites': {
+    ja: 'お気に入りのみ',
+    en: 'Favorites Only',
+    ko: '즐겨찾기만',
+  },
+
+  // === Card ===
+  'card.avatarName': {
+    ja: 'アバター名',
+    en: 'Avatar',
+    ko: '아바타 이름',
+  },
+  'card.author': {
+    ja: '作者',
+    en: 'Author',
+    ko: '작자',
+  },
+  'card.detail': {
+    ja: 'くわしく見る',
+    en: 'View Details',
+    ko: '자세히 보기',
+  },
+  'card.favorite.add': {
+    ja: 'お気に入り登録',
+    en: 'Add to favorites',
+    ko: '즐겨찾기 추가',
+  },
+  'card.favorite.remove': {
+    ja: 'お気に入り解除',
+    en: 'Remove from favorites',
+    ko: '즐겨찾기 해제',
+  },
+  'card.download': {
+    ja: '三面図をダウンロード',
+    en: 'Download reference sheet',
+    ko: '3면도 다운로드',
+  },
+  'card.downloadLabel': {
+    ja: '三面図DL',
+    en: 'Ref Sheet',
+    ko: '3면도',
+  },
+
+  // === List view ===
+  'list.appearance': {
+    ja: '見た目',
+    en: 'Image',
+    ko: '외관',
+  },
+  'list.name': {
+    ja: '名前',
+    en: 'Name',
+    ko: '이름',
+  },
+  'list.category': {
+    ja: 'カテゴリ',
+    en: 'Category',
+    ko: '카테고리',
+  },
+  'list.action': {
+    ja: 'アクション',
+    en: 'Actions',
+    ko: '액션',
+  },
+};

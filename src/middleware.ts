@@ -47,7 +47,7 @@ export function middleware(request: NextRequest) {
     style-src 'self' 'unsafe-inline' udify.app *.udify.app fonts.googleapis.com;
     img-src 'self' data: blob: https: *.akyodex.com *.vrchat.com *.r2.cloudflarestorage.com udify.app *.udify.app;
     font-src 'self' data: udify.app *.udify.app fonts.gstatic.com;
-    connect-src 'self' *.dify.dev *.dify.ai *.udify.app udify.app *.r2.cloudflarestorage.com *.sentry.io https://analytics.google.com https://images.akyodex.com;
+    connect-src 'self' *.dify.dev *.dify.ai *.udify.app udify.app *.r2.cloudflarestorage.com *.sentry.io browser.sentry-cdn.com https://analytics.google.com https://images.akyodex.com;
     frame-src 'self' udify.app *.udify.app;
     worker-src 'self' blob:;
     media-src 'self' data: mediastream: blob:;

@@ -45,11 +45,15 @@ interface RevalidateRequest {
 const DEFAULT_PATHS = [
   '/',      // Japanese home
   '/en',    // English home
+  '/ko',    // Korean home
 ];
 
 // Default tags to revalidate
 const DEFAULT_TAGS = [
   'akyo-data',
+  'akyo-data-ja',
+  'akyo-data-en',
+  'akyo-data-ko',
 ];
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -120,30 +124,42 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Phase 5b: Update KV cache if requested
     let kvUpdated = false;
-    let kvUpdateDetails: { ja: boolean; en: boolean; metadata: boolean } | null = null;
+    let kvUpdateDetails: { ja: boolean; en: boolean; ko: boolean; metadata: boolean } | null = null;
     let kvError: string | null = null;
     
     if (updateKV) {
       try {
         console.log('[revalidate] Updating KV cache...');
-        const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
-        const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
+        const { getAkyoDataFromJSON, getAkyoDataFromJSONIfExists } = await import('@/lib/akyo-data-json');
+        const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
         
-        // Fetch fresh data from JSON for both languages
-        const [dataJa, dataEn] = await Promise.all([
+        // Fetch fresh data from JSON for all languages (ko is optional)
+        const [dataJa, dataEn, dataKo] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
+          getAkyoDataFromJSONIfExists('ko'),
         ]);
         
-        // Update both languages atomically to avoid metadata race condition
-        kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn);
-        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata;
+        if (!dataKo) {
+          console.warn('[revalidate] Korean JSON data not available on CDN, skipping ko KV update');
+        }
+        
+        // Update all languages atomically to avoid metadata race condition
+        kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo ?? undefined);
+        // ko is non-fatal only when Korean JSON was unavailable (dataKo is null).
+        // If Korean data was fetched but the KV write failed, treat as fatal.
+        const koRequired = dataKo !== null;
+        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata
+          && (!koRequired || kvUpdateDetails.ko);
         
         if (!kvUpdated) {
-          kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`;
+          kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`;
           console.error(`[revalidate] ${kvError}`);
+        } else if (!kvUpdateDetails.ko) {
+          // ko JSON was unavailable — log as warning, not error
+          console.warn(`[revalidate] KV cache update partial: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko} (ko JSON unavailable), meta=${kvUpdateDetails.metadata}`);
         } else {
-          console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, meta=${kvUpdateDetails.metadata}`);
+          console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`);
         }
       } catch (error) {
         kvError = `KV update failed: ${error}`;
