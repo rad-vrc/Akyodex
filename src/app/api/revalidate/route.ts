@@ -127,7 +127,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       try {
         console.log('[revalidate] Updating KV cache...');
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
-        const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
+        const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
         
         // Fetch fresh data from JSON for all languages
         const [dataJa, dataEn, dataKo] = await Promise.all([
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         ]);
         
         // Update all languages atomically to avoid metadata race condition
-        kvUpdateDetails = await updateKVCacheBoth(dataJa, dataEn, dataKo);
+        kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo);
         kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.ko && kvUpdateDetails.metadata;
         
         if (!kvUpdated) {

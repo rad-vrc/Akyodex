@@ -140,7 +140,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       console.log('[kv-migrate] Initializing new KV format...');
       try {
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
-        const { updateKVCacheBoth } = await import('@/lib/akyo-data-kv');
+        const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
         
         // Fetch fresh data from JSON
         const [dataJa, dataEn, dataKo] = await Promise.all([
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         result.dataCount.ko = dataKo.length;
         
         // Update KV atomically to avoid metadata race condition
-        const kvResult = await updateKVCacheBoth(dataJa, dataEn, dataKo);
+        const kvResult = await updateKVCacheAll(dataJa, dataEn, dataKo);
         
         // Track successful updates
         if (kvResult.ja) {

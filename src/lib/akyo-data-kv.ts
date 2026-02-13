@@ -171,12 +171,12 @@ export const getAkyoDataFromKVWithSource = cache(
 /**
  * Update KV cache with new data for a single language
  * 
- * WARNING: When updating both languages, use updateKVCacheBoth() instead
+ * WARNING: When updating multiple languages, use updateKVCacheAll() instead
  * to avoid race conditions with metadata updates.
  * 
  * @param data - Array of Akyo data
  * @param lang - Language code
- * @param skipMetadata - If true, skip metadata update (used internally by updateKVCacheBoth)
+ * @param skipMetadata - If true, skip metadata update (used internally by updateKVCacheAll)
  * @returns true if successful, false otherwise
  */
 export async function updateKVCache(
@@ -198,13 +198,13 @@ export async function updateKVCache(
     await kv.put(key, JSON.stringify(data));
     console.log(`[KV] Updated ${key} with ${data.length} avatars`);
     
-    // Skip metadata update if called from updateKVCacheBoth
+    // Skip metadata update if called from updateKVCacheAll
     if (skipMetadata) {
       return true;
     }
     
     // Update metadata - only safe when updating single language
-    // For parallel updates, use updateKVCacheBoth() instead
+    // For parallel updates, use updateKVCacheAll() instead
     let existingMeta: KVMetadata | null = null;
     try {
       existingMeta = await kv.get<KVMetadata>(KV_KEYS.META, { type: 'json' });
@@ -246,7 +246,7 @@ export async function updateKVCache(
  * @param dataKo - Korean Akyo data array (optional for backward compatibility)
  * @returns Object with success status for each language
  */
-export async function updateKVCacheBoth(
+export async function updateKVCacheAll(
   dataJa: AkyoData[],
   dataEn: AkyoData[],
   dataKo?: AkyoData[]
@@ -262,18 +262,24 @@ export async function updateKVCacheBoth(
   
   try {
     // Update all data stores in parallel (without metadata)
-    const updates: Promise<boolean>[] = [
-      updateKVCache(dataJa, 'ja', true),
-      updateKVCache(dataEn, 'en', true),
-    ];
+    const tasks: Record<string, Promise<boolean>> = {
+      ja: updateKVCache(dataJa, 'ja', true),
+      en: updateKVCache(dataEn, 'en', true),
+    };
     if (dataKo) {
-      updates.push(updateKVCache(dataKo, 'ko', true));
+      tasks.ko = updateKVCache(dataKo, 'ko', true);
     }
     
-    const results = await Promise.all(updates);
-    result.ja = results[0];
-    result.en = results[1];
-    result.ko = results[2] ?? false;
+    const entries = Object.entries(tasks);
+    const settled = await Promise.all(entries.map(([, p]) => p));
+    for (let i = 0; i < entries.length; i++) {
+      const lang = entries[i][0] as keyof typeof result;
+      result[lang] = settled[i];
+    }
+    // Ensure ko is explicitly false when not requested
+    if (!dataKo) {
+      result.ko = false;
+    }
     
     // Update metadata once with all counts
     if (result.ja || result.en || result.ko) {
@@ -303,7 +309,7 @@ export async function updateKVCacheBoth(
     
     return result;
   } catch (error) {
-    console.error('[KV] Error in updateKVCacheBoth:', error);
+    console.error('[KV] Error in updateKVCacheAll:', error);
     return result;
   }
 }
