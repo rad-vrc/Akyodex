@@ -113,15 +113,6 @@ export function IconTag({ size, className, ...props }: IconProps) {
   );
 }
 
-/** User astronaut (fa-user-astronaut) */
-export function IconUserAstronaut({ size, className, ...props }: IconProps) {
-  return (
-    <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>
-      <path d="M370.7 96.1C346.1 39.5 289.7 0 224 0S101.9 39.5 77.3 96.1C60.9 97.5 48 111.2 48 128v64c0 16.8 12.9 30.5 29.3 31.9C101.9 280.5 158.3 320 224 320s122.1-39.5 146.7-96.1c16.4-1.4 29.3-15.1 29.3-31.9V128c0-16.8-12.9-30.5-29.3-31.9zM336 144v16a112 112 0 0 1 -224 0V144a112 112 0 0 1 224 0zM32 416H416c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64zm22.3-64l27.2-75.8C98.7 306.5 127.4 330 160 345.4V400H136c-13.3 0-24-10.7-24-24v-8H54.3zM288 400V345.4c32.6-15.4 61.3-38.9 78.5-69.2L393.7 352H336v8c0 13.3-10.7 24-24 24H288z" />
-    </Icon>
-  );
-}
-
 /** User (fa-user) */
 export function IconUser({ size, className, ...props }: IconProps) {
   return (
