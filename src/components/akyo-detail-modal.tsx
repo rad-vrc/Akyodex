@@ -306,7 +306,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 w-12 h-12 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-md border border-white/30"
+              className="absolute top-4 right-4 w-12 h-12 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white/60 backdrop-blur-md border border-white/30"
               style={{
                 background: 'rgba(255, 255, 255, 0.45)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -529,7 +529,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     <button
                       type="button"
                       onClick={handleVRChatOpen}
-                      className="flex-1 py-3 rounded-lg font-medium transition-opacity flex items-center justify-center gap-2"
+                      className="flex-1 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 hover:brightness-110 hover:shadow-md"
                       style={{
                         background: 'linear-gradient(135deg, #f97316, #fb923c)',
                         color: 'white',
