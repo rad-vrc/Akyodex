@@ -2,17 +2,19 @@
 
 import { getCategoryColor } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
+import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
 
 interface AkyoCardProps {
   akyo: AkyoData;
+  lang?: SupportedLanguage;
   onToggleFavorite?: (id: string) => void;
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
-export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps) {
+export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(akyo.id);
@@ -63,7 +65,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           type="button"
           onClick={handleFavoriteClick}
           className="favorite-btn absolute top-2 right-2 z-10"
-          aria-label={akyo.isFavorite ? 'お気に入り解除' : 'お気に入り登録'}
+          aria-label={akyo.isFavorite ? t('card.favorite.remove', lang) : t('card.favorite.add', lang)}
         >
           {akyo.isFavorite ? '❤️' : '🤍'}
         </button>
@@ -78,7 +80,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
             type="button"
             onClick={handleDownloadClick}
             className="reference-sheet-button"
-            title="三面図をダウンロード"
+            title={t('card.download', lang)}
           >
             <svg
               className="w-4 h-4"
@@ -94,7 +96,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
-            <span className="hidden sm:inline">三面図DL</span>
+            <span className="hidden sm:inline">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>
 
@@ -130,11 +132,11 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
         <p className="text-xs text-gray-600 mb-2 whitespace-pre-line">
           {akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
             <>
-              アバター名: {akyo.avatarName}
+              {t('card.avatarName', lang)}: {akyo.avatarName}
               {'\n'}
             </>
           )}
-          作者: {author}
+          {t('card.author', lang)}: {author}
         </p>
 
         {/* くわしく見るボタン */}
@@ -144,7 +146,7 @@ export function AkyoCard({ akyo, onToggleFavorite, onShowDetail }: AkyoCardProps
           className="detail-button w-full flex items-center justify-center gap-2"
         >
           <span className="animate-bounce">🌟</span>
-          <span>くわしく見る</span>
+          <span>{t('card.detail', lang)}</span>
           <span className="animate-bounce">🌟</span>
         </button>
       </div>

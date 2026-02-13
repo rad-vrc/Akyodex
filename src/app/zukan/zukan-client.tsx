@@ -292,7 +292,7 @@ export function ZukanClient({
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src={lang === 'en' ? '/images/logo-US.webp' : '/images/logo.webp'}
+              src={lang === 'ja' ? '/images/logo.webp' : '/images/logo-US.webp'}
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
@@ -380,6 +380,7 @@ export function ZukanClient({
         ) : viewMode === 'list' ? (
           <AkyoList
             data={filteredData.slice(0, renderLimit)}
+            lang={lang}
             onToggleFavorite={toggleFavorite}
             onShowDetail={handleShowDetail}
           />
@@ -389,6 +390,7 @@ export function ZukanClient({
               <AkyoCard
                 key={akyo.id}
                 akyo={akyo}
+                lang={lang}
                 onToggleFavorite={toggleFavorite}
                 onShowDetail={handleShowDetail}
               />

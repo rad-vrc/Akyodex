@@ -250,4 +250,63 @@ export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
     en: 'Favorites Only',
     ko: '즐겨찾기만',
   },
+
+  // === Card ===
+  'card.avatarName': {
+    ja: 'アバター名',
+    en: 'Avatar',
+    ko: '아바타 이름',
+  },
+  'card.author': {
+    ja: '作者',
+    en: 'Author',
+    ko: '작자',
+  },
+  'card.detail': {
+    ja: 'くわしく見る',
+    en: 'View Details',
+    ko: '자세히 보기',
+  },
+  'card.favorite.add': {
+    ja: 'お気に入り登録',
+    en: 'Add to favorites',
+    ko: '즐겨찾기 추가',
+  },
+  'card.favorite.remove': {
+    ja: 'お気に入り解除',
+    en: 'Remove from favorites',
+    ko: '즐겨찾기 해제',
+  },
+  'card.download': {
+    ja: '三面図をダウンロード',
+    en: 'Download reference sheet',
+    ko: '3면도 다운로드',
+  },
+  'card.downloadLabel': {
+    ja: '三面図DL',
+    en: 'Ref Sheet',
+    ko: '3면도',
+  },
+
+  // === List view ===
+  'list.appearance': {
+    ja: '見た目',
+    en: 'Image',
+    ko: '외관',
+  },
+  'list.name': {
+    ja: '名前',
+    en: 'Name',
+    ko: '이름',
+  },
+  'list.category': {
+    ja: 'カテゴリ',
+    en: 'Category',
+    ko: '카테고리',
+  },
+  'list.action': {
+    ja: 'アクション',
+    en: 'Actions',
+    ko: '액션',
+  },
 };
