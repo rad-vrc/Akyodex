@@ -132,7 +132,7 @@ return Response.json({ error: 'msg' }, { status: 400 });
 
 - `any` 型の使用禁止
 - `require()` ではなく ES module (`import`) を使用（scripts/ 除く）
-- ファイル末尾は��行1つで終わること
+- ファイル末尾は改行1つで終わること
 - PR は必ず別ブランチから作成し、main へ直接コミットしない
 - 入力バリデーションは長さ制限付き正規表現（ReDoS 防止）
 - VRChat ID: `/^avtr_[A-Za-z0-9-]{1,50}$/`
