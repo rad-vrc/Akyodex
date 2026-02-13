@@ -173,25 +173,28 @@ export default async function RootLayout({
           strategy="beforeInteractive"
           {...(nonce && { nonce })}
         />
-        {/* Dify AI Chatbot — lazyOnload の単一スクリプトで config → embed の実行順序を保証。
-            2つの lazyOnload スクリプトに分割すると独立して遅延されるため、
-            embed が config より先に実行される可能性がある (Codex P2 feedback) */}
+        {/* Dify AI Chatbot — config は beforeInteractive (SSR HTML に直接出力) で nonce が
+            CSP に正しくマッチする。lazyOnload だとクライアント側で動的生成されるため
+            nonce が適用されず CSP にブロックされていた。
+            embed.min.js は afterInteractive で読み込み、udify.app は script-src で許可済み。
+            beforeInteractive → afterInteractive の順序で config が先に実行される。 */}
         {difyToken ? (
-          <Script
-            id="dify-chatbot-init"
-            strategy="lazyOnload"
-            nonce={nonce}
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.difyChatbotConfig = { token: '${difyToken}' };
-                var s = document.createElement('script');
-                s.src = 'https://udify.app/embed.min.js';
-                s.id = 'dify-chatbot-embed';
-                s.defer = true;
-                document.body.appendChild(s);
-              `,
-            }}
-          />
+          <>
+            <Script
+              id="dify-chatbot-config"
+              strategy="beforeInteractive"
+              nonce={nonce}
+              dangerouslySetInnerHTML={{
+                __html: `window.difyChatbotConfig = { token: '${difyToken}' };`,
+              }}
+            />
+            <Script
+              id="dify-chatbot-embed"
+              src="https://udify.app/embed.min.js"
+              strategy="afterInteractive"
+              nonce={nonce}
+            />
+          </>
         ) : null}
         <WebVitals />
         <ServiceWorkerRegister />
