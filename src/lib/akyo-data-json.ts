@@ -7,7 +7,7 @@
  * This module handles JSON data fetching with:
  * - ISR (Incremental Static Regeneration) every hour as fallback
  * - On-demand revalidation via cache tags ('akyo-data')
- * - Automatic language fallback (en -> ja)
+ * - Automatic language fallback (en/ko -> ja)
  * - React cache() for request deduplication
  * - Fallback to CSV method on error
  * 
