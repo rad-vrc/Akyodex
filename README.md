@@ -118,12 +118,12 @@ npm run dev
 - **ISR (Incremental Static Regeneration)**: Updating static pages periodically without rebuilding the entire site
 - **PWA (Progressive Web App)**: Web application with native app-like features (offline support, installable)
 - **Edge Runtime**: Code execution at CDN edge locations (closer to users) for lower latency
-- **JWT (JSON Web Token)**: Secure authentication token standard
+- **HMAC (Hash-based Message Authentication Code)**: Cryptographic signature for verifying data integrity and authenticity
 
 ### Cloudflare Services
 - **Cloudflare Pages**: Static site hosting with automatic deployment from Git
 - **R2 Bucket**: Object storage (like AWS S3) for files (CSV, images)
-- **KV (Key-Value) Store**: Fast distributed database for simple key-value pairs (used for sessions)
+- **KV (Key-Value) Store**: Fast distributed database for simple key-value pairs (used for sessions and data cache)
 
 ### VRChat Terms
 - **Avatar**: 3D character model used in VRChat
@@ -750,7 +750,7 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 - 🇺🇸 English (en)
 
 #### Detection Priority:
-1. **Cookie** (`lang=ja` or `lang=en`)
+1. **Cookie** (`AKYO_LANG=ja` or `AKYO_LANG=en`)
 2. **Cloudflare Header** (`cf-ipcountry`)
 3. **Accept-Language Header**
 4. **Default**: Japanese
