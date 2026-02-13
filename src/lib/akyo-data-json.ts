@@ -114,6 +114,49 @@ export const getAkyoDataFromJSON = cache(
 );
 
 /**
+ * Fetch Akyo data from JSON only if the requested language file actually exists.
+ * Returns null instead of silently falling back to Japanese.
+ *
+ * Use this when you need to distinguish between "real data for this language"
+ * and "fell back to Japanese" — e.g. during KV migration/revalidation where
+ * writing Japanese data under a Korean key would be incorrect.
+ *
+ * @param lang - Language code
+ * @returns Array of Akyo data, or null if the requested language is unavailable
+ */
+export async function getAkyoDataFromJSONIfExists(
+  lang: SupportedLanguage
+): Promise<AkyoData[] | null> {
+  const url = getJsonUrl(lang);
+
+  console.log(`[getAkyoDataFromJSONIfExists] Checking ${lang} JSON at: ${url}`);
+
+  try {
+    const response = await fetch(url, {
+      next: {
+        revalidate: 3600,
+        tags: ['akyo-data', `akyo-data-${lang}`],
+      },
+      headers: { 'Accept': 'application/json' },
+    });
+
+    if (!response.ok) {
+      console.log(`[getAkyoDataFromJSONIfExists] ${lang} JSON not found (${response.status})`);
+      return null;
+    }
+
+    const json = await response.json();
+    const data: AkyoData[] = normalizeJsonData(json);
+
+    console.log(`[getAkyoDataFromJSONIfExists] Success: ${data.length} avatars (${lang})`);
+    return data;
+  } catch (error) {
+    console.warn(`[getAkyoDataFromJSONIfExists] Error fetching ${lang}:`, error);
+    return null;
+  }
+}
+
+/**
  * Normalize JSON data to ensure consistent AkyoData structure
  * Handles both array format and wrapped format with metadata
  */

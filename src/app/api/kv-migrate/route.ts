@@ -96,11 +96,13 @@ export async function POST(request: NextRequest): Promise<Response> {
       newKeysCreated: string[];
       dataCount: { ja: number; en: number; ko: number };
       errors: string[];
+      warnings: string[];
     } = {
       deletedKeys: [],
       newKeysCreated: [],
       dataCount: { ja: 0, en: 0, ko: 0 },
       errors: [],
+      warnings: [],
     };
 
     // Step 1: Clean up old format keys (akyo:*)
@@ -140,21 +142,28 @@ export async function POST(request: NextRequest): Promise<Response> {
       console.log('[kv-migrate] Initializing new KV format...');
       try {
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
+        const { getAkyoDataFromJSONIfExists } = await import('@/lib/akyo-data-json');
         const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
         
-        // Fetch fresh data from JSON
+        // Fetch fresh data from JSON (ja/en required, ko optional)
         const [dataJa, dataEn, dataKo] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
-          getAkyoDataFromJSON('ko'),
+          getAkyoDataFromJSONIfExists('ko'),
         ]);
         
         result.dataCount.ja = dataJa.length;
         result.dataCount.en = dataEn.length;
-        result.dataCount.ko = dataKo.length;
+        result.dataCount.ko = dataKo?.length ?? 0;
+        
+        if (!dataKo) {
+          const warnMsg = 'Korean JSON data not available on CDN, skipping KV update for ko';
+          console.warn(`[kv-migrate] ${warnMsg}`);
+          result.warnings.push(warnMsg);
+        }
         
         // Update KV atomically to avoid metadata race condition
-        const kvResult = await updateKVCacheAll(dataJa, dataEn, dataKo);
+        const kvResult = await updateKVCacheAll(dataJa, dataEn, dataKo ?? undefined);
         
         // Track successful updates
         if (kvResult.ja) {
@@ -175,7 +184,8 @@ export async function POST(request: NextRequest): Promise<Response> {
         
         if (kvResult.ko) {
           result.newKeysCreated.push('akyo-data-ko');
-        } else {
+        } else if (dataKo) {
+          // Only treat as error if Korean data was actually available but KV write failed
           const errMsg = 'Failed to update KV cache for Korean data';
           console.error(`[kv-migrate] ${errMsg}`);
           result.errors.push(errMsg);

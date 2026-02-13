@@ -127,22 +127,31 @@ export async function POST(request: NextRequest): Promise<Response> {
       try {
         console.log('[revalidate] Updating KV cache...');
         const { getAkyoDataFromJSON } = await import('@/lib/akyo-data-json');
+        const { getAkyoDataFromJSONIfExists } = await import('@/lib/akyo-data-json');
         const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
         
-        // Fetch fresh data from JSON for all languages
+        // Fetch fresh data from JSON for all languages (ko is optional)
         const [dataJa, dataEn, dataKo] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
-          getAkyoDataFromJSON('ko'),
+          getAkyoDataFromJSONIfExists('ko'),
         ]);
         
+        if (!dataKo) {
+          console.warn('[revalidate] Korean JSON data not available on CDN, skipping ko KV update');
+        }
+        
         // Update all languages atomically to avoid metadata race condition
-        kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo);
-        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.ko && kvUpdateDetails.metadata;
+        kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo ?? undefined);
+        // ko is non-fatal: only ja, en, and metadata are required for success
+        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata;
         
         if (!kvUpdated) {
           kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`;
           console.error(`[revalidate] ${kvError}`);
+        } else if (!kvUpdateDetails.ko) {
+          // Log ko failure as warning, not error
+          console.warn(`[revalidate] KV cache update partial: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko} (non-fatal), meta=${kvUpdateDetails.metadata}`);
         } else {
           console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`);
         }

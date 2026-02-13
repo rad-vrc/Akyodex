@@ -58,14 +58,21 @@ function getKVNamespace(): KVNamespace | null {
 }
 
 /**
+ * Map from SupportedLanguage to KV key.
+ * Using a Record ensures TypeScript catches missing mappings
+ * when new languages are added to SupportedLanguage.
+ */
+const KV_KEY_MAP: Record<SupportedLanguage, string> = {
+  ja: KV_KEYS.DATA_JA,
+  en: KV_KEYS.DATA_EN,
+  ko: KV_KEYS.DATA_KO,
+};
+
+/**
  * Get the KV key for a specific language
  */
 function getKVKey(lang: SupportedLanguage): string {
-  switch (lang) {
-    case 'en': return KV_KEYS.DATA_EN;
-    case 'ko': return KV_KEYS.DATA_KO;
-    default: return KV_KEYS.DATA_JA;
-  }
+  return KV_KEY_MAP[lang];
 }
 
 /**

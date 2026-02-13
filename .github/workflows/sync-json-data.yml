@@ -20,7 +20,8 @@ name: Sync JSON Data from CSV
 #   akyo-images/
 #   ├── data/
 #   │   ├── akyo-data-ja.json  (Japanese data)
-#   │   └── akyo-data-en.json  (English data)
+#   │   ├── akyo-data-en.json  (English data)
+#   │   └── akyo-data-ko.json  (Korean data)
 #   └── images/
 #       └── *.webp (avatar images)
 #
@@ -34,6 +35,7 @@ on:
     paths:
       - 'data/akyo-data-ja.csv'
       - 'data/akyo-data-en.csv'
+      - 'data/akyo-data-ko.csv'
   workflow_dispatch:
 
 concurrency:
@@ -45,6 +47,7 @@ env:
   R2_DATA_PATH: data
   JSON_FILE_JA: akyo-data-ja.json
   JSON_FILE_EN: akyo-data-en.json
+  JSON_FILE_KO: akyo-data-ko.json
   SITE_URL: https://akyodex.com
 
 jobs:
@@ -85,13 +88,14 @@ jobs:
           set -e
           JSON_JA="data/${{ env.JSON_FILE_JA }}"
           JSON_EN="data/${{ env.JSON_FILE_EN }}"
-          if git diff --quiet -- "$JSON_JA" "$JSON_EN"; then
+          JSON_KO="data/${{ env.JSON_FILE_KO }}"
+          if git diff --quiet -- "$JSON_JA" "$JSON_EN" "$JSON_KO"; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No JSON changes detected"
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "JSON changes detected:"
-            git diff --stat -- "$JSON_JA" "$JSON_EN"
+            git diff --stat -- "$JSON_JA" "$JSON_EN" "$JSON_KO"
           fi
 
       - name: Commit JSON changes
@@ -100,9 +104,10 @@ jobs:
           set -e
           JSON_JA="data/${{ env.JSON_FILE_JA }}"
           JSON_EN="data/${{ env.JSON_FILE_EN }}"
+          JSON_KO="data/${{ env.JSON_FILE_KO }}"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -- "$JSON_JA" "$JSON_EN"
+          git add -- "$JSON_JA" "$JSON_EN" "$JSON_KO"
           git commit -m "chore: auto-sync JSON data from CSV changes"
           
           MAX_RETRIES=3
@@ -201,6 +206,16 @@ jobs:
             UPLOAD_FAILED=true
           fi
           
+          JSON_KO_PATH="data/${{ env.JSON_FILE_KO }}"
+          R2_KO_PATH="s3://${{ env.R2_BUCKET }}/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_KO }}"
+          echo "Uploading $JSON_KO_PATH to $R2_KO_PATH..."
+          if aws s3 cp "$JSON_KO_PATH" "$R2_KO_PATH" --endpoint-url "$R2_ENDPOINT" --content-type "application/json"; then
+            echo "✅ Uploaded ${{ env.JSON_FILE_KO }}"
+          else
+            echo "::error::Failed to upload ${{ env.JSON_FILE_KO }}"
+            UPLOAD_FAILED=true
+          fi
+          
           if [ "$UPLOAD_FAILED" = true ]; then
             echo "::error::One or more uploads failed"
             exit 1
@@ -220,7 +235,7 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ env.SITE_URL }}/api/revalidate" \
             -H "Content-Type: application/json" \
             -H "x-revalidate-secret: $REVALIDATE_SECRET" \
-            -d '{"paths": ["/", "/en"], "tags": ["akyo-data", "akyo-data-ja", "akyo-data-en"], "updateKV": true}' \
+            -d '{"paths": ["/", "/en", "/ko"], "tags": ["akyo-data", "akyo-data-ja", "akyo-data-en", "akyo-data-ko"], "updateKV": true}' \
             --max-time 60)
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
@@ -243,10 +258,12 @@ jobs:
             echo "### Updated Files" >> $GITHUB_STEP_SUMMARY
             echo "- \`data/${{ env.JSON_FILE_JA }}\`" >> $GITHUB_STEP_SUMMARY
             echo "- \`data/${{ env.JSON_FILE_EN }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- \`data/${{ env.JSON_FILE_KO }}\`" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### R2 URLs" >> $GITHUB_STEP_SUMMARY
             echo "- https://images.akyodex.com/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_JA }}" >> $GITHUB_STEP_SUMMARY
             echo "- https://images.akyodex.com/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_EN }}" >> $GITHUB_STEP_SUMMARY
+            echo "- https://images.akyodex.com/${{ env.R2_DATA_PATH }}/${{ env.JSON_FILE_KO }}" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Cache Invalidation" >> $GITHUB_STEP_SUMMARY
             echo "- ISR revalidation triggered for instant updates" >> $GITHUB_STEP_SUMMARY
