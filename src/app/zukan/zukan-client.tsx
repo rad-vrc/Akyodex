@@ -292,7 +292,7 @@ export function ZukanClient({
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src={lang === 'ja' ? '/images/logo.webp' : '/images/logo-US.webp'}
+              src={lang === 'ja' ? '/images/logo.webp' : lang === 'ko' ? '/images/logo-KO.webp' : '/images/logo-US.webp'}
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
