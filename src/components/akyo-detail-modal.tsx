@@ -306,24 +306,24 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 w-14 h-14 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110"
+              className="absolute top-4 right-4 w-12 h-12 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110 backdrop-blur-md border border-white/30"
               style={{
-                background: 'linear-gradient(135deg, #7c6f8a 0%, #5b4d6b 100%)',
-                boxShadow: '0 4px 10px rgba(91, 77, 107, 0.35)',
+                background: 'rgba(255, 255, 255, 0.45)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
               }}
               aria-label="閉じる"
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 className="transition-transform duration-300 hover:rotate-90"
               >
                 <path
                   d="M18 6L6 18M6 6L18 18"
-                  stroke="white"
-                  strokeWidth="3"
+                  stroke="#6b5b7b"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
