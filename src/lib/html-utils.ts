@@ -61,4 +61,3 @@ export function stripHTMLTags(html: string): string {
     allowedAttributes: {},
   });
 }
-
