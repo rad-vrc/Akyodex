@@ -84,14 +84,21 @@ export function ZukanClient({
         if (!response.ok) throw new Error('Failed to fetch data');
         
         const jsonData = await response.json();
-        if (Array.isArray(jsonData)) {
-          refetchWithNewData(jsonData);
+        // Handle both array format and wrapped format ({ data: [...] })
+        const akyoItems: AkyoData[] | undefined =
+          Array.isArray(jsonData)
+            ? jsonData
+            : jsonData && typeof jsonData === 'object' && Array.isArray(jsonData.data)
+              ? jsonData.data
+              : undefined;
+        if (akyoItems) {
+          refetchWithNewData(akyoItems);
           
           // Extract unique categories and authors from data
           const uniqueCategories = new Set<string>();
           const uniqueAuthors = new Set<string>();
           
-          jsonData.forEach((item: AkyoData) => {
+          akyoItems.forEach((item: AkyoData) => {
             const cats = (item.category || item.attribute || '').split(/[、,]/).map(s => s.trim()).filter(Boolean);
             const auths = (item.author || item.creator || '').split(/[、,]/).map(s => s.trim()).filter(Boolean);
             cats.forEach(c => uniqueCategories.add(c));
