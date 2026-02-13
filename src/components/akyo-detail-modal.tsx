@@ -15,7 +15,7 @@
  */
 
 import { getCategoryColor } from '@/lib/akyo-data-helpers';
-import { IconExternalLink, IconGift, IconHeart, IconPalette, IconSparkles, IconTag, IconUserAstronaut } from '@/components/icons';
+import { IconExternalLink, IconGift, IconHeart, IconPalette, IconSparkles, IconTag, IconUser } from '@/components/icons';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -429,7 +429,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Avatar Name Card */}
                   <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-blue-600 mb-2">
-                      <IconUserAstronaut size="w-3.5 h-3.5" className="mr-1" />アバター名
+                      <IconUser size="w-3.5 h-3.5" className="mr-1" />アバター名
                     </h3>
                     <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
                   </div>
