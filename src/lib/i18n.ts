@@ -1,6 +1,6 @@
 /**
  * Internationalization (i18n) utilities
- * 
+ *
  * Features:
  * - Auto-detect language from headers
  * - Manual language switching
@@ -34,7 +34,7 @@ export const LANGUAGE_TOGGLE_LABELS: Record<SupportedLanguage, string> = {
 
 /**
  * Detect language from Accept-Language header
- * 
+ *
  * Priority:
  * 1. Exact match (ja, en)
  * 2. Language prefix (ja-JP -> ja, en-US -> en)
@@ -47,7 +47,7 @@ export function detectLanguageFromHeader(acceptLanguage: string | null): Support
   // Format: "en-US,en;q=0.9,ja;q=0.8"
   const languages = acceptLanguage
     .split(',')
-    .map(lang => {
+    .map((lang) => {
       const [code, qValue] = lang.split(';');
       const q = qValue ? parseFloat(qValue.replace('q=', '')) : 1.0;
       return { code: code.trim().toLowerCase(), q };
@@ -60,7 +60,7 @@ export function detectLanguageFromHeader(acceptLanguage: string | null): Support
     if (SUPPORTED_LANGUAGES.includes(code as SupportedLanguage)) {
       return code as SupportedLanguage;
     }
-    
+
     // Prefix match (en-US -> en)
     const prefix = code.split('-')[0] as SupportedLanguage;
     if (SUPPORTED_LANGUAGES.includes(prefix)) {
@@ -73,7 +73,7 @@ export function detectLanguageFromHeader(acceptLanguage: string | null): Support
 
 /**
  * Get language from country code
- * 
+ *
  * This uses Cloudflare's cf.country header
  */
 export function getLanguageFromCountry(countryCode: string | null): SupportedLanguage {
@@ -82,10 +82,7 @@ export function getLanguageFromCountry(countryCode: string | null): SupportedLan
   const country = countryCode.toUpperCase();
 
   // English-speaking countries
-  const englishCountries = [
-    'US', 'GB', 'CA', 'AU', 'NZ', 'IE', 
-    'SG', 'IN', 'PH', 'MY', 'ZA'
-  ];
+  const englishCountries = ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'SG', 'IN', 'PH', 'MY', 'ZA'];
 
   if (englishCountries.includes(country)) {
     return 'en';
@@ -308,5 +305,57 @@ export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
     ja: 'アクション',
     en: 'Actions',
     ko: '액션',
+  },
+
+  // === Detail Modal ===
+  'modal.close': {
+    ja: '閉じる',
+    en: 'Close',
+    ko: '닫기',
+  },
+  'modal.name': {
+    ja: 'なまえ',
+    en: 'Name',
+    ko: '이름',
+  },
+  'modal.avatarName': {
+    ja: 'アバター名',
+    en: 'Avatar Name',
+    ko: '아바타 이름',
+  },
+  'modal.category': {
+    ja: 'カテゴリ',
+    en: 'Category',
+    ko: '카테고리',
+  },
+  'modal.author': {
+    ja: 'つくったひと',
+    en: 'Creator',
+    ko: '만든 사람',
+  },
+  'modal.vrchatUrl': {
+    ja: 'VRChat アバターURL',
+    en: 'VRChat Avatar URL',
+    ko: 'VRChat 아바타 URL',
+  },
+  'modal.bonus': {
+    ja: 'おまけじょうほう',
+    en: 'Bonus Info',
+    ko: '보너스 정보',
+  },
+  'modal.favorite.add': {
+    ja: 'お気に入りに追加',
+    en: 'Add to Favorites',
+    ko: '즐겨찾기에 추가',
+  },
+  'modal.favorite.remove': {
+    ja: 'お気に入り解除',
+    en: 'Remove from Favorites',
+    ko: '즐겨찾기 해제',
+  },
+  'modal.vrchatOpen': {
+    ja: 'VRChatで見る',
+    en: 'View in VRChat',
+    ko: 'VRChat에서 보기',
   },
 };

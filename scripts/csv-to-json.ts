@@ -1,15 +1,15 @@
 /**
  * CSV to JSON Converter for Akyo Data
- * 
+ *
  * This script converts Akyo CSV files to JSON format for faster data loading.
  * Run with: npx tsx scripts/csv-to-json.ts
- * 
+ *
  * Phase 4 Implementation: R2 JSON Data Cache
  */
 
+import { parse } from 'csv-parse/sync';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { parse } from 'csv-parse/sync';
 
 interface AkyoData {
   id: string;

@@ -12,12 +12,12 @@
  */
 
 import {
-    DEFAULT_LANGUAGE,
-    getNextLanguage,
-    LANGUAGE_NAMES,
-    LANGUAGE_TOGGLE_LABELS,
-    SUPPORTED_LANGUAGES,
-    type SupportedLanguage,
+  DEFAULT_LANGUAGE,
+  getNextLanguage,
+  LANGUAGE_NAMES,
+  LANGUAGE_TOGGLE_LABELS,
+  SUPPORTED_LANGUAGES,
+  type SupportedLanguage,
 } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
 
@@ -26,7 +26,10 @@ interface LanguageToggleProps {
   className?: string;
 }
 
-export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' }: LanguageToggleProps) {
+export function LanguageToggle({
+  initialLang = DEFAULT_LANGUAGE,
+  className = '',
+}: LanguageToggleProps) {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>(initialLang);
   const [isChanging, setIsChanging] = useState(false);
 
@@ -38,7 +41,7 @@ export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' 
     // ロバストなパース: セミコロン後のスペース有無に関わらず対応
     const cookieLang = document.cookie
       .split(';')
-      .find(row => row.trim().startsWith('AKYO_LANG='))
+      .find((row) => row.trim().startsWith('AKYO_LANG='))
       ?.split('=')[1]
       ?.trim() as SupportedLanguage | undefined;
 
@@ -81,9 +84,7 @@ export function LanguageToggle({ initialLang = DEFAULT_LANGUAGE, className = '' 
       aria-label={`Switch to ${nextLanguageLabel}`}
       title={`Switch to ${nextLanguageLabel}`}
     >
-      <span className="text-lg font-bold">
-        {LANGUAGE_TOGGLE_LABELS[currentLang]}
-      </span>
+      <span className="text-lg font-bold">{LANGUAGE_TOGGLE_LABELS[currentLang]}</span>
     </button>
   );
 }

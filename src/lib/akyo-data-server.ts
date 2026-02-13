@@ -11,8 +11,8 @@
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
 import { cache } from 'react';
+import { extractAuthors, extractCategories, findAkyoById } from './akyo-data-helpers';
 import { parseCsvToAkyoData } from './csv-utils';
-import { extractCategories, extractAuthors, findAkyoById } from './akyo-data-helpers';
 const GITHUB_OWNER = process.env.GITHUB_REPO_OWNER || 'rad-vrc';
 const GITHUB_REPO = process.env.GITHUB_REPO_NAME || 'Akyodex';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';

@@ -1,6 +1,6 @@
 /**
  * Cloudflare KV Namespace type definitions
- * 
+ *
  * Shared interface for KV operations used across the application.
  * This matches the Cloudflare Workers KV API.
  */
@@ -15,9 +15,12 @@ export interface KVNamespace {
    * @param key - The key to get
    * @param options - Optional type specification
    */
-  get(key: string, options?: { type?: 'text' | 'json' | 'arrayBuffer' | 'stream' }): Promise<string | null>;
+  get(
+    key: string,
+    options?: { type?: 'text' | 'json' | 'arrayBuffer' | 'stream' }
+  ): Promise<string | null>;
   get<T>(key: string, options: { type: 'json' }): Promise<T | null>;
-  
+
   /**
    * Put a value into KV
    * @param key - The key to set
@@ -29,22 +32,18 @@ export interface KVNamespace {
     value: string | ArrayBuffer | ReadableStream,
     options?: { expirationTtl?: number; metadata?: Record<string, unknown> }
   ): Promise<void>;
-  
+
   /**
    * Delete a key from KV
    * @param key - The key to delete
    */
   delete(key: string): Promise<void>;
-  
+
   /**
    * List keys in KV
    * @param options - Optional prefix, limit, and cursor for pagination
    */
-  list(options?: {
-    prefix?: string;
-    limit?: number;
-    cursor?: string;
-  }): Promise<{
+  list(options?: { prefix?: string; limit?: number; cursor?: string }): Promise<{
     keys: { name: string }[];
     list_complete: boolean;
     cursor?: string;

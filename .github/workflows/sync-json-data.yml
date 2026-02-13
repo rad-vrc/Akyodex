@@ -109,13 +109,13 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add -- "$JSON_JA" "$JSON_EN" "$JSON_KO"
           git commit -m "chore: auto-sync JSON data from CSV changes"
-          
+
           MAX_RETRIES=3
           RETRY_COUNT=0
           RETRY_DELAY=5
           LAST_FAILURE=""
           LAST_EXIT_CODE=0
-          
+
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             RETRY_COUNT=$((RETRY_COUNT + 1))
             set +e
@@ -173,19 +173,19 @@ jobs:
             exit 1
           fi
           echo "✅ All required secrets are configured"
-          
+
           R2_ENDPOINT="https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com"
-          
+
           echo "Verifying R2 bucket access..."
           if ! aws s3 ls "s3://${{ env.R2_BUCKET }}/" --endpoint-url "$R2_ENDPOINT" > /dev/null 2>&1; then
             echo "::error::Cannot access R2 bucket '${{ env.R2_BUCKET }}'"
             exit 1
           fi
           echo "✅ R2 bucket is accessible"
-          
+
           echo "Uploading JSON files to R2..."
           UPLOAD_FAILED=false
-          
+
           for LANG in JA EN KO; do
             JSON_VAR="JSON_FILE_${LANG}"
             JSON_FILE="${!JSON_VAR}"
@@ -199,7 +199,7 @@ jobs:
               UPLOAD_FAILED=true
             fi
           done
-          
+
           if [ "$UPLOAD_FAILED" = true ]; then
             echo "::error::One or more uploads failed"
             exit 1

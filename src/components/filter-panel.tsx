@@ -11,7 +11,7 @@ interface FilterPanelProps {
   // 旧フィールド（互換性維持、必須のまま）
   attributes: string[];
   creators: string[];
-  
+
   selectedAttribute?: string; // 選択状態のプロップス名は今回は維持
   selectedCreator?: string;
   onAttributeChange: (attribute: string) => void;
@@ -66,13 +66,13 @@ export function FilterPanel({
           aria-label={t('filter.category', lang)}
         >
           <option value="">{t('filter.allCategories', lang)}</option>
-          {displayCategories.map(attr => (
+          {displayCategories.map((attr) => (
             <option key={attr} value={attr}>
               {attr}
             </option>
           ))}
         </select>
-        
+
         <select
           id="creatorFilter"
           value={selectedCreator ?? ''}
@@ -81,7 +81,7 @@ export function FilterPanel({
           aria-label={t('filter.author', lang)}
         >
           <option value="">{t('filter.allAuthors', lang)}</option>
-          {displayAuthors.map(creator => (
+          {displayAuthors.map((creator) => (
             <option key={creator} value={creator}>
               {creator}
             </option>
@@ -105,7 +105,7 @@ export function FilterPanel({
           {sortAscending ? <IconSortAsc size="w-4 h-4" /> : <IconSortDesc size="w-4 h-4" />}{' '}
           {sortAscending ? t('filter.ascending', lang) : t('filter.descending', lang)}
         </button>
-        
+
         <button
           type="button"
           onClick={onRandomClick}
@@ -119,7 +119,7 @@ export function FilterPanel({
         >
           <IconDice size="w-4 h-4" /> {t('filter.random', lang)}
         </button>
-        
+
         <button
           type="button"
           onClick={onFavoritesClick}

@@ -1,31 +1,32 @@
-import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Kosugi_Maru, M_PLUS_Rounded_1c } from "next/font/google";
-import { StructuredData } from "@/components/structured-data";
-import { WebVitals } from "@/components/web-vitals";
-import { ServiceWorkerRegister } from "@/components/service-worker-register";
-import { headers } from "next/headers";
-import Script from "next/script";
-import "./globals.css";
+import { DifyChatbot } from '@/components/dify-chatbot';
+import { ServiceWorkerRegister } from '@/components/service-worker-register';
+import { StructuredData } from '@/components/structured-data';
+import { WebVitals } from '@/components/web-vitals';
+import type { Metadata, Viewport } from 'next';
+import { Kosugi_Maru, M_PLUS_Rounded_1c, Noto_Sans_JP } from 'next/font/google';
+import { headers } from 'next/headers';
+import Script from 'next/script';
+import './globals.css';
 
 const notoSansJP = Noto_Sans_JP({
-  variable: "--font-noto-sans-jp",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
+  variable: '--font-noto-sans-jp',
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  display: 'swap',
 });
 
 const kosugiMaru = Kosugi_Maru({
-  variable: "--font-kosugi-maru",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
+  variable: '--font-kosugi-maru',
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
 });
 
 const mPlusRounded = M_PLUS_Rounded_1c({
-  variable: "--font-m-plus-rounded",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  display: "swap",
+  variable: '--font-m-plus-rounded',
+  subsets: ['latin'],
+  weight: ['400', '500', '700', '900'],
+  display: 'swap',
   preload: false, // 日本語サブセット未対応のため preload を無効化
 });
 
@@ -46,7 +47,8 @@ export const metadata: Metadata = {
     template: '%s | Akyoずかん',
   },
 
-  description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+  description:
+    'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
 
   keywords: ['Akyo', 'Akyodex', 'VRChat', 'Avatar', 'VRChatアバター図鑑', 'Akyoずかん'],
 
@@ -82,7 +84,8 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     alternateLocale: ['en_US'],
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
-    description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+    description:
+      'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     url: 'https://akyodex.com',
     siteName: 'Akyoずかん',
     images: [
@@ -98,7 +101,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
-    description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+    description:
+      'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     images: ['/images/logo-200.png'],
     creator: '@akyodex',
   },
@@ -109,9 +113,7 @@ export const metadata: Metadata = {
       { url: '/images/akyodexIcon-32.png', sizes: '32x32', type: 'image/png' },
       { url: '/images/akyodexIcon-48.png', sizes: '48x48', type: 'image/png' },
     ],
-    apple: [
-      { url: '/images/apple-touch-icon-180.png', sizes: '180x180', type: 'image/png' },
-    ],
+    apple: [{ url: '/images/apple-touch-icon-180.png', sizes: '180x180', type: 'image/png' }],
     other: [
       { rel: 'icon', url: '/images/akyodexIcon-192.png', sizes: '192x192' },
       { rel: 'icon', url: '/images/akyodexIcon-512.png', sizes: '512x512' },
@@ -129,7 +131,7 @@ export const metadata: Metadata = {
   category: 'entertainment',
 };
 
-const sentryUrl = "https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js";
+const sentryUrl = 'https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js';
 
 export default async function RootLayout({
   children,
@@ -168,34 +170,12 @@ export default async function RootLayout({
       >
         {/* Sentry エラー監視 — beforeInteractive でハイドレーション前にロードし、
             ブートストラップ失敗やハイドレーション例外も確実にキャプチャする */}
-        <Script
-          src={sentryUrl}
-          strategy="beforeInteractive"
-          {...(nonce && { nonce })}
-        />
-        {/* Dify AI Chatbot — config は beforeInteractive (SSR HTML に直接出力) で nonce が
-            CSP に正しくマッチする。lazyOnload だとクライアント側で動的生成されるため
-            nonce が適用されず CSP にブロックされていた。
-            embed.min.js は afterInteractive で読み込み、udify.app は script-src で許可済み。
-            beforeInteractive → afterInteractive の順序で config が先に実行される。 */}
-        {difyToken ? (
-          <>
-            <Script
-              id="dify-chatbot-config"
-              strategy="beforeInteractive"
-              nonce={nonce}
-              dangerouslySetInnerHTML={{
-                __html: `window.difyChatbotConfig = { token: '${difyToken}' };`,
-              }}
-            />
-            <Script
-              id="dify-chatbot-embed"
-              src="https://udify.app/embed.min.js"
-              strategy="afterInteractive"
-              nonce={nonce}
-            />
-          </>
-        ) : null}
+        <Script src={sentryUrl} strategy="beforeInteractive" {...(nonce && { nonce })} />
+        {/* Dify AI Chatbot — CSP nonce が Next.js <Script> の inline
+            dangerouslySetInnerHTML に正しく渡されない問題を回避するため、
+            クライアントコンポーネントで config 設定 + embed.min.js 読み込みを実施。
+            dynamicScript: true により document.body.onload 依存を排除。 */}
+        {difyToken ? <DifyChatbot token={difyToken} /> : null}
         <WebVitals />
         <ServiceWorkerRegister />
         {children}

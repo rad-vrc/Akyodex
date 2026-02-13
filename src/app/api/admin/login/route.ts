@@ -8,18 +8,18 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Use Edge Runtime for optimal performance
+// Node.js runtime required for cookie operations via next/headers
 export const runtime = 'nodejs';
 
-import { createSessionToken } from '@/lib/session';
 import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
+import { createSessionToken } from '@/lib/session';
 import type { AdminRole } from '@/types/akyo';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
 /**
- * Timing-safe password comparison (Edge Runtime Compatible)
+ * Timing-safe password comparison (Web Crypto API)
  * Prevents timing attacks by ensuring constant-time comparison
  */
 function timingSafeCompare(a: string, b: string): boolean {
@@ -54,7 +54,9 @@ export async function POST(request: Request) {
     const { password } = body;
 
     if (!password || typeof password !== 'string') {
-      return jsonError('パスワードを入力してください', 400, { message: 'パスワードを入力してください' });
+      return jsonError('パスワードを入力してください', 400, {
+        message: 'パスワードを入力してください',
+      });
     }
 
     // Get passwords from environment variables (server-side only - NOT NEXT_PUBLIC)
@@ -100,6 +102,8 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Login error:', error);
-    return jsonError('ログインエラーが発生しました', 500, { message: 'ログインエラーが発生しました' });
+    return jsonError('ログインエラーが発生しました', 500, {
+      message: 'ログインエラーが発生しました',
+    });
   }
 }

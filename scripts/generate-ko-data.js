@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * Generate Korean (ko) translation data from Japanese (ja) source
- * 
+ *
  * Translates: nickname, category, comment
  * Keeps as-is: id, avatarName, author, avatarUrl
- * 
+ *
  * Usage: node scripts/generate-ko-data.js
  */
 
@@ -19,27 +19,27 @@ const { NICKNAME_MAP } = require('./nickname-map-ko');
 // ============================================================
 const CATEGORY_MAP = {
   // === Top-level categories ===
-  'UMAkyo': 'UMAkyo',
-  'おくりもの': '선물',
-  'お大事に': '쾌차를 빕니다',
-  'ちょんまげ': '상투',
+  UMAkyo: 'UMAkyo',
+  おくりもの: '선물',
+  お大事に: '쾌차를 빕니다',
+  ちょんまげ: '상투',
   'なりきり・仮装': '코스프레',
-  'ばんそうこう': '반창고',
-  'ひげ': '수염',
-  'まめ': '마메',
-  'まめAkyo': '마메Akyo',
+  ばんそうこう: '반창고',
+  ひげ: '수염',
+  まめ: '마메',
+  まめAkyo: '마메Akyo',
   'ギミック・特殊': '기믹・특수',
-  'グロテスク': '그로테스크',
-  'チョコミント類': '초코민트류',
-  'デフォルメ': '디포르메',
-  'ヒーロー': '히어로',
-  'プリティ': '프리티',
-  'ホラー': '호러',
-  'レア': '레어',
-  'ローポリ': '로우폴리',
+  グロテスク: '그로테스크',
+  チョコミント類: '초코민트류',
+  デフォルメ: '디포르메',
+  ヒーロー: '히어로',
+  プリティ: '프리티',
+  ホラー: '호러',
+  レア: '레어',
+  ローポリ: '로우폴리',
 
   // === パロディ (Parody) ===
-  'パロディ': '패러디',
+  パロディ: '패러디',
   'パロディ/Among Us': '패러디/Among Us',
   'パロディ/Backrooms': '패러디/Backrooms',
   'パロディ/Cyberpunk': '패러디/Cyberpunk',
@@ -85,20 +85,20 @@ const CATEGORY_MAP = {
   'パロディ/頭文字D': '패러디/이니셜 D',
 
   // === 乗り物 (Vehicle) ===
-  '乗り物': '탈것',
+  乗り物: '탈것',
   '乗り物/航空': '탈것/항공',
   '乗り物/陸上': '탈것/육상',
 
   // === 体 (Body) ===
-  '体型': '체형',
+  体型: '체형',
   '体型/豊満': '체형/풍만',
-  '体育会系': '체육회계',
+  体育会系: '체육회계',
 
   // === 像 (Figure) ===
   '像・埴輪': '상・하니와',
 
   // === 動物 (Animal) ===
-  '動物': '동물',
+  動物: '동물',
   '動物/あざらし': '동물/물범',
   '動物/いぬ': '동물/개',
   '動物/いのしし': '동물/멧돼지',
@@ -155,25 +155,25 @@ const CATEGORY_MAP = {
   '動物/鳥': '동물/새',
 
   // === 危険物 (Hazardous) ===
-  '危険物': '위험물',
+  危険物: '위험물',
   '危険物/爆発物': '위험물/폭발물',
 
   // === 合体 (Combine) ===
   '合体・変身': '합체・변신',
 
   // === 器官 (Body parts) ===
-  '器官': '기관',
+  器官: '기관',
   '器官/歯': '기관/이빨',
   '器官/耳': '기관/귀',
 
   // === 囚われ (Captive) ===
-  '囚われの身': '갇힌 몸',
+  囚われの身: '갇힌 몸',
 
   // === 四足 (Quadruped) ===
-  '四足歩行': '네발걸음',
+  四足歩行: '네발걸음',
 
   // === 国 (Country) ===
-  '国': '나라',
+  国: '나라',
   '国/エジプト': '나라/이집트',
   '国/日本': '나라/일본',
 
@@ -188,10 +188,10 @@ const CATEGORY_MAP = {
   '季節・行事/恋愛': '계절・행사/연애',
 
   // === 学校 (School) ===
-  '学校': '학교',
+  学校: '학교',
 
   // === 実写 (Live-action) ===
-  '実写': '실사',
+  実写: '실사',
 
   // === 家電・家具 (Appliances/Furniture) ===
   '家電・家具': '가전・가구',
@@ -199,12 +199,12 @@ const CATEGORY_MAP = {
   '家電・家具/枕': '가전・가구/베개',
 
   // === 年齢 (Age) ===
-  '年齢層': '연령층',
+  年齢層: '연령층',
   '年齢層/お年寄り': '연령층/노인',
   '年齢層/子ども': '연령층/어린이',
 
   // === 建物 (Building) ===
-  '建物': '건물',
+  建物: '건물',
 
   // === 技能 (Skill) ===
   '技能・特性': '기능・특성',
@@ -215,7 +215,7 @@ const CATEGORY_MAP = {
   '技能・特性/酸素欠乏耐性': '기능・특성/산소결핍 내성',
 
   // === 架空の存在 (Fictional beings) ===
-  '架空の存在': '가상의 존재',
+  架空の存在: '가상의 존재',
   '架空の存在/りゅう・ドラゴン': '가상의 존재/용・드래곤',
   '架空の存在/モンスター': '가상의 존재/몬스터',
   '架空の存在/天使・神': '가상의 존재/천사・신',
@@ -224,33 +224,33 @@ const CATEGORY_MAP = {
   '架空の存在/悪魔・淫魔': '가상의 존재/악마',
 
   // === 植物 (Plant) ===
-  '植物': '식물',
+  植物: '식물',
   '植物/木の実': '식물/열매',
   '植物/苔': '식물/이끼',
 
   // === 次元 (Dimension) ===
-  '次元': '차원',
+  次元: '차원',
   '次元/3D': '차원/3D',
 
   // === 武器 (Weapon) ===
   '武器・機械': '무기・기계',
 
   // === 歴史 (History) ===
-  '歴史': '역사',
+  歴史: '역사',
 
   // === 死 (Death) ===
-  '死': '죽음',
+  死: '죽음',
 
   // === 毛並み (Fur) ===
-  '毛並み': '털결',
+  毛並み: '털결',
   '毛並み/ふわふわ': '털결/폭신폭신',
   '毛並み/モサモサ': '털결/복슬복슬',
 
   // === 液体 (Liquid) ===
-  '液体': '액체',
+  液体: '액체',
 
   // === 点滴 (IV drip) ===
-  '点滴': '점적',
+  点滴: '점적',
 
   // === 環境 (Environment) ===
   '環境・天候': '환경・날씨',
@@ -262,10 +262,10 @@ const CATEGORY_MAP = {
   '病気・ウイルス': '질병・바이러스',
 
   // === 睡眠 (Sleep) ===
-  '睡眠': '수면',
+  睡眠: '수면',
 
   // === 精霊馬 (Spirit horse) ===
-  '精霊馬': '정령마',
+  精霊馬: '정령마',
 
   // === 素材 (Material) ===
   '素材・材質・生地': '소재・재질',
@@ -292,13 +292,13 @@ const CATEGORY_MAP = {
   '職業・身分/配達員': '직업・신분/배달원',
 
   // === 色 (Color) ===
-  '色': '색상',
+  色: '색상',
 
   // === 芸術 (Art) ===
   '芸術・アート': '예술・아트',
 
   // === 菌類 (Fungi) ===
-  '菌類': '균류',
+  菌類: '균류',
 
   // === 衣類 (Clothing) ===
   '衣類・アクセサリー': '의류・액세서리',
@@ -311,32 +311,32 @@ const CATEGORY_MAP = {
   '衣類・アクセサリー/迷彩': '의류・액세서리/위장',
 
   // === 設備 (Facility) ===
-  '設備': '설비',
+  設備: '설비',
   '設備/お風呂': '설비/욕실',
 
   // === 調味料 (Seasoning) ===
-  '調味料': '조미료',
+  調味料: '조미료',
 
   // === 貝 (Shellfish) ===
-  '貝': '조개',
+  貝: '조개',
 
   // === 道具 (Tools) ===
   '道具・文房具・生活用品': '도구・문구・생활용품',
 
   // === 電子 (Electronic) ===
-  '電子': '전자',
+  電子: '전자',
 
   // === 音楽 (Music) ===
   '音楽・楽器': '음악・악기',
 
   // === 頂に立つ者 (One who stands at the top) ===
-  '頂に立つ者': '정상에 서는 자',
+  頂に立つ者: '정상에 서는 자',
 
   // === 願い事 (Wish) ===
-  '願い事': '소원',
+  願い事: '소원',
 
   // === 食べ物 (Food) ===
-  '食べ物': '음식',
+  食べ物: '음식',
   '食べ物/お寿司': '음식/초밥',
   '食べ物/お弁当': '음식/도시락',
   '食べ物/お肉': '음식/고기',
@@ -353,13 +353,13 @@ const CATEGORY_MAP = {
   '食べ物/野菜/ナス': '음식/채소/가지',
 
   // === 飲み物 (Drink) ===
-  '飲み物': '음료',
+  飲み物: '음료',
 
   // === 骨 (Bone) ===
-  '骨': '뼈',
+  骨: '뼈',
 
   // === 髪型 (Hairstyle) ===
-  '髪型': '헤어스타일',
+  髪型: '헤어스타일',
 };
 
 /**
@@ -367,10 +367,10 @@ const CATEGORY_MAP = {
  */
 function translateCategory(jaCategory) {
   if (!jaCategory) return '';
-  
+
   return jaCategory
     .split(',')
-    .map(cat => {
+    .map((cat) => {
       const trimmed = cat.trim();
       if (CATEGORY_MAP[trimmed]) {
         return CATEGORY_MAP[trimmed];
@@ -388,12 +388,12 @@ function translateCategory(jaCategory) {
  */
 function translateNickname(jaNickname) {
   if (!jaNickname) return jaNickname;
-  
+
   // Exact match from map
   if (NICKNAME_MAP[jaNickname]) {
     return NICKNAME_MAP[jaNickname];
   }
-  
+
   // If no mapping found, keep original
   console.warn(`[WARN] No Korean translation for nickname: "${jaNickname}"`);
   return jaNickname;
@@ -404,22 +404,22 @@ function translateNickname(jaNickname) {
  * Common patterns translation
  */
 const COMMENT_MAP = {
-  'すべてのはじまり': '모든 것의 시작',
-  'Quest対応〇': 'Quest 지원〇',
+  すべてのはじまり: '모든 것의 시작',
+  Quest対応〇: 'Quest 지원〇',
   'Quest対応○': 'Quest 지원○',
   'Quest対応✕': 'Quest 지원✕',
   'Quest対応×': 'Quest 지원×',
-  'Quest対応': 'Quest 지원',
+  Quest対応: 'Quest 지원',
 };
 
 function translateComment(jaComment) {
   if (!jaComment) return '';
-  
+
   // Check exact match first
   if (COMMENT_MAP[jaComment]) {
     return COMMENT_MAP[jaComment];
   }
-  
+
   // Keep the original Japanese comment as-is for now
   // Comments are highly creative and context-dependent
   // A dedicated translation pass is recommended for these
@@ -431,12 +431,12 @@ function translateComment(jaComment) {
 // ============================================================
 function main() {
   const dataDir = path.join(__dirname, '..', 'data');
-  
+
   // === Read Japanese CSV ===
   console.log('📖 Reading Japanese CSV...');
   const csvJaPath = path.join(dataDir, 'akyo-data-ja.csv');
   const csvJa = fs.readFileSync(csvJaPath, 'utf-8');
-  
+
   const records = parse(csvJa, {
     relax_quotes: true,
     relax_column_count: true,
@@ -447,33 +447,41 @@ function main() {
     quote: '"',
     escape: '"',
   });
-  
+
   if (records.length < 2) {
     console.error('❌ No data rows found in CSV');
     process.exit(1);
   }
-  
+
   const [header, ...dataRows] = records;
   console.log(`   Found ${dataRows.length} rows`);
-  
+
   // Header: ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL
   const headerMap = {};
   header.forEach((h, i) => {
     headerMap[h.trim().replace(/^\ufeff/, '')] = i;
   });
-  
+
   // Validate required headers exist
-  const REQUIRED_HEADERS = ['ID', 'Nickname', 'AvatarName', 'Category', 'Comment', 'Author', 'AvatarURL'];
-  const missingHeaders = REQUIRED_HEADERS.filter(h => !(h in headerMap));
+  const REQUIRED_HEADERS = [
+    'ID',
+    'Nickname',
+    'AvatarName',
+    'Category',
+    'Comment',
+    'Author',
+    'AvatarURL',
+  ];
+  const missingHeaders = REQUIRED_HEADERS.filter((h) => !(h in headerMap));
   if (missingHeaders.length > 0) {
     console.error(`\u274C Missing required CSV headers: ${missingHeaders.join(', ')}`);
     console.error(`   Found headers: ${Object.keys(headerMap).join(', ')}`);
     process.exit(1);
   }
-  
+
   // === Translate rows ===
   console.log('🔄 Translating to Korean...');
-  const koRows = dataRows.map(row => {
+  const koRows = dataRows.map((row) => {
     const id = row[headerMap['ID']] || '';
     const nickname = row[headerMap['Nickname']] || '';
     const avatarName = row[headerMap['AvatarName']] || '';
@@ -481,7 +489,7 @@ function main() {
     const comment = row[headerMap['Comment']] || '';
     const author = row[headerMap['Author']] || '';
     const avatarUrl = row[headerMap['AvatarURL']] || '';
-    
+
     return [
       id,
       translateNickname(nickname),
@@ -492,7 +500,7 @@ function main() {
       avatarUrl, // Keep as-is
     ];
   });
-  
+
   // === Write Korean CSV ===
   console.log('📝 Writing Korean CSV...');
   const csvKoPath = path.join(dataDir, 'akyo-data-ko.csv');
@@ -502,11 +510,11 @@ function main() {
   });
   fs.writeFileSync(csvKoPath, csvOutput, 'utf-8');
   console.log(`   ✅ ${csvKoPath}`);
-  
+
   // === Write Korean JSON ===
   console.log('📝 Writing Korean JSON...');
   const jsonKoPath = path.join(dataDir, 'akyo-data-ko.json');
-  const jsonData = koRows.map(row => ({
+  const jsonData = koRows.map((row) => ({
     id: row[0],
     nickname: row[1],
     avatarName: row[2],
@@ -517,7 +525,7 @@ function main() {
   }));
   fs.writeFileSync(jsonKoPath, JSON.stringify(jsonData, null, 2), 'utf-8');
   console.log(`   ✅ ${jsonKoPath}`);
-  
+
   // === Summary ===
   console.log(`\n✨ Korean data generated: ${koRows.length} avatars`);
   console.log('   Files:');
