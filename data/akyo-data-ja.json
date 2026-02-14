@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T08:04:27.147Z",
-  "count": 704,
+  "updatedAt": "2026-02-14T08:10:08.267Z",
+  "count": 705,
   "data": [
     {
       "id": "0001",
@@ -6339,6 +6339,15 @@
       "comment": "舞踊を極めしAkyoらしい。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5a02d6e0-d461-4eb1-becf-28b0d4aadc84"
+    },
+    {
+      "id": "0705",
+      "nickname": "コズミックAkyo",
+      "avatarName": "Cosmic Akyo",
+      "category": "器官,器官/翼,技能・特性,技能・特性/ひこう,技能・特性/無重力耐性,技能・特性/酸素欠乏耐性,環境・天候,環境・天候/外宇宙,トラベラー",
+      "comment": "外宇宙探査のために独自の進化を遂げたらしい。",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_23434774-76bd-4f22-8bf0-2fdc3cce6a26"
     }
   ]
 }
