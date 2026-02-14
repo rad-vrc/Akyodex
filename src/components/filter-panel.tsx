@@ -1,6 +1,13 @@
 'use client';
 
-import { IconDice, IconHeart, IconSortAsc, IconSortDesc, IconTag, IconTags } from '@/components/icons';
+import {
+  IconDice,
+  IconHeart,
+  IconSortAsc,
+  IconSortDesc,
+  IconSparkles,
+  IconTag,
+} from '@/components/icons';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import { useMemo, useState } from 'react';
 
@@ -94,8 +101,8 @@ export function FilterPanel({
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-3">
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <IconTags size="w-4 h-4" />
+            <div className="font-bold text-orange-600 flex items-center gap-2">
+              <IconSparkles size="w-4 h-4" />
               {t('filter.category', lang)}
             </div>
             <div className="flex flex-wrap items-center gap-2">
