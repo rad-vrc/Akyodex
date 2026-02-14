@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:17:22.887Z",
-  "count": 724,
+  "updatedAt": "2026-02-14T10:21:09.629Z",
+  "count": 725,
   "data": [
     {
       "id": "0001",
@@ -6519,6 +6519,15 @@
       "comment": "（ささのきの手記）\r\n永久凍土の研究中に発見された氷のakyo。中に何か埋まっている気がする",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fef7a5db-3006-4a14-8600-29c3cc9402bb"
+    },
+    {
+      "id": "0725",
+      "nickname": "カワウソAkyo",
+      "avatarName": "akyo_カワウソ",
+      "category": "動物,器官,器官/しっぽ,性格,性格/好奇心旺盛,性格/人懐っこい",
+      "comment": "（ささのきの手記）\r\n人懐っこく好奇心旺盛",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
     }
   ]
 }
