@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:53:47.426Z",
-  "count": 719,
+  "updatedAt": "2026-02-14T09:56:53.265Z",
+  "count": 720,
   "data": [
     {
       "id": "0001",
@@ -6474,6 +6474,15 @@
       "comment": "キツネツキ式狐Akyoの好物は宝石なのかな？",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
+    },
+    {
+      "id": "0720",
+      "nickname": "キツネツキ式アルミニウム狐Akyo",
+      "avatarName": "Aluminium Fox Akyo",
+      "category": "動物,動物/きつね,素材・材質・生地,素材・材質・生地/金属",
+      "comment": "ここ200年で生まれたAkyoかな？",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d861904-5b3e-4a6b-a074-3f5d3ef04b9e"
     }
   ]
 }
