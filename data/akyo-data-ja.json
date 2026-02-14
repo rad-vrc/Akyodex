@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T07:59:15.022Z",
-  "count": 703,
+  "updatedAt": "2026-02-14T08:04:27.147Z",
+  "count": 704,
   "data": [
     {
       "id": "0001",
@@ -6330,6 +6330,15 @@
       "comment": "",
       "author": "SplitScream",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca265af0-f7f3-405c-a94d-46b81fea3fbd"
+    },
+    {
+      "id": "0704",
+      "nickname": "RGBダンスAkyo",
+      "avatarName": "RGB Dance Akyo",
+      "category": "ギミック・特殊,ギミック・特殊/ダンス",
+      "comment": "舞踊を極めしAkyoらしい。",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_5a02d6e0-d461-4eb1-becf-28b0d4aadc84"
     }
   ]
 }
