@@ -190,7 +190,7 @@ export function FilterPanel({
                 {t('filter.noCategoryMatch', lang)}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {filteredCategories.map((category) => {
                   const selected = activeCategories.includes(category);
                   return (
