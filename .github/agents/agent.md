@@ -260,6 +260,7 @@ return Response.json({ error: 'msg' }, { status: 400 });
 - パスワード比較は constant-time Uint8Array 比較を使用
 - HTML 出力は `sanitize-html` でサニタイズ
 - セッションは HMAC 署名 (Web Crypto API)、JWT は使用しない
+- `main` 取り込み後の EN/KO 翻訳再生成タスクは `akyodex-main-translation-sync` skill の手順を優先して実行する
 
 ## Cloudflare バインディング
 

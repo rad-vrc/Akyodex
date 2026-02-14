@@ -35,16 +35,15 @@ import { cache } from 'react';
  * Uses @opennextjs/cloudflare's getCloudflareContext helper
  * which provides access to KV, R2, and other bindings defined in wrangler.toml
  */
-function getKVNamespace(): KVNamespace | null {
+async function getKVNamespace(): Promise<KVNamespace | null> {
   try {
-    // Use OpenNext.js Cloudflare helper to get context
-    // This is the correct way to access bindings in @opennextjs/cloudflare
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { getCloudflareContext } = require('@opennextjs/cloudflare');
-    const { env } = getCloudflareContext();
+    // Use OpenNext.js Cloudflare helper to get context.
+    const { getCloudflareContext } = await import('@opennextjs/cloudflare');
+    const { env } = await getCloudflareContext();
+    const kvBinding = (env as { AKYO_KV?: KVNamespace } | undefined)?.AKYO_KV;
 
-    if (env?.AKYO_KV) {
-      return env.AKYO_KV as KVNamespace;
+    if (kvBinding) {
+      return kvBinding;
     }
 
     console.log('[KV] AKYO_KV binding not available in env');
@@ -98,7 +97,7 @@ export interface KVFetchResult {
  */
 export const getAkyoDataFromKVOnly = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[] | null> => {
-    const kv = getKVNamespace();
+    const kv = await getKVNamespace();
 
     if (!kv) {
       console.log('[KV] KV namespace not available');
@@ -139,7 +138,7 @@ export const getAkyoDataFromKVOnly = cache(
  */
 export const getAkyoDataFromKVWithSource = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<KVFetchResult> => {
-    const kv = getKVNamespace();
+    const kv = await getKVNamespace();
 
     if (!kv) {
       console.log('[KV] Falling back to JSON data source (KV unavailable)');
@@ -189,7 +188,7 @@ export async function updateKVCache(
   lang: SupportedLanguage = 'ja',
   skipMetadata = false
 ): Promise<boolean> {
-  const kv = getKVNamespace();
+  const kv = await getKVNamespace();
 
   if (!kv) {
     console.warn('[KV] Cannot update KV: namespace not available');
@@ -258,7 +257,7 @@ export async function updateKVCacheAll(
   dataEn: AkyoData[],
   dataKo?: AkyoData[]
 ): Promise<{ ja: boolean; en: boolean; ko: boolean; metadata: boolean }> {
-  const kv = getKVNamespace();
+  const kv = await getKVNamespace();
 
   if (!kv) {
     console.warn('[KV] Cannot update KV: namespace not available');
@@ -286,8 +285,11 @@ export async function updateKVCacheAll(
       })
     ) as Partial<Record<SupportedLanguage, boolean>>;
 
-    for (const [lang, success] of Object.entries(settledByLang)) {
-      result[lang as keyof typeof result] = success;
+    for (const [lang, success] of Object.entries(settledByLang) as [
+      SupportedLanguage,
+      boolean,
+    ][]) {
+      result[lang] = success;
     }
 
     // Update metadata once with all counts

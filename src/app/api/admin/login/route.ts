@@ -27,10 +27,14 @@ function timingSafeCompare(a: string, b: string): boolean {
   try {
     const bufA = Buffer.from(a, 'utf8');
     const bufB = Buffer.from(b, 'utf8');
-    if (bufA.length !== bufB.length) {
-      return false;
-    }
-    return timingSafeEqual(bufA, bufB);
+    const maxLength = Math.max(bufA.length, bufB.length);
+    const paddedA = Buffer.alloc(maxLength);
+    const paddedB = Buffer.alloc(maxLength);
+    bufA.copy(paddedA);
+    bufB.copy(paddedB);
+
+    const isEqual = timingSafeEqual(paddedA, paddedB);
+    return isEqual && bufA.length === bufB.length;
   } catch {
     return false;
   }
