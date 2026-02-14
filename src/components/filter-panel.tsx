@@ -416,7 +416,7 @@ export function FilterPanel({
 
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="font-bold text-blue-700 flex items-center gap-2">
+            <div className="font-bold text-blue-600/80 flex items-center gap-2">
               <IconUser size="w-4 h-4" />
               {t('filter.author', lang)}
             </div>
