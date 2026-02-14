@@ -23,6 +23,8 @@ export interface AkyoData {
 
   avatarUrl: string; // VRChatアバターURL
   isFavorite?: boolean; // お気に入りフラグ（クライアント側）
+  parsedCategory?: string[]; // フィルタ用のパース済みカテゴリ
+  parsedAuthor?: string[]; // フィルタ用のパース済み作者
 }
 
 /**

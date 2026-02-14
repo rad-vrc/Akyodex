@@ -79,9 +79,9 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     // Filter by categories (supports both single and multi-select)
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((akyo) => {
-        const catsStr = akyo.category || akyo.attribute || '';
-        const cats = catsStr.split(/[、,]/).map((a) => a.trim());
-        const categorySet = new Set(cats);
+        const parsedCategories =
+          akyo.parsedCategory ?? parseFilterTokens(akyo.category || akyo.attribute || '');
+        const categorySet = new Set(parsedCategories);
 
         if (categoryMatchMode === 'and') {
           return selectedCategories.every((category) => categorySet.has(category));
@@ -93,9 +93,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     // Filter by creator/author (supports both single and multi-select)
     if (selectedAuthors.length > 0) {
       filtered = filtered.filter((akyo) => {
-        const authorsStr = akyo.author || akyo.creator || '';
-        const authors = authorsStr.split(/[、,]/).map((author) => author.trim());
-        const authorSet = new Set(authors);
+        const parsedAuthors = akyo.parsedAuthor ?? parseFilterTokens(akyo.author || akyo.creator || '');
+        const authorSet = new Set(parsedAuthors);
         return selectedAuthors.some((author) => authorSet.has(author));
       });
     }
@@ -225,11 +224,20 @@ function saveFavorites(ids: string[]): void {
  * データ配列にお気に入り情報を付与する共通ヘルパー
  * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
  */
+function parseFilterTokens(value: string): string[] {
+  return value
+    .split(/[、,]/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
 function applyFavorites(items: AkyoData[]): AkyoData[] {
   if (items.length === 0) return items;
   const favoritesSet = new Set(getFavorites());
   return items.map(akyo => ({
     ...akyo,
     isFavorite: favoritesSet.has(akyo.id),
+    parsedCategory: akyo.parsedCategory ?? parseFilterTokens(akyo.category || akyo.attribute || ''),
+    parsedAuthor: akyo.parsedAuthor ?? parseFilterTokens(akyo.author || akyo.creator || ''),
   }));
 }
