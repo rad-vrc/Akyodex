@@ -225,7 +225,7 @@ export const UI_TEXTS = {
     ko: 'AND',
   },
   'filter.clearCategories': {
-    ja: 'カテゴリ解除',
+    ja: '絞り込み解除',
     en: 'Clear',
     ko: '카테고리 해제',
   },
@@ -250,7 +250,7 @@ export const UI_TEXTS = {
     ko: '선택 해제',
   },
   'filter.clearAuthors': {
-    ja: '作者解除',
+    ja: '絞り込み解除',
     en: 'Clear',
     ko: '작자 해제',
   },
