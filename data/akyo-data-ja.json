@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T08:56:48.249Z",
-  "count": 706,
+  "updatedAt": "2026-02-14T09:00:04.020Z",
+  "count": 707,
   "data": [
     {
       "id": "0001",
@@ -6357,6 +6357,15 @@
       "comment": "レアなAkyoか、それとも。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cea0caed-4173-4cec-85a0-78ae527ec591"
+    },
+    {
+      "id": "0707",
+      "nickname": "赤チームのAkyo",
+      "avatarName": "Team Red Akyo",
+      "category": "集団・組織,色",
+      "comment": "赤チームにいる。",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_17561028-319e-4df1-bee5-e08e36c47144"
     }
   ]
 }
