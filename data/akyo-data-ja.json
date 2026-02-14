@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:47:45.147Z",
-  "count": 733,
+  "updatedAt": "2026-02-14T10:50:26.173Z",
+  "count": 734,
   "data": [
     {
       "id": "0001",
@@ -6600,6 +6600,15 @@
       "comment": "頭がAkyo！？\r\n人・・・なの？",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
+    },
+    {
+      "id": "0734",
+      "nickname": "レプタイルAkyo",
+      "avatarName": "レプタイルAkyo",
+      "category": "動物,動物/爬虫類,素材・材質・生地,素材・材質・生地/うろこ",
+      "comment": "爬虫類を指す英語だよ！",
+      "author": "huyumusi",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c1695c0-4566-40fa-828b-f29eff60d4d3"
     }
   ]
 }
