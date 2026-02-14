@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:00:04.020Z",
-  "count": 707,
+  "updatedAt": "2026-02-14T09:12:15.472Z",
+  "count": 708,
   "data": [
     {
       "id": "0001",
@@ -6366,6 +6366,15 @@
       "comment": "赤チームにいる。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_17561028-319e-4df1-bee5-e08e36c47144"
+    },
+    {
+      "id": "0708",
+      "nickname": "青チームのAkyo",
+      "avatarName": "Team Blue Akyo",
+      "category": "集団・組織,色",
+      "comment": "青チームにいる。とても青い。",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cfffa6b2-5381-485f-a1aa-2a348a076356"
     }
   ]
 }
