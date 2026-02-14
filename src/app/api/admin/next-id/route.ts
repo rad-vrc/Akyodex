@@ -8,6 +8,8 @@
 
 import { jsonError, validateSession } from '@/lib/api-helpers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
+import fs from 'fs/promises';
+import path from 'path';
 
 interface R2TextObject {
   text: () => Promise<string>;
@@ -22,6 +24,27 @@ interface NextIdEnv {
 }
 
 export const runtime = 'nodejs';
+
+const DEFAULT_CSV_PATH = 'data/akyo-data-ja.csv';
+const GITHUB_CSV_URL =
+  'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
+
+function addCacheBuster(url: string): string {
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}_ts=${Date.now()}`;
+}
+
+async function fetchCsvText(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(addCacheBuster(url), {
+      cache: 'no-store',
+    });
+    if (!response.ok) return null;
+    return await response.text();
+  } catch {
+    return null;
+  }
+}
 
 export async function GET() {
   // Validate admin session
@@ -44,58 +67,62 @@ export async function GET() {
 
     const bucket = env?.AKYO_BUCKET;
 
-    if (bucket) {
-      // Production: Use R2 bucket
-      const csvPath = process.env.GITHUB_CSV_PATH_JA || 'data/akyo-data-ja.csv';
-      const csvObject = await bucket.get(csvPath);
-
-      if (csvObject) {
-        csvContent = await csvObject.text();
-      } else {
-        // Fallback to GitHub if R2 file missing
-        console.warn('[next-id] CSV not found in R2, falling back to GitHub');
-        const githubUrl =
-          'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
-        const githubResponse = await fetch(githubUrl, {
-          next: { revalidate: 0 },
-        });
-
-        if (!githubResponse.ok) {
-          return Response.json({ nextId: '0001' });
-        }
-        csvContent = await githubResponse.text();
+    if (!bucket) {
+      // Development: Prefer local workspace CSV to avoid remote sync lag.
+      try {
+        const localCsvPath = path.join(process.cwd(), DEFAULT_CSV_PATH);
+        csvContent = await fs.readFile(localCsvPath, 'utf-8');
+      } catch {
+        csvContent = '';
       }
     } else {
-      // Development: Fetch from GitHub or R2 public URL
-      const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-      const csvUrl = `${r2BaseUrl}/akyo-data/akyo-data-ja.csv`;
+      csvContent = '';
+    }
 
-      try {
-        const response = await fetch(csvUrl, {
-          next: { revalidate: 60 }, // Cache for 1 minute
-        });
+    if (!csvContent && bucket) {
+      // Production: Read from R2 bucket (support both legacy and current key layouts).
+      const configuredPath = process.env.GITHUB_CSV_PATH_JA;
+      const candidatePaths = [
+        configuredPath,
+        'akyo-data/akyo-data-ja.csv',
+        DEFAULT_CSV_PATH,
+      ].filter((value): value is string => Boolean(value));
 
-        if (!response.ok) {
-          // Fallback to GitHub
-          const githubUrl =
-            'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
-          const githubResponse = await fetch(githubUrl, {
-            next: { revalidate: 60 },
-          });
-
-          if (!githubResponse.ok) {
-            return Response.json({ nextId: '0001' });
-          }
-
-          csvContent = await githubResponse.text();
-        } else {
-          csvContent = await response.text();
+      for (const csvPath of candidatePaths) {
+        const csvObject = await bucket.get(csvPath);
+        if (csvObject) {
+          csvContent = await csvObject.text();
+          break;
         }
-      } catch (error) {
-        console.error('[next-id] Failed to fetch CSV:', error);
-        return Response.json({ nextId: '0001' });
       }
     }
+
+    if (!csvContent) {
+      // Fallback to public R2 URL (no-store to avoid stale cache).
+      const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
+      const publicCsvUrls = [
+        `${r2BaseUrl}/akyo-data/akyo-data-ja.csv`,
+        `${r2BaseUrl}/data/akyo-data-ja.csv`,
+      ];
+
+      for (const csvUrl of publicCsvUrls) {
+        const fetched = await fetchCsvText(csvUrl);
+        if (fetched) {
+          csvContent = fetched;
+          break;
+        }
+      }
+    }
+
+    if (!csvContent) {
+      // Final fallback: GitHub raw CSV.
+      const githubCsv = await fetchCsvText(GITHUB_CSV_URL);
+      if (!githubCsv) {
+        return Response.json({ nextId: '0001' });
+      }
+      csvContent = githubCsv;
+    }
+
     const lines = csvContent.split('\n').filter((line) => line.trim());
 
     // Skip header
