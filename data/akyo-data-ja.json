@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:30:47.268Z",
-  "count": 729,
+  "updatedAt": "2026-02-14T10:31:56.727Z",
+  "count": 730,
   "data": [
     {
       "id": "0001",
@@ -6564,6 +6564,15 @@
       "comment": "AkyoのCMで見たことある！",
       "author": "bbbbb_himiko",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b581ac9f-30f1-4906-b8f2-5c3af0a5d39e"
+    },
+    {
+      "id": "0730",
+      "nickname": "ぽんぽこAkyo",
+      "avatarName": "Akyo_Ponpoko",
+      "category": "パロディ,パロディ/VTuber,動物,動物/たぬき,器官,器官/しっぽ",
+      "comment": "このAkyoもAkyoのCMにいた！",
+      "author": "bbbbb_himiko",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2f438df6-4e1e-444b-8ab8-a7d03b64dd06"
     }
   ]
 }
