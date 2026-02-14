@@ -246,11 +246,8 @@ export function IconEdit({ size, className, ...props }: IconProps) {
 
 /** Tools / wrench (fa-tools) */
 export function IconTools({ size, className, ...props }: IconProps) {
-  return (
-    <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
-      <path d="M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4h54.1l109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109V54c0-7.5-3.5-14.5-9.4-19L78.6 5zM19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L233.7 374.3c-12.8-12.8-22.1-28.5-27.2-45.5L19.9 396.1z" />
-    </Icon>
-  );
+  // Reuse gear icon for better legibility at small sizes in admin tabs.
+  return <IconCog size={size} className={className} {...props} />;
 }
 
 /** Tags (fa-tags) */
