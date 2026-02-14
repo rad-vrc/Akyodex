@@ -696,7 +696,7 @@ const NICKNAME_MAP = {
   AkyoチキンAkyo: 'Akyo 치킨 Akyo',
 
   // === 0571–0580 ===
-  トーストきつねAkyo2: '토스트 여우 Akyo 2',
+  食パンきつねAkyo2: '식빵 여우 Akyo 2',
   // 0572 りんごAkyo → same as 0496
   はちAkyo: '벌 Akyo',
   たこAkyo: '문어 Akyo',

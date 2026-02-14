@@ -44,6 +44,13 @@ export interface ZukanClientProps {
   serverLang: SupportedLanguage;
 }
 
+const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
+  ja: '/images/logo.webp',
+  en: '/images/logo-US.webp',
+  ko: '/images/logo-KO.webp',
+  default: '/images/logo-US.webp',
+};
+
 export function ZukanClient({
   initialData,
   categories,
@@ -90,29 +97,37 @@ export function ZukanClient({
           : jsonData && typeof jsonData === 'object' && Array.isArray(jsonData.data)
             ? jsonData.data
             : undefined;
-        if (akyoItems) {
-          refetchWithNewData(akyoItems);
-
-          // Extract unique categories and authors from data
-          const uniqueCategories = new Set<string>();
-          const uniqueAuthors = new Set<string>();
-
-          akyoItems.forEach((item: AkyoData) => {
-            const cats = (item.category || item.attribute || '')
-              .split(/[、,]/)
-              .map((s) => s.trim())
-              .filter(Boolean);
-            const auths = (item.author || item.creator || '')
-              .split(/[、,]/)
-              .map((s) => s.trim())
-              .filter(Boolean);
-            cats.forEach((c) => uniqueCategories.add(c));
-            auths.forEach((a) => uniqueAuthors.add(a));
-          });
-
-          setCurrentCategories(Array.from(uniqueCategories).sort());
-          setCurrentAuthors(Array.from(uniqueAuthors).sort());
+        if (!akyoItems) {
+          throw new Error(
+            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${JSON.stringify(jsonData)}`
+          );
         }
+
+        refetchWithNewData(akyoItems);
+
+        // Extract unique categories and authors from data
+        const uniqueCategories = new Set<string>();
+        const uniqueAuthors = new Set<string>();
+
+        akyoItems.forEach((item: AkyoData) => {
+          const cats = (item.category || item.attribute || '')
+            .split(/[、,]/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+          const auths = (item.author || item.creator || '')
+            .split(/[、,]/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+          cats.forEach((c) => {
+            uniqueCategories.add(c);
+          });
+          auths.forEach((a) => {
+            uniqueAuthors.add(a);
+          });
+        });
+
+        setCurrentCategories(Array.from(uniqueCategories).sort());
+        setCurrentAuthors(Array.from(uniqueAuthors).sort());
       } catch (err) {
         console.error('[ZukanClient] Failed to refetch language data:', err);
         setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -312,13 +327,7 @@ export function ZukanClient({
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src={
-                lang === 'ja'
-                  ? '/images/logo.webp'
-                  : lang === 'ko'
-                    ? '/images/logo-KO.webp'
-                    : '/images/logo-US.webp'
-              }
+              src={LOGO_BY_LANG[lang] || LOGO_BY_LANG.default}
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
@@ -436,7 +445,12 @@ export function ZukanClient({
       <LanguageToggle initialLang={lang} />
 
       {/* Admin Settings Button - Below Language Toggle (same color as Language Toggle) */}
-      <Link href="/admin" className="admin-button group" aria-label="管理画面" title="管理画面">
+      <Link
+        href="/admin"
+        className="admin-button group"
+        aria-label={t('admin.panel', lang)}
+        title={t('admin.panel', lang)}
+      >
         <IconCog
           size="w-5 h-5 sm:w-6 sm:h-6"
           className="group-hover:rotate-90 transition-transform duration-300"

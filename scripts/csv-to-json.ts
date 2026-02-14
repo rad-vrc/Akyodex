@@ -93,21 +93,30 @@ async function convertCsvToJson() {
   for (const { code, file } of languages) {
     console.log(`📝 Processing ${code.toUpperCase()} CSV (${file})...`);
     const csvPath = path.join(dataDir, file);
-    const csv = await fs.readFile(csvPath, 'utf-8');
-    const data = parseCsvToAkyoData(csv);
 
-    const akyoJsonOutput: AkyoJsonOutput = {
-      version: '1.0',
-      language: code,
-      updatedAt: new Date().toISOString(),
-      count: data.length,
-      data,
-    };
+    try {
+      const csv = await fs.readFile(csvPath, 'utf-8');
+      const data = parseCsvToAkyoData(csv);
 
-    const jsonPath = path.join(dataDir, `akyo-data-${code}.json`);
-    await fs.writeFile(jsonPath, JSON.stringify(akyoJsonOutput, null, 2), 'utf-8');
-    console.log(`   ✅ ${code.toUpperCase()}: ${data.length} avatars → ${jsonPath}`);
-    jsonPaths.push(jsonPath);
+      const akyoJsonOutput: AkyoJsonOutput = {
+        version: '1.0',
+        language: code,
+        updatedAt: new Date().toISOString(),
+        count: data.length,
+        data,
+      };
+
+      const jsonPath = path.join(dataDir, `akyo-data-${code}.json`);
+      await fs.writeFile(jsonPath, JSON.stringify(akyoJsonOutput, null, 2), 'utf-8');
+      console.log(`   ✅ ${code.toUpperCase()}: ${data.length} avatars → ${jsonPath}`);
+      jsonPaths.push(jsonPath);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `   ⚠️ Skipping ${code.toUpperCase()} (${file}) at ${csvPath}: ${message}`
+      );
+      continue;
+    }
   }
 
   // Summary

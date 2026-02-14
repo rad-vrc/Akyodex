@@ -242,11 +242,11 @@ export async function updateKVCache(
 }
 
 /**
- * Update KV cache for all languages atomically
+ * Update KV cache for all languages in a single batch with unified metadata update.
  *
- * This function updates Japanese, English, and Korean data, then writes
- * metadata once with all counts. This avoids race conditions that
- * occur when calling updateKVCache() in parallel.
+ * Language writes are performed in parallel via updateKVCache(), then metadata is
+ * written once with merged counts. If an individual language write fails, partial
+ * writes may occur.
  *
  * @param dataJa - Japanese Akyo data array
  * @param dataEn - English Akyo data array
@@ -269,7 +269,7 @@ export async function updateKVCacheAll(
 
   try {
     // Update all data stores in parallel (without metadata)
-    const tasks: Record<string, Promise<boolean>> = {
+    const tasks: Partial<Record<SupportedLanguage, Promise<boolean>>> = {
       ja: updateKVCache(dataJa, 'ja', true),
       en: updateKVCache(dataEn, 'en', true),
     };
@@ -277,14 +277,17 @@ export async function updateKVCacheAll(
       tasks.ko = updateKVCache(dataKo, 'ko', true);
     }
 
-    const entries = Object.entries(tasks) as [string, Promise<boolean>][];
-    const settled = await Promise.all(entries.map(([, p]) => p));
-    for (const [idx, [lang]] of entries.entries()) {
-      result[lang as keyof typeof result] = settled[idx];
-    }
-    // Ensure ko is explicitly false when not requested
-    if (!dataKo) {
-      result.ko = false;
+    const entries = Object.entries(tasks) as [SupportedLanguage, Promise<boolean>][];
+    const settled = await Promise.allSettled(entries.map(([, task]) => task));
+    const settledByLang = Object.fromEntries(
+      entries.map(([lang], idx) => {
+        const item = settled[idx];
+        return [lang, item.status === 'fulfilled' ? item.value : false];
+      })
+    ) as Partial<Record<SupportedLanguage, boolean>>;
+
+    for (const [lang, success] of Object.entries(settledByLang)) {
+      result[lang as keyof typeof result] = success;
     }
 
     // Update metadata once with all counts
@@ -307,7 +310,7 @@ export async function updateKVCacheAll(
       try {
         await kv.put(KV_KEYS.META, JSON.stringify(meta));
         console.log(
-          `[KV] Updated metadata atomically: ja=${meta.countJa}, en=${meta.countEn}, ko=${meta.countKo}`
+          `[KV] Updated metadata (batch): ja=${meta.countJa}, en=${meta.countEn}, ko=${meta.countKo}`
         );
         result.metadata = true;
       } catch (metaWriteError) {

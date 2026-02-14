@@ -77,7 +77,11 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                       {akyo.nickname || akyo.avatarName}
                     </div>
                     {akyo.nickname && akyo.avatarName && (
-                      <div className="text-xs text-[var(--text-secondary)]">{akyo.avatarName}</div>
+                      <div className="text-xs text-[var(--text-secondary)]">
+                        {akyo.nickname === akyo.avatarName
+                          ? `${t('card.avatarName', lang)}: ${akyo.avatarName}`
+                          : akyo.avatarName}
+                      </div>
                     )}
                   </td>
 

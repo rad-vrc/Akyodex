@@ -130,7 +130,8 @@ cookieStore.set('admin_session', token, {
    - `npm run build` — ビルド成功（型チェック含む）
    - `npm run test` (optional) — E2E テスト通過
 4. ✅ **コミットメッセージ規約**:
-   ```
+
+   ```text
    feat: Add new feature
    fix: Fix bug
    docs: Update documentation
@@ -163,7 +164,7 @@ cookieStore.set('admin_session', token, {
 
 - ✅ **正確性と一貫性を優先**
 - ✅ **複数カテゴリ許可** — 該当するすべてのカテゴリを割り当て
-- ✅ **階層型カテゴリ推奨** — 例: `食べ物/野菜/きゅうり` ではなく `食べ物/野菜/きゅうり`
+- ✅ **階層型カテゴリ推奨** — 良い例: `食べ物/野菜/きゅうり` / 悪い例: `食べ物, きゅうり`
 - ✅ **命名規則の統一** — 全カテゴリで一貫性を保つ
 - ✅ **新規カテゴリ追加時** — 既存のカテゴリ化ロジックへの影響を考慮
 

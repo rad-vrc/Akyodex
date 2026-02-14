@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Delay in milliseconds to wait for Dify chatbot to load before initializing observers
 const DIFY_LOAD_DELAY_MS = 2000;
@@ -27,10 +27,12 @@ interface DifyChatbotProps {
  */
 export function DifyChatbot({ token }: DifyChatbotProps) {
   const initialized = useRef(false);
+  const [loadState, setLoadState] = useState<'idle' | 'loaded' | 'error'>('idle');
 
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
+    setLoadState('idle');
 
     // Set config — dynamicScript: true ensures embed.min.js calls embedChatbot()
     // immediately in the IIFE, instead of setting document.body.onload (which
@@ -44,6 +46,16 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     script.id = 'dify-chatbot-embed';
     script.src = 'https://udify.app/embed.min.js';
     script.async = true;
+    script.onload = () => {
+      setLoadState('loaded');
+    };
+    script.onerror = (event) => {
+      console.error('[DifyChatbot] Failed to load embed script:', {
+        src: script.src,
+        event,
+      });
+      setLoadState('error');
+    };
     document.body.appendChild(script);
 
     // --- Window state observer ---
@@ -73,33 +85,95 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
       checkWindowState();
     });
 
-    const observerTimer = setTimeout(() => {
+    let hasWindowObserver = false;
+    let hasContainerObserver = false;
+    let observerTimer: ReturnType<typeof setTimeout> | null = null;
+    let bodyObserver: MutationObserver | null = null;
+
+    const attachTargetObservers = () => {
       const chatWindow = document.getElementById('dify-chatbot-bubble-window');
-      if (chatWindow) {
+      if (chatWindow && !hasWindowObserver) {
         observer.observe(chatWindow, {
           attributes: true,
           attributeFilter: ['style'],
         });
+        hasWindowObserver = true;
       }
 
       const container = document.getElementById('dify-chatbot-container');
-      if (container) {
+      if (container && !hasContainerObserver) {
         observer.observe(container, {
           childList: true,
           subtree: true,
         });
+        hasContainerObserver = true;
       }
-    }, DIFY_LOAD_DELAY_MS);
+
+      if (hasWindowObserver || hasContainerObserver) {
+        checkWindowState();
+      }
+
+      if (hasWindowObserver && hasContainerObserver) {
+        if (observerTimer) {
+          clearTimeout(observerTimer);
+          observerTimer = null;
+        }
+        bodyObserver?.disconnect();
+        return true;
+      }
+      return false;
+    };
+
+    bodyObserver = new MutationObserver(() => {
+      attachTargetObservers();
+    });
+
+    bodyObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    if (!attachTargetObservers()) {
+      observerTimer = setTimeout(() => {
+        if (!attachTargetObservers()) {
+          console.warn('[DifyChatbot] Chatbot DOM targets not found after delay', {
+            delayMs: DIFY_LOAD_DELAY_MS,
+          });
+        }
+      }, DIFY_LOAD_DELAY_MS);
+    }
 
     return () => {
       clearTimeout(initialCheckTimer);
-      clearTimeout(observerTimer);
+      if (observerTimer) clearTimeout(observerTimer);
+      bodyObserver?.disconnect();
       observer.disconnect();
       const existingScript = document.getElementById('dify-chatbot-embed');
       if (existingScript) existingScript.remove();
+      const container = document.getElementById('dify-chatbot-container');
+      if (container) {
+        container.classList.remove('dify-chatbot-load-failed');
+        container.removeAttribute('data-dify-load-state');
+      }
       delete window.difyChatbotConfig;
     };
-  }, [token]);
+    // token is expected to be immutable for this mounted instance.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const container = document.getElementById('dify-chatbot-container');
+    if (!container) return;
+
+    if (loadState === 'error') {
+      container.classList.add('dify-chatbot-load-failed');
+      container.setAttribute('data-dify-load-state', 'error');
+      return;
+    }
+
+    container.classList.remove('dify-chatbot-load-failed');
+    container.setAttribute('data-dify-load-state', loadState);
+  }, [loadState]);
 
   return null;
 }

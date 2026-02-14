@@ -123,17 +123,9 @@ export function getNextLanguage(current: SupportedLanguage): SupportedLanguage {
 // ============================================================
 
 /**
- * Translate a UI string key for the given language.
- * Falls back to Japanese if key is missing.
- */
-export function t(key: string, lang: SupportedLanguage): string {
-  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.['ja'] ?? key;
-}
-
-/**
  * UI text dictionary: key → { ja, en, ko }
  */
-export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
+export const UI_TEXTS = {
   // === Zukan page ===
   'error.title': {
     ja: 'データの読み込みに失敗しました',
@@ -306,6 +298,11 @@ export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
     en: 'Actions',
     ko: '액션',
   },
+  'admin.panel': {
+    ja: '管理画面',
+    en: 'Admin Panel',
+    ko: '관리 패널',
+  },
 
   // === Detail Modal ===
   'modal.close': {
@@ -358,4 +355,14 @@ export const UI_TEXTS: Record<string, Record<SupportedLanguage, string>> = {
     en: 'View in VRChat',
     ko: 'VRChat에서 보기',
   },
-};
+} as const satisfies Record<string, Record<SupportedLanguage, string>>;
+
+export type UITextKey = keyof typeof UI_TEXTS;
+
+/**
+ * Translate a UI string key for the given language.
+ * Falls back to Japanese if key is missing.
+ */
+export function t(key: UITextKey, lang: SupportedLanguage): string {
+  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.ja;
+}
