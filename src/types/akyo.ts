@@ -34,6 +34,7 @@ export interface AkyoFilterOptions {
   categories?: string[]; // 複数カテゴリ
   categoryMatchMode?: 'or' | 'and'; // 複数カテゴリ一致条件
   author?: string;   // 新フィールド
+  authors?: string[]; // 複数作者
   randomCount?: number;
   favoritesOnly?: boolean;
   

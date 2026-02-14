@@ -63,6 +63,15 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     )
       .map((category) => category.trim())
       .filter(Boolean);
+    const selectedAuthors = (
+      options.authors && options.authors.length > 0
+        ? options.authors
+        : targetAuthor && targetAuthor !== 'all'
+          ? [targetAuthor]
+          : []
+    )
+      .map((author) => author.trim())
+      .filter(Boolean);
     const categoryMatchMode = options.categoryMatchMode === 'and' ? 'and' : 'or';
 
     let filtered = [...data];
@@ -81,12 +90,13 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       });
     }
 
-    // Filter by creator/author
-    if (targetAuthor && targetAuthor !== 'all') {
+    // Filter by creator/author (supports both single and multi-select)
+    if (selectedAuthors.length > 0) {
       filtered = filtered.filter((akyo) => {
         const authorsStr = akyo.author || akyo.creator || '';
-        const authors = authorsStr.split(/[、,]/).map((c) => c.trim());
-        return authors.includes(targetAuthor);
+        const authors = authorsStr.split(/[、,]/).map((author) => author.trim());
+        const authorSet = new Set(authors);
+        return selectedAuthors.some((author) => authorSet.has(author));
       });
     }
 
