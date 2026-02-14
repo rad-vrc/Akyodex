@@ -236,7 +236,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     const originalText = submitBtn?.innerHTML || '';
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = '⛳ VRChat情報取得中...';
+      submitBtn.textContent = '💾 VRChat情報取得中...';
     }
 
     // ===== Step 1: Fetch avatar info and image from VRChat =====
@@ -306,7 +306,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     // Update button text
     if (submitBtn) {
-      submitBtn.textContent = '⛳ 画像処理中...';
+      submitBtn.textContent = '💾 画像処理中...';
     }
 
     // ===== Step 2: Process image for cropping preview =====
@@ -339,7 +339,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     // Update button text for final submission
     if (submitBtn) {
-      submitBtn.textContent = '⛳ 登録中...';
+      submitBtn.textContent = '💾 登録中...';
     }
 
     try {
