@@ -190,7 +190,7 @@ export function FilterPanel({
             type="text"
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold"
+            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-[rgba(102,217,165,0.2)]"
             placeholder={t('filter.categorySearch', lang)}
             aria-label={t('filter.categorySearch', lang)}
           />
@@ -267,7 +267,7 @@ export function FilterPanel({
             type="text"
             value={authorQuery}
             onChange={(e) => setAuthorQuery(e.target.value)}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold"
+            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-[rgba(102,217,165,0.2)]"
             placeholder={t('filter.authorSearch', lang)}
             aria-label={t('filter.authorSearch', lang)}
           />
