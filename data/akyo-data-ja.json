@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:44:19.635Z",
-  "count": 715,
+  "updatedAt": "2026-02-14T09:46:40.040Z",
+  "count": 716,
   "data": [
     {
       "id": "0001",
@@ -6438,6 +6438,15 @@
       "comment": "こっちもおいしい！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f271c3bb-83ad-433a-b177-c3d5b205e75c"
+    },
+    {
+      "id": "0716",
+      "nickname": "キツネツキ式パンク狐Akyo",
+      "avatarName": "Punk Akyo",
+      "category": "ギミック・特殊,ギミック・特殊/AudioLink,動物,動物/きつね,音楽・楽器",
+      "comment": "パンクだぜ！",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_3325b7fe-83c2-47f4-8a6a-e4967ded93c4"
     }
   ]
 }
