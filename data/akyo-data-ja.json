@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:17:40.130Z",
-  "count": 709,
+  "updatedAt": "2026-02-14T09:23:12.681Z",
+  "count": 710,
   "data": [
     {
       "id": "0001",
@@ -6384,6 +6384,15 @@
       "comment": "Akyo？",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2b235fbb-cf51-493c-9314-80916ee9490a"
+    },
+    {
+      "id": "0710",
+      "nickname": "ホログラフィックAkyo",
+      "avatarName": "Holographic Akyo",
+      "category": "レア,エネルギー",
+      "comment": "レア中のレア！",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_eba90b41-ec3f-4c5f-8277-91b55ab1f133"
     }
   ]
 }
