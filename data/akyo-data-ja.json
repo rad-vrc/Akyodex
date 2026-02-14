@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:50:26.173Z",
-  "count": 734,
+  "updatedAt": "2026-02-14T10:52:38.426Z",
+  "count": 735,
   "data": [
     {
       "id": "0001",
@@ -6609,6 +6609,15 @@
       "comment": "爬虫類を指す英語だよ！",
       "author": "huyumusi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c1695c0-4566-40fa-828b-f29eff60d4d3"
+    },
+    {
+      "id": "0735",
+      "nickname": "たぬきまめAkyo/まめだぬきAkyo",
+      "avatarName": "まめだぬきAkyo",
+      "category": "まめ,まめAkyo,デフォルメ,体型,体型/豊満,動物,動物/たぬき,器官,器官/しっぽ,素材・材質・生地,素材・材質・生地/柔らかい",
+      "comment": "まめAkyoパラダイスだ～～～！！！",
+      "author": "Nagisa_Imawari",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_79ec6fbd-ad28-4f80-9887-91b4fc2bd646"
     }
   ]
 }
