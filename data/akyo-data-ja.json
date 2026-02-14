@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:23:12.681Z",
-  "count": 710,
+  "updatedAt": "2026-02-14T09:28:56.402Z",
+  "count": 711,
   "data": [
     {
       "id": "0001",
@@ -6393,6 +6393,15 @@
       "comment": "レア中のレア！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eba90b41-ec3f-4c5f-8277-91b55ab1f133"
+    },
+    {
+      "id": "0711",
+      "nickname": "クイーンAkyo",
+      "avatarName": "Queen Akyo",
+      "category": "プリティ,素材・材質・生地,素材・材質・生地/ぬるぬる,職業・身分,職業・身分/王族",
+      "comment": "ぬるぬるしているらしいよ！",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2cbee432-9e8e-4ba7-a669-076e3c9cb85b"
     }
   ]
 }
