@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:01:31.402Z",
-  "count": 721,
+  "updatedAt": "2026-02-14T10:06:18.191Z",
+  "count": 722,
   "data": [
     {
       "id": "0001",
@@ -6492,6 +6492,15 @@
       "comment": "すごい力を感じる・・・",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c60217fe-cd50-42da-8080-f40e68fcf3c9"
+    },
+    {
+      "id": "0722",
+      "nickname": "電気ヒーターAkyo",
+      "avatarName": "akyo_電気ヒーター",
+      "category": "家電・家具,エネルギー,エネルギー/電気,エネルギー/熱,器官,器官/しっぽ,季節・行事,季節・行事/冬",
+      "comment": "（ささのきの手記）\r\n温めてくれるakyo。プラグは差していなくても平気なようだ。錆びてしまうので水が苦手。",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
     }
   ]
 }
