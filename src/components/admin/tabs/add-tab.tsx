@@ -118,12 +118,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
     }
 
-    // Refresh next ID at submission time
-    let submitId = nextId;
-    const refreshedId = await fetchNextId();
-    if (refreshedId) {
-      submitId = refreshedId;
-    }
+    // Use locally tracked next ID for faster sequential registrations.
+    // On rare ID conflicts (multi-admin concurrent updates), we refresh from server.
+    const submitId = nextId;
 
     const avtrId = match[0];
 
@@ -273,6 +270,13 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       const result = await response.json();
 
       if (!response.ok || !result.success) {
+        if (response.status === 409) {
+          const latestId = await fetchNextId();
+          const latestHint = latestId
+            ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
+            : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。';
+          throw new Error((result.error || 'IDが重複しています') + latestHint);
+        }
         throw new Error(result.error || 'サーバーエラーが発生しました');
       }
 

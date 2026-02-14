@@ -80,6 +80,25 @@ const overridesById = {
   },
   '0678': { Nickname: 'Rain Akyo', Comment: "There's a rumor it appears on rainy days. The credibility is quite low." },
   '0679': { Nickname: 'Uro Akyo', Comment: 'Seeking information.' },
+  '0699': {
+    Nickname: 'Year of the Horse Akyo / New Year Horse Akyo',
+    Comment: 'A horse Akyo dressed in New Year attire. It seems very excited.',
+  },
+  '0700': {
+    Nickname: 'Duck-and-Green-Onion Akyo',
+    Comment: 'A duck Akyo carrying a green onion Akyo. Where did they meet?',
+  },
+  '0701': { Nickname: 'Diamond Akyo', Comment: '' },
+  '0702': { Nickname: 'Fox Bean Akyo', Comment: '' },
+  '0703': { Nickname: 'Cheese Akyo', Comment: '' },
+  '0704': {
+    Nickname: 'RGB Dance Akyo',
+    Comment: 'It seems to be an Akyo that has mastered dance.',
+  },
+  '0705': {
+    Nickname: 'Cosmic Akyo',
+    Comment: 'It seems to have undergone unique evolution for outer-space exploration.',
+  },
 };
 
 function parseCsv(filePath) {
@@ -199,10 +218,14 @@ function main() {
     let nickname = existingEnRow ? String(existingEnRow[idx.Nickname] || '').trim() : '';
     let comment = existingEnRow ? String(existingEnRow[idx.Comment] || '') : '';
 
-    if (!nickname || (!existingEnRow && overridesById[id]?.Nickname != null)) {
+    if (overridesById[id]?.Nickname != null) {
+      nickname = overridesById[id].Nickname;
+    } else if (!nickname) {
       nickname = overridesById[id]?.Nickname ?? String(jaRow[jaIdx.Nickname] || '');
     }
-    if (!comment || (!existingEnRow && overridesById[id]?.Comment != null)) {
+    if (overridesById[id]?.Comment != null) {
+      comment = overridesById[id].Comment;
+    } else if (!comment) {
       comment = overridesById[id]?.Comment ?? String(jaRow[jaIdx.Comment] || '');
     }
 

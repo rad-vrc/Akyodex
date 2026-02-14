@@ -67,6 +67,13 @@ const COMMENT_MAP = {
   'Quest対応✕': 'Quest 지원✕',
   'Quest対応×': 'Quest 지원×',
   Quest対応: 'Quest 지원',
+  'お正月衣装に着替えたうまakyo。うきうきしているらしい。':
+    '설날 복장으로 갈아입은 말 Akyo. 들떠 있는 듯하다.',
+  'ねぎakyoを背負った、かもakyo。どこで出会ったのだろう？':
+    '파 Akyo를 업은 오리 Akyo. 어디서 만난 걸까?',
+  '舞踊を極めしAkyoらしい。': '춤의 경지에 이른 Akyo라고 한다.',
+  '外宇宙探査のために独自の進化を遂げたらしい。':
+    '외우주 탐사를 위해 독자적인 진화를 이룬 듯하다.',
 };
 
 function translateComment(jaComment) {

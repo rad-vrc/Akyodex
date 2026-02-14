@@ -853,6 +853,11 @@ const NICKNAME_MAP = {
   かもねぎAkyo: '오리파 Akyo',
   ダイヤAkyo: '다이아 Akyo',
   きつねまめAkyo: '여우콩 Akyo',
+
+  // === 0703–0710 ===
+  チーズAkyo: '치즈 Akyo',
+  RGBダンスAkyo: 'RGB 댄스 Akyo',
+  コズミックAkyo: '코즈믹 Akyo',
 };
 
 module.exports = { NICKNAME_MAP };
