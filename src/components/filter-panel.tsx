@@ -355,7 +355,7 @@ export function FilterPanel({
                   key={category}
                   type="button"
                   onClick={() => toggleCategory(category)}
-                  className="attribute-badge bg-green-100 text-green-900 hover:bg-green-200"
+                  className="attribute-badge bg-orange-100 text-orange-900 hover:bg-orange-200 border border-orange-300"
                   aria-label={`${category} ${t('filter.removeCategory', lang)}`}
                 >
                   <IconTag size="w-3 h-3" /> {category} ×
@@ -398,9 +398,9 @@ export function FilterPanel({
                         )
                       }
                       tabIndex={focusedCategoryIndex === idx ? 0 : -1}
-                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 ${
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-orange-300 focus:ring-offset-2 ${
                         selected
-                          ? 'bg-green-100 text-green-900 border-green-300'
+                          ? 'bg-orange-100 text-orange-900 border-orange-300'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
                       }`}
                       aria-selected={selected}
