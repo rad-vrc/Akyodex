@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:51:32.595Z",
-  "count": 718,
+  "updatedAt": "2026-02-14T09:53:47.426Z",
+  "count": 719,
   "data": [
     {
       "id": "0001",
@@ -6465,6 +6465,15 @@
       "comment": "こっちも宝石を食べすぎたんだって！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
+    },
+    {
+      "id": "0719",
+      "nickname": "白キツネツキ式ジェム狐Akyo",
+      "avatarName": "White Gem Fox Akyo",
+      "category": "動物,動物/きつね,素材・材質・生地,素材・材質・生地/硬い,素材・材質・生地/石,くいしんぼう",
+      "comment": "キツネツキ式狐Akyoの好物は宝石なのかな？",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
     }
   ]
 }
