@@ -15,6 +15,34 @@ interface AddTabProps {
   creators: string[];
 }
 
+function normalizeId(id: string): string | null {
+  const parsed = Number.parseInt(id, 10);
+  if (Number.isNaN(parsed)) return null;
+  return parsed.toString().padStart(4, '0');
+}
+
+function pickLatestId(currentId: string, candidateId?: string | null): string {
+  const normalizedCurrent = normalizeId(currentId);
+  const normalizedCandidate = candidateId ? normalizeId(candidateId) : null;
+
+  if (!normalizedCandidate) {
+    return normalizedCurrent ?? currentId;
+  }
+  if (!normalizedCurrent) {
+    return normalizedCandidate;
+  }
+
+  const currentNum = Number.parseInt(normalizedCurrent, 10);
+  const candidateNum = Number.parseInt(normalizedCandidate, 10);
+  return candidateNum >= currentNum ? normalizedCandidate : normalizedCurrent;
+}
+
+function getNextSequentialId(id: string): string | null {
+  const normalized = normalizeId(id);
+  if (!normalized) return null;
+  return (Number.parseInt(normalized, 10) + 1).toString().padStart(4, '0');
+}
+
 /**
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
@@ -43,8 +71,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       if (response.ok) {
         const data = await response.json();
         if (data?.nextId) {
-          setNextId(data.nextId);
-          return data.nextId as string;
+          const latestId = pickLatestId(nextIdRef.current, data.nextId as string);
+          nextIdRef.current = latestId;
+          setNextId(latestId);
+          return latestId;
         }
       } else {
         console.error('Failed to fetch next ID, using default');
@@ -248,9 +278,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     try {
       let submitId = nextIdRef.current;
       const refreshedId = await nextIdRefreshPromise;
-      if (refreshedId) {
-        submitId = refreshedId;
-      }
+      submitId = pickLatestId(submitId, refreshedId);
 
       const buildSubmitData = (id: string) => {
         const submitData = new FormData();
@@ -290,18 +318,22 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       if ((!response.ok || !result.success) && response.status === 409) {
         const latestId = await fetchNextId();
         if (latestId) {
-          latestKnownId = latestId;
+          latestKnownId = pickLatestId(submitId, latestId);
         }
 
-        if (latestId && latestId !== submitId) {
-          submitId = latestId;
+        const retryId = latestKnownId ?? getNextSequentialId(submitId);
+        if (retryId && retryId !== submitId) {
+          submitId = retryId;
           ({ response, result } = await uploadWithId(submitId));
         }
       }
 
       if (!response.ok || !result.success) {
         if (response.status === 409) {
-          const latestId = latestKnownId ?? (await fetchNextId());
+          const latestId = pickLatestId(
+            submitId,
+            latestKnownId ?? (await fetchNextId()) ?? getNextSequentialId(submitId)
+          );
           const latestHint = latestId
             ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
             : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。';
@@ -335,7 +367,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       // Increment next ID for next registration
       const currentId = parseInt(submitId, 10);
       if (!isNaN(currentId)) {
-        setNextId((currentId + 1).toString().padStart(4, '0'));
+        const nextSequentialId = (currentId + 1).toString().padStart(4, '0');
+        setNextId((prev) => pickLatestId(prev, nextSequentialId));
       }
     } catch (error) {
       console.error('Form submission error:', error);
