@@ -5,6 +5,7 @@
 import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
+import { ADD_TAB_DRAFT_KEY } from '../draft-keys';
 
 interface AddTabProps {
   // 新フィールド
@@ -13,6 +14,25 @@ interface AddTabProps {
   // 旧フィールド（互換性）
   attributes: string[];
   creators: string[];
+}
+
+interface AddTabDraft {
+  nickname: string;
+  categories: string[];
+  avatarUrl: string;
+  comment: string;
+  customCategories: string[];
+}
+
+function createDefaultFormData() {
+  return {
+    nickname: '',
+    avatarName: '',
+    categories: [] as string[],
+    author: '',
+    avatarUrl: '',
+    comment: '',
+  };
 }
 
 function normalizeId(id: string): string | null {
@@ -43,27 +63,74 @@ function getNextSequentialId(id: string): string | null {
   return (Number.parseInt(normalized, 10) + 1).toString().padStart(4, '0');
 }
 
+function normalizeStringList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const normalized = value
+    .map((item) => (typeof item === 'string' ? item.trim() : ''))
+    .filter(Boolean);
+  return Array.from(new Set(normalized));
+}
+
 /**
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
  */
 export function AddTab({ categories, authors, attributes, creators }: AddTabProps) {
   // 新旧フィールドのマージ
-  const allAttributes = categories || attributes;
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const allAttributes = Array.from(
+    new Set([...(categories || attributes), ...customCategories])
+  ).sort();
   // authors/creators は将来の作者フィルター用に保持（現在はVRChatから自動取得）
   void (authors || creators);
 
   const [nextId, setNextId] = useState('0001');
-  const [formData, setFormData] = useState({
-    nickname: '',
-    avatarName: '',
-    categories: [] as string[],
-    author: '',
-    avatarUrl: '',
-    comment: '',
-  });
+  const [formData, setFormData] = useState(createDefaultFormData);
   const formRef = useRef<HTMLFormElement | null>(null);
   const nextIdRef = useRef(nextId);
+  const draftHydratedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const savedDraft = sessionStorage.getItem(ADD_TAB_DRAFT_KEY);
+      if (!savedDraft) return;
+
+      const parsed = JSON.parse(savedDraft) as Partial<AddTabDraft>;
+      setFormData((prev) => ({
+        ...prev,
+        nickname: typeof parsed.nickname === 'string' ? parsed.nickname : prev.nickname,
+        categories: normalizeStringList(parsed.categories),
+        avatarUrl: typeof parsed.avatarUrl === 'string' ? parsed.avatarUrl : prev.avatarUrl,
+        comment: typeof parsed.comment === 'string' ? parsed.comment : prev.comment,
+      }));
+      setCustomCategories(normalizeStringList(parsed.customCategories));
+    } catch (error) {
+      console.warn('[add-tab] Failed to restore draft:', error);
+    } finally {
+      draftHydratedRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !draftHydratedRef.current) return;
+
+    const draft: AddTabDraft = {
+      nickname: formData.nickname,
+      categories: normalizeStringList(formData.categories),
+      avatarUrl: formData.avatarUrl,
+      comment: formData.comment,
+      customCategories: normalizeStringList(customCategories),
+    };
+    sessionStorage.setItem(ADD_TAB_DRAFT_KEY, JSON.stringify(draft));
+  }, [
+    customCategories,
+    formData.avatarUrl,
+    formData.categories,
+    formData.comment,
+    formData.nickname,
+  ]);
 
   const fetchNextId = useCallback(async (): Promise<string | null> => {
     try {
@@ -352,14 +419,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       );
 
       // Reset form
-      setFormData({
-        nickname: '',
-        avatarName: '',
-        categories: [],
-        author: '',
-        avatarUrl: '',
-        comment: '',
-      });
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem(ADD_TAB_DRAFT_KEY);
+      }
+      setFormData(createDefaultFormData());
       setShowImagePreview(false);
       setOriginalImageSrc(null);
       setNicknameStatus({ message: '', tone: 'neutral' });
@@ -388,6 +451,19 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCreateCategory = (categoryName: string) => {
+    const normalizedInput = categoryName.trim().normalize('NFC').toLowerCase();
+    if (!normalizedInput) return;
+
+    setCustomCategories((prev) => {
+      const exists = prev.some(
+        (existing) => existing.normalize('NFC').toLowerCase() === normalizedInput
+      );
+      if (exists) return prev;
+      return [...prev, categoryName.trim()];
+    });
   };
 
   // Nickname duplicate check function
@@ -821,6 +897,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         currentAttributes={formData.categories}
         onApply={(attributes) => handleInputChange('categories', attributes)}
         allAttributes={allAttributes}
+        onCreateAttribute={handleCreateCategory}
       />
     </div>
   );

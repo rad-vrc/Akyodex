@@ -3,6 +3,7 @@
 import { IconEdit, IconPlusCircle, IconTools } from '@/components/icons';
 import { useState } from 'react';
 import { AddTab } from './tabs/add-tab';
+import { ADD_TAB_DRAFT_KEY } from './draft-keys';
 import { EditTab } from './tabs/edit-tab';
 import { ToolsTab } from './tabs/tools-tab';
 
@@ -24,6 +25,13 @@ type TabType = 'add' | 'edit' | 'tools';
 export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>('add');
 
+  const handleTabChange = (nextTab: TabType) => {
+    if (activeTab === 'add' && nextTab !== 'add' && typeof window !== 'undefined') {
+      sessionStorage.removeItem(ADD_TAB_DRAFT_KEY);
+    }
+    setActiveTab(nextTab);
+  };
+
   const handleDataChange = () => {
     // For now, just show a message that page needs refresh
     // In production, this would trigger a router refresh or data revalidation
@@ -36,7 +44,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
       <div className="bg-white rounded-xl shadow-lg mb-6">
         <div className="flex border-b">
           <button
-            onClick={() => setActiveTab('add')}
+            onClick={() => handleTabChange('add')}
             className={`px-6 py-4 font-medium text-gray-700 transition-colors ${
               activeTab === 'add'
                 ? 'border-b-2 border-red-500 text-red-500'
@@ -47,7 +55,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
             新規登録
           </button>
           <button
-            onClick={() => setActiveTab('edit')}
+            onClick={() => handleTabChange('edit')}
             className={`px-6 py-4 font-medium text-gray-700 transition-colors ${
               activeTab === 'edit'
                 ? 'border-b-2 border-red-500 text-red-500'
@@ -58,7 +66,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
             編集・削除
           </button>
           <button
-            onClick={() => setActiveTab('tools')}
+            onClick={() => handleTabChange('tools')}
             className={`px-6 py-4 font-medium text-gray-700 transition-colors ${
               activeTab === 'tools'
                 ? 'border-b-2 border-red-500 text-red-500'
