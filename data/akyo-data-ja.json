@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T11:01:39.859Z",
-  "count": 738,
+  "updatedAt": "2026-02-14T11:10:50.400Z",
+  "count": 739,
   "data": [
     {
       "id": "0001",
@@ -6645,6 +6645,15 @@
       "comment": "ついてこい！（ ｀ー´）ノ\r\n（作者コメントより）",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
+    },
+    {
+      "id": "0739",
+      "nickname": "Akyo（第三世代）",
+      "avatarName": "akyomo",
+      "category": "パロディ,パロディ/ポケモン,エネルギー,エネルギー/熱,エネルギー/水,エネルギー/植物,器官,架空の存在,架空の存在/モンスター,器官/しっぽ,次元",
+      "comment": "Akyo、ゲットだぜ！",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bebc35-c78b-4755-8e75-0cd26881b3ae"
     }
   ]
 }
