@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:21:09.629Z",
-  "count": 725,
+  "updatedAt": "2026-02-14T10:22:48.304Z",
+  "count": 726,
   "data": [
     {
       "id": "0001",
@@ -6528,6 +6528,15 @@
       "comment": "（ささのきの手記）\r\n人懐っこく好奇心旺盛",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
+    },
+    {
+      "id": "0726",
+      "nickname": "インポスターAkyo",
+      "avatarName": "Imposter Akyo",
+      "category": "チョコミント類,ギミック・特殊",
+      "comment": "遠くから見たらAkyo！",
+      "author": "NEET ENGINEER",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_a8fade8e-ea03-4d99-b0ff-f996535956e8"
     }
   ]
 }
