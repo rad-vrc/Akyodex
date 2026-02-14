@@ -31,7 +31,7 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
     // APIエンドポイント経由でダウンロード（Content-Disposition: attachment が設定される）
     const downloadUrl = `/api/download-reference?id=${akyo.id}`;
-    
+
     // 新しいウィンドウ/タブで開くとダウンロードがトリガーされる
     window.location.href = downloadUrl;
   };
@@ -65,7 +65,9 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
           type="button"
           onClick={handleFavoriteClick}
           className="favorite-btn absolute top-2 right-2 z-10"
-          aria-label={akyo.isFavorite ? t('card.favorite.remove', lang) : t('card.favorite.add', lang)}
+          aria-label={
+            akyo.isFavorite ? t('card.favorite.remove', lang) : t('card.favorite.add', lang)
+          }
         >
           {akyo.isFavorite ? '❤️' : '🤍'}
         </button>

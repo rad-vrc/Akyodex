@@ -14,8 +14,18 @@
  * - Action buttons (favorite + VRChat link)
  */
 
+import {
+  IconExternalLink,
+  IconGift,
+  IconHeart,
+  IconPalette,
+  IconSparkles,
+  IconTag,
+  IconUser,
+} from '@/components/icons';
 import { getCategoryColor } from '@/lib/akyo-data-helpers';
-import { IconExternalLink, IconGift, IconHeart, IconPalette, IconSparkles, IconTag, IconUser } from '@/components/icons';
+import type { SupportedLanguage } from '@/lib/i18n';
+import { t } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -27,9 +37,16 @@ interface AkyoDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onToggleFavorite?: (id: string) => void;
+  lang?: SupportedLanguage;
 }
 
-export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: AkyoDetailModalProps) {
+export function AkyoDetailModal({
+  akyo,
+  isOpen,
+  onClose,
+  onToggleFavorite,
+  lang = 'ja',
+}: AkyoDetailModalProps) {
   const [localAkyo, setLocalAkyo] = useState<AkyoData | null>(akyo);
 
   // 三面図（PNG）優先、WebPフォールバック用の状態
@@ -41,12 +58,12 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   // ズーム機能の状態
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 }); // パーセンテージ
-  
+
   // ドラッグ機能の状態
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const originStartRef = useRef({ x: 50, y: 50 });
-  
+
   // ダブルタップ検出用（モバイル対応）
   const lastTapRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false); // 実際にドラッグ（移動）したか
@@ -104,24 +121,27 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   }, [imageLoadAttempt, localAkyo]);
 
   // シングルクリックでズームイン（クリック位置を中心に）
-  const handleImageClick = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
-    // ドラッグ中やズーム中はクリックとして扱わない
-    if (isDragging || isZoomed) return;
-    
-    // ダブルタップでズーム解除した直後のclickイベントは無視（再ズーム防止）
-    if (justZoomedOutRef.current) {
-      justZoomedOutRef.current = false;
-      return;
-    }
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
-    // ズームイン：クリック位置を中心に
-    setZoomOrigin({ x, y });
-    setIsZoomed(true);
-  }, [isZoomed, isDragging]);
+  const handleImageClick = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      // ドラッグ中やズーム中はクリックとして扱わない
+      if (isDragging || isZoomed) return;
+
+      // ダブルタップでズーム解除した直後のclickイベントは無視（再ズーム防止）
+      if (justZoomedOutRef.current) {
+        justZoomedOutRef.current = false;
+        return;
+      }
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+      // ズームイン：クリック位置を中心に
+      setZoomOrigin({ x, y });
+      setIsZoomed(true);
+    },
+    [isZoomed, isDragging]
+  );
 
   // ダブルクリックでズームアウト
   const handleImageDoubleClick = useCallback(() => {
@@ -131,67 +151,79 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   }, [isZoomed]);
 
   // ドラッグ開始（マウス）
-  const handleDragStart = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
-    if (!isZoomed) return;
-    e.preventDefault();
-    setIsDragging(true);
-    dragStartRef.current = { x: e.clientX, y: e.clientY };
-    originStartRef.current = { ...zoomOrigin };
-  }, [isZoomed, zoomOrigin]);
+  const handleDragStart = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      if (!isZoomed) return;
+      e.preventDefault();
+      setIsDragging(true);
+      dragStartRef.current = { x: e.clientX, y: e.clientY };
+      originStartRef.current = { ...zoomOrigin };
+    },
+    [isZoomed, zoomOrigin]
+  );
 
   // ドラッグ開始（タッチ）
-  const handleTouchStart = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
-    if (!isZoomed || e.touches.length !== 1) return;
-    // ネイティブスクロールを防止
-    e.preventDefault();
-    setIsDragging(true);
-    hasDraggedRef.current = false; // ドラッグ開始時はまだ移動していない
-    dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    originStartRef.current = { ...zoomOrigin };
-  }, [isZoomed, zoomOrigin]);
+  const handleTouchStart = useCallback(
+    (e: ReactTouchEvent<HTMLDivElement>) => {
+      if (!isZoomed || e.touches.length !== 1) return;
+      // ネイティブスクロールを防止
+      e.preventDefault();
+      setIsDragging(true);
+      hasDraggedRef.current = false; // ドラッグ開始時はまだ移動していない
+      dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      originStartRef.current = { ...zoomOrigin };
+    },
+    [isZoomed, zoomOrigin]
+  );
 
   // ドラッグ中（マウス）
-  const handleDragMove = useCallback((e: ReactMouseEvent<HTMLDivElement>) => {
-    if (!isDragging || !isZoomed) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const deltaX = ((e.clientX - dragStartRef.current.x) / rect.width) * 100;
-    const deltaY = ((e.clientY - dragStartRef.current.y) / rect.height) * 100;
-    
-    // ドラッグ方向と逆に origin を移動（自然な操作感）
-    const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
-    const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
-    
-    setZoomOrigin({ x: newX, y: newY });
-  }, [isDragging, isZoomed]);
+  const handleDragMove = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      if (!isDragging || !isZoomed) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const deltaX = ((e.clientX - dragStartRef.current.x) / rect.width) * 100;
+      const deltaY = ((e.clientY - dragStartRef.current.y) / rect.height) * 100;
+
+      // ドラッグ方向と逆に origin を移動（自然な操作感）
+      const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
+      const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
+
+      setZoomOrigin({ x: newX, y: newY });
+    },
+    [isDragging, isZoomed]
+  );
 
   // ドラッグ中（タッチ）
-  const handleTouchMove = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
-    if (!isDragging || !isZoomed || e.touches.length !== 1) return;
-    
-    // ネイティブスクロールを防止
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const touchX = e.touches[0].clientX;
-    const touchY = e.touches[0].clientY;
-    
-    // 移動量がしきい値を超えたらドラッグとみなす
-    const movedX = Math.abs(touchX - dragStartRef.current.x);
-    const movedY = Math.abs(touchY - dragStartRef.current.y);
-    if (movedX > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD) {
-      hasDraggedRef.current = true;
-    }
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const deltaX = ((touchX - dragStartRef.current.x) / rect.width) * 100;
-    const deltaY = ((touchY - dragStartRef.current.y) / rect.height) * 100;
-    
-    const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
-    const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
-    
-    setZoomOrigin({ x: newX, y: newY });
-  }, [isDragging, isZoomed]);
+  const handleTouchMove = useCallback(
+    (e: ReactTouchEvent<HTMLDivElement>) => {
+      if (!isDragging || !isZoomed || e.touches.length !== 1) return;
+
+      // ネイティブスクロールを防止
+      e.preventDefault();
+      e.stopPropagation();
+
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+
+      // 移動量がしきい値を超えたらドラッグとみなす
+      const movedX = Math.abs(touchX - dragStartRef.current.x);
+      const movedY = Math.abs(touchY - dragStartRef.current.y);
+      if (movedX > DRAG_THRESHOLD || movedY > DRAG_THRESHOLD) {
+        hasDraggedRef.current = true;
+      }
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const deltaX = ((touchX - dragStartRef.current.x) / rect.width) * 100;
+      const deltaY = ((touchY - dragStartRef.current.y) / rect.height) * 100;
+
+      const newX = Math.max(0, Math.min(100, originStartRef.current.x - deltaX));
+      const newY = Math.max(0, Math.min(100, originStartRef.current.y - deltaY));
+
+      setZoomOrigin({ x: newX, y: newY });
+    },
+    [isDragging, isZoomed]
+  );
 
   // ドラッグ終了（マウス用）
   const handleDragEnd = useCallback(() => {
@@ -203,7 +235,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
   const handleTouchEnd = useCallback(() => {
     const now = Date.now();
     const timeSinceLastTap = now - lastTapRef.current;
-    
+
     // ズーム中のみダブルタップ判定を行う
     if (isZoomed) {
       if (!hasDraggedRef.current && timeSinceLastTap < DOUBLE_TAP_DELAY) {
@@ -217,7 +249,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
       }
     }
     // 非ズーム時は lastTapRef を更新しない（ズームイン→即ダブルタップ判定を防ぐ）
-    
+
     // ドラッグ状態をリセット
     setIsDragging(false);
     hasDraggedRef.current = false;
@@ -311,7 +343,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 background: 'rgba(255, 255, 255, 0.45)',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
               }}
-              aria-label="閉じる"
+              aria-label={t('modal.close', lang)}
             >
               <svg
                 width="20"
@@ -358,7 +390,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
               <div className="space-y-6">
                 {/* Image Section with Zoom & Drag */}
                 <div className="relative">
-                  <div 
+                  <div
                     className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none ${
                       isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                     }`}
@@ -373,7 +405,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
                   >
-                    <div 
+                    <div
                       className={`w-full h-full relative ${isDragging ? '' : 'transition-transform duration-300 ease-out'}`}
                       style={{
                         transform: isZoomed ? 'scale(2.5)' : 'scale(1)',
@@ -406,7 +438,7 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動  / ダブルタップで戻る
+                      ドラッグで移動 / ダブルタップで戻る
                     </div>
                   )}
 
@@ -421,7 +453,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Name Card */}
                   <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold mb-2" style={{ color: '#FF6B9D' }}>
-                      <IconTag size="w-3.5 h-3.5" className="mr-1" />なまえ
+                      <IconTag size="w-3.5 h-3.5" className="mr-1" />
+                      {t('modal.name', lang)}
                     </h3>
                     <p className="text-xl font-black">{localAkyo.nickname || '-'}</p>
                   </div>
@@ -429,7 +462,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Avatar Name Card */}
                   <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-blue-600 mb-2">
-                      <IconUser size="w-3.5 h-3.5" className="mr-1" />アバター名
+                      <IconUser size="w-3.5 h-3.5" className="mr-1" />
+                      {t('modal.avatarName', lang)}
                     </h3>
                     <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
                   </div>
@@ -437,7 +471,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Categories Card */}
                   <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-orange-600 mb-2">
-                      <IconSparkles size="w-3.5 h-3.5" className="mr-1" />カテゴリ
+                      <IconSparkles size="w-3.5 h-3.5" className="mr-1" />
+                      {t('modal.category', lang)}
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {categories.map((cat, index) => {
@@ -460,7 +495,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                   {/* Author Card */}
                   <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-green-600 mb-2">
-                      <IconPalette size="w-3.5 h-3.5" className="mr-1" />つくったひと
+                      <IconPalette size="w-3.5 h-3.5" className="mr-1" />
+                      {t('modal.author', lang)}
                     </h3>
                     <p className="text-xl font-black">{authorStr || ''}</p>
                   </div>
@@ -469,7 +505,9 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 {/* VRChat URL Section */}
                 {localAkyo.avatarUrl && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-500 mb-2">VRChat アバターURL</h3>
+                    <h3 className="text-sm font-semibold text-gray-500 mb-2">
+                      {t('modal.vrchatUrl', lang)}
+                    </h3>
                     <div className="bg-blue-50 rounded-lg p-4">
                       <a
                         href={localAkyo.avatarUrl}
@@ -490,7 +528,8 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                 {commentStr && (
                   <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-3xl p-5">
                     <h3 className="text-lg font-bold text-gray-900 mb-3">
-                      <IconGift size="w-4 h-4" className="mr-2" />おまけじょうほう
+                      <IconGift size="w-4 h-4" className="mr-2" />
+                      {t('modal.bonus', lang)}
                     </h3>
                     <div className="bg-white bg-opacity-80 rounded-2xl p-4 shadow-inner">
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
@@ -518,10 +557,16 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                           }
                         : undefined
                     }
-                    aria-label={localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
+                    aria-label={
+                      localAkyo.isFavorite
+                        ? t('modal.favorite.remove', lang)
+                        : t('modal.favorite.add', lang)
+                    }
                   >
                     <IconHeart size="w-4 h-4" />
-                    {localAkyo.isFavorite ? 'お気に入り解除' : 'お気に入りに追加'}
+                    {localAkyo.isFavorite
+                      ? t('modal.favorite.remove', lang)
+                      : t('modal.favorite.add', lang)}
                   </button>
 
                   {/* VRChat Button - Orange Gradient (not purple!) */}
@@ -534,10 +579,10 @@ export function AkyoDetailModal({ akyo, isOpen, onClose, onToggleFavorite }: Aky
                         background: 'linear-gradient(135deg, #f97316, #fb923c)',
                         color: 'white',
                       }}
-                      aria-label="VRChatで見る"
+                      aria-label={t('modal.vrchatOpen', lang)}
                     >
                       <IconExternalLink size="w-4 h-4" />
-                      VRChatで見る
+                      {t('modal.vrchatOpen', lang)}
                     </button>
                   )}
                 </div>

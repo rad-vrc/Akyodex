@@ -15,11 +15,11 @@ export function ToolsTab() {
         throw new Error('CSVの取得に失敗しました');
       }
       const csvContent = await response.text();
-      
+
       // ダウンロード用のBlobを作成
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      
+
       // ダウンロードリンクを作成してクリック
       const link = document.createElement('a');
       link.href = url;

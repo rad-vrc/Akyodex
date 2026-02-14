@@ -1,15 +1,15 @@
 /**
  * CSV to JSON Converter for Akyo Data
- * 
+ *
  * This script converts Akyo CSV files to JSON format for faster data loading.
  * Run with: npx tsx scripts/csv-to-json.ts
- * 
+ *
  * Phase 4 Implementation: R2 JSON Data Cache
  */
 
+import { parse } from 'csv-parse/sync';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { parse } from 'csv-parse/sync';
 
 interface AkyoData {
   id: string;
@@ -93,21 +93,30 @@ async function convertCsvToJson() {
   for (const { code, file } of languages) {
     console.log(`📝 Processing ${code.toUpperCase()} CSV (${file})...`);
     const csvPath = path.join(dataDir, file);
-    const csv = await fs.readFile(csvPath, 'utf-8');
-    const data = parseCsvToAkyoData(csv);
 
-    const akyoJsonOutput: AkyoJsonOutput = {
-      version: '1.0',
-      language: code,
-      updatedAt: new Date().toISOString(),
-      count: data.length,
-      data,
-    };
+    try {
+      const csv = await fs.readFile(csvPath, 'utf-8');
+      const data = parseCsvToAkyoData(csv);
 
-    const jsonPath = path.join(dataDir, `akyo-data-${code}.json`);
-    await fs.writeFile(jsonPath, JSON.stringify(akyoJsonOutput, null, 2), 'utf-8');
-    console.log(`   ✅ ${code.toUpperCase()}: ${data.length} avatars → ${jsonPath}`);
-    jsonPaths.push(jsonPath);
+      const akyoJsonOutput: AkyoJsonOutput = {
+        version: '1.0',
+        language: code,
+        updatedAt: new Date().toISOString(),
+        count: data.length,
+        data,
+      };
+
+      const jsonPath = path.join(dataDir, `akyo-data-${code}.json`);
+      await fs.writeFile(jsonPath, JSON.stringify(akyoJsonOutput, null, 2), 'utf-8');
+      console.log(`   ✅ ${code.toUpperCase()}: ${data.length} avatars → ${jsonPath}`);
+      jsonPaths.push(jsonPath);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `   ⚠️ Skipping ${code.toUpperCase()} (${file}) at ${csvPath}: ${message}`
+      );
+      continue;
+    }
   }
 
   // Summary

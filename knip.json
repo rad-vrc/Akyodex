@@ -23,8 +23,6 @@
     "src/lib/akyo-data-kv.ts",
     "src/lib/akyo-data.ts"
   ],
-  "ignoreDependencies": [
-    "eslint-config-next"
-  ],
+  "ignoreDependencies": ["eslint-config-next"],
   "ignoreExportsUsedInFile": true
 }

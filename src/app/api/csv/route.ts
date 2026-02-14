@@ -1,4 +1,5 @@
 import { jsonError } from '@/lib/api-helpers';
+import { isValidLanguage, type SupportedLanguage } from '@/lib/i18n';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -17,8 +18,10 @@ export async function GET(request: Request) {
   try {
     // クエリパラメータから言語を取得（デフォルトは日本語）
     const { searchParams } = new URL(request.url);
-    const rawLang = searchParams.get('lang');
-    const lang = rawLang === 'en' ? 'en' : rawLang === 'ko' ? 'ko' : 'ja';
+    const rawLang = searchParams.get('lang') ?? '';
+    const lang: SupportedLanguage = isValidLanguage(rawLang)
+      ? (rawLang as SupportedLanguage)
+      : 'ja';
 
     // CSVファイルのパス
     const csvPath = path.join(process.cwd(), 'data', `akyo-data-${lang}.csv`);

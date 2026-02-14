@@ -12,11 +12,7 @@
  * - Client-side authentication checks in admin-client.tsx
  */
 
-import {
-  detectLanguageFromHeader,
-  getLanguageFromCountry,
-  isValidLanguage
-} from '@/lib/i18n';
+import { detectLanguageFromHeader, getLanguageFromCountry, isValidLanguage } from '@/lib/i18n';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -56,7 +52,9 @@ export function middleware(request: NextRequest) {
     form-action 'self';
     frame-ancestors 'self';
     upgrade-insecure-requests;
-  `.replace(/\s{2,}/g, ' ').trim();
+  `
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 
   // Allow /admin routes to load (client component handles auth UI)
   if (pathname.startsWith('/admin')) {

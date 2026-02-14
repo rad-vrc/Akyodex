@@ -8,41 +8,29 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Use Edge Runtime for optimal performance
+// Node.js runtime required for crypto.timingSafeEqual and setSessionCookie helper
 export const runtime = 'nodejs';
 
-import { createSessionToken } from '@/lib/session';
+import { timingSafeEqual } from 'crypto';
 import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
+import { createSessionToken } from '@/lib/session';
 import type { AdminRole } from '@/types/akyo';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
 /**
- * Timing-safe password comparison (Edge Runtime Compatible)
+ * Timing-safe password comparison (Node.js crypto)
  * Prevents timing attacks by ensuring constant-time comparison
  */
 function timingSafeCompare(a: string, b: string): boolean {
   try {
-    const encoder = new TextEncoder();
-    const bufA = encoder.encode(a);
-    const bufB = encoder.encode(b);
-
-    // Pad to equal length to prevent length-based timing
-    const maxLen = Math.max(bufA.length, bufB.length);
-    const paddedA = new Uint8Array(maxLen);
-    const paddedB = new Uint8Array(maxLen);
-
-    paddedA.set(bufA);
-    paddedB.set(bufB);
-
-    // Timing-safe comparison
-    let result = 0;
-    for (let i = 0; i < maxLen; i++) {
-      result |= paddedA[i] ^ paddedB[i];
+    const bufA = Buffer.from(a, 'utf8');
+    const bufB = Buffer.from(b, 'utf8');
+    if (bufA.length !== bufB.length) {
+      return false;
     }
-
-    return result === 0;
+    return timingSafeEqual(bufA, bufB);
   } catch {
     return false;
   }
@@ -54,7 +42,7 @@ export async function POST(request: Request) {
     const { password } = body;
 
     if (!password || typeof password !== 'string') {
-      return jsonError('パスワードを入力してください', 400, { message: 'パスワードを入力してください' });
+      return jsonError('Akyoワードを入力してください', 400);
     }
 
     // Get passwords from environment variables (server-side only - NOT NEXT_PUBLIC)
@@ -64,7 +52,7 @@ export async function POST(request: Request) {
     // Validate that passwords are configured
     if (!ownerPassword || !adminPassword) {
       console.error('Admin passwords not configured in environment variables');
-      return jsonError('認証設定エラーです', 500, { message: '認証設定エラーです' });
+      return jsonError('認証設定エラーです', 500);
     }
 
     // Check password and determine role using timing-safe comparison
@@ -85,7 +73,7 @@ export async function POST(request: Request) {
     }
 
     if (!role) {
-      return jsonError('パスワードが違います', 401, { message: 'パスワードが違います' });
+      return jsonError('Akyoワードが違います', 401);
     }
 
     // Create cryptographically signed session token
@@ -100,6 +88,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Login error:', error);
-    return jsonError('ログインエラーが発生しました', 500, { message: 'ログインエラーが発生しました' });
+    return jsonError('ログインエラーが発生しました', 500);
   }
 }

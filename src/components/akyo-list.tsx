@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
-import type { AkyoData } from '@/types/akyo';
-import { getCategoryColor } from '@/lib/akyo-data-helpers';
 import { IconInfoCircle } from '@/components/icons';
+import { getCategoryColor } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
-import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import { t, type SupportedLanguage } from '@/lib/i18n';
+import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import type { AkyoData } from '@/types/akyo';
+import Image from 'next/image';
 
 interface AkyoListProps {
   data: AkyoData[];
@@ -44,7 +44,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
             {data.map((akyo) => {
               const category = akyo.category || akyo.attribute || '';
               const author = akyo.author || akyo.creator || '';
-              
+
               return (
                 <tr key={akyo.id}>
                   {/* No. */}
@@ -78,7 +78,9 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                     </div>
                     {akyo.nickname && akyo.avatarName && (
                       <div className="text-xs text-[var(--text-secondary)]">
-                        {akyo.avatarName}
+                        {akyo.nickname === akyo.avatarName
+                          ? `${t('card.avatarName', lang)}: ${akyo.avatarName}`
+                          : akyo.avatarName}
                       </div>
                     )}
                   </td>
@@ -96,7 +98,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                             style={{
                               background: `${color}20`,
                               color: color,
-                              boxShadow: `0 6px 12px ${color}20`
+                              boxShadow: `0 6px 12px ${color}20`,
                             }}
                           >
                             {trimmedCat}
@@ -107,9 +109,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   </td>
 
                   {/* 作者 */}
-                  <td className="text-sm text-[var(--text-secondary)]">
-                    {author}
-                  </td>
+                  <td className="text-sm text-[var(--text-secondary)]">{author}</td>
 
                   {/* アクション */}
                   <td className="text-center">
@@ -119,11 +119,13 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                         type="button"
                         onClick={(e) => handleFavoriteClick(e, akyo.id)}
                         className="list-action-btn"
-                        aria-label={akyo.isFavorite ? t('card.favorite.remove', lang) : t('card.favorite.add', lang)}
+                        aria-label={
+                          akyo.isFavorite
+                            ? t('card.favorite.remove', lang)
+                            : t('card.favorite.add', lang)
+                        }
                       >
-                        <span className="list-favorite-icon">
-                          {akyo.isFavorite ? '❤️' : '🤍'}
-                        </span>
+                        <span className="list-favorite-icon">{akyo.isFavorite ? '❤️' : '🤍'}</span>
                       </button>
 
                       {/* 詳細ボタン */}

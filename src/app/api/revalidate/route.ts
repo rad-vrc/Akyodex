@@ -3,31 +3,31 @@ import { NextRequest } from 'next/server';
 
 /**
  * On-demand ISR Revalidation API
- * 
+ *
  * Phase 5a: ISR cache invalidation
  * Phase 5b: KV cache update
- * 
+ *
  * This endpoint allows external services (like GitHub Actions) to trigger
  * cache invalidation after data updates, enabling near-instant updates
  * instead of waiting for the ISR revalidation period (1 hour).
- * 
+ *
  * Security:
  * - Requires REVALIDATE_SECRET header for authentication
  * - Should only be called from trusted sources (GitHub Actions webhook)
- * 
+ *
  * Usage:
  * POST /api/revalidate
  * Headers:
  *   x-revalidate-secret: <REVALIDATE_SECRET>
  * Body (optional):
- *   { 
- *     "paths": ["/", "/en"], 
+ *   {
+ *     "paths": ["/", "/en"],
  *     "tags": ["akyo-data"],
  *     "updateKV": true  // Phase 5b: Also update KV cache
  *   }
- * 
+ *
  * If no body is provided, revalidates all main pages by default.
- * 
+ *
  * Environment Variables:
  * - REVALIDATE_SECRET: Secret token for authentication (required)
  */
@@ -43,18 +43,13 @@ interface RevalidateRequest {
 
 // Default paths to revalidate when no specific paths are provided
 const DEFAULT_PATHS = [
-  '/',      // Japanese home
-  '/en',    // English home
-  '/ko',    // Korean home
+  '/', // Japanese home
+  '/en', // English home
+  '/ko', // Korean home
 ];
 
 // Default tags to revalidate
-const DEFAULT_TAGS = [
-  'akyo-data',
-  'akyo-data-ja',
-  'akyo-data-en',
-  'akyo-data-ko',
-];
+const DEFAULT_TAGS = ['akyo-data', 'akyo-data-ja', 'akyo-data-en', 'akyo-data-ko'];
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
@@ -64,18 +59,12 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!expectedSecret) {
       console.error('[revalidate] REVALIDATE_SECRET is not configured');
-      return Response.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
+      return Response.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
     if (!secret || secret !== expectedSecret) {
       console.warn('[revalidate] Invalid or missing secret');
-      return Response.json(
-        { error: 'Invalid secret' },
-        { status: 401 }
-      );
+      return Response.json({ error: 'Invalid secret' }, { status: 401 });
     }
 
     // Parse request body (optional)
@@ -84,7 +73,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     let updateKV = false;
 
     try {
-      const body = await request.json() as RevalidateRequest;
+      const body = (await request.json()) as RevalidateRequest;
       if (body.paths && Array.isArray(body.paths) && body.paths.length > 0) {
         paths = body.paths;
       }
@@ -126,40 +115,48 @@ export async function POST(request: NextRequest): Promise<Response> {
     let kvUpdated = false;
     let kvUpdateDetails: { ja: boolean; en: boolean; ko: boolean; metadata: boolean } | null = null;
     let kvError: string | null = null;
-    
+
     if (updateKV) {
       try {
         console.log('[revalidate] Updating KV cache...');
-        const { getAkyoDataFromJSON, getAkyoDataFromJSONIfExists } = await import('@/lib/akyo-data-json');
+        const { getAkyoDataFromJSON, getAkyoDataFromJSONIfExists } =
+          await import('@/lib/akyo-data-json');
         const { updateKVCacheAll } = await import('@/lib/akyo-data-kv');
-        
+
         // Fetch fresh data from JSON for all languages (ko is optional)
         const [dataJa, dataEn, dataKo] = await Promise.all([
           getAkyoDataFromJSON('ja'),
           getAkyoDataFromJSON('en'),
           getAkyoDataFromJSONIfExists('ko'),
         ]);
-        
+
         if (!dataKo) {
           console.warn('[revalidate] Korean JSON data not available on CDN, skipping ko KV update');
         }
-        
+
         // Update all languages atomically to avoid metadata race condition
         kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo ?? undefined);
         // ko is non-fatal only when Korean JSON was unavailable (dataKo is null).
         // If Korean data was fetched but the KV write failed, treat as fatal.
         const koRequired = dataKo !== null;
-        kvUpdated = kvUpdateDetails.ja && kvUpdateDetails.en && kvUpdateDetails.metadata
-          && (!koRequired || kvUpdateDetails.ko);
-        
+        kvUpdated =
+          kvUpdateDetails.ja &&
+          kvUpdateDetails.en &&
+          kvUpdateDetails.metadata &&
+          (!koRequired || kvUpdateDetails.ko);
+
         if (!kvUpdated) {
           kvError = `KV update incomplete: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`;
           console.error(`[revalidate] ${kvError}`);
         } else if (!kvUpdateDetails.ko) {
           // ko JSON was unavailable — log as warning, not error
-          console.warn(`[revalidate] KV cache update partial: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko} (ko JSON unavailable), meta=${kvUpdateDetails.metadata}`);
+          console.warn(
+            `[revalidate] KV cache update partial: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko} (ko JSON unavailable), meta=${kvUpdateDetails.metadata}`
+          );
         } else {
-          console.log(`[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`);
+          console.log(
+            `[revalidate] KV cache update successful: ja=${kvUpdateDetails.ja}, en=${kvUpdateDetails.en}, ko=${kvUpdateDetails.ko}, meta=${kvUpdateDetails.metadata}`
+          );
         }
       } catch (error) {
         kvError = `KV update failed: ${error}`;
@@ -189,10 +186,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     return Response.json(result, { status: 200 });
   } catch (error) {
     console.error('[revalidate] Unexpected error:', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
