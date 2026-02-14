@@ -339,7 +339,7 @@ export function FilterPanel({
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
             onKeyDown={handleCategorySearchKeyDown}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-green-400/50"
+            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-[var(--primary-green)] focus-visible:ring-2 focus-visible:ring-green-400/50"
             placeholder={t('filter.categorySearch', lang)}
             aria-label={t('filter.categorySearch', lang)}
           />
@@ -437,7 +437,7 @@ export function FilterPanel({
             value={authorQuery}
             onChange={(e) => setAuthorQuery(e.target.value)}
             onKeyDown={handleAuthorSearchKeyDown}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-green-400/50"
+            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-[var(--primary-green)] focus-visible:ring-2 focus-visible:ring-green-400/50"
             placeholder={t('filter.authorSearch', lang)}
             aria-label={t('filter.authorSearch', lang)}
           />
