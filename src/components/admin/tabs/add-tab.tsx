@@ -252,37 +252,56 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         submitId = refreshedId;
       }
 
-      // Prepare form data for submission (using fetched values)
-      const submitData = new FormData();
-      submitData.append('id', submitId);
-      submitData.append('nickname', formData.nickname);
-      submitData.append('avatarName', avatarName);
-      submitData.append('avatarUrl', formData.avatarUrl);
+      const buildSubmitData = (id: string) => {
+        const submitData = new FormData();
+        submitData.append('id', id);
+        submitData.append('nickname', formData.nickname);
+        submitData.append('avatarName', avatarName);
+        submitData.append('avatarUrl', formData.avatarUrl);
 
-      // 新フィールド (VRChatから取得した作者名を使用)
-      submitData.append('author', creatorName);
-      submitData.append('category', formData.categories.join(','));
-      submitData.append('comment', formData.comment);
+        // 新フィールド (VRChatから取得した作者名を使用)
+        submitData.append('author', creatorName);
+        submitData.append('category', formData.categories.join(','));
+        submitData.append('comment', formData.comment);
 
-      // 旧フィールド (互換性のため)
-      submitData.append('creator', creatorName);
-      submitData.append('attributes', formData.categories.join(','));
-      submitData.append('notes', formData.comment);
+        // 旧フィールド (互換性のため)
+        submitData.append('creator', creatorName);
+        submitData.append('attributes', formData.categories.join(','));
+        submitData.append('notes', formData.comment);
 
-      // Always include image data (fetched from VRChat)
-      submitData.append('imageData', croppedImageData!);
+        // Always include image data (fetched from VRChat)
+        submitData.append('imageData', croppedImageData!);
+        return submitData;
+      };
 
-      // Submit to API
-      const response = await fetch('/api/upload-akyo', {
-        method: 'POST',
-        body: submitData,
-      });
+      const uploadWithId = async (id: string) => {
+        const response = await fetch('/api/upload-akyo', {
+          method: 'POST',
+          body: buildSubmitData(id),
+        });
+        const result = await response.json();
+        return { response, result };
+      };
 
-      const result = await response.json();
+      let { response, result } = await uploadWithId(submitId);
+      let latestKnownId: string | null = null;
+
+      // If ID collision happens, refetch latest ID and retry once with the same form payload.
+      if ((!response.ok || !result.success) && response.status === 409) {
+        const latestId = await fetchNextId();
+        if (latestId) {
+          latestKnownId = latestId;
+        }
+
+        if (latestId && latestId !== submitId) {
+          submitId = latestId;
+          ({ response, result } = await uploadWithId(submitId));
+        }
+      }
 
       if (!response.ok || !result.success) {
         if (response.status === 409) {
-          const latestId = await fetchNextId();
+          const latestId = latestKnownId ?? (await fetchNextId());
           const latestHint = latestId
             ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
             : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。';
