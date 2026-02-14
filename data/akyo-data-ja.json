@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:28:10.457Z",
-  "count": 728,
+  "updatedAt": "2026-02-14T10:30:47.268Z",
+  "count": 729,
   "data": [
     {
       "id": "0001",
@@ -6555,6 +6555,15 @@
       "comment": "このバター、VRChatで見た気がする！",
       "author": "のり",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_af4be879-17fc-4391-88cd-e6938e205ba5"
+    },
+    {
+      "id": "0729",
+      "nickname": "ピーナッツくんAkyo",
+      "avatarName": "Akyo_Peanuts",
+      "category": "パロディ,パロディ/VTuber,食べ物,食べ物/野菜",
+      "comment": "AkyoのCMで見たことある！",
+      "author": "bbbbb_himiko",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_b581ac9f-30f1-4906-b8f2-5c3af0a5d39e"
     }
   ]
 }
