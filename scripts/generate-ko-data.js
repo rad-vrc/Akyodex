@@ -82,46 +82,17 @@ function translateComment(jaComment) {
 }
 
 /**
- * Detect unbalanced CSV quotes in a single physical line.
- * Handles escaped quotes ("") inside quoted fields.
- */
-function hasBalancedCsvQuotes(line) {
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i += 1) {
-    if (line[i] !== '"') continue;
-
-    if (inQuotes && line[i + 1] === '"') {
-      i += 1;
-      continue;
-    }
-
-    inQuotes = !inQuotes;
-  }
-
-  return !inQuotes;
-}
-
-/**
  * Fail fast on malformed CSV rows after parsing.
  */
-function validateParsedRows(records, csvText, csvPath) {
+function validateParsedRows(records, csvPath) {
   const [header, ...dataRows] = records;
   const expectedColumnCount = header.length;
-  const sourceLines = csvText.split(/\r\n|\n|\r/).filter((line) => line.trim() !== '');
 
   dataRows.forEach((row, index) => {
     const lineNumber = index + 2; // Header is line 1
     if (row.length !== expectedColumnCount) {
       throw new Error(
         `Malformed CSV row at line ${lineNumber} in ${csvPath}: expected ${expectedColumnCount} columns, got ${row.length}`
-      );
-    }
-
-    const sourceLine = sourceLines[index + 1];
-    if (sourceLine && !hasBalancedCsvQuotes(sourceLine)) {
-      throw new Error(
-        `Malformed CSV row at line ${lineNumber} in ${csvPath}: unbalanced quote detected`
       );
     }
   });
@@ -154,7 +125,7 @@ function main() {
   }
 
   const [header, ...dataRows] = records;
-  validateParsedRows(records, csvJa, csvJaPath);
+  validateParsedRows(records, csvJaPath);
   console.log(`   Found ${dataRows.length} rows`);
 
   // Header: ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL

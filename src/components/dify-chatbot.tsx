@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Delay in milliseconds to wait for Dify chatbot to load before initializing observers
 const DIFY_LOAD_DELAY_MS = 2000;
@@ -26,12 +26,9 @@ interface DifyChatbotProps {
  * from the button when the chat window is open.
  */
 export function DifyChatbot({ token }: DifyChatbotProps) {
-  const initialized = useRef(false);
   const [loadState, setLoadState] = useState<'idle' | 'loaded' | 'error'>('idle');
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
     setLoadState('idle');
 
     // Set config — dynamicScript: true ensures embed.min.js calls embedChatbot()
@@ -42,6 +39,10 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     // Dynamically load embed.min.js — loads from udify.app which is permitted
     // by the CSP script-src allowlist, no nonce needed for external scripts
     // matching a domain pattern.
+    const existingScript = document.getElementById('dify-chatbot-embed');
+    if (existingScript) {
+      existingScript.remove();
+    }
     const script = document.createElement('script');
     script.id = 'dify-chatbot-embed';
     script.src = 'https://udify.app/embed.min.js';
@@ -157,9 +158,7 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
       }
       delete window.difyChatbotConfig;
     };
-    // token is expected to be immutable for this mounted instance.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const container = document.getElementById('dify-chatbot-container');

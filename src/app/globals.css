@@ -744,6 +744,28 @@ select:focus {
 }
 
 /* Dify Chatbot Custom Styling */
+#dify-chatbot-container {
+  position: fixed;
+}
+
+#dify-chatbot-container[data-dify-load-state='error'] {
+  width: min(20rem, calc(100vw - 2rem));
+  max-width: 20rem;
+}
+
+#dify-chatbot-container.dify-chatbot-load-failed::before {
+  content: 'Chat temporarily unavailable. Please try again later.';
+  display: block;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  background: rgba(17, 24, 39, 0.88);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(4px);
+}
+
 #dify-chatbot-bubble-button {
   bottom: 24px !important;
   right: 24px !important;
