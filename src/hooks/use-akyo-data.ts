@@ -226,6 +226,7 @@ function saveFavorites(ids: string[]): void {
  * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
  */
 function applyFavorites(items: AkyoData[]): AkyoData[] {
+  if (items.length === 0) return items;
   const favoritesSet = new Set(getFavorites());
   return items.map(akyo => ({
     ...akyo,

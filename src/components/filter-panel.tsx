@@ -70,7 +70,9 @@ export function FilterPanel({
   const [categoryQuery, setCategoryQuery] = useState('');
   const [authorQuery, setAuthorQuery] = useState('');
   const [focusedCategoryIndex, setFocusedCategoryIndex] = useState(0);
+  const [focusedAuthorIndex, setFocusedAuthorIndex] = useState(0);
   const categoryButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const authorButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const displayCategories = categories || attributes;
   const displayAuthors = authors || creators;
@@ -118,6 +120,18 @@ export function FilterPanel({
       return current;
     });
   }, [filteredCategories]);
+  useEffect(() => {
+    authorButtonRefs.current = authorButtonRefs.current.slice(0, filteredAuthors.length);
+    if (filteredAuthors.length === 0) {
+      setFocusedAuthorIndex(-1);
+      return;
+    }
+    setFocusedAuthorIndex((current) => {
+      if (current < 0) return 0;
+      if (current >= filteredAuthors.length) return filteredAuthors.length - 1;
+      return current;
+    });
+  }, [filteredAuthors]);
 
   const setCategories = (nextCategories: string[]) => {
     if (onAttributesChange) {
@@ -132,6 +146,14 @@ export function FilterPanel({
       setCategories(activeCategories.filter((value) => value !== category));
       return;
     }
+    if (!onAttributesChange) {
+      setCategories([category]);
+      return;
+    }
+    setCategories([...activeCategories, category]);
+  };
+  const addCategory = (category: string) => {
+    if (activeCategories.includes(category)) return;
     if (!onAttributesChange) {
       setCategories([category]);
       return;
@@ -157,10 +179,22 @@ export function FilterPanel({
     }
     setAuthors([...activeAuthors, author]);
   };
+  const addAuthor = (author: string) => {
+    if (activeAuthors.includes(author)) return;
+    if (!onCreatorsChange) {
+      setAuthors([author]);
+      return;
+    }
+    setAuthors([...activeAuthors, author]);
+  };
 
   const moveCategoryFocus = (nextIndex: number) => {
     setFocusedCategoryIndex(nextIndex);
     categoryButtonRefs.current[nextIndex]?.focus();
+  };
+  const moveAuthorFocus = (nextIndex: number) => {
+    setFocusedAuthorIndex(nextIndex);
+    authorButtonRefs.current[nextIndex]?.focus();
   };
 
   const handleCategoryKeyDown = (
@@ -198,6 +232,58 @@ export function FilterPanel({
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       toggleCategory(category);
+    }
+  };
+  const handleAuthorKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    idx: number,
+    author: string
+  ) => {
+    const lastIndex = filteredAuthors.length - 1;
+    if (lastIndex < 0) return;
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveAuthorFocus(idx === lastIndex ? 0 : idx + 1);
+      return;
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveAuthorFocus(idx === 0 ? lastIndex : idx - 1);
+      return;
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault();
+      moveAuthorFocus(0);
+      return;
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault();
+      moveAuthorFocus(lastIndex);
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleAuthor(author);
+    }
+  };
+
+  const handleCategorySearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && filteredCategories.length > 0) {
+      event.preventDefault();
+      addCategory(filteredCategories[0]);
+      setCategoryQuery('');
+    }
+  };
+  const handleAuthorSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && filteredAuthors.length > 0) {
+      event.preventDefault();
+      addAuthor(filteredAuthors[0]);
+      setAuthorQuery('');
     }
   };
 
@@ -273,6 +359,7 @@ export function FilterPanel({
             type="text"
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
+            onKeyDown={handleCategorySearchKeyDown}
             className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-[rgba(102,217,165,0.2)]"
             placeholder={t('filter.categorySearch', lang)}
             aria-label={t('filter.categorySearch', lang)}
@@ -356,6 +443,7 @@ export function FilterPanel({
             type="text"
             value={authorQuery}
             onChange={(e) => setAuthorQuery(e.target.value)}
+            onKeyDown={handleAuthorSearchKeyDown}
             className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-[rgba(102,217,165,0.2)]"
             placeholder={t('filter.authorSearch', lang)}
             aria-label={t('filter.authorSearch', lang)}
@@ -388,13 +476,19 @@ export function FilterPanel({
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-2">
-                {filteredAuthors.map((author) => {
+                {filteredAuthors.map((author, idx) => {
                   const selected = activeAuthors.includes(author);
                   return (
                     <button
                       key={author}
                       type="button"
+                      ref={(el) => {
+                        authorButtonRefs.current[idx] = el;
+                      }}
                       onClick={() => toggleAuthor(author)}
+                      onFocus={() => setFocusedAuthorIndex(idx)}
+                      onKeyDown={(event) => handleAuthorKeyDown(event, idx, author)}
+                      tabIndex={focusedAuthorIndex === idx ? 0 : -1}
                       className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
                         selected
                           ? 'bg-blue-100 text-blue-900 border-blue-300'
