@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:32:53.960Z",
-  "count": 712,
+  "updatedAt": "2026-02-14T09:40:20.367Z",
+  "count": 713,
   "data": [
     {
       "id": "0001",
@@ -6411,6 +6411,15 @@
       "comment": "氷の惑星で発見されたらしい。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
+    },
+    {
+      "id": "0713",
+      "nickname": "ゴールデンキツネツキ式狐Akyo",
+      "avatarName": "Golden Fox Akyo",
+      "category": "レア,動物,動物/きつね,素材・材質・生地,素材・材質・生地/硬い,素材・材質・生地/金属",
+      "comment": "純金なんだって～！",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_56563c93-0b17-4db9-8fda-e804152f79e7"
     }
   ]
 }
