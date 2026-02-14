@@ -416,7 +416,7 @@ export function FilterPanel({
 
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <div className="font-bold text-blue-600 flex items-center gap-2">
               <IconUser size="w-4 h-4" />
               {t('filter.author', lang)}
             </div>
@@ -437,7 +437,7 @@ export function FilterPanel({
             value={authorQuery}
             onChange={(e) => setAuthorQuery(e.target.value)}
             onKeyDown={handleAuthorSearchKeyDown}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-[var(--primary-green)] focus-visible:ring-2 focus-visible:ring-green-400/50"
+            className="w-full rounded-xl border-2 border-blue-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-300/50"
             placeholder={t('filter.authorSearch', lang)}
             aria-label={t('filter.authorSearch', lang)}
           />
