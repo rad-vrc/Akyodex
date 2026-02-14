@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T06:57:37.024Z",
-  "count": 702,
+  "updatedAt": "2026-02-14T07:59:15.022Z",
+  "count": 703,
   "data": [
     {
       "id": "0001",
@@ -6321,6 +6321,15 @@
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34ce01ef-e8e9-4543-bb35-e4ba66687138"
+    },
+    {
+      "id": "0703",
+      "nickname": "チーズAkyo",
+      "avatarName": "Akyo Cheese",
+      "category": "食べ物",
+      "comment": "",
+      "author": "SplitScream",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca265af0-f7f3-405c-a94d-46b81fea3fbd"
     }
   ]
 }
