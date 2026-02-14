@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:06:18.191Z",
-  "count": 722,
+  "updatedAt": "2026-02-14T10:09:52.755Z",
+  "count": 723,
   "data": [
     {
       "id": "0001",
@@ -6501,6 +6501,15 @@
       "comment": "（ささのきの手記）\r\n温めてくれるakyo。プラグは差していなくても平気なようだ。錆びてしまうので水が苦手。",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
+    },
+    {
+      "id": "0723",
+      "nickname": "やきもちAkyo",
+      "avatarName": "akyo_やきもち",
+      "category": "素材・材質・生地,素材・材質・生地/柔らかい,素材・材質・生地/四角い,食べ物,食べ物/料理",
+      "comment": "（ささのきの手記）\r\nしっかり焼かれた四角いお餅に海苔を巻いて。香ばしい香りが食欲を誘う",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0396e41a-c59a-48db-8ac2-ca28c271ef8b"
     }
   ]
 }
