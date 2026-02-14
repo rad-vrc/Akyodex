@@ -163,6 +163,14 @@ function splitTokens(value) {
     .filter(Boolean);
 }
 
+function normalizeLegacyQuotedCell(value) {
+  const text = String(value || '').trim();
+  if (text.length >= 2 && text.startsWith('"') && text.endsWith('"')) {
+    return text.slice(1, -1).replace(/\\"/g, '"');
+  }
+  return text;
+}
+
 function main() {
   if (!fs.existsSync(jaPath)) throw new Error(`Missing source CSV: ${jaPath}`);
   if (!fs.existsSync(enPath)) throw new Error(`Missing target CSV: ${enPath}`);
@@ -215,17 +223,13 @@ function main() {
     });
     const category = enTokens.join(',');
 
-    let nickname = existingEnRow ? String(existingEnRow[idx.Nickname] || '').trim() : '';
-    let comment = existingEnRow ? String(existingEnRow[idx.Comment] || '') : '';
+    let nickname = existingEnRow ? normalizeLegacyQuotedCell(existingEnRow[idx.Nickname]) : '';
+    let comment = existingEnRow ? normalizeLegacyQuotedCell(existingEnRow[idx.Comment]) : '';
 
-    if (overridesById[id]?.Nickname != null) {
-      nickname = overridesById[id].Nickname;
-    } else if (!nickname) {
+    if (!nickname) {
       nickname = overridesById[id]?.Nickname ?? String(jaRow[jaIdx.Nickname] || '');
     }
-    if (overridesById[id]?.Comment != null) {
-      comment = overridesById[id].Comment;
-    } else if (!comment) {
+    if (!comment) {
       comment = overridesById[id]?.Comment ?? String(jaRow[jaIdx.Comment] || '');
     }
 

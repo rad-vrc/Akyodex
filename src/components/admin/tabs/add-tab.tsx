@@ -35,6 +35,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     comment: '',
   });
   const formRef = useRef<HTMLFormElement | null>(null);
+  const nextIdRef = useRef(nextId);
 
   const fetchNextId = useCallback(async (): Promise<string | null> => {
     try {
@@ -58,6 +59,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   useEffect(() => {
     void fetchNextId();
   }, [fetchNextId]);
+
+  useEffect(() => {
+    nextIdRef.current = nextId;
+  }, [nextId]);
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
 
@@ -118,9 +123,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
     }
 
-    // Use locally tracked next ID for faster sequential registrations.
-    // On rare ID conflicts (multi-admin concurrent updates), we refresh from server.
-    const submitId = nextId;
+    // Refresh next ID in background while running expensive avatar/image steps.
+    // This avoids stale IDs without adding extra blocking at submit time.
+    const nextIdRefreshPromise = fetchNextId();
 
     const avtrId = match[0];
 
@@ -241,6 +246,12 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     }
 
     try {
+      let submitId = nextIdRef.current;
+      const refreshedId = await nextIdRefreshPromise;
+      if (refreshedId) {
+        submitId = refreshedId;
+      }
+
       // Prepare form data for submission (using fetched values)
       const submitData = new FormData();
       submitData.append('id', submitId);
