@@ -31,6 +31,8 @@ export interface AkyoData {
 export interface AkyoFilterOptions {
   searchQuery?: string;
   category?: string; // 新フィールド
+  categories?: string[]; // 複数カテゴリ
+  categoryMatchMode?: 'or' | 'and'; // 複数カテゴリ一致条件
   author?: string;   // 新フィールド
   randomCount?: number;
   favoritesOnly?: boolean;
