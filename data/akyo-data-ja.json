@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:25:59.663Z",
-  "count": 727,
+  "updatedAt": "2026-02-14T10:28:10.457Z",
+  "count": 728,
   "data": [
     {
       "id": "0001",
@@ -6546,6 +6546,15 @@
       "comment": "（ささのきの手記）\r\n世紀末に生きるakyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0638079f-4016-47d4-8c3c-5e83c134d978"
+    },
+    {
+      "id": "0728",
+      "nickname": "バターAkyo",
+      "avatarName": "バターあきょう",
+      "category": "パロディ,パロディ/VRChat,食べ物,調味料",
+      "comment": "このバター、VRChatで見た気がする！",
+      "author": "のり",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_af4be879-17fc-4391-88cd-e6938e205ba5"
     }
   ]
 }
