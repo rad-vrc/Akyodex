@@ -194,6 +194,66 @@ export const UI_TEXTS = {
     en: 'All Categories',
     ko: '모든 카테고리',
   },
+  'filter.categorySearch': {
+    ja: 'カテゴリを検索...',
+    en: 'Search categories...',
+    ko: '카테고리 검색...',
+  },
+  'filter.noneSelected': {
+    ja: 'カテゴリ未選択（全カテゴリ対象）',
+    en: 'No category selected (all categories)',
+    ko: '선택된 카테고리 없음 (전체)',
+  },
+  'filter.noCategoryMatch': {
+    ja: '一致するカテゴリがありません',
+    en: 'No matching categories',
+    ko: '일치하는 카테고리가 없습니다',
+  },
+  'filter.removeCategory': {
+    ja: 'を選択解除',
+    en: 'remove',
+    ko: '선택 해제',
+  },
+  'filter.matchOr': {
+    ja: 'OR',
+    en: 'OR',
+    ko: 'OR',
+  },
+  'filter.matchAnd': {
+    ja: 'AND',
+    en: 'AND',
+    ko: 'AND',
+  },
+  'filter.clearCategories': {
+    ja: '絞り込み解除',
+    en: 'Clear',
+    ko: '카테고리 해제',
+  },
+  'filter.authorSearch': {
+    ja: '作者を検索...',
+    en: 'Search authors...',
+    ko: '작자 검색...',
+  },
+  'filter.noneAuthorSelected': {
+    ja: '作者未選択（全作者対象）',
+    en: 'No author selected (all authors)',
+    ko: '선택된 작자 없음 (전체)',
+  },
+  'filter.noAuthorMatch': {
+    ja: '一致する作者がありません',
+    en: 'No matching authors',
+    ko: '일치하는 작자가 없습니다',
+  },
+  'filter.removeAuthor': {
+    ja: 'を選択解除',
+    en: 'remove',
+    ko: '선택 해제',
+  },
+  'filter.clearAuthors': {
+    ja: '絞り込み解除',
+    en: 'Clear',
+    ko: '작자 해제',
+  },
   'filter.author': {
     ja: '作者で絞り込み',
     en: 'Filter by author',

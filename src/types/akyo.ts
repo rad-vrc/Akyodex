@@ -23,6 +23,8 @@ export interface AkyoData {
 
   avatarUrl: string; // VRChatアバターURL
   isFavorite?: boolean; // お気に入りフラグ（クライアント側）
+  parsedCategory?: string[]; // フィルタ用のパース済みカテゴリ
+  parsedAuthor?: string[]; // フィルタ用のパース済み作者
 }
 
 /**
@@ -31,7 +33,10 @@ export interface AkyoData {
 export interface AkyoFilterOptions {
   searchQuery?: string;
   category?: string; // 新フィールド
+  categories?: string[]; // 複数カテゴリ
+  categoryMatchMode?: 'or' | 'and'; // 複数カテゴリ一致条件
   author?: string;   // 新フィールド
+  authors?: string[]; // 複数作者
   randomCount?: number;
   favoritesOnly?: boolean;
   

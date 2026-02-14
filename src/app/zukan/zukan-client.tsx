@@ -142,9 +142,9 @@ export function ZukanClient({
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 状態変数名は変更量が多いので一旦そのまま（selectedCategory等への変更は今後の課題）
-  const [selectedAttribute, setSelectedAttribute] = useState('');
-  const [selectedCreator, setSelectedCreator] = useState('');
+  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
+  const [categoryMatchMode, setCategoryMatchMode] = useState<'or' | 'and'>('or');
+  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
@@ -190,7 +190,15 @@ export function ZukanClient({
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
     setRenderLimit(INITIAL_RENDER_COUNT);
-  }, [searchQuery, selectedAttribute, selectedCreator, favoritesOnly, sortAscending, randomMode]);
+  }, [
+    searchQuery,
+    selectedAttributes,
+    categoryMatchMode,
+    selectedCreators,
+    favoritesOnly,
+    sortAscending,
+    randomMode,
+  ]);
 
   // Virtual scrolling: Infinite scroll handler
   const handleScroll = useCallback(() => {
@@ -217,20 +225,24 @@ export function ZukanClient({
     filterData(
       {
         searchQuery,
+        categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+        categoryMatchMode,
         // 新フィールド名を優先して渡す
-        category: selectedAttribute || undefined,
-        author: selectedCreator || undefined,
+        category: selectedAttributes[0] || undefined,
+        authors: selectedCreators.length > 0 ? selectedCreators : undefined,
+        author: selectedCreators[0] || undefined,
         // 旧フィールド名も念のため渡す
-        attribute: selectedAttribute || undefined,
-        creator: selectedCreator || undefined,
+        attribute: selectedAttributes[0] || undefined,
+        creator: selectedCreators[0] || undefined,
         favoritesOnly,
       },
       sortAscending
     );
   }, [
     searchQuery,
-    selectedAttribute,
-    selectedCreator,
+    selectedAttributes,
+    categoryMatchMode,
+    selectedCreators,
     favoritesOnly,
     sortAscending,
     randomMode,
@@ -255,20 +267,12 @@ export function ZukanClient({
         sortAscending
       );
       setSearchQuery('');
-      setSelectedAttribute('');
-      setSelectedCreator('');
+      setSelectedAttributes([]);
+      setCategoryMatchMode('or');
+      setSelectedCreators([]);
       setFavoritesOnly(false);
     } else {
-      // ランダムモードを解除して通常表示に戻る
-      filterData(
-        {
-          searchQuery,
-          attribute: selectedAttribute || undefined,
-          creator: selectedCreator || undefined,
-          favoritesOnly,
-        },
-        sortAscending
-      );
+      // useEffect が randomMode の変更を検知して通常フィルタを再適用する
     }
   };
 
@@ -367,10 +371,12 @@ export function ZukanClient({
             // 動的に更新されるカテゴリ/作者を使用
             attributes={currentCategories || categories || attributes}
             creators={currentAuthors || authors || creators}
-            selectedAttribute={selectedAttribute}
-            selectedCreator={selectedCreator}
-            onAttributeChange={setSelectedAttribute}
-            onCreatorChange={setSelectedCreator}
+            selectedAttributes={selectedAttributes}
+            categoryMatchMode={categoryMatchMode}
+            selectedCreators={selectedCreators}
+            onAttributesChange={setSelectedAttributes}
+            onCategoryMatchModeChange={setCategoryMatchMode}
+            onCreatorsChange={setSelectedCreators}
             onSortToggle={handleSortToggle}
             onRandomClick={handleRandomClick}
             onFavoritesClick={handleFavoritesClick}

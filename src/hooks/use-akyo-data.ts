@@ -54,24 +54,48 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const query = (options.searchQuery || '').toLowerCase();
     const targetCategory = options.category || options.attribute;
     const targetAuthor = options.author || options.creator;
+    const selectedCategories = (
+      options.categories && options.categories.length > 0
+        ? options.categories
+        : targetCategory && targetCategory !== 'all'
+          ? [targetCategory]
+          : []
+    )
+      .map((category) => category.trim())
+      .filter(Boolean);
+    const selectedAuthors = (
+      options.authors && options.authors.length > 0
+        ? options.authors
+        : targetAuthor && targetAuthor !== 'all'
+          ? [targetAuthor]
+          : []
+    )
+      .map((author) => author.trim())
+      .filter(Boolean);
+    const categoryMatchMode = options.categoryMatchMode === 'and' ? 'and' : 'or';
 
     let filtered = [...data];
 
-    // Filter by attribute/category
-    if (targetCategory && targetCategory !== 'all') {
+    // Filter by categories (supports both single and multi-select)
+    if (selectedCategories.length > 0) {
       filtered = filtered.filter((akyo) => {
-        const catsStr = akyo.category || akyo.attribute || '';
-        const cats = catsStr.split(/[、,]/).map((a) => a.trim());
-        return cats.includes(targetCategory);
+        const parsedCategories =
+          akyo.parsedCategory ?? parseFilterTokens(akyo.category || akyo.attribute || '');
+        const categorySet = new Set(parsedCategories);
+
+        if (categoryMatchMode === 'and') {
+          return selectedCategories.every((category) => categorySet.has(category));
+        }
+        return selectedCategories.some((category) => categorySet.has(category));
       });
     }
 
-    // Filter by creator/author
-    if (targetAuthor && targetAuthor !== 'all') {
+    // Filter by creator/author (supports both single and multi-select)
+    if (selectedAuthors.length > 0) {
       filtered = filtered.filter((akyo) => {
-        const authorsStr = akyo.author || akyo.creator || '';
-        const authors = authorsStr.split(/[、,]/).map((c) => c.trim());
-        return authors.includes(targetAuthor);
+        const parsedAuthors = akyo.parsedAuthor ?? parseFilterTokens(akyo.author || akyo.creator || '');
+        const authorSet = new Set(parsedAuthors);
+        return selectedAuthors.some((author) => authorSet.has(author));
       });
     }
 
@@ -200,10 +224,20 @@ function saveFavorites(ids: string[]): void {
  * データ配列にお気に入り情報を付与する共通ヘルパー
  * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
  */
+function parseFilterTokens(value: string): string[] {
+  return value
+    .split(/[、,]/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
 function applyFavorites(items: AkyoData[]): AkyoData[] {
+  if (items.length === 0) return items;
   const favoritesSet = new Set(getFavorites());
   return items.map(akyo => ({
     ...akyo,
     isFavorite: favoritesSet.has(akyo.id),
+    parsedCategory: akyo.parsedCategory ?? parseFilterTokens(akyo.category || akyo.attribute || ''),
+    parsedAuthor: akyo.parsedAuthor ?? parseFilterTokens(akyo.author || akyo.creator || ''),
   }));
 }

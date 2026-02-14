@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       }
 
       // Check the specified field
-      const fieldValue = normalize(akyo[field as keyof typeof akyo]);
+      const fieldValue = normalize(field === 'nickname' ? akyo.nickname : akyo.avatarName);
       if (fieldValue && fieldValue === targetValue) {
         duplicateIds.push(akyo.id);
       }
