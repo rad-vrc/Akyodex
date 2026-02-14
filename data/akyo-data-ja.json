@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T08:47:32.377Z",
-  "count": 705,
+  "updatedAt": "2026-02-14T08:56:48.249Z",
+  "count": 706,
   "data": [
     {
       "id": "0001",
@@ -6348,6 +6348,15 @@
       "comment": "外宇宙探査のために独自の進化を遂げたらしい。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23434774-76bd-4f22-8bf0-2fdc3cce6a26"
+    },
+    {
+      "id": "0706",
+      "nickname": "クリスタルAkyo",
+      "avatarName": "Crystal Akyo",
+      "category": "レア,素材・材質・生地,素材・材質・生地/ガラス,素材・材質・生地/硬い",
+      "comment": "レアなAkyoか、それとも。",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cea0caed-4173-4cec-85a0-78ae527ec591"
     }
   ]
 }
