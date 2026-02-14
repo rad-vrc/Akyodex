@@ -116,40 +116,42 @@ export function FilterPanel({
                   {t('filter.clearCategories', lang)}
                 </button>
               )}
-              <div
-                className="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200"
-                role="radiogroup"
-                aria-label={`${t('filter.matchOr', lang)} / ${t('filter.matchAnd', lang)}`}
-              >
-                <button
-                  type="button"
-                  role="radio"
-                  onClick={() => onCategoryMatchModeChange?.('or')}
-                  className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
-                    categoryMatchMode === 'or'
-                      ? 'bg-blue-200 text-blue-900'
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                  aria-checked={categoryMatchMode === 'or'}
-                  aria-label={t('filter.matchOr', lang)}
+              {onCategoryMatchModeChange && (
+                <div
+                  className="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200"
+                  role="radiogroup"
+                  aria-label={`${t('filter.matchOr', lang)} / ${t('filter.matchAnd', lang)}`}
                 >
-                  {t('filter.matchOr', lang)}
-                </button>
-                <button
-                  type="button"
-                  role="radio"
-                  onClick={() => onCategoryMatchModeChange?.('and')}
-                  className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
-                    categoryMatchMode === 'and'
-                      ? 'bg-green-200 text-green-900'
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                  aria-checked={categoryMatchMode === 'and'}
-                  aria-label={t('filter.matchAnd', lang)}
-                >
-                  {t('filter.matchAnd', lang)}
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    role="radio"
+                    onClick={() => onCategoryMatchModeChange('or')}
+                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                      categoryMatchMode === 'or'
+                        ? 'bg-blue-200 text-blue-900'
+                        : 'text-gray-600 hover:bg-gray-200'
+                    }`}
+                    aria-checked={categoryMatchMode === 'or'}
+                    aria-label={t('filter.matchOr', lang)}
+                  >
+                    {t('filter.matchOr', lang)}
+                  </button>
+                  <button
+                    type="button"
+                    role="radio"
+                    onClick={() => onCategoryMatchModeChange('and')}
+                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                      categoryMatchMode === 'and'
+                        ? 'bg-green-200 text-green-900'
+                        : 'text-gray-600 hover:bg-gray-200'
+                    }`}
+                    aria-checked={categoryMatchMode === 'and'}
+                    aria-label={t('filter.matchAnd', lang)}
+                  >
+                    {t('filter.matchAnd', lang)}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -203,7 +205,7 @@ export function FilterPanel({
                       }`}
                       aria-pressed={selected}
                     >
-                      {selected ? '✓ ' : ''} {category}
+                      {selected ? `✓ ${category}` : category}
                     </button>
                   );
                 })}

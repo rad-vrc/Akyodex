@@ -298,7 +298,7 @@ select:focus {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-pink));
 }
 
 /* レインボーグラデーション背景（ホームページ用） */
