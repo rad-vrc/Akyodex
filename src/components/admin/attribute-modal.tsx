@@ -9,6 +9,7 @@ interface AttributeModalProps {
   currentAttributes: string[];
   onApply: (attributes: string[]) => void;
   allAttributes: string[];
+  onCreateAttribute?: (attribute: string) => void;
 }
 
 /**
@@ -21,6 +22,7 @@ export function AttributeModal({
   currentAttributes,
   onApply,
   allAttributes,
+  onCreateAttribute,
 }: AttributeModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
@@ -77,6 +79,7 @@ export function AttributeModal({
 
     setAvailableAttributes((prev) => [...prev, trimmed].sort());
     setSelectedAttributes((prev) => [...prev, trimmed]);
+    onCreateAttribute?.(trimmed);
     setNewAttributeName('');
     setShowCreateForm(false);
   };
