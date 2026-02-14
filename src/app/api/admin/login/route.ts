@@ -8,10 +8,10 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Node.js runtime required for crypto.timingSafeEqual and setSessionCookie helper
+// Node.js runtime required for crypto.timingSafeEqual/setSessionCookie helpers
 export const runtime = 'nodejs';
 
-import { timingSafeEqual } from 'crypto';
+import { createHash, timingSafeEqual } from 'crypto';
 import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
 import { createSessionToken } from '@/lib/session';
 import type { AdminRole } from '@/types/akyo';
@@ -20,17 +20,15 @@ import type { AdminRole } from '@/types/akyo';
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
 /**
- * Timing-safe password comparison (Node.js crypto)
- * Prevents timing attacks by ensuring constant-time comparison
+ * Timing-safe password comparison using fixed-length digests.
+ * Converts both inputs to SHA-256 (32 bytes) and compares with timingSafeEqual
+ * to avoid length-based early returns.
  */
 function timingSafeCompare(a: string, b: string): boolean {
   try {
-    const bufA = Buffer.from(a, 'utf8');
-    const bufB = Buffer.from(b, 'utf8');
-    if (bufA.length !== bufB.length) {
-      return false;
-    }
-    return timingSafeEqual(bufA, bufB);
+    const digestA = createHash('sha256').update(a, 'utf8').digest();
+    const digestB = createHash('sha256').update(b, 'utf8').digest();
+    return timingSafeEqual(digestA, digestB);
   } catch {
     return false;
   }
