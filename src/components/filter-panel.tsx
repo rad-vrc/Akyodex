@@ -339,7 +339,7 @@ export function FilterPanel({
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
             onKeyDown={handleCategorySearchKeyDown}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-[var(--primary-green)] focus-visible:ring-2 focus-visible:ring-green-400/50"
+            className="w-full rounded-xl border-2 border-orange-200 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-orange-400 focus-visible:ring-2 focus-visible:ring-orange-300/40"
             placeholder={t('filter.categorySearch', lang)}
             aria-label={t('filter.categorySearch', lang)}
           />
