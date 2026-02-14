@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:58:20.662Z",
-  "count": 737,
+  "updatedAt": "2026-02-14T11:01:39.859Z",
+  "count": 738,
   "data": [
     {
       "id": "0001",
@@ -6636,6 +6636,15 @@
       "comment": "まめAkyoの勢いが止まらない！\r\n全AkyoまめAkyo化計画も夢じゃないね！",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
+    },
+    {
+      "id": "0738",
+      "nickname": "ふしAkyo",
+      "avatarName": "ふしあきょ",
+      "category": "パロディ,パロディ/超かぐや姫！,動物,動物/ウミウシ,素材・材質・生地,素材・材質・生地/柔らかい",
+      "comment": "ついてこい！（ ｀ー´）ノ\r\n（作者コメントより）",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
     }
   ]
 }
