@@ -271,18 +271,7 @@ export function ZukanClient({
       setSelectedCreator('');
       setFavoritesOnly(false);
     } else {
-      // ランダムモードを解除して通常表示に戻る
-      filterData(
-        {
-          searchQuery,
-          categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
-          categoryMatchMode,
-          category: selectedAttributes[0] || undefined,
-          author: selectedCreator || undefined,
-          favoritesOnly,
-        },
-        sortAscending
-      );
+      // useEffect が randomMode の変更を検知して通常フィルタを再適用する
     }
   };
 
