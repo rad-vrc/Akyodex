@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const akyoData = await getAkyoData('ja');
 
     // Normalize function (case-insensitive, trimmed, Unicode NFC normalized)
-    const normalize = (str: string | boolean | undefined): string => {
+    const normalize = (str: string | undefined): string => {
       if (!str || typeof str !== 'string') return '';
       return str.trim().normalize('NFC').toLowerCase();
     };
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       }
 
       // Check the specified field
-      const fieldValue = normalize(akyo[field as keyof typeof akyo]);
+      const fieldValue = normalize(field === 'nickname' ? akyo.nickname : akyo.avatarName);
       if (fieldValue && fieldValue === targetValue) {
         duplicateIds.push(akyo.id);
       }
