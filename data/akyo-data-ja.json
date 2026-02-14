@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:46:40.040Z",
-  "count": 716,
+  "updatedAt": "2026-02-14T09:49:41.464Z",
+  "count": 717,
   "data": [
     {
       "id": "0001",
@@ -6447,6 +6447,15 @@
       "comment": "パンクだぜ！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3325b7fe-83c2-47f4-8a6a-e4967ded93c4"
+    },
+    {
+      "id": "0717",
+      "nickname": "赤キツネツキ式ジェム狐Akyo",
+      "avatarName": "Red Gem Fox Akyo",
+      "category": "動物,動物/きつね,素材・材質・生地,素材・材質・生地/硬い,素材・材質・生地/石,くいしんぼう",
+      "comment": "宝石を食べすぎたらしいよ！",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
     }
   ]
 }
