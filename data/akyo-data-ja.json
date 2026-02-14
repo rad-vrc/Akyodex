@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:28:56.402Z",
-  "count": 711,
+  "updatedAt": "2026-02-14T09:32:53.960Z",
+  "count": 712,
   "data": [
     {
       "id": "0001",
@@ -6402,6 +6402,15 @@
       "comment": "ぬるぬるしているらしいよ！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2cbee432-9e8e-4ba7-a669-076e3c9cb85b"
+    },
+    {
+      "id": "0712",
+      "nickname": "キツネツキ式雪狐Akyo",
+      "avatarName": "Snow Fox Akyo",
+      "category": "動物,動物/きつね,季節・行事,季節・行事/冬,環境・天候,環境・天候/雪,素材・材質・生地,素材・材質・生地/冷たい",
+      "comment": "氷の惑星で発見されたらしい。",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
     }
   ]
 }
