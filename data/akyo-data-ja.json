@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:54:36.094Z",
-  "count": 736,
+  "updatedAt": "2026-02-14T10:58:20.662Z",
+  "count": 737,
   "data": [
     {
       "id": "0001",
@@ -6627,6 +6627,15 @@
       "comment": "まだまだ増える、まめAkyoパラダイス！",
       "author": "もぐやねん",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_41a51483-9cd9-478a-abb2-b7396c54be23"
+    },
+    {
+      "id": "0737",
+      "nickname": "もちまめAkyo/まめもちあきょ",
+      "avatarName": "まめもちあきょ",
+      "category": "まめ,まめAkyo,デフォルメ,体型,体型/豊満,季節・行事,季節・行事/お正月,素材・材質・生地,素材・材質・生地/柔らかい,食べ物,食べ物/料理,食べ物/フルーツ",
+      "comment": "まめAkyoの勢いが止まらない！\r\n全AkyoまめAkyo化計画も夢じゃないね！",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
     }
   ]
 }
