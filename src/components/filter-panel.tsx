@@ -490,7 +490,7 @@ export function FilterPanel({
                         handleListKeyDown(event, idx, filteredAuthors, toggleAuthor, moveAuthorFocus)
                       }
                       tabIndex={focusedAuthorIndex === idx ? 0 : -1}
-                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-orange-300 focus:ring-offset-2 ${
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 ${
                         selected
                           ? 'bg-blue-100 text-blue-900 border-blue-300'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
