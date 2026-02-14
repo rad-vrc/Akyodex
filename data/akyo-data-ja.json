@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T10:52:38.426Z",
-  "count": 735,
+  "updatedAt": "2026-02-14T10:54:36.094Z",
+  "count": 736,
   "data": [
     {
       "id": "0001",
@@ -6618,6 +6618,15 @@
       "comment": "まめAkyoパラダイスだ～～～！！！",
       "author": "Nagisa_Imawari",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_79ec6fbd-ad28-4f80-9887-91b4fc2bd646"
+    },
+    {
+      "id": "0736",
+      "nickname": "パンまめAkyo",
+      "avatarName": "ぱんあきょ",
+      "category": "まめ,まめAkyo,デフォルメ,体型,体型/豊満,食べ物,食べ物/パン,素材・材質・生地,素材・材質・生地/柔らかい",
+      "comment": "まだまだ増える、まめAkyoパラダイス！",
+      "author": "もぐやねん",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_41a51483-9cd9-478a-abb2-b7396c54be23"
     }
   ]
 }
