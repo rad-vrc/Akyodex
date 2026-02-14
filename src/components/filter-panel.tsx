@@ -76,16 +76,24 @@ export function FilterPanel({
   const displayAuthors = authors || creators;
   const normalizedCategoryQuery = categoryQuery.trim().toLowerCase();
   const normalizedAuthorQuery = authorQuery.trim().toLowerCase();
-  const activeCategories = selectedAttributes?.length
-    ? selectedAttributes
-    : selectedAttribute
-      ? [selectedAttribute]
-      : [];
-  const activeAuthors = selectedCreators?.length
-    ? selectedCreators
-    : selectedCreator
-      ? [selectedCreator]
-      : [];
+  const activeCategories = useMemo(
+    () =>
+      selectedAttributes?.length
+        ? selectedAttributes
+        : selectedAttribute
+          ? [selectedAttribute]
+          : [],
+    [selectedAttributes, selectedAttribute]
+  );
+  const activeAuthors = useMemo(
+    () =>
+      selectedCreators?.length
+        ? selectedCreators
+        : selectedCreator
+          ? [selectedCreator]
+          : [],
+    [selectedCreators, selectedCreator]
+  );
 
   const filteredCategories = useMemo(() => {
     if (!normalizedCategoryQuery) return displayCategories;
@@ -367,7 +375,7 @@ export function FilterPanel({
                   className="attribute-badge bg-blue-100 text-blue-900 hover:bg-blue-200"
                   aria-label={`${author} ${t('filter.removeAuthor', lang)}`}
                 >
-                  <IconTag size="w-3 h-3" /> {author} ×
+                  <IconUser size="w-3 h-3" /> {author} ×
                 </button>
               ))
             )}
