@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:12:15.472Z",
-  "count": 708,
+  "updatedAt": "2026-02-14T09:17:40.130Z",
+  "count": 709,
   "data": [
     {
       "id": "0001",
@@ -6375,6 +6375,15 @@
       "comment": "青チームにいる。とても青い。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cfffa6b2-5381-485f-a1aa-2a348a076356"
+    },
+    {
+      "id": "0709",
+      "nickname": "アストラルAkyo",
+      "avatarName": "Astral Akyo",
+      "category": "架空の存在,次元",
+      "comment": "Akyo？",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2b235fbb-cf51-493c-9314-80916ee9490a"
     }
   ]
 }
