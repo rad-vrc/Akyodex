@@ -587,7 +587,7 @@ select:focus {
 }
 
 .list-view-table thead {
-  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
   color: white;
 }
 

@@ -469,7 +469,7 @@ export function FilterPanel({
               </div>
             ) : (
               <div
-                className="grid grid-cols-1 gap-2"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-2"
                 role="listbox"
                 aria-multiselectable="true"
                 aria-label={t('filter.author', lang)}
