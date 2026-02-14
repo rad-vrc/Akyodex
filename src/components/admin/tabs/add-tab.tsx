@@ -898,6 +898,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         onApply={(attributes) => handleInputChange('categories', attributes)}
         allAttributes={allAttributes}
         onCreateAttribute={handleCreateCategory}
+        listColumns={4}
+        modalSize="wide"
       />
     </div>
   );

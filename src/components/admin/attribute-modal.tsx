@@ -10,6 +10,8 @@ interface AttributeModalProps {
   onApply: (attributes: string[]) => void;
   allAttributes: string[];
   onCreateAttribute?: (attribute: string) => void;
+  listColumns?: 3 | 4;
+  modalSize?: 'default' | 'wide';
 }
 
 /**
@@ -23,6 +25,8 @@ export function AttributeModal({
   onApply,
   allAttributes,
   onCreateAttribute,
+  listColumns = 3,
+  modalSize = 'default',
 }: AttributeModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
@@ -97,6 +101,10 @@ export function AttributeModal({
 
   if (!isOpen) return null;
 
+  const modalWidthClass = modalSize === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
+  const gridColumnClass =
+    listColumns === 4 ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 p-3' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3';
+
   return (
     <div
       className="fixed inset-0 z-50 overflow-y-auto"
@@ -117,7 +125,7 @@ export function AttributeModal({
       >
         {/* Modal Content */}
         <div
-          className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[calc(100vh-3rem)] sm:max-h-[calc(100vh-5rem)]"
+          className={`w-full ${modalWidthClass} bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[calc(100vh-3rem)] sm:max-h-[calc(100vh-5rem)]`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -212,7 +220,7 @@ export function AttributeModal({
             {/* Attribute List */}
             <div className="border border-gray-200 rounded-2xl">
               <div className="max-h-72 overflow-y-auto pr-1">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3">
+                <div className={gridColumnClass}>
                   {filteredAttributes.map((attr) => {
                     const isSelected = selectedAttributes.includes(attr);
                     return (
