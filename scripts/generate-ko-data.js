@@ -15,6 +15,29 @@ const { stringify } = require('csv-stringify/sync');
 const { NICKNAME_MAP } = require('./nickname-map-ko');
 const { CATEGORY_MAP } = require('./category-definitions-ko');
 
+function loadExistingKoCommentMap(csvPath) {
+  if (!fs.existsSync(csvPath)) {
+    return new Map();
+  }
+
+  try {
+    const csv = fs.readFileSync(csvPath, 'utf-8');
+    const records = parse(csv, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: false,
+      record_delimiter: ['\r\n', '\n', '\r'],
+      quote: '"',
+      escape: '"',
+    });
+    return new Map(records.map((record) => [record.ID || '', record.Comment || '']));
+  } catch (error) {
+    console.warn(`[WARN] Failed to read existing Korean CSV for fallback: ${csvPath}`);
+    console.warn(`[WARN] ${error instanceof Error ? error.message : String(error)}`);
+    return new Map();
+  }
+}
+
 // ============================================================
 // Category translation map: Japanese → Korean
 // ============================================================
@@ -76,12 +99,17 @@ const COMMENT_MAP = {
     '외우주 탐사를 위해 독자적인 진화를 이룬 듯하다.',
 };
 
-function translateComment(jaComment) {
+function translateComment(jaComment, existingKoComment = '') {
   if (!jaComment) return '';
 
   // Check exact match first
   if (COMMENT_MAP[jaComment]) {
     return COMMENT_MAP[jaComment];
+  }
+
+  if (existingKoComment && existingKoComment.trim()) {
+    console.warn(`[WARN] untranslated comment, reusing existing ko comment: "${jaComment}"`);
+    return existingKoComment.trim();
   }
 
   console.warn(`[WARN] untranslated comment, falling back to original: "${jaComment}"`);
@@ -110,6 +138,9 @@ function validateParsedRows(records, csvPath) {
 // ============================================================
 function main() {
   const dataDir = path.join(__dirname, '..', 'data');
+  const csvKoPath = path.join(dataDir, 'akyo-data-ko.csv');
+  const existingKoCommentMap = loadExistingKoCommentMap(csvKoPath);
+  console.log(`📚 Loaded existing Korean comments: ${existingKoCommentMap.size}`);
 
   // === Read Japanese CSV ===
   console.log('📖 Reading Japanese CSV...');
@@ -169,12 +200,14 @@ function main() {
     const author = row[headerMap['Author']] || '';
     const avatarUrl = row[headerMap['AvatarURL']] || '';
 
+    const existingKoComment = existingKoCommentMap.get(id) || '';
+
     return [
       id,
       translateNickname(nickname),
       avatarName, // Keep as-is
       translateCategory(category),
-      translateComment(comment),
+      translateComment(comment, existingKoComment),
       author, // Keep as-is
       avatarUrl, // Keep as-is
     ];
@@ -182,7 +215,6 @@ function main() {
 
   // === Write Korean CSV ===
   console.log('📝 Writing Korean CSV...');
-  const csvKoPath = path.join(dataDir, 'akyo-data-ko.csv');
   const csvOutput = stringify([header, ...koRows], {
     quoted: true,
     record_delimiter: '\n',

@@ -7,7 +7,8 @@ console.log('============================================================\n');
 
 const testFiles = [
   { name: 'Japanese CSV', path: 'data/akyo-data-ja.csv' },
-  { name: 'English CSV', path: 'data/akyo-data-en.csv' }
+  { name: 'English CSV', path: 'data/akyo-data-en.csv' },
+  { name: 'Korean CSV', path: 'data/akyo-data-ko.csv' },
 ];
 
 let allPassed = true;
@@ -17,13 +18,21 @@ testFiles.forEach(({ name, path }) => {
   console.log('------------------------------------------------------------');
   
   const content = fs.readFileSync(path, 'utf-8');
-  const records = parse(content, {
-    relax_quotes: true,
-    relax_column_count: true,
-    skip_empty_lines: true,
-    trim: false,
-    record_delimiter: ['\r\n', '\n', '\r'],
-  });
+  let records;
+  try {
+    records = parse(content, {
+      skip_empty_lines: true,
+      trim: false,
+      record_delimiter: ['\r\n', '\n', '\r'],
+    });
+  } catch (error) {
+    console.log(
+      `  Parsing errors: 1 FAIL (${error instanceof Error ? error.message : String(error)})`
+    );
+    allPassed = false;
+    console.log('');
+    return;
+  }
 
   const header = records[0];
   const dataRecords = records.slice(1);

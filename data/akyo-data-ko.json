@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-14T08:28:29.757Z",
+  "updatedAt": "2026-02-14T08:36:42.253Z",
   "count": 705,
   "data": [
     {
@@ -27,7 +27,7 @@
       "nickname": "빨간 초코민트 Akyo",
       "avatarName": "Red basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4906f0f8-9fcd-4602-8e10-98dd0dda9bab"
     },
@@ -36,7 +36,7 @@
       "nickname": "초록 초코민트 Akyo",
       "avatarName": "Green basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_610d4cb5-fcdc-45cb-a375-ff4b9bc93a81"
     },
@@ -45,7 +45,7 @@
       "nickname": "파란 초코민트 Akyo",
       "avatarName": "Blue basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e62d5dca-495b-4601-a0fa-b2be5f25595b"
     },
@@ -54,7 +54,7 @@
       "nickname": "노란 초코민트 Akyo",
       "avatarName": "Yellow basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fcabb931-01fc-4448-99fd-7dfba9ea3419"
     },
@@ -63,7 +63,7 @@
       "nickname": "검정 초코민트 Akyo",
       "avatarName": "Black basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8cd731b4-43b3-4241-a609-ce9dfcfed45d"
     },
@@ -72,7 +72,7 @@
       "nickname": "하얀 초코민트 Akyo",
       "avatarName": "White basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0346605b-98c9-4f0e-8b4a-656bb02a51b0"
     },
@@ -81,7 +81,7 @@
       "nickname": "회색 초코민트 Akyo",
       "avatarName": "Gray basic Akyo",
       "category": "초코민트류",
-      "comment": "チョコミントAkyoの色違い",
+      "comment": "초코민트 Akyo의 색 변형",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_42c02723-21b9-419a-9562-4013de092636"
     },
@@ -90,7 +90,7 @@
       "nickname": "미니 초코민트 Akyo",
       "avatarName": "ミニミニAkyoAkyo",
       "category": "초코민트류",
-      "comment": "小さくなったチョコミントAkyo",
+      "comment": "작아진 초코민트 Akyo",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4af80dc9-24b3-4d63-a819-d33debac5055"
     },
@@ -99,7 +99,7 @@
       "nickname": "슈퍼 범용 Akyo",
       "avatarName": "スーパー汎用Akyo",
       "category": "초코민트류, 기믹・특수",
-      "comment": "デフォルトAkyo普及への思いから生まれた便利機能もりもりのAkyoで、表情、ペン、飛行、睡眠、おんぶ等多彩な機能が使用可能",
+      "comment": "기본 Akyo 보급을 향한 마음에서 탄생한 다기능 Akyo. 표정, 펜, 비행, 수면, 업기 등 다양한 기능 사용 가능",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e861e3c4-5227-4b65-8d1a-813d9f6fcffe"
     },
@@ -108,7 +108,7 @@
       "nickname": "슈퍼 스태프 Akyo",
       "avatarName": "スーパースタッフAkyo",
       "category": "초코민트류, 기믹・특수",
-      "comment": "Akyoイベントスタッフ用のAkyoで、セキュリティ上スタッフ機能は通常ロックされている。",
+      "comment": "Akyo 이벤트 스태프용 Akyo. 보안상 스태프 기능은 평소 잠겨 있다.",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_83cb1a9e-9997-4f97-b737-83be2daa62c5"
     },
@@ -117,7 +117,7 @@
       "nickname": "슈퍼 워프 Akyo",
       "avatarName": "スーパーワープAkyo",
       "category": "초코민트류, 기믹・특수",
-      "comment": "ワープを覚えたAkyo。Questの場合はPCユーザーにおんぶしてもらうとワープできる",
+      "comment": "워프를 배운 Akyo. Quest의 경우 PC 유저에게 업히면 워프할 수 있다",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f22cd8e-2cb8-408c-8308-8d5fa2d11dcb"
     },
@@ -126,7 +126,7 @@
       "nickname": "슈퍼 플라잉 운송 Akyo",
       "avatarName": "スーパーフライング運送Akyo",
       "category": "초코민트류, 기믹・특수",
-      "comment": "フライング運送を覚えたAkyo。箱のふたは開け閉めできる。スーパー運送Akyoもいるとのこと",
+      "comment": "플라잉 운송을 배운 Akyo. 상자 뚜껑을 여닫을 수 있다. 슈퍼 운송 Akyo도 있다고 한다",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a4a98039-e32b-4915-8663-a1d73c17f3fa"
     },
@@ -153,7 +153,7 @@
       "nickname": "N/A",
       "avatarName": "Akyo",
       "category": "초코민트류, 기믹・특수",
-      "comment": "謎のAkyo",
+      "comment": "수수께끼의 Akyo",
       "author": "ugai",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_19cb8afc-cda5-416f-a590-726a33f634b4"
     },
@@ -423,7 +423,7 @@
       "nickname": "곤약 Akyo",
       "avatarName": "konjacAkyo",
       "category": "음식",
-      "comment": "首が動く",
+      "comment": "목이 움직인다",
       "author": "ごまシフォン",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca72a3f4-082b-4f5e-99b2-cf6abedfcd73"
     },
@@ -495,7 +495,7 @@
       "nickname": "가죽 Akyo",
       "avatarName": "皮Akyo",
       "category": "동물/여우, 동물, 소재・재질, 소재・재질/부드러운, 소재・재질/동물, 실사",
-      "comment": "リアル狐Akyoとのこと",
+      "comment": "리얼 여우 Akyo라고 한다",
       "author": "甘水あみ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ccddd5fd-df57-47fa-b7ab-a3e0c868a4e7"
     },
@@ -612,7 +612,7 @@
       "nickname": "TIA 셔츠 Akyo",
       "avatarName": "Akyo_Shirt_TIA",
       "category": "초코민트류, 기믹・특수",
-      "comment": "『THIS IS AKYO!』のシャツを着たAkyo",
+      "comment": "'THIS IS AKYO!' 셔츠를 입은 Akyo",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_900b9f1b-9400-4167-884c-04ead786ce0c"
     },
@@ -666,7 +666,7 @@
       "nickname": "느긋한 아누비스 Akyo",
       "avatarName": "Yurumeno_Akyobis",
       "category": "가상의 존재, 가상의 존재/천사・신",
-      "comment": "葱さん式アヌビスAkyo",
+      "comment": "네기상 스타일 아누비스 Akyo",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1d8a7298-ac5c-4a47-91db-0ff2f6f2e07a"
     },
@@ -963,7 +963,7 @@
       "nickname": "샐러맨더 Akyo",
       "avatarName": "SalamanderAkyo",
       "category": "가상의 존재, 가상의 존재/환수・정령",
-      "comment": "うぱAkyoと呼んだりもする",
+      "comment": "우파 Akyo라고 부르기도 한다",
       "author": "SauAu",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_44fec38a-0008-4421-98aa-9dfdc4030c44"
     },
@@ -972,7 +972,7 @@
       "nickname": "멜트 Akyo",
       "avatarName": "MeltedAkyo",
       "category": "기믹・특수",
-      "comment": "スライムAkyoかも",
+      "comment": "슬라임 Akyo일지도?",
       "author": "SauAu",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d2b73f03-0c08-4d5a-9819-9f91aa9659e1"
     },
@@ -1026,7 +1026,7 @@
       "nickname": "폭신폭신 Akyo",
       "avatarName": "ふわふわAkyo",
       "category": "소재・재질, 소재・재질/부드러운, 털결, 털결/폭신폭신",
-      "comment": "472番は別作者バージョン",
+      "comment": "472번은 다른 제작자 버전",
       "author": "雨音さかな",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_74cec706-10c1-4bb2-9f3d-6d829dbd182a"
     },
@@ -1188,7 +1188,7 @@
       "nickname": "구찌 Akyo",
       "avatarName": "Gucci Akyo",
       "category": "의류・액세서리",
-      "comment": "柄はフリーのため権利的にはセーフ",
+      "comment": "패턴은 프리이므로 저작권상 문제 없음",
       "author": "SplitScream",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0662515d-ce3d-4f57-b9a6-e08b7bb5eff2"
     },
@@ -1269,7 +1269,7 @@
       "nickname": "케이크 Akyo",
       "avatarName": "cake",
       "category": "음식, 음식/디저트",
-      "comment": "qchan949式ケーキAkyo",
+      "comment": "qchan949 스타일 케이크 Akyo",
       "author": "qchan949",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fdb6ca57-ebef-44fd-b0d9-22838f480f16"
     },
@@ -1359,7 +1359,7 @@
       "nickname": "소 Akyo",
       "avatarName": "Akyo Cow 256",
       "category": "동물, 동물/소",
-      "comment": "海外の方が作られたうしAkyo",
+      "comment": "해외 분이 만든 소 Akyo",
       "author": "Dithuzad",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4df81f11-643b-43e9-abd8-c15aa109a37a"
     },
@@ -1368,7 +1368,7 @@
       "nickname": "판초 Akyo",
       "avatarName": "akyo___________雨",
       "category": "의류・액세서리, 환경・날씨, 환경・날씨/비",
-      "comment": "初期は_が長い",
+      "comment": "초기에는 _가 길다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea0397b8-c8e1-4c9a-a1e7-c5ca48c090de"
     },
@@ -1440,7 +1440,7 @@
       "nickname": "족제비 Akyo",
       "avatarName": "akyo__fox2",
       "category": "동물, 동물/족제비",
-      "comment": "なぜかfox2",
+      "comment": "왜인지 fox2",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4413eeb4-2b37-43f7-b3c4-0b4ff781f8c2"
     },
@@ -1458,7 +1458,7 @@
       "nickname": "초밥 Akyo",
       "avatarName": "akyo__すし",
       "category": "음식, 음식/요리, 음식/초밥",
-      "comment": "初代すしAkyo",
+      "comment": "초대 스시 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb6e1511-0bf0-4c51-9e66-f4b8c5914bff"
     },
@@ -1476,7 +1476,7 @@
       "nickname": "곰 Akyo 2",
       "avatarName": "akyo__くま２",
       "category": "동물, 동물/곰",
-      "comment": "この色は‥",
+      "comment": "이 색은‥",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7a72f910-f0a8-489a-ad70-e6c7eb03dc25"
     },
@@ -1530,7 +1530,7 @@
       "nickname": "도깨비 Akyo",
       "avatarName": "skyo__oni",
       "category": "가상의 존재, 가상의 존재/요괴・유령",
-      "comment": "skyoなのはミス？",
+      "comment": "skyo인 건 실수?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_677186b1-0a7c-4885-9d5a-200e03ec16f6"
     },
@@ -1548,7 +1548,7 @@
       "nickname": "갓파 Akyo",
       "avatarName": "akyo_kappa",
       "category": "가상의 존재, 가상의 존재/요괴・유령",
-      "comment": "会えたらラッキー",
+      "comment": "만나면 행운!",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_21c11fa6-1ecd-49c8-95f0-c1d8719f6d77"
     },
@@ -1575,7 +1575,7 @@
       "nickname": "치쿠와 Akyo",
       "avatarName": "akyo_ちくわ",
       "category": "음식, 음식/요리",
-      "comment": "内側が気になる",
+      "comment": "안쪽이 궁금하다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca614f53-b7cc-47f1-b10d-577e150fdbd3"
     },
@@ -1611,7 +1611,7 @@
       "nickname": "상어 Akyo",
       "avatarName": "akyo_shark",
       "category": "동물, 동물/해양생물, 동물/상어",
-      "comment": "初代サメAkyo",
+      "comment": "초대 상어 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e45b5e92-5491-4a9b-b273-9a57d31b17c7"
     },
@@ -1791,7 +1791,7 @@
       "nickname": "알파카 Akyo",
       "avatarName": "akyo_アルパカ",
       "category": "동물, 동물/알파카, 네발걸음",
-      "comment": "チョコミント類ではない",
+      "comment": "초코민트류가 아니다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_36b0ccac-72c6-4f68-9474-4898a7355329"
     },
@@ -1809,7 +1809,7 @@
       "nickname": "토로로 Akyo",
       "avatarName": "akyo_TORORO",
       "category": "패러디, 패러디/이웃집 토토로",
-      "comment": "トロロ‥",
+      "comment": "토로로‥",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_36624382-f918-47fb-9bdb-dc02b67df8d3"
     },
@@ -1818,7 +1818,7 @@
       "nickname": "토로로 Akyo 2",
       "avatarName": "akyo_TORORO2",
       "category": "패러디, 패러디/이웃집 토토로",
-      "comment": "腕がある",
+      "comment": "팔이 있다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22aae6f5-3641-4d7a-b9ee-8751d584693c"
     },
@@ -1863,7 +1863,7 @@
       "nickname": "아시가루 Akyo",
       "avatarName": "akyo_asigaru2",
       "category": "직업・신분, 직업・신분/병사, 무기・기계, 나라, 나라/일본",
-      "comment": "asigaru1は没案",
+      "comment": "asigaru1은 폐기안",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_711b3c52-9f3d-479b-abdc-6c1b3f639cbd"
     },
@@ -1872,7 +1872,7 @@
       "nickname": "유령 Akyo/고스트 Akyo",
       "avatarName": "akyo_ghost 3․0",
       "category": "가상의 존재, 가상의 존재/요괴・유령",
-      "comment": "おばけシリーズの始祖",
+      "comment": "유령 시리즈의 시조",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34834487-1367-4c24-baea-5e2e3fd6d5da"
     },
@@ -1917,7 +1917,7 @@
       "nickname": "사자춤 Akyo",
       "avatarName": "akyo_sisimai",
       "category": "계절・행사",
-      "comment": "わるいキッズAkyoを襲う",
+      "comment": "나쁜 키즈 Akyo를 습격한다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3f41cb57-4272-4f6a-8091-e4c5c9dfcedf"
     },
@@ -2043,7 +2043,7 @@
       "nickname": "후리소데 여우 Akyo",
       "avatarName": "きつねkyo_振袖",
       "category": "동물/여우, 동물, 계절・행사, 계절・행사/설날",
-      "comment": "Aがない",
+      "comment": "A가 없다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0d6f6089-2fda-4125-86ce-30d53ac2e548"
     },
@@ -2052,7 +2052,7 @@
       "nickname": "구미호 Akyo",
       "avatarName": "akyo_fox9 1․55",
       "category": "동물/여우, 동물",
-      "comment": "浴衣も着ている",
+      "comment": "유카타도 입고 있다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_347af16a-3802-4214-846c-f027276410df"
     },
@@ -2061,7 +2061,7 @@
       "nickname": "튀김 Akyo",
       "avatarName": "akyo_Fried 1․4",
       "category": "음식, 음식/요리",
-      "comment": "えびフライ？",
+      "comment": "새우튀김?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_43a755ef-8725-43bd-81c8-9c60b817cf0f"
     },
@@ -2088,7 +2088,7 @@
       "nickname": "보병 Akyo",
       "avatarName": "akyo__歩兵",
       "category": "직업・신분, 직업・신분/병사",
-      "comment": "緑はチョコミント類？",
+      "comment": "초록색은 초코민트류?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_44db453a-6048-4c21-b993-4dd3717bfc1d"
     },
@@ -2097,7 +2097,7 @@
       "nickname": "안경 Akyo",
       "avatarName": "akyo__papipo 1․01",
       "category": "의류・액세서리, 의류・액세서리/안경, 패러디, 패러디/인물",
-      "comment": "元ネタがある？",
+      "comment": "원본이 있다?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f68c924d-b93d-4d59-ba31-5d12abfe5a0f"
     },
@@ -2169,7 +2169,7 @@
       "nickname": "의자 Akyo",
       "avatarName": "akyo_isu",
       "category": "가전・가구",
-      "comment": "キッズAkyo！？",
+      "comment": "키즈 Akyo!?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c1407fbf-592f-4ef7-b332-df0b88761f3e"
     },
@@ -2196,7 +2196,7 @@
       "nickname": "허스키 Akyo",
       "avatarName": "akyo_husky",
       "category": "동물, 동물/개",
-      "comment": "いぬAkyoに分類していいか要確認",
+      "comment": "개 Akyo로 분류해도 되는지 확인 필요",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_889f3ebc-bd9d-4cff-bdee-1ceea7fe2485"
     },
@@ -2403,7 +2403,7 @@
       "nickname": "폰데 Akyo",
       "avatarName": "akyo_ponde",
       "category": "음식, 음식/디저트, 패러디, 패러디/미스터도넛",
-      "comment": "ポンデの部分は食べられるとのこと",
+      "comment": "퐁드 부분은 먹을 수 있다고 한다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2e8b058d-2b4b-47c7-bd7b-7088cb5435aa"
     },
@@ -2475,7 +2475,7 @@
       "nickname": "라면 Akyo",
       "avatarName": "akyo_ramen",
       "category": "음식, 음식/요리",
-      "comment": "カップヌードルAkyo？",
+      "comment": "컵라면 Akyo?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ed372625-8a2f-434d-a1b3-bf79322e74a6"
     },
@@ -2502,7 +2502,7 @@
       "nickname": "Lpack Akyo",
       "avatarName": "akyo_Lpack",
       "category": "선물",
-      "comment": "レターパックAkyo？",
+      "comment": "레터팩 Akyo?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2434121e-3e7d-4595-b57d-c5bdffb56fb9"
     },
@@ -2538,7 +2538,7 @@
       "nickname": "키즈 Akyo",
       "avatarName": "akyo_kids",
       "category": "의류・액세서리, 의류・액세서리/모자, 반창고, 연령층, 연령층/어린이",
-      "comment": "Akyoも青かった",
+      "comment": "Akyo도 파랬다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_372cb668-9809-4dac-91ec-2d1c500a19a1"
     },
@@ -2556,7 +2556,7 @@
       "nickname": "해파리 Akyo",
       "avatarName": "akyo_kurage",
       "category": "동물, 동물/해양생물, 동물/해파리",
-      "comment": "深海からのメッセージ",
+      "comment": "심해로부터의 메시지",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d448a9fb-e941-4c35-b61b-846bd4aeb5ed"
     },
@@ -2691,7 +2691,7 @@
       "nickname": "토끼 Akyo 2",
       "avatarName": "akyo_usagi2",
       "category": "동물, 동물/토끼",
-      "comment": "色が変わり服を着た",
+      "comment": "색이 바뀌고 옷을 입었다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_31a1d088-6023-4482-ab21-601aa4ec04b4"
     },
@@ -2718,7 +2718,7 @@
       "nickname": "경찰 여우 Akyo",
       "avatarName": "akyo_foxKeikan 1․3",
       "category": "동물, 동물/여우, 직업・신분, 직업・신분/공무원",
-      "comment": "きみ、たいほ。",
+      "comment": "너, 체포.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef434fa8-5f77-4a1d-beaa-fbfc10e506ec"
     },
@@ -2781,7 +2781,7 @@
       "nickname": "사카반 Akyo",
       "avatarName": "akyo_sakaban 0․7",
       "category": "동물, 동물/해양생물",
-      "comment": "フライになる機能付き",
+      "comment": "튀김으로 변하는 기능 탑재",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a52dad23-d668-487a-8516-f1ec3c121f4e"
     },
@@ -3015,7 +3015,7 @@
       "nickname": "케이크 Akyo",
       "avatarName": "akyo_cake",
       "category": "음식, 음식/디저트",
-      "comment": "ささのき式ケーキAkyo",
+      "comment": "사사노키 스타일 케이크 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bfcf1ebe-f12d-4a41-8a25-d5964e5eccb3"
     },
@@ -3069,7 +3069,7 @@
       "nickname": "후지산 Akyo",
       "avatarName": "akyo_huzisan",
       "category": "환경・날씨, 환경・날씨/산",
-      "comment": "Akyoも積もれば山となる",
+      "comment": "Akyo도 쌓이면 산이 된다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f43b4b71-3e5c-4ef8-a71c-29171bf1ef02"
     },
@@ -3159,7 +3159,7 @@
       "nickname": "천사 여우 Akyo",
       "avatarName": "akyo engel",
       "category": "동물/여우, 동물, 가상의 존재, 가상의 존재/천사・신",
-      "comment": "別作者の天使Akyoも追加予定",
+      "comment": "다른 제작자의 천사 Akyo도 추가 예정",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b600825f-8da6-462a-bb17-0e932ed01354"
     },
@@ -3177,7 +3177,7 @@
       "nickname": "코트 여우 Akyo 4",
       "avatarName": "akyo_foxCoat4",
       "category": "동물/여우, 동물",
-      "comment": "2と3がいないのは故意とのこと",
+      "comment": "2와 3이 없는 것은 고의라고 한다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0fc2d16c-5f9e-4cd4-8172-ce57c420e5c7"
     },
@@ -3186,7 +3186,7 @@
       "nickname": "트리 Akyo",
       "avatarName": "akyo_ツリー",
       "category": "식물, 계절・행사, 계절・행사/크리스마스",
-      "comment": "正確にはクリスマスツリー",
+      "comment": "정확히는 크리스마스 트리",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a6304b4-1da8-4eac-8bcc-1203f5fcb574"
     },
@@ -3330,7 +3330,7 @@
       "nickname": "초코 Akyo",
       "avatarName": "akyo_choco",
       "category": "음식, 음식/디저트",
-      "comment": "バレンタインにはこれ",
+      "comment": "발렌타인에는 이것!",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7b6b928e-fc29-42a8-b587-401346879d98"
     },
@@ -3411,7 +3411,7 @@
       "nickname": "토스트 여우 Akyo 2",
       "avatarName": "akyo_foxトースト2",
       "category": "동물/여우, 동물",
-      "comment": "一体化に失敗した",
+      "comment": "일체화에 실패했다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_463a9a9d-9ae3-4667-b209-914ba2586051"
     },
@@ -3456,7 +3456,7 @@
       "nickname": "족제비 Akyo 3.0",
       "avatarName": "akyo_オコジョ3․0",
       "category": "동물, 동물/족제비",
-      "comment": "Avatar3.0化の意",
+      "comment": "Avatar 3.0화의 의미",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5cf13dab-95d0-42e3-a4c1-c3adc7840e97"
     },
@@ -3465,7 +3465,7 @@
       "nickname": "식빵 Akyo",
       "avatarName": "akyo_to-st",
       "category": "음식, 음식/요리",
-      "comment": "完全に一体化",
+      "comment": "완전히 일체화",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cc9c4a26-4463-4b31-b885-543b6174418c"
     },
@@ -3591,7 +3591,7 @@
       "nickname": "가면 Akyo",
       "avatarName": "akyo_omen",
       "category": "패러디/이상한 집, 패러디",
-      "comment": "このAkyo、何か変？",
+      "comment": "이 Akyo, 뭔가 이상하다?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b2fa062c-7143-4a06-9cb2-8d35c5f23d8f"
     },
@@ -3762,7 +3762,7 @@
       "nickname": "된장국 Akyo",
       "avatarName": "akyo_‚isosiru",
       "category": "음식, 음식/요리",
-      "comment": "豆腐AkyoBとのコラボ",
+      "comment": "두부 AkyoB와의 콜라보",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e30c5206-bf3a-499b-a7df-dd353e1f6227"
     },
@@ -3771,7 +3771,7 @@
       "nickname": "타피오카 Akyo",
       "avatarName": "akyo_タピオカ",
       "category": "음료",
-      "comment": "分類はのみもの系",
+      "comment": "분류는 음료 계열",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e4406b94-2855-4711-a77e-d362989a7b95"
     },
@@ -3780,7 +3780,7 @@
       "nickname": "수확제 Akyo",
       "avatarName": "アキョおじ収穫祭",
       "category": "계절・행사",
-      "comment": "野菜Akyoオールスターズ",
+      "comment": "야채 Akyo 올스타즈",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_601ab1d3-3878-4f20-9da4-cbb803c19b48"
     },
@@ -3798,7 +3798,7 @@
       "nickname": "판초 여우 Akyo",
       "avatarName": "きつねポンチョ",
       "category": "동물/여우, 동물, 의류・액세서리, 환경・날씨, 환경・날씨/비",
-      "comment": "ささのきさんの原点回帰",
+      "comment": "사사노키상의 원점 회귀",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a290b34e-03c1-4d67-a01b-48dcd5b5c6c8"
     },
@@ -3834,7 +3834,7 @@
       "nickname": "유부초밥 Akyo",
       "avatarName": "akyo_いなりずし",
       "category": "음식, 음식/요리, 음식/초밥",
-      "comment": "すしシリーズ3体目",
+      "comment": "스시 시리즈 3번째",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3916d347-d653-4e7e-8ed4-9eb4005e9cbb"
     },
@@ -3861,7 +3861,7 @@
       "nickname": "야자 Akyo",
       "avatarName": "akyo_ヤシの木",
       "category": "식물",
-      "comment": "木シリーズ3体目",
+      "comment": "나무 시리즈 3번째",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d87850c0-4479-4e88-be6f-7548e575867b"
     },
@@ -3906,7 +3906,7 @@
       "nickname": "빨간모자 여우 Akyo",
       "avatarName": "akyo_きつね赤ずきん",
       "category": "동물/여우, 계절・행사/할로윈, 계절・행사, 동물, 코스프레",
-      "comment": "おおかみAkyoに要注意",
+      "comment": "늑대 Akyo에 요주의",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea9e6901-c9c8-47e8-a90b-d55ce222b870"
     },
@@ -3933,7 +3933,7 @@
       "nickname": "노래 파 Akyo",
       "avatarName": "akyo_ねぎうた",
       "category": "음식, 음식/채소, 패러디, 패러디/보컬로이드",
-      "comment": "ねぎシリーズも増加中",
+      "comment": "파 시리즈도 증가 중",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9071118b-d070-4d97-a81d-7deb6df4c22d"
     },
@@ -3960,7 +3960,7 @@
       "nickname": "게 Akyo",
       "avatarName": "akyo_kani",
       "category": "동물, 동물/게, 동물/해양생물",
-      "comment": "エビカニモード付き",
+      "comment": "새우게 모드 탑재",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_50a5f466-4c46-4822-b219-8fdc0d630267"
     },
@@ -3969,7 +3969,7 @@
       "nickname": "떡 Akyo",
       "avatarName": "akyo_もち",
       "category": "음식, 음식/디저트, 계절・행사, 계절・행사/설날",
-      "comment": "2代目もちAkyo",
+      "comment": "2대째 떡 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_209684dd-dca1-415d-a747-af883a896756"
     },
@@ -4086,7 +4086,7 @@
       "nickname": "드래곤 Akyo SP",
       "avatarName": "akyo_老どらごん",
       "category": "가상의 존재, 기능・특성/비행, 동물, 가상의 존재/용・드래곤, 기능・특성",
-      "comment": "SPはサブスタのこと？",
+      "comment": "SP는 서브스탠스를 의미?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_682931f3-e166-4f62-a626-2a1f39a9505e"
     },
@@ -4113,7 +4113,7 @@
       "nickname": "족제비 Akyo 2024",
       "avatarName": "akyo_オコジョ24",
       "category": "동물, 동물/족제비",
-      "comment": "3代目オコジョAkyo",
+      "comment": "3대째 족제비 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bfab0401-1392-4060-805c-456d4cc20b50"
     },
@@ -4131,7 +4131,7 @@
       "nickname": "말 하니와 Akyo",
       "avatarName": "akyo_はにわうま",
       "category": "동물, 동물/말, 역사, 상・하니와, 네발걸음, 계절・행사, 계절・행사/설날",
-      "comment": "はにわとうまにも派生誕生",
+      "comment": "하니와와 말에도 파생 탄생",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa880970-2d3b-4cda-85f6-e1aee46b8e09"
     },
@@ -4140,7 +4140,7 @@
       "nickname": "태양의 탑 Akyo",
       "avatarName": "akyo_taiyou",
       "category": "예술・아트",
-      "comment": "JPSTにはいない",
+      "comment": "JPST에는 없다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6c6d988b-3534-4fdc-bf4c-54437d3eb9ae"
     },
@@ -4158,7 +4158,7 @@
       "nickname": "아누비스 Akyo",
       "avatarName": "akyo_あぬびす",
       "category": "가상의 존재, 가상의 존재/천사・신",
-      "comment": "ささのきさん式アヌビスAkyo",
+      "comment": "사사노키상 스타일 아누비스 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4ded4fea-bf3c-455d-b369-45ba7b30b63a"
     },
@@ -4248,7 +4248,7 @@
       "nickname": "폭신폭신 Akyo",
       "avatarName": "Fuwafuwa_Akyo",
       "category": "소재・재질, 소재・재질/부드러운, 털결, 털결/폭신폭신",
-      "comment": "114番は別作者様ver.",
+      "comment": "114번은 다른 제작자님 ver.",
       "author": "nezu_jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f50c2f5-89b6-4cda-9799-fa674a38a20c"
     },
@@ -4311,7 +4311,7 @@
       "nickname": "페스 기분의 염소 Akyo",
       "avatarName": "フェス気分のヤギAkyo",
       "category": "동물/염소, 기믹・특수, 동물, 계절・행사",
-      "comment": "『Akyoのぱーりない』にてHowToMakeSushiさんのDJを待望するヤギAkyoが変化した姿",
+      "comment": "'Akyo의 파티나잇'에서 HowToMakeSushi의 DJ를 열망하던 염소 Akyo가 변신한 모습",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_897563b1-f2a5-4c1a-a3ad-30b3ef964bcf"
     },
@@ -4365,7 +4365,7 @@
       "nickname": "침낭 Akyo",
       "avatarName": "akyo ねぶくろ",
       "category": "초코민트류, 의류・액세서리, 수면",
-      "comment": "発想の由来が気になります",
+      "comment": "발상의 유래가 궁금합니다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6e10ce52-0b3c-4090-8bb2-28a3c7517f9b"
     },
@@ -4383,7 +4383,7 @@
       "nickname": "피카츄 Akyo",
       "avatarName": "Akyochu",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "ステルバイ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bf07fdde-2289-4d4d-be52-44b4b7253c0e"
     },
@@ -4392,7 +4392,7 @@
       "nickname": "파이리 Akyo",
       "avatarName": "ヒトカゲあきょ",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ed6357c5-0f15-4d59-a448-88302acc7323"
     },
@@ -4401,7 +4401,7 @@
       "nickname": "꼬부기 Akyo",
       "avatarName": "ゼニガメあきょ",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d990dcf-a3e0-4c92-a013-d7b3929dff26"
     },
@@ -4410,7 +4410,7 @@
       "nickname": "이상해씨 Akyo",
       "avatarName": "フシギダネあきょ",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f094609-8fe5-4dd6-ac35-06ea39da3f5f"
     },
@@ -4419,7 +4419,7 @@
       "nickname": "NEET식 거품 Akyo",
       "avatarName": "Bubble Akyo",
       "category": "기믹・특수",
-      "comment": "泡Akyo2体目。1体目はふらっとさん",
+      "comment": "거품 Akyo 2번째. 1번째는 후랏토상",
       "author": "NEET ENGINEER",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c03b0382-19a3-4cb8-a3cf-9055492f3514"
     },
@@ -4437,7 +4437,7 @@
       "nickname": "뿔충이 Akyo",
       "avatarName": "ビーきょ",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6ac1434c-b554-49af-9501-7a5d9e2586c0"
     },
@@ -4446,7 +4446,7 @@
       "nickname": "누오 Akyo",
       "avatarName": "ぬあきょ",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_da169b0b-84a8-4f09-8726-6fdca09e3afa"
     },
@@ -4455,7 +4455,7 @@
       "nickname": "고라파덕 Akyo",
       "avatarName": "あきょダック",
       "category": "패러디/포켓몬, 패러디",
-      "comment": "VRCポケ改変集会用のAkyo",
+      "comment": "VRC 포켓몬 개변 모임용 Akyo",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c5c75ac7-0645-4917-a575-50a4d3417526"
     },
@@ -4473,7 +4473,7 @@
       "nickname": "감 Akyo",
       "avatarName": "柿Akyo",
       "category": "음식, 음식/과일",
-      "comment": "数年の時を経てPublic化",
+      "comment": "수년의 시간을 거쳐 Public화",
       "author": "MaruOcircle",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d1e55563-3030-4649-8edb-3707f7ed3aed"
     },
@@ -4518,7 +4518,7 @@
       "nickname": "침낭 여우 Akyo",
       "avatarName": "akyo_fox ねぶくろ",
       "category": "동물/여우, 의류・액세서리, 동물, 수면",
-      "comment": "うさぎと虎の寝袋に変更可能",
+      "comment": "토끼와 호랑이 침낭으로 변경 가능",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fd8d8d3b-aab3-4303-bd84-e2a04fbd4587"
     },
@@ -4563,7 +4563,7 @@
       "nickname": "토끼 Akyo",
       "avatarName": "usagi-akyo",
       "category": "동물/토끼, 동물",
-      "comment": "あとち式うさぎAkyo",
+      "comment": "아토치 스타일 토끼 Akyo",
       "author": "あとち-krgr",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_74eeb51e-2e98-47d8-b4f8-53fab0197f86"
     },
@@ -4788,7 +4788,7 @@
       "nickname": "먀쿠먀쿠 Akyo",
       "avatarName": "akyo akyoakyo",
       "category": "패러디/먀쿠먀쿠, 패러디, 가상의 존재, 가상의 존재/천사・신",
-      "comment": "あきょあきょしてきた",
+      "comment": "Akyo Akyo 해지고 있다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c28a2612-7037-4bf9-a04d-31ce7e3c1cb1"
     },
@@ -5157,7 +5157,7 @@
       "nickname": "벌 Akyo",
       "avatarName": "akyo はち",
       "category": "동물/벌레, 동물",
-      "comment": "花の蜜を集めるよ",
+      "comment": "꽃의 꿀을 모으고 있어",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4192cd46-3bec-42e7-aadb-eb25743700e3"
     },
@@ -5166,7 +5166,7 @@
       "nickname": "문어 Akyo",
       "avatarName": "たこAkyo",
       "category": "동물, 동물/문어, 동물/해양생물",
-      "comment": "かわいい",
+      "comment": "귀엽다",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a32c423c-45ee-416d-aad4-fcaf17e5d18e"
     },
@@ -5175,7 +5175,7 @@
       "nickname": "개미 Akyo",
       "avatarName": "akyo あり",
       "category": "동물/벌레, 동물",
-      "comment": "兄弟がたくさんいる",
+      "comment": "형제가 많다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3782d68c-fb2a-41b1-8c1d-6f931f3a9431"
     },
@@ -5184,7 +5184,7 @@
       "nickname": "멜론빵 거북이 Akyo",
       "avatarName": "akyp かめメロンパン",
       "category": "음식, 동물, 음식/과일, 음식/디저트, 음식/요리, 동물/거북이, 음식/빵",
-      "comment": "甘い香りを振りまくakyo。無果汁",
+      "comment": "달콤한 향기를 뿌리는 Akyo. 무과즙",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b3f30bdf-9c8b-43e4-b29a-7b5a652c6c88"
     },
@@ -5193,7 +5193,7 @@
       "nickname": "바게트 Akyo",
       "avatarName": "akyo フランスパン",
       "category": "음식, 음식/요리, 음식/빵",
-      "comment": "香ばしい香りを漂わせる",
+      "comment": "고소한 향기를 풍기고 있다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_66e939c1-4176-4b05-aac0-e44c2c7e7e4a"
     },
@@ -5202,7 +5202,7 @@
       "nickname": "우비 드래곤 Akyo",
       "avatarName": "akyo どらごんレインコート",
       "category": "가상의 존재, 기능・특성/비행, 의류・액세서리, 동물, 가상의 존재/용・드래곤, 기능・특성, 환경・날씨, 환경・날씨/비",
-      "comment": "雨の日のお出かけどらごんakyo",
+      "comment": "비 오는 날 외출 드래곤 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d86a3dcc-cc1a-4947-afa8-05fa4f841e77"
     },
@@ -5265,7 +5265,7 @@
       "nickname": "Zakyo",
       "avatarName": "Zakyo",
       "category": "패러디/건담, 패러디, 무기・기계",
-      "comment": "Akyoとは違うのだよ、Akyoとは！",
+      "comment": "Akyo와는 다르다고, Akyo와는!",
       "author": "ステルバイ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_68289ce3-3528-40af-be34-d1ecceaee10b"
     },
@@ -5274,7 +5274,7 @@
       "nickname": "피망 Akyo",
       "avatarName": "akyo ピーマン",
       "category": "음식/채소, 음식",
-      "comment": "カラフルなピーマンakyo",
+      "comment": "알록달록한 피망 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9b279576-3b4a-48ef-8922-6d3a9d0afa64"
     },
@@ -5283,7 +5283,7 @@
       "nickname": "커피 Akyo 2",
       "avatarName": "akyo coffee2",
       "category": "음료",
-      "comment": "お持ち帰りされるコーヒーakyo",
+      "comment": "테이크아웃되는 커피 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b60eef85-42db-4359-8f68-1f96b122b90c"
     },
@@ -5400,7 +5400,7 @@
       "nickname": "밀크 Akyo",
       "avatarName": "akyo milk",
       "category": "음료",
-      "comment": "新鮮な牛乳の入ったakyo。銭湯で大人気",
+      "comment": "신선한 우유가 들어있는 Akyo. 목욕탕에서 대인기",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f263618e-7d1f-4168-a49f-221b2a870e4e"
     },
@@ -5409,7 +5409,7 @@
       "nickname": "위스키 Akyo",
       "avatarName": "akyo ウイスキー",
       "category": "음료",
-      "comment": "柔らかな芳香、深みのあるコクで人々を魅了する",
+      "comment": "부드러운 향기, 깊은 풍미로 사람들을 매료시킨다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2525ae0a-f738-4be8-a656-f5794292a4b8"
     },
@@ -5445,7 +5445,7 @@
       "nickname": "우파루파 Akyo",
       "avatarName": "akyo uparupa",
       "category": "동물/양서류, 동물",
-      "comment": "JPSTの川岸で良く見つかる",
+      "comment": "JPST 강가에서 자주 발견된다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34be8863-c67f-4860-89e1-2cef623725ab"
     },
@@ -5454,7 +5454,7 @@
       "nickname": "문어 가죽 Akyo",
       "avatarName": "タコ皮",
       "category": "동물/문어류, 동물, 동물/해양생물, 동물/문어",
-      "comment": "タコ乳類",
+      "comment": "문어 포유류",
       "author": "甘水あみ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b96f7d86-62c3-4cd8-bae0-baea0e950c08"
     },
@@ -5508,7 +5508,7 @@
       "nickname": "풍선 여우 Akyo",
       "avatarName": "akyo 風船きつね",
       "category": "동물/여우, 기능・특성/비행, 동물, 기능・특성",
-      "comment": "風船でふよふよと漂うきつねakyo",
+      "comment": "풍선으로 둥둥 떠다니는 여우 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b53f9a0-2f30-406b-9f18-17466d95be44"
     },
@@ -5526,7 +5526,7 @@
       "nickname": "커피콩 아쿄",
       "avatarName": "珈琲豆あきょ",
       "category": "마메, 마메Akyo, 음식, 음식/채소, 음료",
-      "comment": "挽いちゃうんですか․․․ Android対応",
+      "comment": "갈아버리는 건가요… Android 대응",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_63545771-3442-4857-ae1f-f2e89737ced3"
     },
@@ -5535,7 +5535,7 @@
       "nickname": "라무네 아쿄",
       "avatarName": "らむねあきょ",
       "category": "음식, 음식/디저트, 음료",
-      "comment": "あきょも満足ǃ シェイプキーにラベルはついてこないので、変形の際はラベルは消してください。Android対応。",
+      "comment": "Akyo도 만족! 셰이프키에 라벨은 따라오지 않으므로 변형 시 라벨은 지워주세요. Android 대응.",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_06ce0752-200e-4f31-9420-c9819153d48b"
     },
@@ -5544,7 +5544,7 @@
       "nickname": "정령 말쿄",
       "avatarName": "精霊うまきょ",
       "category": "정령마, 음식/채소, 음식, 동물, 동물/말, 가상의 존재, 가상의 존재/환수・정령, 음식/채소/오이, 음식/채소/가지, 계절・행사, 계절・행사/설날",
-      "comment": "精霊うまきょ。Android対応。",
+      "comment": "정령 우마쿄. Android 대응.",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b44829ee-239b-4121-bb0f-a9ee032b0634"
     },
@@ -5562,7 +5562,7 @@
       "nickname": "연필 아쿄",
       "avatarName": "鉛筆あきょ",
       "category": "도구・문구・생활용품, 학교",
-      "comment": "ハードなやつさ,Android対応。",
+      "comment": "하드한 녀석이지, Android 대응.",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_09bedaa2-fd65-4ce8-b6a9-f2fde89b6c0d"
     },
@@ -5571,7 +5571,7 @@
       "nickname": "파란고리문어 Akyo",
       "avatarName": "ヒョウモンダコAkyo",
       "category": "동물/문어, 동물/연체동물, 동물, 동물/해양생물",
-      "comment": "悪くなったバナナじゃないよ。「たこAkyo」の改変だよ。https˸⁄⁄booth․pm⁄ja⁄items⁄6780828",
+      "comment": "상한 바나나가 아니야. '타코 Akyo'의 개변이야.",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6d753be0-c587-4007-ba5d-4f44bf243314"
     },
@@ -5580,7 +5580,7 @@
       "nickname": "콩 Akyo（염소）",
       "avatarName": "まめAkyo（ヤギ）",
       "category": "마메, 마메Akyo, 동물, 동물/염소",
-      "comment": "ぼさぼさ様による愛らしすぎる【無料】まめAkyo （Bean Akyo）【VRC向けアバター】（https˸⁄⁄booth․pm⁄ja⁄items⁄7385278）、のヤギAkyo改変。なんとなく耐久力が上がった気になっている。",
+      "comment": "보사보사님의 사랑스러운 【무료】 마메 Akyo (Bean Akyo)【VRC용 아바타】의 염소 Akyo 개변. 왠지 내구력이 올라간 기분.",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d5c02dcd-84d7-434e-a252-93525e918ca2"
     },
@@ -5589,7 +5589,7 @@
       "nickname": "잠두콩 Akyo",
       "avatarName": "そらまめAkyo",
       "category": "마메, 마메Akyo",
-      "comment": "まめ",
+      "comment": "콩",
       "author": "Taiyaki_犬好き",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffd1759d-e23f-41a1-a414-8e1b517d9967"
     },
@@ -5598,7 +5598,7 @@
       "nickname": "부드러운 Akyo",
       "avatarName": "柔らかいAkyo",
       "category": "소재・재질, 소재・재질/부드러운",
-      "comment": "柔らかいAkyo",
+      "comment": "부드러운 Akyo",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7f76d4fe-6694-4ecb-95fc-7c88e09e79d3"
     },
@@ -5760,7 +5760,7 @@
       "nickname": "콩 갓파 아쿄",
       "avatarName": "まめがっぱあきょ",
       "category": "가상의 존재, 가상의 존재/요괴・유령, 마메, 마메Akyo",
-      "comment": "きゅうりください",
+      "comment": "오이 주세요",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b0bb887f-de8e-4d7b-a8ab-7284544351e6"
     },
@@ -5787,7 +5787,7 @@
       "nickname": "갓파마키 Akyo",
       "avatarName": "akyo かっぱまき",
       "category": "음식, 음식/요리, 음식/초밥, 음식/채소, 음식/채소/오이",
-      "comment": "新鮮なキュウリを使用しているらしい。",
+      "comment": "신선한 오이를 사용하고 있다고 한다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7f39082b-0a33-414c-8a19-41c116b86f7f"
     },
@@ -6066,7 +6066,7 @@
       "nickname": "바다거북 Akyo",
       "avatarName": "akyo_うみがめ",
       "category": "동물, 동물/거북이, 소재・재질, 소재・재질/단단한",
-      "comment": "暖かい海に住み、サンゴ礁の周りを泳いでいる姿がよく見られる。また陸に上がり、砂浜を散歩することもあるようだ",
+      "comment": "따뜻한 바다에 살며 산호초 주위를 헤엄치는 모습이 자주 목격된다. 또한 육지에 올라와 해변을 산책하기도 한다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0a92e521-0723-4dc7-9dd8-23fe4724dc86"
     },
@@ -6075,7 +6075,7 @@
       "nickname": "Akyo S",
       "avatarName": "Akyo S",
       "category": "그로테스크, 기믹・특수",
-      "comment": "海の向こうで発見された正体不明のAkyo。その生態は謎に包まれている。",
+      "comment": "바다 건너에서 발견된 정체불명의 Akyo. 그 생태는 수수께끼에 싸여 있다.",
       "author": "yeaboi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5fd3fe95-8af8-43bc-af72-87bc16ec57cd"
     },
@@ -6084,7 +6084,7 @@
       "nickname": "Akyo J",
       "avatarName": "akyo J",
       "category": "기믹・특수",
-      "comment": "海の向こうで発見された正体不明のAkyo。その生態は謎に包まれている。",
+      "comment": "바다 건너에서 발견된 정체불명의 Akyo. 그 생태는 수수께끼에 싸여 있다.",
       "author": "yeaboi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed4937b-e938-4174-94fc-6a06c2e49683"
     },
@@ -6093,7 +6093,7 @@
       "nickname": "무지개 Akyo",
       "avatarName": "量産型ななきょう",
       "category": "색상, 환경・날씨, 환경・날씨/비, 레어",
-      "comment": "とある雨の日、TVクルーが撮影したビデオに映り込んでおりその存在が公に晒されることとなった。",
+      "comment": "어느 비 오는 날, TV 크루가 촬영한 비디오에 찍혀 그 존재가 공개되었다.",
       "author": "nanairoshikibu",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea5ee448-52f5-4684-9a5f-4113ba29bc4b"
     },
@@ -6102,7 +6102,7 @@
       "nickname": "비 Akyo",
       "avatarName": "amekyo",
       "category": "환경・날씨, 환경・날씨/비, 액체",
-      "comment": "雨の日に現れるという噂がある。信憑性はかなり低い。",
+      "comment": "비 오는 날에 나타난다는 소문이 있다. 신빙성은 꽤 낮다.",
       "author": "ameno-hisui",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ad6c464-645d-4b3d-b48b-8b173b9d1b6c"
     },
@@ -6138,7 +6138,7 @@
       "nickname": "진저브레드 Akyo",
       "avatarName": "GingerbreadAkyo",
       "category": "음식, 소재・재질, 소재・재질/얇은, 음식/디저트",
-      "comment": "動くと横に揺れるよ！",
+      "comment": "움직이면 좌우로 흔들려!",
       "author": "oyoso_5_oku",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_04d93765-939b-46dc-9837-3f5f7af5d0b0"
     },
@@ -6237,7 +6237,7 @@
       "nickname": "후광이 뭔가 심상찮은 Akyo ULTIMATE 익스트림 에디션",
       "avatarName": "後光がなんかヤバいAkyoULTIMATEエクストリームエディション",
       "category": "가상의 존재, 가상의 존재/천사・신, 동물, 동물/해양생물, 동물/물고기",
-      "comment": "神威の力、後光の前にすべてのAkyoとGyotoが集う。願い事を聞いてくれるかもしれないし、聞き流されるかもしれない・・・",
+      "comment": "신위의 힘, 후광 앞에 모든 Akyo와 Gyoto가 모인다. 소원을 들어줄지도 모르고, 흘려들을지도 모른다…",
       "author": "zhoney666",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e2d9f94-d726-440f-89d4-9730d89d7641"
     },
@@ -6255,7 +6255,7 @@
       "nickname": "피시본 Akyo",
       "avatarName": "akyo_フィッシュボーン",
       "category": "뼈, 동물, 동물/해양생물, 동물/물고기",
-      "comment": "魚の骨がついたakyo。かぶっているだけなのか体から生えているのか？",
+      "comment": "생선뼈가 붙은 Akyo. 쓰고 있는 건지 몸에서 자란 건지?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1879e2a7-a45c-499d-abc0-eb37e8799ca9"
     },
@@ -6264,7 +6264,7 @@
       "nickname": "늑대 스웨터 Akyo",
       "avatarName": "akyo_おおかみセーター",
       "category": "의류・액세서리, 의류・액세서리/두꺼운 옷, 계절・행사/겨울, 계절・행사, 동물, 동물/늑대, 의류・액세서리/모자, 의류・액세서리/장갑",
-      "comment": "もこもこセーターを着たおおかみakyo。これで寒い日も安心！",
+      "comment": "보슬보슬 스웨터를 입은 늑대 Akyo. 이제 추운 날도 안심!",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2d77ad59-9699-47b7-adae-0ebcf7d94e0a"
     },
@@ -6273,7 +6273,7 @@
       "nickname": "장수풍뎅이 Akyo",
       "avatarName": "akyo_kabuto",
       "category": "동물, 동물/벌레",
-      "comment": "角の生えたakyo。ささのきさんによると本人は「かぶとむしです」と言っているらしい。",
+      "comment": "뿔이 난 Akyo. 사사노키상에 의하면 본인은 '장수풍뎅이입니다'라고 말하고 있다고 한다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8a8ca594-b5f9-4f40-8d05-c37251a694bc"
     },
@@ -6282,7 +6282,7 @@
       "nickname": "스웨터 코끼리 Akyo",
       "avatarName": "akyo_ぞうセーター",
       "category": "의류・액세서리, 의류・액세서리/모자, 의류・액세서리/두꺼운 옷, 계절・행사, 계절・행사/겨울, 동물, 동물/코끼리, 네발걸음",
-      "comment": "セーターを着た冬仕様のぞうakyo。あったかいぞう",
+      "comment": "스웨터를 입은 겨울 사양 코끼리 Akyo. 따뜻하~다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22a5fa0e-e92d-426e-83a9-e6a9a7549f51"
     },
