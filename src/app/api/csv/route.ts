@@ -3,6 +3,59 @@ import { isValidLanguage, type SupportedLanguage } from '@/lib/i18n';
 import fs from 'fs/promises';
 import path from 'path';
 
+const DEFAULT_R2_BASE_URL = 'https://images.akyodex.com';
+const DEFAULT_GITHUB_OWNER = 'rad-vrc';
+const DEFAULT_GITHUB_REPO = 'Akyodex';
+const DEFAULT_GITHUB_BRANCH = 'main';
+const CSV_FETCH_TIMEOUT_MS = 5000;
+
+function isAbortOrTimeoutError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+  const name = 'name' in error && typeof error.name === 'string' ? error.name : '';
+  return name === 'AbortError' || name === 'TimeoutError';
+}
+
+async function readLocalCsv(filePath: string): Promise<string | null> {
+  try {
+    return await fs.readFile(filePath, 'utf-8');
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  }
+}
+
+async function fetchCsvFromCandidates(urls: string[]): Promise<string | null> {
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(CSV_FETCH_TIMEOUT_MS),
+      });
+      if (!response.ok) {
+        console.warn(`[api/csv] Failed candidate: ${url} (${response.status})`);
+        continue;
+      }
+      const text = await response.text();
+      if (!text.trim()) {
+        console.warn(`[api/csv] Empty CSV from candidate: ${url}`);
+        continue;
+      }
+      return text;
+    } catch (error) {
+      if (isAbortOrTimeoutError(error)) {
+        console.warn(`[api/csv] Candidate timed out: ${url} (${CSV_FETCH_TIMEOUT_MS}ms)`);
+        continue;
+      }
+      console.warn(`[api/csv] Candidate fetch error: ${url}`, error);
+    }
+  }
+  return null;
+}
+
 /**
  * This route requires Node.js runtime because:
  * - Uses fs.readFile for local file system access
@@ -23,17 +76,42 @@ export async function GET(request: Request) {
       ? (rawLang as SupportedLanguage)
       : 'ja';
 
-    // CSVファイルのパス
-    const csvPath = path.join(process.cwd(), 'data', `akyo-data-${lang}.csv`);
+    const csvFilename = `akyo-data-${lang}.csv`;
 
-    // ファイルを読み込む
-    const csvContent = await fs.readFile(csvPath, 'utf-8');
+    // 1) Local file (dev / Node runtime with bundled data)
+    const csvPath = path.join(process.cwd(), 'data', csvFilename);
+    let csvContent = await readLocalCsv(csvPath);
+
+    // 2) Public URLs fallback (R2 and GitHub raw)
+    if (!csvContent) {
+      const r2BaseUrl = (process.env.NEXT_PUBLIC_R2_BASE || DEFAULT_R2_BASE_URL).replace(/\/$/, '');
+      const githubOwner = process.env.GITHUB_REPO_OWNER || DEFAULT_GITHUB_OWNER;
+      const githubRepo = process.env.GITHUB_REPO_NAME || DEFAULT_GITHUB_REPO;
+      const githubBranch = process.env.GITHUB_BRANCH || DEFAULT_GITHUB_BRANCH;
+
+      // TODO(csvCandidates): R2 prefix migration in progress.
+      // Preferred path is `/data/${csvFilename}`. Keep `/akyo-data/${csvFilename}`
+      // as a legacy fallback until all environments are unified to the preferred
+      // prefix, then remove the legacy entry safely.
+      const csvCandidates = [
+        `${r2BaseUrl}/akyo-data/${csvFilename}`,
+        `${r2BaseUrl}/data/${csvFilename}`,
+        `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}/data/${csvFilename}`,
+      ];
+
+      csvContent = await fetchCsvFromCandidates(csvCandidates);
+    }
+
+    if (!csvContent) {
+      return jsonError('Failed to load CSV data', 500);
+    }
 
     // CSVとして返す
     return new Response(csvContent, {
       status: 200,
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${csvFilename}"`,
         'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
       },
     });

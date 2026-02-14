@@ -15,6 +15,29 @@ const { stringify } = require('csv-stringify/sync');
 const { NICKNAME_MAP } = require('./nickname-map-ko');
 const { CATEGORY_MAP } = require('./category-definitions-ko');
 
+function loadExistingKoCommentMap(csvPath) {
+  if (!fs.existsSync(csvPath)) {
+    return new Map();
+  }
+
+  try {
+    const csv = fs.readFileSync(csvPath, 'utf-8');
+    const records = parse(csv, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: false,
+      record_delimiter: ['\r\n', '\n', '\r'],
+      quote: '"',
+      escape: '"',
+    });
+    return new Map(records.map((record) => [record.ID || '', record.Comment || '']));
+  } catch (error) {
+    console.warn(`[WARN] Failed to read existing Korean CSV for fallback: ${csvPath}`);
+    console.warn(`[WARN] ${error instanceof Error ? error.message : String(error)}`);
+    return new Map();
+  }
+}
+
 // ============================================================
 // Category translation map: Japanese → Korean
 // ============================================================
@@ -67,14 +90,66 @@ const COMMENT_MAP = {
   'Quest対応✕': 'Quest 지원✕',
   'Quest対応×': 'Quest 지원×',
   Quest対応: 'Quest 지원',
+  'お正月衣装に着替えたうまakyo。うきうきしているらしい。':
+    '설날 복장으로 갈아입은 말 Akyo. 들떠 있는 듯하다.',
+  'ねぎakyoを背負った、かもakyo。どこで出会ったのだろう？':
+    '파 Akyo를 업은 오리 Akyo. 어디서 만난 걸까?',
+  '舞踊を極めしAkyoらしい。': '춤의 경지에 이른 Akyo라고 한다.',
+  '外宇宙探査のために独自の進化を遂げたらしい。':
+    '외우주 탐사를 위해 독자적인 진화를 이룬 듯하다.',
+  'レアなAkyoか、それとも。': '희귀한 Akyo일까, 아니면...',
+  '赤チームにいる。': '빨간 팀에 있다.',
+  '青チームにいる。とても青い。': '파란 팀에 있다. 아주 파랗다.',
+  'Akyo？': 'Akyo?',
+  'レア中のレア！': '희귀 중의 희귀!',
+  'ぬるぬるしているらしいよ！': '미끈미끈하다고 해!',
+  '氷の惑星で発見されたらしい。': '얼음 행성에서 발견되었다고 한다.',
+  '純金なんだって～！': '순금이래~!',
+  'おいしい！': '맛있어!',
+  'こっちもおいしい！': '이것도 맛있어!',
+  'パンクだぜ！': '펑크하다!',
+  '宝石を食べすぎたらしいよ！': '보석을 너무 많이 먹었다고 해!',
+  'こっちも宝石を食べすぎたんだって！': '이것도 보석을 너무 많이 먹었대!',
+  'キツネツキ式狐Akyoの好物は宝石なのかな？': '키츠네츠키식 여우 Akyo의 좋아하는 음식은 보석일까?',
+  'ここ200年で生まれたAkyoかな？': '지난 200년 사이에 태어난 Akyo일까?',
+  'すごい力を感じる・・・': '엄청난 힘이 느껴진다...',
+  '（ささのきの手記）\r\n温めてくれるakyo。プラグは差していなくても平気なようだ。錆びてしまうので水が苦手。':
+    '(사사노키의 수기)\r\n따뜻하게 해주는 Akyo. 플러그를 꽂지 않아도 괜찮은 듯하다. 녹이 슬어서 물을 싫어한다.',
+  '（ささのきの手記）\r\nしっかり焼かれた四角いお餅に海苔を巻いて。香ばしい香りが食欲を誘う':
+    '(사사노키의 수기)\r\n노릇하게 구운 네모난 떡에 김을 말았다. 고소한 향이 식욕을 자극한다.',
+  '（ささのきの手記）\r\n永久凍土の研究中に発見された氷のakyo。中に何か埋まっている気がする':
+    '(사사노키의 수기)\r\n영구동토 연구 중 발견된 얼음 Akyo. 안에 뭔가 묻혀 있는 것 같다.',
+  '（ささのきの手記）\r\n人懐っこく好奇心旺盛': '(사사노키의 수기)\r\n사람을 잘 따르고 호기심이 왕성하다.',
+  '遠くから見たらAkyo！': '멀리서 보면 Akyo!',
+  '（ささのきの手記）\r\n世紀末に生きるakyo': '(사사노키의 수기)\r\n세기말을 살아가는 Akyo.',
+  'このバター、VRChatで見た気がする！': '이 버터, VRChat에서 본 것 같아!',
+  'AkyoのCMで見たことある！': 'Akyo 광고에서 본 적 있어!',
+  'このAkyoもAkyoのCMにいた！': '이 Akyo도 Akyo 광고에 있었어!',
+  'よく見て、肩の上に苔Akyoがいるよ！自律もするんだって！':
+    '잘 봐, 어깨 위에 이끼 Akyo가 있어! 자율적으로 움직이기도 한대!',
+  '記憶を失ってもなおその魂の灯火は熱く燃え上がる！\r\nマンボーマンの遺志を継ぎ今ここに誕生した絆の戦士・ウーパールーパーマンとうまAkyoに全宇宙の命運は託された！':
+    '기억을 잃어도 그 영혼의 불꽃은 뜨겁게 타오른다!\r\n맨보맨의 유지를 이어 지금 이곳에 탄생한 유대의 전사・우파루파맨과 말 Akyo에게 온 우주의 명운이 맡겨졌다!',
+  '頭がAkyo！？\r\n人・・・なの？': '머리가 Akyo！？\r\n사람...이야?',
+  '爬虫類を指す英語だよ！': '파충류를 뜻하는 영어야!',
+  'まめAkyoパラダイスだ～～～！！！': '마메 Akyo 파라다이스다~~~!!!',
+  'まだまだ増える、まめAkyoパラダイス！': '아직도 늘어나는 마메 Akyo 파라다이스!',
+  'まめAkyoの勢いが止まらない！\r\n全AkyoまめAkyo化計画も夢じゃないね！':
+    '마메 Akyo의 기세가 멈추지 않아!\r\n모든 Akyo를 마메 Akyo로 만드는 계획도 꿈만은 아니네!',
+  'ついてこい！（ ｀ー´）ノ\r\n（作者コメントより）': '따라와!（ ｀ー´）ノ\r\n(제작자 코멘트에서)',
+  'Akyo、ゲットだぜ！': 'Akyo, 겟이다제!',
 };
 
-function translateComment(jaComment) {
+function translateComment(jaComment, existingKoComment = '') {
   if (!jaComment) return '';
 
   // Check exact match first
   if (COMMENT_MAP[jaComment]) {
     return COMMENT_MAP[jaComment];
+  }
+
+  if (existingKoComment && existingKoComment.trim()) {
+    console.warn(`[WARN] untranslated comment, reusing existing ko comment: "${jaComment}"`);
+    return existingKoComment.trim();
   }
 
   console.warn(`[WARN] untranslated comment, falling back to original: "${jaComment}"`);
@@ -103,6 +178,9 @@ function validateParsedRows(records, csvPath) {
 // ============================================================
 function main() {
   const dataDir = path.join(__dirname, '..', 'data');
+  const csvKoPath = path.join(dataDir, 'akyo-data-ko.csv');
+  const existingKoCommentMap = loadExistingKoCommentMap(csvKoPath);
+  console.log(`📚 Loaded existing Korean comments: ${existingKoCommentMap.size}`);
 
   // === Read Japanese CSV ===
   console.log('📖 Reading Japanese CSV...');
@@ -162,12 +240,14 @@ function main() {
     const author = row[headerMap['Author']] || '';
     const avatarUrl = row[headerMap['AvatarURL']] || '';
 
+    const existingKoComment = existingKoCommentMap.get(id) || '';
+
     return [
       id,
       translateNickname(nickname),
       avatarName, // Keep as-is
       translateCategory(category),
-      translateComment(comment),
+      translateComment(comment, existingKoComment),
       author, // Keep as-is
       avatarUrl, // Keep as-is
     ];
@@ -175,7 +255,6 @@ function main() {
 
   // === Write Korean CSV ===
   console.log('📝 Writing Korean CSV...');
-  const csvKoPath = path.join(dataDir, 'akyo-data-ko.csv');
   const csvOutput = stringify([header, ...koRows], {
     quoted: true,
     record_delimiter: '\n',

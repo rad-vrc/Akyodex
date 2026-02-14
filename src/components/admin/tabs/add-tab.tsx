@@ -5,6 +5,7 @@
 import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
+import { ADD_TAB_DRAFT_KEY } from '../draft-keys';
 
 interface AddTabProps {
   // 新フィールド
@@ -15,26 +16,121 @@ interface AddTabProps {
   creators: string[];
 }
 
-/**
- * Add Tab Component
- * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
- */
-export function AddTab({ categories, authors, attributes, creators }: AddTabProps) {
-  // 新旧フィールドのマージ
-  const allAttributes = categories || attributes;
-  // authors/creators は将来の作者フィルター用に保持（現在はVRChatから自動取得）
-  void (authors || creators);
+interface AddTabDraft {
+  nickname: string;
+  categories: string[];
+  avatarUrl: string;
+  comment: string;
+  customCategories: string[];
+}
 
-  const [nextId, setNextId] = useState('0001');
-  const [formData, setFormData] = useState({
+function createDefaultFormData() {
+  return {
     nickname: '',
     avatarName: '',
     categories: [] as string[],
     author: '',
     avatarUrl: '',
     comment: '',
-  });
+  };
+}
+
+function normalizeId(id: string): string | null {
+  const parsed = Number.parseInt(id, 10);
+  if (Number.isNaN(parsed)) return null;
+  return parsed.toString().padStart(4, '0');
+}
+
+function pickLatestId(currentId: string, candidateId?: string | null): string {
+  const normalizedCurrent = normalizeId(currentId);
+  const normalizedCandidate = candidateId ? normalizeId(candidateId) : null;
+
+  if (!normalizedCandidate) {
+    return normalizedCurrent ?? currentId;
+  }
+  if (!normalizedCurrent) {
+    return normalizedCandidate;
+  }
+
+  const currentNum = Number.parseInt(normalizedCurrent, 10);
+  const candidateNum = Number.parseInt(normalizedCandidate, 10);
+  return candidateNum >= currentNum ? normalizedCandidate : normalizedCurrent;
+}
+
+function getNextSequentialId(id: string): string | null {
+  const normalized = normalizeId(id);
+  if (!normalized) return null;
+  return (Number.parseInt(normalized, 10) + 1).toString().padStart(4, '0');
+}
+
+function normalizeStringList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const normalized = value
+    .map((item) => (typeof item === 'string' ? item.trim() : ''))
+    .filter(Boolean);
+  return Array.from(new Set(normalized));
+}
+
+/**
+ * Add Tab Component
+ * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
+ */
+export function AddTab({ categories, authors, attributes, creators }: AddTabProps) {
+  // 新旧フィールドのマージ
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const allAttributes = Array.from(
+    new Set([...(categories || attributes), ...customCategories])
+  ).sort();
+  // authors/creators は将来の作者フィルター用に保持（現在はVRChatから自動取得）
+  void (authors || creators);
+
+  const [nextId, setNextId] = useState('0001');
+  const [formData, setFormData] = useState(createDefaultFormData);
   const formRef = useRef<HTMLFormElement | null>(null);
+  const nextIdRef = useRef(nextId);
+  const draftHydratedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const savedDraft = sessionStorage.getItem(ADD_TAB_DRAFT_KEY);
+      if (!savedDraft) return;
+
+      const parsed = JSON.parse(savedDraft) as Partial<AddTabDraft>;
+      setFormData((prev) => ({
+        ...prev,
+        nickname: typeof parsed.nickname === 'string' ? parsed.nickname : prev.nickname,
+        categories: normalizeStringList(parsed.categories),
+        avatarUrl: typeof parsed.avatarUrl === 'string' ? parsed.avatarUrl : prev.avatarUrl,
+        comment: typeof parsed.comment === 'string' ? parsed.comment : prev.comment,
+      }));
+      setCustomCategories(normalizeStringList(parsed.customCategories));
+    } catch (error) {
+      console.warn('[add-tab] Failed to restore draft:', error);
+    } finally {
+      draftHydratedRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !draftHydratedRef.current) return;
+
+    const draft: AddTabDraft = {
+      nickname: formData.nickname,
+      categories: normalizeStringList(formData.categories),
+      avatarUrl: formData.avatarUrl,
+      comment: formData.comment,
+      customCategories: normalizeStringList(customCategories),
+    };
+    sessionStorage.setItem(ADD_TAB_DRAFT_KEY, JSON.stringify(draft));
+  }, [
+    customCategories,
+    formData.avatarUrl,
+    formData.categories,
+    formData.comment,
+    formData.nickname,
+  ]);
 
   const fetchNextId = useCallback(async (): Promise<string | null> => {
     try {
@@ -42,8 +138,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       if (response.ok) {
         const data = await response.json();
         if (data?.nextId) {
-          setNextId(data.nextId);
-          return data.nextId as string;
+          const latestId = pickLatestId(nextIdRef.current, data.nextId as string);
+          nextIdRef.current = latestId;
+          setNextId(latestId);
+          return latestId;
         }
       } else {
         console.error('Failed to fetch next ID, using default');
@@ -58,6 +156,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   useEffect(() => {
     void fetchNextId();
   }, [fetchNextId]);
+
+  useEffect(() => {
+    nextIdRef.current = nextId;
+  }, [nextId]);
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
 
@@ -118,12 +220,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
     }
 
-    // Refresh next ID at submission time
-    let submitId = nextId;
-    const refreshedId = await fetchNextId();
-    if (refreshedId) {
-      submitId = refreshedId;
-    }
+    // Refresh next ID in background while running expensive avatar/image steps.
+    // This avoids stale IDs without adding extra blocking at submit time.
+    const nextIdRefreshPromise = fetchNextId();
 
     const avtrId = match[0];
 
@@ -137,7 +236,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     const originalText = submitBtn?.innerHTML || '';
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = '⛳ VRChat情報取得中...';
+      submitBtn.textContent = '💾 VRChat情報取得中...';
     }
 
     // ===== Step 1: Fetch avatar info and image from VRChat =====
@@ -207,7 +306,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     // Update button text
     if (submitBtn) {
-      submitBtn.textContent = '⛳ 画像処理中...';
+      submitBtn.textContent = '💾 画像処理中...';
     }
 
     // ===== Step 2: Process image for cropping preview =====
@@ -240,39 +339,73 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
     // Update button text for final submission
     if (submitBtn) {
-      submitBtn.textContent = '⛳ 登録中...';
+      submitBtn.textContent = '💾 登録中...';
     }
 
     try {
-      // Prepare form data for submission (using fetched values)
-      const submitData = new FormData();
-      submitData.append('id', submitId);
-      submitData.append('nickname', formData.nickname);
-      submitData.append('avatarName', avatarName);
-      submitData.append('avatarUrl', formData.avatarUrl);
+      let submitId = nextIdRef.current;
+      const refreshedId = await nextIdRefreshPromise;
+      submitId = pickLatestId(submitId, refreshedId);
 
-      // 新フィールド (VRChatから取得した作者名を使用)
-      submitData.append('author', creatorName);
-      submitData.append('category', formData.categories.join(','));
-      submitData.append('comment', formData.comment);
+      const buildSubmitData = (id: string) => {
+        const submitData = new FormData();
+        submitData.append('id', id);
+        submitData.append('nickname', formData.nickname);
+        submitData.append('avatarName', avatarName);
+        submitData.append('avatarUrl', formData.avatarUrl);
 
-      // 旧フィールド (互換性のため)
-      submitData.append('creator', creatorName);
-      submitData.append('attributes', formData.categories.join(','));
-      submitData.append('notes', formData.comment);
+        // 新フィールド (VRChatから取得した作者名を使用)
+        submitData.append('author', creatorName);
+        submitData.append('category', formData.categories.join(','));
+        submitData.append('comment', formData.comment);
 
-      // Always include image data (fetched from VRChat)
-      submitData.append('imageData', croppedImageData!);
+        // 旧フィールド (互換性のため)
+        submitData.append('creator', creatorName);
+        submitData.append('attributes', formData.categories.join(','));
+        submitData.append('notes', formData.comment);
 
-      // Submit to API
-      const response = await fetch('/api/upload-akyo', {
-        method: 'POST',
-        body: submitData,
-      });
+        // Always include image data (fetched from VRChat)
+        submitData.append('imageData', croppedImageData!);
+        return submitData;
+      };
 
-      const result = await response.json();
+      const uploadWithId = async (id: string) => {
+        const response = await fetch('/api/upload-akyo', {
+          method: 'POST',
+          body: buildSubmitData(id),
+        });
+        const result = await response.json();
+        return { response, result };
+      };
+
+      let { response, result } = await uploadWithId(submitId);
+      let latestKnownId: string | null = null;
+
+      // If ID collision happens, refetch latest ID and retry once with the same form payload.
+      if ((!response.ok || !result.success) && response.status === 409) {
+        const latestId = await fetchNextId();
+        if (latestId) {
+          latestKnownId = pickLatestId(submitId, latestId);
+        }
+
+        const retryId = latestKnownId ?? getNextSequentialId(submitId);
+        if (retryId && retryId !== submitId) {
+          submitId = retryId;
+          ({ response, result } = await uploadWithId(submitId));
+        }
+      }
 
       if (!response.ok || !result.success) {
+        if (response.status === 409) {
+          const latestId = pickLatestId(
+            submitId,
+            latestKnownId ?? (await fetchNextId()) ?? getNextSequentialId(submitId)
+          );
+          const latestHint = latestId
+            ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
+            : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。';
+          throw new Error((result.error || 'IDが重複しています') + latestHint);
+        }
         throw new Error(result.error || 'サーバーエラーが発生しました');
       }
 
@@ -286,14 +419,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       );
 
       // Reset form
-      setFormData({
-        nickname: '',
-        avatarName: '',
-        categories: [],
-        author: '',
-        avatarUrl: '',
-        comment: '',
-      });
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem(ADD_TAB_DRAFT_KEY);
+      }
+      setFormData(createDefaultFormData());
       setShowImagePreview(false);
       setOriginalImageSrc(null);
       setNicknameStatus({ message: '', tone: 'neutral' });
@@ -301,7 +430,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       // Increment next ID for next registration
       const currentId = parseInt(submitId, 10);
       if (!isNaN(currentId)) {
-        setNextId((currentId + 1).toString().padStart(4, '0'));
+        const nextSequentialId = (currentId + 1).toString().padStart(4, '0');
+        setNextId((prev) => pickLatestId(prev, nextSequentialId));
       }
     } catch (error) {
       console.error('Form submission error:', error);
@@ -321,6 +451,19 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCreateCategory = (categoryName: string) => {
+    const normalizedInput = categoryName.trim().normalize('NFC').toLowerCase();
+    if (!normalizedInput) return;
+
+    setCustomCategories((prev) => {
+      const exists = prev.some(
+        (existing) => existing.normalize('NFC').toLowerCase() === normalizedInput
+      );
+      if (exists) return prev;
+      return [...prev, categoryName.trim()];
+    });
   };
 
   // Nickname duplicate check function
@@ -754,6 +897,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         currentAttributes={formData.categories}
         onApply={(attributes) => handleInputChange('categories', attributes)}
         allAttributes={allAttributes}
+        onCreateAttribute={handleCreateCategory}
+        listColumns={4}
+        modalSize="wide"
       />
     </div>
   );

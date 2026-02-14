@@ -80,6 +80,95 @@ const overridesById = {
   },
   '0678': { Nickname: 'Rain Akyo', Comment: "There's a rumor it appears on rainy days. The credibility is quite low." },
   '0679': { Nickname: 'Uro Akyo', Comment: 'Seeking information.' },
+  '0699': {
+    Nickname: 'Year of the Horse Akyo / New Year Horse Akyo',
+    Comment: 'A horse Akyo dressed in New Year attire. It seems very excited.',
+  },
+  '0700': {
+    Nickname: 'Duck-and-Green-Onion Akyo',
+    Comment: 'A duck Akyo carrying a green onion Akyo. Where did they meet?',
+  },
+  '0701': {
+    Nickname: 'Diamond Akyo',
+    Category: 'Material・Texture,Material・Texture/Stone,Hard',
+    Comment: '',
+  },
+  '0702': { Nickname: 'Fox Bean Akyo', Comment: '' },
+  '0703': { Nickname: 'Cheese Akyo', Comment: '' },
+  '0704': {
+    Nickname: 'RGB Dance Akyo',
+    Comment: 'It seems to be an Akyo that has mastered dance.',
+  },
+  '0705': {
+    Nickname: 'Cosmic Akyo',
+    Comment: 'It seems to have undergone unique evolution for outer-space exploration.',
+  },
+  '0706': { Nickname: 'Crystal Akyo', Comment: 'Is it a rare Akyo, or...?' },
+  '0707': { Nickname: 'Red Team Akyo', Comment: "It's on the red team." },
+  '0708': { Nickname: 'Blue Team Akyo', Comment: "It's on the blue team. Very blue." },
+  '0709': { Nickname: 'Astral Akyo', Comment: 'Akyo?' },
+  '0710': { Nickname: 'Holographic Akyo', Comment: 'The rarest of the rare!' },
+  '0711': { Nickname: 'Queen Akyo', Comment: "Apparently it's slippery!" },
+  '0712': {
+    Nickname: "Kitsunetsuki's Snow Fox Akyo",
+    Comment: 'It is said to have been discovered on an icy planet.',
+  },
+  '0713': { Nickname: "Kitsunetsuki's Golden Fox Akyo", Comment: "It's made of pure gold!" },
+  '0714': { Nickname: "Kitsunetsuki's Red Gummy Fox Akyo", Comment: 'Delicious!' },
+  '0715': { Nickname: "Kitsunetsuki's Blue Gummy Fox Akyo", Comment: 'This one is delicious too!' },
+  '0716': { Nickname: "Kitsunetsuki's Punk Fox Akyo", Comment: 'So punk!' },
+  '0717': { Nickname: "Kitsunetsuki's Red Gem Fox Akyo", Comment: 'Apparently it ate too many gems!' },
+  '0718': { Nickname: "Kitsunetsuki's Purple Gem Fox Akyo", Comment: 'This one also ate too many gems!' },
+  '0719': {
+    Nickname: "Kitsunetsuki's White Gem Fox Akyo",
+    Comment: "I wonder if Kitsunetsuki's Fox Akyo's favorite food is gems?",
+  },
+  '0720': {
+    Nickname: "Kitsunetsuki's Aluminum Fox Akyo",
+    Comment: 'Maybe this Akyo was born within the last 200 years?',
+  },
+  '0721': { Nickname: "Kitsunetsuki's Ethereal Fox Akyo", Comment: 'I can feel an incredible power...' },
+  '0722': {
+    Nickname: 'Electric Heater Akyo',
+    Comment:
+      "(Sasanoki's notes)\r\nAn Akyo that keeps you warm. It seems fine even without being plugged in. It dislikes water because it rusts.",
+  },
+  '0723': {
+    Nickname: 'Yaki Mochi Akyo',
+    Comment:
+      "(Sasanoki's notes)\r\nA properly grilled square mochi wrapped in nori. Its savory aroma stimulates the appetite.",
+  },
+  '0724': {
+    Nickname: 'Permafrost Akyo',
+    Comment:
+      "(Sasanoki's notes)\r\nAn ice Akyo discovered during permafrost research. It feels like something is buried inside.",
+  },
+  '0725': { Nickname: 'Otter Akyo', Comment: "(Sasanoki's notes)\r\nFriendly and very curious." },
+  '0726': { Nickname: 'Impostor Akyo', Comment: 'From a distance, it looks like Akyo!' },
+  '0727': { Nickname: 'Mohawk Akyo', Comment: "(Sasanoki's notes)\r\nAn Akyo living in the end times." },
+  '0728': { Nickname: 'Butter Akyo', Comment: 'I feel like I have seen this butter in VRChat!' },
+  '0729': { Nickname: 'Peanuts-kun Akyo', Comment: "I've seen it in an Akyo commercial!" },
+  '0730': { Nickname: 'Ponpoko Akyo', Comment: 'This Akyo was in an Akyo commercial too!' },
+  '0731': {
+    Nickname: 'Forest Nijimasu-man with Moss Akyo',
+    Comment: "Look closely, there's a Moss Akyo on its shoulder! It can move on its own too!",
+  },
+  '0732': {
+    Nickname: 'Warrior of Bonds: Axolotlman & Horse Akyo',
+    Comment:
+      "Even after losing its memory, the flame of its soul still burns fiercely!\r\nCarrying on Mambo Man's will, the Warrior of Bonds, Axolotlman and Horse Akyo, is born here and now, entrusted with the fate of the entire universe!",
+  },
+  '0733': { Nickname: 'Akyoman / Akyo Head', Comment: 'Its head is Akyo!?\r\nIs it... human?' },
+  '0734': { Nickname: 'Reptile Akyo', Comment: "It's the English word for reptiles!" },
+  '0735': { Nickname: 'Tanuki Bean Akyo / Bean Tanuki Akyo', Comment: "It's Bean Akyo paradise~~~!!!" },
+  '0736': { Nickname: 'Bread Bean Akyo', Comment: 'Bean Akyo paradise keeps growing!' },
+  '0737': {
+    Nickname: 'Mochi Bean Akyo / Bean Mochi Akyo',
+    Comment:
+      "The Bean Akyo momentum won't stop!\r\nTurning all Akyo into Bean Akyo might not be just a dream!",
+  },
+  '0738': { Nickname: 'Fushi Akyo', Comment: 'Follow me! ( ｀ー´)ノ\r\n(from the creator comment)' },
+  '0739': { Nickname: 'Akyo (Third Generation)', Comment: 'Gotta catch Akyo!' },
 };
 
 function parseCsv(filePath) {
@@ -144,6 +233,14 @@ function splitTokens(value) {
     .filter(Boolean);
 }
 
+function normalizeLegacyQuotedCell(value) {
+  const text = String(value || '').trim();
+  if (text.length >= 2 && text.startsWith('"') && text.endsWith('"')) {
+    return text.slice(1, -1).replace(/\\"/g, '"');
+  }
+  return text;
+}
+
 function main() {
   if (!fs.existsSync(jaPath)) throw new Error(`Missing source CSV: ${jaPath}`);
   if (!fs.existsSync(enPath)) throw new Error(`Missing target CSV: ${enPath}`);
@@ -187,6 +284,7 @@ function main() {
   for (const jaRow of ja.rows) {
     const id = String(jaRow[jaIdx.ID]).trim();
     const existingEnRow = enById.get(id);
+    const override = overridesById[id];
 
     const jaTokens = splitTokens(jaRow[jaIdx.Category]);
     const enTokens = jaTokens.map((t) => {
@@ -194,16 +292,24 @@ function main() {
       if (!mapped) missingCategoryTokens.add(t);
       return mapped || t;
     });
-    const category = enTokens.join(',');
+    const category = override?.Category ?? enTokens.join(',');
 
-    let nickname = existingEnRow ? String(existingEnRow[idx.Nickname] || '').trim() : '';
-    let comment = existingEnRow ? String(existingEnRow[idx.Comment] || '') : '';
+    const jaNickname = normalizeLegacyQuotedCell(jaRow[jaIdx.Nickname]);
+    const jaComment = normalizeLegacyQuotedCell(jaRow[jaIdx.Comment]);
 
-    if (!nickname || (!existingEnRow && overridesById[id]?.Nickname != null)) {
-      nickname = overridesById[id]?.Nickname ?? String(jaRow[jaIdx.Nickname] || '');
+    let nickname = existingEnRow ? normalizeLegacyQuotedCell(existingEnRow[idx.Nickname]) : '';
+    let comment = existingEnRow ? normalizeLegacyQuotedCell(existingEnRow[idx.Comment]) : '';
+
+    if (override?.Nickname != null && (!nickname || nickname === jaNickname)) {
+      nickname = override.Nickname;
+    } else if (!nickname) {
+      nickname = jaNickname;
     }
-    if (!comment || (!existingEnRow && overridesById[id]?.Comment != null)) {
-      comment = overridesById[id]?.Comment ?? String(jaRow[jaIdx.Comment] || '');
+
+    if (override?.Comment != null && (!comment || comment === jaComment)) {
+      comment = override.Comment;
+    } else if (!comment) {
+      comment = jaComment;
     }
 
     if (!existingEnRow && !overridesById[id]) missingRowTranslations.push(id);
