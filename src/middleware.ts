@@ -36,10 +36,13 @@ export function middleware(request: NextRequest) {
   const nonce = btoa(String.fromCharCode(...randomBytes));
 
   // Content Security Policy
-  // Note: 'unsafe-inline' and 'unsafe-eval' are required for Dify chatbot to function properly
+  // Note:
+  // - Browsers ignore 'unsafe-inline' when nonce/hash is present in script-src.
+  // - Dify injects a known inline bootstrap snippet; allow it via hash.
+  //   If Dify updates that snippet, this hash must be refreshed.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' *.dify.dev *.dify.ai *.udify.app udify.app js.sentry-cdn.com browser.sentry-cdn.com *.sentry.io https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com https://paulrosen.github.io https://cdn-cookieyes.com fonts.googleapis.com;
+    script-src 'self' 'nonce-${nonce}' 'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4=' 'unsafe-eval' *.dify.dev *.dify.ai *.udify.app udify.app js.sentry-cdn.com browser.sentry-cdn.com *.sentry.io https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com https://paulrosen.github.io https://cdn-cookieyes.com fonts.googleapis.com;
     style-src 'self' 'unsafe-inline' udify.app *.udify.app fonts.googleapis.com;
     img-src 'self' data: blob: https: *.akyodex.com *.vrchat.com *.r2.cloudflarestorage.com udify.app *.udify.app;
     font-src 'self' data: udify.app *.udify.app fonts.gstatic.com;

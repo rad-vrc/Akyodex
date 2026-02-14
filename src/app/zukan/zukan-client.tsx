@@ -98,8 +98,19 @@ export function ZukanClient({
             ? jsonData.data
             : undefined;
         if (!akyoItems) {
+          const payloadSummary = (() => {
+            if (jsonData && typeof jsonData === 'object' && !Array.isArray(jsonData)) {
+              const keys = Object.keys(jsonData as Record<string, unknown>);
+              return `{ keys: [${keys.join(', ')}] }`;
+            }
+            const raw = JSON.stringify(jsonData);
+            const MAX_LENGTH = 1000;
+            if (raw.length <= MAX_LENGTH) return raw;
+            return `${raw.slice(0, MAX_LENGTH)}...(truncated, ${raw.length} chars)`;
+          })();
+
           throw new Error(
-            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${JSON.stringify(jsonData)}`
+            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${payloadSummary}`
           );
         }
 
@@ -142,12 +153,14 @@ export function ZukanClient({
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 状態変数名は変更量が多いので一旦そのまま（selectedCategory等への変更は今後の課題）
-  const [selectedAttribute, setSelectedAttribute] = useState('');
+  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
+  const [categoryMatchMode, setCategoryMatchMode] = useState<'or' | 'and'>('or');
   const [selectedCreator, setSelectedCreator] = useState('');
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
+  const [isDesktopViewport, setIsDesktopViewport] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   // Modal state
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
@@ -190,7 +203,15 @@ export function ZukanClient({
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
     setRenderLimit(INITIAL_RENDER_COUNT);
-  }, [searchQuery, selectedAttribute, selectedCreator, favoritesOnly, sortAscending, randomMode]);
+  }, [
+    searchQuery,
+    selectedAttributes,
+    categoryMatchMode,
+    selectedCreator,
+    favoritesOnly,
+    sortAscending,
+    randomMode,
+  ]);
 
   // Virtual scrolling: Infinite scroll handler
   const handleScroll = useCallback(() => {
@@ -211,17 +232,33 @@ export function ZukanClient({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  // Keep desktop/mobile filter layout in sync with viewport size.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const query = window.matchMedia('(min-width: 1024px)');
+    const syncByViewport = () => {
+      const isDesktop = query.matches;
+      setIsDesktopViewport(isDesktop);
+      setIsFilterPanelOpen(isDesktop);
+    };
+    syncByViewport();
+    query.addEventListener('change', syncByViewport);
+    return () => query.removeEventListener('change', syncByViewport);
+  }, []);
+
   // フィルター適用
   useEffect(() => {
     if (randomMode) return; // ランダム表示中は通常フィルタ適用を抑止
     filterData(
       {
         searchQuery,
+        categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+        categoryMatchMode,
         // 新フィールド名を優先して渡す
-        category: selectedAttribute || undefined,
+        category: selectedAttributes[0] || undefined,
         author: selectedCreator || undefined,
         // 旧フィールド名も念のため渡す
-        attribute: selectedAttribute || undefined,
+        attribute: selectedAttributes[0] || undefined,
         creator: selectedCreator || undefined,
         favoritesOnly,
       },
@@ -229,7 +266,8 @@ export function ZukanClient({
     );
   }, [
     searchQuery,
-    selectedAttribute,
+    selectedAttributes,
+    categoryMatchMode,
     selectedCreator,
     favoritesOnly,
     sortAscending,
@@ -255,7 +293,8 @@ export function ZukanClient({
         sortAscending
       );
       setSearchQuery('');
-      setSelectedAttribute('');
+      setSelectedAttributes([]);
+      setCategoryMatchMode('or');
       setSelectedCreator('');
       setFavoritesOnly(false);
     } else {
@@ -263,8 +302,10 @@ export function ZukanClient({
       filterData(
         {
           searchQuery,
-          attribute: selectedAttribute || undefined,
-          creator: selectedCreator || undefined,
+          categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+          categoryMatchMode,
+          category: selectedAttributes[0] || undefined,
+          author: selectedCreator || undefined,
           favoritesOnly,
         },
         sortAscending
@@ -286,6 +327,12 @@ export function ZukanClient({
     }),
     [data, filteredData]
   );
+
+  const activeFilterCount = useMemo(
+    () => selectedAttributes.length + (selectedCreator ? 1 : 0) + (favoritesOnly ? 1 : 0),
+    [selectedAttributes, selectedCreator, favoritesOnly]
+  );
+  const shouldRenderFilterPanel = isDesktopViewport || isFilterPanelOpen;
 
   if (error) {
     return (
@@ -358,27 +405,52 @@ export function ZukanClient({
             onSearch={setSearchQuery}
             value={searchQuery}
             placeholder={t('search.placeholder', lang)}
+            ariaLabel={t('search.ariaLabel', lang)}
+            clearAriaLabel={t('search.clearAriaLabel', lang)}
           />
         </div>
 
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
-          <FilterPanel
-            // 動的に更新されるカテゴリ/作者を使用
-            attributes={currentCategories || categories || attributes}
-            creators={currentAuthors || authors || creators}
-            selectedAttribute={selectedAttribute}
-            selectedCreator={selectedCreator}
-            onAttributeChange={setSelectedAttribute}
-            onCreatorChange={setSelectedCreator}
-            onSortToggle={handleSortToggle}
-            onRandomClick={handleRandomClick}
-            onFavoritesClick={handleFavoritesClick}
-            favoritesOnly={favoritesOnly}
-            sortAscending={sortAscending}
-            randomMode={randomMode}
-            lang={lang}
-          />
+          <div className="lg:hidden space-y-2">
+            <button
+              type="button"
+              onClick={() => setIsFilterPanelOpen((current) => !current)}
+              aria-expanded={isFilterPanelOpen}
+              aria-controls="zukan-filter-panel"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-sm transition-colors hover:bg-gray-50"
+            >
+              {isFilterPanelOpen ? t('filter.panelHide', lang) : t('filter.panelShow', lang)}
+            </button>
+            {!isFilterPanelOpen ? (
+              <p className="text-xs text-[var(--text-secondary)]">
+                {t('filter.panelSummary', lang).replace('{count}', String(activeFilterCount))}
+              </p>
+            ) : null}
+          </div>
+
+          {shouldRenderFilterPanel ? (
+            <div id="zukan-filter-panel">
+              <FilterPanel
+                // 動的に更新されるカテゴリ/作者を使用
+                attributes={currentCategories || categories || attributes}
+                creators={currentAuthors || authors || creators}
+                selectedAttributes={selectedAttributes}
+                categoryMatchMode={categoryMatchMode}
+                selectedCreator={selectedCreator}
+                onAttributesChange={setSelectedAttributes}
+                onCategoryMatchModeChange={setCategoryMatchMode}
+                onCreatorChange={setSelectedCreator}
+                onSortToggle={handleSortToggle}
+                onRandomClick={handleRandomClick}
+                onFavoritesClick={handleFavoritesClick}
+                favoritesOnly={favoritesOnly}
+                sortAscending={sortAscending}
+                randomMode={randomMode}
+                lang={lang}
+              />
+            </div>
+          ) : null}
 
           {/* ビュー切替 */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">

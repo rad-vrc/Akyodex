@@ -162,6 +162,16 @@ export const UI_TEXTS = {
     en: 'Search by name, nickname, author...',
     ko: '이름・별명・작자로 검색...',
   },
+  'search.ariaLabel': {
+    ja: 'Akyo検索',
+    en: 'Search Akyo',
+    ko: 'Akyo 검색',
+  },
+  'search.clearAriaLabel': {
+    ja: '検索をクリア',
+    en: 'Clear search',
+    ko: '검색 지우기',
+  },
   'view.grid': {
     ja: 'グリッド表示',
     en: 'Grid view',
@@ -193,6 +203,41 @@ export const UI_TEXTS = {
     ja: 'すべてのカテゴリ',
     en: 'All Categories',
     ko: '모든 카테고리',
+  },
+  'filter.categorySearch': {
+    ja: 'カテゴリを検索...',
+    en: 'Search categories...',
+    ko: '카테고리 검색...',
+  },
+  'filter.noneSelected': {
+    ja: 'カテゴリ未選択（全カテゴリ対象）',
+    en: 'No category selected (all categories)',
+    ko: '선택된 카테고리 없음 (전체)',
+  },
+  'filter.noCategoryMatch': {
+    ja: '一致するカテゴリがありません',
+    en: 'No matching categories',
+    ko: '일치하는 카테고리가 없습니다',
+  },
+  'filter.removeCategory': {
+    ja: 'を選択解除',
+    en: 'remove',
+    ko: '선택 해제',
+  },
+  'filter.matchOr': {
+    ja: 'OR',
+    en: 'OR',
+    ko: 'OR',
+  },
+  'filter.matchAnd': {
+    ja: 'AND',
+    en: 'AND',
+    ko: 'AND',
+  },
+  'filter.clearCategories': {
+    ja: 'カテゴリ解除',
+    en: 'Clear',
+    ko: '카테고리 해제',
   },
   'filter.author': {
     ja: '作者で絞り込み',
@@ -238,6 +283,21 @@ export const UI_TEXTS = {
     ja: 'お気に入りのみ',
     en: 'Favorites Only',
     ko: '즐겨찾기만',
+  },
+  'filter.panelShow': {
+    ja: 'フィルタを開く',
+    en: 'Open filters',
+    ko: '필터 열기',
+  },
+  'filter.panelHide': {
+    ja: 'フィルタを閉じる',
+    en: 'Close filters',
+    ko: '필터 닫기',
+  },
+  'filter.panelSummary': {
+    ja: '有効な絞り込み: {count}件',
+    en: 'Active filters: {count}',
+    ko: '활성 필터: {count}개',
   },
 
   // === Card ===

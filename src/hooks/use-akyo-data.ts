@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 /** localStorage のキー名 */
 const FAVORITES_STORAGE_KEY = 'akyoFavorites';
+const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 /**
  * Akyoデータを管理するカスタムフック (SSR対応版)
@@ -54,24 +55,38 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const query = (options.searchQuery || '').toLowerCase();
     const targetCategory = options.category || options.attribute;
     const targetAuthor = options.author || options.creator;
+    const selectedCategories = (
+      options.categories && options.categories.length > 0
+        ? options.categories
+        : targetCategory && targetCategory !== 'all'
+          ? [targetCategory]
+          : []
+    )
+      .map((category) => category.trim())
+      .filter(Boolean);
+    const categoryMatchMode = options.categoryMatchMode === 'and' ? 'and' : 'or';
 
     let filtered = [...data];
 
-    // Filter by attribute/category
-    if (targetCategory && targetCategory !== 'all') {
+    // Filter by categories (supports both single and multi-select)
+    if (selectedCategories.length > 0) {
       filtered = filtered.filter((akyo) => {
-        const catsStr = akyo.category || akyo.attribute || '';
-        const cats = catsStr.split(/[、,]/).map((a) => a.trim());
-        return cats.includes(targetCategory);
+        const parsedCategories =
+          akyo.parsedCategory ?? parseMultiValueField(akyo.category || akyo.attribute || '');
+
+        if (categoryMatchMode === 'and') {
+          return selectedCategories.every((category) => parsedCategories.includes(category));
+        }
+        return selectedCategories.some((category) => parsedCategories.includes(category));
       });
     }
 
     // Filter by creator/author
     if (targetAuthor && targetAuthor !== 'all') {
       filtered = filtered.filter((akyo) => {
-        const authorsStr = akyo.author || akyo.creator || '';
-        const authors = authorsStr.split(/[、,]/).map((c) => c.trim());
-        return authors.includes(targetAuthor);
+        const parsedAuthors =
+          akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || '');
+        return parsedAuthors.includes(targetAuthor);
       });
     }
 
@@ -201,9 +216,19 @@ function saveFavorites(ids: string[]): void {
  * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
  */
 function applyFavorites(items: AkyoData[]): AkyoData[] {
+  if (items.length === 0) return items;
   const favoritesSet = new Set(getFavorites());
   return items.map(akyo => ({
     ...akyo,
+    parsedCategory: akyo.parsedCategory ?? parseMultiValueField(akyo.category || akyo.attribute || ''),
+    parsedAuthor: akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || ''),
     isFavorite: favoritesSet.has(akyo.id),
   }));
+}
+
+function parseMultiValueField(value: string): string[] {
+  return value
+    .split(MULTI_VALUE_SPLIT_PATTERN)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
 }

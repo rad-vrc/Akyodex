@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 interface SearchBarProps {
   onSearch: (query: string) => void;
   placeholder?: string;
+  ariaLabel?: string;
+  clearAriaLabel?: string;
   /** デバウンス遅延（ミリ秒）。デフォルト 200ms */
   debounceMs?: number;
   /** 外部から制御する検索クエリ値（親がリセットした場合に同期される） */
@@ -17,7 +19,14 @@ interface SearchBarProps {
  * 500体以上のデータセットに対してキーストローク毎にフィルタが走るのを防ぐため、
  * デバウンスを使用して入力が落ち着いてから onSearch を発火する。
  */
-export function SearchBar({ onSearch, placeholder = '名前・作者・属性で検索...', debounceMs = 200, value }: SearchBarProps) {
+export function SearchBar({
+  onSearch,
+  placeholder = '名前・作者・属性で検索...',
+  ariaLabel = '検索',
+  clearAriaLabel = '検索をクリア',
+  debounceMs = 200,
+  value,
+}: SearchBarProps) {
   const [query, setQuery] = useState(value ?? '');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -82,7 +91,7 @@ export function SearchBar({ onSearch, placeholder = '名前・作者・属性で
         onChange={handleChange}
         placeholder={placeholder}
         className="search-input w-full"
-        aria-label="Akyo検索"
+        aria-label={ariaLabel}
         autoComplete="off"
         spellCheck="false"
       />
@@ -93,7 +102,7 @@ export function SearchBar({ onSearch, placeholder = '名前・作者・属性で
           type="button"
           onClick={handleClear}
           className="absolute right-5 top-1/2 -translate-y-1/2 text-2xl hover:scale-110 transition-transform"
-          aria-label="検索をクリア"
+          aria-label={clearAriaLabel}
         >
           ❌
         </button>
