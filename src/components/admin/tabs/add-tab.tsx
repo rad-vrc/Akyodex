@@ -35,6 +35,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     comment: '',
   });
   const formRef = useRef<HTMLFormElement | null>(null);
+  const nextIdRef = useRef(nextId);
 
   const fetchNextId = useCallback(async (): Promise<string | null> => {
     try {
@@ -58,6 +59,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   useEffect(() => {
     void fetchNextId();
   }, [fetchNextId]);
+
+  useEffect(() => {
+    nextIdRef.current = nextId;
+  }, [nextId]);
 
   const [showAttributeModal, setShowAttributeModal] = useState(false);
 
@@ -118,12 +123,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       }
     }
 
-    // Refresh next ID at submission time
-    let submitId = nextId;
-    const refreshedId = await fetchNextId();
-    if (refreshedId) {
-      submitId = refreshedId;
-    }
+    // Refresh next ID in background while running expensive avatar/image steps.
+    // This avoids stale IDs without adding extra blocking at submit time.
+    const nextIdRefreshPromise = fetchNextId();
 
     const avtrId = match[0];
 
@@ -244,35 +246,67 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     }
 
     try {
-      // Prepare form data for submission (using fetched values)
-      const submitData = new FormData();
-      submitData.append('id', submitId);
-      submitData.append('nickname', formData.nickname);
-      submitData.append('avatarName', avatarName);
-      submitData.append('avatarUrl', formData.avatarUrl);
+      let submitId = nextIdRef.current;
+      const refreshedId = await nextIdRefreshPromise;
+      if (refreshedId) {
+        submitId = refreshedId;
+      }
 
-      // 新フィールド (VRChatから取得した作者名を使用)
-      submitData.append('author', creatorName);
-      submitData.append('category', formData.categories.join(','));
-      submitData.append('comment', formData.comment);
+      const buildSubmitData = (id: string) => {
+        const submitData = new FormData();
+        submitData.append('id', id);
+        submitData.append('nickname', formData.nickname);
+        submitData.append('avatarName', avatarName);
+        submitData.append('avatarUrl', formData.avatarUrl);
 
-      // 旧フィールド (互換性のため)
-      submitData.append('creator', creatorName);
-      submitData.append('attributes', formData.categories.join(','));
-      submitData.append('notes', formData.comment);
+        // 新フィールド (VRChatから取得した作者名を使用)
+        submitData.append('author', creatorName);
+        submitData.append('category', formData.categories.join(','));
+        submitData.append('comment', formData.comment);
 
-      // Always include image data (fetched from VRChat)
-      submitData.append('imageData', croppedImageData!);
+        // 旧フィールド (互換性のため)
+        submitData.append('creator', creatorName);
+        submitData.append('attributes', formData.categories.join(','));
+        submitData.append('notes', formData.comment);
 
-      // Submit to API
-      const response = await fetch('/api/upload-akyo', {
-        method: 'POST',
-        body: submitData,
-      });
+        // Always include image data (fetched from VRChat)
+        submitData.append('imageData', croppedImageData!);
+        return submitData;
+      };
 
-      const result = await response.json();
+      const uploadWithId = async (id: string) => {
+        const response = await fetch('/api/upload-akyo', {
+          method: 'POST',
+          body: buildSubmitData(id),
+        });
+        const result = await response.json();
+        return { response, result };
+      };
+
+      let { response, result } = await uploadWithId(submitId);
+      let latestKnownId: string | null = null;
+
+      // If ID collision happens, refetch latest ID and retry once with the same form payload.
+      if ((!response.ok || !result.success) && response.status === 409) {
+        const latestId = await fetchNextId();
+        if (latestId) {
+          latestKnownId = latestId;
+        }
+
+        if (latestId && latestId !== submitId) {
+          submitId = latestId;
+          ({ response, result } = await uploadWithId(submitId));
+        }
+      }
 
       if (!response.ok || !result.success) {
+        if (response.status === 409) {
+          const latestId = latestKnownId ?? (await fetchNextId());
+          const latestHint = latestId
+            ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
+            : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。';
+          throw new Error((result.error || 'IDが重複しています') + latestHint);
+        }
         throw new Error(result.error || 'サーバーエラーが発生しました');
       }
 
