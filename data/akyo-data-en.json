@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-14T11:10:50.442Z",
-  "count": 705,
+  "updatedAt": "2026-02-14T11:24:11.615Z",
+  "count": 739,
   "data": [
     {
       "id": "0001",
@@ -6308,7 +6308,7 @@
       "id": "0701",
       "nickname": "Diamond Akyo",
       "avatarName": "DaiAkyo",
-      "category": "Material・Texture/Stone,Hard",
+      "category": "Material・Texture,Material・Texture/Stone,Hard",
       "comment": "",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_449a39f1-4a2d-4265-b492-531b71f95239"
@@ -6348,6 +6348,312 @@
       "comment": "It seems to have undergone unique evolution for outer-space exploration.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23434774-76bd-4f22-8bf0-2fdc3cce6a26"
+    },
+    {
+      "id": "0706",
+      "nickname": "Crystal Akyo",
+      "avatarName": "Crystal Akyo",
+      "category": "Rare,Material・Texture,Material・Texture/Glass,Hard",
+      "comment": "Is it a rare Akyo, or...?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cea0caed-4173-4cec-85a0-78ae527ec591"
+    },
+    {
+      "id": "0707",
+      "nickname": "Red Team Akyo",
+      "avatarName": "Team Red Akyo",
+      "category": "Group・Organization,Color",
+      "comment": "It's on the red team.",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_17561028-319e-4df1-bee5-e08e36c47144"
+    },
+    {
+      "id": "0708",
+      "nickname": "Blue Team Akyo",
+      "avatarName": "Team Blue Akyo",
+      "category": "Group・Organization,Color",
+      "comment": "It's on the blue team. Very blue.",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cfffa6b2-5381-485f-a1aa-2a348a076356"
+    },
+    {
+      "id": "0709",
+      "nickname": "Astral Akyo",
+      "avatarName": "Astral Akyo",
+      "category": "Fictional Being,Dimension",
+      "comment": "Akyo?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2b235fbb-cf51-493c-9314-80916ee9490a"
+    },
+    {
+      "id": "0710",
+      "nickname": "Holographic Akyo",
+      "avatarName": "Holographic Akyo",
+      "category": "Rare,Energy",
+      "comment": "The rarest of the rare!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_eba90b41-ec3f-4c5f-8277-91b55ab1f133"
+    },
+    {
+      "id": "0711",
+      "nickname": "Queen Akyo",
+      "avatarName": "Queen Akyo",
+      "category": "Pretty,Material・Texture,Material・Texture/Slippery,Occupation/Status,Occupation/Status/Royalty",
+      "comment": "Apparently it's slippery!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2cbee432-9e8e-4ba7-a669-076e3c9cb85b"
+    },
+    {
+      "id": "0712",
+      "nickname": "Kitsunetsuki's Snow Fox Akyo",
+      "avatarName": "Snow Fox Akyo",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Winter,Environment・Weather,Environment・Weather/Snow,Material・Texture,Cold",
+      "comment": "It is said to have been discovered on an icy planet.",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
+    },
+    {
+      "id": "0713",
+      "nickname": "Kitsunetsuki's Golden Fox Akyo",
+      "avatarName": "Golden Fox Akyo",
+      "category": "Rare,Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Metal",
+      "comment": "It's made of pure gold!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_56563c93-0b17-4db9-8fda-e804152f79e7"
+    },
+    {
+      "id": "0714",
+      "nickname": "Kitsunetsuki's Red Gummy Fox Akyo",
+      "avatarName": "Red Gummy Fox Akyo",
+      "category": "Animal,Animal/Fox,Food,Food/Sweets",
+      "comment": "Delicious!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_18ca2ce5-b63a-414e-afc2-c0bd59e9185a"
+    },
+    {
+      "id": "0715",
+      "nickname": "Kitsunetsuki's Blue Gummy Fox Akyo",
+      "avatarName": "Blue Gummy Fox Akyo",
+      "category": "Animal,Animal/Fox,Food,Food/Sweets",
+      "comment": "This one is delicious too!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_f271c3bb-83ad-433a-b177-c3d5b205e75c"
+    },
+    {
+      "id": "0716",
+      "nickname": "Kitsunetsuki's Punk Fox Akyo",
+      "avatarName": "Punk Akyo",
+      "category": "Gimmick・Special,Gimmick・Special/AudioLink,Animal,Animal/Fox,Music・Instrument",
+      "comment": "So punk!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_3325b7fe-83c2-47f4-8a6a-e4967ded93c4"
+    },
+    {
+      "id": "0717",
+      "nickname": "Kitsunetsuki's Red Gem Fox Akyo",
+      "avatarName": "Red Gem Fox Akyo",
+      "category": "Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Stone,Glutton",
+      "comment": "Apparently it ate too many gems!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
+    },
+    {
+      "id": "0718",
+      "nickname": "Kitsunetsuki's Purple Gem Fox Akyo",
+      "avatarName": "Purple Gem Fox Akyo",
+      "category": "Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Stone,Glutton",
+      "comment": "This one also ate too many gems!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
+    },
+    {
+      "id": "0719",
+      "nickname": "Kitsunetsuki's White Gem Fox Akyo",
+      "avatarName": "White Gem Fox Akyo",
+      "category": "Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Stone,Glutton",
+      "comment": "I wonder if Kitsunetsuki's Fox Akyo's favorite food is gems?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
+    },
+    {
+      "id": "0720",
+      "nickname": "Kitsunetsuki's Aluminum Fox Akyo",
+      "avatarName": "Aluminium Fox Akyo",
+      "category": "Animal,Animal/Fox,Material・Texture,Material・Texture/Metal",
+      "comment": "Maybe this Akyo was born within the last 200 years?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d861904-5b3e-4a6b-a074-3f5d3ef04b9e"
+    },
+    {
+      "id": "0721",
+      "nickname": "Kitsunetsuki's Ethereal Fox Akyo",
+      "avatarName": "Ethereal Fox Akyo",
+      "category": "Animal,Animal/Fox,Energy,Fictional Being,Dimension",
+      "comment": "I can feel an incredible power...",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c60217fe-cd50-42da-8080-f40e68fcf3c9"
+    },
+    {
+      "id": "0722",
+      "nickname": "Electric Heater Akyo",
+      "avatarName": "akyo_電気ヒーター",
+      "category": "Appliances・Furniture,Energy,Energy/Electricity,Energy/Heat,Body Part,Body Part/Tail,Season・Event,Season・Event/Winter",
+      "comment": "(Sasanoki's notes)\r\nAn Akyo that keeps you warm. It seems fine even without being plugged in. It dislikes water because it rusts.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
+    },
+    {
+      "id": "0723",
+      "nickname": "Yaki Mochi Akyo",
+      "avatarName": "akyo_やきもち",
+      "category": "Material・Texture,Soft,Material・Texture/Square,Food,Food/Dish",
+      "comment": "(Sasanoki's notes)\r\nA properly grilled square mochi wrapped in nori. Its savory aroma stimulates the appetite.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0396e41a-c59a-48db-8ac2-ca28c271ef8b"
+    },
+    {
+      "id": "0724",
+      "nickname": "Permafrost Akyo",
+      "avatarName": "akyo_永久凍土",
+      "category": "Captive,Animal,Material・Texture,Cold,Material・Texture/Square,Hard,Material・Texture/Ice",
+      "comment": "(Sasanoki's notes)\r\nAn ice Akyo discovered during permafrost research. It feels like something is buried inside.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_fef7a5db-3006-4a14-8600-29c3cc9402bb"
+    },
+    {
+      "id": "0725",
+      "nickname": "Otter Akyo",
+      "avatarName": "akyo_カワウソ",
+      "category": "Animal,Body Part,Body Part/Tail,Personality,Personality/Curious,Personality/Friendly",
+      "comment": "(Sasanoki's notes)\r\nFriendly and very curious.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
+    },
+    {
+      "id": "0726",
+      "nickname": "Impostor Akyo",
+      "avatarName": "Imposter Akyo",
+      "category": "Mint Chocolate,Gimmick・Special",
+      "comment": "From a distance, it looks like Akyo!",
+      "author": "NEET ENGINEER",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_a8fade8e-ea03-4d99-b0ff-f996535956e8"
+    },
+    {
+      "id": "0727",
+      "nickname": "Mohawk Akyo",
+      "avatarName": "akyo_モヒカン",
+      "category": "Clothing/Accessory,Clothing/Accessory/Glasses,Hair Style,Hair Style/Mohawk",
+      "comment": "(Sasanoki's notes)\r\nAn Akyo living in the end times.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0638079f-4016-47d4-8c3c-5e83c134d978"
+    },
+    {
+      "id": "0728",
+      "nickname": "Butter Akyo",
+      "avatarName": "バターあきょう",
+      "category": "Parody,Parody/VRChat,Food,Seasoning",
+      "comment": "I feel like I have seen this butter in VRChat!",
+      "author": "のり",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_af4be879-17fc-4391-88cd-e6938e205ba5"
+    },
+    {
+      "id": "0729",
+      "nickname": "Peanuts-kun Akyo",
+      "avatarName": "Akyo_Peanuts",
+      "category": "Parody,Parody/VTuber,Food,Food/Vegetable",
+      "comment": "I've seen it in an Akyo commercial!",
+      "author": "bbbbb_himiko",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_b581ac9f-30f1-4906-b8f2-5c3af0a5d39e"
+    },
+    {
+      "id": "0730",
+      "nickname": "Ponpoko Akyo",
+      "avatarName": "Akyo_Ponpoko",
+      "category": "Parody,Parody/VTuber,Animal,Animal/Tanuki,Body Part,Body Part/Tail",
+      "comment": "This Akyo was in an Akyo commercial too!",
+      "author": "bbbbb_himiko",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2f438df6-4e1e-444b-8ab8-a7d03b64dd06"
+    },
+    {
+      "id": "0731",
+      "nickname": "Forest Nijimasu-man with Moss Akyo",
+      "avatarName": "森のニジマスマンWith苔Akyo",
+      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Gimmick・Special,Animal/Marine Life,Real Photo,Plant,Moss,Material・Texture,Material・Texture/Plant,Art",
+      "comment": "Look closely, there's a Moss Akyo on its shoulder! It can move on its own too!",
+      "author": "nekononomicon",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8324c16d-05c0-4793-9f77-f1edf0340eb0"
+    },
+    {
+      "id": "0732",
+      "nickname": "Warrior of Bonds: Axolotlman & Horse Akyo",
+      "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
+      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Animal/Amphibian,Animal/Horse,Traveler,Hero,Vehicle,Vehicle/Land,Body Part,Body Part/Tail,Quadruped,Dimension",
+      "comment": "Even after losing its memory, the flame of its soul still burns fiercely!\r\nCarrying on Mambo Man's will, the Warrior of Bonds, Axolotlman and Horse Akyo, is born here and now, entrusted with the fate of the entire universe!",
+      "author": "らど⁄rad1031",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
+    },
+    {
+      "id": "0733",
+      "nickname": "Akyoman / Akyo Head",
+      "avatarName": "Akyohead",
+      "category": "Mint Chocolate,Roleplay,Athletic,Animal,Unknown",
+      "comment": "Its head is Akyo!?\r\nIs it... human?",
+      "author": "暗手_Ante",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
+    },
+    {
+      "id": "0734",
+      "nickname": "Reptile Akyo",
+      "avatarName": "レプタイルAkyo",
+      "category": "Animal,Animal/Reptile,Material・Texture,Material・Texture/Scales",
+      "comment": "It's the English word for reptiles!",
+      "author": "huyumusi",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c1695c0-4566-40fa-828b-f29eff60d4d3"
+    },
+    {
+      "id": "0735",
+      "nickname": "Tanuki Bean Akyo / Bean Tanuki Akyo",
+      "avatarName": "まめだぬきAkyo",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Animal,Animal/Tanuki,Body Part,Body Part/Tail,Material・Texture,Soft",
+      "comment": "It's Bean Akyo paradise~~~!!!",
+      "author": "Nagisa_Imawari",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_79ec6fbd-ad28-4f80-9887-91b4fc2bd646"
+    },
+    {
+      "id": "0736",
+      "nickname": "Bread Bean Akyo",
+      "avatarName": "ぱんあきょ",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Food,Bread,Material・Texture,Soft",
+      "comment": "Bean Akyo paradise keeps growing!",
+      "author": "もぐやねん",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_41a51483-9cd9-478a-abb2-b7396c54be23"
+    },
+    {
+      "id": "0737",
+      "nickname": "Mochi Bean Akyo / Bean Mochi Akyo",
+      "avatarName": "まめもちあきょ",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Season・Event,Season・Event/New Year,Material・Texture,Soft,Food,Food/Dish,Food/Fruit",
+      "comment": "The Bean Akyo momentum won't stop!\r\nTurning all Akyo into Bean Akyo might not be just a dream!",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
+    },
+    {
+      "id": "0738",
+      "nickname": "Fushi Akyo",
+      "avatarName": "ふしあきょ",
+      "category": "Parody,Parody/Super Princess Kaguya!,Animal,Animal/Sea Slug,Material・Texture,Soft",
+      "comment": "Follow me! ( ｀ー´)ノ\r\n(from the creator comment)",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
+    },
+    {
+      "id": "0739",
+      "nickname": "Akyo (Third Generation)",
+      "avatarName": "akyomo",
+      "category": "Parody,Parody/Pokemon,Energy,Energy/Heat,Energy/Water,Energy/Plant,Body Part,Fictional Being,Monster,Body Part/Tail,Dimension",
+      "comment": "Gotta catch Akyo!",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bebc35-c78b-4755-8e75-0cd26881b3ae"
     }
   ]
 }

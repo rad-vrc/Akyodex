@@ -858,6 +858,46 @@ const NICKNAME_MAP = {
   チーズAkyo: '치즈 Akyo',
   RGBダンスAkyo: 'RGB 댄스 Akyo',
   コズミックAkyo: '코즈믹 Akyo',
+  クリスタルAkyo: '크리스탈 Akyo',
+  赤チームのAkyo: '빨간 팀 Akyo',
+  青チームのAkyo: '파란 팀 Akyo',
+  アストラルAkyo: '아스트랄 Akyo',
+  ホログラフィックAkyo: '홀로그래픽 Akyo',
+
+  // === 0711–0720 ===
+  クイーンAkyo: '퀸 Akyo',
+  キツネツキ式雪狐Akyo: '키츠네츠키식 설여우 Akyo',
+  ゴールデンキツネツキ式狐Akyo: '골든 키츠네츠키식 여우 Akyo',
+  赤キツネツキ式グミ狐Akyo: '빨간 키츠네츠키식 젤리 여우 Akyo',
+  青キツネツキ式グミ狐Akyo: '파란 키츠네츠키식 젤리 여우 Akyo',
+  キツネツキ式パンク狐Akyo: '키츠네츠키식 펑크 여우 Akyo',
+  赤キツネツキ式ジェム狐Akyo: '빨간 키츠네츠키식 젬 여우 Akyo',
+  紫キツネツキ式ジェム狐Akyo: '보라 키츠네츠키식 젬 여우 Akyo',
+  白キツネツキ式ジェム狐Akyo: '하얀 키츠네츠키식 젬 여우 Akyo',
+  キツネツキ式アルミニウム狐Akyo: '키츠네츠키식 알루미늄 여우 Akyo',
+
+  // === 0721–0730 ===
+  キツネツキ式エーテリアル狐Akyo: '키츠네츠키식 에테리얼 여우 Akyo',
+  電気ヒーターAkyo: '전기히터 Akyo',
+  やきもちAkyo: '야키모치 Akyo',
+  永久凍土Akyo: '영구동토 Akyo',
+  カワウソAkyo: '수달 Akyo',
+  インポスターAkyo: '임포스터 Akyo',
+  モヒカンAkyo: '모히칸 Akyo',
+  バターAkyo: '버터 Akyo',
+  ピーナッツくんAkyo: '피넛츠군 Akyo',
+  ぽんぽこAkyo: '폰포코 Akyo',
+
+  // === 0731–0740 ===
+  森のニジマスマンWith苔Akyo: '숲의 니지마스맨 With 이끼 Akyo',
+  '絆の戦士・ウーパールーパーマン＆うまAkyo': '유대의 전사・우파루파맨 & 말 Akyo',
+  'Akyoマン/Akyoヘッド': 'Akyo맨/Akyo헤드',
+  レプタイルAkyo: '렙타일 Akyo',
+  'たぬきまめAkyo/まめだぬきAkyo': '너구리콩 Akyo/콩너구리 Akyo',
+  パンまめAkyo: '빵콩 Akyo',
+  'もちまめAkyo/まめもちあきょ': '모찌콩 Akyo/콩모찌 아쿄',
+  ふしAkyo: '후시 Akyo',
+  'Akyo（第三世代）': 'Akyo (3세대)',
 };
 
 module.exports = { NICKNAME_MAP };

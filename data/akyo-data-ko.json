@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-14T11:10:50.470Z",
-  "count": 705,
+  "updatedAt": "2026-02-14T11:24:11.624Z",
+  "count": 739,
   "data": [
     {
       "id": "0001",
@@ -6348,6 +6348,312 @@
       "comment": "외우주 탐사를 위해 독자적인 진화를 이룬 듯하다.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23434774-76bd-4f22-8bf0-2fdc3cce6a26"
+    },
+    {
+      "id": "0706",
+      "nickname": "크리스탈 Akyo",
+      "avatarName": "Crystal Akyo",
+      "category": "레어, 소재・재질, 소재・재질/유리, 소재・재질/단단한",
+      "comment": "희귀한 Akyo일까, 아니면...",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cea0caed-4173-4cec-85a0-78ae527ec591"
+    },
+    {
+      "id": "0707",
+      "nickname": "빨간 팀 Akyo",
+      "avatarName": "Team Red Akyo",
+      "category": "집단・조직, 색상",
+      "comment": "빨간 팀에 있다.",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_17561028-319e-4df1-bee5-e08e36c47144"
+    },
+    {
+      "id": "0708",
+      "nickname": "파란 팀 Akyo",
+      "avatarName": "Team Blue Akyo",
+      "category": "집단・조직, 색상",
+      "comment": "파란 팀에 있다. 아주 파랗다.",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cfffa6b2-5381-485f-a1aa-2a348a076356"
+    },
+    {
+      "id": "0709",
+      "nickname": "아스트랄 Akyo",
+      "avatarName": "Astral Akyo",
+      "category": "가상의 존재, 차원",
+      "comment": "Akyo?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2b235fbb-cf51-493c-9314-80916ee9490a"
+    },
+    {
+      "id": "0710",
+      "nickname": "홀로그래픽 Akyo",
+      "avatarName": "Holographic Akyo",
+      "category": "레어, 에너지",
+      "comment": "희귀 중의 희귀!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_eba90b41-ec3f-4c5f-8277-91b55ab1f133"
+    },
+    {
+      "id": "0711",
+      "nickname": "퀸 Akyo",
+      "avatarName": "Queen Akyo",
+      "category": "프리티, 소재・재질, 소재・재질/미끈미끈, 직업・신분, 직업・신분/왕족",
+      "comment": "미끈미끈하다고 해!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2cbee432-9e8e-4ba7-a669-076e3c9cb85b"
+    },
+    {
+      "id": "0712",
+      "nickname": "키츠네츠키식 설여우 Akyo",
+      "avatarName": "Snow Fox Akyo",
+      "category": "동물, 동물/여우, 계절・행사, 계절・행사/겨울, 환경・날씨, 환경・날씨/눈, 소재・재질, 소재・재질/차가운",
+      "comment": "얼음 행성에서 발견되었다고 한다.",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
+    },
+    {
+      "id": "0713",
+      "nickname": "골든 키츠네츠키식 여우 Akyo",
+      "avatarName": "Golden Fox Akyo",
+      "category": "레어, 동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/금속",
+      "comment": "순금이래~!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_56563c93-0b17-4db9-8fda-e804152f79e7"
+    },
+    {
+      "id": "0714",
+      "nickname": "빨간 키츠네츠키식 젤리 여우 Akyo",
+      "avatarName": "Red Gummy Fox Akyo",
+      "category": "동물, 동물/여우, 음식, 음식/디저트",
+      "comment": "맛있어!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_18ca2ce5-b63a-414e-afc2-c0bd59e9185a"
+    },
+    {
+      "id": "0715",
+      "nickname": "파란 키츠네츠키식 젤리 여우 Akyo",
+      "avatarName": "Blue Gummy Fox Akyo",
+      "category": "동물, 동물/여우, 음식, 음식/디저트",
+      "comment": "이것도 맛있어!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_f271c3bb-83ad-433a-b177-c3d5b205e75c"
+    },
+    {
+      "id": "0716",
+      "nickname": "키츠네츠키식 펑크 여우 Akyo",
+      "avatarName": "Punk Akyo",
+      "category": "기믹・특수, 기믹・특수/AudioLink, 동물, 동물/여우, 음악・악기",
+      "comment": "펑크하다!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_3325b7fe-83c2-47f4-8a6a-e4967ded93c4"
+    },
+    {
+      "id": "0717",
+      "nickname": "빨간 키츠네츠키식 젬 여우 Akyo",
+      "avatarName": "Red Gem Fox Akyo",
+      "category": "동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/돌, 먹보",
+      "comment": "보석을 너무 많이 먹었다고 해!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
+    },
+    {
+      "id": "0718",
+      "nickname": "보라 키츠네츠키식 젬 여우 Akyo",
+      "avatarName": "Purple Gem Fox Akyo",
+      "category": "동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/돌, 먹보",
+      "comment": "이것도 보석을 너무 많이 먹었대!",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
+    },
+    {
+      "id": "0719",
+      "nickname": "하얀 키츠네츠키식 젬 여우 Akyo",
+      "avatarName": "White Gem Fox Akyo",
+      "category": "동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/돌, 먹보",
+      "comment": "키츠네츠키식 여우 Akyo의 좋아하는 음식은 보석일까?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
+    },
+    {
+      "id": "0720",
+      "nickname": "키츠네츠키식 알루미늄 여우 Akyo",
+      "avatarName": "Aluminium Fox Akyo",
+      "category": "동물, 동물/여우, 소재・재질, 소재・재질/금속",
+      "comment": "지난 200년 사이에 태어난 Akyo일까?",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d861904-5b3e-4a6b-a074-3f5d3ef04b9e"
+    },
+    {
+      "id": "0721",
+      "nickname": "키츠네츠키식 에테리얼 여우 Akyo",
+      "avatarName": "Ethereal Fox Akyo",
+      "category": "동물, 동물/여우, 에너지, 가상의 존재, 차원",
+      "comment": "엄청난 힘이 느껴진다...",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c60217fe-cd50-42da-8080-f40e68fcf3c9"
+    },
+    {
+      "id": "0722",
+      "nickname": "전기히터 Akyo",
+      "avatarName": "akyo_電気ヒーター",
+      "category": "가전・가구, 에너지, 에너지/전기, 에너지/열, 기관, 기관/꼬리, 계절・행사, 계절・행사/겨울",
+      "comment": "(사사노키의 수기)\r\n따뜻하게 해주는 Akyo. 플러그를 꽂지 않아도 괜찮은 듯하다. 녹이 슬어서 물을 싫어한다.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
+    },
+    {
+      "id": "0723",
+      "nickname": "야키모치 Akyo",
+      "avatarName": "akyo_やきもち",
+      "category": "소재・재질, 소재・재질/부드러운, 소재・재질/네모, 음식, 음식/요리",
+      "comment": "(사사노키의 수기)\r\n노릇하게 구운 네모난 떡에 김을 말았다. 고소한 향이 식욕을 자극한다.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0396e41a-c59a-48db-8ac2-ca28c271ef8b"
+    },
+    {
+      "id": "0724",
+      "nickname": "영구동토 Akyo",
+      "avatarName": "akyo_永久凍土",
+      "category": "갇힌 몸, 동물, 소재・재질, 소재・재질/차가운, 소재・재질/네모, 소재・재질/단단한, 소재・재질/얼음",
+      "comment": "(사사노키의 수기)\r\n영구동토 연구 중 발견된 얼음 Akyo. 안에 뭔가 묻혀 있는 것 같다.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_fef7a5db-3006-4a14-8600-29c3cc9402bb"
+    },
+    {
+      "id": "0725",
+      "nickname": "수달 Akyo",
+      "avatarName": "akyo_カワウソ",
+      "category": "동물, 기관, 기관/꼬리, 성격, 성격/호기심 왕성, 성격/사람을 잘 따름",
+      "comment": "(사사노키의 수기)\r\n사람을 잘 따르고 호기심이 왕성하다.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
+    },
+    {
+      "id": "0726",
+      "nickname": "임포스터 Akyo",
+      "avatarName": "Imposter Akyo",
+      "category": "초코민트류, 기믹・특수",
+      "comment": "멀리서 보면 Akyo!",
+      "author": "NEET ENGINEER",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_a8fade8e-ea03-4d99-b0ff-f996535956e8"
+    },
+    {
+      "id": "0727",
+      "nickname": "모히칸 Akyo",
+      "avatarName": "akyo_モヒカン",
+      "category": "의류・액세서리, 의류・액세서리/안경, 헤어스타일, 헤어스타일/모히칸",
+      "comment": "(사사노키의 수기)\r\n세기말을 살아가는 Akyo.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0638079f-4016-47d4-8c3c-5e83c134d978"
+    },
+    {
+      "id": "0728",
+      "nickname": "버터 Akyo",
+      "avatarName": "バターあきょう",
+      "category": "패러디, 패러디/VRChat, 음식, 조미료",
+      "comment": "이 버터, VRChat에서 본 것 같아!",
+      "author": "のり",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_af4be879-17fc-4391-88cd-e6938e205ba5"
+    },
+    {
+      "id": "0729",
+      "nickname": "피넛츠군 Akyo",
+      "avatarName": "Akyo_Peanuts",
+      "category": "패러디, 패러디/VTuber, 음식, 음식/채소",
+      "comment": "Akyo 광고에서 본 적 있어!",
+      "author": "bbbbb_himiko",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_b581ac9f-30f1-4906-b8f2-5c3af0a5d39e"
+    },
+    {
+      "id": "0730",
+      "nickname": "폰포코 Akyo",
+      "avatarName": "Akyo_Ponpoko",
+      "category": "패러디, 패러디/VTuber, 동물, 동물/너구리, 기관, 기관/꼬리",
+      "comment": "이 Akyo도 Akyo 광고에 있었어!",
+      "author": "bbbbb_himiko",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_2f438df6-4e1e-444b-8ab8-a7d03b64dd06"
+    },
+    {
+      "id": "0731",
+      "nickname": "숲의 니지마스맨 With 이끼 Akyo",
+      "avatarName": "森のニジマスマンWith苔Akyo",
+      "category": "동물, 동물/피시헤드, 집단・조직, 집단・조직/어두족, 기믹・특수, 동물/해양생물, 실사, 식물, 식물/이끼, 소재・재질, 소재・재질/식물, 예술・아트",
+      "comment": "잘 봐, 어깨 위에 이끼 Akyo가 있어! 자율적으로 움직이기도 한대!",
+      "author": "nekononomicon",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8324c16d-05c0-4793-9f77-f1edf0340eb0"
+    },
+    {
+      "id": "0732",
+      "nickname": "유대의 전사・우파루파맨 & 말 Akyo",
+      "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
+      "category": "동물, 동물/피시헤드, 집단・조직, 집단・조직/어두족, 동물/양서류, 동물/말, 트래블러, 히어로, 탈것, 탈것/육상, 기관, 기관/꼬리, 네발걸음, 차원",
+      "comment": "기억을 잃어도 그 영혼의 불꽃은 뜨겁게 타오른다!\r\n맨보맨의 유지를 이어 지금 이곳에 탄생한 유대의 전사・우파루파맨과 말 Akyo에게 온 우주의 명운이 맡겨졌다!",
+      "author": "らど⁄rad1031",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
+    },
+    {
+      "id": "0733",
+      "nickname": "Akyo맨/Akyo헤드",
+      "avatarName": "Akyohead",
+      "category": "초코민트류, 코스프레, 체육회계, 동물, 정체불명",
+      "comment": "머리가 Akyo！？\r\n사람...이야?",
+      "author": "暗手_Ante",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
+    },
+    {
+      "id": "0734",
+      "nickname": "렙타일 Akyo",
+      "avatarName": "レプタイルAkyo",
+      "category": "동물, 동물/파충류, 소재・재질, 소재・재질/비늘",
+      "comment": "파충류를 뜻하는 영어야!",
+      "author": "huyumusi",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c1695c0-4566-40fa-828b-f29eff60d4d3"
+    },
+    {
+      "id": "0735",
+      "nickname": "너구리콩 Akyo/콩너구리 Akyo",
+      "avatarName": "まめだぬきAkyo",
+      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 동물, 동물/너구리, 기관, 기관/꼬리, 소재・재질, 소재・재질/부드러운",
+      "comment": "마메 Akyo 파라다이스다~~~!!!",
+      "author": "Nagisa_Imawari",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_79ec6fbd-ad28-4f80-9887-91b4fc2bd646"
+    },
+    {
+      "id": "0736",
+      "nickname": "빵콩 Akyo",
+      "avatarName": "ぱんあきょ",
+      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 음식, 음식/빵, 소재・재질, 소재・재질/부드러운",
+      "comment": "아직도 늘어나는 마메 Akyo 파라다이스!",
+      "author": "もぐやねん",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_41a51483-9cd9-478a-abb2-b7396c54be23"
+    },
+    {
+      "id": "0737",
+      "nickname": "모찌콩 Akyo/콩모찌 아쿄",
+      "avatarName": "まめもちあきょ",
+      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 계절・행사, 계절・행사/설날, 소재・재질, 소재・재질/부드러운, 음식, 음식/요리, 음식/과일",
+      "comment": "마메 Akyo의 기세가 멈추지 않아!\r\n모든 Akyo를 마메 Akyo로 만드는 계획도 꿈만은 아니네!",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
+    },
+    {
+      "id": "0738",
+      "nickname": "후시 Akyo",
+      "avatarName": "ふしあきょ",
+      "category": "패러디, 패러디/초 카구야 공주!, 동물, 동물/바다민달팽이, 소재・재질, 소재・재질/부드러운",
+      "comment": "따라와!（ ｀ー´）ノ\r\n(제작자 코멘트에서)",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
+    },
+    {
+      "id": "0739",
+      "nickname": "Akyo (3세대)",
+      "avatarName": "akyomo",
+      "category": "패러디, 패러디/포켓몬, 에너지, 에너지/열, 에너지/물, 에너지/식물, 기관, 가상의 존재, 가상의 존재/몬스터, 기관/꼬리, 차원",
+      "comment": "Akyo, 겟이다제!",
+      "author": "kuro5963",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bebc35-c78b-4755-8e75-0cd26881b3ae"
     }
   ]
 }
