@@ -7,6 +7,15 @@ const DEFAULT_R2_BASE_URL = 'https://images.akyodex.com';
 const DEFAULT_GITHUB_OWNER = 'rad-vrc';
 const DEFAULT_GITHUB_REPO = 'Akyodex';
 const DEFAULT_GITHUB_BRANCH = 'main';
+const CSV_FETCH_TIMEOUT_MS = 5000;
+
+function isAbortOrTimeoutError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+  const name = 'name' in error && typeof error.name === 'string' ? error.name : '';
+  return name === 'AbortError' || name === 'TimeoutError';
+}
 
 async function readLocalCsv(filePath: string): Promise<string | null> {
   try {
@@ -22,7 +31,10 @@ async function readLocalCsv(filePath: string): Promise<string | null> {
 async function fetchCsvFromCandidates(urls: string[]): Promise<string | null> {
   for (const url of urls) {
     try {
-      const response = await fetch(url, { cache: 'no-store' });
+      const response = await fetch(url, {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(CSV_FETCH_TIMEOUT_MS),
+      });
       if (!response.ok) {
         console.warn(`[api/csv] Failed candidate: ${url} (${response.status})`);
         continue;
@@ -34,6 +46,10 @@ async function fetchCsvFromCandidates(urls: string[]): Promise<string | null> {
       }
       return text;
     } catch (error) {
+      if (isAbortOrTimeoutError(error)) {
+        console.warn(`[api/csv] Candidate timed out: ${url} (${CSV_FETCH_TIMEOUT_MS}ms)`);
+        continue;
+      }
       console.warn(`[api/csv] Candidate fetch error: ${url}`, error);
     }
   }
@@ -73,6 +89,10 @@ export async function GET(request: Request) {
       const githubRepo = process.env.GITHUB_REPO_NAME || DEFAULT_GITHUB_REPO;
       const githubBranch = process.env.GITHUB_BRANCH || DEFAULT_GITHUB_BRANCH;
 
+      // TODO(csvCandidates): R2 prefix migration in progress.
+      // Preferred path is `/data/${csvFilename}`. Keep `/akyo-data/${csvFilename}`
+      // as a legacy fallback until all environments are unified to the preferred
+      // prefix, then remove the legacy entry safely.
       const csvCandidates = [
         `${r2BaseUrl}/akyo-data/${csvFilename}`,
         `${r2BaseUrl}/data/${csvFilename}`,

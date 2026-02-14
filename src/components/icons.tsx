@@ -244,7 +244,12 @@ export function IconEdit({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Tools / wrench (fa-tools) */
+/**
+ * IconTools currently delegates to IconCog intentionally.
+ * We use the gear (IconCog) because it stays legible in small admin tab buttons,
+ * even though this diverges from a wrench graphic. If a true wrench icon is needed
+ * later, replace this delegation with a dedicated IconTools SVG path.
+ */
 export function IconTools({ size, className, ...props }: IconProps) {
   // Reuse gear icon for better legibility at small sizes in admin tabs.
   return <IconCog size={size} className={className} {...props} />;
