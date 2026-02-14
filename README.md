@@ -90,10 +90,10 @@ npm run dev
 **Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズを網羅したオンライン図鑑です。
 
 ### Key Features
-- 🎨 **アバターデータベース** - 4桁ID管理システム（日本語/英語 CSV + JSON データ）
+- 🎨 **アバターデータベース** - 4桁ID管理システム（日本語/英語/韓国語 CSV + JSON データ）
 - 🔐 **Admin Panel** - HMAC署名セッション認証、画像クロッピング、VRChat連携
 - 📱 **PWA対応** - 6種類のキャッシング戦略
-- 🌍 **多言語対応** - 日本語/英語（自動検出）
+- 🌍 **多言語対応** - 日本語/英語/韓国語（自動検出 + 手動切替）
 - ⚡ **Edge Runtime** - Cloudflare Pages + R2 + KV
 - 🤖 **Difyチャットボット** - AI搭載のアバター検索アシスタント
 - 📊 **多段データロード** - KV → JSON → CSV 自動フォールバック
@@ -189,7 +189,7 @@ Data Source Priority: KV (~5ms) → JSON (~20ms) → CSV (~200ms)
 
 ### Security
 - **HTML Sanitization**: sanitize-html 2.17.0
-- **Timing Attack Prevention**: Constant-time Uint8Array comparison
+- **Timing Attack Prevention**: Node.js `crypto.timingSafeEqual`
 - **Input Validation**: Length-limited regex patterns
 - **XSS Prevention**: HTML entity decoding + tag stripping
 - **CSRF Protection**: Origin/Referer header validation
@@ -275,7 +275,7 @@ Akyodex/
 │   │   ├── loading-spinner.tsx      # Loading indicator
 │   │   ├── mini-akyo-bg.tsx         # Animated background
 │   │   ├── icons.tsx                # SVG icon components
-│   │   ├── dify-chatbot-handler.tsx # Dify chatbot event handler
+│   │   ├── dify-chatbot.tsx         # Dify chatbot loader/state handler
 │   │   ├── structured-data.tsx      # JSON-LD structured data
 │   │   ├── web-vitals.tsx           # Web Vitals reporting
 │   │   ├── service-worker-register.tsx  # SW registration
@@ -327,7 +327,10 @@ Akyodex/
 │   ├── fix-categories-en.js         # English category fixes
 │   ├── category-definitions-ja.js   # Japanese category keywords
 │   ├── category-definitions-en.js   # English category keywords
+│   ├── category-definitions-ko.js   # Korean category keywords
 │   ├── category-ja-en-map.js        # Category translation map
+│   ├── generate-ko-data.js          # Generate KO data from JA source
+│   ├── nickname-map-ko.js           # KO nickname translation map
 │   ├── update-categories-v3.js      # Japanese category updater
 │   ├── update-categories-en-v3.js   # English category updater
 │   ├── update-categories-common.js  # Shared category logic
@@ -340,8 +343,10 @@ Akyodex/
 └── data/
     ├── akyo-data-ja.csv             # Japanese avatar data
     ├── akyo-data-en.csv             # English avatar data
+    ├── akyo-data-ko.csv             # Korean avatar data
     ├── akyo-data-ja.json            # Japanese data (JSON cache)
-    └── akyo-data-en.json            # English data (JSON cache)
+    ├── akyo-data-en.json            # English data (JSON cache)
+    └── akyo-data-ko.json            # Korean data (JSON cache)
 ```
 
 ---
@@ -668,9 +673,10 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 
 ### 1. Avatar Gallery
 
-- **Avatars**: Complete database with 4-digit IDs, JP/EN data
-- **Search**: By nickname, avatar name, categories
-- **Filtering**: By categories, authors
+- **Avatars**: Complete database with 4-digit IDs, JP/EN/KO data
+- **Search**: By nickname, avatar name, category, author
+- **Filtering**: Multi-select categories (OR/AND) + multi-select authors
+- **Keyboard A11y**: Arrow/Home/End/Enter support in filter lists
 - **View Modes**: Grid view and list view
 - **Detail View**: Modal with full information
 - **SSG + ISR**: Static generation with 1-hour revalidation
@@ -748,9 +754,10 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 #### Supported Languages:
 - 🇯🇵 Japanese (ja) - Default
 - 🇺🇸 English (en)
+- 🇰🇷 Korean (ko)
 
 #### Detection Priority:
-1. **Cookie** (`AKYO_LANG=ja` or `AKYO_LANG=en`)
+1. **Cookie** (`AKYO_LANG=ja` / `en` / `ko`)
 2. **Cloudflare Header** (`cf-ipcountry`)
 3. **Accept-Language Header**
 4. **Default**: Japanese
@@ -758,7 +765,7 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 #### Implementation:
 - Edge Middleware for language detection
 - Client-side language toggle
-- Separate data files (akyo-data-ja.csv/json, akyo-data-en.csv/json)
+- Separate data files (akyo-data-ja/en/ko.csv + .json)
 - Dynamic content loading with language refetch
 
 ### 5. Dify AI Chatbot
@@ -932,19 +939,10 @@ Users can ask questions like:
 
 ```typescript
 function timingSafeCompare(a: string, b: string): boolean {
-  const encoder = new TextEncoder();
-  const bufA = encoder.encode(a);
-  const bufB = encoder.encode(b);
-  const maxLen = Math.max(bufA.length, bufB.length);
-  const paddedA = new Uint8Array(maxLen);
-  const paddedB = new Uint8Array(maxLen);
-  paddedA.set(bufA);
-  paddedB.set(bufB);
-  let result = 0;
-  for (let i = 0; i < maxLen; i++) {
-    result |= paddedA[i] ^ paddedB[i];
-  }
-  return result === 0;
+  const bufA = Buffer.from(a, 'utf8');
+  const bufB = Buffer.from(b, 'utf8');
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
 }
 
 // Always check both passwords to prevent role detection
