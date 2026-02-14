@@ -10,7 +10,7 @@ import {
   IconUser,
 } from '@/components/icons';
 import { t, type SupportedLanguage } from '@/lib/i18n';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface FilterPanelProps {
   // 新フィールド（オプショナル）
@@ -69,6 +69,8 @@ export function FilterPanel({
 }: FilterPanelProps) {
   const [categoryQuery, setCategoryQuery] = useState('');
   const [authorQuery, setAuthorQuery] = useState('');
+  const [focusedCategoryIndex, setFocusedCategoryIndex] = useState(0);
+  const categoryButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const displayCategories = categories || attributes;
   const displayAuthors = authors || creators;
@@ -96,6 +98,19 @@ export function FilterPanel({
     return displayAuthors.filter((author) => author.toLowerCase().includes(normalizedAuthorQuery));
   }, [displayAuthors, normalizedAuthorQuery]);
 
+  useEffect(() => {
+    categoryButtonRefs.current = categoryButtonRefs.current.slice(0, filteredCategories.length);
+    if (filteredCategories.length === 0) {
+      setFocusedCategoryIndex(-1);
+      return;
+    }
+    setFocusedCategoryIndex((current) => {
+      if (current < 0) return 0;
+      if (current >= filteredCategories.length) return filteredCategories.length - 1;
+      return current;
+    });
+  }, [filteredCategories]);
+
   const setCategories = (nextCategories: string[]) => {
     if (onAttributesChange) {
       onAttributesChange(nextCategories);
@@ -107,6 +122,10 @@ export function FilterPanel({
   const toggleCategory = (category: string) => {
     if (activeCategories.includes(category)) {
       setCategories(activeCategories.filter((value) => value !== category));
+      return;
+    }
+    if (!onAttributesChange) {
+      setCategories([category]);
       return;
     }
     setCategories([...activeCategories, category]);
@@ -124,7 +143,54 @@ export function FilterPanel({
       setAuthors(activeAuthors.filter((value) => value !== author));
       return;
     }
+    if (!onCreatorsChange) {
+      setAuthors([author]);
+      return;
+    }
     setAuthors([...activeAuthors, author]);
+  };
+
+  const moveCategoryFocus = (nextIndex: number) => {
+    setFocusedCategoryIndex(nextIndex);
+    categoryButtonRefs.current[nextIndex]?.focus();
+  };
+
+  const handleCategoryKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    idx: number,
+    category: string
+  ) => {
+    const lastIndex = filteredCategories.length - 1;
+    if (lastIndex < 0) return;
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveCategoryFocus(idx === lastIndex ? 0 : idx + 1);
+      return;
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveCategoryFocus(idx === 0 ? lastIndex : idx - 1);
+      return;
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault();
+      moveCategoryFocus(0);
+      return;
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault();
+      moveCategoryFocus(lastIndex);
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleCategory(category);
+    }
   };
 
   return (
@@ -150,37 +216,46 @@ export function FilterPanel({
               {onCategoryMatchModeChange && (
                 <div
                   className="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200"
-                  role="radiogroup"
                   aria-label={`${t('filter.matchOr', lang)} / ${t('filter.matchAnd', lang)}`}
                 >
-                  <button
-                    type="button"
-                    role="radio"
-                    onClick={() => onCategoryMatchModeChange('or')}
-                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                  <input
+                    id="category-match-or"
+                    type="radio"
+                    name="category-match-mode"
+                    className="sr-only"
+                    checked={categoryMatchMode === 'or'}
+                    onChange={() => onCategoryMatchModeChange('or')}
+                    aria-label={t('filter.matchOr', lang)}
+                  />
+                  <label
+                    htmlFor="category-match-or"
+                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors cursor-pointer ${
                       categoryMatchMode === 'or'
                         ? 'bg-blue-200 text-blue-900'
                         : 'text-gray-600 hover:bg-gray-200'
                     }`}
-                    aria-checked={categoryMatchMode === 'or'}
-                    aria-label={t('filter.matchOr', lang)}
                   >
                     {t('filter.matchOr', lang)}
-                  </button>
-                  <button
-                    type="button"
-                    role="radio"
-                    onClick={() => onCategoryMatchModeChange('and')}
-                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                  </label>
+                  <input
+                    id="category-match-and"
+                    type="radio"
+                    name="category-match-mode"
+                    className="sr-only"
+                    checked={categoryMatchMode === 'and'}
+                    onChange={() => onCategoryMatchModeChange('and')}
+                    aria-label={t('filter.matchAnd', lang)}
+                  />
+                  <label
+                    htmlFor="category-match-and"
+                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors cursor-pointer ${
                       categoryMatchMode === 'and'
                         ? 'bg-green-200 text-green-900'
                         : 'text-gray-600 hover:bg-gray-200'
                     }`}
-                    aria-checked={categoryMatchMode === 'and'}
-                    aria-label={t('filter.matchAnd', lang)}
                   >
                     {t('filter.matchAnd', lang)}
-                  </button>
+                  </label>
                 </div>
               )}
             </div>
@@ -222,13 +297,19 @@ export function FilterPanel({
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                {filteredCategories.map((category) => {
+                {filteredCategories.map((category, idx) => {
                   const selected = activeCategories.includes(category);
                   return (
                     <button
                       key={category}
                       type="button"
+                      ref={(el) => {
+                        categoryButtonRefs.current[idx] = el;
+                      }}
                       onClick={() => toggleCategory(category)}
+                      onFocus={() => setFocusedCategoryIndex(idx)}
+                      onKeyDown={(event) => handleCategoryKeyDown(event, idx, category)}
+                      tabIndex={focusedCategoryIndex === idx ? 0 : -1}
                       className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
                         selected
                           ? 'bg-green-100 text-green-900 border-green-300'
