@@ -193,11 +193,21 @@ export function FilterPanel({
 
   const moveCategoryFocus = (nextIndex: number) => {
     setFocusedCategoryIndex(nextIndex);
-    categoryButtonRefs.current[nextIndex]?.focus();
+    const target = categoryButtonRefs.current[nextIndex];
+    target?.focus();
+    target?.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
   };
   const moveAuthorFocus = (nextIndex: number) => {
     setFocusedAuthorIndex(nextIndex);
-    authorButtonRefs.current[nextIndex]?.focus();
+    const target = authorButtonRefs.current[nextIndex];
+    target?.focus();
+    target?.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
   };
 
   const handleListKeyDown = (
@@ -329,14 +339,14 @@ export function FilterPanel({
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
             onKeyDown={handleCategorySearchKeyDown}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-[rgba(102,217,165,0.2)]"
+            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-green-400/50"
             placeholder={t('filter.categorySearch', lang)}
             aria-label={t('filter.categorySearch', lang)}
           />
 
           <div className="flex flex-wrap gap-2 min-h-8">
             {activeCategories.length === 0 ? (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-gray-700">
                 {t('filter.noneSelected', lang)}
               </span>
             ) : (
@@ -388,7 +398,7 @@ export function FilterPanel({
                         )
                       }
                       tabIndex={focusedCategoryIndex === idx ? 0 : -1}
-                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 ${
                         selected
                           ? 'bg-green-100 text-green-900 border-green-300'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
@@ -427,14 +437,14 @@ export function FilterPanel({
             value={authorQuery}
             onChange={(e) => setAuthorQuery(e.target.value)}
             onKeyDown={handleAuthorSearchKeyDown}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-[rgba(102,217,165,0.2)]"
+            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus:border-[var(--primary-green)] focus:ring-4 focus:ring-green-400/50"
             placeholder={t('filter.authorSearch', lang)}
             aria-label={t('filter.authorSearch', lang)}
           />
 
           <div className="flex flex-wrap gap-2 min-h-8">
             {activeAuthors.length === 0 ? (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-gray-700">
                 {t('filter.noneAuthorSelected', lang)}
               </span>
             ) : (
@@ -480,7 +490,7 @@ export function FilterPanel({
                         handleListKeyDown(event, idx, filteredAuthors, toggleAuthor, moveAuthorFocus)
                       }
                       tabIndex={focusedAuthorIndex === idx ? 0 : -1}
-                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-orange-300 focus:ring-offset-2 ${
                         selected
                           ? 'bg-blue-100 text-blue-900 border-blue-300'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
