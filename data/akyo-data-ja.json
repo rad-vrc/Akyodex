@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:56:53.265Z",
-  "count": 720,
+  "updatedAt": "2026-02-14T10:01:31.402Z",
+  "count": 721,
   "data": [
     {
       "id": "0001",
@@ -6483,6 +6483,15 @@
       "comment": "ここ200年で生まれたAkyoかな？",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d861904-5b3e-4a6b-a074-3f5d3ef04b9e"
+    },
+    {
+      "id": "0721",
+      "nickname": "キツネツキ式エーテリアル狐Akyo",
+      "avatarName": "Ethereal Fox Akyo",
+      "category": "動物,動物/きつね,エネルギー,架空の存在,次元",
+      "comment": "すごい力を感じる・・・",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c60217fe-cd50-42da-8080-f40e68fcf3c9"
     }
   ]
 }
