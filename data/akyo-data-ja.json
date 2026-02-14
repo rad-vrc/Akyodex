@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-14T09:40:20.367Z",
-  "count": 713,
+  "updatedAt": "2026-02-14T09:43:28.272Z",
+  "count": 714,
   "data": [
     {
       "id": "0001",
@@ -6420,6 +6420,15 @@
       "comment": "純金なんだって～！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_56563c93-0b17-4db9-8fda-e804152f79e7"
+    },
+    {
+      "id": "0714",
+      "nickname": "赤キツネツキ式グミ狐Akyo",
+      "avatarName": "Red Gummy Fox Akyo",
+      "category": "動物,動物/きつね,食べ物,食べ物/スイーツ",
+      "comment": "おいしい！",
+      "author": "Smug Kitty",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_18ca2ce5-b63a-414e-afc2-c0bd59e9185a"
     }
   ]
 }
