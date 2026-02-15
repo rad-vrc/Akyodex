@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-15T11:28:23.088Z",
+  "updatedAt": "2026-02-15T12:59:50.002Z",
   "count": 739,
   "data": [
     {
@@ -3113,7 +3113,7 @@
       "id": "0346",
       "nickname": "Magical Fox Akyo",
       "avatarName": "akyo_FoxMagic",
-      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_88494bab-d2bc-43f2-ae26-e886b86d9dae"
@@ -3131,7 +3131,7 @@
       "id": "0348",
       "nickname": "Magical Dragon Akyo",
       "avatarName": "akyo_DragonMagic",
-      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Skill・Trait/Magic,Animal,Fictional Being/Dragon,Roleplay",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Skill・Trait/Magic,Animal,Fictional Being/Dragon,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3212,7 +3212,7 @@
       "id": "0357",
       "nickname": "Knight Dragon Akyo",
       "avatarName": "akyo_どらごんないと",
-      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Animal,Fictional Being/Dragon,Roleplay,Role・Status,Military・Weapons,Role・Status/Soldier",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Animal,Fictional Being/Dragon,Fashion,Fashion/Roleplay,Role・Status,Military・Weapons,Role・Status/Soldier",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eec93a2a-cc5f-4106-bd3b-35969990009b"
@@ -3887,7 +3887,7 @@
       "id": "0432",
       "nickname": "Bunny Fox Akyo",
       "avatarName": "akyo_BunnyFox",
-      "category": "Season・Event,Season・Event/Halloween,Animal,Animal/Fox,Fashion,Roleplay,Pretty",
+      "category": "Season・Event,Season・Event/Halloween,Animal,Animal/Fox,Fashion,Fashion/Roleplay,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_542c948a-4a80-4226-9f7b-8a7fe2c0049d"
@@ -3905,7 +3905,7 @@
       "id": "0434",
       "nickname": "Red Riding Hood Fox Akyo",
       "avatarName": "akyo_きつね赤ずきん",
-      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
       "comment": "Beware of the wolf Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea9e6901-c9c8-47e8-a90b-d55ce222b870"
@@ -3977,7 +3977,7 @@
       "id": "0442",
       "nickname": "Magical Green Onion AkyoAkyo",
       "avatarName": "akyo_ねぎまほう",
-      "category": "Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Food,Food/Vegetable,Roleplay",
+      "category": "Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Food,Food/Vegetable,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb18a90b-8452-4702-b24a-5cd9abd5d22a"
@@ -4031,7 +4031,7 @@
       "id": "0448",
       "nickname": "Halloween Pumpkin Akyo",
       "avatarName": "akyo_かぼちゃHW",
-      "category": "Season・Event,Season・Event/Halloween,Roleplay",
+      "category": "Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7b2e4467-0cff-4a97-80ce-be816e05d345"
@@ -4040,7 +4040,7 @@
       "id": "0449",
       "nickname": "Halloween Poncho FoxBeer Akyo",
       "avatarName": "akyo_foxHW",
-      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fashion,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cec68cad-1972-4a81-8289-4adb9988d5cf"
@@ -4049,7 +4049,7 @@
       "id": "0450",
       "nickname": "Jiangshi Fox Akyo",
       "avatarName": "akyo_きつねキョンシー",
-      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e407374-de0c-42d1-af14-a7b5ff7ebf07"
@@ -4103,7 +4103,7 @@
       "id": "0456",
       "nickname": "Halloween Japanese Radish Akyo",
       "avatarName": "akyo_だいこんHW",
-      "category": "Food,Food/Vegetable,Season・Event,Season・Event/Halloween,Japanese Radish,Roleplay",
+      "category": "Food,Food/Vegetable,Season・Event,Season・Event/Halloween,Japanese Radish,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c9eda5f8-c8cb-4f2f-8797-375583500552"
@@ -4679,7 +4679,7 @@
       "id": "0520",
       "nickname": "Humanoid-like Akyo",
       "avatarName": "NothumanoidAkyo",
-      "category": "Roleplay,Parody,Parody/VRChat",
+      "category": "Fashion,Fashion/Roleplay,Parody,Parody/VRChat",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7672bbc5-b0aa-4062-b389-0faadf382bd0"
@@ -4796,7 +4796,7 @@
       "id": "0533",
       "nickname": "R.I.P. Akyo",
       "avatarName": "RestInAkyo",
-      "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Roleplay,Death",
+      "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay,Death",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ce6a950b-22e0-45b8-9407-e27476b1d595"
@@ -4805,7 +4805,7 @@
       "id": "0534",
       "nickname": "Tombstone Akyo",
       "avatarName": "bosekiAkyo",
-      "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard,Roleplay,Death",
+      "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard,Fashion,Fashion/Roleplay,Death",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4db2f6fb-ae17-4cc8-89ac-6306e161c9dc"
@@ -4841,7 +4841,7 @@
       "id": "0538",
       "nickname": "Magical Girl Fox Akyo",
       "avatarName": "akyo fox 魔法少女",
-      "category": "Animal,Animal/Fox,Role・Status,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Roleplay,Pretty",
+      "category": "Animal,Animal/Fox,Role・Status,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Fashion,Fashion/Roleplay,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
@@ -4913,7 +4913,7 @@
       "id": "0546",
       "nickname": "Dr. Doom Akyo",
       "avatarName": "akyo魔博士",
-      "category": "Parody,Parody/Fantastic Four,Season・Event,Season・Event/Halloween,Role・Status,Roleplay",
+      "category": "Parody,Parody/Fantastic Four,Season・Event,Season・Event/Halloween,Role・Status,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0e4bd90-0cad-40ec-ab4c-759de355b9d4"
@@ -5714,7 +5714,7 @@
       "id": "0635",
       "nickname": "Photograph of the Deceased Cosplay Akyo",
       "avatarName": "ieigokkoAkyo",
-      "category": "Mint Chocolate,Death,Appliances・Furniture,Roleplay",
+      "category": "Mint Chocolate,Death,Appliances・Furniture,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_04f1f4cb-4d48-4d6b-813f-2207b92c365a"
@@ -5822,7 +5822,7 @@
       "id": "0647",
       "nickname": "Western Fox Akyo",
       "avatarName": "akyo_きつねウエスタン",
-      "category": "Animal,Animal/Fox,Roleplay",
+      "category": "Animal,Animal/Fox,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_605792cc-122c-4257-936d-715d2b37b144"
@@ -5930,7 +5930,7 @@
       "id": "0659",
       "nickname": "Halloween Fox Akyo 2025",
       "avatarName": "akyo_きつねハロウィン25",
-      "category": "Season・Event,Animal,Animal/Fox,Roleplay",
+      "category": "Season・Event,Animal,Animal/Fox,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5278f2bc-68ee-43df-b015-e29b5a696965"
@@ -5957,7 +5957,7 @@
       "id": "0662",
       "nickname": "Halloween Maid Fox Akyo",
       "avatarName": "akyo_メイド_ハロウィン",
-      "category": "Animal,Animal/Fox,Season・Event,Role・Status,Roleplay,Pretty,Season・Event/Halloween",
+      "category": "Animal,Animal/Fox,Season・Event,Role・Status,Fashion,Fashion/Roleplay,Pretty,Season・Event/Halloween",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d9c07422-e074-487b-b565-f2ea1f6c0254"
@@ -5975,7 +5975,7 @@
       "id": "0664",
       "nickname": "Halloween Carrot Akyo",
       "avatarName": "akyo_にんじんハロウィン",
-      "category": "Food,Food/Vegetable,Season・Event,Carrot,Roleplay",
+      "category": "Food,Food/Vegetable,Season・Event,Carrot,Fashion,Fashion/Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_78763b3e-9111-4aa2-a2b3-b44d80dbb690"
@@ -6020,7 +6020,7 @@
       "id": "0669",
       "nickname": "Human-faced Akyo",
       "avatarName": "Akyo",
-      "category": "Gimmick・Special,Roleplay",
+      "category": "Mint Chocolate,Horror",
       "comment": "",
       "author": "ichigata",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3e4038de-1d26-41e6-a710-9cda8e5dd5c5"

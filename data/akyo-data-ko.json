@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-15T11:28:23.132Z",
+  "updatedAt": "2026-02-15T12:59:50.018Z",
   "count": 739,
   "data": [
     {
@@ -3113,7 +3113,7 @@
       "id": "0346",
       "nickname": "마법 여우 Akyo",
       "avatarName": "akyo_FoxMagic",
-      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,기능・특성,기능・특성/마법,코스프레",
+      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,기능・특성,기능・특성/마법,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_88494bab-d2bc-43f2-ae26-e886b86d9dae"
@@ -3131,7 +3131,7 @@
       "id": "0348",
       "nickname": "마법 드래곤 Akyo",
       "avatarName": "akyo_DragonMagic",
-      "category": "가상의 존재,기능・특성,기능・특성/비행,계절・행사,계절・행사/할로윈,기능・특성/마법,동물,가상의 존재/용・드래곤,코스프레",
+      "category": "가상의 존재,기능・특성,기능・특성/비행,계절・행사,계절・행사/할로윈,기능・특성/마법,동물,가상의 존재/용・드래곤,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3212,7 +3212,7 @@
       "id": "0357",
       "nickname": "나이트 드래곤 Akyo",
       "avatarName": "akyo_どらごんないと",
-      "category": "가상의 존재,기능・특성,기능・특성/비행,계절・행사,계절・행사/할로윈,동물,가상의 존재/용・드래곤,코스프레,신분・역할,무기・기계,신분・역할/병사",
+      "category": "가상의 존재,기능・특성,기능・특성/비행,계절・행사,계절・행사/할로윈,동물,가상의 존재/용・드래곤,패션,패션/코스프레,신분・역할,무기・기계,신분・역할/병사",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eec93a2a-cc5f-4106-bd3b-35969990009b"
@@ -3887,7 +3887,7 @@
       "id": "0432",
       "nickname": "버니 여우 Akyo",
       "avatarName": "akyo_BunnyFox",
-      "category": "계절・행사,계절・행사/할로윈,동물,동물/여우,패션,코스프레,프리티",
+      "category": "계절・행사,계절・행사/할로윈,동물,동물/여우,패션,패션/코스프레,프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_542c948a-4a80-4226-9f7b-8a7fe2c0049d"
@@ -3905,7 +3905,7 @@
       "id": "0434",
       "nickname": "빨간모자 여우 Akyo",
       "avatarName": "akyo_きつね赤ずきん",
-      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,코스프레",
+      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,패션,패션/코스프레",
       "comment": "늑대 Akyo에 요주의",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea9e6901-c9c8-47e8-a90b-d55ce222b870"
@@ -3977,7 +3977,7 @@
       "id": "0442",
       "nickname": "마법 파 Akyo",
       "avatarName": "akyo_ねぎまほう",
-      "category": "계절・행사,계절・행사/할로윈,기능・특성,기능・특성/마법,음식,음식/채소,코스프레",
+      "category": "계절・행사,계절・행사/할로윈,기능・특성,기능・특성/마법,음식,음식/채소,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb18a90b-8452-4702-b24a-5cd9abd5d22a"
@@ -4031,7 +4031,7 @@
       "id": "0448",
       "nickname": "호박 할로윈 Akyo",
       "avatarName": "akyo_かぼちゃHW",
-      "category": "계절・행사,계절・행사/할로윈,코스프레",
+      "category": "계절・행사,계절・행사/할로윈,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7b2e4467-0cff-4a97-80ce-be816e05d345"
@@ -4040,7 +4040,7 @@
       "id": "0449",
       "nickname": "할로윈 판초 여우 Akyo",
       "avatarName": "akyo_foxHW",
-      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,패션,코스프레",
+      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cec68cad-1972-4a81-8289-4adb9988d5cf"
@@ -4049,7 +4049,7 @@
       "id": "0450",
       "nickname": "강시 여우 Akyo",
       "avatarName": "akyo_きつねキョンシー",
-      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,가상의 존재,가상의 존재/요괴・유령,코스프레",
+      "category": "동물,동물/여우,계절・행사,계절・행사/할로윈,가상의 존재,가상의 존재/요괴・유령,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e407374-de0c-42d1-af14-a7b5ff7ebf07"
@@ -4103,7 +4103,7 @@
       "id": "0456",
       "nickname": "할로윈 무 Akyo",
       "avatarName": "akyo_だいこんHW",
-      "category": "음식,음식/채소,계절・행사,계절・행사/할로윈,음식/채소/무,코스프레",
+      "category": "음식,음식/채소,계절・행사,계절・행사/할로윈,음식/채소/무,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c9eda5f8-c8cb-4f2f-8797-375583500552"
@@ -4679,7 +4679,7 @@
       "id": "0520",
       "nickname": "휴머노이드 모방 Akyo",
       "avatarName": "NothumanoidAkyo",
-      "category": "코스프레,패러디,패러디/VRChat",
+      "category": "패션,패션/코스프레,패러디,패러디/VRChat",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7672bbc5-b0aa-4062-b389-0faadf382bd0"
@@ -4796,7 +4796,7 @@
       "id": "0533",
       "nickname": "R.I.P. Akyo",
       "avatarName": "RestInAkyo",
-      "category": "초코민트류,건물,계절・행사,계절・행사/할로윈,코스프레,죽음",
+      "category": "초코민트류,건물,계절・행사,계절・행사/할로윈,패션,패션/코스프레,죽음",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ce6a950b-22e0-45b8-9407-e27476b1d595"
@@ -4805,7 +4805,7 @@
       "id": "0534",
       "nickname": "묘비 Akyo",
       "avatarName": "bosekiAkyo",
-      "category": "초코민트류,건물,계절・행사,계절・행사/할로윈,소재・원재료,소재・원재료/돌,형태・촉감,형태・촉감/단단한,코스프레,죽음",
+      "category": "초코민트류,건물,계절・행사,계절・행사/할로윈,소재・원재료,소재・원재료/돌,형태・촉감,형태・촉감/단단한,패션,패션/코스프레,죽음",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4db2f6fb-ae17-4cc8-89ac-6306e161c9dc"
@@ -4841,7 +4841,7 @@
       "id": "0538",
       "nickname": "마법소녀 여우 Akyo",
       "avatarName": "akyo fox 魔法少女",
-      "category": "동물,동물/여우,신분・역할,계절・행사,계절・행사/할로윈,기능・특성,기능・특성/마법,코스프레,프리티",
+      "category": "동물,동물/여우,신분・역할,계절・행사,계절・행사/할로윈,기능・특성,기능・특성/마법,패션,패션/코스프레,프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
@@ -4913,7 +4913,7 @@
       "id": "0546",
       "nickname": "Akyo마박사",
       "avatarName": "akyo魔博士",
-      "category": "패러디,패러디/판타스틱 4,계절・행사,계절・행사/할로윈,신분・역할,코스프레",
+      "category": "패러디,패러디/판타스틱 4,계절・행사,계절・행사/할로윈,신분・역할,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0e4bd90-0cad-40ec-ab4c-759de355b9d4"
@@ -5714,7 +5714,7 @@
       "id": "0635",
       "nickname": "영정사진 놀이 Akyo",
       "avatarName": "ieigokkoAkyo",
-      "category": "초코민트류,죽음,가전・가구,코스프레",
+      "category": "초코민트류,죽음,가전・가구,패션,패션/코스프레",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_04f1f4cb-4d48-4d6b-813f-2207b92c365a"
@@ -5822,7 +5822,7 @@
       "id": "0647",
       "nickname": "웨스턴 여우 Akyo",
       "avatarName": "akyo_きつねウエスタン",
-      "category": "동물,동물/여우,코스프레",
+      "category": "동물,동물/여우,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_605792cc-122c-4257-936d-715d2b37b144"
@@ -5930,7 +5930,7 @@
       "id": "0659",
       "nickname": "할로윈 여우 Akyo 2025",
       "avatarName": "akyo_きつねハロウィン25",
-      "category": "계절・행사,동물,동물/여우,코스프레",
+      "category": "계절・행사,동물,동물/여우,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5278f2bc-68ee-43df-b015-e29b5a696965"
@@ -5957,7 +5957,7 @@
       "id": "0662",
       "nickname": "할로윈 메이드 여우 Akyo",
       "avatarName": "akyo_メイド_ハロウィン",
-      "category": "동물,동물/여우,계절・행사,신분・역할,코스프레,프리티,계절・행사/할로윈",
+      "category": "동물,동물/여우,계절・행사,신분・역할,패션,패션/코스프레,프리티,계절・행사/할로윈",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d9c07422-e074-487b-b565-f2ea1f6c0254"
@@ -5975,7 +5975,7 @@
       "id": "0664",
       "nickname": "할로윈 당근 Akyo",
       "avatarName": "akyo_にんじんハロウィン",
-      "category": "음식,음식/채소,계절・행사,음식/채소/당근,코스프레",
+      "category": "음식,음식/채소,계절・행사,음식/채소/당근,패션,패션/코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_78763b3e-9111-4aa2-a2b3-b44d80dbb690"
@@ -6020,7 +6020,7 @@
       "id": "0669",
       "nickname": "인면 Akyo",
       "avatarName": "Akyo",
-      "category": "기믹・특수,코스프레",
+      "category": "초코민트류,호러",
       "comment": "",
       "author": "ichigata",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3e4038de-1d26-41e6-a710-9cda8e5dd5c5"
