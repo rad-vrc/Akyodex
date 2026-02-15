@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-14T11:31:25.512Z",
+  "updatedAt": "2026-02-15T08:56:07.192Z",
   "count": 739,
   "data": [
     {
@@ -170,7 +170,7 @@
       "id": "0019",
       "nickname": "Kitsunetsuki's Fox Akyo",
       "avatarName": "KTNTK_Akyo",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "kitsune_tsuki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_84179c75-7975-4f15-955b-c1f94a211bbe"
@@ -179,7 +179,7 @@
       "id": "0020",
       "nickname": "Kitsunetsuki's Ghost Fox Akyo",
       "avatarName": "sAKYOn_Ghost",
-      "category": "Animal/Fox,Animal,Fictional Being,Fictional Being/Yokai・Ghost",
+      "category": "Animal,Animal/Fox,Fictional Being,Fictional Being/Yokai・Ghost",
       "comment": "",
       "author": "kitsune_tsuki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9365ef3-351c-4abf-b4b8-5e09e49b13c4"
@@ -188,7 +188,7 @@
       "id": "0021",
       "nickname": "Kitsunetsuki's Melted Fox Akyo",
       "avatarName": "Melt_sakyon",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "kitsune_tsuki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_32eff565-39cc-46bb-883a-5b25473d095c"
@@ -197,7 +197,7 @@
       "id": "0022",
       "nickname": "Kitsunetsuki's Long-Leg Fox Akyo",
       "avatarName": "sAKYOn_？",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "kitsune_tsuki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_29c2973e-8181-4fa7-8e12-f0578d2727ea"
@@ -206,7 +206,7 @@
       "id": "0023",
       "nickname": "Uuga Eats Akyo",
       "avatarName": "Uuga Eats",
-      "category": "Mint Chocolate,Occupation/Status,Occupation/Status/Delivery Worker",
+      "category": "Mint Chocolate,Role・Status,Role・Status/Delivery Worker",
       "comment": "",
       "author": "bbbbb_himiko",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9f160901-c9cf-4329-b021-e29b7dbffd0e"
@@ -233,7 +233,7 @@
       "id": "0026",
       "nickname": "Cordyceps Akyo",
       "avatarName": "Toutyuakyo_冬虫亜京",
-      "category": "Animal/Bug,Animal,Season・Event",
+      "category": "Animal,Animal/Bug,Season・Event",
       "comment": "",
       "author": "bbbbb_himiko",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c1bded47-4a5f-4f89-8ec9-142f8a7db49a"
@@ -260,7 +260,7 @@
       "id": "0029",
       "nickname": "Duffle Coat Akyo",
       "avatarName": "Duffel coat_Akyo",
-      "category": "Mint Chocolate,Clothing/Accessory,Clothing/Accessory/Warm Clothing",
+      "category": "Mint Chocolate,Fashion,Fashion/Warm Clothing",
       "comment": "",
       "author": "isamu_masashi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9ec28f7b-9f5a-433a-9422-d7578368a679"
@@ -269,7 +269,7 @@
       "id": "0030",
       "nickname": "Down Vest Akyo",
       "avatarName": "Downvest_Akyo",
-      "category": "Mint Chocolate,Clothing/Accessory,Clothing/Accessory/Warm Clothing",
+      "category": "Mint Chocolate,Fashion,Fashion/Warm Clothing",
       "comment": "",
       "author": "isamu_masashi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_40663914-34fa-48d8-b355-e69c2c64e294"
@@ -305,7 +305,7 @@
       "id": "0034",
       "nickname": "Sea Slug Akyo",
       "avatarName": "UMIUSHI_AKYO_BLUE",
-      "category": "Animal/Sea Slug,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Sea Slug,Animal/Marine Life",
       "comment": "",
       "author": "Bangasa",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6b41a46-f18b-4c6a-8f4c-0694b8e10a95"
@@ -314,7 +314,7 @@
       "id": "0035",
       "nickname": "Mystic Sea Slug Akyo",
       "avatarName": "akyo_mystic_umiushi",
-      "category": "Animal/Sea Slug,Gimmick・Special,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Sea Slug,Gimmick・Special,Animal/Marine Life",
       "comment": "",
       "author": "Bangasa",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_01f41d9a-80e9-4463-bea1-8fee85f3829d"
@@ -323,7 +323,7 @@
       "id": "0036",
       "nickname": "Neo Sea Slug Akyo",
       "avatarName": "neo_umiushi_akyo",
-      "category": "Animal/Sea Slug,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Sea Slug,Animal/Marine Life",
       "comment": "",
       "author": "Bangasa",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_18efa753-234b-458d-85b0-0d745d22987f"
@@ -341,7 +341,7 @@
       "id": "0038",
       "nickname": "Toon Akyo",
       "avatarName": "Toon Akyo!",
-      "category": "Gimmick・Special,Parody/Disney,Parody",
+      "category": "Gimmick・Special,Parody,Parody/Disney",
       "comment": "",
       "author": "teramo",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cd27aba2-7447-4dc6-ba38-560e8e132ff2"
@@ -386,7 +386,7 @@
       "id": "0043",
       "nickname": "Southern Tamandua Akyo",
       "avatarName": "ミナミコアリクイAkyo",
-      "category": "Animal/Anteater,Animal",
+      "category": "Animal,Animal/Anteater",
       "comment": "",
       "author": "teramo",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_03c93715-e49f-4992-969a-aec9f3d7682d"
@@ -404,7 +404,7 @@
       "id": "0045",
       "nickname": "Wood Akyo",
       "avatarName": "Wood",
-      "category": "Plant,Material・Texture,Material・Texture/Plant/Wood,Hard",
+      "category": "Plant,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_415137aa-5cbf-4027-b9b9-668303cc2f70"
@@ -413,7 +413,7 @@
       "id": "0046",
       "nickname": "Marble Akyo",
       "avatarName": "Marble",
-      "category": "Material・Texture,Material・Texture/Stone,Hard",
+      "category": "Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1501f28e-a6db-4a5e-8968-1da53a1a961d"
@@ -440,7 +440,7 @@
       "id": "0049",
       "nickname": "Research Vessel MU-KYO",
       "avatarName": "調査船MU-KYO",
-      "category": "Vehicle,Parody/Muy,Parody",
+      "category": "Vehicle,Parody,Parody/Muy",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_98bd2b2f-991e-42d2-86b5-ca576f02032a"
@@ -467,7 +467,7 @@
       "id": "0052",
       "nickname": "Goat Akyo",
       "avatarName": "％＆＠＄＃ヤギAkyo",
-      "category": "Animal/Goat,Animal",
+      "category": "Animal,Animal/Goat",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_82097fe1-f3fd-4755-b45b-a86c01ad6a49"
@@ -476,7 +476,7 @@
       "id": "0053",
       "nickname": "Devil Goat Akyo",
       "avatarName": "デビルヤギAkyo",
-      "category": "Animal/Goat,Fictional Being,Devil・Succubus,Animal",
+      "category": "Animal,Animal/Goat,Fictional Being,Devil・Succubus",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_21d65ba5-081c-454e-8124-7aade9ef1a95"
@@ -494,7 +494,7 @@
       "id": "0055",
       "nickname": "Skin Akyo",
       "avatarName": "皮Akyo",
-      "category": "Animal/Fox,Animal,Material・Texture,Soft,Material・Texture/Animal,Real Photo",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Material・Raw Material/Animal,Real Photo",
       "comment": "Regarding the real fox Akyo",
       "author": "甘水あみ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ccddd5fd-df57-47fa-b7ab-a3e0c868a4e7"
@@ -503,7 +503,7 @@
       "id": "0056",
       "nickname": "Meat Akyo",
       "avatarName": "肉Akyo",
-      "category": "Animal/Fox,Food,Animal,Meat,Real Photo",
+      "category": "Animal,Animal/Fox,Food,Meat,Real Photo",
       "comment": "",
       "author": "甘水あみ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_189e56d5-4ce0-4d9a-b965-e3b0f8056fb5"
@@ -521,7 +521,7 @@
       "id": "0058",
       "nickname": "Cyber Akyo",
       "avatarName": "CyberAkyo",
-      "category": "Mint Chocolate,Parody/Cyberpunk,Parody,Electronic",
+      "category": "Mint Chocolate,Parody,Parody/Cyberpunk,Electronic",
       "comment": "",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_130cc445-7bbe-4477-8b47-eae583097c5f"
@@ -530,7 +530,7 @@
       "id": "0059",
       "nickname": "Ground Self-Defense Force Akyo",
       "avatarName": "陸自Akyo",
-      "category": "Occupation/Status,Occupation/Status/Soldier,Occupation/Status/Civil Servant,Clothing/Accessory,Clothing/Accessory/Camouflage",
+      "category": "Role・Status,Role・Status/Soldier,Role・Status/Civil Servant,Fashion,Fashion/Camouflage",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2d80cf2e-afd4-464a-824e-27f38d4165de"
@@ -539,7 +539,7 @@
       "id": "0060",
       "nickname": "Farmer Akyo",
       "avatarName": "NOKYO",
-      "category": "Occupation/Status,Occupation/Status/Farmer,Daily Necessities",
+      "category": "Role・Status,Role・Status/Farmer,Daily Necessities",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb7a3393-d5e0-4580-9ab3-de2f34a25ee3"
@@ -557,7 +557,7 @@
       "id": "0062",
       "nickname": "Sunfish Akyo",
       "avatarName": "ManbowAkyo",
-      "category": "Animal/Fish,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1063161d-4535-4896-b797-0f5ba63042b8"
@@ -575,7 +575,7 @@
       "id": "0064",
       "nickname": "Denim Akyo",
       "avatarName": "Akyo_Denim",
-      "category": "Material・Texture,Soft",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4b4a1951-c15d-4adf-833f-dbe11d3e0752"
@@ -584,7 +584,7 @@
       "id": "0065",
       "nickname": "Magma Akyo",
       "avatarName": "Akyo_Magma",
-      "category": "Material・Texture,Material・Texture/Stone,Hard",
+      "category": "Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e85e82-5f1e-4557-a957-bed11f0c9f7a"
@@ -602,7 +602,7 @@
       "id": "0067",
       "nickname": "Stealth Akyo",
       "avatarName": "Akyo_Stealth",
-      "category": "Material・Texture,Soft,Clothing/Accessory,Clothing/Accessory/Camouflage",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Fashion,Fashion/Camouflage",
       "comment": "",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8f0a7c2d-4c8f-47ff-98cd-479a99b155d4"
@@ -629,7 +629,7 @@
       "id": "0070",
       "nickname": "This is Cat Akyo",
       "avatarName": "AKYo-040-jp",
-      "category": "Parody/SCP,Parody,Animal,Animal/Cat",
+      "category": "Parody,Parody/SCP,Animal,Animal/Cat",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7806ddb-31a4-454b-a3e7-1402214190bf"
@@ -656,7 +656,7 @@
       "id": "0073",
       "nickname": "Zundamon Akyo",
       "avatarName": "Akyodamon_yousei",
-      "category": "Parody/Zundamon,Parody",
+      "category": "Parody,Parody/Zundamon",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7fcde9bb-0dba-4e81-8457-ca29ada051d1"
@@ -710,7 +710,7 @@
       "id": "0079",
       "nickname": "Wanna Be Crab Akyo",
       "avatarName": "KanininaritaiAkyo",
-      "category": "Animal/Crab,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Crab,Animal/Marine Life",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b0c29ba2-2c8f-496d-abcf-6693567db8a5"
@@ -719,7 +719,7 @@
       "id": "0080",
       "nickname": "Rene Magritte Akyo",
       "avatarName": "Rene_MAkyoritte",
-      "category": "Animal/Fish,Art,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Art,Animal/Marine Life",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4bbdb42f-e1ff-4609-94df-bdf905b830fc"
@@ -746,7 +746,7 @@
       "id": "0083",
       "nickname": "Mole Akyo",
       "avatarName": "もぐらAkyo",
-      "category": "Animal/Mole,Animal",
+      "category": "Animal,Animal/Mole",
       "comment": "",
       "author": "スケタ_",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f7f10558-f0d3-43c2-996a-027264644d10"
@@ -755,7 +755,7 @@
       "id": "0084",
       "nickname": "Elephant Jellyfish Akyo",
       "avatarName": "ゾウクラゲAkyo",
-      "category": "Animal/Jellyfish,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Jellyfish,Animal/Marine Life",
       "comment": "",
       "author": "スケタ_",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d44f6860-c79f-41ab-b7a8-cb7cc9b4ee89"
@@ -782,7 +782,7 @@
       "id": "0087",
       "nickname": "School Swimsuit Akyo",
       "avatarName": "スク水あきょう",
-      "category": "Clothing/Accessory,Clothing/Accessory/Swimsuit,School",
+      "category": "Fashion,Fashion/Swimsuit,School",
       "comment": "",
       "author": "syuninn39",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f95048d-98e0-4b42-91fc-6c011037166f"
@@ -791,7 +791,7 @@
       "id": "0088",
       "nickname": "Garden Eel Akyo",
       "avatarName": "ちんあきょー",
-      "category": "Animal/Fish,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "syuninn39",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f1d2dab-b56a-456c-87ab-bf1d22913e41"
@@ -818,7 +818,7 @@
       "id": "0091",
       "nickname": "Stained Glass Akyo",
       "avatarName": "StainedGlassAkyo",
-      "category": "Art,Material・Texture,Material・Texture/Glass,Hard",
+      "category": "Art,Material・Raw Material,Material・Raw Material/Glass,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "Sau-AU",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_56f36a30-a80a-4bb4-a528-00432c10fa5d"
@@ -926,7 +926,7 @@
       "id": "0103",
       "nickname": "Voxel Akyo",
       "avatarName": "BoxelAkyo",
-      "category": "Material・Texture,Dimension,Dimension/3D",
+      "category": "Material・Raw Material,Dimension,Dimension/3D",
       "comment": "",
       "author": "Sau-AU",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_466a40fb-5aeb-4a7d-831b-5d815ddaa43e"
@@ -1025,7 +1025,7 @@
       "id": "0114",
       "nickname": "Fluffy Akyo",
       "avatarName": "ふわふわAkyo",
-      "category": "Material・Texture,Soft,Fur,Fur/Fluffy",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Fluffy",
       "comment": "Version 472 is by a different author.",
       "author": "雨音さかな",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_74cec706-10c1-4bb2-9f3d-6d829dbd182a"
@@ -1115,7 +1115,7 @@
       "id": "0124",
       "nickname": "Diffraction Grating Akyo",
       "avatarName": "回折格子Akyo",
-      "category": "Material・Texture,Material・Texture/Glass",
+      "category": "Material・Raw Material,Material・Raw Material/Glass",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a24f37ec-7d3a-4537-85a9-a58c18080737"
@@ -1133,7 +1133,7 @@
       "id": "0126",
       "nickname": "Leopard Gecko Akyo",
       "avatarName": "ヒョウモントカゲモドキAkyo",
-      "category": "Animal/Gecko,Animal",
+      "category": "Animal,Animal/Gecko",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c484e100-e8ec-4fd1-8ee8-10ffd543e537"
@@ -1178,7 +1178,7 @@
       "id": "0131",
       "nickname": "Dancer Akyo",
       "avatarName": "踊り子Akyo",
-      "category": "Occupation/Status",
+      "category": "Role・Status",
       "comment": "",
       "author": "YukiYukiVirtual",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b200729e-1158-43a5-9ff8-0a84fbca061f"
@@ -1187,7 +1187,7 @@
       "id": "0132",
       "nickname": "Gucci Akyo",
       "avatarName": "Gucci Akyo",
-      "category": "Clothing/Accessory",
+      "category": "Fashion",
       "comment": "The pattern is free, so it's legally safe.",
       "author": "SplitScream",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0662515d-ce3d-4f57-b9a6-e08b7bb5eff2"
@@ -1205,7 +1205,7 @@
       "id": "0134",
       "nickname": "Amethyst Akyo",
       "avatarName": "AmethystAkyo",
-      "category": "Material・Texture,Material・Texture/Stone,Hard",
+      "category": "Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "しみずあきら",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffad6923-877f-4a5d-83b1-d4c2bb8d66b1"
@@ -1214,7 +1214,7 @@
       "id": "0135",
       "nickname": "Cardboard Akyo",
       "avatarName": "akyo snake",
-      "category": "Parody/Metal Gear Solid,Parody",
+      "category": "Parody,Parody/Metal Gear Solid",
       "comment": "",
       "author": "qchan949",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6cc5a8d4-d1e9-49f5-8836-6afe115e3bd6"
@@ -1250,7 +1250,7 @@
       "id": "0139",
       "nickname": "Olaf Akyo",
       "avatarName": "akyo_orf",
-      "category": "Season・Event,Environment・Weather,Material・Texture,Cold,Season・Event/Winter",
+      "category": "Season・Event,Environment・Weather,Material・Raw Material,Shape・Texture,Shape・Texture/Cold,Season・Event/Winter",
       "comment": "",
       "author": "qchan949",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4a34a656-b5f0-4367-890f-019196f6613a"
@@ -1367,7 +1367,7 @@
       "id": "0152",
       "nickname": "Poncho Akyo",
       "avatarName": "akyo___________雨",
-      "category": "Clothing/Accessory,Environment・Weather,Environment・Weather/Rain",
+      "category": "Fashion,Environment・Weather,Environment・Weather/Rain",
       "comment": "Initially, the underscores in avatar names were long.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea0397b8-c8e1-4c9a-a1e7-c5ca48c090de"
@@ -1376,7 +1376,7 @@
       "id": "0153",
       "nickname": "Halloween Akyo",
       "avatarName": "akyo__________コスプレ",
-      "category": "Season・Event/Halloween,Season・Event",
+      "category": "Season・Event,Season・Event/Halloween",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c73ed86-4a38-444e-b322-a6e02bca900c"
@@ -1385,7 +1385,7 @@
       "id": "0154",
       "nickname": "Construction Akyo",
       "avatarName": "akyo____安全",
-      "category": "Mint Chocolate,Occupation/Status",
+      "category": "Mint Chocolate,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cc69727b-9d2b-4e74-b874-3235df98c67f"
@@ -1394,7 +1394,7 @@
       "id": "0155",
       "nickname": "Towel Akyo",
       "avatarName": "akyo____タオル",
-      "category": "Daily Necessities,Equipment/Bath,Equipment",
+      "category": "Daily Necessities,Equipment,Equipment/Bath",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_969d3c87-669c-475a-8721-41e691ec6aef"
@@ -1403,7 +1403,7 @@
       "id": "0156",
       "nickname": "Aloha Akyo",
       "avatarName": "akyo____アロハ",
-      "category": "Clothing/Accessory",
+      "category": "Fashion",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f618b1bc-8093-472a-873c-a3370f6bcab4"
@@ -1421,7 +1421,7 @@
       "id": "0158",
       "nickname": "Santa Akyo",
       "avatarName": "akyo___サンタ",
-      "category": "Clothing/Accessory,Season・Event,Season・Event/Christmas",
+      "category": "Fashion,Season・Event,Season・Event/Christmas",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fc36d46b-05bf-495d-b946-cbf61119bfa2"
@@ -1430,7 +1430,7 @@
       "id": "0159",
       "nickname": "Fox Akyo",
       "avatarName": "akyo__fox",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fc558b6d-0f92-4288-a712-13c6b2e95de9"
@@ -1448,7 +1448,7 @@
       "id": "0161",
       "nickname": "Fox Akyo 2",
       "avatarName": "akyo__fox3",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_61185638-323e-42c9-9048-a5d4d9f1281f"
@@ -1520,7 +1520,7 @@
       "id": "0169",
       "nickname": "Dragon Akyo",
       "avatarName": "akyo_どらごん 1․52",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a197978a-19f3-4282-95f9-884320ef57c7"
@@ -1583,7 +1583,7 @@
       "id": "0176",
       "nickname": "Nurse Akyo",
       "avatarName": "akyo_ナース",
-      "category": "Occupation/Status,Occupation/Status/Healthcare Worker",
+      "category": "Role・Status,Role・Status/Healthcare Worker",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_90058d68-5c07-4632-a4e0-ee53b0344a55"
@@ -1592,7 +1592,7 @@
       "id": "0177",
       "nickname": "Muffler Akyo",
       "avatarName": "akyo_マフラー",
-      "category": "Clothing/Accessory",
+      "category": "Fashion",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b0dd2e0a-012c-4867-99c8-22a7e4b0ee79"
@@ -1637,7 +1637,7 @@
       "id": "0182",
       "nickname": "Sister Akyo",
       "avatarName": "akyo_シスター",
-      "category": "Occupation/Status",
+      "category": "Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3b3feea7-e6ec-414b-b4b3-83152f02954a"
@@ -1646,7 +1646,7 @@
       "id": "0183",
       "nickname": "Fox Sister Akyo",
       "avatarName": "akyo_狐シスター",
-      "category": "Animal/Fox,Animal,Occupation/Status",
+      "category": "Animal,Animal/Fox,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_475416d0-6e42-402b-b5e0-129cc8d8a071"
@@ -1655,7 +1655,7 @@
       "id": "0184",
       "nickname": "Postal Akyo",
       "avatarName": "akyo_郵便",
-      "category": "Occupation/Status,Occupation/Status/Delivery Worker",
+      "category": "Role・Status,Role・Status/Delivery Worker",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cd62208e-db35-4573-9454-c5b18d9392a5"
@@ -1700,7 +1700,7 @@
       "id": "0189",
       "nickname": "Indian Akyo",
       "avatarName": "akyo_いんでぃあん",
-      "category": "Clothing/Accessory",
+      "category": "Fashion",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_69288b67-c532-4dba-b16d-8ed3993582c0"
@@ -1736,7 +1736,7 @@
       "id": "0193",
       "nickname": "Ninja Akyo",
       "avatarName": "akyo_ninja",
-      "category": "Occupation/Status,Country,Country/Japan",
+      "category": "Role・Status,Country,Country/Japan",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bfb73e94-4acf-4401-80fc-e8175486e0f6"
@@ -1781,7 +1781,7 @@
       "id": "0198",
       "nickname": "Bunny Akyo",
       "avatarName": "akyo_バニー",
-      "category": "Clothing/Accessory,Pretty",
+      "category": "Fashion,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_99d9cfe3-5b6c-4ab6-a48f-f3ccb4c020c9"
@@ -1826,7 +1826,7 @@
       "id": "0203",
       "nickname": "Yukata Akyo",
       "avatarName": "akyo_yukata1",
-      "category": "Clothing/Accessory",
+      "category": "Fashion",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2ccce43-1bb6-4962-be94-bf341e6df024"
@@ -1853,7 +1853,7 @@
       "id": "0206",
       "nickname": "Seaside Akyo",
       "avatarName": "akyo_sea",
-      "category": "Environment・Weather,Skill・Trait/Diving,Skill・Trait",
+      "category": "Environment・Weather,Skill・Trait,Skill・Trait/Diving",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_90e8e6ec-c455-4a45-b778-89651e4baec3"
@@ -1862,7 +1862,7 @@
       "id": "0207",
       "nickname": "Foot Soldier Akyo",
       "avatarName": "akyo_asigaru2",
-      "category": "Occupation/Status,Occupation/Status/Soldier,Military・Weapons,Country,Country/Japan",
+      "category": "Role・Status,Role・Status/Soldier,Military・Weapons,Country,Country/Japan",
       "comment": "Asigaru1 is a rejected proposal",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_711b3c52-9f3d-479b-abdc-6c1b3f639cbd"
@@ -1880,7 +1880,7 @@
       "id": "0209",
       "nickname": "Franken Akyo",
       "avatarName": "akyo_フランケン",
-      "category": "Season・Event/Halloween,Season・Event,Fictional Being,Fictional Being/Yokai・Ghost",
+      "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c86e679-6d0e-4a64-8aec-a666c0bb3127"
@@ -1889,7 +1889,7 @@
       "id": "0210",
       "nickname": "Mummy Akyo",
       "avatarName": "akyo_ミイラ",
-      "category": "Season・Event/Halloween,Season・Event,Fictional Being,Fictional Being/Yokai・Ghost",
+      "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c1a939ff-b601-46ad-8041-49948e8d04f9"
@@ -1907,7 +1907,7 @@
       "id": "0212",
       "nickname": "Coat Fox Akyo",
       "avatarName": "akyo_coat",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_20553520-5c47-41cf-9815-1c160e1a8cfd"
@@ -1925,7 +1925,7 @@
       "id": "0214",
       "nickname": "Shrine Maiden Fox Akyo",
       "avatarName": "akyo_miko",
-      "category": "Animal/Fox,Animal,Occupation/Status",
+      "category": "Animal,Animal/Fox,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0c16e22-fb58-4040-b58b-bcce4ce9ffa1"
@@ -1943,7 +1943,7 @@
       "id": "0216",
       "nickname": "Low-Poly Fox Akyo",
       "avatarName": "akyo_狐ローポリ",
-      "category": "Animal/Fox,Animal,Low-poly",
+      "category": "Animal,Animal/Fox,Low-poly",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_298de4f3-d106-4742-a795-7442cd7bd5cd"
@@ -1961,7 +1961,7 @@
       "id": "0218",
       "nickname": "Egyptian Pharaoh Akyo",
       "avatarName": "akyo_ファラオ",
-      "category": "History,Country,Country/Egypt,Occupation/Status,Occupation/Status/Royalty,Ruler",
+      "category": "History,Country,Country/Egypt,Role・Status,Role・Status/Royalty,Ruler",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e08913-bd24-4e64-9175-5eefc0d5cf32"
@@ -1970,7 +1970,7 @@
       "id": "0219",
       "nickname": "Fox Taiyaki Akyo",
       "avatarName": "akyo_taiyaki",
-      "category": "Animal/Fox,Animal,Food,Food/Dish",
+      "category": "Animal,Animal/Fox,Food,Food/Dish",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ceeb309c-1a40-4428-b40a-b2db5c5c926c"
@@ -1997,7 +1997,7 @@
       "id": "0222",
       "nickname": "Pirate Akyo",
       "avatarName": "akyo_kaizoku",
-      "category": "Occupation/Status",
+      "category": "Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f02535d3-5b8a-4589-a468-a129f002c45b"
@@ -2006,7 +2006,7 @@
       "id": "0223",
       "nickname": "Fox Akyo V2",
       "avatarName": "akyo_fox V2",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_270596d5-eb6c-49f0-8e3e-547b8ad5dfad"
@@ -2024,7 +2024,7 @@
       "id": "0225",
       "nickname": "Cleaning Akyo",
       "avatarName": "akyo___おそうじ 0․303",
-      "category": "Occupation/Status,Daily Necessities",
+      "category": "Role・Status,Daily Necessities",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4aa294f8-df3e-447b-b5d1-9753663a69e3"
@@ -2042,7 +2042,7 @@
       "id": "0227",
       "nickname": "Furisode Fox Akyo",
       "avatarName": "きつねkyo_振袖",
-      "category": "Animal/Fox,Animal,Season・Event,Season・Event/New Year",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/New Year",
       "comment": "A is not present",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0d6f6089-2fda-4125-86ce-30d53ac2e548"
@@ -2051,7 +2051,7 @@
       "id": "0228",
       "nickname": "Nine-Tailed Fox Akyo",
       "avatarName": "akyo_fox9 1․55",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "She's also wearing a yukata.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_347af16a-3802-4214-846c-f027276410df"
@@ -2069,7 +2069,7 @@
       "id": "0230",
       "nickname": "Maid Fox Akyo",
       "avatarName": "akyo___メイド 1․74",
-      "category": "Animal/Fox,Animal,Occupation/Status,Pretty",
+      "category": "Animal,Animal/Fox,Role・Status,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b6d06215-a01a-44f7-abfe-f9ef5d57b1db"
@@ -2087,7 +2087,7 @@
       "id": "0232",
       "nickname": "Infantry Akyo",
       "avatarName": "akyo__歩兵",
-      "category": "Occupation/Status,Occupation/Status/Soldier",
+      "category": "Role・Status,Role・Status/Soldier",
       "comment": "Is green mint chocolate?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_44db453a-6048-4c21-b993-4dd3717bfc1d"
@@ -2096,7 +2096,7 @@
       "id": "0233",
       "nickname": "Glasses Akyo",
       "avatarName": "akyo__papipo 1․01",
-      "category": "Clothing/Accessory,Clothing/Accessory/Glasses,Parody,Parody/Person",
+      "category": "Fashion,Fashion/Glasses,Parody,Parody/Person",
       "comment": "Is there an original source?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f68c924d-b93d-4d59-ba31-5d12abfe5a0f"
@@ -2132,7 +2132,7 @@
       "id": "0237",
       "nickname": "Dracula Akyo",
       "avatarName": "akyo__Helloween",
-      "category": "Season・Event/Halloween,Season・Event,Fictional Being,Fictional Being/Yokai・Ghost",
+      "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_839891c0-f3a2-4338-b071-a25a423d2567"
@@ -2141,7 +2141,7 @@
       "id": "0238",
       "nickname": "Ghost Fox Akyo",
       "avatarName": "ローポリきつねyu-rei",
-      "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Animal,Fictional Being,Fictional Being/Yokai・Ghost,Low-poly",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost,Low-poly",
       "comment": "Status unknown, needs confirmation",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bd6c9d1b-c6da-4d2a-9ebc-ce4453c94dd5"
@@ -2150,7 +2150,7 @@
       "id": "0239",
       "nickname": "Idol Fox Akyo",
       "avatarName": "akyo きつねidol",
-      "category": "Animal/Fox,Animal,Occupation/Status,Pretty",
+      "category": "Animal,Animal/Fox,Role・Status,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bb0395-8436-4dd9-b753-1d3555ebf798"
@@ -2177,7 +2177,7 @@
       "id": "0242",
       "nickname": "Traveling Fox Akyo / Poncho Fox Akyo",
       "avatarName": "fox pontyo 0․4",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Environment・Weather,Environment・Weather/Rain",
+      "category": "Animal,Animal/Fox,Fashion,Environment・Weather,Environment・Weather/Rain",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b32ab8eb-a15b-416f-ae7b-2ee4a1b5b9a7"
@@ -2213,7 +2213,7 @@
       "id": "0246",
       "nickname": "Fox Udon Akyo",
       "avatarName": "akyo_fox_udon",
-      "category": "Animal/Fox,Animal,Food,Food/Dish",
+      "category": "Animal,Animal/Fox,Food,Food/Dish",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34e805c0-2030-4fba-b60b-5225fa62c893"
@@ -2222,7 +2222,7 @@
       "id": "0247",
       "nickname": "Cherry Blossom Fox Akyo",
       "avatarName": "akyo fox sakura",
-      "category": "Animal/Fox,Animal,Plant",
+      "category": "Animal,Animal/Fox,Plant",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_44f31d4e-bb9e-4979-9034-9fe48c6474ad"
@@ -2231,7 +2231,7 @@
       "id": "0248",
       "nickname": "Summer Fox Akyo",
       "avatarName": "akyo fox summer",
-      "category": "Animal/Fox,Animal,Season・Event",
+      "category": "Animal,Animal/Fox,Season・Event",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75e7aea-f210-4a94-85be-6ee2a23d4c94"
@@ -2294,7 +2294,7 @@
       "id": "0255",
       "nickname": "Triceratops Akyo",
       "avatarName": "akyo_トリケラ",
-      "category": "Animal/Dinosaur,Animal,Quadruped",
+      "category": "Animal,Animal/Dinosaur,Quadruped",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7aed34-d6f0-42d1-bd93-bf97447e3c06"
@@ -2303,7 +2303,7 @@
       "id": "0256",
       "nickname": "Stegosaurus Akyo",
       "avatarName": "akyo_sutego",
-      "category": "Animal/Dinosaur,Animal,Quadruped",
+      "category": "Animal,Animal/Dinosaur,Quadruped",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a1b7da99-1ac6-4374-9d2f-40d896dd8722"
@@ -2312,7 +2312,7 @@
       "id": "0257",
       "nickname": "Pteranodon Akyo",
       "avatarName": "akyo_putera",
-      "category": "Animal/Dinosaur,Animal",
+      "category": "Animal,Animal/Dinosaur",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b8ac1e0d-54b4-4bac-9070-3a3cecd9b8d2"
@@ -2321,7 +2321,7 @@
       "id": "0258",
       "nickname": "Hot Fox Akyo",
       "avatarName": "akyo_hotfox",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cbbfe341-412e-46ee-ae10-8f0e36bfba41"
@@ -2330,7 +2330,7 @@
       "id": "0259",
       "nickname": "T-Rex Akyo",
       "avatarName": "akyo_ティラノ",
-      "category": "Animal/Dinosaur,Animal",
+      "category": "Animal,Animal/Dinosaur",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f0c70f5a-be7a-4d0a-a5ae-7f59e09e7e0e"
@@ -2366,7 +2366,7 @@
       "id": "0263",
       "nickname": "Paper Akyo",
       "avatarName": "akyo_paper",
-      "category": "Material・Texture,Material・Texture/Plant/Wood",
+      "category": "Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2ad9aca-efab-4ea1-a4f3-f34ef46bfa12"
@@ -2375,7 +2375,7 @@
       "id": "0264",
       "nickname": "Sleepwear Cat Akyo",
       "avatarName": "akyo_fox nemaki",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6a9e2984-e3a7-4426-b92b-e1c448606b17"
@@ -2537,7 +2537,7 @@
       "id": "0282",
       "nickname": "Kid Akyo",
       "avatarName": "akyo_kids",
-      "category": "Clothing/Accessory,Clothing/Accessory/Hat,Bandage,Age Group,Age Group/Child",
+      "category": "Fashion,Fashion/Hat,Bandage,Age Group,Age Group/Child",
       "comment": "Akyo was also blue.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_372cb668-9809-4dac-91ec-2d1c500a19a1"
@@ -2564,7 +2564,7 @@
       "id": "0285",
       "nickname": "Eraser Akyo",
       "avatarName": "akyo_kesigomu",
-      "category": "Daily Necessities,School,Material・Texture,Soft",
+      "category": "Daily Necessities,School,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5c5210ce-ba4a-495b-a620-f843847a61d9"
@@ -2573,7 +2573,7 @@
       "id": "0286",
       "nickname": "Jiangshi Akyo",
       "avatarName": "akyo_キョンシー",
-      "category": "Season・Event/Halloween,Season・Event,Fictional Being,Fictional Being/Yokai・Ghost",
+      "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_99abe0dd-2e1f-424a-bd8c-84f93c0294bf"
@@ -2582,7 +2582,7 @@
       "id": "0287",
       "nickname": "Shampoo Akyo",
       "avatarName": "akyo_シャンプー",
-      "category": "Daily Necessities,Equipment/Bath,Equipment",
+      "category": "Daily Necessities,Equipment,Equipment/Bath",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c41de7a4-73f5-49bd-bc9b-7318aea4a628"
@@ -2591,7 +2591,7 @@
       "id": "0288",
       "nickname": "Brachiosaurus Akyo",
       "avatarName": "akyo_ブラキオ",
-      "category": "Animal/Dinosaur,Animal,Quadruped",
+      "category": "Animal,Animal/Dinosaur,Quadruped",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6928d36e-778f-492e-b6f8-bd257734b4da"
@@ -2618,7 +2618,7 @@
       "id": "0291",
       "nickname": "Plesiosaurus Akyo",
       "avatarName": "akyo_プレシオ",
-      "category": "Animal/Dinosaur,Animal,Quadruped",
+      "category": "Animal,Animal/Dinosaur,Quadruped",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f24f0b20-f2b0-473f-b740-251916488e6c"
@@ -2663,7 +2663,7 @@
       "id": "0296",
       "nickname": "Toast Fox Akyo",
       "avatarName": "akyo_きつねトースト",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e7f025f3-5e4d-4600-80e1-6ce8739fd929"
@@ -2699,7 +2699,7 @@
       "id": "0300",
       "nickname": "Adventure Fox Akyo",
       "avatarName": "akyo_きつねぼうけん",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_da2e8f1e-fc9f-4868-9c01-43cc61b3d3b7"
@@ -2708,7 +2708,7 @@
       "id": "0301",
       "nickname": "Chef Fox Akyo",
       "avatarName": "akyo_コックさん",
-      "category": "Animal,Animal/Fox,Occupation/Status",
+      "category": "Animal,Animal/Fox,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a5b5fb92-581d-45c8-98ab-4b8abf668aa9"
@@ -2717,7 +2717,7 @@
       "id": "0302",
       "nickname": "Police Fox Akyo",
       "avatarName": "akyo_foxKeikan 1․3",
-      "category": "Animal,Animal/Fox,Occupation/Status,Occupation/Status/Civil Servant",
+      "category": "Animal,Animal/Fox,Role・Status,Role・Status/Civil Servant",
       "comment": "You're under arrest.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef434fa8-5f77-4a1d-beaa-fbfc10e506ec"
@@ -2735,7 +2735,7 @@
       "id": "0304",
       "nickname": "Molting Fox Akyo",
       "avatarName": "akyo_きつね換毛期",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9efb2906-0d31-4797-b751-84444db99249"
@@ -2753,7 +2753,7 @@
       "id": "0306",
       "nickname": "Space Fox Akyo",
       "avatarName": "akyo_fox space 1․07",
-      "category": "Animal,Animal/Fox,Environment・Weather,Occupation/Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
+      "category": "Animal,Animal/Fox,Environment・Weather,Role・Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b3112b5-a594-46d3-a5da-74c3be8b8ba0"
@@ -2771,7 +2771,7 @@
       "id": "0308",
       "nickname": "Firefighter Fox Akyo",
       "avatarName": "akyo_fox syoubou 0․4",
-      "category": "Animal,Animal/Fox,Occupation/Status,Occupation/Status/Civil Servant",
+      "category": "Animal,Animal/Fox,Role・Status,Role・Status/Civil Servant",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4fc01e6a-ae87-4ea9-8a17-34160c89b36f"
@@ -2816,7 +2816,7 @@
       "id": "0313",
       "nickname": "Doctor Fox Akyo",
       "avatarName": "akyo_きつねいしゃ",
-      "category": "Animal/Fox,Animal,Occupation/Status,Occupation/Status/Healthcare Worker",
+      "category": "Animal,Animal/Fox,Role・Status,Role・Status/Healthcare Worker",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_19b1c941-7da8-42f8-af18-25c8689dbb58"
@@ -2825,7 +2825,7 @@
       "id": "0314",
       "nickname": "British Fox Akyo",
       "avatarName": "akyo_きつね英国",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a26d5f16-e51c-4b7d-8f7b-55bea29ee79c"
@@ -2870,7 +2870,7 @@
       "id": "0319",
       "nickname": "High School Girl Fox Akyo",
       "avatarName": "akyo_きつねjk",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ea6b4af-790c-44d3-a37b-638fc9d3cd01"
@@ -2879,7 +2879,7 @@
       "id": "0320",
       "nickname": "High School Cheerleader Fox Akyo",
       "avatarName": "akyo_チアきつね",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bc3582f6-8e84-4ad8-9baf-6433f041ab61"
@@ -2951,7 +2951,7 @@
       "id": "0328",
       "nickname": "Wyvern Akyo",
       "avatarName": "akyo_わいばーん 0․9",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_609ce6a5-44c6-4086-8598-5409e8355283"
@@ -2960,7 +2960,7 @@
       "id": "0329",
       "nickname": "Winter Fox Akyo",
       "avatarName": "akyo_きつね冬",
-      "category": "Animal/Fox,Animal,Season・Event",
+      "category": "Animal,Animal/Fox,Season・Event",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_560fbf6f-fde6-49b6-be9c-df2c498468e0"
@@ -2969,7 +2969,7 @@
       "id": "0330",
       "nickname": "Fruit Fox Akyo",
       "avatarName": "akyo_fox fruits",
-      "category": "Animal/Fox,Animal,Food,Food/Fruit",
+      "category": "Animal,Animal/Fox,Food,Food/Fruit",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6b4cd56e-dbc2-4be1-bcd5-4f80cbd49fd2"
@@ -2987,7 +2987,7 @@
       "id": "0332",
       "nickname": "Samurai Akyo",
       "avatarName": "akyo_samurai",
-      "category": "History,Occupation/Status,Occupation/Status/Soldier,Military・Weapons,Country,Country/Japan",
+      "category": "History,Role・Status,Role・Status/Soldier,Military・Weapons,Country,Country/Japan",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b457017-3fd0-4fd7-bb8e-172f35487c34"
@@ -2996,7 +2996,7 @@
       "id": "0333",
       "nickname": "Fox Samurai Akyo",
       "avatarName": "akyo_きつね侍",
-      "category": "Animal/Fox,Animal,History,Occupation/Status,Occupation/Status/Soldier,Military・Weapons,Country,Country/Japan",
+      "category": "Animal,Animal/Fox,History,Role・Status,Role・Status/Soldier,Military・Weapons,Country,Country/Japan",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_32c0de34-9e10-4537-85fb-97aa19c20a15"
@@ -3005,7 +3005,7 @@
       "id": "0334",
       "nickname": "Detective Fox Akyo",
       "avatarName": "akyo_fox探偵",
-      "category": "Animal/Fox,Animal,Occupation/Status",
+      "category": "Animal,Animal/Fox,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_41736927-28e7-4914-8b5c-6155c04291b4"
@@ -3041,7 +3041,7 @@
       "id": "0338",
       "nickname": "Lon Akyo",
       "avatarName": "akyo_ryuu",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4d6dc03d-98c2-4475-977a-fe1300f65be1"
@@ -3050,7 +3050,7 @@
       "id": "0339",
       "nickname": "Loyal Fox Akyo",
       "avatarName": "akyo_fox okitune",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f8501fd2-c7e5-4875-9315-36c4a64abe94"
@@ -3077,7 +3077,7 @@
       "id": "0342",
       "nickname": "Lunch Fox Akyo",
       "avatarName": "akyo_foxBENTOU",
-      "category": "Animal/Fox,Animal,Food,Food/Dish",
+      "category": "Animal,Animal/Fox,Food,Food/Dish",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a1d965d2-b004-4e98-bfd8-4bc5a292bd5b"
@@ -3086,7 +3086,7 @@
       "id": "0343",
       "nickname": "Sandwich Fox Akyo",
       "avatarName": "akyo_きつねサンド",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_971afb40-f6e1-4056-9365-8d01181780a9"
@@ -3104,7 +3104,7 @@
       "id": "0345",
       "nickname": "Down Jacket Fox Akyo",
       "avatarName": "akyo_きつねダウン",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_01d23e78-5e37-45a1-adb5-1c86ef867142"
@@ -3113,7 +3113,7 @@
       "id": "0346",
       "nickname": "Magical Fox Akyo",
       "avatarName": "akyo_FoxMagic",
-      "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Animal,Roleplay,Skill・Trait",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_88494bab-d2bc-43f2-ae26-e886b86d9dae"
@@ -3122,7 +3122,7 @@
       "id": "0347",
       "nickname": "Halloween Pumpkin Akyo",
       "avatarName": "akyo_ハロウィンカボチャ",
-      "category": "Season・Event/Halloween,Season・Event",
+      "category": "Season・Event,Season・Event/Halloween",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_62d7d050-c40e-4c60-936e-6dfc4809e646"
@@ -3131,7 +3131,7 @@
       "id": "0348",
       "nickname": "Magical Dragon Akyo",
       "avatarName": "akyo_DragonMagic",
-      "category": "Fictional Being,Skill・Trait/Flying,Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Animal,Fictional Being/Dragon,Roleplay,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Skill・Trait/Magic,Animal,Fictional Being/Dragon,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_96199d43-c85e-4830-967a-30280694a643"
@@ -3140,7 +3140,7 @@
       "id": "0349",
       "nickname": "Dragon Set Akyo",
       "avatarName": "akyo_どらごんセット",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_58d857fa-4105-4d0e-98e5-60e8fd7cafd8"
@@ -3149,7 +3149,7 @@
       "id": "0350",
       "nickname": "Detective Dragon Akyo",
       "avatarName": "akyo_どらごん探偵",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Occupation/Status,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Role・Status,Fictional Being/Dragon",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5cec5888-b04c-4bad-8bf3-67c043daa73b"
@@ -3158,7 +3158,7 @@
       "id": "0351",
       "nickname": "Angel Fox Akyo",
       "avatarName": "akyo engel",
-      "category": "Animal/Fox,Animal,Fictional Being,Fictional Being/God",
+      "category": "Animal,Animal/Fox,Fictional Being,Fictional Being/God",
       "comment": "There's also an Angel Akyo by another author.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b600825f-8da6-462a-bb17-0e932ed01354"
@@ -3176,7 +3176,7 @@
       "id": "0353",
       "nickname": "Coat Fox Akyo 4",
       "avatarName": "akyo_foxCoat4",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "It is said that the absence of 2 and 3 is intentional.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0fc2d16c-5f9e-4cd4-8172-ce57c420e5c7"
@@ -3212,7 +3212,7 @@
       "id": "0357",
       "nickname": "Knight Dragon Akyo",
       "avatarName": "akyo_どらごんないと",
-      "category": "Fictional Being,Skill・Trait/Flying,Season・Event/Halloween,Season・Event,Animal,Fictional Being/Dragon,Roleplay,Occupation/Status,Military・Weapons,Occupation/Status/Soldier,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Animal,Fictional Being/Dragon,Roleplay,Role・Status,Military・Weapons,Role・Status/Soldier",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eec93a2a-cc5f-4106-bd3b-35969990009b"
@@ -3221,7 +3221,7 @@
       "id": "0358",
       "nickname": "Bath Fox Akyo",
       "avatarName": "akyo_foxBath",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Equipment,Equipment/Bath",
+      "category": "Animal,Animal/Fox,Fashion,Equipment,Equipment/Bath",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f5ff713f-0094-45b2-97b6-90f5722308eb"
@@ -3230,7 +3230,7 @@
       "id": "0359",
       "nickname": "King Akyo",
       "avatarName": "akyo_king",
-      "category": "Occupation/Status,Occupation/Status/Royalty,Ruler,Beard",
+      "category": "Role・Status,Role・Status/Royalty,Ruler,Fashion,Fashion/Beard",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_86a2c20a-370f-41b1-9ae8-92c37231dc6d"
@@ -3239,7 +3239,7 @@
       "id": "0360",
       "nickname": "Wedding Dragon Akyo",
       "avatarName": "akyo_どらごん振袖",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Season・Event,Season・Event/New Year,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Season・Event,Season・Event/New Year",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0458f77-35e9-4656-aaa5-ff622d81c619"
@@ -3293,7 +3293,7 @@
       "id": "0366",
       "nickname": "Fox Wedding Akyo",
       "avatarName": "akyo_きつねの嫁入り",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Season・Event,Season・Event/Romance,Pretty",
+      "category": "Animal,Animal/Fox,Fashion,Season・Event,Season・Event/Romance,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b11f07af-9755-4405-87dc-8297e1716db8"
@@ -3311,7 +3311,7 @@
       "id": "0368",
       "nickname": "Wedding Groom Akyo",
       "avatarName": "akyo_狐の嫁入り2",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Season・Event,Season・Event/Romance",
+      "category": "Animal,Animal/Fox,Fashion,Season・Event,Season・Event/Romance",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_08f05b3b-fd93-4dd4-83f5-4fbb6792dd6e"
@@ -3320,7 +3320,7 @@
       "id": "0369",
       "nickname": "Wedding Attendant Fox Akyo",
       "avatarName": "akyo_きつね つきそい",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4854b039-8a6c-48be-b035-e95f59af6a85"
@@ -3374,7 +3374,7 @@
       "id": "0375",
       "nickname": "Loader Akyo 2/Loader Fox Akyo",
       "avatarName": "akyo_ローダー2",
-      "category": "Animal/Fox,Animal,Mint Chocolate,Military・Weapons",
+      "category": "Animal,Animal/Fox,Mint Chocolate,Military・Weapons",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fcfb1c55-baf9-45ec-a14e-0e8a224e6ffd"
@@ -3401,7 +3401,7 @@
       "id": "0378",
       "nickname": "Scarf Fox Akyo",
       "avatarName": "akyo_きつねスカーフ",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_88033f7b-5f8b-45bf-9656-db61a83464d9"
@@ -3410,7 +3410,7 @@
       "id": "0379",
       "nickname": "Toast Fox Akyo 2",
       "avatarName": "akyo_foxトースト2",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "Failed to integrate",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_463a9a9d-9ae3-4667-b209-914ba2586051"
@@ -3446,7 +3446,7 @@
       "id": "0383",
       "nickname": "Japanese Maid Fox Akyo",
       "avatarName": "akyo_きつね和メイド",
-      "category": "Animal/Fox,Animal,Occupation/Status,Pretty",
+      "category": "Animal,Animal/Fox,Role・Status,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2ebe0457-ed55-4618-96d4-dfde88bee666"
@@ -3473,7 +3473,7 @@
       "id": "0386",
       "nickname": "Bread Loaf Fox Akyo",
       "avatarName": "akyo_to-st fox",
-      "category": "Animal/Fox,Animal,Food,Food/Dish",
+      "category": "Animal,Animal/Fox,Food,Food/Dish",
       "comment": "Same comment as #385",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b950ae46-6ba0-4830-b55a-77957f468a1d"
@@ -3518,7 +3518,7 @@
       "id": "0391",
       "nickname": "Uncle Akyo/Akyo Oji",
       "avatarName": "akyo_ozi",
-      "category": "Occupation/Status,Occupation/Status/Farmer,Age Group,Age Group/Elderly,Beard",
+      "category": "Role・Status,Role・Status/Farmer,Age Group,Age Group/Elderly,Fashion,Fashion/Beard",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e21d1394-394f-4bc3-a68a-55462ec730b6"
@@ -3536,7 +3536,7 @@
       "id": "0393",
       "nickname": "Lord Akyo",
       "avatarName": "akyo_tono",
-      "category": "Occupation/Status,Ruler,Country,Country/Japan,History,Chonmage",
+      "category": "Role・Status,Ruler,Country,Country/Japan,History,Chonmage",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
@@ -3545,7 +3545,7 @@
       "id": "0394",
       "nickname": "Submarine Akyo",
       "avatarName": "akyo_せんすい",
-      "category": "Occupation/Status,Skill・Trait/Diving,Skill・Trait",
+      "category": "Role・Status,Skill・Trait,Skill・Trait/Diving",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_131de112-3d4a-48a7-a9d5-c3f723091a78"
@@ -3590,7 +3590,7 @@
       "id": "0399",
       "nickname": "Mask Akyo",
       "avatarName": "akyo_omen",
-      "category": "Parody/Strange Houses,Parody",
+      "category": "Parody,Parody/Strange Houses",
       "comment": "Is something wrong with this Akyo?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b2fa062c-7143-4a06-9cb2-8d35c5f23d8f"
@@ -3599,7 +3599,7 @@
       "id": "0400",
       "nickname": "Sumo Wrestler Akyo",
       "avatarName": "akyo_rikishi",
-      "category": "Occupation/Status,Country,Country/Japan",
+      "category": "Role・Status,Country,Country/Japan",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_16421321-cee6-4ae4-8546-6ce4c435a2e8"
@@ -3617,7 +3617,7 @@
       "id": "0402",
       "nickname": "Fishing Akyo",
       "avatarName": "akyo_つり",
-      "category": "Occupation/Status",
+      "category": "Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e6c065ac-bfbd-451c-bc4a-9a14a34e9055"
@@ -3626,7 +3626,7 @@
       "id": "0403",
       "nickname": "Messy Akyo",
       "avatarName": "akyo_モサモサ",
-      "category": "Material・Texture,Soft,Fur,Fur/Shaggy",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Shaggy",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_574728ce-c4c4-4410-a1df-4a4ae377411b"
@@ -3635,7 +3635,7 @@
       "id": "0404",
       "nickname": "Pudding Fox Akyo",
       "avatarName": "akyo_きつねプリン",
-      "category": "Animal/Fox,Animal,Food,Food/Sweets",
+      "category": "Animal,Animal/Fox,Food,Food/Sweets",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ff5143b-53f9-44a5-8b7a-ddf65574189b"
@@ -3662,7 +3662,7 @@
       "id": "0407",
       "nickname": "Cafe Fox Akyo",
       "avatarName": "akyo_きつねcafe",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_64e71072-2049-47fb-b0df-632f5c93cb9a"
@@ -3671,7 +3671,7 @@
       "id": "0408",
       "nickname": "Artist Fox Akyo",
       "avatarName": "akyo_fox art",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0af97e1a-50f2-47dd-ac0c-a9ee8236b692"
@@ -3689,7 +3689,7 @@
       "id": "0410",
       "nickname": "Ground Combat Fox Akyo",
       "avatarName": "陸戦型きつねakyo",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b12a04f-19fb-441f-8c8b-beeeb3c2d14d"
@@ -3698,7 +3698,7 @@
       "id": "0411",
       "nickname": "Red Fox Akyo",
       "avatarName": "赤きつねakyo 1․1",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_99635a51-2477-47f8-a4ed-a828215e10db"
@@ -3707,7 +3707,7 @@
       "id": "0412",
       "nickname": "Tibetan Fox Akyo",
       "avatarName": "チベスナきつねakyo",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_49c314a8-1241-4842-9c2c-645e295ad0e2"
@@ -3725,7 +3725,7 @@
       "id": "0414",
       "nickname": "Bikini Fox Akyo",
       "avatarName": "きつねビキニ",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a81a4356-1e8b-4aba-95bb-be3bc60f95c9"
@@ -3734,7 +3734,7 @@
       "id": "0415",
       "nickname": "Frilly Swimsuit Fox Akyo",
       "avatarName": "きつねakyoフリル水着",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Clothing/Accessory/Swimsuit,Pretty",
+      "category": "Animal,Animal/Fox,Fashion,Fashion/Swimsuit,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4a4dfa62-d23d-4ad6-8526-fb261ad1fb5d"
@@ -3797,7 +3797,7 @@
       "id": "0422",
       "nickname": "Poncho Fox Akyo",
       "avatarName": "きつねポンチョ",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Environment・Weather,Environment・Weather/Rain",
+      "category": "Animal,Animal/Fox,Fashion,Environment・Weather,Environment・Weather/Rain",
       "comment": "Sasanoki's Return to the Roots",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a290b34e-03c1-4d67-a01b-48dcd5b5c6c8"
@@ -3806,7 +3806,7 @@
       "id": "0423",
       "nickname": "Shaved Ice Fox Akyo",
       "avatarName": "akyo_きつねかき氷",
-      "category": "Animal/Fox,Animal,Food,Food/Sweets",
+      "category": "Animal,Animal/Fox,Food,Food/Sweets",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_32d08ec4-b351-4945-8df4-2d934a0e62a5"
@@ -3842,7 +3842,7 @@
       "id": "0427",
       "nickname": "Grocer Green Onion Akyo",
       "avatarName": "akyo_ねぎ八百屋",
-      "category": "Food,Food/Vegetable,Occupation/Status",
+      "category": "Food,Food/Vegetable,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ad9eb708-8fcc-43bd-9011-dd2e0eab93c7"
@@ -3851,7 +3851,7 @@
       "id": "0428",
       "nickname": "Farmer Green Onion Akyo",
       "avatarName": "akyo_ねぎ農家",
-      "category": "Food,Food/Vegetable,Occupation/Status,Occupation/Status/Farmer",
+      "category": "Food,Food/Vegetable,Role・Status,Role・Status/Farmer",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7042dcef-edbf-4c68-b182-51d5aa0b0ee9"
@@ -3869,7 +3869,7 @@
       "id": "0430",
       "nickname": "Racing Fox Akyo",
       "avatarName": "akyo_レーシングきつね",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e8ed7d23-ac42-442d-9607-de2875a8d7c9"
@@ -3878,7 +3878,7 @@
       "id": "0431",
       "nickname": "Station Attendant Fox Akyo",
       "avatarName": "akyo_きつね駅員",
-      "category": "Animal/Fox,Animal,Occupation/Status",
+      "category": "Animal,Animal/Fox,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffd524f1-ea73-4338-8d2c-2d9d75d3ae82"
@@ -3887,7 +3887,7 @@
       "id": "0432",
       "nickname": "Bunny Fox Akyo",
       "avatarName": "akyo_BunnyFox",
-      "category": "Season・Event/Halloween,Season・Event,Animal,Animal/Fox,Clothing/Accessory,Roleplay,Pretty",
+      "category": "Season・Event,Season・Event/Halloween,Animal,Animal/Fox,Fashion,Roleplay,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_542c948a-4a80-4226-9f7b-8a7fe2c0049d"
@@ -3896,7 +3896,7 @@
       "id": "0433",
       "nickname": "Stretch Akyo",
       "avatarName": "akyo_ストレッチ",
-      "category": "Parody,Parody/Stretchman,Athletic",
+      "category": "Parody,Parody/Stretchman,Physical,Physical/Athletic",
       "comment": "Lifelong Health, Lifelong Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_189d434f-2982-4b77-b6a2-d04aaaf62d05"
@@ -3905,7 +3905,7 @@
       "id": "0434",
       "nickname": "Red Riding Hood Fox Akyo",
       "avatarName": "akyo_きつね赤ずきん",
-      "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Animal,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Roleplay",
       "comment": "Beware of the wolf Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea9e6901-c9c8-47e8-a90b-d55ce222b870"
@@ -3914,7 +3914,7 @@
       "id": "0435",
       "nickname": "Hunter Akyo",
       "avatarName": "akyo_猟師",
-      "category": "Occupation/Status",
+      "category": "Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_997f4267-2f36-4d6c-9ebe-1b96f6592291"
@@ -3941,7 +3941,7 @@
       "id": "0438",
       "nickname": "Ukyo Fox Akyo",
       "avatarName": "akyo_foxUkyo",
-      "category": "Animal/Fox,Parody/AIBOU,Parody,Animal",
+      "category": "Animal,Animal/Fox,Parody,Parody/AIBOU",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2855f50c-07d4-4e4c-84fa-23c2f5013308"
@@ -3977,7 +3977,7 @@
       "id": "0442",
       "nickname": "Magical Green Onion AkyoAkyo",
       "avatarName": "akyo_ねぎまほう",
-      "category": "Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Food,Food/Vegetable,Roleplay,Skill・Trait",
+      "category": "Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Food,Food/Vegetable,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eb18a90b-8452-4702-b24a-5cd9abd5d22a"
@@ -3995,7 +3995,7 @@
       "id": "0444",
       "nickname": "Mont Blanc Fox Akyo",
       "avatarName": "akyo_きつねモンブラン",
-      "category": "Animal/Fox,Animal,Food,Food/Sweets",
+      "category": "Animal,Animal/Fox,Food,Food/Sweets",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_74f6c6a7-b8db-4bb7-b85a-4bafb512b1d9"
@@ -4013,7 +4013,7 @@
       "id": "0446",
       "nickname": "Space Normal Akyo",
       "avatarName": "akyo_うちゅう",
-      "category": "Environment・Weather,Occupation/Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
+      "category": "Environment・Weather,Role・Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7da3b3-0e5c-44a1-89fc-a9a89da3961f"
@@ -4022,7 +4022,7 @@
       "id": "0447",
       "nickname": "Knight Fox Akyo",
       "avatarName": "akyo_きつねないと",
-      "category": "Animal/Fox,Animal",
+      "category": "Animal,Animal/Fox",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b6edb67a-1a5c-4268-828c-51ed8e0f536b"
@@ -4031,7 +4031,7 @@
       "id": "0448",
       "nickname": "Halloween Pumpkin Akyo",
       "avatarName": "akyo_かぼちゃHW",
-      "category": "Season・Event/Halloween,Season・Event,Roleplay",
+      "category": "Season・Event,Season・Event/Halloween,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7b2e4467-0cff-4a97-80ce-be816e05d345"
@@ -4040,7 +4040,7 @@
       "id": "0449",
       "nickname": "Halloween Poncho FoxBeer Akyo",
       "avatarName": "akyo_foxHW",
-      "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Animal,Clothing/Accessory,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fashion,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cec68cad-1972-4a81-8289-4adb9988d5cf"
@@ -4049,7 +4049,7 @@
       "id": "0450",
       "nickname": "Jiangshi Fox Akyo",
       "avatarName": "akyo_きつねキョンシー",
-      "category": "Animal/Fox,Season・Event/Halloween,Season・Event,Animal,Fictional Being,Fictional Being/Yokai・Ghost,Roleplay",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e407374-de0c-42d1-af14-a7b5ff7ebf07"
@@ -4085,7 +4085,7 @@
       "id": "0454",
       "nickname": "Dragon Akyo SP",
       "avatarName": "akyo_老どらごん",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
       "comment": "SP stands for Substance Painter, right?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_682931f3-e166-4f62-a626-2a1f39a9505e"
@@ -4094,7 +4094,7 @@
       "id": "0455",
       "nickname": "Wood Carving Fox Akyo",
       "avatarName": "akyo_木彫りきつね",
-      "category": "Animal/Fox,Animal,Material・Texture,Material・Texture/Plant/Wood,Hard,Art",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Shape・Texture,Shape・Texture/Hard,Art",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_706f8cad-a7cd-4fa0-b9eb-2a7f47c7bb04"
@@ -4103,7 +4103,7 @@
       "id": "0456",
       "nickname": "Halloween Japanese Radish Akyo",
       "avatarName": "akyo_だいこんHW",
-      "category": "Food/Vegetable,Season・Event/Halloween,Season・Event,Food,Japanese Radish,Roleplay",
+      "category": "Food,Food/Vegetable,Season・Event,Season・Event/Halloween,Japanese Radish,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c9eda5f8-c8cb-4f2f-8797-375583500552"
@@ -4121,7 +4121,7 @@
       "id": "0458",
       "nickname": "Kotatsu Fox Akyo",
       "avatarName": "akyo_きつねこたつ",
-      "category": "Animal/Fox,Animal,Appliances・Furniture,Season・Event,Season・Event/New Year",
+      "category": "Animal,Animal/Fox,Appliances・Furniture,Season・Event,Season・Event/New Year",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cf0aabab-d449-469c-9f2c-ae49663c78d1"
@@ -4184,7 +4184,7 @@
       "id": "0465",
       "nickname": "Snowman Fox Akyo",
       "avatarName": "akyo_ゆきだるま",
-      "category": "Animal/Fox,Animal,Season・Event,Material・Texture,Cold",
+      "category": "Animal,Animal/Fox,Season・Event,Material・Raw Material,Shape・Texture,Shape・Texture/Cold",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9ba51df3-046a-4272-a755-61d651548875"
@@ -4220,7 +4220,7 @@
       "id": "0469",
       "nickname": "Santa Fox Akyo",
       "avatarName": "akyo_きつねサンタ",
-      "category": "Animal/Fox,Animal,Clothing/Accessory,Season・Event,Season・Event/Christmas",
+      "category": "Animal,Animal/Fox,Fashion,Season・Event,Season・Event/Christmas",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9583d3bf-57f6-4aa7-a809-e21ad08bc37b"
@@ -4247,7 +4247,7 @@
       "id": "0472",
       "nickname": "Fluffy Akyo",
       "avatarName": "Fuwafuwa_Akyo",
-      "category": "Material・Texture,Soft,Fur,Fur/Fluffy",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Fluffy",
       "comment": "114 is another author's version.",
       "author": "nezu_jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f50c2f5-89b6-4cda-9799-fa674a38a20c"
@@ -4274,7 +4274,7 @@
       "id": "0475",
       "nickname": "Prisoner Akyo",
       "avatarName": "PrisonerAkyo",
-      "category": "Mint Chocolate,Occupation/Status,Occupation/Status/Convict,Captive",
+      "category": "Mint Chocolate,Role・Status,Role・Status/Convict,Captive",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8bb19cf9-83f2-4b67-9fe2-81a800704ba9"
@@ -4301,7 +4301,7 @@
       "id": "0478",
       "nickname": "Akyo Train",
       "avatarName": "Akyonotesen",
-      "category": "Mint Chocolate,Vehicle,Vehicle/Land,Occupation/Status",
+      "category": "Mint Chocolate,Vehicle,Vehicle/Land,Role・Status",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b4e941cc-6921-47ae-a3ef-9caf6d714062"
@@ -4310,7 +4310,7 @@
       "id": "0479",
       "nickname": "Festival Vibes Goat Akyo",
       "avatarName": "フェス気分のヤギAkyo",
-      "category": "Animal/Goat,Gimmick・Special,Animal,Season・Event",
+      "category": "Animal,Animal/Goat,Gimmick・Special,Season・Event",
       "comment": "The transformed form of Akyo the goat, eagerly awaiting DJ HowToMakeSushi at 'Akyo's Party Night'",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_897563b1-f2a5-4c1a-a3ad-30b3ef964bcf"
@@ -4319,7 +4319,7 @@
       "id": "0480",
       "nickname": "Sushi Aquarium Employee Akyo",
       "avatarName": "すし水勤務のAkyo",
-      "category": "Mint Chocolate,Occupation/Status",
+      "category": "Mint Chocolate,Role・Status",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b38aeb2a-bb50-470a-82b6-ab977a023530"
@@ -4346,7 +4346,7 @@
       "id": "0483",
       "nickname": "Corgi Akyo",
       "avatarName": "akyo コーギー",
-      "category": "Animal/Dog,Animal",
+      "category": "Animal,Animal/Dog",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7265691a-2a56-4638-83bd-ed6b122fa3c6"
@@ -4355,7 +4355,7 @@
       "id": "0484",
       "nickname": "Sailor Fox Akyo",
       "avatarName": "akyo Fox すいへい",
-      "category": "Animal/Fox,Occupation/Status,Animal",
+      "category": "Animal,Animal/Fox,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e5aa01d-59a8-4631-8b48-46803c1d982a"
@@ -4364,7 +4364,7 @@
       "id": "0485",
       "nickname": "Sleeping Bag Akyo",
       "avatarName": "akyo ねぶくろ",
-      "category": "Mint Chocolate,Clothing/Accessory,Sleep",
+      "category": "Mint Chocolate,Fashion,Sleep",
       "comment": "I'm curious about the origin of the idea.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6e10ce52-0b3c-4090-8bb2-28a3c7517f9b"
@@ -4373,7 +4373,7 @@
       "id": "0486",
       "nickname": "Sick Akyo",
       "avatarName": "KazehikiAkyo",
-      "category": "Mint Chocolate,Illness,Clothing/Accessory,Clothing/Accessory/Mask,Get Well Soon,Appliances・Furniture,Appliances・Furniture/Futon",
+      "category": "Mint Chocolate,Illness,Fashion,Fashion/Mask,Get Well Soon,Appliances・Furniture,Appliances・Furniture/Futon",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -4382,7 +4382,7 @@
       "id": "0487",
       "nickname": "Pikachu Akyo",
       "avatarName": "Akyochu",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "ステルバイ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bf07fdde-2289-4d4d-be52-44b4b7253c0e"
@@ -4391,7 +4391,7 @@
       "id": "0488",
       "nickname": "Charmander Akyo",
       "avatarName": "ヒトカゲあきょ",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ed6357c5-0f15-4d59-a448-88302acc7323"
@@ -4400,7 +4400,7 @@
       "id": "0489",
       "nickname": "Squirtle Akyo",
       "avatarName": "ゼニガメあきょ",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d990dcf-a3e0-4c92-a013-d7b3929dff26"
@@ -4409,7 +4409,7 @@
       "id": "0490",
       "nickname": "Bulbasaur Akyo",
       "avatarName": "フシギダネあきょ",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f094609-8fe5-4dd6-ac35-06ea39da3f5f"
@@ -4427,7 +4427,7 @@
       "id": "0492",
       "nickname": "Tilefish Akyo",
       "avatarName": "AmadaiAkyo",
-      "category": "Animal/Fish,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e8b4b2ed-d735-48dc-b1f8-4350dc5fd7ef"
@@ -4436,7 +4436,7 @@
       "id": "0493",
       "nickname": "Weedle Akyo",
       "avatarName": "ビーきょ",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6ac1434c-b554-49af-9501-7a5d9e2586c0"
@@ -4445,7 +4445,7 @@
       "id": "0494",
       "nickname": "Quagsire Akyo",
       "avatarName": "ぬあきょ",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_da169b0b-84a8-4f09-8726-6fdca09e3afa"
@@ -4454,7 +4454,7 @@
       "id": "0495",
       "nickname": "Psyduck Akyo",
       "avatarName": "あきょダック",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "Akyo for the VRC Pokémon Custom Gathering",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c5c75ac7-0645-4917-a575-50a4d3417526"
@@ -4490,7 +4490,7 @@
       "id": "0499",
       "nickname": "Ribbon Fox Akyo",
       "avatarName": "リボンきつねakyo",
-      "category": "Animal/Fox,Clothing/Accessory,Animal",
+      "category": "Animal,Animal/Fox,Fashion",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5d5ac7fd-2ddb-4a05-97ed-aa3154207b5f"
@@ -4499,7 +4499,7 @@
       "id": "0500",
       "nickname": "Singing Green Onion Akyo B",
       "avatarName": "ねぎうたB",
-      "category": "Food/Vegetable,Food,Parody/Vocaloid,Parody,Green Onion",
+      "category": "Food,Food/Vegetable,Parody,Parody/Vocaloid,Green Onion",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f8cda2a-d208-43d0-86ec-21f787c73b6b"
@@ -4508,7 +4508,7 @@
       "id": "0501",
       "nickname": "Sleeping Bag Akyo 2",
       "avatarName": "akyo ねぶくろ2",
-      "category": "Mint Chocolate,Clothing/Accessory,Sleep",
+      "category": "Mint Chocolate,Fashion,Sleep",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6ef3c177-0e60-4b5e-91dd-fa7955b4392f"
@@ -4517,7 +4517,7 @@
       "id": "0502",
       "nickname": "Sleeping Bag Fox Akyo",
       "avatarName": "akyo_fox ねぶくろ",
-      "category": "Animal/Fox,Clothing/Accessory,Animal,Sleep",
+      "category": "Animal,Animal/Fox,Fashion,Sleep",
       "comment": "Can be changed to a rabbit and tiger sleeping bag",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fd8d8d3b-aab3-4303-bd84-e2a04fbd4587"
@@ -4526,7 +4526,7 @@
       "id": "0503",
       "nickname": "Bronze Statue Akyo",
       "avatarName": "ブロンズAKyo リターンズ",
-      "category": "Statue,Material・Texture,Material・Texture/Metal,Hard",
+      "category": "Statue,Material・Raw Material,Material・Raw Material/Metal,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "huyumusi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fefc7e4b-6b16-4488-8fb1-5049e12e99fc"
@@ -4544,7 +4544,7 @@
       "id": "0505",
       "nickname": "Golden Butterfly Akyo",
       "avatarName": "ア蝶",
-      "category": "Color,Animal/Bug/Butterfly,Animal/Bug,Animal",
+      "category": "Color,Animal,Animal/Bug,Animal/Bug/Butterfly",
       "comment": "",
       "author": "＂K＂ ちゃん",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_12c6cf90-a33a-49b1-9734-7671d58472b2"
@@ -4562,7 +4562,7 @@
       "id": "0507",
       "nickname": "Rabbit Akyo",
       "avatarName": "usagi-akyo",
-      "category": "Animal/Rabbit,Animal",
+      "category": "Animal,Animal/Rabbit",
       "comment": "Akyo the Atochi-style Rabbit",
       "author": "あとち-krgr",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_74eeb51e-2e98-47d8-b4f8-53fab0197f86"
@@ -4571,7 +4571,7 @@
       "id": "0508",
       "nickname": "Fluffy Japanese Radish Akyo",
       "avatarName": "akyo だいこんモフ",
-      "category": "Food/Vegetable,Food,Japanese Radish",
+      "category": "Food,Food/Vegetable,Japanese Radish",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0eabbbf5-04b3-4b7f-a057-0607ff402b2d"
@@ -4580,7 +4580,7 @@
       "id": "0509",
       "nickname": "Cinnamoroll Akyo",
       "avatarName": "akyo siro",
-      "category": "Parody/Sinnamoroll,Parody",
+      "category": "Parody,Parody/Sinnamoroll",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_45e7d425-fa40-49ff-8d12-069ecb902fc3"
@@ -4634,7 +4634,7 @@
       "id": "0515",
       "nickname": "Eevee Akyo",
       "avatarName": "noteeveeAkyo",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1f175aba-4f80-4d65-bcf2-13df4b21a8b9"
@@ -4643,7 +4643,7 @@
       "id": "0516",
       "nickname": "Mokuri-like Akyo",
       "avatarName": "mokurimodokiakyo",
-      "category": "Parody/Mokuri,Parody",
+      "category": "Parody,Parody/Mokuri",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8c339fb3-9b2f-4c24-bbb2-08618d94c07d"
@@ -4661,7 +4661,7 @@
       "id": "0518",
       "nickname": "Wight Akyo",
       "avatarName": "Akyomosouomoimasu",
-      "category": "Parody/Yu-Gi-Oh!,Parody",
+      "category": "Parody,Parody/Yu-Gi-Oh!",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f5a642b5-5949-40a5-ad21-add67d040c12"
@@ -4670,7 +4670,7 @@
       "id": "0519",
       "nickname": "Zubat Akyo",
       "avatarName": "notzubattoAkyo",
-      "category": "Parody/Pokemon,Parody",
+      "category": "Parody,Parody/Pokemon",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_09d1c703-0803-401c-9009-00324114e66e"
@@ -4688,7 +4688,7 @@
       "id": "0521",
       "nickname": "Wormie Sock Akyo",
       "avatarName": "WormiesockAkyo",
-      "category": "Parody/Wormiesock,Parody",
+      "category": "Parody,Parody/Wormiesock",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8c01977d-3a41-483d-9880-626842cb6f19"
@@ -4697,7 +4697,7 @@
       "id": "0522",
       "nickname": "Obligation Chocolate Akyo",
       "avatarName": "girichocoAkyo",
-      "category": "Food/Sweets,Food,Season・Event",
+      "category": "Food,Food/Sweets,Season・Event",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5f6d45a2-e71a-47f5-8fe2-079a2de0931c"
@@ -4706,7 +4706,7 @@
       "id": "0523",
       "nickname": "Cloth Ghost Akyo",
       "avatarName": "nunoghostAkyo",
-      "category": "Mint Chocolate,Fictional Being,Fictional Being/Yokai・Ghost,Material・Texture,Soft",
+      "category": "Mint Chocolate,Fictional Being,Fictional Being/Yokai・Ghost,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_520589a3-4c83-4ac7-a6f9-4ad24ab082db"
@@ -4733,7 +4733,7 @@
       "id": "0526",
       "nickname": "Hello Kitty Akyo",
       "avatarName": "akyo siro2",
-      "category": "Parody/Hello Kitty,Parody",
+      "category": "Parody,Parody/Hello Kitty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bf82a1ef-e685-4428-bbf3-f7cac74b4eab"
@@ -4742,7 +4742,7 @@
       "id": "0527",
       "nickname": "Cafe Dragon Akyo",
       "avatarName": "akyo どらごんcefe",
-      "category": "Fictional Being,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Occupation/Status,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a1f578c-cfb6-49bb-8833-aec0969cd2a5"
@@ -4769,7 +4769,7 @@
       "id": "0530",
       "nickname": "T-Rex Akyo 2",
       "avatarName": "ティラノ2",
-      "category": "Animal/Dinosaur,Animal",
+      "category": "Animal,Animal/Dinosaur",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f530f699-c918-4e77-9c64-1232d1a07a97"
@@ -4778,7 +4778,7 @@
       "id": "0531",
       "nickname": "Wedding Fox Akyo",
       "avatarName": "akyo foxウェディング",
-      "category": "Animal/Fox,Season・Event,Season・Event/Romance,Clothing/Accessory,Animal,Pretty",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Romance,Fashion,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7fcd3f66-1da1-425c-8b60-9b7384eb28b8"
@@ -4787,7 +4787,7 @@
       "id": "0532",
       "nickname": "Myaku Myaku Akyo",
       "avatarName": "akyo akyoakyo",
-      "category": "Parody/Myakumyaku,Parody,Fictional Being,Fictional Being/God",
+      "category": "Parody,Parody/Myakumyaku,Fictional Being,Fictional Being/God",
       "comment": "akyoakyo started",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c28a2612-7037-4bf9-a04d-31ce7e3c1cb1"
@@ -4796,7 +4796,7 @@
       "id": "0533",
       "nickname": "R.I.P. Akyo",
       "avatarName": "RestInAkyo",
-      "category": "Mint Chocolate,Building,Season・Event/Halloween,Season・Event,Roleplay,Death",
+      "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Roleplay,Death",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ce6a950b-22e0-45b8-9407-e27476b1d595"
@@ -4805,7 +4805,7 @@
       "id": "0534",
       "nickname": "Tombstone Akyo",
       "avatarName": "bosekiAkyo",
-      "category": "Mint Chocolate,Building,Season・Event/Halloween,Season・Event,Material・Texture,Material・Texture/Stone,Hard,Roleplay,Death",
+      "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard,Roleplay,Death",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4db2f6fb-ae17-4cc8-89ac-6306e161c9dc"
@@ -4814,7 +4814,7 @@
       "id": "0535",
       "nickname": "Real Cat Akyo",
       "avatarName": "Akyoxwell",
-      "category": "Animal/Cat,Real Photo,Animal,Art,Parody,Parody/Meme",
+      "category": "Animal,Animal/Cat,Real Photo,Art,Parody,Parody/Meme",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d49f5b99-ac6e-42c3-a7d7-86e0c9dc12a5"
@@ -4823,7 +4823,7 @@
       "id": "0536",
       "nickname": "Backrooms Akyo",
       "avatarName": "kiiroibougohukuAkyo",
-      "category": "Parody/Backrooms,Parody,Horror",
+      "category": "Parody,Parody/Backrooms,Horror",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7ed83e28-c1a3-442c-8158-ad74b74ce390"
@@ -4832,7 +4832,7 @@
       "id": "0537",
       "nickname": "Hinamatsuri Wolf Akyo",
       "avatarName": "akyo おおかみひなまつり",
-      "category": "Season・Event,Animal,Animal/Wolf,Occupation/Status",
+      "category": "Season・Event,Animal,Animal/Wolf,Role・Status",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fc1a94f3-8340-4b5c-9ead-3a768e95791b"
@@ -4841,7 +4841,7 @@
       "id": "0538",
       "nickname": "Magical Girl Fox Akyo",
       "avatarName": "akyo fox 魔法少女",
-      "category": "Animal/Fox,Occupation/Status,Season・Event/Halloween,Season・Event,Skill・Trait/Magic,Animal,Roleplay,Pretty,Skill・Trait",
+      "category": "Animal,Animal/Fox,Role・Status,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Roleplay,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
@@ -4850,7 +4850,7 @@
       "id": "0539",
       "nickname": "Sea Urchin Akyo",
       "avatarName": "akyo uni",
-      "category": "Animal,Animal/Marine Life,Material・Texture,Spiky",
+      "category": "Animal,Animal/Marine Life,Material・Raw Material,Shape・Texture,Shape・Texture/Spiky",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b877aa1d-2fbc-497e-85e2-c7683ced3fe3"
@@ -4868,7 +4868,7 @@
       "id": "0541",
       "nickname": "Palico Fox Akyo",
       "avatarName": "akyo きつねオトモ",
-      "category": "Animal/Fox,Occupation/Status,Parody/Monster Hunter,Parody,Animal,Military・Weapons",
+      "category": "Animal,Animal/Fox,Role・Status,Parody,Parody/Monster Hunter,Military・Weapons",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7e3f6a6d-83da-4f06-8e7e-274943b93199"
@@ -4886,7 +4886,7 @@
       "id": "0543",
       "nickname": "Dancing Afro AkyoAkyo",
       "avatarName": "Akyo_Dancing Afro",
-      "category": "Hair Style,Music・Instrument",
+      "category": "Fashion,Fashion/Hair Style,Music・Instrument",
       "comment": "",
       "author": "Masami.S",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c202f0d6-f6ec-428e-aa44-bb5406921371"
@@ -4904,7 +4904,7 @@
       "id": "0545",
       "nickname": "Felyne-like Akyo",
       "avatarName": "airoumodokiAkyo",
-      "category": "Animal/Cat,Parody/Monster Hunter,Parody,Animal",
+      "category": "Animal,Animal/Cat,Parody,Parody/Monster Hunter",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1c26ddeb-3957-4146-a79f-1163224f368c"
@@ -4913,7 +4913,7 @@
       "id": "0546",
       "nickname": "Dr. Doom Akyo",
       "avatarName": "akyo魔博士",
-      "category": "Parody/Fantastic Four,Parody,Season・Event/Halloween,Season・Event,Occupation/Status,Roleplay",
+      "category": "Parody,Parody/Fantastic Four,Season・Event,Season・Event/Halloween,Role・Status,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0e4bd90-0cad-40ec-ab4c-759de355b9d4"
@@ -4949,7 +4949,7 @@
       "id": "0550",
       "nickname": "Kirin Armor Fox Akyo",
       "avatarName": "akyo キリン装備",
-      "category": "Animal/Fox,Occupation/Status,Parody/Monster Hunter,Parody,Animal,Military・Weapons",
+      "category": "Animal,Animal/Fox,Role・Status,Parody,Parody/Monster Hunter,Military・Weapons",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e7a25fa3-d00f-4d5a-96ef-ad07a650f21c"
@@ -4976,7 +4976,7 @@
       "id": "0553",
       "nickname": "RR Dragon Akyo",
       "avatarName": "どらごんRR",
-      "category": "Fictional Being,Skill・Trait/Flying,Parody/Pokemon,Parody,Animal,Fictional Being/Dragon,Skill・Trait",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Parody,Parody/Pokemon,Animal,Fictional Being/Dragon",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eaf31613-4202-48bd-bb01-e587b45f038a"
@@ -4985,7 +4985,7 @@
       "id": "0554",
       "nickname": "Noir Akyo",
       "avatarName": "akyo ノワール",
-      "category": "Food/Sweets,Food",
+      "category": "Food,Food/Sweets",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4f4a8dba-586d-442a-898b-9cd5edf05902"
@@ -5048,7 +5048,7 @@
       "id": "0561",
       "nickname": "Concrete Akyo",
       "avatarName": "ConcreteAkyo",
-      "category": "Material・Texture,Hard",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9fd0ba74-53d8-4430-ae21-c8d897c10b19"
@@ -5057,7 +5057,7 @@
       "id": "0562",
       "nickname": "Concrete Akyo 2",
       "avatarName": "ConcreteAkyo",
-      "category": "Material・Texture,Hard",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Hard",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_aaa0fc29-6e51-4dfa-a332-649aff9e1483"
@@ -5084,7 +5084,7 @@
       "id": "0565",
       "nickname": "Princess Akyo",
       "avatarName": "ohimesamaAkyo",
-      "category": "Mint Chocolate,Occupation/Status,Occupation/Status/Royalty,History,Pretty",
+      "category": "Mint Chocolate,Role・Status,Role・Status/Royalty,History,Pretty",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c672232d-9fd0-40a8-8bce-8593db0699c9"
@@ -5093,7 +5093,7 @@
       "id": "0566",
       "nickname": "Khezu Akyo",
       "avatarName": "huruhuruAkyo",
-      "category": "Fictional Being,Monster,Parody/Monster Hunter,Parody",
+      "category": "Fictional Being,Monster,Parody,Parody/Monster Hunter",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e8cf8505-4c50-424b-834c-e8faeae78639"
@@ -5111,7 +5111,7 @@
       "id": "0568",
       "nickname": "Initial Akyo",
       "avatarName": "Akyoutouhuten86",
-      "category": "Mint Chocolate,Vehicle,Parody/Initial D,Parody",
+      "category": "Mint Chocolate,Vehicle,Parody,Parody/Initial D",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_115bf301-6c82-4d17-b06b-9b209408f662"
@@ -5120,7 +5120,7 @@
       "id": "0569",
       "nickname": "Warp Star Akyo",
       "avatarName": "Warpakyoster",
-      "category": "Mint Chocolate,Vehicle,Parody/Kirby,Parody",
+      "category": "Mint Chocolate,Vehicle,Parody,Parody/Kirby",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cc122f8f-4127-4eb7-9a3d-0c13ce3e242e"
@@ -5129,7 +5129,7 @@
       "id": "0570",
       "nickname": "Family Akyo Chicken Akyo",
       "avatarName": "akyo チキ",
-      "category": "Food,Food/Dish,Parody/Family Mart,Parody,Fried",
+      "category": "Food,Food/Dish,Parody,Parody/Family Mart,Fried",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2e1f580d-3835-4ec8-9faa-33a6096e2a7a"
@@ -5138,7 +5138,7 @@
       "id": "0571",
       "nickname": "Bread Loaf Fox Akyo 2",
       "avatarName": "akyo to-stFox2",
-      "category": "Animal/Fox,Food,Animal,Food/Dish,Bread",
+      "category": "Animal,Animal/Fox,Food,Food/Dish,Bread",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c2a20b7-56dd-413e-a530-aeff2ec06531"
@@ -5156,7 +5156,7 @@
       "id": "0573",
       "nickname": "Bee Akyo",
       "avatarName": "akyo はち",
-      "category": "Animal/Bug,Animal",
+      "category": "Animal,Animal/Bug",
       "comment": "He gathers flower nectar.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4192cd46-3bec-42e7-aadb-eb25743700e3"
@@ -5174,7 +5174,7 @@
       "id": "0575",
       "nickname": "Ant Akyo",
       "avatarName": "akyo あり",
-      "category": "Animal/Bug,Animal",
+      "category": "Animal,Animal/Bug",
       "comment": "He has many younger brothers.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3782d68c-fb2a-41b1-8c1d-6f931f3a9431"
@@ -5201,7 +5201,7 @@
       "id": "0578",
       "nickname": "Raincoat Dragon Akyo",
       "avatarName": "akyo どらごんレインコート",
-      "category": "Fictional Being,Skill・Trait/Flying,Clothing/Accessory,Animal,Fictional Being/Dragon,Skill・Trait,Environment・Weather,Environment・Weather/Rain",
+      "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Fashion,Animal,Fictional Being/Dragon,Environment・Weather,Environment・Weather/Rain",
       "comment": "Rainy Day Outing Dragon Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d86a3dcc-cc1a-4947-afa8-05fa4f841e77"
@@ -5219,7 +5219,7 @@
       "id": "0580",
       "nickname": "Gyaru AkyoAkyo",
       "avatarName": "galAkyo",
-      "category": "Mint Chocolate,Clothing/Accessory,School,Pretty",
+      "category": "Mint Chocolate,Fashion,School,Pretty",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4fd38eea-392a-4695-8cf2-af446dd84e72"
@@ -5228,7 +5228,7 @@
       "id": "0581",
       "nickname": "Reimu Akyo",
       "avatarName": "rakuennosutekinaAkyo",
-      "category": "Parody/Touhou,Parody",
+      "category": "Parody,Parody/Touhou",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6ab059d3-ea84-4c72-9f55-7ab1d59ff389"
@@ -5237,7 +5237,7 @@
       "id": "0582",
       "nickname": "Marisa Akyo",
       "avatarName": "hutsuunoAkyotsukai",
-      "category": "Parody/Touhou,Parody",
+      "category": "Parody,Parody/Touhou",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea71d4e5-221e-4f6e-ac55-c262e193441a"
@@ -5246,7 +5246,7 @@
       "id": "0583",
       "nickname": "Vault-Akyo",
       "avatarName": "bault-Akyo",
-      "category": "Mint Chocolate,Parody/Fallout,Parody",
+      "category": "Mint Chocolate,Parody,Parody/Fallout",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f1a87926-cc7d-4ad8-854a-bec9b0d7bc44"
@@ -5264,7 +5264,7 @@
       "id": "0585",
       "nickname": "Zakyo",
       "avatarName": "Zakyo",
-      "category": "Parody/Gundam,Parody,Military・Weapons",
+      "category": "Parody,Parody/Gundam,Military・Weapons",
       "comment": "It's different from Akyo, you know! Different from Akyo!",
       "author": "ステルバイ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_68289ce3-3528-40af-be34-d1ecceaee10b"
@@ -5273,7 +5273,7 @@
       "id": "0586",
       "nickname": "Bell Pepper Akyo",
       "avatarName": "akyo ピーマン",
-      "category": "Food/Vegetable,Food",
+      "category": "Food,Food/Vegetable",
       "comment": "Colorful Bell Peppers Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9b279576-3b4a-48ef-8922-6d3a9d0afa64"
@@ -5300,7 +5300,7 @@
       "id": "0589",
       "nickname": "House Snail Akyo",
       "avatarName": "Akyothehousnail",
-      "category": "Animal/Shell,Building,Parody,Parody/Jam the House Nail,Animal,Animal/Snail",
+      "category": "Animal,Animal/Shell,Building,Parody,Parody/Jam the House Nail,Animal/Snail",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_54cc51a2-32a7-42ee-bec5-a67990cd7edb"
@@ -5336,7 +5336,7 @@
       "id": "0593",
       "nickname": "Blade Cosplay Akyo",
       "avatarName": "bladegokkoAkyo",
-      "category": "Parody/Kamen Rider,Parody,Transformation,Hero",
+      "category": "Parody,Parody/Kamen Rider,Transformation,Role・Status,Role・Status/Hero",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7306d8e6-9518-4337-b739-c8ddbbf65c95"
@@ -5345,7 +5345,7 @@
       "id": "0594",
       "nickname": "Gunner Akyo",
       "avatarName": "gunner akyo",
-      "category": "Military・Weapons,Occupation/Status,Occupation/Status/Soldier",
+      "category": "Military・Weapons,Role・Status,Role・Status/Soldier",
       "comment": "",
       "author": "Fuganbya",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0adb324-619c-43c8-af9e-2ed4d98f8a2a"
@@ -5354,7 +5354,7 @@
       "id": "0595",
       "nickname": "Army Akyo",
       "avatarName": "akyo_army",
-      "category": "Military・Weapons,Occupation/Status,Occupation/Status/Soldier",
+      "category": "Military・Weapons,Role・Status,Role・Status/Soldier",
       "comment": "",
       "author": "kazakami okenu",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f47c6214-6daf-4d40-9e6b-274a59662d2a"
@@ -5381,7 +5381,7 @@
       "id": "0598",
       "nickname": "Fish Akyo",
       "avatarName": "亜魚",
-      "category": "Animal/Fish,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "kuguro",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a6092306-d1aa-44fb-b54d-593cbea7133b"
@@ -5390,7 +5390,7 @@
       "id": "0599",
       "nickname": "Axolotl Akyo",
       "avatarName": "亜魚露とル",
-      "category": "Animal/Amphibian,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Amphibian,Animal/Marine Life",
       "comment": "",
       "author": "kuguro",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_039bb82d-bb7b-43c2-9d66-328d36d994de"
@@ -5417,7 +5417,7 @@
       "id": "0602",
       "nickname": "Garren Cosplay Akyo",
       "avatarName": "gyarengokkoAkyo",
-      "category": "Parody/Kamen Rider,Parody,Transformation,Hero",
+      "category": "Parody,Parody/Kamen Rider,Transformation,Role・Status,Role・Status/Hero",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_aae617bf-de58-4d95-ba31-b0a171dedd2d"
@@ -5426,7 +5426,7 @@
       "id": "0603",
       "nickname": "Mascot Costume Akyo Boy",
       "avatarName": "kigurumiAkyokun",
-      "category": "Mint Chocolate,Occupation/Status",
+      "category": "Mint Chocolate,Role・Status",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f1bf652f-164f-4f00-98a6-bb6db5be81ee"
@@ -5444,7 +5444,7 @@
       "id": "0605",
       "nickname": "Axolotl Akyo",
       "avatarName": "akyo uparupa",
-      "category": "Animal/Amphibian,Animal",
+      "category": "Animal,Animal/Amphibian",
       "comment": "Often found along the banks of the Japan Street",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34be8863-c67f-4860-89e1-2cef623725ab"
@@ -5462,7 +5462,7 @@
       "id": "0607",
       "nickname": "Nanachi-like Akyo",
       "avatarName": "nanachimodokiAkyo",
-      "category": "Parody/Made in Abyss,Parody",
+      "category": "Parody,Parody/Made in Abyss",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ee68c6c7-c62b-4ea1-b8c0-94b099b3b3d0"
@@ -5480,7 +5480,7 @@
       "id": "0609",
       "nickname": "Bomberman Akyo",
       "avatarName": "bomberAkyon",
-      "category": "Parody/Bomberman,Parody",
+      "category": "Parody,Parody/Bomberman",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3455042f-42cd-4c0e-a04a-a2a3e0217769"
@@ -5498,7 +5498,7 @@
       "id": "0611",
       "nickname": "Mascot Fish Head Akyo",
       "avatarName": "kigurumiokashirakun",
-      "category": "Animal/Fish,Occupation/Status,Animal,Animal/Marine Life,Military・Weapons,Daily Necessities",
+      "category": "Animal,Animal/Fish,Role・Status,Animal/Marine Life,Military・Weapons,Daily Necessities",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_70171281-584d-4036-9f2d-040493b699aa"
@@ -5507,7 +5507,7 @@
       "id": "0612",
       "nickname": "Balloon Fox Akyo",
       "avatarName": "akyo 風船きつね",
-      "category": "Animal/Fox,Skill・Trait/Flying,Animal,Skill・Trait",
+      "category": "Animal,Animal/Fox,Skill・Trait,Skill・Trait/Flying",
       "comment": "Fox Akyo drifting gently on a balloon",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b53f9a0-2f30-406b-9f18-17466d95be44"
@@ -5543,7 +5543,7 @@
       "id": "0616",
       "nickname": "Spirit Horse Akyo",
       "avatarName": "精霊うまきょ",
-      "category": "Spirit Horse,Food/Vegetable,Food,Animal,Animal/Horse,Fictional Being,Fictional Being/Mythical Beast・Spirit,Cucumber,Eggplant,Season・Event,Season・Event/New Year",
+      "category": "Spirit Horse,Food,Food/Vegetable,Animal,Animal/Horse,Fictional Being,Fictional Being/Mythical Beast・Spirit,Cucumber,Eggplant,Season・Event,Season・Event/New Year",
       "comment": "Spirit Horse Akyo. Android compatible.",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b44829ee-239b-4121-bb0f-a9ee032b0634"
@@ -5552,7 +5552,7 @@
       "id": "0617",
       "nickname": "Akyolin Gnome Horn",
       "avatarName": "あきょりん・のーむ・ほーん",
-      "category": "Parody/Goblin Gnome Horn,Parody",
+      "category": "Parody,Parody/Goblin Gnome Horn",
       "comment": "Underdog. Android compatible.",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_713d2fd3-ca63-4ec4-97a9-099bb4649c9e"
@@ -5570,7 +5570,7 @@
       "id": "0619",
       "nickname": "Blue-Ringed Octopus Akyo",
       "avatarName": "ヒョウモンダコAkyo",
-      "category": "Animal/Octopus,Mollusk,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Octopus,Mollusk,Animal/Marine Life",
       "comment": "It's not a rotten banana. It's a modification of “Tako Akyo”. https://booth.pm/ja/items/6780828",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6d753be0-c587-4007-ba5d-4f44bf243314"
@@ -5597,7 +5597,7 @@
       "id": "0622",
       "nickname": "Soft Akyo",
       "avatarName": "柔らかいAkyo",
-      "category": "Material・Texture,Soft",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "Soft Akyo",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7f76d4fe-6694-4ecb-95fc-7c88e09e79d3"
@@ -5615,7 +5615,7 @@
       "id": "0624",
       "nickname": "Nightcap Akyo",
       "avatarName": "nightcapAkyo",
-      "category": "Mint Chocolate,Clothing/Accessory,Sleep,Appliances・Furniture,Appliances・Furniture/Pillow",
+      "category": "Mint Chocolate,Fashion,Sleep,Appliances・Furniture,Appliances・Furniture/Pillow",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5"
@@ -5642,7 +5642,7 @@
       "id": "0627",
       "nickname": "Box Akyo Dam",
       "avatarName": "hakoAkyodam",
-      "category": "Mint Chocolate,Material・Texture,Material・Texture/Plant,Material・Texture/Plant/Wood,Parody,Parody/Gundam",
+      "category": "Mint Chocolate,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Parody,Parody/Gundam",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23becd0a-c416-48c2-8cd5-cba021fe8237"
@@ -5651,7 +5651,7 @@
       "id": "0628",
       "nickname": "Syarube-like Akyo",
       "avatarName": "syarubemodokiAkyo",
-      "category": "Parody/Syarube,Parody",
+      "category": "Parody,Parody/Syarube",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0cfe69d9-8243-4ba1-9133-c8f21b2c5ad3"
@@ -5660,7 +5660,7 @@
       "id": "0629",
       "nickname": "Rabbit Hole Akyo",
       "avatarName": "RabbitHoleAkyo",
-      "category": "Animal/Rabbit,Clothing/Accessory,Parody/Vocaloid,Parody,Animal,Body Part,Ear,Pretty",
+      "category": "Animal,Animal/Rabbit,Fashion,Parody,Parody/Vocaloid,Body Part,Ear,Pretty",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_91e5ca26-8080-4856-bbae-ed3e0145c665"
@@ -5678,7 +5678,7 @@
       "id": "0631",
       "nickname": "Cardboard Knight Akyo",
       "avatarName": "danbouruKnightAkyo",
-      "category": "Occupation/Status,Material・Texture,Material・Texture/Plant,Material・Texture/Plant/Wood,Occupation/Status/Soldier,Military・Weapons",
+      "category": "Role・Status,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Role・Status/Soldier,Military・Weapons",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d285ea6a-07b5-4a63-b8f5-9f5053281d5c"
@@ -5696,7 +5696,7 @@
       "id": "0633",
       "nickname": "Lop-Eared Rabbit Akyo",
       "avatarName": "lopearedrabbitAkyo",
-      "category": "Animal/Rabbit,Animal,Body Part,Ear",
+      "category": "Animal,Animal/Rabbit,Body Part,Ear",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_92434578-9723-41b7-b092-f1fe424aba27"
@@ -5705,7 +5705,7 @@
       "id": "0634",
       "nickname": "Lop-Eared Bunny Akyo",
       "avatarName": "lopearedrabbitbunnyAkyo",
-      "category": "Animal/Rabbit,Clothing/Accessory,Animal,Body Part,Ear,Pretty",
+      "category": "Animal,Animal/Rabbit,Fashion,Body Part,Ear,Pretty",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d73a53f5-1abe-462a-ab3f-fb9ffac341d2"
@@ -5723,7 +5723,7 @@
       "id": "0636",
       "nickname": "Fluffy Lion Akyo",
       "avatarName": "mofumofulionAkyo",
-      "category": "Animal/Lion,Animal",
+      "category": "Animal,Animal/Lion",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_aa979ea4-2fb0-49a2-a569-941bd3c643f1"
@@ -5732,7 +5732,7 @@
       "id": "0637",
       "nickname": "Magolor-like Akyo",
       "avatarName": "magolormodokiAkyo",
-      "category": "Parody/Kirby,Parody",
+      "category": "Parody,Parody/Kirby",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_54ee1d70-598a-445a-a798-e4daf7f39ca9"
@@ -5741,7 +5741,7 @@
       "id": "0638",
       "nickname": "Marx-like Akyo",
       "avatarName": "marxmodokiAkyo",
-      "category": "Parody/Kirby,Parody",
+      "category": "Parody,Parody/Kirby",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9a700090-2864-4ca8-90f2-bdb36cb81b99"
@@ -5804,7 +5804,7 @@
       "id": "0645",
       "nickname": "One-piece Fox Akyo 2025",
       "avatarName": "akyo_きつね25ワンピ",
-      "category": "Animal/Fox,Season・Event,Season・Event/Summer,Clothing/Accessory,Animal,Pretty",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Summer,Fashion,Pretty",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f6764dcf-02b9-4c2d-9b23-bb565157b59a"
@@ -5822,7 +5822,7 @@
       "id": "0647",
       "nickname": "Western Fox Akyo",
       "avatarName": "akyo_きつねウエスタン",
-      "category": "Animal/Fox,Animal,Roleplay",
+      "category": "Animal,Animal/Fox,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_605792cc-122c-4257-936d-715d2b37b144"
@@ -5840,7 +5840,7 @@
       "id": "0649",
       "nickname": "Salmon Akyo",
       "avatarName": "akyo_しゃけ",
-      "category": "Food,Animal/Fish,Animal,Animal/Marine Life",
+      "category": "Food,Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_07d0cc53-5165-45a1-aabb-d769d325c66a"
@@ -5858,7 +5858,7 @@
       "id": "0651",
       "nickname": "Stingray Akyo",
       "avatarName": "akyo_エイ",
-      "category": "Animal/Fish,Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2078f132-cbc1-4fa8-a763-6e7826bc00f4"
@@ -5894,7 +5894,7 @@
       "id": "0655",
       "nickname": "Clione Akyo",
       "avatarName": "akyo クリオネ",
-      "category": "Mollusk,Animal/Shell,Animal,Animal/Marine Life",
+      "category": "Mollusk,Animal,Animal/Shell,Animal/Marine Life",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34ec4a76-cdaf-498f-8f7a-8110ac1f3a59"
@@ -5912,7 +5912,7 @@
       "id": "0657",
       "nickname": "Crocodile Akyo",
       "avatarName": "akyo わに",
-      "category": "Animal/Crocodile,Animal",
+      "category": "Animal,Animal/Crocodile",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c9e56c83-ba36-4262-ad0d-474ac93ef131"
@@ -5930,7 +5930,7 @@
       "id": "0659",
       "nickname": "Halloween Fox Akyo 2025",
       "avatarName": "akyo_きつねハロウィン25",
-      "category": "Season・Event,Animal/Fox,Animal,Roleplay",
+      "category": "Season・Event,Animal,Animal/Fox,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5278f2bc-68ee-43df-b015-e29b5a696965"
@@ -5939,7 +5939,7 @@
       "id": "0660",
       "nickname": "Masked Wolf Akyo",
       "avatarName": "akyo_おおかみマスク",
-      "category": "Animal/Wolf,Clothing/Accessory,Animal,Clothing/Accessory/Mask,Season・Event,Season・Event/Halloween",
+      "category": "Animal,Animal/Wolf,Fashion,Fashion/Mask,Season・Event,Season・Event/Halloween",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_05eacbfe-57a5-4d51-9ef5-51034d95a29c"
@@ -5957,7 +5957,7 @@
       "id": "0662",
       "nickname": "Halloween Maid Fox Akyo",
       "avatarName": "akyo_メイド_ハロウィン",
-      "category": "Animal/Fox,Season・Event,Animal,Occupation/Status,Roleplay,Pretty,Season・Event/Halloween",
+      "category": "Animal,Animal/Fox,Season・Event,Role・Status,Roleplay,Pretty,Season・Event/Halloween",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d9c07422-e074-487b-b565-f2ea1f6c0254"
@@ -5966,7 +5966,7 @@
       "id": "0663",
       "nickname": "Doctor Dragon Akyo",
       "avatarName": "akyo 医者どらごんakyo",
-      "category": "Occupation/Status,Fictional Being,Fictional Being/Dragon,Occupation/Status/Healthcare Worker,Skill・Trait/Flying,Animal,Skill・Trait",
+      "category": "Role・Status,Fictional Being,Fictional Being/Dragon,Role・Status/Healthcare Worker,Skill・Trait,Skill・Trait/Flying,Animal",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c3441277-1558-433c-aa75-8bcd9469dc9c"
@@ -5975,7 +5975,7 @@
       "id": "0664",
       "nickname": "Halloween Carrot Akyo",
       "avatarName": "akyo_にんじんハロウィン",
-      "category": "Food/Vegetable,Season・Event,Food,Carrot,Roleplay",
+      "category": "Food,Food/Vegetable,Season・Event,Carrot,Roleplay",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_78763b3e-9111-4aa2-a2b3-b44d80dbb690"
@@ -5984,7 +5984,7 @@
       "id": "0665",
       "nickname": "Onion Akyo",
       "avatarName": "akyo_たまねぎ",
-      "category": "Food/Vegetable,Food",
+      "category": "Food,Food/Vegetable",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_97e175e3-150b-4a3b-b77a-ef103397227f"
@@ -6011,7 +6011,7 @@
       "id": "0668",
       "nickname": "Cold Akyo",
       "avatarName": "kazeakyo",
-      "category": "Illness,Mint Chocolate,Clothing/Accessory,Clothing/Accessory/Mask,Get Well Soon,Appliances・Furniture,Appliances・Furniture/Futon,Appliances・Furniture/Pillow,IV Drip",
+      "category": "Illness,Mint Chocolate,Fashion,Fashion/Mask,Get Well Soon,Appliances・Furniture,Appliances・Furniture/Futon,Appliances・Furniture/Pillow,Liquid,Liquid/IV Drip",
       "comment": "",
       "author": "nezu_jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
@@ -6065,7 +6065,7 @@
       "id": "0674",
       "nickname": "Sea Turtle Akyo",
       "avatarName": "akyo_うみがめ",
-      "category": "Animal,Animal/Turtle,Material・Texture,Hard",
+      "category": "Animal,Animal/Turtle,Material・Raw Material,Shape・Texture,Shape・Texture/Hard",
       "comment": "It lives in warm seas and is often seen swimming around coral reefs. It also seems to come ashore and take walks along sandy beaches.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0a92e521-0723-4dc7-9dd8-23fe4724dc86"
@@ -6101,7 +6101,7 @@
       "id": "0678",
       "nickname": "Rain Akyo",
       "avatarName": "amekyo",
-      "category": "Environment・Weather,Environment・Weather/Rain,Liquid",
+      "category": "Environment・Weather,Environment・Weather/Rain,Liquid,Liquid/Water",
       "comment": "There's a rumor it appears on rainy days. The credibility is quite low.",
       "author": "ameno-hisui",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ad6c464-645d-4b3d-b48b-8b173b9d1b6c"
@@ -6110,7 +6110,7 @@
       "id": "0679",
       "nickname": "Uro Akyo",
       "avatarName": "urokyo",
-      "category": "Clothing/Accessory,Clothing/Accessory/Glasses",
+      "category": "Fashion,Fashion/Glasses",
       "comment": "Seeking information.",
       "author": "ウロVRC",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_697acb61-6b9e-4ede-8276-735695375010"
@@ -6128,7 +6128,7 @@
       "id": "0681",
       "nickname": "Spinning Top Akyo",
       "avatarName": "komakyo-test",
-      "category": "Fur/Fluffy,Fur",
+      "category": "Shape・Texture,Shape・Texture/Fluffy",
       "comment": "",
       "author": "ameno-hisui",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_60e9698d-f412-4ca1-8317-f9333a27652c"
@@ -6137,7 +6137,7 @@
       "id": "0682",
       "nickname": "Gingerbread Akyo",
       "avatarName": "GingerbreadAkyo",
-      "category": "Food,Material・Texture,Material・Texture/Thin,Food/Sweets",
+      "category": "Food,Material・Raw Material,Shape・Texture,Shape・Texture/Thin,Food/Sweets",
       "comment": "It sways side to side when it moves!",
       "author": "oyoso_5_oku",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_04d93765-939b-46dc-9837-3f5f7af5d0b0"
@@ -6155,7 +6155,7 @@
       "id": "0684",
       "nickname": "Muscle Kitsune Tsuki Fox Akyo",
       "avatarName": "muscle_sakyon",
-      "category": "Art,Animal/Fox,Animal,Athletic",
+      "category": "Art,Animal,Animal/Fox,Physical,Physical/Athletic",
       "comment": "",
       "author": "-野牛-",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_73a7c0b5-dbb9-4e02-b57a-92a8ad1a8397"
@@ -6227,7 +6227,7 @@
       "id": "0692",
       "nickname": "God Bean Akyo / Bean Akyo with an Amazing Halo",
       "avatarName": "GODまめAkyo",
-      "category": "Bean,Bean Akyo,Fictional Being/God,Fictional Being",
+      "category": "Bean,Bean Akyo,Fictional Being,Fictional Being/God",
       "comment": "",
       "author": "zhoney666",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7968ca2-e527-4107-a1e8-89435a7cae70"
@@ -6263,7 +6263,7 @@
       "id": "0696",
       "nickname": "Wolf Sweater Akyo",
       "avatarName": "akyo_おおかみセーター",
-      "category": "Clothing/Accessory,Clothing/Accessory/Warm Clothing,Season・Event/Winter,Season・Event,Animal,Animal/Wolf,Clothing/Accessory/Hat,Clothing/Accessory/Gloves",
+      "category": "Fashion,Fashion/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Wolf,Fashion/Hat,Fashion/Gloves",
       "comment": "A wolf Akyo wearing a fluffy sweater. Now it's ready for cold days!",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2d77ad59-9699-47b7-adae-0ebcf7d94e0a"
@@ -6281,7 +6281,7 @@
       "id": "0698",
       "nickname": "Sweater Elephant Akyo",
       "avatarName": "akyo_ぞうセーター",
-      "category": "Clothing/Accessory,Clothing/Accessory/Hat,Clothing/Accessory/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Elephant,Quadruped",
+      "category": "Fashion,Fashion/Hat,Fashion/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Elephant,Quadruped",
       "comment": "A winter-ready elephant Akyo wearing a sweater. Nice and warm.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22a5fa0e-e92d-426e-83a9-e6a9a7549f51"
@@ -6290,7 +6290,7 @@
       "id": "0699",
       "nickname": "Year of the Horse Akyo / New Year Horse Akyo",
       "avatarName": "akyo_うまどし",
-      "category": "Quadruped,Animal/Horse,Animal,Season・Event,Season・Event/New Year,Clothing/Accessory",
+      "category": "Quadruped,Animal,Animal/Horse,Season・Event,Season・Event/New Year,Fashion",
       "comment": "A horse Akyo dressed in New Year attire. It seems very excited.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_829d6be4-302c-4d81-bb9b-a8d06beaa521"
@@ -6299,7 +6299,7 @@
       "id": "0700",
       "nickname": "Duck-and-Green-Onion Akyo",
       "avatarName": "akyo_かも＆ねぎ",
-      "category": "Animal,Animal/Bird,Season・Event,Season・Event/New Year,Skill・Trait/Flying,Skill・Trait,Food,Food/Vegetable,Green Onion",
+      "category": "Animal,Animal/Bird,Season・Event,Season・Event/New Year,Skill・Trait,Skill・Trait/Flying,Food,Food/Vegetable,Green Onion",
       "comment": "A duck Akyo carrying a green onion Akyo. Where did they meet?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_92d566a6-9cf0-4cc9-bb8d-609cee7b5abd"
@@ -6317,7 +6317,7 @@
       "id": "0702",
       "nickname": "Fox Bean Akyo",
       "avatarName": "akyo mameFox",
-      "category": "Bean,Bean Akyo,Deformed,Body Type/Plump,Body Type,Animal,Animal/Fox,Soft,Material・Texture",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Animal,Animal/Fox,Shape・Texture,Shape・Texture/Soft,Material・Raw Material",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34ce01ef-e8e9-4543-bb35-e4ba66687138"
@@ -6344,7 +6344,7 @@
       "id": "0705",
       "nickname": "Cosmic Akyo",
       "avatarName": "Cosmic Akyo",
-      "category": "Body Part,Body Part/Wing,Skill・Trait,Skill・Trait/Flying,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance,Environment・Weather,Environment・Weather/Outer Space,Traveler",
+      "category": "Body Part,Body Part/Wing,Skill・Trait,Skill・Trait/Flying,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance,Environment・Weather,Environment・Weather/Outer Space,Role・Status,Role・Status/Traveler",
       "comment": "It seems to have undergone unique evolution for outer-space exploration.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23434774-76bd-4f22-8bf0-2fdc3cce6a26"
@@ -6353,7 +6353,7 @@
       "id": "0706",
       "nickname": "Crystal Akyo",
       "avatarName": "Crystal Akyo",
-      "category": "Rare,Material・Texture,Material・Texture/Glass,Hard",
+      "category": "Rare,Material・Raw Material,Material・Raw Material/Glass,Shape・Texture,Shape・Texture/Hard",
       "comment": "Is it a rare Akyo, or...?",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cea0caed-4173-4cec-85a0-78ae527ec591"
@@ -6398,7 +6398,7 @@
       "id": "0711",
       "nickname": "Queen Akyo",
       "avatarName": "Queen Akyo",
-      "category": "Pretty,Material・Texture,Material・Texture/Slippery,Occupation/Status,Occupation/Status/Royalty",
+      "category": "Pretty,Material・Raw Material,Shape・Texture,Shape・Texture/Slippery,Role・Status,Role・Status/Royalty",
       "comment": "Apparently it's slippery!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2cbee432-9e8e-4ba7-a669-076e3c9cb85b"
@@ -6407,7 +6407,7 @@
       "id": "0712",
       "nickname": "Kitsunetsuki's Snow Fox Akyo",
       "avatarName": "Snow Fox Akyo",
-      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Winter,Environment・Weather,Environment・Weather/Snow,Material・Texture,Cold",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Winter,Environment・Weather,Environment・Weather/Snow,Material・Raw Material,Shape・Texture,Shape・Texture/Cold",
       "comment": "It is said to have been discovered on an icy planet.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
@@ -6416,7 +6416,7 @@
       "id": "0713",
       "nickname": "Kitsunetsuki's Golden Fox Akyo",
       "avatarName": "Golden Fox Akyo",
-      "category": "Rare,Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Metal",
+      "category": "Rare,Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Metal",
       "comment": "It's made of pure gold!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_56563c93-0b17-4db9-8fda-e804152f79e7"
@@ -6452,7 +6452,7 @@
       "id": "0717",
       "nickname": "Kitsunetsuki's Red Gem Fox Akyo",
       "avatarName": "Red Gem Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Stone,Glutton",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Glutton",
       "comment": "Apparently it ate too many gems!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
@@ -6461,7 +6461,7 @@
       "id": "0718",
       "nickname": "Kitsunetsuki's Purple Gem Fox Akyo",
       "avatarName": "Purple Gem Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Stone,Glutton",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Glutton",
       "comment": "This one also ate too many gems!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
@@ -6470,7 +6470,7 @@
       "id": "0719",
       "nickname": "Kitsunetsuki's White Gem Fox Akyo",
       "avatarName": "White Gem Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Texture,Hard,Material・Texture/Stone,Glutton",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Glutton",
       "comment": "I wonder if Kitsunetsuki's Fox Akyo's favorite food is gems?",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
@@ -6479,7 +6479,7 @@
       "id": "0720",
       "nickname": "Kitsunetsuki's Aluminum Fox Akyo",
       "avatarName": "Aluminium Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Texture,Material・Texture/Metal",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Material・Raw Material/Metal",
       "comment": "Maybe this Akyo was born within the last 200 years?",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d861904-5b3e-4a6b-a074-3f5d3ef04b9e"
@@ -6498,7 +6498,7 @@
       "nickname": "Electric Heater Akyo",
       "avatarName": "akyo_電気ヒーター",
       "category": "Appliances・Furniture,Energy,Energy/Electricity,Energy/Heat,Body Part,Body Part/Tail,Season・Event,Season・Event/Winter",
-      "comment": "(Sasanoki's notes)\nAn Akyo that keeps you warm. It seems fine even without being plugged in. It dislikes water because it rusts.",
+      "comment": "(Sasanoki's notes)\r\nAn Akyo that keeps you warm. It seems fine even without being plugged in. It dislikes water because it rusts.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
     },
@@ -6506,8 +6506,8 @@
       "id": "0723",
       "nickname": "Yaki Mochi Akyo",
       "avatarName": "akyo_やきもち",
-      "category": "Material・Texture,Soft,Material・Texture/Square,Food,Food/Dish",
-      "comment": "(Sasanoki's notes)\nA properly grilled square mochi wrapped in nori. Its savory aroma stimulates the appetite.",
+      "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Square,Food,Food/Dish",
+      "comment": "(Sasanoki's notes)\r\nA properly grilled square mochi wrapped in nori. Its savory aroma stimulates the appetite.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0396e41a-c59a-48db-8ac2-ca28c271ef8b"
     },
@@ -6515,8 +6515,8 @@
       "id": "0724",
       "nickname": "Permafrost Akyo",
       "avatarName": "akyo_永久凍土",
-      "category": "Captive,Animal,Material・Texture,Cold,Material・Texture/Square,Hard,Material・Texture/Ice",
-      "comment": "(Sasanoki's notes)\nAn ice Akyo discovered during permafrost research. It feels like something is buried inside.",
+      "category": "Captive,Animal,Material・Raw Material,Shape・Texture,Shape・Texture/Cold,Shape・Texture/Square,Shape・Texture/Hard,Material・Raw Material/Ice",
+      "comment": "(Sasanoki's notes)\r\nAn ice Akyo discovered during permafrost research. It feels like something is buried inside.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fef7a5db-3006-4a14-8600-29c3cc9402bb"
     },
@@ -6525,7 +6525,7 @@
       "nickname": "Otter Akyo",
       "avatarName": "akyo_カワウソ",
       "category": "Animal,Body Part,Body Part/Tail,Personality,Personality/Curious,Personality/Friendly",
-      "comment": "(Sasanoki's notes)\nFriendly and very curious.",
+      "comment": "(Sasanoki's notes)\r\nFriendly and very curious.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
     },
@@ -6542,8 +6542,8 @@
       "id": "0727",
       "nickname": "Mohawk Akyo",
       "avatarName": "akyo_モヒカン",
-      "category": "Clothing/Accessory,Clothing/Accessory/Glasses,Hair Style,Hair Style/Mohawk",
-      "comment": "(Sasanoki's notes)\nAn Akyo living in the end times.",
+      "category": "Fashion,Fashion/Glasses,Fashion/Hair Style,Fashion/Hair Style/Mohawk",
+      "comment": "(Sasanoki's notes)\r\nAn Akyo living in the end times.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0638079f-4016-47d4-8c3c-5e83c134d978"
     },
@@ -6578,7 +6578,7 @@
       "id": "0731",
       "nickname": "Forest Nijimasu-man with Moss Akyo",
       "avatarName": "森のニジマスマンWith苔Akyo",
-      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Gimmick・Special,Animal/Marine Life,Real Photo,Plant,Moss,Material・Texture,Material・Texture/Plant,Art",
+      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Gimmick・Special,Animal/Marine Life,Real Photo,Plant,Moss,Material・Raw Material,Material・Raw Material/Plant,Art",
       "comment": "Look closely, there's a Moss Akyo on its shoulder! It can move on its own too!",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8324c16d-05c0-4793-9f77-f1edf0340eb0"
@@ -6587,8 +6587,8 @@
       "id": "0732",
       "nickname": "Warrior of Bonds: Axolotlman & Horse Akyo",
       "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
-      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Animal/Amphibian,Animal/Horse,Traveler,Hero,Vehicle,Vehicle/Land,Body Part,Body Part/Tail,Quadruped,Dimension",
-      "comment": "Even after losing its memory, the flame of its soul still burns fiercely!\nCarrying on Mambo Man's will, the Warrior of Bonds, Axolotlman and Horse Akyo, is born here and now, entrusted with the fate of the entire universe!",
+      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Animal/Amphibian,Animal/Horse,Role・Status,Role・Status/Traveler,Role・Status/Hero,Vehicle,Vehicle/Land,Body Part,Body Part/Tail,Quadruped,Dimension",
+      "comment": "Even after losing its memory, the flame of its soul still burns fiercely!\r\nCarrying on Mambo Man's will, the Warrior of Bonds, Axolotlman and Horse Akyo, is born here and now, entrusted with the fate of the entire universe!",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
     },
@@ -6596,8 +6596,8 @@
       "id": "0733",
       "nickname": "Akyoman / Akyo Head",
       "avatarName": "Akyohead",
-      "category": "Mint Chocolate,Roleplay,Athletic,Animal,Unknown",
-      "comment": "Its head is Akyo!?\nIs it... human?",
+      "category": "Mint Chocolate,Roleplay,Physical,Physical/Athletic,Animal,Unknown",
+      "comment": "Its head is Akyo!?\r\nIs it... human?",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
     },
@@ -6605,7 +6605,7 @@
       "id": "0734",
       "nickname": "Reptile Akyo",
       "avatarName": "レプタイルAkyo",
-      "category": "Animal,Animal/Reptile,Material・Texture,Material・Texture/Scales",
+      "category": "Animal,Animal/Reptile,Material・Raw Material,Shape・Texture,Shape・Texture/Scales",
       "comment": "It's the English word for reptiles!",
       "author": "huyumusi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c1695c0-4566-40fa-828b-f29eff60d4d3"
@@ -6614,7 +6614,7 @@
       "id": "0735",
       "nickname": "Tanuki Bean Akyo / Bean Tanuki Akyo",
       "avatarName": "まめだぬきAkyo",
-      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Animal,Animal/Tanuki,Body Part,Body Part/Tail,Material・Texture,Soft",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Animal,Animal/Tanuki,Body Part,Body Part/Tail,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "It's Bean Akyo paradise~~~!!!",
       "author": "Nagisa_Imawari",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_79ec6fbd-ad28-4f80-9887-91b4fc2bd646"
@@ -6623,7 +6623,7 @@
       "id": "0736",
       "nickname": "Bread Bean Akyo",
       "avatarName": "ぱんあきょ",
-      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Food,Bread,Material・Texture,Soft",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Food,Bread,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "Bean Akyo paradise keeps growing!",
       "author": "もぐやねん",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_41a51483-9cd9-478a-abb2-b7396c54be23"
@@ -6632,8 +6632,8 @@
       "id": "0737",
       "nickname": "Mochi Bean Akyo / Bean Mochi Akyo",
       "avatarName": "まめもちあきょ",
-      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Season・Event,Season・Event/New Year,Material・Texture,Soft,Food,Food/Dish,Food/Fruit",
-      "comment": "The Bean Akyo momentum won't stop!\nTurning all Akyo into Bean Akyo might not be just a dream!",
+      "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Season・Event,Season・Event/New Year,Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Food,Food/Dish,Food/Fruit",
+      "comment": "The Bean Akyo momentum won't stop!\r\nTurning all Akyo into Bean Akyo might not be just a dream!",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
     },
@@ -6641,8 +6641,8 @@
       "id": "0738",
       "nickname": "Fushi Akyo",
       "avatarName": "ふしあきょ",
-      "category": "Parody,Parody/Super Princess Kaguya!,Animal,Animal/Sea Slug,Material・Texture,Soft",
-      "comment": "Follow me! ( ｀ー´)ノ\n(from the creator comment)",
+      "category": "Parody,Parody/Super Princess Kaguya!,Animal,Animal/Sea Slug,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
+      "comment": "Follow me! ( ｀ー´)ノ\r\n(from the creator comment)",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
     },
