@@ -36,7 +36,8 @@ function timingSafeCompare(a: string, b: string): boolean {
 
     const isEqual = timingSafeEqual(paddedA, paddedB);
     return isEqual && bufA.length === bufB.length;
-  } catch {
+  } catch (error) {
+    console.error('[admin/login] timingSafeCompare failed:', error);
     return false;
   }
 }

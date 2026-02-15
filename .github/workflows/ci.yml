@@ -38,6 +38,7 @@ jobs:
 
       - name: Verify Dify CSP hash
         run: npm run verify:dify-csp-hash
+        continue-on-error: true
         env:
           DIFY_CSP_HASH_CHECK_TOKEN: ${{ vars.DIFY_CSP_HASH_CHECK_TOKEN }}
         

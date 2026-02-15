@@ -449,5 +449,5 @@ export type UITextKey = keyof typeof UI_TEXTS;
  * Falls back to Japanese if key is missing.
  */
 export function t(key: UITextKey, lang: SupportedLanguage): string {
-  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.ja;
+  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.ja ?? '';
 }

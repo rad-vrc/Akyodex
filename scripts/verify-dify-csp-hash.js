@@ -4,6 +4,8 @@ const fs = require('fs/promises');
 const { createHash } = require('crypto');
 
 const MIDDLEWARE_PATH = 'src/middleware.ts';
+// Public fallback token used by the frontend embed as well (not a secret).
+// Keep DEFAULT_DIFY_TOKEN in sync when rotating the Dify chatbot instance token.
 const DEFAULT_DIFY_TOKEN = 'bJthPu2B6Jf4AnsU';
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_RETRIES = 3;
