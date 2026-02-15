@@ -35,6 +35,10 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     setLoadState('idle');
     let isDisposed = false;
     let mountPollTimer: ReturnType<typeof setInterval> | null = null;
+    let observerTimer: ReturnType<typeof setTimeout> | null = null;
+    let bodyObserver: MutationObserver | null = null;
+    let observerTimedOut = false;
+    let mountPollTimedOut = false;
 
     const hasMountedChatbotDom = () =>
       Boolean(
@@ -44,10 +48,35 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
 
     const markLoadedIfMounted = () => {
       if (!hasMountedChatbotDom()) return false;
+      if (observerTimer) {
+        clearTimeout(observerTimer);
+        observerTimer = null;
+      }
+      if (mountPollTimer) {
+        clearInterval(mountPollTimer);
+        mountPollTimer = null;
+      }
+      observerTimedOut = false;
+      mountPollTimedOut = false;
       if (!isDisposed) {
         setLoadState((current) => (current === 'error' ? current : 'loaded'));
       }
       return true;
+    };
+
+    const maybeSetLoadError = () => {
+      if (isDisposed) return;
+      if (!observerTimedOut || !mountPollTimedOut) return;
+      console.error(
+        '[DifyChatbot] Chatbot DOM did not mount before observer and mount timeouts elapsed.',
+        {
+          observerDelayMs: DIFY_LOAD_DELAY_MS,
+          mountTimeoutMs: DIFY_MOUNT_TIMEOUT_MS,
+        }
+      );
+      setLoadState('error');
+      bodyObserver?.disconnect();
+      bodyObserver = null;
     };
 
     // Set config — dynamicScript: true ensures embed.min.js calls embedChatbot()
@@ -67,16 +96,21 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     script.src = 'https://udify.app/embed.min.js';
     script.async = true;
     script.onload = () => {
+      attachTargetObservers();
       if (markLoadedIfMounted()) return;
+
+      observerTimer = setTimeout(() => {
+        if (isDisposed) return;
+        if (markLoadedIfMounted()) return;
+        observerTimedOut = true;
+        maybeSetLoadError();
+      }, DIFY_LOAD_DELAY_MS);
 
       const mountDeadline = Date.now() + DIFY_MOUNT_TIMEOUT_MS;
       mountPollTimer = setInterval(() => {
         if (isDisposed) return;
         if (markLoadedIfMounted()) {
-          if (mountPollTimer) {
-            clearInterval(mountPollTimer);
-            mountPollTimer = null;
-          }
+          attachTargetObservers();
           return;
         }
         if (Date.now() < mountDeadline) return;
@@ -85,14 +119,19 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
           clearInterval(mountPollTimer);
           mountPollTimer = null;
         }
-        console.error(
-          '[DifyChatbot] embed.min.js loaded but chatbot DOM did not mount in time. This may indicate CSP blocked inline bootstrap code.',
-          { timeoutMs: DIFY_MOUNT_TIMEOUT_MS }
-        );
-        setLoadState('error');
+        mountPollTimedOut = true;
+        maybeSetLoadError();
       }, DIFY_MOUNT_POLL_INTERVAL_MS);
     };
     script.onerror = (event) => {
+      if (observerTimer) {
+        clearTimeout(observerTimer);
+        observerTimer = null;
+      }
+      if (mountPollTimer) {
+        clearInterval(mountPollTimer);
+        mountPollTimer = null;
+      }
       console.error('[DifyChatbot] Failed to load embed script:', {
         src: script.src,
         event,
@@ -130,8 +169,6 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
 
     let hasWindowObserver = false;
     let hasContainerObserver = false;
-    let observerTimer: ReturnType<typeof setTimeout> | null = null;
-    let bodyObserver: MutationObserver | null = null;
 
     const attachTargetObservers = () => {
       const chatWindow = document.getElementById('dify-chatbot-bubble-window');
@@ -178,23 +215,7 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
       subtree: true,
     });
 
-    if (!attachTargetObservers()) {
-      observerTimer = setTimeout(() => {
-        if (!attachTargetObservers()) {
-          console.error(
-            '[DifyChatbot] Chatbot DOM targets not found after delay. This may indicate CSP blocked inline bootstrap code.',
-            {
-              delayMs: DIFY_LOAD_DELAY_MS,
-            }
-          );
-          if (!isDisposed) {
-            setLoadState('error');
-          }
-          bodyObserver?.disconnect();
-          bodyObserver = null;
-        }
-      }, DIFY_LOAD_DELAY_MS);
-    }
+    attachTargetObservers();
 
     return () => {
       isDisposed = true;
