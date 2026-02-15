@@ -33,7 +33,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key !== FAVORITES_STORAGE_KEY) return;
       // キャッシュを無効化して最新の値を取得
-      favoritesCache = null;
+      invalidateFavoritesCache();
       setData(prev => applyFavorites(prev));
       setFilteredData(prev => applyFavorites(prev));
     };
@@ -167,6 +167,10 @@ export function useAkyoData(initialData: AkyoData[] = []) {
  * 頻繁なアクセス時のパフォーマンスを改善
  */
 let favoritesCache: string[] | null = null;
+
+function invalidateFavoritesCache(): void {
+  favoritesCache = null;
+}
 
 /**
  * お気に入りIDを取得（キャッシュ対応）

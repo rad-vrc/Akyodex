@@ -183,11 +183,10 @@ export function ZukanClient({
 
   const handleModalFavoriteToggle = (id: string) => {
     toggleFavorite(id);
-    // Update modal with latest data
-    const updated = data.find((a) => a.id === id);
-    if (updated && selectedAkyo?.id === id) {
-      setSelectedAkyo(updated);
-    }
+    // Optimistically update modal state and let data-sync effect reconcile with source data.
+    setSelectedAkyo((prev) =>
+      prev && prev.id === id ? { ...prev, isFavorite: !prev.isFavorite } : prev
+    );
   };
 
   // data が更新された際（cross-tab sync 等）、モーダルが開いていれば selectedAkyo を最新に同期

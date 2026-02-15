@@ -1,5 +1,6 @@
+import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess } from '@/lib/api-helpers';
+import { timingSafeEqual } from 'crypto';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { NextRequest } from 'next/server';
 
 /**
  * On-demand ISR Revalidation API
@@ -25,6 +26,9 @@ import { NextRequest } from 'next/server';
  *     "tags": ["akyo-data"],
  *     "updateKV": true  // Phase 5b: Also update KV cache
  *   }
+ * Note:
+ * - If paths/tags are omitted, default values are used.
+ * - If paths/tags are provided, they must be non-empty arrays.
  *
  * If no body is provided, revalidates all main pages by default.
  *
@@ -50,8 +54,62 @@ const DEFAULT_PATHS = [
 
 // Default tags to revalidate
 const DEFAULT_TAGS = ['akyo-data', 'akyo-data-ja', 'akyo-data-en', 'akyo-data-ko'];
+const MAX_PATHS = 20;
+const MAX_TAGS = 20;
+const MAX_PATH_LENGTH = 200;
+const MAX_TAG_LENGTH = 120;
 
-export async function POST(request: NextRequest): Promise<Response> {
+function timingSafeCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a, 'utf8');
+    const bufB = Buffer.from(b, 'utf8');
+    const maxLength = Math.max(bufA.length, bufB.length);
+    const paddedA = Buffer.alloc(maxLength);
+    const paddedB = Buffer.alloc(maxLength);
+    bufA.copy(paddedA);
+    bufB.copy(paddedB);
+    const isEqual = timingSafeEqual(paddedA, paddedB);
+    return isEqual && bufA.length === bufB.length;
+  } catch (error) {
+    console.error('[revalidate] timingSafeCompare failed:', error);
+    return false;
+  }
+}
+
+function parseStringArray(
+  value: unknown,
+  {
+    maxItems,
+    maxItemLength,
+    mustStartWithSlash,
+  }: { maxItems: number; maxItemLength: number; mustStartWithSlash: boolean }
+): string[] | null {
+  if (!Array.isArray(value) || value.length > maxItems) {
+    return null;
+  }
+
+  const parsed: string[] = [];
+  for (const item of value) {
+    if (typeof item !== 'string') {
+      return null;
+    }
+    const normalized = item.trim();
+    if (
+      normalized.length === 0 ||
+      normalized.length > maxItemLength ||
+      CONTROL_CHARACTER_PATTERN.test(normalized)
+    ) {
+      return null;
+    }
+    if (mustStartWithSlash && !normalized.startsWith('/')) {
+      return null;
+    }
+    parsed.push(normalized);
+  }
+  return parsed;
+}
+
+export async function POST(request: Request): Promise<Response> {
   try {
     // Verify secret
     const secret = request.headers.get('x-revalidate-secret');
@@ -59,32 +117,67 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!expectedSecret) {
       console.error('[revalidate] REVALIDATE_SECRET is not configured');
-      return Response.json({ error: 'Server configuration error' }, { status: 500 });
+      return jsonError('Server configuration error', 500);
     }
 
-    if (!secret || secret !== expectedSecret) {
+    if (!secret || !timingSafeCompare(secret, expectedSecret)) {
       console.warn('[revalidate] Invalid or missing secret');
-      return Response.json({ error: 'Invalid secret' }, { status: 401 });
+      return jsonError('Invalid secret', 401);
     }
 
     // Parse request body (optional)
     let paths = DEFAULT_PATHS;
     let tags = DEFAULT_TAGS;
     let updateKV = false;
+    let parsedBody: unknown = {};
 
     try {
-      const body = (await request.json()) as RevalidateRequest;
-      if (body.paths && Array.isArray(body.paths) && body.paths.length > 0) {
-        paths = body.paths;
-      }
-      if (body.tags && Array.isArray(body.tags) && body.tags.length > 0) {
-        tags = body.tags;
-      }
-      if (body.updateKV === true) {
-        updateKV = true;
-      }
+      parsedBody = await request.json();
     } catch {
       // No body or invalid JSON - use defaults
+    }
+
+    const body: RevalidateRequest =
+      parsedBody && typeof parsedBody === 'object' && !Array.isArray(parsedBody)
+        ? (parsedBody as RevalidateRequest)
+        : {};
+
+    if (body.paths !== undefined) {
+      const parsedPaths = parseStringArray(body.paths, {
+        maxItems: MAX_PATHS,
+        maxItemLength: MAX_PATH_LENGTH,
+        mustStartWithSlash: true,
+      });
+      if (!parsedPaths) {
+        return jsonError('Invalid paths format', 400);
+      }
+      if (parsedPaths.length === 0) {
+        return jsonError('paths cannot be empty when provided', 400);
+      }
+      paths = parsedPaths;
+    }
+
+    if (body.tags !== undefined) {
+      const parsedTags = parseStringArray(body.tags, {
+        maxItems: MAX_TAGS,
+        maxItemLength: MAX_TAG_LENGTH,
+        mustStartWithSlash: false,
+      });
+      if (!parsedTags) {
+        return jsonError('Invalid tags format', 400);
+      }
+      if (parsedTags.length === 0) {
+        return jsonError('tags cannot be empty when provided', 400);
+      }
+      tags = parsedTags;
+    }
+
+    if (body.updateKV !== undefined && typeof body.updateKV !== 'boolean') {
+      return jsonError('Invalid updateKV format', 400);
+    }
+
+    if (body.updateKV === true) {
+      updateKV = true;
     }
 
     // Revalidate paths
@@ -93,9 +186,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       try {
         revalidatePath(path);
         revalidatedPaths.push(path);
-        console.log(`[revalidate] Revalidated path: ${path}`);
+        console.log('[revalidate] Revalidated path', { path });
       } catch (error) {
-        console.error(`[revalidate] Failed to revalidate path ${path}:`, error);
+        console.error('[revalidate] Failed to revalidate path', { path, error });
       }
     }
 
@@ -105,9 +198,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       try {
         revalidateTag(tag);
         revalidatedTags.push(tag);
-        console.log(`[revalidate] Revalidated tag: ${tag}`);
+        console.log('[revalidate] Revalidated tag', { tag });
       } catch (error) {
-        console.error(`[revalidate] Failed to revalidate tag ${tag}:`, error);
+        console.error('[revalidate] Failed to revalidate tag', { tag, error });
       }
     }
 
@@ -134,7 +227,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           console.warn('[revalidate] Korean JSON data not available on CDN, skipping ko KV update');
         }
 
-        // Update all languages atomically to avoid metadata race condition
+        // Update all languages in one batch with unified metadata update
         kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo ?? undefined);
         // ko is non-fatal only when Korean JSON was unavailable (dataKo is null).
         // If Korean data was fetched but the KV write failed, treat as fatal.
@@ -180,19 +273,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     // This ensures calling workflows (e.g., GitHub Actions) detect the failure
     // and can retry or alert, preventing stale KV data from being served
     if (updateKV && !kvUpdated) {
-      return Response.json(result, { status: 500 });
+      return jsonError('KV cache update failed', 500, result);
     }
 
-    return Response.json(result, { status: 200 });
+    return jsonSuccess(result);
   } catch (error) {
     console.error('[revalidate] Unexpected error:', error);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    return jsonError('Internal server error', 500);
   }
 }
 
 // Health check endpoint
 export async function GET(): Promise<Response> {
-  return Response.json({
+  return jsonSuccess({
     status: 'ok',
     endpoint: '/api/revalidate',
     method: 'POST',
