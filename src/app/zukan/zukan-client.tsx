@@ -159,7 +159,6 @@ export function ZukanClient({
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
-  const [isWideViewport, setIsWideViewport] = useState(false);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   // Modal state
@@ -232,21 +231,6 @@ export function ZukanClient({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Keep filter layout in sync with viewport size.
-  // Collapsible only on mobile; always visible on >= sm screens.
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const query = window.matchMedia('(min-width: 640px)');
-    const syncByViewport = () => {
-      const isWide = query.matches;
-      setIsWideViewport(isWide);
-      setIsFilterPanelOpen(isWide);
-    };
-    syncByViewport();
-    query.addEventListener('change', syncByViewport);
-    return () => query.removeEventListener('change', syncByViewport);
-  }, []);
-
   // フィルター適用
   useEffect(() => {
     if (randomMode) return; // ランダム表示中は通常フィルタ適用を抑止
@@ -284,9 +268,10 @@ export function ZukanClient({
 
   // ランダム表示
   const handleRandomClick = () => {
-    const newRandomMode = !randomMode;
-    setRandomMode(newRandomMode);
-    if (newRandomMode) {
+    if (randomMode) {
+      setRandomMode(false);
+    } else {
+      setRandomMode(true);
       filterData(
         {
           searchQuery: '',
@@ -299,20 +284,6 @@ export function ZukanClient({
       setCategoryMatchMode('or');
       setSelectedCreators([]);
       setFavoritesOnly(false);
-    } else {
-      // ランダムモードを解除して通常表示に戻る
-      filterData(
-        {
-          searchQuery,
-          categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
-          authors: selectedCreators.length > 0 ? selectedCreators : undefined,
-          categoryMatchMode,
-          category: selectedAttributes[0] || undefined,
-          author: selectedCreators[0] || undefined,
-          favoritesOnly,
-        },
-        sortAscending
-      );
     }
   };
 
@@ -335,7 +306,6 @@ export function ZukanClient({
     () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
     [selectedAttributes, selectedCreators, favoritesOnly]
   );
-  const shouldRenderFilterPanel = isWideViewport || isFilterPanelOpen;
 
   if (error) {
     return (
@@ -432,30 +402,30 @@ export function ZukanClient({
             ) : null}
           </div>
 
-          {shouldRenderFilterPanel ? (
-            <div id="zukan-filter-panel">
-              <FilterPanel
-                // 動的に更新されるカテゴリ/作者を使用
-                attributes={currentCategories || categories || attributes}
-                creators={currentAuthors || authors || creators}
-                selectedAttributes={selectedAttributes}
-                selectedCreators={selectedCreators}
-                categoryMatchMode={categoryMatchMode}
-                selectedCreator={selectedCreators[0] || ''}
-                onAttributesChange={setSelectedAttributes}
-                onCreatorsChange={setSelectedCreators}
-                onCategoryMatchModeChange={setCategoryMatchMode}
-                onCreatorChange={(creator) => setSelectedCreators(creator ? [creator] : [])}
-                onSortToggle={handleSortToggle}
-                onRandomClick={handleRandomClick}
-                onFavoritesClick={handleFavoritesClick}
-                favoritesOnly={favoritesOnly}
-                sortAscending={sortAscending}
-                randomMode={randomMode}
-                lang={lang}
-              />
-            </div>
-          ) : null}
+          <div id="zukan-filter-panel" className={isFilterPanelOpen ? 'block sm:block' : 'hidden sm:block'}>
+            <FilterPanel
+              // 動的に更新されるカテゴリ/作者を使用
+              categories={currentCategories || categories || attributes}
+              authors={currentAuthors || authors || creators}
+              attributes={currentCategories || categories || attributes}
+              creators={currentAuthors || authors || creators}
+              selectedAttributes={selectedAttributes}
+              selectedCreators={selectedCreators}
+              categoryMatchMode={categoryMatchMode}
+              selectedCreator={selectedCreators[0] || ''}
+              onAttributesChange={setSelectedAttributes}
+              onCreatorsChange={setSelectedCreators}
+              onCategoryMatchModeChange={setCategoryMatchMode}
+              onCreatorChange={(creator) => setSelectedCreators(creator ? [creator] : [])}
+              onSortToggle={handleSortToggle}
+              onRandomClick={handleRandomClick}
+              onFavoritesClick={handleFavoritesClick}
+              favoritesOnly={favoritesOnly}
+              sortAscending={sortAscending}
+              randomMode={randomMode}
+              lang={lang}
+            />
+          </div>
 
           {/* ビュー切替 */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">

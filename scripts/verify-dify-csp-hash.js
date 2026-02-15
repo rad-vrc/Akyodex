@@ -15,7 +15,7 @@ function computeSha256Base64(content) {
 }
 
 function extractConfiguredHash(middlewareSource) {
-  const scriptSrcMatch = middlewareSource.match(/script-src\s+'self'[\s\S]*?;/);
+  const scriptSrcMatch = middlewareSource.match(/script-src\s+'self'[\s\S]*?(?:;|$)/);
   if (!scriptSrcMatch) {
     throw new Error(`script-src directive not found in ${MIDDLEWARE_PATH}`);
   }

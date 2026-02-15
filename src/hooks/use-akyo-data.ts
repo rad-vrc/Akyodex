@@ -55,24 +55,13 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const query = (options.searchQuery || '').toLowerCase();
     const targetCategory = options.category || options.attribute;
     const targetAuthor = options.author || options.creator;
-    const selectedAuthors = (
-      options.authors && options.authors.length > 0
-        ? options.authors
-        : targetAuthor && targetAuthor !== 'all'
-          ? [targetAuthor]
-          : []
-    )
-      .map((author) => author.trim())
-      .filter(Boolean);
-    const selectedCategories = (
-      options.categories && options.categories.length > 0
-        ? options.categories
-        : targetCategory && targetCategory !== 'all'
-          ? [targetCategory]
-          : []
-    )
-      .map((category) => category.trim())
-      .filter(Boolean);
+    const createSelectedList = (values: string[] | undefined, singleValue: string | undefined) =>
+      (values && values.length > 0 ? values : singleValue && singleValue !== 'all' ? [singleValue] : [])
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+    const selectedAuthors = createSelectedList(options.authors, targetAuthor);
+    const selectedCategories = createSelectedList(options.categories, targetCategory);
     const categoryMatchMode = options.categoryMatchMode === 'and' ? 'and' : 'or';
 
     let filtered = [...data];
@@ -127,9 +116,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     } else {
       // Sort by ID
       filtered.sort((a, b) => {
-        const idA = parseInt(a.id, 10);
-        const idB = parseInt(b.id, 10);
-        return sortAsc ? idA - idB : idB - idA;
+        const idA = Number.parseInt(a.id, 10);
+        const idB = Number.parseInt(b.id, 10);
+        const safeIdA = Number.isNaN(idA) ? 0 : idA;
+        const safeIdB = Number.isNaN(idB) ? 0 : idB;
+        return sortAsc ? safeIdA - safeIdB : safeIdB - safeIdA;
       });
     }
 

@@ -64,7 +64,7 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
       observerTimedOut = false;
       mountPollTimedOut = false;
       if (!isDisposed) {
-        setLoadState((current) => (current === 'error' ? current : 'loaded'));
+        setLoadState('loaded');
       }
       return true;
     };
@@ -143,7 +143,9 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
         src: script.src,
         event,
       });
-      setLoadState('error');
+      if (!isDisposed) {
+        setLoadState('error');
+      }
     };
     document.body.appendChild(script);
 
