@@ -72,8 +72,7 @@ function normalizeHierarchicalCategories(category: string): string {
  */
 function parseCsvToAkyoData(csvText: string): AkyoData[] {
   const records: string[][] = parse(csvText, {
-    relax_quotes: true,
-    relax_column_count: true,
+    // Strict parsing is required to fail fast on malformed CSV.
     skip_empty_lines: true,
     trim: false,
     record_delimiter: ['\r\n', '\n', '\r'],
@@ -88,9 +87,14 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
 
   const [header, ...dataRecords] = records;
   const data: AkyoData[] = [];
+  const invalidRows: Array<{ rowNumber: number; columnCount: number }> = [];
 
-  for (const record of dataRecords) {
+  for (const [index, record] of dataRecords.entries()) {
     if (record.length !== header.length) {
+      invalidRows.push({
+        rowNumber: index + 2, // +1 for zero-based index and +1 for header row
+        columnCount: record.length,
+      });
       continue;
     }
 
@@ -109,6 +113,16 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
       author: rawRow['Author'] ?? '',
       avatarUrl: rawRow['AvatarURL'] ?? '',
     });
+  }
+
+  if (invalidRows.length > 0) {
+    const preview = invalidRows
+      .slice(0, 5)
+      .map((row) => `row ${row.rowNumber}: expected ${header.length}, got ${row.columnCount}`)
+      .join('; ');
+    throw new Error(
+      `Malformed CSV detected: ${invalidRows.length} row(s) have invalid column counts. ${preview}`
+    );
   }
 
   return data;
