@@ -23,7 +23,7 @@ import {
   IconTag,
   IconUser,
 } from '@/components/icons';
-import { getCategoryColor } from '@/lib/akyo-data-helpers';
+import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import type { SupportedLanguage } from '@/lib/i18n';
 import { t } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
@@ -265,10 +265,7 @@ export function AkyoDetailModal({
 
   const displayName = localAkyo.nickname || localAkyo.avatarName || '';
   const categories: string[] = categoryStr
-    ? categoryStr
-        .split(/[、,]/)
-        .map((a: string) => a.trim())
-        .filter(Boolean)
+    ? parseAndSortCategories(categoryStr)
     : [];
   const categoryColor = getCategoryColor(categoryStr);
 
