@@ -5,7 +5,7 @@
  * Translates: nickname, category, comment
  * Keeps as-is: id, avatarName, author, avatarUrl
  *
- * Usage: node scripts/generate-ko-data.js
+ * Usage: node scripts/generate-ko-data.js [--verbose]
  */
 
 const fs = require('fs');
@@ -14,6 +14,9 @@ const { parse } = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
 const { NICKNAME_MAP } = require('./nickname-map-ko');
 const { CATEGORY_MAP } = require('./category-definitions-ko');
+
+const VERBOSE = process.argv.includes('--verbose');
+let untranslatedCommentCount = 0;
 
 function loadExistingKoCommentMap(csvPath) {
   if (!fs.existsSync(csvPath)) {
@@ -146,13 +149,18 @@ function translateComment(jaComment, existingKoComment = '') {
   if (COMMENT_MAP[jaComment]) {
     return COMMENT_MAP[jaComment];
   }
+  untranslatedCommentCount += 1;
 
   if (existingKoComment && existingKoComment.trim()) {
-    console.warn(`[WARN] untranslated comment, reusing existing ko comment: "${jaComment}"`);
+    if (VERBOSE) {
+      console.warn(`[WARN] untranslated comment, reusing existing ko comment: "${jaComment}"`);
+    }
     return existingKoComment.trim();
   }
 
-  console.warn(`[WARN] untranslated comment, falling back to original: "${jaComment}"`);
+  if (VERBOSE) {
+    console.warn(`[WARN] untranslated comment, falling back to original: "${jaComment}"`);
+  }
   return jaComment;
 }
 
@@ -278,6 +286,11 @@ function main() {
   console.log(`   ✅ ${jsonKoPath}`);
 
   // === Summary ===
+  if (untranslatedCommentCount > 0) {
+    console.warn(
+      `[WARN] ${untranslatedCommentCount} untranslated comments (use --verbose for detailed rows)`
+    );
+  }
   console.log(`\n✨ Korean data generated: ${koRows.length} avatars`);
   console.log('   Files:');
   console.log(`   - ${csvKoPath}`);

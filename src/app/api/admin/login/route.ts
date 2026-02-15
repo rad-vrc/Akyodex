@@ -8,28 +8,36 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Node.js runtime required for crypto.timingSafeEqual/setSessionCookie helpers
+// Node.js runtime required for crypto.timingSafeEqual and setSessionCookie helper
 export const runtime = 'nodejs';
 
-import { createHash, timingSafeEqual } from 'crypto';
+import { timingSafeEqual } from 'crypto';
 import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
 import { createSessionToken } from '@/lib/session';
 import type { AdminRole } from '@/types/akyo';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
+const MAX_AKYO_WORD_LENGTH = 256;
 
 /**
- * Timing-safe password comparison using fixed-length digests.
- * Converts both inputs to SHA-256 (32 bytes) and compares with timingSafeEqual
- * to avoid length-based early returns.
+ * Timing-safe password comparison (Node.js crypto)
+ * Prevents timing attacks by ensuring constant-time comparison
  */
 function timingSafeCompare(a: string, b: string): boolean {
   try {
-    const digestA = createHash('sha256').update(a, 'utf8').digest();
-    const digestB = createHash('sha256').update(b, 'utf8').digest();
-    return timingSafeEqual(digestA, digestB);
-  } catch {
+    const bufA = Buffer.from(a, 'utf8');
+    const bufB = Buffer.from(b, 'utf8');
+    const maxLength = Math.max(bufA.length, bufB.length);
+    const paddedA = Buffer.alloc(maxLength);
+    const paddedB = Buffer.alloc(maxLength);
+    bufA.copy(paddedA);
+    bufB.copy(paddedB);
+
+    const isEqual = timingSafeEqual(paddedA, paddedB);
+    return isEqual && bufA.length === bufB.length;
+  } catch (error) {
+    console.error('[admin/login] timingSafeCompare failed:', error);
     return false;
   }
 }
@@ -41,6 +49,9 @@ export async function POST(request: Request) {
 
     if (!password || typeof password !== 'string') {
       return jsonError('Akyoワードを入力してください', 400);
+    }
+    if (password.length > MAX_AKYO_WORD_LENGTH) {
+      return jsonError(`Akyoワードは${MAX_AKYO_WORD_LENGTH}文字以内で入力してください`, 400);
     }
 
     // Get passwords from environment variables (server-side only - NOT NEXT_PUBLIC)

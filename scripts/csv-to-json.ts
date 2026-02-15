@@ -88,6 +88,15 @@ async function convertCsvToJson() {
     { code: 'ko', file: 'akyo-data-ko.csv' },
   ] as const;
 
+  type LanguageCode = (typeof languages)[number]['code'];
+  const requiredLanguages = new Set<LanguageCode>(['ja', 'en']);
+  const failedConversions: Array<{
+    code: LanguageCode;
+    file: string;
+    csvPath: string;
+    message: string;
+  }> = [];
+
   const jsonPaths: string[] = [];
 
   for (const { code, file } of languages) {
@@ -111,12 +120,38 @@ async function convertCsvToJson() {
       console.log(`   ✅ ${code.toUpperCase()}: ${data.length} avatars → ${jsonPath}`);
       jsonPaths.push(jsonPath);
     } catch (error) {
+      const nodeError = error as NodeJS.ErrnoException;
       const message = error instanceof Error ? error.message : String(error);
-      console.warn(
-        `   ⚠️ Skipping ${code.toUpperCase()} (${file}) at ${csvPath}: ${message}`
+      if (nodeError.code === 'ENOENT') {
+        failedConversions.push({ code, file, csvPath, message });
+        console.warn(
+          `   ⚠️ Skipping ${code.toUpperCase()} (${file}) at ${csvPath}: ${message}`
+        );
+        continue;
+      }
+
+      throw new Error(
+        `CSV conversion failed for ${code.toUpperCase()} (${file}) at ${csvPath}: ${message}`
       );
-      continue;
     }
+  }
+
+  const requiredFailures = failedConversions.filter((failure) =>
+    requiredLanguages.has(failure.code)
+  );
+
+  if (requiredFailures.length > 0) {
+    const summary = requiredFailures
+      .map(({ code, file, message }) => `${code.toUpperCase()} (${file}): ${message}`)
+      .join(' | ');
+    throw new Error(`Required CSV conversion failed: ${summary}`);
+  }
+
+  if (failedConversions.length > 0) {
+    const summary = failedConversions
+      .map(({ code, file }) => `${code.toUpperCase()} (${file})`)
+      .join(', ');
+    console.warn(`⚠️ Optional CSV conversion failures occurred: ${summary}`);
   }
 
   // Summary

@@ -162,6 +162,16 @@ export const UI_TEXTS = {
     en: 'Search by name, nickname, author...',
     ko: '이름・별명・작자로 검색...',
   },
+  'search.ariaLabel': {
+    ja: 'Akyo検索',
+    en: 'Search Akyo',
+    ko: 'Akyo 검색',
+  },
+  'search.clearAriaLabel': {
+    ja: '検索をクリア',
+    en: 'Clear search',
+    ko: '검색 지우기',
+  },
   'view.grid': {
     ja: 'グリッド表示',
     en: 'Grid view',
@@ -227,7 +237,12 @@ export const UI_TEXTS = {
   'filter.clearCategories': {
     ja: '絞り込み解除',
     en: 'Clear',
-    ko: '카테고리 해제',
+    ko: '필터 해제',
+  },
+  'filter.author': {
+    ja: '作者で絞り込み',
+    en: 'Filter by author',
+    ko: '작자로 필터',
   },
   'filter.authorSearch': {
     ja: '作者を検索...',
@@ -252,12 +267,7 @@ export const UI_TEXTS = {
   'filter.clearAuthors': {
     ja: '絞り込み解除',
     en: 'Clear',
-    ko: '작자 해제',
-  },
-  'filter.author': {
-    ja: '作者で絞り込み',
-    en: 'Filter by author',
-    ko: '작자로 필터',
+    ko: '필터 해제',
   },
   'filter.allAuthors': {
     ja: 'すべての作者',
@@ -298,6 +308,21 @@ export const UI_TEXTS = {
     ja: 'お気に入りのみ',
     en: 'Favorites Only',
     ko: '즐겨찾기만',
+  },
+  'filter.panelShow': {
+    ja: '絞り込みフィルタを開く',
+    en: 'Open filters',
+    ko: '필터 열기',
+  },
+  'filter.panelHide': {
+    ja: 'フィルタを閉じる',
+    en: 'Close filters',
+    ko: '필터 닫기',
+  },
+  'filter.panelSummary': {
+    ja: '有効な絞り込み: {count}件',
+    en: 'Active filters: {count}',
+    ko: '활성 필터: {count}개',
   },
 
   // === Card ===
@@ -424,5 +449,5 @@ export type UITextKey = keyof typeof UI_TEXTS;
  * Falls back to Japanese if key is missing.
  */
 export function t(key: UITextKey, lang: SupportedLanguage): string {
-  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.ja;
+  return UI_TEXTS[key]?.[lang] ?? UI_TEXTS[key]?.ja ?? '';
 }

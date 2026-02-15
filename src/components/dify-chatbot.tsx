@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 
 // Delay in milliseconds to wait for Dify chatbot to load before initializing observers
 const DIFY_LOAD_DELAY_MS = 2000;
+// Maximum wait for Dify DOM to appear after script onload
+const DIFY_MOUNT_TIMEOUT_MS = 8000;
+const DIFY_MOUNT_POLL_INTERVAL_MS = 250;
 
 declare global {
   interface Window {
@@ -29,7 +32,57 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
   const [loadState, setLoadState] = useState<'idle' | 'loaded' | 'error'>('idle');
 
   useEffect(() => {
+    if (!token) {
+      setLoadState('error');
+      return;
+    }
+
     setLoadState('idle');
+    let isDisposed = false;
+    let mountPollTimer: ReturnType<typeof setInterval> | null = null;
+    let observerTimer: ReturnType<typeof setTimeout> | null = null;
+    let bodyObserver: MutationObserver | null = null;
+    let observerTimedOut = false;
+    let mountPollTimedOut = false;
+
+    const hasMountedChatbotDom = () =>
+      Boolean(
+        document.getElementById('dify-chatbot-bubble-button') &&
+          document.getElementById('dify-chatbot-bubble-window')
+      );
+
+    const markLoadedIfMounted = () => {
+      if (!hasMountedChatbotDom()) return false;
+      if (observerTimer) {
+        clearTimeout(observerTimer);
+        observerTimer = null;
+      }
+      if (mountPollTimer) {
+        clearInterval(mountPollTimer);
+        mountPollTimer = null;
+      }
+      observerTimedOut = false;
+      mountPollTimedOut = false;
+      if (!isDisposed) {
+        setLoadState('loaded');
+      }
+      return true;
+    };
+
+    const maybeSetLoadError = () => {
+      if (isDisposed) return;
+      if (!observerTimedOut || !mountPollTimedOut) return;
+      console.error(
+        '[DifyChatbot] Chatbot DOM did not mount before observer and mount timeouts elapsed.',
+        {
+          observerDelayMs: DIFY_LOAD_DELAY_MS,
+          mountTimeoutMs: DIFY_MOUNT_TIMEOUT_MS,
+        }
+      );
+      setLoadState('error');
+      bodyObserver?.disconnect();
+      bodyObserver = null;
+    };
 
     // Set config — dynamicScript: true ensures embed.min.js calls embedChatbot()
     // immediately in the IIFE, instead of setting document.body.onload (which
@@ -48,14 +101,51 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     script.src = 'https://udify.app/embed.min.js';
     script.async = true;
     script.onload = () => {
-      setLoadState('loaded');
+      attachTargetObservers();
+      if (markLoadedIfMounted()) return;
+
+      observerTimer = setTimeout(() => {
+        if (isDisposed) return;
+        if (markLoadedIfMounted()) return;
+        observerTimedOut = true;
+        maybeSetLoadError();
+      }, DIFY_LOAD_DELAY_MS);
+
+      const mountDeadline = Date.now() + DIFY_MOUNT_TIMEOUT_MS;
+      mountPollTimer = setInterval(() => {
+        if (isDisposed) return;
+        if (markLoadedIfMounted()) {
+          attachTargetObservers();
+          return;
+        }
+        if (Date.now() < mountDeadline) return;
+
+        if (mountPollTimer) {
+          clearInterval(mountPollTimer);
+          mountPollTimer = null;
+        }
+        mountPollTimedOut = true;
+        maybeSetLoadError();
+      }, DIFY_MOUNT_POLL_INTERVAL_MS);
     };
     script.onerror = (event) => {
+      if (observerTimer) {
+        clearTimeout(observerTimer);
+        observerTimer = null;
+      }
+      if (mountPollTimer) {
+        clearInterval(mountPollTimer);
+        mountPollTimer = null;
+      }
+      bodyObserver?.disconnect();
+      bodyObserver = null;
       console.error('[DifyChatbot] Failed to load embed script:', {
         src: script.src,
         event,
       });
-      setLoadState('error');
+      if (!isDisposed) {
+        setLoadState('error');
+      }
     };
     document.body.appendChild(script);
 
@@ -88,8 +178,6 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
 
     let hasWindowObserver = false;
     let hasContainerObserver = false;
-    let observerTimer: ReturnType<typeof setTimeout> | null = null;
-    let bodyObserver: MutationObserver | null = null;
 
     const attachTargetObservers = () => {
       const chatWindow = document.getElementById('dify-chatbot-bubble-window');
@@ -114,6 +202,8 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
         checkWindowState();
       }
 
+      markLoadedIfMounted();
+
       if (hasWindowObserver && hasContainerObserver) {
         if (observerTimer) {
           clearTimeout(observerTimer);
@@ -134,19 +224,16 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
       subtree: true,
     });
 
-    if (!attachTargetObservers()) {
-      observerTimer = setTimeout(() => {
-        if (!attachTargetObservers()) {
-          console.warn('[DifyChatbot] Chatbot DOM targets not found after delay', {
-            delayMs: DIFY_LOAD_DELAY_MS,
-          });
-        }
-      }, DIFY_LOAD_DELAY_MS);
-    }
+    attachTargetObservers();
 
     return () => {
+      isDisposed = true;
       clearTimeout(initialCheckTimer);
       if (observerTimer) clearTimeout(observerTimer);
+      if (mountPollTimer) {
+        clearInterval(mountPollTimer);
+        mountPollTimer = null;
+      }
       bodyObserver?.disconnect();
       observer.disconnect();
       const existingScript = document.getElementById('dify-chatbot-embed');
@@ -160,6 +247,9 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     };
   }, [token]);
 
+  // This useEffect updates the externally rendered '#dify-chatbot-container'
+  // element, which is mounted in zukan-client.tsx. The early return is required
+  // because this component may run before that container exists.
   useEffect(() => {
     const container = document.getElementById('dify-chatbot-container');
     if (!container) return;

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 /** localStorage のキー名 */
 const FAVORITES_STORAGE_KEY = 'akyoFavorites';
+const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 /**
  * Akyoデータを管理するカスタムフック (SSR対応版)
@@ -54,24 +55,13 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const query = (options.searchQuery || '').toLowerCase();
     const targetCategory = options.category || options.attribute;
     const targetAuthor = options.author || options.creator;
-    const selectedCategories = (
-      options.categories && options.categories.length > 0
-        ? options.categories
-        : targetCategory && targetCategory !== 'all'
-          ? [targetCategory]
-          : []
-    )
-      .map((category) => category.trim())
-      .filter(Boolean);
-    const selectedAuthors = (
-      options.authors && options.authors.length > 0
-        ? options.authors
-        : targetAuthor && targetAuthor !== 'all'
-          ? [targetAuthor]
-          : []
-    )
-      .map((author) => author.trim())
-      .filter(Boolean);
+    const createSelectedList = (values: string[] | undefined, singleValue: string | undefined) =>
+      (values && values.length > 0 ? values : singleValue && singleValue !== 'all' ? [singleValue] : [])
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+    const selectedAuthors = createSelectedList(options.authors, targetAuthor);
+    const selectedCategories = createSelectedList(options.categories, targetCategory);
     const categoryMatchMode = options.categoryMatchMode === 'and' ? 'and' : 'or';
 
     let filtered = [...data];
@@ -80,22 +70,21 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((akyo) => {
         const parsedCategories =
-          akyo.parsedCategory ?? parseFilterTokens(akyo.category || akyo.attribute || '');
-        const categorySet = new Set(parsedCategories);
+          akyo.parsedCategory ?? parseMultiValueField(akyo.category || akyo.attribute || '');
 
         if (categoryMatchMode === 'and') {
-          return selectedCategories.every((category) => categorySet.has(category));
+          return selectedCategories.every((category) => parsedCategories.includes(category));
         }
-        return selectedCategories.some((category) => categorySet.has(category));
+        return selectedCategories.some((category) => parsedCategories.includes(category));
       });
     }
 
-    // Filter by creator/author (supports both single and multi-select)
+    // Filter by creator/author
     if (selectedAuthors.length > 0) {
       filtered = filtered.filter((akyo) => {
-        const parsedAuthors = akyo.parsedAuthor ?? parseFilterTokens(akyo.author || akyo.creator || '');
-        const authorSet = new Set(parsedAuthors);
-        return selectedAuthors.some((author) => authorSet.has(author));
+        const parsedAuthors =
+          akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || '');
+        return selectedAuthors.some((author) => parsedAuthors.includes(author));
       });
     }
 
@@ -127,9 +116,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     } else {
       // Sort by ID
       filtered.sort((a, b) => {
-        const idA = parseInt(a.id, 10);
-        const idB = parseInt(b.id, 10);
-        return sortAsc ? idA - idB : idB - idA;
+        const idA = Number.parseInt(a.id, 10);
+        const idB = Number.parseInt(b.id, 10);
+        const safeIdA = Number.isNaN(idA) ? 0 : idA;
+        const safeIdB = Number.isNaN(idB) ? 0 : idB;
+        return sortAsc ? safeIdA - safeIdB : safeIdB - safeIdA;
       });
     }
 
@@ -224,20 +215,20 @@ function saveFavorites(ids: string[]): void {
  * データ配列にお気に入り情報を付与する共通ヘルパー
  * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
  */
-function parseFilterTokens(value: string): string[] {
-  return value
-    .split(/[、,]/)
-    .map((token) => token.trim())
-    .filter(Boolean);
-}
-
 function applyFavorites(items: AkyoData[]): AkyoData[] {
   if (items.length === 0) return items;
   const favoritesSet = new Set(getFavorites());
   return items.map(akyo => ({
     ...akyo,
+    parsedCategory: akyo.parsedCategory ?? parseMultiValueField(akyo.category || akyo.attribute || ''),
+    parsedAuthor: akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || ''),
     isFavorite: favoritesSet.has(akyo.id),
-    parsedCategory: akyo.parsedCategory ?? parseFilterTokens(akyo.category || akyo.attribute || ''),
-    parsedAuthor: akyo.parsedAuthor ?? parseFilterTokens(akyo.author || akyo.creator || ''),
   }));
+}
+
+function parseMultiValueField(value: string): string[] {
+  return value
+    .split(MULTI_VALUE_SPLIT_PATTERN)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
 }

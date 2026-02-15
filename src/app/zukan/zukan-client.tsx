@@ -98,8 +98,19 @@ export function ZukanClient({
             ? jsonData.data
             : undefined;
         if (!akyoItems) {
+          const payloadSummary = (() => {
+            if (jsonData && typeof jsonData === 'object' && !Array.isArray(jsonData)) {
+              const keys = Object.keys(jsonData as Record<string, unknown>);
+              return `{ keys: [${keys.join(', ')}] }`;
+            }
+            const raw = JSON.stringify(jsonData);
+            const MAX_LENGTH = 1000;
+            if (raw.length <= MAX_LENGTH) return raw;
+            return `${raw.slice(0, MAX_LENGTH)}...(truncated, ${raw.length} chars)`;
+          })();
+
           throw new Error(
-            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${JSON.stringify(jsonData)}`
+            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${payloadSummary}`
           );
         }
 
@@ -148,6 +159,7 @@ export function ZukanClient({
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   // Modal state
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
@@ -226,10 +238,10 @@ export function ZukanClient({
       {
         searchQuery,
         categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+        authors: selectedCreators.length > 0 ? selectedCreators : undefined,
         categoryMatchMode,
         // 新フィールド名を優先して渡す
         category: selectedAttributes[0] || undefined,
-        authors: selectedCreators.length > 0 ? selectedCreators : undefined,
         author: selectedCreators[0] || undefined,
         // 旧フィールド名も念のため渡す
         attribute: selectedAttributes[0] || undefined,
@@ -256,9 +268,10 @@ export function ZukanClient({
 
   // ランダム表示
   const handleRandomClick = () => {
-    const newRandomMode = !randomMode;
-    setRandomMode(newRandomMode);
-    if (newRandomMode) {
+    if (randomMode) {
+      setRandomMode(false);
+    } else {
+      setRandomMode(true);
       filterData(
         {
           searchQuery: '',
@@ -271,8 +284,6 @@ export function ZukanClient({
       setCategoryMatchMode('or');
       setSelectedCreators([]);
       setFavoritesOnly(false);
-    } else {
-      // useEffect が randomMode の変更を検知して通常フィルタを再適用する
     }
   };
 
@@ -289,6 +300,11 @@ export function ZukanClient({
       favorites: data.filter((a) => a.isFavorite).length,
     }),
     [data, filteredData]
+  );
+
+  const activeFilterCount = useMemo(
+    () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
+    [selectedAttributes, selectedCreators, favoritesOnly]
   );
 
   if (error) {
@@ -362,29 +378,54 @@ export function ZukanClient({
             onSearch={setSearchQuery}
             value={searchQuery}
             placeholder={t('search.placeholder', lang)}
+            ariaLabel={t('search.ariaLabel', lang)}
+            clearAriaLabel={t('search.clearAriaLabel', lang)}
           />
         </div>
 
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
-          <FilterPanel
-            // 動的に更新されるカテゴリ/作者を使用
-            attributes={currentCategories || categories || attributes}
-            creators={currentAuthors || authors || creators}
-            selectedAttributes={selectedAttributes}
-            categoryMatchMode={categoryMatchMode}
-            selectedCreators={selectedCreators}
-            onAttributesChange={setSelectedAttributes}
-            onCategoryMatchModeChange={setCategoryMatchMode}
-            onCreatorsChange={setSelectedCreators}
-            onSortToggle={handleSortToggle}
-            onRandomClick={handleRandomClick}
-            onFavoritesClick={handleFavoritesClick}
-            favoritesOnly={favoritesOnly}
-            sortAscending={sortAscending}
-            randomMode={randomMode}
-            lang={lang}
-          />
+          <div className="sm:hidden space-y-2">
+            <button
+              type="button"
+              onClick={() => setIsFilterPanelOpen((current) => !current)}
+              aria-expanded={isFilterPanelOpen}
+              aria-controls="zukan-filter-panel"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-sm transition-colors hover:bg-gray-50"
+            >
+              {isFilterPanelOpen ? t('filter.panelHide', lang) : t('filter.panelShow', lang)}
+            </button>
+            {!isFilterPanelOpen ? (
+              <p className="text-xs text-[var(--text-secondary)]">
+                {t('filter.panelSummary', lang).replace('{count}', String(activeFilterCount))}
+              </p>
+            ) : null}
+          </div>
+
+          <div id="zukan-filter-panel" className={isFilterPanelOpen ? 'block sm:block' : 'hidden sm:block'}>
+            <FilterPanel
+              // 動的に更新されるカテゴリ/作者を使用
+              categories={currentCategories || categories || attributes}
+              authors={currentAuthors || authors || creators}
+              attributes={currentCategories || categories || attributes}
+              creators={currentAuthors || authors || creators}
+              selectedAttributes={selectedAttributes}
+              selectedCreators={selectedCreators}
+              categoryMatchMode={categoryMatchMode}
+              selectedCreator={selectedCreators[0] || ''}
+              onAttributesChange={setSelectedAttributes}
+              onCreatorsChange={setSelectedCreators}
+              onCategoryMatchModeChange={setCategoryMatchMode}
+              onCreatorChange={(creator) => setSelectedCreators(creator ? [creator] : [])}
+              onSortToggle={handleSortToggle}
+              onRandomClick={handleRandomClick}
+              onFavoritesClick={handleFavoritesClick}
+              favoritesOnly={favoritesOnly}
+              sortAscending={sortAscending}
+              randomMode={randomMode}
+              lang={lang}
+            />
+          </div>
 
           {/* ビュー切替 */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">
