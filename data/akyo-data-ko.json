@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-14T11:31:25.547Z",
+  "updatedAt": "2026-02-15T08:36:45.250Z",
   "count": 739,
   "data": [
     {
@@ -206,7 +206,7 @@
       "id": "0023",
       "nickname": "우가이츠 Akyo",
       "avatarName": "Uuga Eats",
-      "category": "초코민트류, 직업・신분, 직업・신분/배달원",
+      "category": "초코민트류, 신분・역할, 신분・역할/배달원",
       "comment": "",
       "author": "bbbbb_himiko",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9f160901-c9cf-4329-b021-e29b7dbffd0e"
@@ -260,7 +260,7 @@
       "id": "0029",
       "nickname": "더플코트 Akyo",
       "avatarName": "Duffel coat_Akyo",
-      "category": "초코민트류, 의류・액세서리, 의류・액세서리/두꺼운 옷",
+      "category": "초코민트류, 패션, 패션/두꺼운 옷",
       "comment": "",
       "author": "isamu_masashi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9ec28f7b-9f5a-433a-9422-d7578368a679"
@@ -269,7 +269,7 @@
       "id": "0030",
       "nickname": "다운조끼 Akyo",
       "avatarName": "Downvest_Akyo",
-      "category": "초코민트류, 의류・액세서리, 의류・액세서리/두꺼운 옷",
+      "category": "초코민트류, 패션, 패션/두꺼운 옷",
       "comment": "",
       "author": "isamu_masashi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_40663914-34fa-48d8-b355-e69c2c64e294"
@@ -404,7 +404,7 @@
       "id": "0045",
       "nickname": "나뭇결 Akyo",
       "avatarName": "Wood",
-      "category": "식물, 소재・재질, 소재・재질/식물/나무, 소재・재질/단단한",
+      "category": "식물, 소재・원재료, 소재・원재료/식물/나무, 형태・촉감/단단한",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_415137aa-5cbf-4027-b9b9-668303cc2f70"
@@ -413,7 +413,7 @@
       "id": "0046",
       "nickname": "대리석 Akyo",
       "avatarName": "Marble",
-      "category": "소재・재질, 소재・재질/돌, 소재・재질/단단한",
+      "category": "소재・원재료, 소재・원재료/돌, 형태・촉감/단단한",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1501f28e-a6db-4a5e-8968-1da53a1a961d"
@@ -494,7 +494,7 @@
       "id": "0055",
       "nickname": "가죽 Akyo",
       "avatarName": "皮Akyo",
-      "category": "동물/여우, 동물, 소재・재질, 소재・재질/부드러운, 소재・재질/동물, 실사",
+      "category": "동물/여우, 동물, 소재・원재료, 형태・촉감/부드러운, 소재・원재료/동물, 실사",
       "comment": "리얼 여우 Akyo라고 한다",
       "author": "甘水あみ",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ccddd5fd-df57-47fa-b7ab-a3e0c868a4e7"
@@ -530,7 +530,7 @@
       "id": "0059",
       "nickname": "육자대 Akyo",
       "avatarName": "陸自Akyo",
-      "category": "직업・신분, 직업・신분/병사, 직업・신분/공무원, 의류・액세서리, 의류・액세서리/위장",
+      "category": "신분・역할, 신분・역할/병사, 신분・역할/공무원, 패션, 패션/위장",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2d80cf2e-afd4-464a-824e-27f38d4165de"
@@ -539,7 +539,7 @@
       "id": "0060",
       "nickname": "농kyo",
       "avatarName": "NOKYO",
-      "category": "직업・신분, 직업・신분/농부, 도구・문구・생활용품",
+      "category": "신분・역할, 신분・역할/농부, 도구・문구・생활용품",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb7a3393-d5e0-4580-9ab3-de2f34a25ee3"
@@ -575,7 +575,7 @@
       "id": "0064",
       "nickname": "데님 Akyo",
       "avatarName": "Akyo_Denim",
-      "category": "소재・재질, 소재・재질/부드러운",
+      "category": "소재・원재료, 형태・촉감/부드러운",
       "comment": "",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4b4a1951-c15d-4adf-833f-dbe11d3e0752"
@@ -584,7 +584,7 @@
       "id": "0065",
       "nickname": "마그마 Akyo",
       "avatarName": "Akyo_Magma",
-      "category": "소재・재질, 소재・재질/돌, 소재・재질/단단한",
+      "category": "소재・원재료, 소재・원재료/돌, 형태・촉감/단단한",
       "comment": "",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e85e82-5f1e-4557-a957-bed11f0c9f7a"
@@ -602,7 +602,7 @@
       "id": "0067",
       "nickname": "스텔스 Akyo",
       "avatarName": "Akyo_Stealth",
-      "category": "소재・재질, 소재・재질/부드러운, 의류・액세서리, 의류・액세서리/위장",
+      "category": "소재・원재료, 형태・촉감/부드러운, 패션, 패션/위장",
       "comment": "",
       "author": "らど/rado1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8f0a7c2d-4c8f-47ff-98cd-479a99b155d4"
@@ -782,7 +782,7 @@
       "id": "0087",
       "nickname": "스쿨미즈 Akyo",
       "avatarName": "スク水あきょう",
-      "category": "의류・액세서리, 의류・액세서리/수영복, 학교",
+      "category": "패션, 패션/수영복, 학교",
       "comment": "",
       "author": "syuninn39",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0f95048d-98e0-4b42-91fc-6c011037166f"
@@ -818,7 +818,7 @@
       "id": "0091",
       "nickname": "스테인드글라스 Akyo",
       "avatarName": "StainedGlassAkyo",
-      "category": "예술・아트, 소재・재질, 소재・재질/유리, 소재・재질/단단한",
+      "category": "예술・아트, 소재・원재료, 소재・원재료/유리, 형태・촉감/단단한",
       "comment": "",
       "author": "Sau-AU",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_56f36a30-a80a-4bb4-a528-00432c10fa5d"
@@ -926,7 +926,7 @@
       "id": "0103",
       "nickname": "복셀 Akyo",
       "avatarName": "BoxelAkyo",
-      "category": "소재・재질, 차원, 차원/3D",
+      "category": "소재・원재료, 차원, 차원/3D",
       "comment": "",
       "author": "Sau-AU",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_466a40fb-5aeb-4a7d-831b-5d815ddaa43e"
@@ -1025,7 +1025,7 @@
       "id": "0114",
       "nickname": "폭신폭신 Akyo",
       "avatarName": "ふわふわAkyo",
-      "category": "소재・재질, 소재・재질/부드러운, 털결, 털결/폭신폭신",
+      "category": "소재・원재료, 형태・촉감/부드러운, 형태・촉감, 형태・촉감/폭신폭신",
       "comment": "472번은 다른 제작자 버전",
       "author": "雨音さかな",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_74cec706-10c1-4bb2-9f3d-6d829dbd182a"
@@ -1115,7 +1115,7 @@
       "id": "0124",
       "nickname": "회절격자 Akyo",
       "avatarName": "回折格子Akyo",
-      "category": "소재・재질, 소재・재질/유리",
+      "category": "소재・원재료, 소재・원재료/유리",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a24f37ec-7d3a-4537-85a9-a58c18080737"
@@ -1178,7 +1178,7 @@
       "id": "0131",
       "nickname": "무용수 Akyo",
       "avatarName": "踊り子Akyo",
-      "category": "직업・신분",
+      "category": "신분・역할",
       "comment": "",
       "author": "YukiYukiVirtual",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b200729e-1158-43a5-9ff8-0a84fbca061f"
@@ -1187,7 +1187,7 @@
       "id": "0132",
       "nickname": "구찌 Akyo",
       "avatarName": "Gucci Akyo",
-      "category": "의류・액세서리",
+      "category": "패션",
       "comment": "패턴은 프리이므로 저작권상 문제 없음",
       "author": "SplitScream",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0662515d-ce3d-4f57-b9a6-e08b7bb5eff2"
@@ -1205,7 +1205,7 @@
       "id": "0134",
       "nickname": "자수정 Akyo",
       "avatarName": "AmethystAkyo",
-      "category": "소재・재질, 소재・재질/돌, 소재・재질/단단한",
+      "category": "소재・원재료, 소재・원재료/돌, 형태・촉감/단단한",
       "comment": "",
       "author": "しみずあきら",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffad6923-877f-4a5d-83b1-d4c2bb8d66b1"
@@ -1250,7 +1250,7 @@
       "id": "0139",
       "nickname": "눈사람 Akyo",
       "avatarName": "akyo_orf",
-      "category": "계절・행사, 환경・날씨, 소재・재질, 소재・재질/차가운, 계절・행사/겨울",
+      "category": "계절・행사, 환경・날씨, 소재・원재료, 형태・촉감/차가운, 계절・행사/겨울",
       "comment": "",
       "author": "qchan949",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4a34a656-b5f0-4367-890f-019196f6613a"
@@ -1367,7 +1367,7 @@
       "id": "0152",
       "nickname": "판초 Akyo",
       "avatarName": "akyo___________雨",
-      "category": "의류・액세서리, 환경・날씨, 환경・날씨/비",
+      "category": "패션, 환경・날씨, 환경・날씨/비",
       "comment": "초기에는 _가 길다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ea0397b8-c8e1-4c9a-a1e7-c5ca48c090de"
@@ -1385,7 +1385,7 @@
       "id": "0154",
       "nickname": "공사 Akyo",
       "avatarName": "akyo____安全",
-      "category": "초코민트류, 직업・신분",
+      "category": "초코민트류, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cc69727b-9d2b-4e74-b874-3235df98c67f"
@@ -1403,7 +1403,7 @@
       "id": "0156",
       "nickname": "알로하 Akyo",
       "avatarName": "akyo____アロハ",
-      "category": "의류・액세서리",
+      "category": "패션",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f618b1bc-8093-472a-873c-a3370f6bcab4"
@@ -1421,7 +1421,7 @@
       "id": "0158",
       "nickname": "산타 Akyo",
       "avatarName": "akyo___サンタ",
-      "category": "의류・액세서리, 계절・행사, 계절・행사/크리스마스",
+      "category": "패션, 계절・행사, 계절・행사/크리스마스",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fc36d46b-05bf-495d-b946-cbf61119bfa2"
@@ -1583,7 +1583,7 @@
       "id": "0176",
       "nickname": "간호사 Akyo",
       "avatarName": "akyo_ナース",
-      "category": "직업・신분, 직업・신분/의료종사자",
+      "category": "신분・역할, 신분・역할/의료종사자",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_90058d68-5c07-4632-a4e0-ee53b0344a55"
@@ -1592,7 +1592,7 @@
       "id": "0177",
       "nickname": "목도리 Akyo",
       "avatarName": "akyo_マフラー",
-      "category": "의류・액세서리",
+      "category": "패션",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b0dd2e0a-012c-4867-99c8-22a7e4b0ee79"
@@ -1637,7 +1637,7 @@
       "id": "0182",
       "nickname": "수녀 Akyo",
       "avatarName": "akyo_シスター",
-      "category": "직업・신분",
+      "category": "신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3b3feea7-e6ec-414b-b4b3-83152f02954a"
@@ -1646,7 +1646,7 @@
       "id": "0183",
       "nickname": "수녀 여우 Akyo",
       "avatarName": "akyo_狐シスター",
-      "category": "동물/여우, 동물, 직업・신분",
+      "category": "동물/여우, 동물, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_475416d0-6e42-402b-b5e0-129cc8d8a071"
@@ -1655,7 +1655,7 @@
       "id": "0184",
       "nickname": "우편 Akyo",
       "avatarName": "akyo_郵便",
-      "category": "직업・신분, 직업・신분/배달원",
+      "category": "신분・역할, 신분・역할/배달원",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cd62208e-db35-4573-9454-c5b18d9392a5"
@@ -1700,7 +1700,7 @@
       "id": "0189",
       "nickname": "인디언 Akyo",
       "avatarName": "akyo_いんでぃあん",
-      "category": "의류・액세서리",
+      "category": "패션",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_69288b67-c532-4dba-b16d-8ed3993582c0"
@@ -1736,7 +1736,7 @@
       "id": "0193",
       "nickname": "닌자 Akyo",
       "avatarName": "akyo_ninja",
-      "category": "직업・신분, 나라, 나라/일본",
+      "category": "신분・역할, 나라, 나라/일본",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_bfb73e94-4acf-4401-80fc-e8175486e0f6"
@@ -1781,7 +1781,7 @@
       "id": "0198",
       "nickname": "버니 Akyo",
       "avatarName": "akyo_バニー",
-      "category": "의류・액세서리, 프리티",
+      "category": "패션, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_99d9cfe3-5b6c-4ab6-a48f-f3ccb4c020c9"
@@ -1826,7 +1826,7 @@
       "id": "0203",
       "nickname": "유카타 Akyo",
       "avatarName": "akyo_yukata1",
-      "category": "의류・액세서리",
+      "category": "패션",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2ccce43-1bb6-4962-be94-bf341e6df024"
@@ -1862,7 +1862,7 @@
       "id": "0207",
       "nickname": "아시가루 Akyo",
       "avatarName": "akyo_asigaru2",
-      "category": "직업・신분, 직업・신분/병사, 무기・기계, 나라, 나라/일본",
+      "category": "신분・역할, 신분・역할/병사, 무기・기계, 나라, 나라/일본",
       "comment": "asigaru1은 폐기안",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_711b3c52-9f3d-479b-abdc-6c1b3f639cbd"
@@ -1925,7 +1925,7 @@
       "id": "0214",
       "nickname": "무녀 여우 Akyo",
       "avatarName": "akyo_miko",
-      "category": "동물/여우, 동물, 직업・신분",
+      "category": "동물/여우, 동물, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0c16e22-fb58-4040-b58b-bcce4ce9ffa1"
@@ -1961,7 +1961,7 @@
       "id": "0218",
       "nickname": "이집트 Akyo/파라오 Akyo",
       "avatarName": "akyo_ファラオ",
-      "category": "역사, 나라, 나라/이집트, 직업・신분, 직업・신분/왕족, 정상에 서는 자",
+      "category": "역사, 나라, 나라/이집트, 신분・역할, 신분・역할/왕족, 정상에 서는 자",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e2e08913-bd24-4e64-9175-5eefc0d5cf32"
@@ -1997,7 +1997,7 @@
       "id": "0222",
       "nickname": "해적 Akyo",
       "avatarName": "akyo_kaizoku",
-      "category": "직업・신분",
+      "category": "신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f02535d3-5b8a-4589-a468-a129f002c45b"
@@ -2024,7 +2024,7 @@
       "id": "0225",
       "nickname": "청소 Akyo",
       "avatarName": "akyo___おそうじ 0․303",
-      "category": "직업・신분, 도구・문구・생활용품",
+      "category": "신분・역할, 도구・문구・생활용품",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4aa294f8-df3e-447b-b5d1-9753663a69e3"
@@ -2069,7 +2069,7 @@
       "id": "0230",
       "nickname": "메이드 여우 Akyo",
       "avatarName": "akyo___メイド 1․74",
-      "category": "동물/여우, 동물, 직업・신분, 프리티",
+      "category": "동물/여우, 동물, 신분・역할, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b6d06215-a01a-44f7-abfe-f9ef5d57b1db"
@@ -2087,7 +2087,7 @@
       "id": "0232",
       "nickname": "보병 Akyo",
       "avatarName": "akyo__歩兵",
-      "category": "직업・신분, 직업・신분/병사",
+      "category": "신분・역할, 신분・역할/병사",
       "comment": "초록색은 초코민트류?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_44db453a-6048-4c21-b993-4dd3717bfc1d"
@@ -2096,7 +2096,7 @@
       "id": "0233",
       "nickname": "안경 Akyo",
       "avatarName": "akyo__papipo 1․01",
-      "category": "의류・액세서리, 의류・액세서리/안경, 패러디, 패러디/인물",
+      "category": "패션, 패션/안경, 패러디, 패러디/인물",
       "comment": "원본이 있다?",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f68c924d-b93d-4d59-ba31-5d12abfe5a0f"
@@ -2150,7 +2150,7 @@
       "id": "0239",
       "nickname": "아이돌 여우 Akyo",
       "avatarName": "akyo きつねidol",
-      "category": "동물/여우, 동물, 직업・신분, 프리티",
+      "category": "동물/여우, 동물, 신분・역할, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bb0395-8436-4dd9-b753-1d3555ebf798"
@@ -2177,7 +2177,7 @@
       "id": "0242",
       "nickname": "여행 여우 Akyo/판초 여우 Akyo",
       "avatarName": "fox pontyo 0․4",
-      "category": "동물/여우, 동물, 의류・액세서리, 환경・날씨, 환경・날씨/비",
+      "category": "동물/여우, 동물, 패션, 환경・날씨, 환경・날씨/비",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b32ab8eb-a15b-416f-ae7b-2ee4a1b5b9a7"
@@ -2366,7 +2366,7 @@
       "id": "0263",
       "nickname": "페이퍼 Akyo",
       "avatarName": "akyo_paper",
-      "category": "소재・재질, 소재・재질/식물/나무",
+      "category": "소재・원재료, 소재・원재료/식물/나무",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2ad9aca-efab-4ea1-a4f3-f34ef46bfa12"
@@ -2537,7 +2537,7 @@
       "id": "0282",
       "nickname": "키즈 Akyo",
       "avatarName": "akyo_kids",
-      "category": "의류・액세서리, 의류・액세서리/모자, 반창고, 연령층, 연령층/어린이",
+      "category": "패션, 패션/모자, 반창고, 연령층, 연령층/어린이",
       "comment": "Akyo도 파랬다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_372cb668-9809-4dac-91ec-2d1c500a19a1"
@@ -2564,7 +2564,7 @@
       "id": "0285",
       "nickname": "지우개 Akyo",
       "avatarName": "akyo_kesigomu",
-      "category": "도구・문구・생활용품, 학교, 소재・재질, 소재・재질/부드러운",
+      "category": "도구・문구・생활용품, 학교, 소재・원재료, 형태・촉감/부드러운",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5c5210ce-ba4a-495b-a620-f843847a61d9"
@@ -2708,7 +2708,7 @@
       "id": "0301",
       "nickname": "요리사 여우 Akyo",
       "avatarName": "akyo_コックさん",
-      "category": "동물, 동물/여우, 직업・신분",
+      "category": "동물, 동물/여우, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a5b5fb92-581d-45c8-98ab-4b8abf668aa9"
@@ -2717,7 +2717,7 @@
       "id": "0302",
       "nickname": "경찰 여우 Akyo",
       "avatarName": "akyo_foxKeikan 1․3",
-      "category": "동물, 동물/여우, 직업・신분, 직업・신분/공무원",
+      "category": "동물, 동물/여우, 신분・역할, 신분・역할/공무원",
       "comment": "너, 체포.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef434fa8-5f77-4a1d-beaa-fbfc10e506ec"
@@ -2753,7 +2753,7 @@
       "id": "0306",
       "nickname": "우주 여우 Akyo",
       "avatarName": "akyo_fox space 1․07",
-      "category": "동물, 동물/여우, 환경・날씨, 직업・신분, 환경・날씨/우주, 기능・특성, 기능・특성/무중력 내성, 기능・특성/산소결핍 내성",
+      "category": "동물, 동물/여우, 환경・날씨, 신분・역할, 환경・날씨/우주, 기능・특성, 기능・특성/무중력 내성, 기능・특성/산소결핍 내성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b3112b5-a594-46d3-a5da-74c3be8b8ba0"
@@ -2771,7 +2771,7 @@
       "id": "0308",
       "nickname": "소방 여우 Akyo",
       "avatarName": "akyo_fox syoubou 0․4",
-      "category": "동물, 동물/여우, 직업・신분, 직업・신분/공무원",
+      "category": "동물, 동물/여우, 신분・역할, 신분・역할/공무원",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4fc01e6a-ae87-4ea9-8a17-34160c89b36f"
@@ -2816,7 +2816,7 @@
       "id": "0313",
       "nickname": "의사 여우 Akyo",
       "avatarName": "akyo_きつねいしゃ",
-      "category": "동물/여우, 동물, 직업・신분, 직업・신분/의료종사자",
+      "category": "동물/여우, 동물, 신분・역할, 신분・역할/의료종사자",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_19b1c941-7da8-42f8-af18-25c8689dbb58"
@@ -2987,7 +2987,7 @@
       "id": "0332",
       "nickname": "아시가루 Akyo 2／사무라이 Akyo",
       "avatarName": "akyo_samurai",
-      "category": "역사, 직업・신분, 직업・신분/병사, 무기・기계, 나라, 나라/일본",
+      "category": "역사, 신분・역할, 신분・역할/병사, 무기・기계, 나라, 나라/일본",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1b457017-3fd0-4fd7-bb8e-172f35487c34"
@@ -2996,7 +2996,7 @@
       "id": "0333",
       "nickname": "사무라이 여우 Akyo",
       "avatarName": "akyo_きつね侍",
-      "category": "동물/여우, 동물, 역사, 직업・신분, 직업・신분/병사, 무기・기계, 나라, 나라/일본",
+      "category": "동물/여우, 동물, 역사, 신분・역할, 신분・역할/병사, 무기・기계, 나라, 나라/일본",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_32c0de34-9e10-4537-85fb-97aa19c20a15"
@@ -3005,7 +3005,7 @@
       "id": "0334",
       "nickname": "탐정 여우 Akyo",
       "avatarName": "akyo_fox探偵",
-      "category": "동물/여우, 동물, 직업・신분",
+      "category": "동물/여우, 동물, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_41736927-28e7-4914-8b5c-6155c04291b4"
@@ -3149,7 +3149,7 @@
       "id": "0350",
       "nickname": "탐정 드래곤 Akyo",
       "avatarName": "akyo_どらごん探偵",
-      "category": "가상의 존재, 기능・특성/비행, 동물, 직업・신분, 가상의 존재/용・드래곤, 기능・특성",
+      "category": "가상의 존재, 기능・특성/비행, 동물, 신분・역할, 가상의 존재/용・드래곤, 기능・특성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5cec5888-b04c-4bad-8bf3-67c043daa73b"
@@ -3212,7 +3212,7 @@
       "id": "0357",
       "nickname": "나이트 드래곤 Akyo",
       "avatarName": "akyo_どらごんないと",
-      "category": "가상의 존재, 기능・특성/비행, 계절・행사/할로윈, 계절・행사, 동물, 가상의 존재/용・드래곤, 코스프레, 직업・신분, 무기・기계, 직업・신분/병사, 기능・특성",
+      "category": "가상의 존재, 기능・특성/비행, 계절・행사/할로윈, 계절・행사, 동물, 가상의 존재/용・드래곤, 코스프레, 신분・역할, 무기・기계, 신분・역할/병사, 기능・특성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_eec93a2a-cc5f-4106-bd3b-35969990009b"
@@ -3221,7 +3221,7 @@
       "id": "0358",
       "nickname": "목욕 여우 Akyo",
       "avatarName": "akyo_foxBath",
-      "category": "동물/여우, 동물, 의류・액세서리, 설비, 설비/욕실",
+      "category": "동물/여우, 동물, 패션, 설비, 설비/욕실",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f5ff713f-0094-45b2-97b6-90f5722308eb"
@@ -3230,7 +3230,7 @@
       "id": "0359",
       "nickname": "킹 Akyo",
       "avatarName": "akyo_king",
-      "category": "직업・신분, 직업・신분/왕족, 정상에 서는 자, 수염",
+      "category": "신분・역할, 신분・역할/왕족, 정상에 서는 자, 패션/수염",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_86a2c20a-370f-41b1-9ae8-92c37231dc6d"
@@ -3293,7 +3293,7 @@
       "id": "0366",
       "nickname": "시집가는 여우 Akyo",
       "avatarName": "akyo_きつねの嫁入り",
-      "category": "동물/여우, 동물, 의류・액세서리, 계절・행사, 계절・행사/연애, 프리티",
+      "category": "동물/여우, 동물, 패션, 계절・행사, 계절・행사/연애, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b11f07af-9755-4405-87dc-8297e1716db8"
@@ -3311,7 +3311,7 @@
       "id": "0368",
       "nickname": "장가가는 여우 Akyo",
       "avatarName": "akyo_狐の嫁入り2",
-      "category": "동물/여우, 동물, 의류・액세서리, 계절・행사, 계절・행사/연애",
+      "category": "동물/여우, 동물, 패션, 계절・행사, 계절・행사/연애",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_08f05b3b-fd93-4dd4-83f5-4fbb6792dd6e"
@@ -3446,7 +3446,7 @@
       "id": "0383",
       "nickname": "화풍 메이드 여우 Akyo",
       "avatarName": "akyo_きつね和メイド",
-      "category": "동물/여우, 동물, 직업・신분, 프리티",
+      "category": "동물/여우, 동물, 신분・역할, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2ebe0457-ed55-4618-96d4-dfde88bee666"
@@ -3518,7 +3518,7 @@
       "id": "0391",
       "nickname": "아쿄 아저씨/아저씨 Akyo",
       "avatarName": "akyo_ozi",
-      "category": "직업・신분, 직업・신분/농부, 연령층, 연령층/노인, 수염",
+      "category": "신분・역할, 신분・역할/농부, 연령층, 연령층/노인, 패션/수염",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e21d1394-394f-4bc3-a68a-55462ec730b6"
@@ -3536,7 +3536,7 @@
       "id": "0393",
       "nickname": "영주 Akyo",
       "avatarName": "akyo_tono",
-      "category": "직업・신분, 정상에 서는 자, 나라, 나라/일본, 역사, 상투",
+      "category": "신분・역할, 정상에 서는 자, 나라, 나라/일본, 역사, 상투",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
@@ -3545,7 +3545,7 @@
       "id": "0394",
       "nickname": "잠수 Akyo",
       "avatarName": "akyo_せんすい",
-      "category": "직업・신분, 기능・특성/잠수, 기능・특성",
+      "category": "신분・역할, 기능・특성/잠수, 기능・특성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_131de112-3d4a-48a7-a9d5-c3f723091a78"
@@ -3599,7 +3599,7 @@
       "id": "0400",
       "nickname": "스모선수 Akyo",
       "avatarName": "akyo_rikishi",
-      "category": "직업・신분, 나라, 나라/일본",
+      "category": "신분・역할, 나라, 나라/일본",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_16421321-cee6-4ae4-8546-6ce4c435a2e8"
@@ -3617,7 +3617,7 @@
       "id": "0402",
       "nickname": "낚시 Akyo",
       "avatarName": "akyo_つり",
-      "category": "직업・신분",
+      "category": "신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e6c065ac-bfbd-451c-bc4a-9a14a34e9055"
@@ -3626,7 +3626,7 @@
       "id": "0403",
       "nickname": "텁수룩 Akyo",
       "avatarName": "akyo_モサモサ",
-      "category": "소재・재질, 소재・재질/부드러운, 털결, 털결/복슬복슬",
+      "category": "소재・원재료, 형태・촉감/부드러운, 형태・촉감, 형태・촉감/복슬복슬",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_574728ce-c4c4-4410-a1df-4a4ae377411b"
@@ -3734,7 +3734,7 @@
       "id": "0415",
       "nickname": "프릴 수영복 여우 Akyo",
       "avatarName": "きつねakyoフリル水着",
-      "category": "동물/여우, 동물, 의류・액세서리, 의류・액세서리/수영복, 프리티",
+      "category": "동물/여우, 동물, 패션, 패션/수영복, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4a4dfa62-d23d-4ad6-8526-fb261ad1fb5d"
@@ -3797,7 +3797,7 @@
       "id": "0422",
       "nickname": "판초 여우 Akyo",
       "avatarName": "きつねポンチョ",
-      "category": "동물/여우, 동물, 의류・액세서리, 환경・날씨, 환경・날씨/비",
+      "category": "동물/여우, 동물, 패션, 환경・날씨, 환경・날씨/비",
       "comment": "사사노키상의 원점 회귀",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a290b34e-03c1-4d67-a01b-48dcd5b5c6c8"
@@ -3842,7 +3842,7 @@
       "id": "0427",
       "nickname": "채소가게 파 Akyo",
       "avatarName": "akyo_ねぎ八百屋",
-      "category": "음식, 음식/채소, 직업・신분",
+      "category": "음식, 음식/채소, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ad9eb708-8fcc-43bd-9011-dd2e0eab93c7"
@@ -3851,7 +3851,7 @@
       "id": "0428",
       "nickname": "농가 파 Akyo",
       "avatarName": "akyo_ねぎ農家",
-      "category": "음식, 음식/채소, 직업・신분, 직업・신분/농부",
+      "category": "음식, 음식/채소, 신분・역할, 신분・역할/농부",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7042dcef-edbf-4c68-b182-51d5aa0b0ee9"
@@ -3878,7 +3878,7 @@
       "id": "0431",
       "nickname": "역무원 여우 Akyo",
       "avatarName": "akyo_きつね駅員",
-      "category": "동물/여우, 동물, 직업・신분",
+      "category": "동물/여우, 동물, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ffd524f1-ea73-4338-8d2c-2d9d75d3ae82"
@@ -3887,7 +3887,7 @@
       "id": "0432",
       "nickname": "버니 여우 Akyo",
       "avatarName": "akyo_BunnyFox",
-      "category": "계절・행사/할로윈, 계절・행사, 동물, 동물/여우, 의류・액세서리, 코스프레, 프리티",
+      "category": "계절・행사/할로윈, 계절・행사, 동물, 동물/여우, 패션, 코스프레, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_542c948a-4a80-4226-9f7b-8a7fe2c0049d"
@@ -3896,7 +3896,7 @@
       "id": "0433",
       "nickname": "스트레치 Akyo",
       "avatarName": "akyo_ストレッチ",
-      "category": "패러디, 패러디/스트레치맨, 체육회계",
+      "category": "패러디, 패러디/스트레치맨, 피지컬, 피지컬/체육계",
       "comment": "生涯健康、生涯Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_189d434f-2982-4b77-b6a2-d04aaaf62d05"
@@ -3914,7 +3914,7 @@
       "id": "0435",
       "nickname": "사냥꾼 Akyo",
       "avatarName": "akyo_猟師",
-      "category": "직업・신분",
+      "category": "신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_997f4267-2f36-4d6c-9ebe-1b96f6592291"
@@ -4013,7 +4013,7 @@
       "id": "0446",
       "nickname": "우주 Akyo",
       "avatarName": "akyo_うちゅう",
-      "category": "환경・날씨, 직업・신분, 환경・날씨/우주, 기능・특성, 기능・특성/무중력 내성, 기능・특성/산소결핍 내성",
+      "category": "환경・날씨, 신분・역할, 환경・날씨/우주, 기능・특성, 기능・특성/무중력 내성, 기능・특성/산소결핍 내성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ca7da3b3-0e5c-44a1-89fc-a9a89da3961f"
@@ -4040,7 +4040,7 @@
       "id": "0449",
       "nickname": "할로윈 판초 여우 Akyo",
       "avatarName": "akyo_foxHW",
-      "category": "동물/여우, 계절・행사/할로윈, 계절・행사, 동물, 의류・액세서리, 코스프레",
+      "category": "동물/여우, 계절・행사/할로윈, 계절・행사, 동물, 패션, 코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cec68cad-1972-4a81-8289-4adb9988d5cf"
@@ -4094,7 +4094,7 @@
       "id": "0455",
       "nickname": "목조 여우 Akyo",
       "avatarName": "akyo_木彫りきつね",
-      "category": "동물/여우, 동물, 소재・재질, 소재・재질/식물/나무, 소재・재질/단단한, 예술・아트",
+      "category": "동물/여우, 동물, 소재・원재료, 소재・원재료/식물/나무, 형태・촉감/단단한, 예술・아트",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_706f8cad-a7cd-4fa0-b9eb-2a7f47c7bb04"
@@ -4184,7 +4184,7 @@
       "id": "0465",
       "nickname": "눈사람 여우 Akyo",
       "avatarName": "akyo_ゆきだるま",
-      "category": "동물/여우, 동물, 계절・행사, 소재・재질, 소재・재질/차가운",
+      "category": "동물/여우, 동물, 계절・행사, 소재・원재료, 형태・촉감/차가운",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9ba51df3-046a-4272-a755-61d651548875"
@@ -4220,7 +4220,7 @@
       "id": "0469",
       "nickname": "산타 여우 Akyo",
       "avatarName": "akyo_きつねサンタ",
-      "category": "동물/여우, 동물, 의류・액세서리, 계절・행사, 계절・행사/크리스마스",
+      "category": "동물/여우, 동물, 패션, 계절・행사, 계절・행사/크리스마스",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9583d3bf-57f6-4aa7-a809-e21ad08bc37b"
@@ -4247,7 +4247,7 @@
       "id": "0472",
       "nickname": "폭신폭신 Akyo",
       "avatarName": "Fuwafuwa_Akyo",
-      "category": "소재・재질, 소재・재질/부드러운, 털결, 털결/폭신폭신",
+      "category": "소재・원재료, 형태・촉감/부드러운, 형태・촉감, 형태・촉감/폭신폭신",
       "comment": "114번은 다른 제작자님 ver.",
       "author": "nezu_jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f50c2f5-89b6-4cda-9799-fa674a38a20c"
@@ -4274,7 +4274,7 @@
       "id": "0475",
       "nickname": "죄수 Akyo",
       "avatarName": "PrisonerAkyo",
-      "category": "초코민트류, 직업・신분, 직업・신분/수형자, 갇힌 몸",
+      "category": "초코민트류, 신분・역할, 신분・역할/수형자, 갇힌 몸",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8bb19cf9-83f2-4b67-9fe2-81a800704ba9"
@@ -4301,7 +4301,7 @@
       "id": "0478",
       "nickname": "아쿄의 철도",
       "avatarName": "Akyonotesen",
-      "category": "초코민트류, 탈것, 탈것/육상, 직업・신분",
+      "category": "초코민트류, 탈것, 탈것/육상, 신분・역할",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b4e941cc-6921-47ae-a3ef-9caf6d714062"
@@ -4319,7 +4319,7 @@
       "id": "0480",
       "nickname": "초밥수족관 근무 Akyo",
       "avatarName": "すし水勤務のAkyo",
-      "category": "초코민트류, 직업・신분",
+      "category": "초코민트류, 신분・역할",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b38aeb2a-bb50-470a-82b6-ab977a023530"
@@ -4355,7 +4355,7 @@
       "id": "0484",
       "nickname": "수병 여우 Akyo",
       "avatarName": "akyo Fox すいへい",
-      "category": "동물/여우, 직업・신분, 동물",
+      "category": "동물/여우, 신분・역할, 동물",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5e5aa01d-59a8-4631-8b48-46803c1d982a"
@@ -4364,7 +4364,7 @@
       "id": "0485",
       "nickname": "침낭 Akyo",
       "avatarName": "akyo ねぶくろ",
-      "category": "초코민트류, 의류・액세서리, 수면",
+      "category": "초코민트류, 패션, 수면",
       "comment": "발상의 유래가 궁금합니다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6e10ce52-0b3c-4090-8bb2-28a3c7517f9b"
@@ -4373,7 +4373,7 @@
       "id": "0486",
       "nickname": "감기걸린 Akyo",
       "avatarName": "KazehikiAkyo",
-      "category": "초코민트류, 질병・바이러스, 의류・액세서리, 의류・액세서리/마스크, 쾌차를 빕니다, 가전・가구, 가전・가구/이불",
+      "category": "초코민트류, 질병・바이러스, 패션, 패션/마스크, 쾌차를 빕니다, 가전・가구, 가전・가구/이불",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b75d27c3-a766-4f68-9f7b-83c49a7942bb"
@@ -4490,7 +4490,7 @@
       "id": "0499",
       "nickname": "리본 여우 Akyo",
       "avatarName": "リボンきつねakyo",
-      "category": "동물/여우, 의류・액세서리, 동물",
+      "category": "동물/여우, 패션, 동물",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5d5ac7fd-2ddb-4a05-97ed-aa3154207b5f"
@@ -4508,7 +4508,7 @@
       "id": "0501",
       "nickname": "침낭 Akyo 2",
       "avatarName": "akyo ねぶくろ2",
-      "category": "초코민트류, 의류・액세서리, 수면",
+      "category": "초코민트류, 패션, 수면",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6ef3c177-0e60-4b5e-91dd-fa7955b4392f"
@@ -4517,7 +4517,7 @@
       "id": "0502",
       "nickname": "침낭 여우 Akyo",
       "avatarName": "akyo_fox ねぶくろ",
-      "category": "동물/여우, 의류・액세서리, 동물, 수면",
+      "category": "동물/여우, 패션, 동물, 수면",
       "comment": "토끼와 호랑이 침낭으로 변경 가능",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fd8d8d3b-aab3-4303-bd84-e2a04fbd4587"
@@ -4526,7 +4526,7 @@
       "id": "0503",
       "nickname": "동상 Akyo",
       "avatarName": "ブロンズAKyo リターンズ",
-      "category": "상・하니와, 소재・재질, 소재・재질/금속, 소재・재질/단단한",
+      "category": "상・하니와, 소재・원재료, 소재・원재료/금속, 형태・촉감/단단한",
       "comment": "",
       "author": "huyumusi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fefc7e4b-6b16-4488-8fb1-5049e12e99fc"
@@ -4706,7 +4706,7 @@
       "id": "0523",
       "nickname": "천 고스트 Akyo",
       "avatarName": "nunoghostAkyo",
-      "category": "초코민트류, 가상의 존재, 가상의 존재/요괴・유령, 소재・재질, 소재・재질/부드러운",
+      "category": "초코민트류, 가상의 존재, 가상의 존재/요괴・유령, 소재・원재료, 형태・촉감/부드러운",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_520589a3-4c83-4ac7-a6f9-4ad24ab082db"
@@ -4742,7 +4742,7 @@
       "id": "0527",
       "nickname": "카페 드래곤 Akyo",
       "avatarName": "akyo どらごんcefe",
-      "category": "가상의 존재, 기능・특성/비행, 동물, 가상의 존재/용・드래곤, 직업・신분, 기능・특성",
+      "category": "가상의 존재, 기능・특성/비행, 동물, 가상의 존재/용・드래곤, 신분・역할, 기능・특성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2a1f578c-cfb6-49bb-8833-aec0969cd2a5"
@@ -4778,7 +4778,7 @@
       "id": "0531",
       "nickname": "웨딩 여우 Akyo",
       "avatarName": "akyo foxウェディング",
-      "category": "동물/여우, 계절・행사, 계절・행사/연애, 의류・액세서리, 동물, 프리티",
+      "category": "동물/여우, 계절・행사, 계절・행사/연애, 패션, 동물, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7fcd3f66-1da1-425c-8b60-9b7384eb28b8"
@@ -4805,7 +4805,7 @@
       "id": "0534",
       "nickname": "묘비 Akyo",
       "avatarName": "bosekiAkyo",
-      "category": "초코민트류, 건물, 계절・행사/할로윈, 계절・행사, 소재・재질, 소재・재질/돌, 소재・재질/단단한, 코스프레, 죽음",
+      "category": "초코민트류, 건물, 계절・행사/할로윈, 계절・행사, 소재・원재료, 소재・원재료/돌, 형태・촉감/단단한, 코스프레, 죽음",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4db2f6fb-ae17-4cc8-89ac-6306e161c9dc"
@@ -4832,7 +4832,7 @@
       "id": "0537",
       "nickname": "히나마츠리 늑대 Akyo",
       "avatarName": "akyo おおかみひなまつり",
-      "category": "계절・행사, 동물, 동물/늑대, 직업・신분",
+      "category": "계절・행사, 동물, 동물/늑대, 신분・역할",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fc1a94f3-8340-4b5c-9ead-3a768e95791b"
@@ -4841,7 +4841,7 @@
       "id": "0538",
       "nickname": "마법소녀 여우 Akyo",
       "avatarName": "akyo fox 魔法少女",
-      "category": "동물/여우, 직업・신분, 계절・행사/할로윈, 계절・행사, 기능・특성/마법, 동물, 코스프레, 프리티, 기능・특성",
+      "category": "동물/여우, 신분・역할, 계절・행사/할로윈, 계절・행사, 기능・특성/마법, 동물, 코스프레, 프리티, 기능・특성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c8937290-f0da-43ac-8386-d5865506457f"
@@ -4850,7 +4850,7 @@
       "id": "0539",
       "nickname": "성게 Akyo",
       "avatarName": "akyo uni",
-      "category": "동물, 동물/해양생물, 소재・재질, 소재・재질/가시투성이",
+      "category": "동물, 동물/해양생물, 소재・원재료, 형태・촉감/가시투성이",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b877aa1d-2fbc-497e-85e2-c7683ced3fe3"
@@ -4868,7 +4868,7 @@
       "id": "0541",
       "nickname": "오토모 여우 Akyo",
       "avatarName": "akyo きつねオトモ",
-      "category": "동물/여우, 직업・신분, 패러디/몬스터 헌터, 패러디, 동물, 무기・기계",
+      "category": "동물/여우, 신분・역할, 패러디/몬스터 헌터, 패러디, 동물, 무기・기계",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7e3f6a6d-83da-4f06-8e7e-274943b93199"
@@ -4886,7 +4886,7 @@
       "id": "0543",
       "nickname": "댄싱 아프로 Akyo",
       "avatarName": "Akyo_Dancing Afro",
-      "category": "헤어스타일, 음악・악기",
+      "category": "패션/헤어스타일, 음악・악기",
       "comment": "",
       "author": "Masami.S",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c202f0d6-f6ec-428e-aa44-bb5406921371"
@@ -4913,7 +4913,7 @@
       "id": "0546",
       "nickname": "Akyo마박사",
       "avatarName": "akyo魔博士",
-      "category": "패러디/판타스틱 4, 패러디, 계절・행사/할로윈, 계절・행사, 직업・신분, 코스프레",
+      "category": "패러디/판타스틱 4, 패러디, 계절・행사/할로윈, 계절・행사, 신분・역할, 코스프레",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0e4bd90-0cad-40ec-ab4c-759de355b9d4"
@@ -4949,7 +4949,7 @@
       "id": "0550",
       "nickname": "기린 장비 여우 Akyo",
       "avatarName": "akyo キリン装備",
-      "category": "동물/여우, 직업・신분, 패러디/몬스터 헌터, 패러디, 동물, 무기・기계",
+      "category": "동물/여우, 신분・역할, 패러디/몬스터 헌터, 패러디, 동물, 무기・기계",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_e7a25fa3-d00f-4d5a-96ef-ad07a650f21c"
@@ -5048,7 +5048,7 @@
       "id": "0561",
       "nickname": "콘크리트 Akyo",
       "avatarName": "ConcreteAkyo",
-      "category": "소재・재질, 소재・재질/단단한",
+      "category": "소재・원재료, 형태・촉감/단단한",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9fd0ba74-53d8-4430-ae21-c8d897c10b19"
@@ -5057,7 +5057,7 @@
       "id": "0562",
       "nickname": "콘크리트 Akyo 2",
       "avatarName": "ConcreteAkyo",
-      "category": "소재・재질, 소재・재질/단단한",
+      "category": "소재・원재료, 형태・촉감/단단한",
       "comment": "",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_aaa0fc29-6e51-4dfa-a332-649aff9e1483"
@@ -5084,7 +5084,7 @@
       "id": "0565",
       "nickname": "공주 Akyo",
       "avatarName": "ohimesamaAkyo",
-      "category": "초코민트류, 직업・신분, 직업・신분/왕족, 역사, 프리티",
+      "category": "초코민트류, 신분・역할, 신분・역할/왕족, 역사, 프리티",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c672232d-9fd0-40a8-8bce-8593db0699c9"
@@ -5201,7 +5201,7 @@
       "id": "0578",
       "nickname": "우비 드래곤 Akyo",
       "avatarName": "akyo どらごんレインコート",
-      "category": "가상의 존재, 기능・특성/비행, 의류・액세서리, 동물, 가상의 존재/용・드래곤, 기능・특성, 환경・날씨, 환경・날씨/비",
+      "category": "가상의 존재, 기능・특성/비행, 패션, 동물, 가상의 존재/용・드래곤, 기능・특성, 환경・날씨, 환경・날씨/비",
       "comment": "비 오는 날 외출 드래곤 Akyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d86a3dcc-cc1a-4947-afa8-05fa4f841e77"
@@ -5219,7 +5219,7 @@
       "id": "0580",
       "nickname": "갸루 Akyo",
       "avatarName": "galAkyo",
-      "category": "초코민트류, 의류・액세서리, 학교, 프리티",
+      "category": "초코민트류, 패션, 학교, 프리티",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_4fd38eea-392a-4695-8cf2-af446dd84e72"
@@ -5336,7 +5336,7 @@
       "id": "0593",
       "nickname": "블레이드 놀이 Akyo",
       "avatarName": "bladegokkoAkyo",
-      "category": "패러디/가면라이더, 패러디, 합체・변신, 히어로",
+      "category": "패러디/가면라이더, 패러디, 합체・변신, 신분・역할/히어로",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7306d8e6-9518-4337-b739-c8ddbbf65c95"
@@ -5345,7 +5345,7 @@
       "id": "0594",
       "nickname": "거너 Akyo",
       "avatarName": "gunner akyo",
-      "category": "무기・기계, 직업・신분, 직업・신분/병사",
+      "category": "무기・기계, 신분・역할, 신분・역할/병사",
       "comment": "",
       "author": "Fuganbya",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_a0adb324-619c-43c8-af9e-2ed4d98f8a2a"
@@ -5354,7 +5354,7 @@
       "id": "0595",
       "nickname": "아미 Akyo",
       "avatarName": "akyo_army",
-      "category": "무기・기계, 직업・신분, 직업・신분/병사",
+      "category": "무기・기계, 신분・역할, 신분・역할/병사",
       "comment": "",
       "author": "kazakami okenu",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f47c6214-6daf-4d40-9e6b-274a59662d2a"
@@ -5417,7 +5417,7 @@
       "id": "0602",
       "nickname": "갸렌 놀이 Akyo",
       "avatarName": "gyarengokkoAkyo",
-      "category": "패러디/가면라이더, 패러디, 합체・변신, 히어로",
+      "category": "패러디/가면라이더, 패러디, 합체・변신, 신분・역할/히어로",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_aae617bf-de58-4d95-ba31-b0a171dedd2d"
@@ -5426,7 +5426,7 @@
       "id": "0603",
       "nickname": "인형옷 Akyo군",
       "avatarName": "kigurumiAkyokun",
-      "category": "초코민트류, 직업・신분",
+      "category": "초코민트류, 신분・역할",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f1bf652f-164f-4f00-98a6-bb6db5be81ee"
@@ -5498,7 +5498,7 @@
       "id": "0611",
       "nickname": "인형옷 물고기머리 Akyo",
       "avatarName": "kigurumiokashirakun",
-      "category": "동물/물고기, 직업・신분, 동물, 동물/해양생물, 무기・기계, 도구・문구・생활용품",
+      "category": "동물/물고기, 신분・역할, 동물, 동물/해양생물, 무기・기계, 도구・문구・생활용품",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_70171281-584d-4036-9f2d-040493b699aa"
@@ -5597,7 +5597,7 @@
       "id": "0622",
       "nickname": "부드러운 Akyo",
       "avatarName": "柔らかいAkyo",
-      "category": "소재・재질, 소재・재질/부드러운",
+      "category": "소재・원재료, 형태・촉감/부드러운",
       "comment": "부드러운 Akyo",
       "author": "Holimond.jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7f76d4fe-6694-4ecb-95fc-7c88e09e79d3"
@@ -5615,7 +5615,7 @@
       "id": "0624",
       "nickname": "나이트캡 Akyo",
       "avatarName": "nightcapAkyo",
-      "category": "초코민트류, 의류・액세서리, 수면, 가전・가구, 가전・가구/베개",
+      "category": "초코민트류, 패션, 수면, 가전・가구, 가전・가구/베개",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_43f222aa-e5ef-4f3f-afc2-c1620607adb5"
@@ -5642,7 +5642,7 @@
       "id": "0627",
       "nickname": "상자 Akyo 댐",
       "avatarName": "hakoAkyodam",
-      "category": "초코민트류, 소재・재질, 소재・재질/식물, 소재・재질/식물/나무, 패러디, 패러디/건담",
+      "category": "초코민트류, 소재・원재료, 소재・원재료/식물, 소재・원재료/식물/나무, 패러디, 패러디/건담",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23becd0a-c416-48c2-8cd5-cba021fe8237"
@@ -5660,7 +5660,7 @@
       "id": "0629",
       "nickname": "래빗홀 Akyo",
       "avatarName": "RabbitHoleAkyo",
-      "category": "동물/토끼, 의류・액세서리, 패러디/보컬로이드, 패러디, 동물, 기관, 기관/귀, 프리티",
+      "category": "동물/토끼, 패션, 패러디/보컬로이드, 패러디, 동물, 기관, 기관/귀, 프리티",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_91e5ca26-8080-4856-bbae-ed3e0145c665"
@@ -5678,7 +5678,7 @@
       "id": "0631",
       "nickname": "골판지 나이트 Akyo",
       "avatarName": "danbouruKnightAkyo",
-      "category": "직업・신분, 소재・재질, 소재・재질/식물, 소재・재질/식물/나무, 직업・신분/병사, 무기・기계",
+      "category": "신분・역할, 소재・원재료, 소재・원재료/식물, 소재・원재료/식물/나무, 신분・역할/병사, 무기・기계",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d285ea6a-07b5-4a63-b8f5-9f5053281d5c"
@@ -5705,7 +5705,7 @@
       "id": "0634",
       "nickname": "늘어진귀 버니 Akyo",
       "avatarName": "lopearedrabbitbunnyAkyo",
-      "category": "동물/토끼, 의류・액세서리, 동물, 기관, 기관/귀, 프리티",
+      "category": "동물/토끼, 패션, 동물, 기관, 기관/귀, 프리티",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d73a53f5-1abe-462a-ab3f-fb9ffac341d2"
@@ -5804,7 +5804,7 @@
       "id": "0645",
       "nickname": "원피스 여우 Akyo 2025",
       "avatarName": "akyo_きつね25ワンピ",
-      "category": "동물/여우, 계절・행사, 계절・행사/여름, 의류・액세서리, 동물, 프리티",
+      "category": "동물/여우, 계절・행사, 계절・행사/여름, 패션, 동물, 프리티",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f6764dcf-02b9-4c2d-9b23-bb565157b59a"
@@ -5939,7 +5939,7 @@
       "id": "0660",
       "nickname": "마스크 늑대 Akyo",
       "avatarName": "akyo_おおかみマスク",
-      "category": "동물/늑대, 의류・액세서리, 동물, 의류・액세서리/마스크, 계절・행사, 계절・행사/할로윈",
+      "category": "동물/늑대, 패션, 동물, 패션/마스크, 계절・행사, 계절・행사/할로윈",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_05eacbfe-57a5-4d51-9ef5-51034d95a29c"
@@ -5957,7 +5957,7 @@
       "id": "0662",
       "nickname": "할로윈 메이드 여우 Akyo",
       "avatarName": "akyo_メイド_ハロウィン",
-      "category": "동물/여우, 계절・행사, 동물, 직업・신분, 코스프레, 프리티, 계절・행사/할로윈",
+      "category": "동물/여우, 계절・행사, 동물, 신분・역할, 코스프레, 프리티, 계절・행사/할로윈",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d9c07422-e074-487b-b565-f2ea1f6c0254"
@@ -5966,7 +5966,7 @@
       "id": "0663",
       "nickname": "의사 드래곤 Akyo",
       "avatarName": "akyo 医者どらごんakyo",
-      "category": "직업・신분, 가상의 존재, 가상의 존재/용・드래곤, 직업・신분/의료종사자, 기능・특성/비행, 동물, 기능・특성",
+      "category": "신분・역할, 가상의 존재, 가상의 존재/용・드래곤, 신분・역할/의료종사자, 기능・특성/비행, 동물, 기능・특성",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c3441277-1558-433c-aa75-8bcd9469dc9c"
@@ -6011,7 +6011,7 @@
       "id": "0668",
       "nickname": "감기 Akyo",
       "avatarName": "kazeakyo",
-      "category": "질병・바이러스, 초코민트류, 의류・액세서리, 의류・액세서리/마스크, 쾌차를 빕니다, 가전・가구, 가전・가구/이불, 가전・가구/베개, 점적",
+      "category": "질병・바이러스, 초코민트류, 패션, 패션/마스크, 쾌차를 빕니다, 가전・가구, 가전・가구/이불, 가전・가구/베개, 액체/점적",
       "comment": "",
       "author": "nezu_jp",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_1a8e5fc0-5930-440c-8815-2d318ea8a273"
@@ -6065,7 +6065,7 @@
       "id": "0674",
       "nickname": "바다거북 Akyo",
       "avatarName": "akyo_うみがめ",
-      "category": "동물, 동물/거북이, 소재・재질, 소재・재질/단단한",
+      "category": "동물, 동물/거북이, 소재・원재료, 형태・촉감/단단한",
       "comment": "따뜻한 바다에 살며 산호초 주위를 헤엄치는 모습이 자주 목격된다. 또한 육지에 올라와 해변을 산책하기도 한다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0a92e521-0723-4dc7-9dd8-23fe4724dc86"
@@ -6101,7 +6101,7 @@
       "id": "0678",
       "nickname": "비 Akyo",
       "avatarName": "amekyo",
-      "category": "환경・날씨, 환경・날씨/비, 액체",
+      "category": "환경・날씨, 환경・날씨/비, 액체, 액체/물",
       "comment": "비 오는 날에 나타난다는 소문이 있다. 신빙성은 꽤 낮다.",
       "author": "ameno-hisui",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0ad6c464-645d-4b3d-b48b-8b173b9d1b6c"
@@ -6110,7 +6110,7 @@
       "id": "0679",
       "nickname": "우로 Akyo",
       "avatarName": "urokyo",
-      "category": "의류・액세서리, 의류・액세서리/안경",
+      "category": "패션, 패션/안경",
       "comment": "情報提供募集中",
       "author": "ウロVRC",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_697acb61-6b9e-4ede-8276-735695375010"
@@ -6128,7 +6128,7 @@
       "id": "0681",
       "nickname": "팽이 Akyo",
       "avatarName": "komakyo-test",
-      "category": "털결/폭신폭신, 털결",
+      "category": "형태・촉감/폭신폭신, 형태・촉감",
       "comment": "",
       "author": "ameno-hisui",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_60e9698d-f412-4ca1-8317-f9333a27652c"
@@ -6137,7 +6137,7 @@
       "id": "0682",
       "nickname": "진저브레드 Akyo",
       "avatarName": "GingerbreadAkyo",
-      "category": "음식, 소재・재질, 소재・재질/얇은, 음식/디저트",
+      "category": "음식, 소재・원재료, 형태・촉감/얇은, 음식/디저트",
       "comment": "움직이면 좌우로 흔들려!",
       "author": "oyoso_5_oku",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_04d93765-939b-46dc-9837-3f5f7af5d0b0"
@@ -6155,7 +6155,7 @@
       "id": "0684",
       "nickname": "머슬 키츠네츠키식 여우 Akyo",
       "avatarName": "muscle_sakyon",
-      "category": "예술・아트, 동물/여우, 동물, 체육회계",
+      "category": "예술・아트, 동물/여우, 동물, 피지컬, 피지컬/체육계",
       "comment": "",
       "author": "-野牛-",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_73a7c0b5-dbb9-4e02-b57a-92a8ad1a8397"
@@ -6263,7 +6263,7 @@
       "id": "0696",
       "nickname": "늑대 스웨터 Akyo",
       "avatarName": "akyo_おおかみセーター",
-      "category": "의류・액세서리, 의류・액세서리/두꺼운 옷, 계절・행사/겨울, 계절・행사, 동물, 동물/늑대, 의류・액세서리/모자, 의류・액세서리/장갑",
+      "category": "패션, 패션/두꺼운 옷, 계절・행사/겨울, 계절・행사, 동물, 동물/늑대, 패션/모자, 패션/장갑",
       "comment": "보슬보슬 스웨터를 입은 늑대 Akyo. 이제 추운 날도 안심!",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2d77ad59-9699-47b7-adae-0ebcf7d94e0a"
@@ -6281,7 +6281,7 @@
       "id": "0698",
       "nickname": "스웨터 코끼리 Akyo",
       "avatarName": "akyo_ぞうセーター",
-      "category": "의류・액세서리, 의류・액세서리/모자, 의류・액세서리/두꺼운 옷, 계절・행사, 계절・행사/겨울, 동물, 동물/코끼리, 네발걸음",
+      "category": "패션, 패션/모자, 패션/두꺼운 옷, 계절・행사, 계절・행사/겨울, 동물, 동물/코끼리, 네발걸음",
       "comment": "스웨터를 입은 겨울 사양 코끼리 Akyo. 따뜻하~다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22a5fa0e-e92d-426e-83a9-e6a9a7549f51"
@@ -6290,7 +6290,7 @@
       "id": "0699",
       "nickname": "말띠 Akyo/설날 말 Akyo",
       "avatarName": "akyo_うまどし",
-      "category": "네발걸음, 동물/말, 동물, 계절・행사, 계절・행사/설날, 의류・액세서리",
+      "category": "네발걸음, 동물/말, 동물, 계절・행사, 계절・행사/설날, 패션",
       "comment": "설날 복장으로 갈아입은 말 Akyo. 들떠 있는 듯하다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_829d6be4-302c-4d81-bb9b-a8d06beaa521"
@@ -6308,7 +6308,7 @@
       "id": "0701",
       "nickname": "다이아 Akyo",
       "avatarName": "DaiAkyo",
-      "category": "소재・재질/돌, 소재・재질/단단한",
+      "category": "소재・원재료/돌, 형태・촉감/단단한",
       "comment": "",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_449a39f1-4a2d-4265-b492-531b71f95239"
@@ -6317,7 +6317,7 @@
       "id": "0702",
       "nickname": "여우콩 Akyo",
       "avatarName": "akyo mameFox",
-      "category": "마메, 마메Akyo, 디포르메, 체형/풍만, 체형, 동물, 동물/여우, 소재・재질/부드러운, 소재・재질",
+      "category": "마메, 마메Akyo, 디포르메, 체형/풍만, 체형, 동물, 동물/여우, 형태・촉감/부드러운, 소재・원재료",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_34ce01ef-e8e9-4543-bb35-e4ba66687138"
@@ -6344,7 +6344,7 @@
       "id": "0705",
       "nickname": "코즈믹 Akyo",
       "avatarName": "Cosmic Akyo",
-      "category": "기관, 기관/날개, 기능・특성, 기능・특성/비행, 기능・특성/무중력 내성, 기능・특성/산소결핍 내성, 환경・날씨, 환경・날씨/우주, 트래블러",
+      "category": "기관, 기관/날개, 기능・특성, 기능・특성/비행, 기능・특성/무중력 내성, 기능・특성/산소결핍 내성, 환경・날씨, 환경・날씨/우주, 신분・역할/트래블러",
       "comment": "외우주 탐사를 위해 독자적인 진화를 이룬 듯하다.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_23434774-76bd-4f22-8bf0-2fdc3cce6a26"
@@ -6353,7 +6353,7 @@
       "id": "0706",
       "nickname": "크리스탈 Akyo",
       "avatarName": "Crystal Akyo",
-      "category": "레어, 소재・재질, 소재・재질/유리, 소재・재질/단단한",
+      "category": "레어, 소재・원재료, 소재・원재료/유리, 형태・촉감/단단한",
       "comment": "희귀한 Akyo일까, 아니면...",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cea0caed-4173-4cec-85a0-78ae527ec591"
@@ -6398,7 +6398,7 @@
       "id": "0711",
       "nickname": "퀸 Akyo",
       "avatarName": "Queen Akyo",
-      "category": "프리티, 소재・재질, 소재・재질/미끈미끈, 직업・신분, 직업・신분/왕족",
+      "category": "프리티, 소재・원재료, 형태・촉감/미끈미끈, 신분・역할, 신분・역할/왕족",
       "comment": "미끈미끈하다고 해!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_2cbee432-9e8e-4ba7-a669-076e3c9cb85b"
@@ -6407,7 +6407,7 @@
       "id": "0712",
       "nickname": "키츠네츠키식 설여우 Akyo",
       "avatarName": "Snow Fox Akyo",
-      "category": "동물, 동물/여우, 계절・행사, 계절・행사/겨울, 환경・날씨, 환경・날씨/눈, 소재・재질, 소재・재질/차가운",
+      "category": "동물, 동물/여우, 계절・행사, 계절・행사/겨울, 환경・날씨, 환경・날씨/눈, 소재・원재료, 형태・촉감/차가운",
       "comment": "얼음 행성에서 발견되었다고 한다.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
@@ -6416,7 +6416,7 @@
       "id": "0713",
       "nickname": "골든 키츠네츠키식 여우 Akyo",
       "avatarName": "Golden Fox Akyo",
-      "category": "레어, 동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/금속",
+      "category": "레어, 동물, 동물/여우, 소재・원재료, 형태・촉감/단단한, 소재・원재료/금속",
       "comment": "순금이래~!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_56563c93-0b17-4db9-8fda-e804152f79e7"
@@ -6452,7 +6452,7 @@
       "id": "0717",
       "nickname": "빨간 키츠네츠키식 젬 여우 Akyo",
       "avatarName": "Red Gem Fox Akyo",
-      "category": "동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/돌, 먹보",
+      "category": "동물, 동물/여우, 소재・원재료, 형태・촉감/단단한, 소재・원재료/돌, 먹보",
       "comment": "보석을 너무 많이 먹었다고 해!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
@@ -6461,7 +6461,7 @@
       "id": "0718",
       "nickname": "보라 키츠네츠키식 젬 여우 Akyo",
       "avatarName": "Purple Gem Fox Akyo",
-      "category": "동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/돌, 먹보",
+      "category": "동물, 동물/여우, 소재・원재료, 형태・촉감/단단한, 소재・원재료/돌, 먹보",
       "comment": "이것도 보석을 너무 많이 먹었대!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
@@ -6470,7 +6470,7 @@
       "id": "0719",
       "nickname": "하얀 키츠네츠키식 젬 여우 Akyo",
       "avatarName": "White Gem Fox Akyo",
-      "category": "동물, 동물/여우, 소재・재질, 소재・재질/단단한, 소재・재질/돌, 먹보",
+      "category": "동물, 동물/여우, 소재・원재료, 형태・촉감/단단한, 소재・원재료/돌, 먹보",
       "comment": "키츠네츠키식 여우 Akyo의 좋아하는 음식은 보석일까?",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
@@ -6479,7 +6479,7 @@
       "id": "0720",
       "nickname": "키츠네츠키식 알루미늄 여우 Akyo",
       "avatarName": "Aluminium Fox Akyo",
-      "category": "동물, 동물/여우, 소재・재질, 소재・재질/금속",
+      "category": "동물, 동물/여우, 소재・원재료, 소재・원재료/금속",
       "comment": "지난 200년 사이에 태어난 Akyo일까?",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8d861904-5b3e-4a6b-a074-3f5d3ef04b9e"
@@ -6498,7 +6498,7 @@
       "nickname": "전기히터 Akyo",
       "avatarName": "akyo_電気ヒーター",
       "category": "가전・가구, 에너지, 에너지/전기, 에너지/열, 기관, 기관/꼬리, 계절・행사, 계절・행사/겨울",
-      "comment": "(사사노키의 수기)\n따뜻하게 해주는 Akyo. 플러그를 꽂지 않아도 괜찮은 듯하다. 녹이 슬어서 물을 싫어한다.",
+      "comment": "(사사노키의 수기)\r\n따뜻하게 해주는 Akyo. 플러그를 꽂지 않아도 괜찮은 듯하다. 녹이 슬어서 물을 싫어한다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
     },
@@ -6506,8 +6506,8 @@
       "id": "0723",
       "nickname": "야키모치 Akyo",
       "avatarName": "akyo_やきもち",
-      "category": "소재・재질, 소재・재질/부드러운, 소재・재질/네모, 음식, 음식/요리",
-      "comment": "(사사노키의 수기)\n노릇하게 구운 네모난 떡에 김을 말았다. 고소한 향이 식욕을 자극한다.",
+      "category": "소재・원재료, 형태・촉감/부드러운, 형태・촉감/네모, 음식, 음식/요리",
+      "comment": "(사사노키의 수기)\r\n노릇하게 구운 네모난 떡에 김을 말았다. 고소한 향이 식욕을 자극한다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0396e41a-c59a-48db-8ac2-ca28c271ef8b"
     },
@@ -6515,8 +6515,8 @@
       "id": "0724",
       "nickname": "영구동토 Akyo",
       "avatarName": "akyo_永久凍土",
-      "category": "갇힌 몸, 동물, 소재・재질, 소재・재질/차가운, 소재・재질/네모, 소재・재질/단단한, 소재・재질/얼음",
-      "comment": "(사사노키의 수기)\n영구동토 연구 중 발견된 얼음 Akyo. 안에 뭔가 묻혀 있는 것 같다.",
+      "category": "갇힌 몸, 동물, 소재・원재료, 형태・촉감/차가운, 형태・촉감/네모, 형태・촉감/단단한, 소재・원재료/얼음",
+      "comment": "(사사노키의 수기)\r\n영구동토 연구 중 발견된 얼음 Akyo. 안에 뭔가 묻혀 있는 것 같다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fef7a5db-3006-4a14-8600-29c3cc9402bb"
     },
@@ -6525,7 +6525,7 @@
       "nickname": "수달 Akyo",
       "avatarName": "akyo_カワウソ",
       "category": "동물, 기관, 기관/꼬리, 성격, 성격/호기심 왕성, 성격/사람을 잘 따름",
-      "comment": "(사사노키의 수기)\n사람을 잘 따르고 호기심이 왕성하다.",
+      "comment": "(사사노키의 수기)\r\n사람을 잘 따르고 호기심이 왕성하다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
     },
@@ -6542,8 +6542,8 @@
       "id": "0727",
       "nickname": "모히칸 Akyo",
       "avatarName": "akyo_モヒカン",
-      "category": "의류・액세서리, 의류・액세서리/안경, 헤어스타일, 헤어스타일/모히칸",
-      "comment": "(사사노키의 수기)\n세기말을 살아가는 Akyo.",
+      "category": "패션, 패션/안경, 패션/헤어스타일, 패션/헤어스타일/모히칸",
+      "comment": "(사사노키의 수기)\r\n세기말을 살아가는 Akyo.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0638079f-4016-47d4-8c3c-5e83c134d978"
     },
@@ -6578,7 +6578,7 @@
       "id": "0731",
       "nickname": "숲의 니지마스맨 With 이끼 Akyo",
       "avatarName": "森のニジマスマンWith苔Akyo",
-      "category": "동물, 동물/피시헤드, 집단・조직, 집단・조직/어두족, 기믹・특수, 동물/해양생물, 실사, 식물, 식물/이끼, 소재・재질, 소재・재질/식물, 예술・아트",
+      "category": "동물, 동물/피시헤드, 집단・조직, 집단・조직/어두족, 기믹・특수, 동물/해양생물, 실사, 식물, 식물/이끼, 소재・원재료, 소재・원재료/식물, 예술・아트",
       "comment": "잘 봐, 어깨 위에 이끼 Akyo가 있어! 자율적으로 움직이기도 한대!",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8324c16d-05c0-4793-9f77-f1edf0340eb0"
@@ -6587,8 +6587,8 @@
       "id": "0732",
       "nickname": "유대의 전사・우파루파맨 & 말 Akyo",
       "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
-      "category": "동물, 동물/피시헤드, 집단・조직, 집단・조직/어두족, 동물/양서류, 동물/말, 트래블러, 히어로, 탈것, 탈것/육상, 기관, 기관/꼬리, 네발걸음, 차원",
-      "comment": "기억을 잃어도 그 영혼의 불꽃은 뜨겁게 타오른다!\n맨보맨의 유지를 이어 지금 이곳에 탄생한 유대의 전사・우파루파맨과 말 Akyo에게 온 우주의 명운이 맡겨졌다!",
+      "category": "동물, 동물/피시헤드, 집단・조직, 집단・조직/어두족, 동물/양서류, 동물/말, 신분・역할/트래블러, 신분・역할/히어로, 탈것, 탈것/육상, 기관, 기관/꼬리, 네발걸음, 차원",
+      "comment": "기억을 잃어도 그 영혼의 불꽃은 뜨겁게 타오른다!\r\n맨보맨의 유지를 이어 지금 이곳에 탄생한 유대의 전사・우파루파맨과 말 Akyo에게 온 우주의 명운이 맡겨졌다!",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
     },
@@ -6596,8 +6596,8 @@
       "id": "0733",
       "nickname": "Akyo맨/Akyo헤드",
       "avatarName": "Akyohead",
-      "category": "초코민트류, 코스프레, 체육회계, 동물, 정체불명",
-      "comment": "머리가 Akyo！？\n사람...이야?",
+      "category": "초코민트류, 코스프레, 피지컬, 피지컬/체육계, 동물, 정체불명",
+      "comment": "머리가 Akyo！？\r\n사람...이야?",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
     },
@@ -6605,7 +6605,7 @@
       "id": "0734",
       "nickname": "렙타일 Akyo",
       "avatarName": "レプタイルAkyo",
-      "category": "동물, 동물/파충류, 소재・재질, 소재・재질/비늘",
+      "category": "동물, 동물/파충류, 소재・원재료, 형태・촉감/비늘",
       "comment": "파충류를 뜻하는 영어야!",
       "author": "huyumusi",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0c1695c0-4566-40fa-828b-f29eff60d4d3"
@@ -6614,7 +6614,7 @@
       "id": "0735",
       "nickname": "너구리콩 Akyo/콩너구리 Akyo",
       "avatarName": "まめだぬきAkyo",
-      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 동물, 동물/너구리, 기관, 기관/꼬리, 소재・재질, 소재・재질/부드러운",
+      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 동물, 동물/너구리, 기관, 기관/꼬리, 소재・원재료, 형태・촉감/부드러운",
       "comment": "마메 Akyo 파라다이스다~~~!!!",
       "author": "Nagisa_Imawari",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_79ec6fbd-ad28-4f80-9887-91b4fc2bd646"
@@ -6623,7 +6623,7 @@
       "id": "0736",
       "nickname": "빵콩 Akyo",
       "avatarName": "ぱんあきょ",
-      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 음식, 음식/빵, 소재・재질, 소재・재질/부드러운",
+      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 음식, 음식/빵, 소재・원재료, 형태・촉감/부드러운",
       "comment": "아직도 늘어나는 마메 Akyo 파라다이스!",
       "author": "もぐやねん",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_41a51483-9cd9-478a-abb2-b7396c54be23"
@@ -6632,8 +6632,8 @@
       "id": "0737",
       "nickname": "모찌콩 Akyo/콩모찌 아쿄",
       "avatarName": "まめもちあきょ",
-      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 계절・행사, 계절・행사/설날, 소재・재질, 소재・재질/부드러운, 음식, 음식/요리, 음식/과일",
-      "comment": "마메 Akyo의 기세가 멈추지 않아!\n모든 Akyo를 마메 Akyo로 만드는 계획도 꿈만은 아니네!",
+      "category": "마메, 마메Akyo, 디포르메, 체형, 체형/풍만, 계절・행사, 계절・행사/설날, 소재・원재료, 형태・촉감/부드러운, 음식, 음식/요리, 음식/과일",
+      "comment": "마메 Akyo의 기세가 멈추지 않아!\r\n모든 Akyo를 마메 Akyo로 만드는 계획도 꿈만은 아니네!",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
     },
@@ -6641,8 +6641,8 @@
       "id": "0738",
       "nickname": "후시 Akyo",
       "avatarName": "ふしあきょ",
-      "category": "패러디, 패러디/초 카구야 공주!, 동물, 동물/바다민달팽이, 소재・재질, 소재・재질/부드러운",
-      "comment": "따라와!（ ｀ー´）ノ\n(제작자 코멘트에서)",
+      "category": "패러디, 패러디/초 카구야 공주!, 동물, 동물/바다민달팽이, 소재・원재료, 형태・촉감/부드러운",
+      "comment": "따라와!（ ｀ー´）ノ\r\n(제작자 코멘트에서)",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
     },
