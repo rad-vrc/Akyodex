@@ -159,7 +159,7 @@ export function ZukanClient({
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
-  const [isDesktopViewport, setIsDesktopViewport] = useState(false);
+  const [isWideViewport, setIsWideViewport] = useState(false);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   // Modal state
@@ -232,14 +232,15 @@ export function ZukanClient({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Keep desktop/mobile filter layout in sync with viewport size.
+  // Keep filter layout in sync with viewport size.
+  // Collapsible only on mobile; always visible on >= sm screens.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const query = window.matchMedia('(min-width: 1024px)');
+    const query = window.matchMedia('(min-width: 640px)');
     const syncByViewport = () => {
-      const isDesktop = query.matches;
-      setIsDesktopViewport(isDesktop);
-      setIsFilterPanelOpen(isDesktop);
+      const isWide = query.matches;
+      setIsWideViewport(isWide);
+      setIsFilterPanelOpen(isWide);
     };
     syncByViewport();
     query.addEventListener('change', syncByViewport);
@@ -334,7 +335,7 @@ export function ZukanClient({
     () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
     [selectedAttributes, selectedCreators, favoritesOnly]
   );
-  const shouldRenderFilterPanel = isDesktopViewport || isFilterPanelOpen;
+  const shouldRenderFilterPanel = isWideViewport || isFilterPanelOpen;
 
   if (error) {
     return (
@@ -414,7 +415,7 @@ export function ZukanClient({
 
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
-          <div className="lg:hidden space-y-2">
+          <div className="sm:hidden space-y-2">
             <button
               type="button"
               onClick={() => setIsFilterPanelOpen((current) => !current)}
