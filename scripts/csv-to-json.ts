@@ -29,6 +29,10 @@ interface AkyoJsonOutput {
   data: AkyoData[];
 }
 
+function normalizeLineEndings(value: string): string {
+  return value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+
 /**
  * Ensure every subcategory token has all ancestor tokens in the same category list.
  * Example: "A/B/C,D" -> "A,A/B,A/B/C,D"
@@ -101,7 +105,7 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
       nickname: rawRow['Nickname'] ?? '',
       avatarName: rawRow['AvatarName'] ?? '',
       category: normalizeHierarchicalCategories(rawRow['Category'] ?? ''),
-      comment: rawRow['Comment'] ?? '',
+      comment: normalizeLineEndings(rawRow['Comment'] ?? ''),
       author: rawRow['Author'] ?? '',
       avatarUrl: rawRow['AvatarURL'] ?? '',
     });
