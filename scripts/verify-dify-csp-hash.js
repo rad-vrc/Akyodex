@@ -27,7 +27,7 @@ function extractConfiguredHash(middlewareSource) {
 }
 
 function collectInlineScriptHashes(html) {
-  const scriptMatches = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+  const scriptMatches = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)];
   const nonEmptyScripts = scriptMatches.map((match) => match[1]).filter((code) => code.trim().length > 0);
   return [...new Set(nonEmptyScripts.map((code) => computeSha256Base64(code)))];
 }
