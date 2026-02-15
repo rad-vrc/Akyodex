@@ -181,9 +181,9 @@ export async function POST(request: Request): Promise<Response> {
       try {
         revalidatePath(path);
         revalidatedPaths.push(path);
-        console.log(`[revalidate] Revalidated path: ${path}`);
+        console.log('[revalidate] Revalidated path', { path });
       } catch (error) {
-        console.error(`[revalidate] Failed to revalidate path ${path}:`, error);
+        console.error('[revalidate] Failed to revalidate path', { path, error });
       }
     }
 
@@ -193,9 +193,9 @@ export async function POST(request: Request): Promise<Response> {
       try {
         revalidateTag(tag);
         revalidatedTags.push(tag);
-        console.log(`[revalidate] Revalidated tag: ${tag}`);
+        console.log('[revalidate] Revalidated tag', { tag });
       } catch (error) {
-        console.error(`[revalidate] Failed to revalidate tag ${tag}:`, error);
+        console.error('[revalidate] Failed to revalidate tag', { tag, error });
       }
     }
 
