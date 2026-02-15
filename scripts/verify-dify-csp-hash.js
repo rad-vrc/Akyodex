@@ -75,7 +75,10 @@ async function main() {
   const middlewareSource = await fs.readFile(MIDDLEWARE_PATH, 'utf8');
   const configuredHash = extractConfiguredHash(middlewareSource);
 
-  const token = process.env.DIFY_CSP_HASH_CHECK_TOKEN || process.env.NEXT_PUBLIC_DIFY_TOKEN || DEFAULT_DIFY_TOKEN;
+  const token =
+    process.env.DIFY_CSP_HASH_CHECK_TOKEN ||
+    process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN ||
+    DEFAULT_DIFY_TOKEN;
   const targetUrl = `https://udify.app/chatbot/${token}`;
 
   const html = await fetchHtmlWithRetry(targetUrl);

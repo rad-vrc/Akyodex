@@ -32,6 +32,11 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
   const [loadState, setLoadState] = useState<'idle' | 'loaded' | 'error'>('idle');
 
   useEffect(() => {
+    if (!token) {
+      setLoadState('error');
+      return;
+    }
+
     setLoadState('idle');
     let isDisposed = false;
     let mountPollTimer: ReturnType<typeof setInterval> | null = null;
@@ -132,6 +137,8 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
         clearInterval(mountPollTimer);
         mountPollTimer = null;
       }
+      bodyObserver?.disconnect();
+      bodyObserver = null;
       console.error('[DifyChatbot] Failed to load embed script:', {
         src: script.src,
         event,
