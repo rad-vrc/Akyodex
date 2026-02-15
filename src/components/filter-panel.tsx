@@ -10,7 +10,7 @@ import {
   IconUser,
 } from '@/components/icons';
 import { t, type SupportedLanguage } from '@/lib/i18n';
-import { useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 interface FilterPanelProps {
   // 新フィールド（オプショナル）
@@ -23,17 +23,17 @@ interface FilterPanelProps {
 
   // 新しいカテゴリ選択
   selectedAttributes?: string[];
-  selectedCreators?: string[];
   categoryMatchMode?: 'or' | 'and';
   onAttributesChange?: (attributes: string[]) => void;
-  onCreatorsChange?: (creators: string[]) => void;
   onCategoryMatchModeChange?: (mode: 'or' | 'and') => void;
 
   // 旧フィールド（互換）
   selectedAttribute?: string;
+  selectedCreators?: string[];
   selectedCreator?: string;
   onAttributeChange?: (attribute: string) => void;
-  onCreatorChange: (creator: string) => void;
+  onCreatorsChange?: (creators: string[]) => void;
+  onCreatorChange?: (creator: string) => void;
 
   onSortToggle: () => void;
   onRandomClick: () => void;
@@ -50,14 +50,14 @@ export function FilterPanel({
   attributes,
   creators,
   selectedAttributes,
-  selectedCreators,
   categoryMatchMode = 'or',
   onAttributesChange,
-  onCreatorsChange,
   onCategoryMatchModeChange,
+  selectedCreators,
   selectedAttribute,
   selectedCreator,
   onAttributeChange,
+  onCreatorsChange,
   onCreatorChange,
   onSortToggle,
   onRandomClick,
@@ -69,21 +69,36 @@ export function FilterPanel({
 }: FilterPanelProps) {
   const [categoryQuery, setCategoryQuery] = useState('');
   const [authorQuery, setAuthorQuery] = useState('');
+  const [focusedCategoryIndex, setFocusedCategoryIndex] = useState(0);
+  const [focusedAuthorIndex, setFocusedAuthorIndex] = useState(0);
+  const categoryButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const authorButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const matchModeIdPrefix = useId();
+  const matchOrId = `${matchModeIdPrefix}-match-or`;
+  const matchAndId = `${matchModeIdPrefix}-match-and`;
 
   const displayCategories = categories || attributes;
   const displayAuthors = authors || creators;
   const normalizedCategoryQuery = categoryQuery.trim().toLowerCase();
   const normalizedAuthorQuery = authorQuery.trim().toLowerCase();
-  const activeCategories = selectedAttributes?.length
-    ? selectedAttributes
-    : selectedAttribute
-      ? [selectedAttribute]
-      : [];
-  const activeAuthors = selectedCreators?.length
-    ? selectedCreators
-    : selectedCreator
-      ? [selectedCreator]
-      : [];
+  const activeCategories = useMemo(
+    () =>
+      selectedAttributes?.length
+        ? selectedAttributes
+        : selectedAttribute
+          ? [selectedAttribute]
+          : [],
+    [selectedAttributes, selectedAttribute]
+  );
+  const activeAuthors = useMemo(
+    () =>
+      selectedCreators?.length
+        ? selectedCreators
+        : selectedCreator
+          ? [selectedCreator]
+          : [],
+    [selectedCreators, selectedCreator]
+  );
 
   const filteredCategories = useMemo(() => {
     if (!normalizedCategoryQuery) return displayCategories;
@@ -91,11 +106,35 @@ export function FilterPanel({
       category.toLowerCase().includes(normalizedCategoryQuery)
     );
   }, [displayCategories, normalizedCategoryQuery]);
-
   const filteredAuthors = useMemo(() => {
     if (!normalizedAuthorQuery) return displayAuthors;
     return displayAuthors.filter((author) => author.toLowerCase().includes(normalizedAuthorQuery));
   }, [displayAuthors, normalizedAuthorQuery]);
+
+  useEffect(() => {
+    categoryButtonRefs.current = categoryButtonRefs.current.slice(0, filteredCategories.length);
+    if (filteredCategories.length === 0) {
+      setFocusedCategoryIndex(-1);
+      return;
+    }
+    setFocusedCategoryIndex((current) => {
+      if (current < 0) return 0;
+      if (current >= filteredCategories.length) return filteredCategories.length - 1;
+      return current;
+    });
+  }, [filteredCategories]);
+  useEffect(() => {
+    authorButtonRefs.current = authorButtonRefs.current.slice(0, filteredAuthors.length);
+    if (filteredAuthors.length === 0) {
+      setFocusedAuthorIndex(-1);
+      return;
+    }
+    setFocusedAuthorIndex((current) => {
+      if (current < 0) return 0;
+      if (current >= filteredAuthors.length) return filteredAuthors.length - 1;
+      return current;
+    });
+  }, [filteredAuthors]);
 
   const setCategories = (nextCategories: string[]) => {
     if (onAttributesChange) {
@@ -110,15 +149,26 @@ export function FilterPanel({
       setCategories(activeCategories.filter((value) => value !== category));
       return;
     }
+    if (!onAttributesChange) {
+      setCategories([category]);
+      return;
+    }
     setCategories([...activeCategories, category]);
   };
-
+  const addCategory = (category: string) => {
+    if (activeCategories.includes(category)) return;
+    if (!onAttributesChange) {
+      setCategories([category]);
+      return;
+    }
+    setCategories([...activeCategories, category]);
+  };
   const setAuthors = (nextAuthors: string[]) => {
     if (onCreatorsChange) {
       onCreatorsChange(nextAuthors);
       return;
     }
-    onCreatorChange(nextAuthors[0] || '');
+    onCreatorChange?.(nextAuthors[0] || '');
   };
 
   const toggleAuthor = (author: string) => {
@@ -126,7 +176,94 @@ export function FilterPanel({
       setAuthors(activeAuthors.filter((value) => value !== author));
       return;
     }
+    if (!onCreatorsChange) {
+      setAuthors([author]);
+      return;
+    }
     setAuthors([...activeAuthors, author]);
+  };
+  const addAuthor = (author: string) => {
+    if (activeAuthors.includes(author)) return;
+    if (!onCreatorsChange) {
+      setAuthors([author]);
+      return;
+    }
+    setAuthors([...activeAuthors, author]);
+  };
+
+  const moveCategoryFocus = (nextIndex: number) => {
+    setFocusedCategoryIndex(nextIndex);
+    const target = categoryButtonRefs.current[nextIndex];
+    target?.focus();
+    target?.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
+  };
+  const moveAuthorFocus = (nextIndex: number) => {
+    setFocusedAuthorIndex(nextIndex);
+    const target = authorButtonRefs.current[nextIndex];
+    target?.focus();
+    target?.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
+  };
+
+  const handleListKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    idx: number,
+    items: string[],
+    toggleFn: (item: string) => void,
+    moveFocusFn: (nextIndex: number) => void
+  ) => {
+    const lastIndex = items.length - 1;
+    if (lastIndex < 0) return;
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveFocusFn(idx === lastIndex ? 0 : idx + 1);
+      return;
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveFocusFn(idx === 0 ? lastIndex : idx - 1);
+      return;
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault();
+      moveFocusFn(0);
+      return;
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault();
+      moveFocusFn(lastIndex);
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      const item = items[idx];
+      if (item) toggleFn(item);
+    }
+  };
+
+  const handleCategorySearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && filteredCategories.length > 0) {
+      event.preventDefault();
+      addCategory(filteredCategories[0]);
+      setCategoryQuery('');
+    }
+  };
+  const handleAuthorSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && filteredAuthors.length > 0) {
+      event.preventDefault();
+      addAuthor(filteredAuthors[0]);
+      setAuthorQuery('');
+    }
   };
 
   return (
@@ -149,34 +286,51 @@ export function FilterPanel({
                   {t('filter.clearCategories', lang)}
                 </button>
               )}
-              <div className="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200">
-                <button
-                  type="button"
-                  onClick={() => onCategoryMatchModeChange?.('or')}
-                  className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
-                    categoryMatchMode === 'or'
-                      ? 'bg-blue-200 text-blue-900'
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                  aria-pressed={categoryMatchMode === 'or'}
-                  aria-label={t('filter.matchOr', lang)}
-                >
-                  {t('filter.matchOr', lang)}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onCategoryMatchModeChange?.('and')}
-                  className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
-                    categoryMatchMode === 'and'
-                      ? 'bg-green-200 text-green-900'
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                  aria-pressed={categoryMatchMode === 'and'}
-                  aria-label={t('filter.matchAnd', lang)}
-                >
-                  {t('filter.matchAnd', lang)}
-                </button>
-              </div>
+              {onCategoryMatchModeChange && (
+                <fieldset className="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200">
+                  <legend className="sr-only">
+                    {`${t('filter.matchOr', lang)} / ${t('filter.matchAnd', lang)}`}
+                  </legend>
+                  <input
+                    id={matchOrId}
+                    type="radio"
+                    name={`${matchModeIdPrefix}-category-match-mode`}
+                    className="sr-only"
+                    checked={categoryMatchMode === 'or'}
+                    onChange={() => onCategoryMatchModeChange('or')}
+                    aria-label={t('filter.matchOr', lang)}
+                  />
+                  <label
+                    htmlFor={matchOrId}
+                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors cursor-pointer ${
+                      categoryMatchMode === 'or'
+                        ? 'bg-blue-200 text-blue-900'
+                        : 'text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {t('filter.matchOr', lang)}
+                  </label>
+                  <input
+                    id={matchAndId}
+                    type="radio"
+                    name={`${matchModeIdPrefix}-category-match-mode`}
+                    className="sr-only"
+                    checked={categoryMatchMode === 'and'}
+                    onChange={() => onCategoryMatchModeChange('and')}
+                    aria-label={t('filter.matchAnd', lang)}
+                  />
+                  <label
+                    htmlFor={matchAndId}
+                    className={`px-3 py-1 text-xs font-bold rounded-full transition-colors cursor-pointer ${
+                      categoryMatchMode === 'and'
+                        ? 'bg-green-200 text-green-900'
+                        : 'text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {t('filter.matchAnd', lang)}
+                  </label>
+                </fieldset>
+              )}
             </div>
           </div>
 
@@ -184,14 +338,15 @@ export function FilterPanel({
             type="text"
             value={categoryQuery}
             onChange={(e) => setCategoryQuery(e.target.value)}
-            className="w-full rounded-xl border-2 border-[var(--primary-green)] bg-white px-3 py-2 text-sm font-semibold"
+            onKeyDown={handleCategorySearchKeyDown}
+            className="w-full rounded-xl border-2 border-orange-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-orange-500 focus-visible:ring-2 focus-visible:ring-orange-300/50"
             placeholder={t('filter.categorySearch', lang)}
             aria-label={t('filter.categorySearch', lang)}
           />
 
           <div className="flex flex-wrap gap-2 min-h-8">
             {activeCategories.length === 0 ? (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-gray-700">
                 {t('filter.noneSelected', lang)}
               </span>
             ) : (
@@ -200,7 +355,7 @@ export function FilterPanel({
                   key={category}
                   type="button"
                   onClick={() => toggleCategory(category)}
-                  className="attribute-badge bg-green-100 text-green-900 hover:bg-green-200"
+                  className="attribute-badge bg-orange-100 text-orange-900 hover:bg-orange-200 border border-orange-300"
                   aria-label={`${category} ${t('filter.removeCategory', lang)}`}
                 >
                   <IconTag size="w-3 h-3" /> {category} ×
@@ -215,22 +370,42 @@ export function FilterPanel({
                 {t('filter.noCategoryMatch', lang)}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {filteredCategories.map((category) => {
+              <div
+                className="grid grid-cols-1 sm:grid-cols-3 gap-2"
+                role="listbox"
+                aria-multiselectable="true"
+                aria-label={t('filter.category', lang)}
+              >
+                {filteredCategories.map((category, idx) => {
                   const selected = activeCategories.includes(category);
                   return (
                     <button
                       key={category}
                       type="button"
+                      role="option"
+                      ref={(el) => {
+                        categoryButtonRefs.current[idx] = el;
+                      }}
                       onClick={() => toggleCategory(category)}
-                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
+                      onFocus={() => setFocusedCategoryIndex(idx)}
+                      onKeyDown={(event) =>
+                        handleListKeyDown(
+                          event,
+                          idx,
+                          filteredCategories,
+                          toggleCategory,
+                          moveCategoryFocus
+                        )
+                      }
+                      tabIndex={focusedCategoryIndex === idx ? 0 : -1}
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-orange-300 focus:ring-offset-2 ${
                         selected
-                          ? 'bg-green-100 text-green-900 border-green-300'
+                          ? 'bg-orange-100 text-orange-900 border-orange-300'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
                       }`}
-                      aria-pressed={selected}
+                      aria-selected={selected}
                     >
-                      {selected ? '✓ ' : ''}{category}
+                      {selected ? `✓ ${category}` : category}
                     </button>
                   );
                 })}
@@ -241,11 +416,11 @@ export function FilterPanel({
 
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="font-bold text-blue-600 flex items-center gap-2">
+            <div className="font-bold text-blue-600/80 flex items-center gap-2">
               <IconUser size="w-4 h-4" />
               {t('filter.author', lang)}
             </div>
-            {activeAuthors.length > 0 ? (
+            {activeAuthors.length > 0 && (
               <button
                 type="button"
                 onClick={() => setAuthors([])}
@@ -254,21 +429,22 @@ export function FilterPanel({
               >
                 {t('filter.clearAuthors', lang)}
               </button>
-            ) : null}
+            )}
           </div>
 
           <input
             type="text"
             value={authorQuery}
             onChange={(e) => setAuthorQuery(e.target.value)}
-            className="w-full rounded-xl border-2 border-[var(--primary-blue)] bg-white px-3 py-2 text-sm font-semibold"
+            onKeyDown={handleAuthorSearchKeyDown}
+            className="w-full rounded-xl border-2 border-blue-300 bg-white px-3 py-2 text-sm font-semibold focus:outline-none focus-visible:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-300/50"
             placeholder={t('filter.authorSearch', lang)}
             aria-label={t('filter.authorSearch', lang)}
           />
 
           <div className="flex flex-wrap gap-2 min-h-8">
             {activeAuthors.length === 0 ? (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-gray-700">
                 {t('filter.noneAuthorSelected', lang)}
               </span>
             ) : (
@@ -292,22 +468,36 @@ export function FilterPanel({
                 {t('filter.noAuthorMatch', lang)}
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-2">
-                {filteredAuthors.map((author) => {
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 gap-2"
+                role="listbox"
+                aria-multiselectable="true"
+                aria-label={t('filter.author', lang)}
+              >
+                {filteredAuthors.map((author, idx) => {
                   const selected = activeAuthors.includes(author);
                   return (
                     <button
                       key={author}
                       type="button"
+                      role="option"
+                      ref={(el) => {
+                        authorButtonRefs.current[idx] = el;
+                      }}
                       onClick={() => toggleAuthor(author)}
-                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
+                      onFocus={() => setFocusedAuthorIndex(idx)}
+                      onKeyDown={(event) =>
+                        handleListKeyDown(event, idx, filteredAuthors, toggleAuthor, moveAuthorFocus)
+                      }
+                      tabIndex={focusedAuthorIndex === idx ? 0 : -1}
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 ${
                         selected
                           ? 'bg-blue-100 text-blue-900 border-blue-300'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
                       }`}
-                      aria-pressed={selected}
+                      aria-selected={selected}
                     >
-                      {selected ? '✓ ' : ''}{author}
+                      {selected ? `✓ ${author}` : author}
                     </button>
                   );
                 })}
