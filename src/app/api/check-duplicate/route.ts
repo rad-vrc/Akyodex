@@ -13,7 +13,8 @@ import { jsonError, jsonSuccess, validateOrigin } from '@/lib/api-helpers';
 export const runtime = 'nodejs';
 
 const MAX_DUPLICATE_CHECK_VALUE_LENGTH = 120;
-const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F]/u;
+// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
+const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
 
 export async function POST(request: Request) {
   try {

@@ -1,4 +1,5 @@
 import { jsonError, jsonSuccess } from '@/lib/api-helpers';
+import { timingSafeEqual } from 'crypto';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 /**
@@ -50,6 +51,62 @@ const DEFAULT_PATHS = [
 
 // Default tags to revalidate
 const DEFAULT_TAGS = ['akyo-data', 'akyo-data-ja', 'akyo-data-en', 'akyo-data-ko'];
+const MAX_PATHS = 20;
+const MAX_TAGS = 20;
+const MAX_PATH_LENGTH = 200;
+const MAX_TAG_LENGTH = 120;
+// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
+const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
+
+function timingSafeCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a, 'utf8');
+    const bufB = Buffer.from(b, 'utf8');
+    const maxLength = Math.max(bufA.length, bufB.length);
+    const paddedA = Buffer.alloc(maxLength);
+    const paddedB = Buffer.alloc(maxLength);
+    bufA.copy(paddedA);
+    bufB.copy(paddedB);
+    const isEqual = timingSafeEqual(paddedA, paddedB);
+    return isEqual && bufA.length === bufB.length;
+  } catch (error) {
+    console.error('[revalidate] timingSafeCompare failed:', error);
+    return false;
+  }
+}
+
+function parseStringArray(
+  value: unknown,
+  {
+    maxItems,
+    maxItemLength,
+    mustStartWithSlash,
+  }: { maxItems: number; maxItemLength: number; mustStartWithSlash: boolean }
+): string[] | null {
+  if (!Array.isArray(value) || value.length > maxItems) {
+    return null;
+  }
+
+  const parsed: string[] = [];
+  for (const item of value) {
+    if (typeof item !== 'string') {
+      return null;
+    }
+    const normalized = item.trim();
+    if (
+      normalized.length === 0 ||
+      normalized.length > maxItemLength ||
+      CONTROL_CHARACTER_PATTERN.test(normalized)
+    ) {
+      return null;
+    }
+    if (mustStartWithSlash && !normalized.startsWith('/')) {
+      return null;
+    }
+    parsed.push(normalized);
+  }
+  return parsed;
+}
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -62,7 +119,7 @@ export async function POST(request: Request): Promise<Response> {
       return jsonError('Server configuration error', 500);
     }
 
-    if (!secret || secret !== expectedSecret) {
+    if (!secret || !timingSafeCompare(secret, expectedSecret)) {
       console.warn('[revalidate] Invalid or missing secret');
       return jsonError('Invalid secret', 401);
     }
@@ -74,12 +131,39 @@ export async function POST(request: Request): Promise<Response> {
 
     try {
       const body = (await request.json()) as RevalidateRequest;
-      if (body.paths && Array.isArray(body.paths) && body.paths.length > 0) {
-        paths = body.paths;
+
+      if (body.paths !== undefined) {
+        const parsedPaths = parseStringArray(body.paths, {
+          maxItems: MAX_PATHS,
+          maxItemLength: MAX_PATH_LENGTH,
+          mustStartWithSlash: true,
+        });
+        if (!parsedPaths) {
+          return jsonError('Invalid paths format', 400);
+        }
+        if (parsedPaths.length > 0) {
+          paths = parsedPaths;
+        }
       }
-      if (body.tags && Array.isArray(body.tags) && body.tags.length > 0) {
-        tags = body.tags;
+
+      if (body.tags !== undefined) {
+        const parsedTags = parseStringArray(body.tags, {
+          maxItems: MAX_TAGS,
+          maxItemLength: MAX_TAG_LENGTH,
+          mustStartWithSlash: false,
+        });
+        if (!parsedTags) {
+          return jsonError('Invalid tags format', 400);
+        }
+        if (parsedTags.length > 0) {
+          tags = parsedTags;
+        }
       }
+
+      if (body.updateKV !== undefined && typeof body.updateKV !== 'boolean') {
+        return jsonError('Invalid updateKV format', 400);
+      }
+
       if (body.updateKV === true) {
         updateKV = true;
       }
