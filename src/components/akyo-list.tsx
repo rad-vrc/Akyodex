@@ -1,7 +1,7 @@
 'use client';
 
 import { IconInfoCircle } from '@/components/icons';
-import { getCategoryColor } from '@/lib/akyo-data-helpers';
+import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
@@ -44,6 +44,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
             {data.map((akyo) => {
               const category = akyo.category || akyo.attribute || '';
               const author = akyo.author || akyo.creator || '';
+              const sortedCategories = parseAndSortCategories(category);
 
               return (
                 <tr key={akyo.id}>
@@ -88,8 +89,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   {/* カテゴリ */}
                   <td>
                     <div className="flex flex-wrap gap-1">
-                      {category.split(/[、,]/).map((cat, index) => {
-                        const trimmedCat = cat.trim();
+                      {sortedCategories.map((trimmedCat, index) => {
                         const color = getCategoryColor(trimmedCat);
                         return (
                           <span

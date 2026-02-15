@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-15T09:08:28.366Z",
+  "updatedAt": "2026-02-15T10:55:43.850Z",
   "count": 739,
   "data": [
     {
@@ -431,7 +431,7 @@
       "id": "0048",
       "nickname": "UFO Akyo",
       "avatarName": "UFAkyo",
-      "category": "Vehicle,Vehicle/Aviation,UMAkyo,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Hypoxia Resistance,Skill・Trait/Zero-G Resistance,Gimmick・Special",
+      "category": "Vehicle,Vehicle/Aviation,Unknown UMAkyo,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Hypoxia Resistance,Skill・Trait/Zero-G Resistance,Gimmick・Special",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -3167,7 +3167,7 @@
       "id": "0352",
       "nickname": "Ezo Akyo",
       "avatarName": "akyo_エゾ",
-      "category": "Animal",
+      "category": "Animal,Animal/Bird",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -3428,7 +3428,7 @@
       "id": "0381",
       "nickname": "Whale Akyo",
       "avatarName": "akyo_くじら",
-      "category": "Animal,Animal/Marine Life",
+      "category": "Animal,Animal/Fish,Animal/Marine Life",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3b8d1b4f-fc7a-4c4c-bb32-b30c493bc8fd"
@@ -3536,7 +3536,7 @@
       "id": "0393",
       "nickname": "Lord Akyo",
       "avatarName": "akyo_tono",
-      "category": "Role・Status,Ruler,Country,Country/Japan,History,Chonmage",
+      "category": "Role・Status,Ruler,Country,Country/Japan,History,Fashion,Fashion/Hair Style,Fashion/Hair Style/Chonmage",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
@@ -4751,7 +4751,7 @@
       "id": "0528",
       "nickname": "Monkey Akyo",
       "avatarName": "akyo saru",
-      "category": "Animal",
+      "category": "Animal,Animal/Monkey",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_dbe6c282-8cb6-449f-aa1a-862757313391"
@@ -5318,7 +5318,7 @@
       "id": "0591",
       "nickname": "Whale Meat Akyo",
       "avatarName": "鯨肉Akyo",
-      "category": "Food,Animal,Meat",
+      "category": "Food,Animal,Animal/Fish,Animal/Marine Life,Meat",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"
@@ -5624,7 +5624,7 @@
       "id": "0625",
       "nickname": "Big Boobs Cow Print Akyo",
       "avatarName": "bigboinushigaraAkyo",
-      "category": "Body Type,Body Type/Plump,Animal",
+      "category": "Body Type,Body Type/Plump,Animal,Animal/Cow",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -6056,7 +6056,7 @@
       "id": "0673",
       "nickname": "Agyo",
       "avatarName": "agyo",
-      "category": "Mint Chocolate,Gimmick・Special,Transformation",
+      "category": "Mint Chocolate,Gimmick・Special,Transformation,Unknown UMAkyo",
       "comment": "",
       "author": "․reiki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_349aeb2b-df20-4499-9729-fb818392a97f"
@@ -6452,7 +6452,7 @@
       "id": "0717",
       "nickname": "Kitsunetsuki's Red Gem Fox Akyo",
       "avatarName": "Red Gem Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Glutton",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Personality・Preference,Personality・Preference/Glutton",
       "comment": "Apparently it ate too many gems!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
@@ -6461,7 +6461,7 @@
       "id": "0718",
       "nickname": "Kitsunetsuki's Purple Gem Fox Akyo",
       "avatarName": "Purple Gem Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Glutton",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Personality・Preference,Personality・Preference/Glutton",
       "comment": "This one also ate too many gems!",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
@@ -6470,7 +6470,7 @@
       "id": "0719",
       "nickname": "Kitsunetsuki's White Gem Fox Akyo",
       "avatarName": "White Gem Fox Akyo",
-      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Glutton",
+      "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Personality・Preference,Personality・Preference/Glutton",
       "comment": "I wonder if Kitsunetsuki's Fox Akyo's favorite food is gems?",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
@@ -6524,7 +6524,7 @@
       "id": "0725",
       "nickname": "Otter Akyo",
       "avatarName": "akyo_カワウソ",
-      "category": "Animal,Body Part,Body Part/Tail,Personality,Personality/Curious,Personality/Friendly",
+      "category": "Animal,Animal/Otter,Body Part,Body Part/Tail,Personality・Preference,Personality・Preference/Curious,Personality・Preference/Friendly",
       "comment": "(Sasanoki's notes)\nFriendly and very curious.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
@@ -6578,7 +6578,7 @@
       "id": "0731",
       "nickname": "Forest Nijimasu-man with Moss Akyo",
       "avatarName": "森のニジマスマンWith苔Akyo",
-      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Gimmick・Special,Animal/Marine Life,Real Photo,Plant,Moss,Material・Raw Material,Material・Raw Material/Plant,Art",
+      "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Gimmick・Special,Real Photo,Plant,Moss,Material・Raw Material,Material・Raw Material/Plant,Art",
       "comment": "Look closely, there's a Moss Akyo on its shoulder! It can move on its own too!",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8324c16d-05c0-4793-9f77-f1edf0340eb0"
@@ -6596,7 +6596,7 @@
       "id": "0733",
       "nickname": "Akyoman / Akyo Head",
       "avatarName": "Akyohead",
-      "category": "Mint Chocolate,Roleplay,Physical,Physical/Athletic,Animal,Unknown",
+      "category": "Mint Chocolate,Roleplay,Physical,Physical/Athletic,Unknown UMAkyo",
       "comment": "Its head is Akyo!?\nIs it... human?",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
@@ -6641,7 +6641,7 @@
       "id": "0738",
       "nickname": "Fushi Akyo",
       "avatarName": "ふしあきょ",
-      "category": "Parody,Parody/Super Princess Kaguya!,Animal,Animal/Sea Slug,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
+      "category": "Parody,Parody/Super Princess Kaguya!,Animal,Animal/Marine Life,Animal/Sea Slug,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
       "comment": "Follow me! ( ｀ー´)ノ\n(from the creator comment)",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"

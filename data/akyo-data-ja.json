@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-15T09:08:28.324Z",
+  "updatedAt": "2026-02-15T10:55:43.828Z",
   "count": 739,
   "data": [
     {
@@ -431,7 +431,7 @@
       "id": "0048",
       "nickname": "UFOAkyo",
       "avatarName": "UFAkyo",
-      "category": "乗り物,乗り物/航空,UMAkyo,環境・天候,環境・天候/外宇宙,技能・特性,技能・特性/酸素欠乏耐性,技能・特性/無重力耐性,ギミック・特殊",
+      "category": "乗り物,乗り物/航空,正体不明のUMAkyo,環境・天候,環境・天候/外宇宙,技能・特性,技能・特性/酸素欠乏耐性,技能・特性/無重力耐性,ギミック・特殊",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -3167,7 +3167,7 @@
       "id": "0352",
       "nickname": "エゾAkyo",
       "avatarName": "akyo_エゾ",
-      "category": "動物",
+      "category": "動物,動物/鳥",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -3428,7 +3428,7 @@
       "id": "0381",
       "nickname": "くじらAkyo",
       "avatarName": "akyo_くじら",
-      "category": "動物,動物/海の生き物",
+      "category": "動物,動物/魚,動物/海の生き物",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3b8d1b4f-fc7a-4c4c-bb32-b30c493bc8fd"
@@ -3536,7 +3536,7 @@
       "id": "0393",
       "nickname": "とのAkyo",
       "avatarName": "akyo_tono",
-      "category": "身分・役割,頂に立つ者,国,国/日本,歴史,ちょんまげ",
+      "category": "身分・役割,頂に立つ者,国,国/日本,歴史,ファッション,ファッション/髪型,ファッション/髪型/ちょんまげ",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c7cdd58f-01bf-4d58-83ea-205ea44093f9"
@@ -4751,7 +4751,7 @@
       "id": "0528",
       "nickname": "サルAkyo",
       "avatarName": "akyo saru",
-      "category": "動物",
+      "category": "動物,動物/さる",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_dbe6c282-8cb6-449f-aa1a-862757313391"
@@ -5318,7 +5318,7 @@
       "id": "0591",
       "nickname": "鯨肉Akyo",
       "avatarName": "鯨肉Akyo",
-      "category": "食べ物,動物,食べ物/お肉",
+      "category": "食べ物,動物,動物/魚,動物/海の生き物,食べ物/お肉",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"
@@ -5624,7 +5624,7 @@
       "id": "0625",
       "nickname": "ビッグボイン牛柄Akyo",
       "avatarName": "bigboinushigaraAkyo",
-      "category": "体型,体型/豊満,動物",
+      "category": "体型,体型/豊満,動物,動物/うし",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -6056,7 +6056,7 @@
       "id": "0673",
       "nickname": "Agyo",
       "avatarName": "agyo",
-      "category": "チョコミント類,ギミック・特殊,合体・変身",
+      "category": "チョコミント類,ギミック・特殊,合体・変身,正体不明のUMAkyo",
       "comment": "",
       "author": "․reiki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_349aeb2b-df20-4499-9729-fb818392a97f"
@@ -6452,7 +6452,7 @@
       "id": "0717",
       "nickname": "赤キツネツキ式ジェム狐Akyo",
       "avatarName": "Red Gem Fox Akyo",
-      "category": "動物,動物/きつね,素材・原材料,形状・触り心地,形状・触り心地/硬い,素材・原材料/石,くいしんぼう",
+      "category": "動物,動物/きつね,素材・原材料,形状・触り心地,形状・触り心地/硬い,素材・原材料/石,性格・趣向,性格・趣向/くいしんぼう",
       "comment": "宝石を食べすぎたらしいよ！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c29ef391-e29d-4e1b-959c-dc410d21d9f9"
@@ -6461,7 +6461,7 @@
       "id": "0718",
       "nickname": "紫キツネツキ式ジェム狐Akyo",
       "avatarName": "Purple Gem Fox Akyo",
-      "category": "動物,動物/きつね,素材・原材料,形状・触り心地,形状・触り心地/硬い,素材・原材料/石,くいしんぼう",
+      "category": "動物,動物/きつね,素材・原材料,形状・触り心地,形状・触り心地/硬い,素材・原材料/石,性格・趣向,性格・趣向/くいしんぼう",
       "comment": "こっちも宝石を食べすぎたんだって！",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_57990f78-b9de-4160-a3e6-5d6baa2e1144"
@@ -6470,7 +6470,7 @@
       "id": "0719",
       "nickname": "白キツネツキ式ジェム狐Akyo",
       "avatarName": "White Gem Fox Akyo",
-      "category": "動物,動物/きつね,素材・原材料,形状・触り心地,形状・触り心地/硬い,素材・原材料/石,くいしんぼう",
+      "category": "動物,動物/きつね,素材・原材料,形状・触り心地,形状・触り心地/硬い,素材・原材料/石,性格・趣向,性格・趣向/くいしんぼう",
       "comment": "キツネツキ式狐Akyoの好物は宝石なのかな？",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fed201a5-52b3-45aa-94a9-902d053d303a"
@@ -6498,7 +6498,7 @@
       "nickname": "電気ヒーターAkyo",
       "avatarName": "akyo_電気ヒーター",
       "category": "家電・家具,エネルギー,エネルギー/電気,エネルギー/熱,器官,器官/しっぽ,季節・行事,季節・行事/冬",
-      "comment": "（ささのきの手記）\r\n温めてくれるakyo。プラグは差していなくても平気なようだ。錆びてしまうので水が苦手。",
+      "comment": "（ささのきの手記）\n温めてくれるakyo。プラグは差していなくても平気なようだ。錆びてしまうので水が苦手。",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_c6c8782f-be01-43fe-9cb3-5edd2e3d265e"
     },
@@ -6507,7 +6507,7 @@
       "nickname": "やきもちAkyo",
       "avatarName": "akyo_やきもち",
       "category": "素材・原材料,形状・触り心地,形状・触り心地/柔らかい,形状・触り心地/四角い,食べ物,食べ物/料理",
-      "comment": "（ささのきの手記）\r\nしっかり焼かれた四角いお餅に海苔を巻いて。香ばしい香りが食欲を誘う",
+      "comment": "（ささのきの手記）\nしっかり焼かれた四角いお餅に海苔を巻いて。香ばしい香りが食欲を誘う",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0396e41a-c59a-48db-8ac2-ca28c271ef8b"
     },
@@ -6516,7 +6516,7 @@
       "nickname": "永久凍土Akyo",
       "avatarName": "akyo_永久凍土",
       "category": "囚われの身,動物,素材・原材料,形状・触り心地,形状・触り心地/冷たい,形状・触り心地/四角い,形状・触り心地/硬い,素材・原材料/氷",
-      "comment": "（ささのきの手記）\r\n永久凍土の研究中に発見された氷のakyo。中に何か埋まっている気がする",
+      "comment": "（ささのきの手記）\n永久凍土の研究中に発見された氷のakyo。中に何か埋まっている気がする",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_fef7a5db-3006-4a14-8600-29c3cc9402bb"
     },
@@ -6524,8 +6524,8 @@
       "id": "0725",
       "nickname": "カワウソAkyo",
       "avatarName": "akyo_カワウソ",
-      "category": "動物,器官,器官/しっぽ,性格,性格/好奇心旺盛,性格/人懐っこい",
-      "comment": "（ささのきの手記）\r\n人懐っこく好奇心旺盛",
+      "category": "動物,動物/カワウソ,器官,器官/しっぽ,性格・趣向,性格・趣向/好奇心旺盛,性格・趣向/人懐っこい",
+      "comment": "（ささのきの手記）\n人懐っこく好奇心旺盛",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
     },
@@ -6543,7 +6543,7 @@
       "nickname": "モヒカンAkyo",
       "avatarName": "akyo_モヒカン",
       "category": "ファッション,ファッション/メガネ,ファッション/髪型,ファッション/髪型/モヒカン",
-      "comment": "（ささのきの手記）\r\n世紀末に生きるakyo",
+      "comment": "（ささのきの手記）\n世紀末に生きるakyo",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_0638079f-4016-47d4-8c3c-5e83c134d978"
     },
@@ -6578,7 +6578,7 @@
       "id": "0731",
       "nickname": "森のニジマスマンWith苔Akyo",
       "avatarName": "森のニジマスマンWith苔Akyo",
-      "category": "動物,動物/フィッシュヘッド,集団・組織,集団・組織/魚頭族,ギミック・特殊,動物/海の生き物,実写,植物,植物/苔,素材・原材料,素材・原材料/植物,芸術・アート",
+      "category": "動物,動物/フィッシュヘッド,集団・組織,集団・組織/魚頭族,ギミック・特殊,実写,植物,植物/苔,素材・原材料,素材・原材料/植物,芸術・アート",
       "comment": "よく見て、肩の上に苔Akyoがいるよ！自律もするんだって！",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8324c16d-05c0-4793-9f77-f1edf0340eb0"
@@ -6588,7 +6588,7 @@
       "nickname": "絆の戦士・ウーパールーパーマン＆うまAkyo",
       "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
       "category": "動物,動物/フィッシュヘッド,集団・組織,集団・組織/魚頭族,動物/両生類,動物/うま,身分・役割,身分・役割/トラベラー,身分・役割/ヒーロー,乗り物,乗り物/陸上,器官,器官/しっぽ,四足歩行,次元",
-      "comment": "記憶を失ってもなおその魂の灯火は熱く燃え上がる！\r\nマンボーマンの遺志を継ぎ今ここに誕生した絆の戦士・ウーパールーパーマンとうまAkyoに全宇宙の命運は託された！",
+      "comment": "記憶を失ってもなおその魂の灯火は熱く燃え上がる！\nマンボーマンの遺志を継ぎ今ここに誕生した絆の戦士・ウーパールーパーマンとうまAkyoに全宇宙の命運は託された！",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
     },
@@ -6596,8 +6596,8 @@
       "id": "0733",
       "nickname": "Akyoマン/Akyoヘッド",
       "avatarName": "Akyohead",
-      "category": "チョコミント類,なりきり・仮装,フィジカル,フィジカル/体育会系,動物,正体不明",
-      "comment": "頭がAkyo！？\r\n人・・・なの？",
+      "category": "チョコミント類,なりきり・仮装,フィジカル,フィジカル/体育会系,正体不明のUMAkyo",
+      "comment": "頭がAkyo！？\n人・・・なの？",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
     },
@@ -6633,7 +6633,7 @@
       "nickname": "もちまめAkyo/まめもちあきょ",
       "avatarName": "まめもちあきょ",
       "category": "まめ,まめAkyo,デフォルメ,体型,体型/豊満,季節・行事,季節・行事/お正月,素材・原材料,形状・触り心地,形状・触り心地/柔らかい,食べ物,食べ物/料理,食べ物/フルーツ",
-      "comment": "まめAkyoの勢いが止まらない！\r\n全AkyoまめAkyo化計画も夢じゃないね！",
+      "comment": "まめAkyoの勢いが止まらない！\n全AkyoまめAkyo化計画も夢じゃないね！",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d4239cc5-31ac-4700-bc84-1df0a7f07e60"
     },
@@ -6641,8 +6641,8 @@
       "id": "0738",
       "nickname": "ふしAkyo",
       "avatarName": "ふしあきょ",
-      "category": "パロディ,パロディ/超かぐや姫！,動物,動物/ウミウシ,素材・原材料,形状・触り心地,形状・触り心地/柔らかい",
-      "comment": "ついてこい！（ ｀ー´）ノ\r\n（作者コメントより）",
+      "category": "パロディ,パロディ/超かぐや姫！,動物,動物/海の生き物,動物/ウミウシ,素材・原材料,形状・触り心地,形状・触り心地/柔らかい",
+      "comment": "ついてこい！（ ｀ー´）ノ\n（作者コメントより）",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
     },

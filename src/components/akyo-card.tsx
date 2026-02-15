@@ -1,6 +1,6 @@
 'use client';
 
-import { getCategoryColor } from '@/lib/akyo-data-helpers';
+import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
@@ -39,6 +39,7 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
   // 互換性のため新旧フィールドをチェック
   const category = akyo.category || akyo.attribute;
   const author = akyo.author || akyo.creator;
+  const sortedCategories = category ? parseAndSortCategories(category) : [];
 
   return (
     <div className="akyo-card cursor-pointer" onClick={handleCardClick}>
@@ -110,8 +111,7 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
         {/* 属性バッジ */}
         {category && (
           <div className="flex flex-wrap gap-1 mb-2">
-            {category.split(/[、,]/).map((cat, index) => {
-              const trimmedCat = cat.trim();
+            {sortedCategories.map((trimmedCat, index) => {
               const color = getCategoryColor(trimmedCat);
               return (
                 <span

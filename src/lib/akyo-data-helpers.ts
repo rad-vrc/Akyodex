@@ -8,6 +8,7 @@
  */
 
 import type { AkyoData } from '@/types/akyo';
+const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 /**
  * Extract all unique categories from a dataset
@@ -22,7 +23,7 @@ export function extractCategories(data: AkyoData[]): string[] {
   
   data.forEach((akyo) => {
     const catStr = akyo.category || akyo.attribute || '';
-    const cats = catStr.split(/[、,]/).map((c) => c.trim()).filter(Boolean);
+    const cats = catStr.split(MULTI_VALUE_SPLIT_PATTERN).map((c) => c.trim()).filter(Boolean);
     cats.forEach((cat) => categoriesSet.add(cat));
   });
   
@@ -42,11 +43,26 @@ export function extractAuthors(data: AkyoData[]): string[] {
   
   data.forEach((akyo) => {
     const authorStr = akyo.author || akyo.creator || '';
-    const authors = authorStr.split(/[、,]/).map((a) => a.trim()).filter(Boolean);
+    const authors = authorStr
+      .split(MULTI_VALUE_SPLIT_PATTERN)
+      .map((a) => a.trim())
+      .filter(Boolean);
     authors.forEach((author) => authorsSet.add(author));
   });
   
   return Array.from(authorsSet).sort();
+}
+
+/**
+ * Parse category string and sort with the same logic as filter panel
+ * (default JavaScript lexical sort).
+ */
+export function parseAndSortCategories(category: string): string[] {
+  return category
+    .split(MULTI_VALUE_SPLIT_PATTERN)
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .sort();
 }
 
 /**
