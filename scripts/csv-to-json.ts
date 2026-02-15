@@ -30,6 +30,37 @@ interface AkyoJsonOutput {
 }
 
 /**
+ * Ensure every subcategory token has its parent token in the same category list.
+ * Example: "A/B,C" -> "A,A/B,C"
+ */
+function normalizeHierarchicalCategories(category: string): string {
+  const tokens = category
+    .split(',')
+    .map((token) => token.trim())
+    .filter(Boolean);
+
+  const normalized: string[] = [];
+  const seen = new Set<string>();
+
+  for (const token of tokens) {
+    if (token.includes('/')) {
+      const parent = token.split('/')[0];
+      if (!seen.has(parent)) {
+        normalized.push(parent);
+        seen.add(parent);
+      }
+    }
+
+    if (!seen.has(token)) {
+      normalized.push(token);
+      seen.add(token);
+    }
+  }
+
+  return normalized.join(',');
+}
+
+/**
  * Parse CSV content into AkyoData array
  */
 function parseCsvToAkyoData(csvText: string): AkyoData[] {
@@ -66,7 +97,7 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
       id: rawRow['ID'] ?? '',
       nickname: rawRow['Nickname'] ?? '',
       avatarName: rawRow['AvatarName'] ?? '',
-      category: rawRow['Category'] ?? '',
+      category: normalizeHierarchicalCategories(rawRow['Category'] ?? ''),
       comment: rawRow['Comment'] ?? '',
       author: rawRow['Author'] ?? '',
       avatarUrl: rawRow['AvatarURL'] ?? '',
