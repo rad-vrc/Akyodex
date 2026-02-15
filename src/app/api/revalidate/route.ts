@@ -1,5 +1,5 @@
+import { jsonError, jsonSuccess } from '@/lib/api-helpers';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { NextRequest } from 'next/server';
 
 /**
  * On-demand ISR Revalidation API
@@ -51,7 +51,7 @@ const DEFAULT_PATHS = [
 // Default tags to revalidate
 const DEFAULT_TAGS = ['akyo-data', 'akyo-data-ja', 'akyo-data-en', 'akyo-data-ko'];
 
-export async function POST(request: NextRequest): Promise<Response> {
+export async function POST(request: Request): Promise<Response> {
   try {
     // Verify secret
     const secret = request.headers.get('x-revalidate-secret');
@@ -59,12 +59,12 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!expectedSecret) {
       console.error('[revalidate] REVALIDATE_SECRET is not configured');
-      return Response.json({ error: 'Server configuration error' }, { status: 500 });
+      return jsonError('Server configuration error', 500);
     }
 
     if (!secret || secret !== expectedSecret) {
       console.warn('[revalidate] Invalid or missing secret');
-      return Response.json({ error: 'Invalid secret' }, { status: 401 });
+      return jsonError('Invalid secret', 401);
     }
 
     // Parse request body (optional)
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           console.warn('[revalidate] Korean JSON data not available on CDN, skipping ko KV update');
         }
 
-        // Update all languages atomically to avoid metadata race condition
+        // Update all languages in one batch with unified metadata update
         kvUpdateDetails = await updateKVCacheAll(dataJa, dataEn, dataKo ?? undefined);
         // ko is non-fatal only when Korean JSON was unavailable (dataKo is null).
         // If Korean data was fetched but the KV write failed, treat as fatal.
@@ -180,19 +180,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     // This ensures calling workflows (e.g., GitHub Actions) detect the failure
     // and can retry or alert, preventing stale KV data from being served
     if (updateKV && !kvUpdated) {
-      return Response.json(result, { status: 500 });
+      return jsonError('KV cache update failed', 500, result);
     }
 
-    return Response.json(result, { status: 200 });
+    return jsonSuccess(result);
   } catch (error) {
     console.error('[revalidate] Unexpected error:', error);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    return jsonError('Internal server error', 500);
   }
 }
 
 // Health check endpoint
 export async function GET(): Promise<Response> {
-  return Response.json({
+  return jsonSuccess({
     status: 'ok',
     endpoint: '/api/revalidate',
     method: 'POST',

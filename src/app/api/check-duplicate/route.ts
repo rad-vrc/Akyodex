@@ -13,10 +13,7 @@ import { jsonError, jsonSuccess, validateOrigin } from '@/lib/api-helpers';
 export const runtime = 'nodejs';
 
 const MAX_DUPLICATE_CHECK_VALUE_LENGTH = 120;
-const DUPLICATE_CHECK_VALUE_PATTERN = new RegExp(
-  `^[^\\u0000-\\u001F\\u007F]{1,${MAX_DUPLICATE_CHECK_VALUE_LENGTH}}$`,
-  'u'
-);
+const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F]/u;
 
 export async function POST(request: Request) {
   try {
@@ -37,7 +34,12 @@ export async function POST(request: Request) {
       return jsonError('無効なフィールドです。nickname または avatarName を指定してください。', 400);
     }
 
-    if (!DUPLICATE_CHECK_VALUE_PATTERN.test(value)) {
+    const trimmedValue = value.trim();
+    if (
+      trimmedValue.length === 0 ||
+      trimmedValue.length > MAX_DUPLICATE_CHECK_VALUE_LENGTH ||
+      CONTROL_CHARACTER_PATTERN.test(trimmedValue)
+    ) {
       return jsonError(
         `入力値の形式が不正です。${MAX_DUPLICATE_CHECK_VALUE_LENGTH}文字以内で入力してください。`,
         400
@@ -65,7 +67,7 @@ export async function POST(request: Request) {
     };
 
     // Find duplicates
-    const targetValue = normalize(value);
+    const targetValue = normalize(trimmedValue);
     const duplicateIds: string[] = [];
 
     akyoData.forEach((akyo) => {
