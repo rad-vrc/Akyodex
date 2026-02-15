@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-15T08:51:48.618Z",
+  "updatedAt": "2026-02-15T08:56:07.207Z",
   "count": 739,
   "data": [
     {
@@ -404,7 +404,7 @@
       "id": "0045",
       "nickname": "나뭇결 Akyo",
       "avatarName": "Wood",
-      "category": "식물,소재・원재료,소재・원재료/식물/나무,형태・촉감,형태・촉감/단단한",
+      "category": "식물,소재・원재료,소재・원재료/식물,소재・원재료/식물/나무,형태・촉감,형태・촉감/단단한",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_415137aa-5cbf-4027-b9b9-668303cc2f70"
@@ -2366,7 +2366,7 @@
       "id": "0263",
       "nickname": "페이퍼 Akyo",
       "avatarName": "akyo_paper",
-      "category": "소재・원재료,소재・원재료/식물/나무",
+      "category": "소재・원재료,소재・원재료/식물,소재・원재료/식물/나무",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2ad9aca-efab-4ea1-a4f3-f34ef46bfa12"
@@ -4094,7 +4094,7 @@
       "id": "0455",
       "nickname": "목조 여우 Akyo",
       "avatarName": "akyo_木彫りきつね",
-      "category": "동물,동물/여우,소재・원재료,소재・원재료/식물/나무,형태・촉감,형태・촉감/단단한,예술・아트",
+      "category": "동물,동물/여우,소재・원재료,소재・원재료/식물,소재・원재료/식물/나무,형태・촉감,형태・촉감/단단한,예술・아트",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_706f8cad-a7cd-4fa0-b9eb-2a7f47c7bb04"
@@ -4544,7 +4544,7 @@
       "id": "0505",
       "nickname": "금빛 나비 Akyo",
       "avatarName": "ア蝶",
-      "category": "색상,동물,동물/벌레/나비,동물/벌레",
+      "category": "색상,동물,동물/벌레,동물/벌레/나비",
       "comment": "",
       "author": "＂K＂ ちゃん",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_12c6cf90-a33a-49b1-9734-7671d58472b2"

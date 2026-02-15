@@ -30,8 +30,8 @@ interface AkyoJsonOutput {
 }
 
 /**
- * Ensure every subcategory token has its parent token in the same category list.
- * Example: "A/B,C" -> "A,A/B,C"
+ * Ensure every subcategory token has all ancestor tokens in the same category list.
+ * Example: "A/B/C,D" -> "A,A/B,A/B/C,D"
  */
 function normalizeHierarchicalCategories(category: string): string {
   const tokens = category
@@ -44,10 +44,13 @@ function normalizeHierarchicalCategories(category: string): string {
 
   for (const token of tokens) {
     if (token.includes('/')) {
-      const parent = token.split('/')[0];
-      if (!seen.has(parent)) {
-        normalized.push(parent);
-        seen.add(parent);
+      const parts = token.split('/');
+      for (let i = 1; i < parts.length; i++) {
+        const ancestor = parts.slice(0, i).join('/');
+        if (!seen.has(ancestor)) {
+          normalized.push(ancestor);
+          seen.add(ancestor);
+        }
       }
     }
 

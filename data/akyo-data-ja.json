@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-15T08:51:48.573Z",
+  "updatedAt": "2026-02-15T08:56:07.171Z",
   "count": 739,
   "data": [
     {
@@ -404,7 +404,7 @@
       "id": "0045",
       "nickname": "木目Akyo",
       "avatarName": "Wood",
-      "category": "植物,素材・原材料,素材・原材料/植物/木,形状・触り心地,形状・触り心地/硬い",
+      "category": "植物,素材・原材料,素材・原材料/植物,素材・原材料/植物/木,形状・触り心地,形状・触り心地/硬い",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_415137aa-5cbf-4027-b9b9-668303cc2f70"
@@ -2366,7 +2366,7 @@
       "id": "0263",
       "nickname": "ペーパーAkyo",
       "avatarName": "akyo_paper",
-      "category": "素材・原材料,素材・原材料/植物/木",
+      "category": "素材・原材料,素材・原材料/植物,素材・原材料/植物/木",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f2ad9aca-efab-4ea1-a4f3-f34ef46bfa12"
@@ -4094,7 +4094,7 @@
       "id": "0455",
       "nickname": "木彫りきつねAkyo",
       "avatarName": "akyo_木彫りきつね",
-      "category": "動物,動物/きつね,素材・原材料,素材・原材料/植物/木,形状・触り心地,形状・触り心地/硬い,芸術・アート",
+      "category": "動物,動物/きつね,素材・原材料,素材・原材料/植物,素材・原材料/植物/木,形状・触り心地,形状・触り心地/硬い,芸術・アート",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_706f8cad-a7cd-4fa0-b9eb-2a7f47c7bb04"
@@ -4544,7 +4544,7 @@
       "id": "0505",
       "nickname": "おきんきん蝶Akyo",
       "avatarName": "ア蝶",
-      "category": "色,動物,動物/虫/蝶,動物/虫",
+      "category": "色,動物,動物/虫,動物/虫/蝶",
       "comment": "",
       "author": "＂K＂ ちゃん",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_12c6cf90-a33a-49b1-9734-7671d58472b2"
