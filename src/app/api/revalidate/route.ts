@@ -128,47 +128,51 @@ export async function POST(request: Request): Promise<Response> {
     let paths = DEFAULT_PATHS;
     let tags = DEFAULT_TAGS;
     let updateKV = false;
+    let parsedBody: unknown = {};
 
     try {
-      const body = (await request.json()) as RevalidateRequest;
-
-      if (body.paths !== undefined) {
-        const parsedPaths = parseStringArray(body.paths, {
-          maxItems: MAX_PATHS,
-          maxItemLength: MAX_PATH_LENGTH,
-          mustStartWithSlash: true,
-        });
-        if (!parsedPaths) {
-          return jsonError('Invalid paths format', 400);
-        }
-        if (parsedPaths.length > 0) {
-          paths = parsedPaths;
-        }
-      }
-
-      if (body.tags !== undefined) {
-        const parsedTags = parseStringArray(body.tags, {
-          maxItems: MAX_TAGS,
-          maxItemLength: MAX_TAG_LENGTH,
-          mustStartWithSlash: false,
-        });
-        if (!parsedTags) {
-          return jsonError('Invalid tags format', 400);
-        }
-        if (parsedTags.length > 0) {
-          tags = parsedTags;
-        }
-      }
-
-      if (body.updateKV !== undefined && typeof body.updateKV !== 'boolean') {
-        return jsonError('Invalid updateKV format', 400);
-      }
-
-      if (body.updateKV === true) {
-        updateKV = true;
-      }
+      parsedBody = await request.json();
     } catch {
       // No body or invalid JSON - use defaults
+    }
+
+    const body: RevalidateRequest =
+      parsedBody && typeof parsedBody === 'object' ? (parsedBody as RevalidateRequest) : {};
+
+    if (body.paths !== undefined) {
+      const parsedPaths = parseStringArray(body.paths, {
+        maxItems: MAX_PATHS,
+        maxItemLength: MAX_PATH_LENGTH,
+        mustStartWithSlash: true,
+      });
+      if (!parsedPaths) {
+        return jsonError('Invalid paths format', 400);
+      }
+      if (parsedPaths.length > 0) {
+        paths = parsedPaths;
+      }
+    }
+
+    if (body.tags !== undefined) {
+      const parsedTags = parseStringArray(body.tags, {
+        maxItems: MAX_TAGS,
+        maxItemLength: MAX_TAG_LENGTH,
+        mustStartWithSlash: false,
+      });
+      if (!parsedTags) {
+        return jsonError('Invalid tags format', 400);
+      }
+      if (parsedTags.length > 0) {
+        tags = parsedTags;
+      }
+    }
+
+    if (body.updateKV !== undefined && typeof body.updateKV !== 'boolean') {
+      return jsonError('Invalid updateKV format', 400);
+    }
+
+    if (body.updateKV === true) {
+      updateKV = true;
     }
 
     // Revalidate paths

@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       CONTROL_CHARACTER_PATTERN.test(trimmedValue)
     ) {
       return jsonError(
-        `入力値の形式が不正です。${MAX_DUPLICATE_CHECK_VALUE_LENGTH}文字以内で入力してください。`,
+        `入力値の形式が不正です。${MAX_DUPLICATE_CHECK_VALUE_LENGTH}文字以内で、制御文字を含まない値を入力してください。`,
         400
       );
     }
