@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-15T10:46:36.621Z",
+  "updatedAt": "2026-02-15T10:55:43.828Z",
   "count": 739,
   "data": [
     {
@@ -3428,7 +3428,7 @@
       "id": "0381",
       "nickname": "くじらAkyo",
       "avatarName": "akyo_くじら",
-      "category": "動物,動物/くじら,動物/海の生き物",
+      "category": "動物,動物/魚,動物/海の生き物",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_3b8d1b4f-fc7a-4c4c-bb32-b30c493bc8fd"
@@ -5318,7 +5318,7 @@
       "id": "0591",
       "nickname": "鯨肉Akyo",
       "avatarName": "鯨肉Akyo",
-      "category": "食べ物,動物,動物/くじら,動物/海の生き物,食べ物/お肉",
+      "category": "食べ物,動物,動物/魚,動物/海の生き物,食べ物/お肉",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"

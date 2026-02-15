@@ -91,7 +91,6 @@ module.exports = {
   '動物/かたつむり': 'Animal/Snail',
   '動物/かめ': 'Animal/Turtle',
   '動物/きつね': 'Animal/Fox',
-  '動物/くじら': 'Animal/Whale',
   '動物/くま': 'Animal/Bear',
   '動物/さる': 'Animal/Monkey',
   '動物/しか': 'Animal/Deer',
