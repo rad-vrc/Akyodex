@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-15T09:24:34.479Z",
+  "updatedAt": "2026-02-15T10:14:14.129Z",
   "count": 739,
   "data": [
     {
@@ -3167,7 +3167,7 @@
       "id": "0352",
       "nickname": "エゾAkyo",
       "avatarName": "akyo_エゾ",
-      "category": "動物",
+      "category": "動物,動物/鳥",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -4751,7 +4751,7 @@
       "id": "0528",
       "nickname": "サルAkyo",
       "avatarName": "akyo saru",
-      "category": "動物",
+      "category": "動物,動物/さる",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_dbe6c282-8cb6-449f-aa1a-862757313391"
@@ -5318,7 +5318,7 @@
       "id": "0591",
       "nickname": "鯨肉Akyo",
       "avatarName": "鯨肉Akyo",
-      "category": "食べ物,動物,食べ物/お肉",
+      "category": "食べ物,動物,動物/くじら,動物/海の生き物,食べ物/お肉",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"
@@ -5624,7 +5624,7 @@
       "id": "0625",
       "nickname": "ビッグボイン牛柄Akyo",
       "avatarName": "bigboinushigaraAkyo",
-      "category": "体型,体型/豊満,動物",
+      "category": "体型,体型/豊満,動物,動物/うし",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -6524,7 +6524,7 @@
       "id": "0725",
       "nickname": "カワウソAkyo",
       "avatarName": "akyo_カワウソ",
-      "category": "動物,器官,器官/しっぽ,性格・趣向,性格・趣向/好奇心旺盛,性格・趣向/人懐っこい",
+      "category": "動物,動物/カワウソ,器官,器官/しっぽ,性格・趣向,性格・趣向/好奇心旺盛,性格・趣向/人懐っこい",
       "comment": "（ささのきの手記）\r\n人懐っこく好奇心旺盛",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
@@ -6587,7 +6587,7 @@
       "id": "0732",
       "nickname": "絆の戦士・ウーパールーパーマン＆うまAkyo",
       "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
-      "category": "動物,動物/フィッシュヘッド,集団・組織,集団・組織/魚頭族,動物/両生類,動物/うま,身分・役割,身分・役割/トラベラー,身分・役割/ヒーロー,乗り物,乗り物/陸上,器官,器官/しっぽ,四足歩行,次元",
+      "category": "動物,動物/海の生き物,動物/フィッシュヘッド,集団・組織,集団・組織/魚頭族,動物/両生類,動物/うま,身分・役割,身分・役割/トラベラー,身分・役割/ヒーロー,乗り物,乗り物/陸上,器官,器官/しっぽ,四足歩行,次元",
       "comment": "記憶を失ってもなおその魂の灯火は熱く燃え上がる！\r\nマンボーマンの遺志を継ぎ今ここに誕生した絆の戦士・ウーパールーパーマンとうまAkyoに全宇宙の命運は託された！",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
@@ -6641,7 +6641,7 @@
       "id": "0738",
       "nickname": "ふしAkyo",
       "avatarName": "ふしあきょ",
-      "category": "パロディ,パロディ/超かぐや姫！,動物,動物/ウミウシ,素材・原材料,形状・触り心地,形状・触り心地/柔らかい",
+      "category": "パロディ,パロディ/超かぐや姫！,動物,動物/海の生き物,動物/ウミウシ,素材・原材料,形状・触り心地,形状・触り心地/柔らかい",
       "comment": "ついてこい！（ ｀ー´）ノ\r\n（作者コメントより）",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-15T09:24:34.512Z",
+  "updatedAt": "2026-02-15T10:14:14.166Z",
   "count": 739,
   "data": [
     {
@@ -3167,7 +3167,7 @@
       "id": "0352",
       "nickname": "에조 Akyo",
       "avatarName": "akyo_エゾ",
-      "category": "동물",
+      "category": "동물,동물/새",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b808a377-a264-4352-affc-cd7de3391c0c"
@@ -4751,7 +4751,7 @@
       "id": "0528",
       "nickname": "원숭이 Akyo",
       "avatarName": "akyo saru",
-      "category": "동물",
+      "category": "동물,동물/원숭이",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_dbe6c282-8cb6-449f-aa1a-862757313391"
@@ -5318,7 +5318,7 @@
       "id": "0591",
       "nickname": "고래고기 Akyo",
       "avatarName": "鯨肉Akyo",
-      "category": "음식,동물,음식/고기",
+      "category": "음식,동물,동물/고래,동물/해양생물,음식/고기",
       "comment": "",
       "author": "カヤ（kaya）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ad10f0e-b1c2-4089-ba34-88d4ce48a9aa"
@@ -5624,7 +5624,7 @@
       "id": "0625",
       "nickname": "빅붕 젖소무늬 Akyo",
       "avatarName": "bigboinushigaraAkyo",
-      "category": "체형,체형/풍만,동물",
+      "category": "체형,체형/풍만,동물,동물/소",
       "comment": "",
       "author": "葱 potipoti93",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8b415c54-820a-41e0-b4da-6e5fadc1e408"
@@ -6524,7 +6524,7 @@
       "id": "0725",
       "nickname": "수달 Akyo",
       "avatarName": "akyo_カワウソ",
-      "category": "동물,기관,기관/꼬리,성격・취향,성격・취향/호기심 왕성,성격・취향/사람을 잘 따름",
+      "category": "동물,동물/수달,기관,기관/꼬리,성격・취향,성격・취향/호기심 왕성,성격・취향/사람을 잘 따름",
       "comment": "(사사노키의 수기)\r\n사람을 잘 따르고 호기심이 왕성하다.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_5ed7ae81-05de-4f82-a43e-5b8e15eed53e"
@@ -6587,7 +6587,7 @@
       "id": "0732",
       "nickname": "유대의 전사・우파루파맨 & 말 Akyo",
       "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
-      "category": "동물,동물/피시헤드,집단・조직,집단・조직/어두족,동물/양서류,동물/말,신분・역할,신분・역할/트래블러,신분・역할/히어로,탈것,탈것/육상,기관,기관/꼬리,네발걸음,차원",
+      "category": "동물,동물/해양생물,동물/피시헤드,집단・조직,집단・조직/어두족,동물/양서류,동물/말,신분・역할,신분・역할/트래블러,신분・역할/히어로,탈것,탈것/육상,기관,기관/꼬리,네발걸음,차원",
       "comment": "기억을 잃어도 그 영혼의 불꽃은 뜨겁게 타오른다!\r\n맨보맨의 유지를 이어 지금 이곳에 탄생한 유대의 전사・우파루파맨과 말 Akyo에게 온 우주의 명운이 맡겨졌다!",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_b9b47adc-4e87-487d-910b-e21e35ec64bb"
@@ -6641,7 +6641,7 @@
       "id": "0738",
       "nickname": "후시 Akyo",
       "avatarName": "ふしあきょ",
-      "category": "패러디,패러디/초 카구야 공주!,동물,동물/바다민달팽이,소재・원재료,형태・촉감,형태・촉감/부드러운",
+      "category": "패러디,패러디/초 카구야 공주!,동물,동물/해양생물,동물/바다민달팽이,소재・원재료,형태・촉감,형태・촉감/부드러운",
       "comment": "따라와!（ ｀ー´）ノ\r\n(제작자 코멘트에서)",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_8206471b-3867-4ec8-92c8-05c4969a978c"
