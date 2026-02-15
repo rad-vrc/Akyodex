@@ -55,6 +55,15 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const query = (options.searchQuery || '').toLowerCase();
     const targetCategory = options.category || options.attribute;
     const targetAuthor = options.author || options.creator;
+    const selectedAuthors = (
+      options.authors && options.authors.length > 0
+        ? options.authors
+        : targetAuthor && targetAuthor !== 'all'
+          ? [targetAuthor]
+          : []
+    )
+      .map((author) => author.trim())
+      .filter(Boolean);
     const selectedCategories = (
       options.categories && options.categories.length > 0
         ? options.categories
@@ -82,11 +91,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     }
 
     // Filter by creator/author
-    if (targetAuthor && targetAuthor !== 'all') {
+    if (selectedAuthors.length > 0) {
       filtered = filtered.filter((akyo) => {
         const parsedAuthors =
           akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || '');
-        return parsedAuthors.includes(targetAuthor);
+        return selectedAuthors.some((author) => parsedAuthors.includes(author));
       });
     }
 

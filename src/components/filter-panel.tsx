@@ -7,6 +7,7 @@ import {
   IconSortDesc,
   IconSparkles,
   IconTag,
+  IconUser,
 } from '@/components/icons';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import { useMemo, useState } from 'react';
@@ -22,8 +23,10 @@ interface FilterPanelProps {
 
   // 新しいカテゴリ選択
   selectedAttributes?: string[];
+  selectedCreators?: string[];
   categoryMatchMode?: 'or' | 'and';
   onAttributesChange?: (attributes: string[]) => void;
+  onCreatorsChange?: (creators: string[]) => void;
   onCategoryMatchModeChange?: (mode: 'or' | 'and') => void;
 
   // 旧フィールド（互換）
@@ -47,8 +50,10 @@ export function FilterPanel({
   attributes,
   creators,
   selectedAttributes,
+  selectedCreators,
   categoryMatchMode = 'or',
   onAttributesChange,
+  onCreatorsChange,
   onCategoryMatchModeChange,
   selectedAttribute,
   selectedCreator,
@@ -63,14 +68,21 @@ export function FilterPanel({
   lang = 'ja',
 }: FilterPanelProps) {
   const [categoryQuery, setCategoryQuery] = useState('');
+  const [authorQuery, setAuthorQuery] = useState('');
 
   const displayCategories = categories || attributes;
   const displayAuthors = authors || creators;
   const normalizedCategoryQuery = categoryQuery.trim().toLowerCase();
+  const normalizedAuthorQuery = authorQuery.trim().toLowerCase();
   const activeCategories = selectedAttributes?.length
     ? selectedAttributes
     : selectedAttribute
       ? [selectedAttribute]
+      : [];
+  const activeAuthors = selectedCreators?.length
+    ? selectedCreators
+    : selectedCreator
+      ? [selectedCreator]
       : [];
 
   const filteredCategories = useMemo(() => {
@@ -79,6 +91,11 @@ export function FilterPanel({
       category.toLowerCase().includes(normalizedCategoryQuery)
     );
   }, [displayCategories, normalizedCategoryQuery]);
+
+  const filteredAuthors = useMemo(() => {
+    if (!normalizedAuthorQuery) return displayAuthors;
+    return displayAuthors.filter((author) => author.toLowerCase().includes(normalizedAuthorQuery));
+  }, [displayAuthors, normalizedAuthorQuery]);
 
   const setCategories = (nextCategories: string[]) => {
     if (onAttributesChange) {
@@ -94,6 +111,22 @@ export function FilterPanel({
       return;
     }
     setCategories([...activeCategories, category]);
+  };
+
+  const setAuthors = (nextAuthors: string[]) => {
+    if (onCreatorsChange) {
+      onCreatorsChange(nextAuthors);
+      return;
+    }
+    onCreatorChange(nextAuthors[0] || '');
+  };
+
+  const toggleAuthor = (author: string) => {
+    if (activeAuthors.includes(author)) {
+      setAuthors(activeAuthors.filter((value) => value !== author));
+      return;
+    }
+    setAuthors([...activeAuthors, author]);
   };
 
   return (
@@ -197,7 +230,7 @@ export function FilterPanel({
                       }`}
                       aria-pressed={selected}
                     >
-                      {selected ? '✓ ' : ''} {category}
+                      {selected ? '✓ ' : ''}{category}
                     </button>
                   );
                 })}
@@ -206,24 +239,81 @@ export function FilterPanel({
           </div>
         </section>
 
-        <section className="space-y-2">
-          <label htmlFor="creatorFilter" className="font-bold text-[var(--text-primary)] block">
-            {t('filter.author', lang)}
-          </label>
-          <select
-            id="creatorFilter"
-            value={selectedCreator ?? ''}
-            onChange={(e) => onCreatorChange(e.target.value)}
-            className="w-full"
-            aria-label={t('filter.author', lang)}
-          >
-            <option value="">{t('filter.allAuthors', lang)}</option>
-            {displayAuthors.map((creator) => (
-              <option key={creator} value={creator}>
-                {creator}
-              </option>
-            ))}
-          </select>
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="font-bold text-blue-600 flex items-center gap-2">
+              <IconUser size="w-4 h-4" />
+              {t('filter.author', lang)}
+            </div>
+            {activeAuthors.length > 0 ? (
+              <button
+                type="button"
+                onClick={() => setAuthors([])}
+                className="px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800 hover:bg-red-200 transition-colors"
+                aria-label={t('filter.clearAuthors', lang)}
+              >
+                {t('filter.clearAuthors', lang)}
+              </button>
+            ) : null}
+          </div>
+
+          <input
+            type="text"
+            value={authorQuery}
+            onChange={(e) => setAuthorQuery(e.target.value)}
+            className="w-full rounded-xl border-2 border-[var(--primary-blue)] bg-white px-3 py-2 text-sm font-semibold"
+            placeholder={t('filter.authorSearch', lang)}
+            aria-label={t('filter.authorSearch', lang)}
+          />
+
+          <div className="flex flex-wrap gap-2 min-h-8">
+            {activeAuthors.length === 0 ? (
+              <span className="text-xs text-[var(--text-secondary)]">
+                {t('filter.noneAuthorSelected', lang)}
+              </span>
+            ) : (
+              activeAuthors.map((author) => (
+                <button
+                  key={author}
+                  type="button"
+                  onClick={() => toggleAuthor(author)}
+                  className="attribute-badge bg-blue-100 text-blue-900 hover:bg-blue-200"
+                  aria-label={`${author} ${t('filter.removeAuthor', lang)}`}
+                >
+                  <IconUser size="w-3 h-3" /> {author} ×
+                </button>
+              ))
+            )}
+          </div>
+
+          <div className="max-h-52 overflow-y-auto rounded-xl border border-gray-200 bg-white p-2">
+            {filteredAuthors.length === 0 ? (
+              <div className="px-2 py-3 text-xs text-[var(--text-secondary)]">
+                {t('filter.noAuthorMatch', lang)}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-2">
+                {filteredAuthors.map((author) => {
+                  const selected = activeAuthors.includes(author);
+                  return (
+                    <button
+                      key={author}
+                      type="button"
+                      onClick={() => toggleAuthor(author)}
+                      className={`text-left rounded-lg px-3 py-2 text-sm font-semibold border transition-colors ${
+                        selected
+                          ? 'bg-blue-100 text-blue-900 border-blue-300'
+                          : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                      }`}
+                      aria-pressed={selected}
+                    >
+                      {selected ? '✓ ' : ''}{author}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </section>
       </div>
 

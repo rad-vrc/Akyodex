@@ -155,7 +155,7 @@ export function ZukanClient({
 
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
   const [categoryMatchMode, setCategoryMatchMode] = useState<'or' | 'and'>('or');
-  const [selectedCreator, setSelectedCreator] = useState('');
+  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
@@ -207,7 +207,7 @@ export function ZukanClient({
     searchQuery,
     selectedAttributes,
     categoryMatchMode,
-    selectedCreator,
+    selectedCreators,
     favoritesOnly,
     sortAscending,
     randomMode,
@@ -253,13 +253,14 @@ export function ZukanClient({
       {
         searchQuery,
         categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+        authors: selectedCreators.length > 0 ? selectedCreators : undefined,
         categoryMatchMode,
         // 新フィールド名を優先して渡す
         category: selectedAttributes[0] || undefined,
-        author: selectedCreator || undefined,
+        author: selectedCreators[0] || undefined,
         // 旧フィールド名も念のため渡す
         attribute: selectedAttributes[0] || undefined,
-        creator: selectedCreator || undefined,
+        creator: selectedCreators[0] || undefined,
         favoritesOnly,
       },
       sortAscending
@@ -268,7 +269,7 @@ export function ZukanClient({
     searchQuery,
     selectedAttributes,
     categoryMatchMode,
-    selectedCreator,
+    selectedCreators,
     favoritesOnly,
     sortAscending,
     randomMode,
@@ -295,7 +296,7 @@ export function ZukanClient({
       setSearchQuery('');
       setSelectedAttributes([]);
       setCategoryMatchMode('or');
-      setSelectedCreator('');
+      setSelectedCreators([]);
       setFavoritesOnly(false);
     } else {
       // ランダムモードを解除して通常表示に戻る
@@ -303,9 +304,10 @@ export function ZukanClient({
         {
           searchQuery,
           categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+          authors: selectedCreators.length > 0 ? selectedCreators : undefined,
           categoryMatchMode,
           category: selectedAttributes[0] || undefined,
-          author: selectedCreator || undefined,
+          author: selectedCreators[0] || undefined,
           favoritesOnly,
         },
         sortAscending
@@ -329,8 +331,8 @@ export function ZukanClient({
   );
 
   const activeFilterCount = useMemo(
-    () => selectedAttributes.length + (selectedCreator ? 1 : 0) + (favoritesOnly ? 1 : 0),
-    [selectedAttributes, selectedCreator, favoritesOnly]
+    () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
+    [selectedAttributes, selectedCreators, favoritesOnly]
   );
   const shouldRenderFilterPanel = isDesktopViewport || isFilterPanelOpen;
 
@@ -436,11 +438,13 @@ export function ZukanClient({
                 attributes={currentCategories || categories || attributes}
                 creators={currentAuthors || authors || creators}
                 selectedAttributes={selectedAttributes}
+                selectedCreators={selectedCreators}
                 categoryMatchMode={categoryMatchMode}
-                selectedCreator={selectedCreator}
+                selectedCreator={selectedCreators[0] || ''}
                 onAttributesChange={setSelectedAttributes}
+                onCreatorsChange={setSelectedCreators}
                 onCategoryMatchModeChange={setCategoryMatchMode}
-                onCreatorChange={setSelectedCreator}
+                onCreatorChange={(creator) => setSelectedCreators(creator ? [creator] : [])}
                 onSortToggle={handleSortToggle}
                 onRandomClick={handleRandomClick}
                 onFavoritesClick={handleFavoritesClick}

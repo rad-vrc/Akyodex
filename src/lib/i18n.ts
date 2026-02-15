@@ -244,6 +244,31 @@ export const UI_TEXTS = {
     en: 'Filter by author',
     ko: '작자로 필터',
   },
+  'filter.authorSearch': {
+    ja: '作者を検索...',
+    en: 'Search authors...',
+    ko: '작자 검색...',
+  },
+  'filter.noneAuthorSelected': {
+    ja: '作者未選択（全作者対象）',
+    en: 'No author selected (all authors)',
+    ko: '선택된 작자 없음 (전체)',
+  },
+  'filter.noAuthorMatch': {
+    ja: '一致する作者がありません',
+    en: 'No matching authors',
+    ko: '일치하는 작자가 없습니다',
+  },
+  'filter.removeAuthor': {
+    ja: 'を選択解除',
+    en: 'remove',
+    ko: '선택 해제',
+  },
+  'filter.clearAuthors': {
+    ja: '絞り込み解除',
+    en: 'Clear',
+    ko: '필터 해제',
+  },
   'filter.allAuthors': {
     ja: 'すべての作者',
     en: 'All Authors',
@@ -285,7 +310,7 @@ export const UI_TEXTS = {
     ko: '즐겨찾기만',
   },
   'filter.panelShow': {
-    ja: 'フィルタを開く',
+    ja: '絞り込みフィルタを開く',
     en: 'Open filters',
     ko: '필터 열기',
   },
