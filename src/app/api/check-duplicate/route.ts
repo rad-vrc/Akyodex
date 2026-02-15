@@ -7,14 +7,12 @@
 
 // Phase 4: Using unified data module with JSON support
 import { getAkyoData } from '@/lib/akyo-data';
-import { jsonError, jsonSuccess, validateOrigin } from '@/lib/api-helpers';
+import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess, validateOrigin } from '@/lib/api-helpers';
 
 // Node.js runtime is required because getAkyoData() can fall back to CSV parsing via akyo-data-server.
 export const runtime = 'nodejs';
 
 const MAX_DUPLICATE_CHECK_VALUE_LENGTH = 120;
-// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
-const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
 
 export async function POST(request: Request) {
   try {
@@ -23,7 +21,12 @@ export async function POST(request: Request) {
       return jsonError('不正なリクエスト元です', 403);
     }
 
-    const body = await request.json();
+    let body: Record<string, unknown>;
+    try {
+      body = (await request.json()) as Record<string, unknown>;
+    } catch {
+      return jsonError('リクエストボディのJSON形式が不正です。', 400);
+    }
     const { field, value, excludeId } = body;
 
     // Validate input

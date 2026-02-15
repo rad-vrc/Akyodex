@@ -7,6 +7,9 @@
 import { cookies } from 'next/headers';
 import { SessionData, validateSession as validateSessionToken } from './session';
 
+// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
+export const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
+
 /**
  * Validate session from request cookies
  *

@@ -1,4 +1,4 @@
-import { jsonError, jsonSuccess } from '@/lib/api-helpers';
+import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess } from '@/lib/api-helpers';
 import { timingSafeEqual } from 'crypto';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
@@ -26,6 +26,9 @@ import { revalidatePath, revalidateTag } from 'next/cache';
  *     "tags": ["akyo-data"],
  *     "updateKV": true  // Phase 5b: Also update KV cache
  *   }
+ * Note:
+ * - If paths/tags are omitted, default values are used.
+ * - If paths/tags are provided, they must be non-empty arrays.
  *
  * If no body is provided, revalidates all main pages by default.
  *
@@ -55,8 +58,6 @@ const MAX_PATHS = 20;
 const MAX_TAGS = 20;
 const MAX_PATH_LENGTH = 200;
 const MAX_TAG_LENGTH = 120;
-// biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
-const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
 
 function timingSafeCompare(a: string, b: string): boolean {
   try {
@@ -137,7 +138,9 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const body: RevalidateRequest =
-      parsedBody && typeof parsedBody === 'object' ? (parsedBody as RevalidateRequest) : {};
+      parsedBody && typeof parsedBody === 'object' && !Array.isArray(parsedBody)
+        ? (parsedBody as RevalidateRequest)
+        : {};
 
     if (body.paths !== undefined) {
       const parsedPaths = parseStringArray(body.paths, {
@@ -148,9 +151,10 @@ export async function POST(request: Request): Promise<Response> {
       if (!parsedPaths) {
         return jsonError('Invalid paths format', 400);
       }
-      if (parsedPaths.length > 0) {
-        paths = parsedPaths;
+      if (parsedPaths.length === 0) {
+        return jsonError('paths cannot be empty when provided', 400);
       }
+      paths = parsedPaths;
     }
 
     if (body.tags !== undefined) {
@@ -162,9 +166,10 @@ export async function POST(request: Request): Promise<Response> {
       if (!parsedTags) {
         return jsonError('Invalid tags format', 400);
       }
-      if (parsedTags.length > 0) {
-        tags = parsedTags;
+      if (parsedTags.length === 0) {
+        return jsonError('tags cannot be empty when provided', 400);
       }
+      tags = parsedTags;
     }
 
     if (body.updateKV !== undefined && typeof body.updateKV !== 'boolean') {
