@@ -135,7 +135,6 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
 
     const attachTargetObservers = () => {
       const chatWindow = document.getElementById('dify-chatbot-bubble-window');
-      const chatButton = document.getElementById('dify-chatbot-bubble-button');
       if (chatWindow && !hasWindowObserver) {
         observer.observe(chatWindow, {
           attributes: true,
@@ -157,9 +156,7 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
         checkWindowState();
       }
 
-      if (chatWindow && chatButton && !isDisposed) {
-        setLoadState((current) => (current === 'error' ? current : 'loaded'));
-      }
+      markLoadedIfMounted();
 
       if (hasWindowObserver && hasContainerObserver) {
         if (observerTimer) {

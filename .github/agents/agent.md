@@ -124,7 +124,7 @@ tools:
 
 # Akyodex コーディングエージェント
 
-VRChat アバター図鑑「Akyodex」の開発エージェント。640体以上のアバターデータを4桁ID (0001-) で管理する Next.js アプリケーション。日本語/英語の多言語対応。
+VRChat アバター図鑑「Akyodex」の開発エージェント。640体以上のアバターデータを4桁ID (0001-) で管理する Next.js アプリケーション。日本語/英語/韓国語の多言語対応。
 
 ## 技術スタック
 
@@ -147,6 +147,7 @@ VRChat アバター図鑑「Akyodex」の開発エージェント。640体以上
 
 - `data/akyo-data-ja.csv` / `data/akyo-data-ja.json` — 日本語データ
 - `data/akyo-data-en.csv` / `data/akyo-data-en.json` — 英語データ
+- `data/akyo-data-ko.csv` / `data/akyo-data-ko.json` — 韓国語データ
 - CRUD操作時: R2更新 → KVキャッシュ更新 → GitHub CSV同期 → ISR revalidation
 
 ## ビルド・検証コマンド
