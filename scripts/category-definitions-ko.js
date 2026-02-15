@@ -5,7 +5,7 @@
 
 const CATEGORY_MAP = {
   // === Top-level categories ===
-  UMAkyo: 'UMAkyo',
+  '正体不明のUMAkyo': '정체불명의 UMAkyo',
   おくりもの: '선물',
   お大事に: '쾌차를 빕니다',
   'なりきり・仮装': '코스프레',

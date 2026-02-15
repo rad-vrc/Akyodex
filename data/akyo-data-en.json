@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-15T10:21:21.333Z",
+  "updatedAt": "2026-02-15T10:38:07.455Z",
   "count": 739,
   "data": [
     {
@@ -431,7 +431,7 @@
       "id": "0048",
       "nickname": "UFO Akyo",
       "avatarName": "UFAkyo",
-      "category": "Vehicle,Vehicle/Aviation,UMAkyo,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Hypoxia Resistance,Skill・Trait/Zero-G Resistance,Gimmick・Special",
+      "category": "Vehicle,Vehicle/Aviation,Unknown UMAkyo,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Hypoxia Resistance,Skill・Trait/Zero-G Resistance,Gimmick・Special",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -6056,7 +6056,7 @@
       "id": "0673",
       "nickname": "Agyo",
       "avatarName": "agyo",
-      "category": "Mint Chocolate,Gimmick・Special,Transformation",
+      "category": "Mint Chocolate,Gimmick・Special,Transformation,Unknown UMAkyo",
       "comment": "",
       "author": "․reiki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_349aeb2b-df20-4499-9729-fb818392a97f"
@@ -6596,7 +6596,7 @@
       "id": "0733",
       "nickname": "Akyoman / Akyo Head",
       "avatarName": "Akyohead",
-      "category": "Mint Chocolate,Roleplay,Physical,Physical/Athletic,Animal,Unknown",
+      "category": "Mint Chocolate,Roleplay,Physical,Physical/Athletic,Unknown UMAkyo",
       "comment": "Its head is Akyo!?\r\nIs it... human?",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"

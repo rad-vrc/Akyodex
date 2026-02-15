@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-15T10:21:21.310Z",
+  "updatedAt": "2026-02-15T10:38:07.431Z",
   "count": 739,
   "data": [
     {
@@ -431,7 +431,7 @@
       "id": "0048",
       "nickname": "UFOAkyo",
       "avatarName": "UFAkyo",
-      "category": "乗り物,乗り物/航空,UMAkyo,環境・天候,環境・天候/外宇宙,技能・特性,技能・特性/酸素欠乏耐性,技能・特性/無重力耐性,ギミック・特殊",
+      "category": "乗り物,乗り物/航空,正体不明のUMAkyo,環境・天候,環境・天候/外宇宙,技能・特性,技能・特性/酸素欠乏耐性,技能・特性/無重力耐性,ギミック・特殊",
       "comment": "",
       "author": "nekononomicon",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_6f73a233-3ed2-4c81-98d9-aaff1fc477cd"
@@ -6056,7 +6056,7 @@
       "id": "0673",
       "nickname": "Agyo",
       "avatarName": "agyo",
-      "category": "チョコミント類,ギミック・特殊,合体・変身",
+      "category": "チョコミント類,ギミック・特殊,合体・変身,正体不明のUMAkyo",
       "comment": "",
       "author": "․reiki",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_349aeb2b-df20-4499-9729-fb818392a97f"
@@ -6596,8 +6596,8 @@
       "id": "0733",
       "nickname": "Akyoマン/Akyoヘッド",
       "avatarName": "Akyohead",
-      "category": "チョコミント類,なりきり・仮装,フィジカル,フィジカル/体育会系,動物,正体不明",
-      "comment": "頭がAkyo！？\r\n人・・・なの？",
+      "category": "チョコミント類,なりきり・仮装,フィジカル,フィジカル/体育会系,正体不明のUMAkyo",
+      "comment": "頭がAkyo！？\n人・・・なの？",
       "author": "暗手_Ante",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_856ef241-11a6-4f9b-abec-11bd6fd8fb77"
     },

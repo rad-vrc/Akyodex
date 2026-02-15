@@ -6,7 +6,7 @@
  * - Values are the canonical tokens used in `data/akyo-data-en.csv`.
  */
 module.exports = {
-  'UMAkyo': 'UMAkyo',
+  '正体不明のUMAkyo': 'Unknown UMAkyo',
   'お大事に': 'Get Well Soon',
   'お布団': 'Futon',
   'お風呂': 'Equipment/Bath',
