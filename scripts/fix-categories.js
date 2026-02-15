@@ -216,14 +216,21 @@ for (let i = 1; i < records.length; i++) {
     if (!categories.includes('合体・変身')) categories.push('合体・変身');
   }
   
-  // 14c. なりきりと仮装をなりきり・仮装に統一
+  // 14c. なりきりと仮装をファッション/なりきり・仮装に統一
   if (categories.includes('なりきり')) {
     categories = categories.filter(c => c !== 'なりきり');
-    if (!categories.includes('なりきり・仮装')) categories.push('なりきり・仮装');
+    if (!categories.includes('ファッション')) categories.push('ファッション');
+    if (!categories.includes('ファッション/なりきり・仮装')) categories.push('ファッション/なりきり・仮装');
   }
   if (categories.includes('仮装')) {
     categories = categories.filter(c => c !== '仮装');
-    if (!categories.includes('なりきり・仮装')) categories.push('なりきり・仮装');
+    if (!categories.includes('ファッション')) categories.push('ファッション');
+    if (!categories.includes('ファッション/なりきり・仮装')) categories.push('ファッション/なりきり・仮装');
+  }
+  if (categories.includes('なりきり・仮装')) {
+    categories = categories.filter(c => c !== 'なりきり・仮装');
+    if (!categories.includes('ファッション')) categories.push('ファッション');
+    if (!categories.includes('ファッション/なりきり・仮装')) categories.push('ファッション/なりきり・仮装');
   }
   
   // 15. 野菜系を食べ物/野菜/○○に階層化
