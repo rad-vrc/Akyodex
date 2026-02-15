@@ -9,7 +9,14 @@
 import { getAkyoData } from '@/lib/akyo-data';
 import { jsonError, jsonSuccess, validateOrigin } from '@/lib/api-helpers';
 
+// Node.js runtime is required because getAkyoData() can fall back to CSV parsing via akyo-data-server.
 export const runtime = 'nodejs';
+
+const MAX_DUPLICATE_CHECK_VALUE_LENGTH = 120;
+const DUPLICATE_CHECK_VALUE_PATTERN = new RegExp(
+  `^[^\\u0000-\\u001F\\u007F]{1,${MAX_DUPLICATE_CHECK_VALUE_LENGTH}}$`,
+  'u'
+);
 
 export async function POST(request: Request) {
   try {
@@ -23,11 +30,29 @@ export async function POST(request: Request) {
 
     // Validate input
     if (!field || !value || typeof value !== 'string') {
-      return jsonError('Invalid request. field and value are required.', 400);
+      return jsonError('不正なリクエストです。field と value が必要です。', 400);
     }
 
     if (field !== 'nickname' && field !== 'avatarName') {
-      return jsonError('Invalid field. Must be "nickname" or "avatarName".', 400);
+      return jsonError('無効なフィールドです。nickname または avatarName を指定してください。', 400);
+    }
+
+    if (!DUPLICATE_CHECK_VALUE_PATTERN.test(value)) {
+      return jsonError(
+        `入力値の形式が不正です。${MAX_DUPLICATE_CHECK_VALUE_LENGTH}文字以内で入力してください。`,
+        400
+      );
+    }
+
+    let normalizedExcludeId: string | undefined;
+    if (excludeId !== undefined && excludeId !== null) {
+      if (typeof excludeId !== 'string' && typeof excludeId !== 'number') {
+        return jsonError('excludeId の形式が不正です。', 400);
+      }
+      normalizedExcludeId = String(excludeId).trim();
+      if (normalizedExcludeId.length > 32) {
+        return jsonError('excludeId が長すぎます。', 400);
+      }
     }
 
     // Get all avatar data
@@ -35,7 +60,7 @@ export async function POST(request: Request) {
 
     // Normalize function (case-insensitive, trimmed, Unicode NFC normalized)
     const normalize = (str: string | undefined): string => {
-      if (!str || typeof str !== 'string') return '';
+      if (!str) return '';
       return str.trim().normalize('NFC').toLowerCase();
     };
 
@@ -45,7 +70,7 @@ export async function POST(request: Request) {
 
     akyoData.forEach((akyo) => {
       // Skip if this is the excluded ID (for edit operations)
-      if (excludeId && akyo.id === excludeId) {
+      if (normalizedExcludeId && akyo.id === normalizedExcludeId) {
         return;
       }
 
@@ -82,6 +107,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Duplicate check error:', error);
-    return jsonError('Internal server error', 500);
+    return jsonError('サーバーエラーが発生しました。', 500);
   }
 }

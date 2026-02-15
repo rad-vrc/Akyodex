@@ -8,6 +8,7 @@
     "build": "opennextjs-cloudflare build && node scripts/prepare-cloudflare-pages.js",
     "start": "next start",
     "lint": "eslint",
+    "verify:dify-csp-hash": "node scripts/verify-dify-csp-hash.js",
     "knip": "knip",
     "test": "playwright test",
     "test:playwright": "playwright test",

@@ -18,6 +18,7 @@ import type { AdminRole } from '@/types/akyo';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
+const MAX_AKYO_WORD_LENGTH = 256;
 
 /**
  * Timing-safe password comparison (Node.js crypto)
@@ -47,6 +48,9 @@ export async function POST(request: Request) {
 
     if (!password || typeof password !== 'string') {
       return jsonError('Akyoワードを入力してください', 400);
+    }
+    if (password.length > MAX_AKYO_WORD_LENGTH) {
+      return jsonError(`Akyoワードは${MAX_AKYO_WORD_LENGTH}文字以内で入力してください`, 400);
     }
 
     // Get passwords from environment variables (server-side only - NOT NEXT_PUBLIC)
