@@ -24,6 +24,10 @@ binding = "AKYO_KV"
 
 id = "42b435eff5ca4de9a33d70faff6c6abc"
 
+[[kv_namespaces]]
+binding = "NEXT_TAG_CACHE_KV"
+id = "42b435eff5ca4de9a33d70faff6c6abc"
+
 
 [[r2_buckets]]
 binding = "AKYO_BUCKET"
@@ -39,6 +43,10 @@ bucket_name = "akyodex-cache"
 [env.production]
 [[env.production.kv_namespaces]]
 binding = "AKYO_KV"
+id = "42b435eff5ca4de9a33d70faff6c6abc"
+
+[[env.production.kv_namespaces]]
+binding = "NEXT_TAG_CACHE_KV"
 id = "42b435eff5ca4de9a33d70faff6c6abc"
 
 [[env.production.r2_buckets]]
