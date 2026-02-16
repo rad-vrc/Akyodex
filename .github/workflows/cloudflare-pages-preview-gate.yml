@@ -1,0 +1,170 @@
+name: Cloudflare Pages Preview Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: cloudflare-pages-preview-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify-preview-deployment:
+    name: Verify Cloudflare Pages Preview
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'akyodex-nextjs' }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PR_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+
+    steps:
+      - name: Validate required secrets
+        if: github.event.pull_request.head.repo.fork == false
+        run: |
+          set -euo pipefail
+          if [ -z "${CF_API_TOKEN:-}" ] || [ -z "${CF_ACCOUNT_ID:-}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID が未設定です。"
+            exit 1
+          fi
+
+      - name: Skip gate for forked PRs
+        if: github.event.pull_request.head.repo.fork == true
+        run: |
+          echo "Fork PR のため Cloudflare API シークレットにアクセスできません。"
+          echo "このチェックはスキップします。"
+
+      - name: Wait for Cloudflare Pages preview result
+        if: github.event.pull_request.head.repo.fork == false
+        id: gate
+        run: |
+          set -euo pipefail
+
+          api_url="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${CF_PROJECT_NAME}/deployments?per_page=50"
+          max_attempts=40
+          interval_seconds=20
+
+          echo "Polling Cloudflare Pages preview deployment..."
+          echo "- project: ${CF_PROJECT_NAME}"
+          echo "- sha: ${PR_HEAD_SHA}"
+          echo "- branch: ${PR_HEAD_BRANCH}"
+
+          for ((attempt=1; attempt<=max_attempts; attempt++)); do
+            echo "Attempt ${attempt}/${max_attempts}"
+
+            response="$(curl -fsS \
+              -H "Authorization: Bearer ${CF_API_TOKEN}" \
+              -H "Content-Type: application/json" \
+              "${api_url}")"
+
+            parsed="$(node - <<'NODE' "${response}" "${PR_HEAD_SHA}" "${PR_HEAD_BRANCH}"
+            const body = JSON.parse(process.argv[2]);
+            const sha = process.argv[3];
+            const branch = process.argv[4];
+            const deployments = Array.isArray(body.result) ? body.result : [];
+
+            const match = deployments.find((deployment) => {
+              const metadata = deployment?.deployment_trigger?.metadata ?? {};
+              const commitHash =
+                metadata.commit_hash ??
+                metadata.commit_sha ??
+                metadata.sha ??
+                deployment?.source?.revision ??
+                '';
+              const commitBranch =
+                metadata.branch ??
+                metadata.commit_ref ??
+                deployment?.source?.branch ??
+                '';
+              return commitHash === sha && (commitBranch === '' || commitBranch === branch);
+            });
+
+            if (!match) {
+              console.log('not_found|||');
+              process.exit(0);
+            }
+
+            const status = String(match?.latest_stage?.status ?? '').toLowerCase();
+            const stageName = String(match?.latest_stage?.name ?? '');
+            const deploymentUrl = String(
+              match?.url ?? (Array.isArray(match?.aliases) && match.aliases[0] ? match.aliases[0] : '')
+            );
+            const deploymentId = String(match?.short_id ?? match?.id ?? '');
+            console.log(`${status}|${stageName}|${deploymentUrl}|${deploymentId}`);
+            NODE
+            )"
+
+            IFS='|' read -r status stage_name deployment_url deployment_id <<<"${parsed}"
+
+            if [ "${status}" = "not_found" ]; then
+              echo "No deployment found yet for this commit."
+              sleep "${interval_seconds}"
+              continue
+            fi
+
+            echo "Found deployment ${deployment_id} (stage=${stage_name}, status=${status})"
+
+            if [ "${status}" = "success" ]; then
+              echo "deployment_url=${deployment_url}" >> "${GITHUB_OUTPUT}"
+              echo "deployment_id=${deployment_id}" >> "${GITHUB_OUTPUT}"
+              echo "✅ Cloudflare Pages preview is successful."
+              exit 0
+            fi
+
+            if [ "${status}" = "failure" ] || [ "${status}" = "failed" ] || [ "${status}" = "error" ] || [ "${status}" = "canceled" ] || [ "${status}" = "cancelled" ]; then
+              echo "::error::Cloudflare Pages preview failed (deployment=${deployment_id}, status=${status}, url=${deployment_url})"
+              exit 1
+            fi
+
+            echo "Deployment is still in progress."
+            sleep "${interval_seconds}"
+          done
+
+          echo "::error::Timed out waiting for Cloudflare Pages preview deployment result."
+          exit 1
+
+      - name: Add PR comment on failure
+        if: failure() && github.event.pull_request.head.repo.fork == false
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              '## ❌ Cloudflare Pages Preview Gate Failed',
+              '',
+              '- このPRコミットの Cloudflare Pages プレビューデプロイが失敗、またはタイムアウトしました。',
+              `- 詳細ログ: ${runUrl}`,
+              '',
+              'マージ前に Cloudflare Pages のデプロイ失敗原因を解消してください。'
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: Publish success summary
+        if: success() && github.event.pull_request.head.repo.fork == false
+        run: |
+          {
+            echo "## Cloudflare Pages Preview Gate"
+            echo ""
+            echo "✅ Preview deployment is healthy."
+            echo "- Deployment ID: ${{ steps.gate.outputs.deployment_id }}"
+            echo "- Preview URL: ${{ steps.gate.outputs.deployment_url }}"
+          } >> "${GITHUB_STEP_SUMMARY}"
