@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ko",
-  "updatedAt": "2026-02-16T11:10:54.620Z",
+  "updatedAt": "2026-02-16T11:44:51.801Z",
   "count": 739,
   "data": [
     {
@@ -2861,7 +2861,7 @@
       "id": "0318",
       "nickname": "코끼리 Akyo",
       "avatarName": "akyo_ぞう",
-      "category": "동물,동물/코끼리,네발걸음",
+      "category": "동물,동물/코끼리,네발걸음,기관,기관/코",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef619ead-45bc-4512-8b51-2ff383572dc2"
@@ -6281,7 +6281,7 @@
       "id": "0698",
       "nickname": "스웨터 코끼리 Akyo",
       "avatarName": "akyo_ぞうセーター",
-      "category": "패션,패션/모자,패션/두꺼운 옷,계절・행사,계절・행사/겨울,동물,동물/코끼리,네발걸음",
+      "category": "패션,패션/모자,패션/두꺼운 옷,계절・행사,계절・행사/겨울,동물,동물/코끼리,네발걸음,기관,기관/코",
       "comment": "스웨터를 입은 겨울 사양 코끼리 Akyo. 따뜻하~다",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22a5fa0e-e92d-426e-83a9-e6a9a7549f51"
@@ -6407,7 +6407,7 @@
       "id": "0712",
       "nickname": "키츠네츠키식 설여우 Akyo",
       "avatarName": "Snow Fox Akyo",
-      "category": "동물,동물/여우,계절・행사,계절・행사/겨울,환경・날씨,환경・날씨/눈,소재・원재료,형태・촉감,형태・촉감/차가운",
+      "category": "동물,동물/여우,계절・행사,계절・행사/겨울,환경・날씨,환경・날씨/눈・얼음,소재・원재료,형태・촉감,형태・촉감/차가운",
       "comment": "얼음 행성에서 발견되었다고 한다.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"

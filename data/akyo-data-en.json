@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-16T11:10:54.568Z",
+  "updatedAt": "2026-02-16T11:44:51.790Z",
   "count": 739,
   "data": [
     {
@@ -2861,7 +2861,7 @@
       "id": "0318",
       "nickname": "Elephant Akyo",
       "avatarName": "akyo_ぞう",
-      "category": "Animal,Animal/Elephant,Quadruped",
+      "category": "Animal,Animal/Elephant,Quadruped,Body Part,Body Part/Nose",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef619ead-45bc-4512-8b51-2ff383572dc2"
@@ -6281,7 +6281,7 @@
       "id": "0698",
       "nickname": "Sweater Elephant Akyo",
       "avatarName": "akyo_ぞうセーター",
-      "category": "Fashion,Fashion/Hat,Fashion/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Elephant,Quadruped",
+      "category": "Fashion,Fashion/Hat,Fashion/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Elephant,Quadruped,Body Part,Body Part/Nose",
       "comment": "A winter-ready elephant Akyo wearing a sweater. Nice and warm.",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22a5fa0e-e92d-426e-83a9-e6a9a7549f51"
@@ -6407,7 +6407,7 @@
       "id": "0712",
       "nickname": "Kitsunetsuki's Snow Fox Akyo",
       "avatarName": "Snow Fox Akyo",
-      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Winter,Environment・Weather,Environment・Weather/Snow,Material・Raw Material,Shape・Texture,Shape・Texture/Cold",
+      "category": "Animal,Animal/Fox,Season・Event,Season・Event/Winter,Environment・Weather,Environment・Weather/Snow・Ice,Material・Raw Material,Shape・Texture,Shape・Texture/Cold",
       "comment": "It is said to have been discovered on an icy planet.",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
