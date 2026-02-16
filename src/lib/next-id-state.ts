@@ -1,8 +1,10 @@
 import type { KVNamespace } from '@/types/kv';
 
-const NEXT_ID_HINT_KEY = 'akyo-next-id-hint';
+const NEXT_ID_HINT_KEY_PREFIX = 'akyo-next-id-hints/';
+const LEGACY_NEXT_ID_HINT_KEY = 'akyo-next-id-hint';
 const NEXT_ID_HINT_TTL_SECONDS = 60 * 60 * 24 * 30;
 const IN_MEMORY_HINT_MAX_AGE_MS = 2000;
+const HINT_LIST_PAGE_SIZE = 1000;
 
 let inMemoryNextIdHint: number | null = null;
 let inMemoryNextIdHintSyncedAtMs = 0;
@@ -60,9 +62,28 @@ export async function readNextIdHint(): Promise<number | null> {
   if (!kv) return inMemoryNextIdHint;
 
   try {
-    const rawHint = await kv.get(NEXT_ID_HINT_KEY);
-    const parsedHint = parseAkyoIdNumber(rawHint);
-    const mergedHint = pickLatestAkyoId(inMemoryNextIdHint, parsedHint);
+    let kvMaxHint: number | null = null;
+    let cursor: string | undefined;
+
+    do {
+      const page = await kv.list({
+        prefix: NEXT_ID_HINT_KEY_PREFIX,
+        limit: HINT_LIST_PAGE_SIZE,
+        cursor,
+      });
+
+      for (const key of page.keys) {
+        const suffix = key.name.slice(NEXT_ID_HINT_KEY_PREFIX.length);
+        kvMaxHint = pickLatestAkyoId(kvMaxHint, parseAkyoIdNumber(suffix));
+      }
+
+      cursor = page.list_complete ? undefined : page.cursor;
+    } while (cursor);
+
+    const legacyRawHint = await kv.get(LEGACY_NEXT_ID_HINT_KEY);
+    kvMaxHint = pickLatestAkyoId(kvMaxHint, parseAkyoIdNumber(legacyRawHint));
+
+    const mergedHint = pickLatestAkyoId(inMemoryNextIdHint, kvMaxHint);
     if (mergedHint !== null) {
       inMemoryNextIdHint = mergedHint;
       inMemoryNextIdHintSyncedAtMs = now;
@@ -86,13 +107,8 @@ export async function persistNextIdHint(nextId: string | number): Promise<void> 
   if (!kv || mergedLocalHint === null) return;
 
   try {
-    const existingHint = parseAkyoIdNumber(await kv.get(NEXT_ID_HINT_KEY));
-    const hintToStore = pickLatestAkyoId(existingHint, mergedLocalHint);
-    if (hintToStore === null) return;
-
-    inMemoryNextIdHint = hintToStore;
-    inMemoryNextIdHintSyncedAtMs = Date.now();
-    await kv.put(NEXT_ID_HINT_KEY, formatAkyoId(hintToStore), {
+    // Append-only per-ID key avoids read-modify-write races on a shared key.
+    await kv.put(`${NEXT_ID_HINT_KEY_PREFIX}${formatAkyoId(mergedLocalHint)}`, '1', {
       expirationTtl: NEXT_ID_HINT_TTL_SECONDS,
     });
   } catch (error) {
