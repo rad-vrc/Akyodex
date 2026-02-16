@@ -658,6 +658,11 @@ Use an alternative trusted-branch approach (for example, a secrets-dependent job
 |---------|------|---------|
 | `AKYO_BUCKET` | R2 Bucket | Avatar images and data files |
 | `AKYO_KV` | KV Namespace | Admin session storage + data cache |
+| `NEXT_TAG_CACHE_KV` | KV Namespace | OpenNext tag revalidation cache |
+
+`AKYO_KV` と `NEXT_TAG_CACHE_KV` を同じ namespace に割り当てる場合は、キー体系が重ならないことを確認してください。
+- App data cache keys: `akyo-data-*`
+- OpenNext tag cache keys: `<NEXT_BUILD_ID>/<tag>`
 
 ### How to Generate Session Secret
 

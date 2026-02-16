@@ -26,6 +26,11 @@ id = "42b435eff5ca4de9a33d70faff6c6abc"
 
 [[kv_namespaces]]
 binding = "NEXT_TAG_CACHE_KV"
+# NOTE: Shared with AKYO_KV for now.
+# Key spaces are non-overlapping:
+# - app data cache uses "akyo-data-*"
+# - OpenNext tag cache uses "<NEXT_BUILD_ID>/<tag>"
+# 運用上分離したい場合は dedicated KV namespace ID に差し替えてください。
 id = "42b435eff5ca4de9a33d70faff6c6abc"
 
 
@@ -47,6 +52,7 @@ id = "42b435eff5ca4de9a33d70faff6c6abc"
 
 [[env.production.kv_namespaces]]
 binding = "NEXT_TAG_CACHE_KV"
+# NOTE: Productionでも同様に shared namespace を利用中。
 id = "42b435eff5ca4de9a33d70faff6c6abc"
 
 [[env.production.r2_buckets]]

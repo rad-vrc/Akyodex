@@ -190,7 +190,7 @@ on:
 
 4. **Cloudflare Pages デプロイ**
    - `wrangler-action@v3` を使用
-   - プロジェクト名: `akyodex-nextjs`
+   - プロジェクト名: `akyodex`
 
 5. **デプロイサマリー作成**
    - GitHub Step Summary に結果表示
@@ -443,7 +443,7 @@ jobs:
 | `DEFAULT_ADMIN_PASSWORD_HASH` | ✅ Yes | ビルド用管理者パスワードハッシュ | - |
 | `DEFAULT_OWNER_PASSWORD_HASH` | ✅ Yes | ビルド用オーナーパスワードハッシュ | - |
 | `DEFAULT_JWT_SECRET` | ✅ Yes | ビルド用 JWT シークレット | - |
-| `CLOUDFLARE_PAGES_PROJECT` | 🔵 Optional | Cloudflare Pages プロジェクト名（Preview Gate用） | `akyodex-nextjs` |
+| `CLOUDFLARE_PAGES_PROJECT` | 🔵 Optional | Cloudflare Pages プロジェクト名（Preview Gate用） | `akyodex` |
 | `NEXT_PUBLIC_SITE_URL` | 🔵 Optional | サイト URL | - |
 | `NEXT_PUBLIC_R2_BASE` | 🔵 Optional | R2 ベース URL | - |
 
@@ -648,7 +648,7 @@ Could not list R2 buckets - check API token permissions
 
 2. wrangler.toml の設定を確認
    ```toml
-   name = "akyodex-nextjs"
+   name = "akyodex"
    compatibility_date = "2025-01-22"
    ```
 
