@@ -17,6 +17,21 @@
 - **異なるユースケース**: カスタム API や低レベル制御が必要な場合
 - **歴史的理由**: Pages の Next.js サポートは比較的新しい（2023年以降）
 
+## ✅ 現在の実施ステータス（2026-02-16 20:17:05 JST / 2026-02-16 11:17:05 UTC）
+
+| 項目 | 状態 | 備考 |
+|------|------|------|
+| Workers vs Pages の調査・比較 | ✅ 完了 | 本ドキュメントに比較結果と移行判断を記録済み |
+| 方針決定（Pages 継続） | ✅ 完了 | 「移行不要」を採用 |
+| Pages デプロイ互換性の修正 | ✅ 完了 | `fix: restore Pages deploy compatibility and add preview gate (#268)` |
+| Cloudflare Pages Preview Gate 導入 | ✅ 完了 | PR ごとのデプロイ成否ゲートを運用中 |
+| `/zukan` の CSP nonce 不一致対応 | ✅ 完了 | `fix(zukan): switch to dynamic rendering to resolve CSP nonce mismatch (#271)` |
+| Workers 本番移行（Phase 1-4） | ⏳ 未着手 | 条件成立時のみ実施（本ドキュメントの長期方針） |
+
+### 直近の結論
+- 現在は **Cloudflare Pages 継続運用** が最適。
+- Workers 移行は「必要条件が揃った場合のみ」実施。
+
 ---
 
 ## 🔍 詳細調査結果
@@ -600,7 +615,8 @@ jobs:
 
 ---
 
-**調査日**: 2025-11-07
-**調査者**: GitHub Copilot
-**対象プロジェクト**: Akyodex Next.js (Next.js 15.5.2 + App Router + Cloudflare Pages)
-**結論**: **Cloudflare Pages での継続使用を推奨。Workers への移行は不要。**
+**初版調査日**: 2025-11-07
+**最終更新**: 2026-02-16 20:17:05 JST / 2026-02-16 11:17:05 UTC
+**調査者**: GitHub Copilot, Codex
+**対象プロジェクト**: Akyodex Next.js (Next.js 15.5.10 + App Router + Cloudflare Pages)
+**現行結論**: **Cloudflare Pages での継続使用を推奨。Workers への移行は必要条件が揃うまで保留。**
