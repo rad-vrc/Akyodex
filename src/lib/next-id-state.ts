@@ -59,7 +59,13 @@ export async function readNextIdHint(): Promise<number | null> {
   }
 
   const kv = await getKVNamespace();
-  if (!kv) return inMemoryNextIdHint;
+  if (!kv) {
+    if (inMemoryNextIdHint !== null) {
+      // Avoid repeated dynamic import attempts while KV is unavailable.
+      inMemoryNextIdHintSyncedAtMs = now;
+    }
+    return inMemoryNextIdHint;
+  }
 
   try {
     let kvMaxHint: number | null = null;

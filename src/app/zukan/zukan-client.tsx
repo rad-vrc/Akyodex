@@ -65,7 +65,7 @@ function extractTaxonomy(
   const uniqueCategories = new Set<string>();
   const uniqueAuthors = new Set<string>();
 
-  akyoItems.forEach((item) => {
+  for (const item of akyoItems) {
     const cats = (item.category || item.attribute || '')
       .split(MULTI_VALUE_SPLIT_PATTERN)
       .map((s) => s.trim())
@@ -75,13 +75,13 @@ function extractTaxonomy(
       .map((s) => s.trim())
       .filter(Boolean);
 
-    cats.forEach((category) => {
+    for (const category of cats) {
       uniqueCategories.add(category);
-    });
-    auths.forEach((author) => {
+    }
+    for (const author of auths) {
       uniqueAuthors.add(author);
-    });
-  });
+    }
+  }
 
   return {
     categories: Array.from(uniqueCategories).sort(),
@@ -164,14 +164,14 @@ export function ZukanClient({
         });
         if (!response.ok) throw new Error('Failed to fetch data');
 
-        const jsonData = await response.json();
+        const jsonData: unknown = await response.json();
         const wrappedData =
           jsonData && typeof jsonData === 'object'
-            ? (jsonData as { data?: unknown }).data
+            ? (jsonData as Record<string, unknown>).data
             : undefined;
         // Handle both array format and wrapped format ({ data: [...] })
         const akyoItems: AkyoData[] | undefined = Array.isArray(jsonData)
-          ? jsonData
+          ? (jsonData as AkyoData[])
           : Array.isArray(wrappedData)
             ? (wrappedData as AkyoData[])
             : undefined;
@@ -181,7 +181,7 @@ export function ZukanClient({
               const keys = Object.keys(jsonData as Record<string, unknown>);
               return `{ keys: [${keys.join(', ')}] }`;
             }
-            const raw = JSON.stringify(jsonData);
+            const raw = JSON.stringify(jsonData) ?? String(jsonData);
             const MAX_LENGTH = 1000;
             if (raw.length <= MAX_LENGTH) return raw;
             return `${raw.slice(0, MAX_LENGTH)}...(truncated, ${raw.length} chars)`;
