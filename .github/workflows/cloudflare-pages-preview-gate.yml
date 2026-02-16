@@ -1,0 +1,245 @@
+name: Cloudflare Pages Preview Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+  checks: read
+  pull-requests: write
+
+concurrency:
+  group: cloudflare-pages-preview-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify-preview-deployment:
+    name: Verify Cloudflare Pages Preview
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_PROJECT_NAME_PRIMARY: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+      CF_PROJECT_NAME_FALLBACK: akyodex
+      GITHUB_TOKEN: ${{ github.token }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PR_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+
+    steps:
+      - name: Validate required secrets
+        if: github.event.pull_request.head.repo.fork == false
+        run: |
+          set -euo pipefail
+          if [ -z "${CF_API_TOKEN:-}" ] || [ -z "${CF_ACCOUNT_ID:-}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID が未設定です。"
+            exit 1
+          fi
+
+      - name: Skip gate for forked PRs
+        if: github.event.pull_request.head.repo.fork == true
+        run: |
+          echo "Fork PR のため Cloudflare API シークレットにアクセスできません。"
+          echo "このチェックはスキップします。"
+
+      - name: Wait for Cloudflare Pages preview result
+        if: github.event.pull_request.head.repo.fork == false
+        id: gate
+        run: |
+          set -euo pipefail
+
+          max_attempts=30
+          interval_seconds=20
+          project_candidates=()
+
+          if [ -n "${CF_PROJECT_NAME_PRIMARY:-}" ]; then
+            project_candidates+=("${CF_PROJECT_NAME_PRIMARY}")
+          fi
+          if [ -n "${CF_PROJECT_NAME_FALLBACK:-}" ]; then
+            is_duplicate=false
+            for existing in "${project_candidates[@]:-}"; do
+              if [ "${existing}" = "${CF_PROJECT_NAME_FALLBACK}" ]; then
+                is_duplicate=true
+                break
+              fi
+            done
+            if [ "${is_duplicate}" = "false" ]; then
+              project_candidates+=("${CF_PROJECT_NAME_FALLBACK}")
+            fi
+          fi
+
+          if [ ${#project_candidates[@]} -eq 0 ]; then
+            echo "::error::No Cloudflare Pages project candidates configured."
+            exit 1
+          fi
+
+          echo "Polling Cloudflare Pages preview deployment..."
+          echo "- projects: ${project_candidates[*]}"
+          echo "- sha: ${PR_HEAD_SHA}"
+          echo "- branch: ${PR_HEAD_BRANCH}"
+
+          for ((attempt=1; attempt<=max_attempts; attempt++)); do
+            echo "Attempt ${attempt}/${max_attempts}"
+            found_in_progress=false
+
+            for project_name in "${project_candidates[@]}"; do
+              api_url="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${project_name}/deployments?per_page=50"
+
+              response=""
+              if ! response="$(curl --silent --show-error \
+                --retry 5 \
+                --retry-delay 2 \
+                --retry-connrefused \
+                --retry-all-errors \
+                --connect-timeout 10 \
+                --max-time 20 \
+                -H "Authorization: Bearer ${CF_API_TOKEN}" \
+                -H "Content-Type: application/json" \
+                "${api_url}")"; then
+                echo "Cloudflare API request failed for project ${project_name}; trying next candidate."
+                continue
+              fi
+
+              if [ -z "${response}" ]; then
+                echo "Cloudflare API returned empty response for project ${project_name}; trying next candidate."
+                continue
+              fi
+
+              parsed=""
+              if ! parsed="$(node -e 'const body = JSON.parse(process.argv[1]); const sha = process.argv[2]; const branch = process.argv[3]; const deployments = Array.isArray(body.result) ? body.result : []; const match = deployments.find((deployment) => { const metadata = deployment?.deployment_trigger?.metadata ?? {}; const commitHash = metadata.commit_hash ?? metadata.commit_sha ?? metadata.sha ?? deployment?.source?.revision ?? ""; const commitBranch = metadata.branch ?? metadata.commit_ref ?? deployment?.source?.branch ?? ""; return commitHash === sha && (commitBranch === "" || commitBranch === branch); }); if (!match) { console.log("not_found|||"); process.exit(0); } const status = String(match?.latest_stage?.status ?? "").toLowerCase(); const stageName = String(match?.latest_stage?.name ?? ""); const deploymentUrl = String(match?.url ?? (Array.isArray(match?.aliases) && match.aliases[0] ? match.aliases[0] : "")); const deploymentId = String(match?.short_id ?? match?.id ?? ""); console.log(status + "|" + stageName + "|" + deploymentUrl + "|" + deploymentId);' "${response}" "${PR_HEAD_SHA}" "${PR_HEAD_BRANCH}")"; then
+                echo "Failed to parse Cloudflare API response for project ${project_name}; trying next candidate."
+                continue
+              fi
+
+              IFS='|' read -r status stage_name deployment_url deployment_id <<<"${parsed}"
+
+              if [ "${status}" = "not_found" ]; then
+                echo "No deployment match yet in project ${project_name}."
+                continue
+              fi
+
+              echo "Found deployment ${deployment_id} in ${project_name} (stage=${stage_name}, status=${status})"
+
+              if [ "${status}" = "success" ]; then
+                echo "deployment_url=${deployment_url}" >> "${GITHUB_OUTPUT}"
+                echo "deployment_id=${deployment_id}" >> "${GITHUB_OUTPUT}"
+                echo "✅ Cloudflare Pages preview is successful."
+                exit 0
+              fi
+
+              if [ "${status}" = "failure" ] || [ "${status}" = "failed" ] || [ "${status}" = "error" ] || [ "${status}" = "canceled" ] || [ "${status}" = "cancelled" ]; then
+                echo "::error::Cloudflare Pages preview failed (project=${project_name}, deployment=${deployment_id}, status=${status}, url=${deployment_url})"
+                exit 1
+              fi
+
+              found_in_progress=true
+            done
+
+            if [ "${found_in_progress}" = "true" ]; then
+              echo "Deployment is still in progress."
+            else
+              echo "No deployment found yet for this commit in any project candidate."
+            fi
+
+            # Fallback: Cloudflare API metadata may omit commit hash.
+            # In that case, rely on the GitHub check-run result for "Cloudflare Pages".
+            github_api_url="https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${PR_HEAD_SHA}/check-runs?per_page=100"
+            gh_response=""
+            if gh_response="$(curl --silent --show-error \
+              --retry 5 \
+              --retry-delay 2 \
+              --retry-connrefused \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 20 \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "${github_api_url}")"; then
+              gh_parsed=""
+              if gh_parsed="$(node -e 'const body = JSON.parse(process.argv[1]); const runs = Array.isArray(body.check_runs) ? body.check_runs : []; const run = runs.find((item) => String(item?.name ?? "").toLowerCase() === "cloudflare pages"); if (!run) { console.log("not_found|||"); process.exit(0); } const status = String(run?.status ?? ""); const conclusion = String(run?.conclusion ?? ""); const detailsUrl = String(run?.details_url ?? ""); console.log(status + "|" + conclusion + "|" + detailsUrl);' "${gh_response}")"; then
+                IFS='|' read -r gh_status gh_conclusion gh_details_url <<<"${gh_parsed}"
+                if [ "${gh_status}" = "completed" ]; then
+                  if [ "${gh_conclusion}" = "success" ]; then
+                    echo "deployment_url=${gh_details_url}" >> "${GITHUB_OUTPUT}"
+                    echo "deployment_id=github-check-cloudflare-pages" >> "${GITHUB_OUTPUT}"
+                    echo "✅ Cloudflare Pages check-run is successful."
+                    exit 0
+                  fi
+                  if [ "${gh_conclusion}" = "failure" ] || [ "${gh_conclusion}" = "cancelled" ] || [ "${gh_conclusion}" = "timed_out" ] || [ "${gh_conclusion}" = "action_required" ]; then
+                    echo "::error::Cloudflare Pages check-run failed (conclusion=${gh_conclusion}, url=${gh_details_url})"
+                    exit 1
+                  fi
+                fi
+              fi
+            else
+              echo "GitHub check-runs request failed; continuing Cloudflare polling."
+            fi
+            sleep "${interval_seconds}"
+          done
+
+          echo "::error::Timed out waiting for Cloudflare Pages preview deployment result."
+          exit 1
+
+      - name: Add PR comment on failure
+        if: failure() && github.event.pull_request.head.repo.fork == false
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const header = '## ❌ Cloudflare Pages Preview Gate Failed';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              header,
+              '',
+              '- このPRコミットの Cloudflare Pages プレビューデプロイが失敗、またはタイムアウトしました。',
+              `- 詳細ログ: ${runUrl}`,
+              '',
+              'マージ前に Cloudflare Pages のデプロイ失敗原因を解消してください。'
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100
+            });
+
+            const existing = comments.find((comment) =>
+              comment.body?.includes(header) &&
+              (comment.user?.login === 'github-actions[bot]' || comment.user?.type === 'Bot')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      - name: Publish success summary
+        if: success() && github.event.pull_request.head.repo.fork == false
+        run: |
+          {
+            echo "## Cloudflare Pages Preview Gate"
+            echo ""
+            echo "✅ Preview deployment is healthy."
+            echo "- Deployment ID: ${{ steps.gate.outputs.deployment_id }}"
+            echo "- Preview URL: ${{ steps.gate.outputs.deployment_url }}"
+          } >> "${GITHUB_STEP_SUMMARY}"

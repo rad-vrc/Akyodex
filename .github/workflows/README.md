@@ -52,10 +52,18 @@
 |------------|---------|---------|------|
 | **CI** | `ci.yml` | PR, Push | Lint、型チェック、ビルド検証、セキュリティスキャン |
 | **Deploy** | `deploy-cloudflare-pages.yml` | Push to main, Manual | Cloudflare Pages へのデプロイ |
+| **Pages Preview Gate** | `cloudflare-pages-preview-gate.yml` | PR | Cloudflare Pages プレビュー成否をPR上で自動ゲート |
 | **Security Audit** | `security-audit.yml` | 毎週月曜日, Manual | 依存関係の脆弱性スキャン |
 | **Validate Resources** | `validate-cloudflare-resources.yml` | 毎日, Manual | R2/KV/CSV データの整合性チェック |
 | **Reusable Build** | `reusable-build.yml` | Workflow call | 共通ビルドロジック（DRY原則） |
 | **Next.js Health Check** | `nextjs-health-check.yml` | PR (コード変更時) | Next.js設定とベストプラクティス検証 |
+
+### PRマージ前の必須チェック推奨
+
+Cloudflare Pages のデプロイ失敗を見逃さないため、GitHub の Branch protection で以下チェックを **Required** に設定してください。
+
+- `CI - Continuous Integration / Build Validation`
+- `Cloudflare Pages Preview Gate / Verify Cloudflare Pages Preview`
 
 ---
 
@@ -182,7 +190,7 @@ on:
 
 4. **Cloudflare Pages デプロイ**
    - `wrangler-action@v3` を使用
-   - プロジェクト名: `akyodex-nextjs`
+   - プロジェクト名: `akyodex`
 
 5. **デプロイサマリー作成**
    - GitHub Step Summary に結果表示
@@ -435,6 +443,7 @@ jobs:
 | `DEFAULT_ADMIN_PASSWORD_HASH` | ✅ Yes | ビルド用管理者パスワードハッシュ | - |
 | `DEFAULT_OWNER_PASSWORD_HASH` | ✅ Yes | ビルド用オーナーパスワードハッシュ | - |
 | `DEFAULT_JWT_SECRET` | ✅ Yes | ビルド用 JWT シークレット | - |
+| `CLOUDFLARE_PAGES_PROJECT` | 🔵 Optional | Cloudflare Pages プロジェクト名（Preview Gate用） | `akyodex` |
 | `NEXT_PUBLIC_SITE_URL` | 🔵 Optional | サイト URL | - |
 | `NEXT_PUBLIC_R2_BASE` | 🔵 Optional | R2 ベース URL | - |
 
@@ -639,7 +648,7 @@ Could not list R2 buckets - check API token permissions
 
 2. wrangler.toml の設定を確認
    ```toml
-   name = "akyodex-nextjs"
+   name = "akyodex"
    compatibility_date = "2025-01-22"
    ```
 

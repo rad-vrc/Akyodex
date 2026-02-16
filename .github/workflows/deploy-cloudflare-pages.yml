@@ -24,6 +24,9 @@ jobs:
   deploy:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
+    env:
+      # Keep deployment target aligned with preview-gate fallback behavior.
+      CF_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'akyodex' }}
     
     permissions:
       contents: read
@@ -87,7 +90,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .open-next --project-name=akyodex-nextjs
+          command: pages deploy .open-next --project-name=${{ env.CF_PAGES_PROJECT }}
           
       - name: Wait for deployment to be ready
         if: steps.deployment.outcome == 'success'
