@@ -78,22 +78,18 @@ function setCachedCsvNextId(idNum: number): void {
 function computeNextIdFromCsv(csvContent: string): number {
   const lines = csvContent.split('\n').filter((line) => line.trim());
   const dataLines = lines.slice(1);
-  const usedIds = new Set<number>();
+  let maxId = 0;
 
   for (const line of dataLines) {
     const match = line.match(/^"?(\d+)"?/);
     if (!match) continue;
     const id = Number.parseInt(match[1], 10);
-    if (!Number.isNaN(id)) {
-      usedIds.add(id);
+    if (!Number.isNaN(id) && id > maxId) {
+      maxId = id;
     }
   }
 
-  let nextIdNum = 1;
-  while (usedIds.has(nextIdNum)) {
-    nextIdNum += 1;
-  }
-  return nextIdNum;
+  return maxId + 1;
 }
 
 async function withTimeout<T>(

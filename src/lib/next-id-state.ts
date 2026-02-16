@@ -41,7 +41,7 @@ export function pickLatestAkyoId(...ids: Array<number | null | undefined>): numb
 async function getKVNamespace(): Promise<KVNamespace | null> {
   try {
     const { getCloudflareContext } = await import('@opennextjs/cloudflare');
-    const { env } = await getCloudflareContext();
+    const { env } = getCloudflareContext();
     return ((env as NextIdEnvBindings | undefined)?.AKYO_KV as KVNamespace | undefined) ?? null;
   } catch {
     return null;
