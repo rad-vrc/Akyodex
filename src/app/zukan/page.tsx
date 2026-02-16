@@ -19,11 +19,10 @@ import { ZukanClient } from './zukan-client';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { DEFAULT_LANGUAGE } from '@/lib/i18n';
 
-// ISR: Revalidate every hour (3600 seconds)
-export const revalidate = 3600;
-
-// Force static generation (no dynamic server usage)
-export const dynamic = 'force-static';
+// Dynamic rendering to ensure CSP nonce consistency
+// middleware.ts generates a new nonce per request → layout.tsx reads it via headers()
+// Static/ISR would freeze the nonce in cached HTML, causing mismatch (Issue #270)
+export const dynamic = 'force-dynamic';
 
 // Dynamic metadata
 export const metadata: Metadata = {
