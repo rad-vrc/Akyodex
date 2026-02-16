@@ -140,6 +140,10 @@ const COMMENT_MAP = {
     '마메 Akyo의 기세가 멈추지 않아!\r\n모든 Akyo를 마메 Akyo로 만드는 계획도 꿈만은 아니네!',
   'ついてこい！（ ｀ー´）ノ\r\n（作者コメントより）': '따라와!（ ｀ー´）ノ\r\n(제작자 코멘트에서)',
   'Akyo、ゲットだぜ！': 'Akyo, 겟이다제!',
+  '（ささのきの手記）\r\n永久凍土で眠っていたakyo。目覚めたらずいぶん暖かくなっていてびっくりしている':
+    '(사사노키의 수기)\r\n영구동토에서 잠들어 있던 Akyo. 깨어나니 한참 따뜻해져서 깜짝 놀라고 있다.',
+  '（ささのきの手記）\r\n栄養価が高く森のバターとも呼ばれる。そのおいしさはakyoにも人気である':
+    '(사사노키의 수기)\r\n영양가가 높아 숲의 버터라고도 불린다. 그 맛은 Akyo에게도 인기다.',
 };
 
 function translateComment(jaComment, existingKoComment = '') {
@@ -148,6 +152,14 @@ function translateComment(jaComment, existingKoComment = '') {
   // Check exact match first
   if (COMMENT_MAP[jaComment]) {
     return COMMENT_MAP[jaComment];
+  }
+
+  // Retry with normalized line-endings: JA CSV may use \n while map keys use \r\n
+  const normalized = jaComment.replace(/\r\n/g, '\n');
+  for (const [key, value] of Object.entries(COMMENT_MAP)) {
+    if (key.replace(/\r\n/g, '\n') === normalized) {
+      return value;
+    }
   }
   untranslatedCommentCount += 1;
 

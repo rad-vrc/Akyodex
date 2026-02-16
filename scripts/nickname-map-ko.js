@@ -898,6 +898,10 @@ const NICKNAME_MAP = {
   'もちまめAkyo/まめもちあきょ': '모찌콩 Akyo/콩모찌 아쿄',
   ふしAkyo: '후시 Akyo',
   'Akyo（第三世代）': 'Akyo (3세대)',
+
+  // === 0740–0741 ===
+  マンモスAkyo: '매머드 Akyo',
+  アボカドAkyo: '아보카도 Akyo',
 };
 
 module.exports = { NICKNAME_MAP };

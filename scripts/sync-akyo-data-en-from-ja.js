@@ -169,6 +169,16 @@ const overridesById = {
   },
   '0738': { Nickname: 'Fushi Akyo', Comment: 'Follow me! ( ｀ー´)ノ\r\n(from the creator comment)' },
   '0739': { Nickname: 'Akyo (Third Generation)', Comment: 'Gotta catch Akyo!' },
+  '0740': {
+    Nickname: 'Mammoth Akyo',
+    Comment:
+      "(Sasanoki's notes)\r\nAn Akyo that was sleeping in the permafrost. When it woke up, it was surprised at how warm it had become.",
+  },
+  '0741': {
+    Nickname: 'Avocado Akyo',
+    Comment:
+      "(Sasanoki's notes)\r\nHighly nutritious, also known as the butter of the forest. Its deliciousness is popular even among Akyo.",
+  },
 };
 
 function parseCsv(filePath) {
@@ -211,8 +221,7 @@ function assertCsvRowLengthsMatchHeader({ header, rows }, filePath) {
     const row = rows[i];
     if (row.length !== expectedColumns) {
       throw new Error(
-        `CSV row has unexpected column count in ${filePath} at data row #${i + 1} (expected ${expectedColumns}, got ${
-          row.length
+        `CSV row has unexpected column count in ${filePath} at data row #${i + 1} (expected ${expectedColumns}, got ${row.length
         }). Row: ${JSON.stringify(row)}`,
       );
     }
@@ -306,7 +315,10 @@ function main() {
       nickname = jaNickname;
     }
 
-    if (override?.Comment != null && (!comment || comment === jaComment)) {
+    // Normalize line-endings for comparison: the EN CSV uses \r\n record delimiters,
+    // so embedded newlines in existing comments may be \r\n while JA uses \n.
+    const normalizeEol = (s) => s.replace(/\r\n/g, '\n');
+    if (override?.Comment != null && (!comment || normalizeEol(comment) === normalizeEol(jaComment))) {
       comment = override.Comment;
     } else if (!comment) {
       comment = jaComment;
@@ -329,7 +341,7 @@ function main() {
     const tokens = Array.from(missingCategoryTokens).sort();
     throw new Error(
       `Missing category translations (${tokens.length}). Add them to scripts/category-ja-en-map.js:\\n` +
-        tokens.map((t) => `- ${t}`).join('\\n'),
+      tokens.map((t) => `- ${t}`).join('\\n'),
     );
   }
 
