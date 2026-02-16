@@ -607,6 +607,16 @@ If any check fails, see [Troubleshooting](#troubleshooting) section for detailed
 - API errors → Check Environment variables
 - Bindings not working → Check Settings → Functions
 
+### Cloudflare Pages Preview Gate limitation (fork PRs)
+
+The workflow `.github/workflows/cloudflare-pages-preview-gate.yml` has two steps:
+- `Validate required secrets`
+- `Skip gate for forked PRs`
+
+For forked PRs, `CF_API_TOKEN` and `CF_ACCOUNT_ID` are unavailable by design, so the preview verification is skipped.
+If you need strict verification for forked PRs as well, do not rely only on this workflow as a required status check.
+Use an alternative trusted-branch approach (for example, a secrets-dependent job that runs after maintainers push to a protected branch).
+
 ---
 
 ## 🔑 Environment Variables

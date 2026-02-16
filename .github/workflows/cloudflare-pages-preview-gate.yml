@@ -66,12 +66,34 @@ jobs:
           for ((attempt=1; attempt<=max_attempts; attempt++)); do
             echo "Attempt ${attempt}/${max_attempts}"
 
-            response="$(curl -fsS \
+            response=""
+            if ! response="$(curl --silent --show-error \
+              --retry 5 \
+              --retry-delay 2 \
+              --retry-connrefused \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 20 \
               -H "Authorization: Bearer ${CF_API_TOKEN}" \
               -H "Content-Type: application/json" \
-              "${api_url}")"
+              "${api_url}")"; then
+              echo "Cloudflare API request failed on attempt ${attempt}; retrying."
+              sleep "${interval_seconds}"
+              continue
+            fi
 
-            parsed="$(node -e "const body = JSON.parse(process.argv[1]); const sha = process.argv[2]; const branch = process.argv[3]; const deployments = Array.isArray(body.result) ? body.result : []; const match = deployments.find((deployment) => { const metadata = deployment?.deployment_trigger?.metadata ?? {}; const commitHash = metadata.commit_hash ?? metadata.commit_sha ?? metadata.sha ?? deployment?.source?.revision ?? ''; const commitBranch = metadata.branch ?? metadata.commit_ref ?? deployment?.source?.branch ?? ''; return commitHash === sha && (commitBranch === '' || commitBranch === branch); }); if (!match) { console.log('not_found|||'); process.exit(0); } const status = String(match?.latest_stage?.status ?? '').toLowerCase(); const stageName = String(match?.latest_stage?.name ?? ''); const deploymentUrl = String(match?.url ?? (Array.isArray(match?.aliases) && match.aliases[0] ? match.aliases[0] : '')); const deploymentId = String(match?.short_id ?? match?.id ?? ''); console.log(\`${status}|${stageName}|${deploymentUrl}|${deploymentId}\`);" "${response}" "${PR_HEAD_SHA}" "${PR_HEAD_BRANCH}")"
+            if [ -z "${response}" ]; then
+              echo "Cloudflare API returned empty response on attempt ${attempt}; retrying."
+              sleep "${interval_seconds}"
+              continue
+            fi
+
+            parsed=""
+            if ! parsed="$(node -e 'const body = JSON.parse(process.argv[1]); const sha = process.argv[2]; const branch = process.argv[3]; const deployments = Array.isArray(body.result) ? body.result : []; const match = deployments.find((deployment) => { const metadata = deployment?.deployment_trigger?.metadata ?? {}; const commitHash = metadata.commit_hash ?? metadata.commit_sha ?? metadata.sha ?? deployment?.source?.revision ?? ""; const commitBranch = metadata.branch ?? metadata.commit_ref ?? deployment?.source?.branch ?? ""; return commitHash === sha && (commitBranch === "" || commitBranch === branch); }); if (!match) { console.log("not_found|||"); process.exit(0); } const status = String(match?.latest_stage?.status ?? "").toLowerCase(); const stageName = String(match?.latest_stage?.name ?? ""); const deploymentUrl = String(match?.url ?? (Array.isArray(match?.aliases) && match.aliases[0] ? match.aliases[0] : "")); const deploymentId = String(match?.short_id ?? match?.id ?? ""); console.log(status + "|" + stageName + "|" + deploymentUrl + "|" + deploymentId);' "${response}" "${PR_HEAD_SHA}" "${PR_HEAD_BRANCH}")"; then
+              echo "Failed to parse Cloudflare API response on attempt ${attempt}; retrying."
+              sleep "${interval_seconds}"
+              continue
+            fi
 
             IFS='|' read -r status stage_name deployment_url deployment_id <<<"${parsed}"
 
@@ -107,21 +129,44 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const header = '## ❌ Cloudflare Pages Preview Gate Failed';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const body = [
-              '## ❌ Cloudflare Pages Preview Gate Failed',
+              header,
               '',
               '- このPRコミットの Cloudflare Pages プレビューデプロイが失敗、またはタイムアウトしました。',
               `- 詳細ログ: ${runUrl}`,
               '',
               'マージ前に Cloudflare Pages のデプロイ失敗原因を解消してください。'
             ].join('\n');
-            await github.rest.issues.createComment({
+
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body
+              per_page: 100
             });
+
+            const existing = comments.find((comment) =>
+              comment.body?.includes(header) &&
+              (comment.user?.login === 'github-actions[bot]' || comment.user?.type === 'Bot')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
 
       - name: Publish success summary
         if: success() && github.event.pull_request.head.repo.fork == false
