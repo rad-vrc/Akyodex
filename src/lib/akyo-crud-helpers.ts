@@ -16,6 +16,7 @@ import {
     loadAkyoCsv,
     replaceRecordById,
 } from './csv-utils';
+import { persistNextIdHint } from './next-id-state';
 import type { R2UploadOptions, R2UploadResult } from './r2-utils';
 import { deleteImageFromR2, uploadImageToR2 } from './r2-utils';
 
@@ -154,6 +155,13 @@ export async function processAkyoCRUD(
             fileSha,
             commitMessage,
         });
+
+        if (operation === 'add') {
+            const currentId = Number.parseInt(id, 10);
+            if (!Number.isNaN(currentId)) {
+                await persistNextIdHint(currentId + 1);
+            }
+        }
 
         // Step 4: Handle image operation (after successful CSV commit)
         const imageResult = await handleImageOperation(operation, id, imageData);

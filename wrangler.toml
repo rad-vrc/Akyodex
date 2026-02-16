@@ -29,6 +29,22 @@ id = "42b435eff5ca4de9a33d70faff6c6abc"
 binding = "AKYO_BUCKET"
 bucket_name = "akyo-images"
 
+[[r2_buckets]]
+binding = "NEXT_INC_CACHE_R2_BUCKET"
+bucket_name = "akyodex-cache"
+
+[[durable_objects.bindings]]
+name = "NEXT_CACHE_DO_QUEUE"
+class_name = "DOQueueHandler"
+
+[[durable_objects.bindings]]
+name = "NEXT_TAG_CACHE_DO_SHARDED"
+class_name = "DOShardedTagCache"
+
+[[migrations]]
+tag = "v1-next-cache-do"
+new_sqlite_classes = ["DOQueueHandler", "DOShardedTagCache"]
+
 
 # Environment variables for production
 
@@ -40,6 +56,18 @@ id = "42b435eff5ca4de9a33d70faff6c6abc"
 [[env.production.r2_buckets]]
 binding = "AKYO_BUCKET"
 bucket_name = "akyo-images"
+
+[[env.production.r2_buckets]]
+binding = "NEXT_INC_CACHE_R2_BUCKET"
+bucket_name = "akyodex-cache"
+
+[[env.production.durable_objects.bindings]]
+name = "NEXT_CACHE_DO_QUEUE"
+class_name = "DOQueueHandler"
+
+[[env.production.durable_objects.bindings]]
+name = "NEXT_TAG_CACHE_DO_SHARDED"
+class_name = "DOShardedTagCache"
 
 
 [env.production.vars]

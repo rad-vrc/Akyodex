@@ -51,6 +51,44 @@ const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
   default: '/images/logo-US.webp',
 };
 
+const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
+
+interface LanguageDatasetCacheEntry {
+  items: AkyoData[];
+  categories: string[];
+  authors: string[];
+}
+
+function extractTaxonomy(
+  akyoItems: AkyoData[]
+): Pick<LanguageDatasetCacheEntry, 'categories' | 'authors'> {
+  const uniqueCategories = new Set<string>();
+  const uniqueAuthors = new Set<string>();
+
+  for (const item of akyoItems) {
+    const cats = (item.category || item.attribute || '')
+      .split(MULTI_VALUE_SPLIT_PATTERN)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const auths = (item.author || item.creator || '')
+      .split(MULTI_VALUE_SPLIT_PATTERN)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    for (const category of cats) {
+      uniqueCategories.add(category);
+    }
+    for (const author of auths) {
+      uniqueAuthors.add(author);
+    }
+  }
+
+  return {
+    categories: Array.from(uniqueCategories).sort(),
+    authors: Array.from(uniqueAuthors).sort(),
+  };
+}
+
 export function ZukanClient({
   initialData,
   categories,
@@ -77,25 +115,65 @@ export function ZukanClient({
   // Dynamic categories/authors (may change on language switch)
   const [currentCategories, setCurrentCategories] = useState(categories);
   const [currentAuthors, setCurrentAuthors] = useState(authors);
+  const languageDatasetCacheRef = useRef<Map<SupportedLanguage, LanguageDatasetCacheEntry>>(
+    new Map([
+      [
+        serverLang,
+        {
+          items: initialData,
+          categories,
+          authors,
+        },
+      ],
+    ])
+  );
+
+  // Keep the server-rendered language payload fresh in cache.
+  useEffect(() => {
+    languageDatasetCacheRef.current.set(serverLang, {
+      items: initialData,
+      categories,
+      authors,
+    });
+  }, [serverLang, initialData, categories, authors]);
 
   // Refetch data when language differs from server-rendered language
   useEffect(() => {
     if (!isReady || !needsRefetch || lang === serverLang) return;
 
+    const cachedDataset = languageDatasetCacheRef.current.get(lang);
+    if (cachedDataset) {
+      refetchWithNewData(cachedDataset.items);
+      setCurrentCategories(cachedDataset.categories);
+      setCurrentAuthors(cachedDataset.authors);
+      setError(null);
+      return;
+    }
+
+    let cancelled = false;
+    const controller = new AbortController();
+
     const fetchLanguageData = async () => {
       setLoading(true);
+      setError(null);
       try {
         // Fetch JSON data for the detected language from CDN
         const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-        const response = await fetch(`${r2Base}/data/akyo-data-${lang}.json`);
+        const response = await fetch(`${r2Base}/data/akyo-data-${lang}.json`, {
+          signal: controller.signal,
+        });
         if (!response.ok) throw new Error('Failed to fetch data');
 
-        const jsonData = await response.json();
+        const jsonData: unknown = await response.json();
+        const wrappedData =
+          jsonData && typeof jsonData === 'object'
+            ? (jsonData as Record<string, unknown>).data
+            : undefined;
         // Handle both array format and wrapped format ({ data: [...] })
         const akyoItems: AkyoData[] | undefined = Array.isArray(jsonData)
-          ? jsonData
-          : jsonData && typeof jsonData === 'object' && Array.isArray(jsonData.data)
-            ? jsonData.data
+          ? (jsonData as AkyoData[])
+          : Array.isArray(wrappedData)
+            ? (wrappedData as AkyoData[])
             : undefined;
         if (!akyoItems) {
           const payloadSummary = (() => {
@@ -103,7 +181,7 @@ export function ZukanClient({
               const keys = Object.keys(jsonData as Record<string, unknown>);
               return `{ keys: [${keys.join(', ')}] }`;
             }
-            const raw = JSON.stringify(jsonData);
+            const raw = JSON.stringify(jsonData) ?? String(jsonData);
             const MAX_LENGTH = 1000;
             if (raw.length <= MAX_LENGTH) return raw;
             return `${raw.slice(0, MAX_LENGTH)}...(truncated, ${raw.length} chars)`;
@@ -114,40 +192,34 @@ export function ZukanClient({
           );
         }
 
+        if (cancelled) return;
+
         refetchWithNewData(akyoItems);
-
-        // Extract unique categories and authors from data
-        const uniqueCategories = new Set<string>();
-        const uniqueAuthors = new Set<string>();
-
-        akyoItems.forEach((item: AkyoData) => {
-          const cats = (item.category || item.attribute || '')
-            .split(/[、,]/)
-            .map((s) => s.trim())
-            .filter(Boolean);
-          const auths = (item.author || item.creator || '')
-            .split(/[、,]/)
-            .map((s) => s.trim())
-            .filter(Boolean);
-          cats.forEach((c) => {
-            uniqueCategories.add(c);
-          });
-          auths.forEach((a) => {
-            uniqueAuthors.add(a);
-          });
+        const taxonomy = extractTaxonomy(akyoItems);
+        setCurrentCategories(taxonomy.categories);
+        setCurrentAuthors(taxonomy.authors);
+        languageDatasetCacheRef.current.set(lang, {
+          items: akyoItems,
+          categories: taxonomy.categories,
+          authors: taxonomy.authors,
         });
-
-        setCurrentCategories(Array.from(uniqueCategories).sort());
-        setCurrentAuthors(Array.from(uniqueAuthors).sort());
       } catch (err) {
+        if (cancelled) return;
+        if (err instanceof Error && err.name === 'AbortError') return;
         console.error('[ZukanClient] Failed to refetch language data:', err);
         setError(err instanceof Error ? err.message : 'Failed to load data');
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchLanguageData();
+    void fetchLanguageData();
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [isReady, needsRefetch, lang, serverLang, refetchWithNewData, setLoading, setError]);
 
   const [viewMode, setViewMode] = useState<ViewMode>('grid');

@@ -42,7 +42,7 @@ export async function loadAkyoCsv(options: {
   githubConfig?: GitHubConfig;
 } = {}) {
   const { csvFileName, githubConfig } = options;
-  const csvFile = await fetchCSVFromGitHub(csvFileName, githubConfig);
+  const csvFile = await fetchCSVFromGitHub(csvFileName, { config: githubConfig });
   const records = parseCSV(csvFile.content);
 
   if (records.length === 0) {

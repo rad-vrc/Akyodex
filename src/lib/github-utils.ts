@@ -171,15 +171,15 @@ async function commitFileToGitHub(
  * Convenience wrapper for fetchFileFromGitHub with CSV-specific path
  *
  * @param csvFileName - CSV filename (default: 'akyo-data-ja.csv')
- * @param config - GitHub configuration (optional)
+ * @param options - GitHub fetch options (optional)
  * @returns CSV content and SHA
  */
 export async function fetchCSVFromGitHub(
   csvFileName: string = 'akyo-data-ja.csv',
-  config?: GitHubConfig
+  options?: { config?: GitHubConfig; timeoutMs?: number }
 ): Promise<GitHubFileResponse> {
   const filePath = `data/${csvFileName}`;
-  return fetchFileFromGitHub(filePath, config);
+  return fetchFileFromGitHub(filePath, options?.config, options?.timeoutMs ?? 30000);
 }
 
 /**
