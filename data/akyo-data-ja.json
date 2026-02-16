@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-16T11:08:45.709Z",
-  "count": 740,
+  "updatedAt": "2026-02-16T11:10:54.531Z",
+  "count": 741,
   "data": [
     {
       "id": "0001",
@@ -6663,6 +6663,15 @@
       "comment": "（ささのきの手記）\n永久凍土で眠っていたakyo。目覚めたらずいぶん暖かくなっていてびっくりしている",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb3ebbe2-3ab2-44b5-a782-f241134998b7"
+    },
+    {
+      "id": "0741",
+      "nickname": "アボカドAkyo",
+      "avatarName": "akyo_アボカド",
+      "category": "植物,植物/木の実,食べ物,食べ物/フルーツ",
+      "comment": "（ささのきの手記）\n栄養価が高く森のバターとも呼ばれる。そのおいしさはakyoにも人気である",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef0fead6-7356-4acb-9f18-41bc93c82a73"
     }
   ]
 }
