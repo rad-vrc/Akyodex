@@ -661,7 +661,7 @@ Use an alternative trusted-branch approach (for example, a secrets-dependent job
 | `NEXT_TAG_CACHE_KV` | KV Namespace | OpenNext tag revalidation cache |
 
 `AKYO_KV` と `NEXT_TAG_CACHE_KV` を同じ namespace に割り当てる場合は、キー体系が重ならないことを確認してください。
-- App data cache keys: `akyo-data-*`
+- App data cache keys: `akyo-data:ja`, `akyo-data:en` (pattern: `akyo-data:<locale>`)
 - OpenNext tag cache keys: `<NEXT_BUILD_ID>/<tag>`
 
 ### How to Generate Session Secret
