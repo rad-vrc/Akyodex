@@ -40,7 +40,9 @@ bucket_name = "akyo-images"
 
 [[r2_buckets]]
 binding = "NEXT_INC_CACHE_R2_BUCKET"
-bucket_name = "akyodex-cache"
+# NOTE: Cloudflare Pages 側で存在する bucket 名に合わせる。
+# OpenNext incremental cache keys are namespaced under `incremental-cache/...`.
+bucket_name = "akyo-images"
 
 
 # Environment variables for production
@@ -61,7 +63,8 @@ bucket_name = "akyo-images"
 
 [[env.production.r2_buckets]]
 binding = "NEXT_INC_CACHE_R2_BUCKET"
-bucket_name = "akyodex-cache"
+# NOTE: Production も同一設定。
+bucket_name = "akyo-images"
 
 
 [env.production.vars]
