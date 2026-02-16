@@ -1,13 +1,12 @@
 /**
- * Zukan Page - Server Component (Static Generation)
+ * Zukan Page - Server Component (Dynamic Rendering)
  * 
- * Performance optimizations:
- * - Static generation at build time
- * - ISR (Incremental Static Regeneration) every hour
- * - Parallel data fetching with React cache()
- * - Language detection moved to client-side for static caching
+ * Rendering strategy:
+ * - Dynamic rendering per request (force-dynamic) to ensure CSP nonce consistency
+ * - Parallel data fetching with React cache() + KV cache for performance
+ * - Language detection moved to client-side
  * 
- * Data is pre-rendered with Japanese (default language).
+ * Data is fetched with Japanese (default language).
  * Client component handles language detection and refetching if needed.
  */
 
@@ -19,11 +18,10 @@ import { ZukanClient } from './zukan-client';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { DEFAULT_LANGUAGE } from '@/lib/i18n';
 
-// ISR: Revalidate every hour (3600 seconds)
-export const revalidate = 3600;
-
-// Force static generation (no dynamic server usage)
-export const dynamic = 'force-static';
+// Dynamic rendering to ensure CSP nonce consistency
+// middleware.ts generates a new nonce per request → layout.tsx reads it via headers()
+// Static/ISR would freeze the nonce in cached HTML, causing mismatch (Issue #270)
+export const dynamic = 'force-dynamic';
 
 // Dynamic metadata
 export const metadata: Metadata = {
@@ -39,15 +37,14 @@ export const metadata: Metadata = {
 /**
  * Server Component: Fetch data and render client component
  * 
- * Static Generation Optimization:
+ * Dynamic Rendering:
  * - Pre-renders with default language (Japanese)
  * - Parallel data fetching with Promise.all()
  * - React cache() prevents duplicate fetches
- * - ISR ensures CDN can cache this page for 1 hour
  * - Client handles language detection and refetching if needed
  */
 export default async function ZukanPage() {
-  // Use default language for static generation
+  // Use default language for initial render
   // Client component will detect user's language and refetch if needed
   const lang = DEFAULT_LANGUAGE;
 
