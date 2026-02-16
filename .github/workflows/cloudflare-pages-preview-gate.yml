@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  checks: read
   pull-requests: write
 
 concurrency:
@@ -30,6 +31,7 @@ jobs:
       CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CF_PROJECT_NAME_PRIMARY: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
       CF_PROJECT_NAME_FALLBACK: akyodex
+      GITHUB_TOKEN: ${{ github.token }}
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       PR_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
 
@@ -146,6 +148,40 @@ jobs:
               echo "Deployment is still in progress."
             else
               echo "No deployment found yet for this commit in any project candidate."
+            fi
+
+            # Fallback: Cloudflare API metadata may omit commit hash.
+            # In that case, rely on the GitHub check-run result for "Cloudflare Pages".
+            github_api_url="https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${PR_HEAD_SHA}/check-runs?per_page=100"
+            gh_response=""
+            if gh_response="$(curl --silent --show-error \
+              --retry 5 \
+              --retry-delay 2 \
+              --retry-connrefused \
+              --retry-all-errors \
+              --connect-timeout 10 \
+              --max-time 20 \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "${github_api_url}")"; then
+              gh_parsed=""
+              if gh_parsed="$(node -e 'const body = JSON.parse(process.argv[1]); const runs = Array.isArray(body.check_runs) ? body.check_runs : []; const run = runs.find((item) => String(item?.name ?? "").toLowerCase() === "cloudflare pages"); if (!run) { console.log("not_found|||"); process.exit(0); } const status = String(run?.status ?? ""); const conclusion = String(run?.conclusion ?? ""); const detailsUrl = String(run?.details_url ?? ""); console.log(status + "|" + conclusion + "|" + detailsUrl);' "${gh_response}")"; then
+                IFS='|' read -r gh_status gh_conclusion gh_details_url <<<"${gh_parsed}"
+                if [ "${gh_status}" = "completed" ]; then
+                  if [ "${gh_conclusion}" = "success" ]; then
+                    echo "deployment_url=${gh_details_url}" >> "${GITHUB_OUTPUT}"
+                    echo "deployment_id=github-check-cloudflare-pages" >> "${GITHUB_OUTPUT}"
+                    echo "✅ Cloudflare Pages check-run is successful."
+                    exit 0
+                  fi
+                  if [ "${gh_conclusion}" = "failure" ] || [ "${gh_conclusion}" = "cancelled" ] || [ "${gh_conclusion}" = "timed_out" ] || [ "${gh_conclusion}" = "action_required" ]; then
+                    echo "::error::Cloudflare Pages check-run failed (conclusion=${gh_conclusion}, url=${gh_details_url})"
+                    exit 1
+                  fi
+                fi
+              fi
+            else
+              echo "GitHub check-runs request failed; continuing Cloudflare polling."
             fi
             sleep "${interval_seconds}"
           done
