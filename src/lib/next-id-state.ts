@@ -2,8 +2,10 @@ import type { KVNamespace } from '@/types/kv';
 
 const NEXT_ID_HINT_KEY = 'akyo-next-id-hint';
 const NEXT_ID_HINT_TTL_SECONDS = 60 * 60 * 24 * 30;
+const IN_MEMORY_HINT_MAX_AGE_MS = 2000;
 
 let inMemoryNextIdHint: number | null = null;
+let inMemoryNextIdHintSyncedAtMs = 0;
 
 interface NextIdEnvBindings {
   AKYO_KV?: KVNamespace;
@@ -45,23 +47,30 @@ async function getKVNamespace(): Promise<KVNamespace | null> {
 }
 
 export async function readNextIdHint(): Promise<number | null> {
-  if (inMemoryNextIdHint !== null) {
+  const now = Date.now();
+  const hasFreshInMemoryHint =
+    inMemoryNextIdHint !== null &&
+    now - inMemoryNextIdHintSyncedAtMs <= IN_MEMORY_HINT_MAX_AGE_MS;
+
+  if (hasFreshInMemoryHint) {
     return inMemoryNextIdHint;
   }
 
   const kv = await getKVNamespace();
-  if (!kv) return null;
+  if (!kv) return inMemoryNextIdHint;
 
   try {
     const rawHint = await kv.get(NEXT_ID_HINT_KEY);
     const parsedHint = parseAkyoIdNumber(rawHint);
-    if (parsedHint !== null) {
-      inMemoryNextIdHint = parsedHint;
+    const mergedHint = pickLatestAkyoId(inMemoryNextIdHint, parsedHint);
+    if (mergedHint !== null) {
+      inMemoryNextIdHint = mergedHint;
+      inMemoryNextIdHintSyncedAtMs = now;
     }
-    return parsedHint;
+    return mergedHint;
   } catch (error) {
     console.warn('[next-id-state] Failed to read hint from KV:', error);
-    return null;
+    return inMemoryNextIdHint;
   }
 }
 
@@ -71,6 +80,7 @@ export async function persistNextIdHint(nextId: string | number): Promise<void> 
 
   const mergedLocalHint = pickLatestAkyoId(inMemoryNextIdHint, candidateHint);
   inMemoryNextIdHint = mergedLocalHint;
+  inMemoryNextIdHintSyncedAtMs = Date.now();
 
   const kv = await getKVNamespace();
   if (!kv || mergedLocalHint === null) return;
@@ -81,6 +91,7 @@ export async function persistNextIdHint(nextId: string | number): Promise<void> 
     if (hintToStore === null) return;
 
     inMemoryNextIdHint = hintToStore;
+    inMemoryNextIdHintSyncedAtMs = Date.now();
     await kv.put(NEXT_ID_HINT_KEY, formatAkyoId(hintToStore), {
       expirationTtl: NEXT_ID_HINT_TTL_SECONDS,
     });

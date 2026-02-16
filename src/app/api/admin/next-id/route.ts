@@ -32,6 +32,7 @@ const GITHUB_CSV_URL =
   'https://raw.githubusercontent.com/rad-vrc/Akyodex/main/data/akyo-data-ja.csv';
 const FETCH_TIMEOUT_MS = 5000;
 const NEXT_ID_CACHE_TTL_MS = 1500;
+const GITHUB_API_TIMEOUT_MS = 3500;
 
 let cachedCsvNextId: { value: number; expiresAt: number } | null = null;
 
@@ -126,16 +127,6 @@ export async function GET() {
         }
       }
 
-      if (!csvContent) {
-        // Authoritative source: GitHub API (if token is available).
-        try {
-          const githubCsv = await fetchCSVFromGitHub('akyo-data-ja.csv');
-          csvContent = githubCsv.content;
-        } catch {
-          csvContent = '';
-        }
-      }
-
       if (!csvContent && bucket) {
         // Fast source: R2 bucket (supports legacy and current key layouts).
         const configuredPath = process.env.GITHUB_CSV_PATH_JA;
@@ -168,6 +159,20 @@ export async function GET() {
             csvContent = fetched;
             break;
           }
+        }
+      }
+
+      if (!csvContent) {
+        // Authoritative fallback: GitHub API (short timeout to avoid admin UI stalls).
+        try {
+          const githubCsv = await fetchCSVFromGitHub(
+            'akyo-data-ja.csv',
+            undefined,
+            GITHUB_API_TIMEOUT_MS
+          );
+          csvContent = githubCsv.content;
+        } catch {
+          csvContent = '';
         }
       }
 

@@ -176,10 +176,11 @@ async function commitFileToGitHub(
  */
 export async function fetchCSVFromGitHub(
   csvFileName: string = 'akyo-data-ja.csv',
-  config?: GitHubConfig
+  config?: GitHubConfig,
+  timeoutMs: number = 30000
 ): Promise<GitHubFileResponse> {
   const filePath = `data/${csvFileName}`;
-  return fetchFileFromGitHub(filePath, config);
+  return fetchFileFromGitHub(filePath, config, timeoutMs);
 }
 
 /**

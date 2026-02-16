@@ -165,11 +165,15 @@ export function ZukanClient({
         if (!response.ok) throw new Error('Failed to fetch data');
 
         const jsonData = await response.json();
+        const wrappedData =
+          jsonData && typeof jsonData === 'object'
+            ? (jsonData as { data?: unknown }).data
+            : undefined;
         // Handle both array format and wrapped format ({ data: [...] })
         const akyoItems: AkyoData[] | undefined = Array.isArray(jsonData)
           ? jsonData
-          : jsonData && typeof jsonData === 'object' && Array.isArray(jsonData.data)
-            ? jsonData.data
+          : Array.isArray(wrappedData)
+            ? (wrappedData as AkyoData[])
             : undefined;
         if (!akyoItems) {
           const payloadSummary = (() => {
