@@ -28,7 +28,8 @@ jobs:
     env:
       CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CF_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'akyodex' }}
+      CF_PROJECT_NAME_PRIMARY: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+      CF_PROJECT_NAME_FALLBACK: akyodex
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       PR_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
 
@@ -54,70 +55,98 @@ jobs:
         run: |
           set -euo pipefail
 
-          api_url="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${CF_PROJECT_NAME}/deployments?per_page=50"
           max_attempts=30
           interval_seconds=20
+          project_candidates=()
+
+          if [ -n "${CF_PROJECT_NAME_PRIMARY:-}" ]; then
+            project_candidates+=("${CF_PROJECT_NAME_PRIMARY}")
+          fi
+          if [ -n "${CF_PROJECT_NAME_FALLBACK:-}" ]; then
+            is_duplicate=false
+            for existing in "${project_candidates[@]:-}"; do
+              if [ "${existing}" = "${CF_PROJECT_NAME_FALLBACK}" ]; then
+                is_duplicate=true
+                break
+              fi
+            done
+            if [ "${is_duplicate}" = "false" ]; then
+              project_candidates+=("${CF_PROJECT_NAME_FALLBACK}")
+            fi
+          fi
+
+          if [ ${#project_candidates[@]} -eq 0 ]; then
+            echo "::error::No Cloudflare Pages project candidates configured."
+            exit 1
+          fi
 
           echo "Polling Cloudflare Pages preview deployment..."
-          echo "- project: ${CF_PROJECT_NAME}"
+          echo "- projects: ${project_candidates[*]}"
           echo "- sha: ${PR_HEAD_SHA}"
           echo "- branch: ${PR_HEAD_BRANCH}"
 
           for ((attempt=1; attempt<=max_attempts; attempt++)); do
             echo "Attempt ${attempt}/${max_attempts}"
+            found_in_progress=false
 
-            response=""
-            if ! response="$(curl --silent --show-error \
-              --retry 5 \
-              --retry-delay 2 \
-              --retry-connrefused \
-              --retry-all-errors \
-              --connect-timeout 10 \
-              --max-time 20 \
-              -H "Authorization: Bearer ${CF_API_TOKEN}" \
-              -H "Content-Type: application/json" \
-              "${api_url}")"; then
-              echo "Cloudflare API request failed on attempt ${attempt}; retrying."
-              sleep "${interval_seconds}"
-              continue
+            for project_name in "${project_candidates[@]}"; do
+              api_url="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${project_name}/deployments?per_page=50"
+
+              response=""
+              if ! response="$(curl --silent --show-error \
+                --retry 5 \
+                --retry-delay 2 \
+                --retry-connrefused \
+                --retry-all-errors \
+                --connect-timeout 10 \
+                --max-time 20 \
+                -H "Authorization: Bearer ${CF_API_TOKEN}" \
+                -H "Content-Type: application/json" \
+                "${api_url}")"; then
+                echo "Cloudflare API request failed for project ${project_name}; trying next candidate."
+                continue
+              fi
+
+              if [ -z "${response}" ]; then
+                echo "Cloudflare API returned empty response for project ${project_name}; trying next candidate."
+                continue
+              fi
+
+              parsed=""
+              if ! parsed="$(node -e 'const body = JSON.parse(process.argv[1]); const sha = process.argv[2]; const branch = process.argv[3]; const deployments = Array.isArray(body.result) ? body.result : []; const match = deployments.find((deployment) => { const metadata = deployment?.deployment_trigger?.metadata ?? {}; const commitHash = metadata.commit_hash ?? metadata.commit_sha ?? metadata.sha ?? deployment?.source?.revision ?? ""; const commitBranch = metadata.branch ?? metadata.commit_ref ?? deployment?.source?.branch ?? ""; return commitHash === sha && (commitBranch === "" || commitBranch === branch); }); if (!match) { console.log("not_found|||"); process.exit(0); } const status = String(match?.latest_stage?.status ?? "").toLowerCase(); const stageName = String(match?.latest_stage?.name ?? ""); const deploymentUrl = String(match?.url ?? (Array.isArray(match?.aliases) && match.aliases[0] ? match.aliases[0] : "")); const deploymentId = String(match?.short_id ?? match?.id ?? ""); console.log(status + "|" + stageName + "|" + deploymentUrl + "|" + deploymentId);' "${response}" "${PR_HEAD_SHA}" "${PR_HEAD_BRANCH}")"; then
+                echo "Failed to parse Cloudflare API response for project ${project_name}; trying next candidate."
+                continue
+              fi
+
+              IFS='|' read -r status stage_name deployment_url deployment_id <<<"${parsed}"
+
+              if [ "${status}" = "not_found" ]; then
+                echo "No deployment match yet in project ${project_name}."
+                continue
+              fi
+
+              echo "Found deployment ${deployment_id} in ${project_name} (stage=${stage_name}, status=${status})"
+
+              if [ "${status}" = "success" ]; then
+                echo "deployment_url=${deployment_url}" >> "${GITHUB_OUTPUT}"
+                echo "deployment_id=${deployment_id}" >> "${GITHUB_OUTPUT}"
+                echo "✅ Cloudflare Pages preview is successful."
+                exit 0
+              fi
+
+              if [ "${status}" = "failure" ] || [ "${status}" = "failed" ] || [ "${status}" = "error" ] || [ "${status}" = "canceled" ] || [ "${status}" = "cancelled" ]; then
+                echo "::error::Cloudflare Pages preview failed (project=${project_name}, deployment=${deployment_id}, status=${status}, url=${deployment_url})"
+                exit 1
+              fi
+
+              found_in_progress=true
+            done
+
+            if [ "${found_in_progress}" = "true" ]; then
+              echo "Deployment is still in progress."
+            else
+              echo "No deployment found yet for this commit in any project candidate."
             fi
-
-            if [ -z "${response}" ]; then
-              echo "Cloudflare API returned empty response on attempt ${attempt}; retrying."
-              sleep "${interval_seconds}"
-              continue
-            fi
-
-            parsed=""
-            if ! parsed="$(node -e 'const body = JSON.parse(process.argv[1]); const sha = process.argv[2]; const branch = process.argv[3]; const deployments = Array.isArray(body.result) ? body.result : []; const match = deployments.find((deployment) => { const metadata = deployment?.deployment_trigger?.metadata ?? {}; const commitHash = metadata.commit_hash ?? metadata.commit_sha ?? metadata.sha ?? deployment?.source?.revision ?? ""; const commitBranch = metadata.branch ?? metadata.commit_ref ?? deployment?.source?.branch ?? ""; return commitHash === sha && (commitBranch === "" || commitBranch === branch); }); if (!match) { console.log("not_found|||"); process.exit(0); } const status = String(match?.latest_stage?.status ?? "").toLowerCase(); const stageName = String(match?.latest_stage?.name ?? ""); const deploymentUrl = String(match?.url ?? (Array.isArray(match?.aliases) && match.aliases[0] ? match.aliases[0] : "")); const deploymentId = String(match?.short_id ?? match?.id ?? ""); console.log(status + "|" + stageName + "|" + deploymentUrl + "|" + deploymentId);' "${response}" "${PR_HEAD_SHA}" "${PR_HEAD_BRANCH}")"; then
-              echo "Failed to parse Cloudflare API response on attempt ${attempt}; retrying."
-              sleep "${interval_seconds}"
-              continue
-            fi
-
-            IFS='|' read -r status stage_name deployment_url deployment_id <<<"${parsed}"
-
-            if [ "${status}" = "not_found" ]; then
-              echo "No deployment found yet for this commit."
-              sleep "${interval_seconds}"
-              continue
-            fi
-
-            echo "Found deployment ${deployment_id} (stage=${stage_name}, status=${status})"
-
-            if [ "${status}" = "success" ]; then
-              echo "deployment_url=${deployment_url}" >> "${GITHUB_OUTPUT}"
-              echo "deployment_id=${deployment_id}" >> "${GITHUB_OUTPUT}"
-              echo "✅ Cloudflare Pages preview is successful."
-              exit 0
-            fi
-
-            if [ "${status}" = "failure" ] || [ "${status}" = "failed" ] || [ "${status}" = "error" ] || [ "${status}" = "canceled" ] || [ "${status}" = "cancelled" ]; then
-              echo "::error::Cloudflare Pages preview failed (deployment=${deployment_id}, status=${status}, url=${deployment_url})"
-              exit 1
-            fi
-
-            echo "Deployment is still in progress."
             sleep "${interval_seconds}"
           done
 
