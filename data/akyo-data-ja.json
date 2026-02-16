@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-16T01:54:47.802Z",
-  "count": 739,
+  "updatedAt": "2026-02-16T11:08:45.709Z",
+  "count": 740,
   "data": [
     {
       "id": "0001",
@@ -6654,6 +6654,15 @@
       "comment": "Akyo、ゲットだぜ！",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bebc35-c78b-4755-8e75-0cd26881b3ae"
+    },
+    {
+      "id": "0740",
+      "nickname": "マンモスAkyo",
+      "avatarName": "akyo_マンモス",
+      "category": "動物,動物/マンモス,四足歩行,復活,器官,器官/鼻,環境・天候,環境・天候/雪,睡眠",
+      "comment": "（ささのきの手記）\n永久凍土で眠っていたakyo。目覚めたらずいぶん暖かくなっていてびっくりしている",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb3ebbe2-3ab2-44b5-a782-f241134998b7"
     }
   ]
 }
