@@ -24,7 +24,7 @@ const eslintConfig = [
     ],
   },
   {
-    // Downgrade new React 19.2 compiler lint rules from error → warn.
+    // Downgrade new React 19.2 compiler lint rules from error -> warn.
     // These flag pre-existing patterns (setState in useEffect, Math.random in useRef)
     // that are valid in this codebase. TODO: Refactor to satisfy these rules.
     rules: {

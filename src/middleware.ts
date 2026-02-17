@@ -55,7 +55,6 @@ const SCRIPT_SRC = [
     "https://googletagmanager.com",
     "https://*.googletagmanager.com",
     "https://www.google-analytics.com",
-    "https://api.github.com",
     "https://paulrosen.github.io",
     "https://cdn-cookieyes.com",
     "https://fonts.googleapis.com",
@@ -79,6 +78,8 @@ const IMG_SRC = [
     "'self'",
     "data:",
     "blob:",
+    "https://imagedelivery.net",
+    "https://*.imagedelivery.net",
     "https://*.akyodex.com",
     "https://*.vrchat.com",
     "https://*.vrcimg.com",
@@ -97,6 +98,8 @@ const CONNECT_SRC = [
     "https://*.sentry.io",
     "https://browser.sentry-cdn.com",
     "https://analytics.google.com",
+    "https://www.google-analytics.com",
+    "https://api.github.com",
     "https://images.akyodex.com",
 ];
 
