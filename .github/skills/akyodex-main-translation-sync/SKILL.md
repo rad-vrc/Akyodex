@@ -57,7 +57,7 @@ git fetch origin
 git rebase origin/main
 ```
 
-If rebase conflicts occur, resolve conflicts, continue rebase, and rerun validation.
+If rebase conflicts occur, resolve conflicts, `git rebase --continue`, and rerun Step 4 validation (`npm run test:csv` + `npx tsc --noEmit --incremental false`).
 
 ## Step 3: Regenerate Translation Data
 
@@ -97,7 +97,10 @@ npm run test:csv
 npx tsc --noEmit --incremental false
 ```
 
-If either fails, fix translation/map issues before commit.
+- `test:csv` 成功時: 出力末尾にエラーなし。失敗時はカテゴリマップ不足やCSV構造異常が原因。
+- `tsc` 成功時: 出力なし（exit 0）。失敗時は JSON 型定義と生成データの不整合が原因。
+
+どちらか失敗したら、該当マップファイルまたはCSVを修正してから次へ進む。
 
 ## Step 5: Commit and PR
 
