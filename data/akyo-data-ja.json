@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-16T11:10:54.531Z",
+  "updatedAt": "2026-02-16T13:46:52.006Z",
   "count": 741,
   "data": [
     {
@@ -2861,7 +2861,7 @@
       "id": "0318",
       "nickname": "ぞうAkyo",
       "avatarName": "akyo_ぞう",
-      "category": "動物,動物/ぞう,四足歩行",
+      "category": "動物,動物/ぞう,四足歩行,器官,器官/鼻",
       "comment": "",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef619ead-45bc-4512-8b51-2ff383572dc2"
@@ -6218,7 +6218,7 @@
       "id": "0691",
       "nickname": "キバナヘイシソウAkyo",
       "avatarName": "Sarraceniakyo flava",
-      "category": "植物",
+      "category": "植物,囚われの身",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f71ae964-f130-45fe-976d-a51d8caa1ed5"
@@ -6281,7 +6281,7 @@
       "id": "0698",
       "nickname": "セーターぞうAkyo",
       "avatarName": "akyo_ぞうセーター",
-      "category": "ファッション,ファッション/ぼうし,ファッション/厚着,季節・行事,季節・行事/冬,動物,動物/ぞう,四足歩行",
+      "category": "ファッション,ファッション/ぼうし,ファッション/厚着,季節・行事,季節・行事/冬,動物,動物/ぞう,四足歩行,器官,器官/鼻",
       "comment": "セーターを着た冬仕様のぞうakyo。あったかいぞう",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_22a5fa0e-e92d-426e-83a9-e6a9a7549f51"
@@ -6407,7 +6407,7 @@
       "id": "0712",
       "nickname": "キツネツキ式雪狐Akyo",
       "avatarName": "Snow Fox Akyo",
-      "category": "動物,動物/きつね,季節・行事,季節・行事/冬,環境・天候,環境・天候/雪,素材・原材料,形状・触り心地,形状・触り心地/冷たい",
+      "category": "動物,動物/きつね,季節・行事,季節・行事/冬,環境・天候,環境・天候/雪・氷,素材・原材料,形状・触り心地,形状・触り心地/冷たい",
       "comment": "氷の惑星で発見されたらしい。",
       "author": "Smug Kitty",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_9c67ca40-efe4-450e-9dff-b1115cce3bf0"
@@ -6659,7 +6659,7 @@
       "id": "0740",
       "nickname": "マンモスAkyo",
       "avatarName": "akyo_マンモス",
-      "category": "動物,動物/マンモス,四足歩行,復活,器官,器官/鼻,環境・天候,環境・天候/雪,睡眠",
+      "category": "動物,動物/マンモス,四足歩行,復活,器官,器官/鼻,環境・天候,環境・天候/雪・氷,睡眠",
       "comment": "（ささのきの手記）\n永久凍土で眠っていたakyo。目覚めたらずいぶん暖かくなっていてびっくりしている",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb3ebbe2-3ab2-44b5-a782-f241134998b7"
