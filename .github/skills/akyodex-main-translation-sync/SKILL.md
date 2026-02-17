@@ -7,7 +7,7 @@ description: Sync Akyodex work with the latest main branch, regenerate English a
 
 ## Overview
 
-Use this workflow for translation refresh tasks in `/home/dorad/Akyodex`:
+Use this workflow for translation refresh tasks (run from the repository root):
 
 - Bring branch up to date with `origin/main`
 - Regenerate `data/akyo-data-en.csv` and `data/akyo-data-ko.csv`
@@ -105,8 +105,8 @@ Review and commit:
 
 ```bash
 git status --short
-git diff -- data/akyo-data-en.csv data/akyo-data-ko.csv data/akyo-data-ja.json data/akyo-data-en.json data/akyo-data-ko.json
-git add data/akyo-data-en.csv data/akyo-data-ko.csv data/akyo-data-ja.json data/akyo-data-en.json data/akyo-data-ko.json
+git diff -- data/ scripts/
+git add data/ scripts/
 git commit -m "chore: sync en/ko translation data from ja"
 ```
 
