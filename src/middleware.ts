@@ -61,6 +61,11 @@ const SCRIPT_SRC = [
     "https://fonts.googleapis.com",
 ];
 
+/**
+ * Note: 'unsafe-inline' is retained for compatibility with third-party widgets
+ * like Dify and Sentry that may inject inline styles. Nonce-based protection
+ * is applied in parallel to allow transition to strict styles where possible.
+ */
 const STYLE_SRC = [
     "'self'",
     "'unsafe-inline'",
@@ -128,6 +133,13 @@ export function middleware(request: NextRequest) {
      * While the 'matcher' in the config handles most exclusions, this block
      * serves as a defensive fallback to ensure static assets and API routes
      * are never processed by the middleware logic.
+     *
+     * IMPORTANT:
+     * - API routes (/api/*) are bypassed here under the assumption they return JSON only.
+     * - Static assets (with extensions) are bypassed to avoid CSP overhead.
+     *
+     * TODO: If any API route is added in the future that returns HTML (e.g. OGP generator,
+     * server-side rendered charts), it must be audited and CSP headers applied.
      */
     if (
         pathname.startsWith('/_next') ||
@@ -149,7 +161,7 @@ export function middleware(request: NextRequest) {
     const cspHeader = `
     default-src 'self';
     script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
-    style-src ${STYLE_SRC.join(' ')};
+    style-src ${STYLE_SRC.join(' ')} 'nonce-${nonce}';
     img-src ${IMG_SRC.join(' ')};
     font-src ${FONT_SRC.join(' ')};
     connect-src ${CONNECT_SRC.join(' ')};
