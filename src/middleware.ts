@@ -24,7 +24,8 @@ const LANGUAGE_COOKIE_OPTIONS = {
     maxAge: 60 * 60 * 24 * 365, // 1 year
     path: '/',
     sameSite: 'lax' as const,
-    secure: true,
+    // Only set secure=true in production to allow local persistence on http://localhost
+    secure: process.env.NODE_ENV === 'production',
 };
 
 /** Apply common security headers (CSP + nonce) to a response */
@@ -33,10 +34,71 @@ function applySecurityHeaders(response: NextResponse, cspHeader: string, nonce: 
     response.headers.set('x-nonce', nonce);
 }
 
+/**
+ * CSP Source Constants
+ * Refactored into arrays for easier maintenance as requested in PR review.
+ */
+const SCRIPT_SRC = [
+    "'self'",
+    "*.dify.dev",
+    "*.dify.ai",
+    "*.udify.app",
+    "udify.app",
+    "js.sentry-cdn.com",
+    "browser.sentry-cdn.com",
+    "*.sentry.io",
+    "https://analytics.google.com",
+    "googletagmanager.com",
+    "*.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://api.github.com",
+    "https://paulrosen.github.io",
+    "https://cdn-cookieyes.com",
+    "fonts.googleapis.com",
+];
+
+const STYLE_SRC = [
+    "'self'",
+    "'unsafe-inline'",
+    "udify.app",
+    "*.udify.app",
+    "fonts.googleapis.com",
+];
+
+const IMG_SRC = [
+    "'self'",
+    "data:",
+    "blob:",
+    "https:",
+    "*.akyodex.com",
+    "*.vrchat.com",
+    "*.r2.cloudflarestorage.com",
+    "udify.app",
+    "*.udify.app",
+];
+
+const CONNECT_SRC = [
+    "'self'",
+    "*.dify.dev",
+    "*.dify.ai",
+    "*.udify.app",
+    "udify.app",
+    "*.r2.cloudflarestorage.com",
+    "*.sentry.io",
+    "browser.sentry-cdn.com",
+    "https://analytics.google.com",
+    "https://images.akyodex.com",
+];
+
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Skip middleware for static files and API routes
+    /**
+     * Defensive check: redundant path exclusion.
+     * While the 'matcher' in the config handles most exclusions, this block
+     * serves as a defensive fallback to ensure static assets and API routes
+     * are never processed by the middleware logic.
+     */
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/api') ||
@@ -51,17 +113,16 @@ export function middleware(request: NextRequest) {
     const nonce = btoa(String.fromCharCode(...randomBytes));
 
     // Content Security Policy
-    // Note:
-    // - Browsers ignore 'unsafe-inline' when nonce/hash is present in script-src.
-    // - Dify injects a known inline bootstrap snippet; allow it via hash.
-    //   If Dify updates that snippet, this hash must be refreshed.
+    // Note: Dify injects a known inline bootstrap snippet; allow it via hash.
+    const difyHash = "'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4='";
+
     const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4=' *.dify.dev *.dify.ai *.udify.app udify.app js.sentry-cdn.com browser.sentry-cdn.com *.sentry.io https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com https://paulrosen.github.io https://cdn-cookieyes.com fonts.googleapis.com;
-    style-src 'self' 'unsafe-inline' udify.app *.udify.app fonts.googleapis.com;
-    img-src 'self' data: blob: https: *.akyodex.com *.vrchat.com *.r2.cloudflarestorage.com udify.app *.udify.app;
+    script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
+    style-src ${STYLE_SRC.join(' ')};
+    img-src ${IMG_SRC.join(' ')};
     font-src 'self' data: udify.app *.udify.app fonts.gstatic.com;
-    connect-src 'self' *.dify.dev *.dify.ai *.udify.app udify.app *.r2.cloudflarestorage.com *.sentry.io browser.sentry-cdn.com https://analytics.google.com https://images.akyodex.com;
+    connect-src ${CONNECT_SRC.join(' ')};
     frame-src 'self' udify.app *.udify.app;
     worker-src 'self' blob:;
     media-src 'self' data: mediastream: blob:;
