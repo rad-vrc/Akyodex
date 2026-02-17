@@ -19,6 +19,20 @@ import { NextResponse } from 'next/server';
 
 const LANGUAGE_COOKIE = 'AKYO_LANG';
 
+/** Cookie options shared across all language cookie calls */
+const LANGUAGE_COOKIE_OPTIONS = {
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+    path: '/',
+    sameSite: 'lax' as const,
+    secure: true,
+};
+
+/** Apply common security headers (CSP + nonce) to a response */
+function applySecurityHeaders(response: NextResponse, cspHeader: string, nonce: string): void {
+    response.headers.set('Content-Security-Policy', cspHeader);
+    response.headers.set('x-nonce', nonce);
+}
+
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
@@ -63,8 +77,7 @@ export function middleware(request: NextRequest) {
     // Allow /admin routes to load (client component handles auth UI)
     if (pathname.startsWith('/admin')) {
         const response = NextResponse.next();
-        response.headers.set('Content-Security-Policy', cspHeader);
-        response.headers.set('x-nonce', nonce);
+        applySecurityHeaders(response, cspHeader, nonce);
         return response;
     }
 
@@ -74,8 +87,7 @@ export function middleware(request: NextRequest) {
     if (cookieLang && isValidLanguage(cookieLang)) {
         const response = NextResponse.next();
         response.headers.set('x-akyo-lang', cookieLang);
-        response.headers.set('Content-Security-Policy', cspHeader);
-        response.headers.set('x-nonce', nonce);
+        applySecurityHeaders(response, cspHeader, nonce);
         return response;
     }
 
@@ -85,12 +97,8 @@ export function middleware(request: NextRequest) {
         const langFromCountry = getLanguageFromCountry(cfCountry);
         const response = NextResponse.next();
         response.headers.set('x-akyo-lang', langFromCountry);
-        response.headers.set('Content-Security-Policy', cspHeader);
-        response.headers.set('x-nonce', nonce);
-        response.cookies.set(LANGUAGE_COOKIE, langFromCountry, {
-            maxAge: 60 * 60 * 24 * 365, // 1 year
-            path: '/',
-        });
+        applySecurityHeaders(response, cspHeader, nonce);
+        response.cookies.set(LANGUAGE_COOKIE, langFromCountry, LANGUAGE_COOKIE_OPTIONS);
         return response;
     }
 
@@ -100,12 +108,8 @@ export function middleware(request: NextRequest) {
 
     const response = NextResponse.next();
     response.headers.set('x-akyo-lang', detectedLang);
-    response.headers.set('Content-Security-Policy', cspHeader);
-    response.headers.set('x-nonce', nonce);
-    response.cookies.set(LANGUAGE_COOKIE, detectedLang, {
-        maxAge: 60 * 60 * 24 * 365, // 1 year
-        path: '/',
-    });
+    applySecurityHeaders(response, cspHeader, nonce);
+    response.cookies.set(LANGUAGE_COOKIE, detectedLang, LANGUAGE_COOKIE_OPTIONS);
 
     return response;
 }
