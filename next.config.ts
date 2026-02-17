@@ -9,18 +9,18 @@ const nextConfig: NextConfig = {
     // 2. Set NEXT_PUBLIC_CLOUDFLARE_IMAGES_ACCOUNT_HASH=your_account_hash
     // 3. Change unoptimized to false
     unoptimized: process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES !== 'true',
-    
+
     // Use custom loader when Cloudflare Images is enabled
     ...(process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true' && {
       loader: 'custom',
       loaderFile: './src/lib/cloudflare-image-loader.ts',
     }),
-    
+
     // Image formats and sizes
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    
+
     // Remote patterns for image sources
     remotePatterns: [
       {
@@ -109,9 +109,6 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // i18n対応準備
-  i18n: undefined, // App Routerでは別の方法で実装
-
   // 環境変数の検証（オプション）
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://akyodex.com',
@@ -120,7 +117,7 @@ const nextConfig: NextConfig = {
 
   // パフォーマンス最適化
   reactStrictMode: true,
-  
+
   // 本番環境での最適化
   poweredByHeader: false,
   compress: true,
