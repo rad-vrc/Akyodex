@@ -62,9 +62,10 @@ const SCRIPT_SRC = [
 ];
 
 /**
- * Note: 'unsafe-inline' is retained for compatibility with third-party widgets
- * like Dify and Sentry that may inject inline styles. Nonce-based protection
- * is applied in parallel to allow transition to strict styles where possible.
+ * Note: 'unsafe-inline' is required for style-src because:
+ * 1. React's inline 'style={{...}}' attributes are used extensively throughout the app.
+ * 2. Browsers ignore 'unsafe-inline' if a nonce is present, which would block React attributes.
+ * 3. Third-party widgets (Dify, Sentry) also depend on inline styles.
  */
 const STYLE_SRC = [
     "'self'",
@@ -134,12 +135,12 @@ export function middleware(request: NextRequest) {
      * serves as a defensive fallback to ensure static assets and API routes
      * are never processed by the middleware logic.
      *
-     * IMPORTANT:
-     * - API routes (/api/*) are bypassed here under the assumption they return JSON only.
+     * ASSUMPTION:
+     * - API routes (/api/*) are expected to return JSON only. If any API returns HTML
+     *   in the future, CSP headers must be manually applied or this block updated.
      * - Static assets (with extensions) are bypassed to avoid CSP overhead.
      *
-     * TODO: If any API route is added in the future that returns HTML (e.g. OGP generator,
-     * server-side rendered charts), it must be audited and CSP headers applied.
+     * TODO: Audit and apply CSP for any HTML-returning API endpoints (e.g. OGP handlers).
      */
     if (
         pathname.startsWith('/_next') ||
@@ -161,7 +162,7 @@ export function middleware(request: NextRequest) {
     const cspHeader = `
     default-src 'self';
     script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
-    style-src ${STYLE_SRC.join(' ')} 'nonce-${nonce}';
+    style-src ${STYLE_SRC.join(' ')};
     img-src ${IMG_SRC.join(' ')};
     font-src ${FONT_SRC.join(' ')};
     connect-src ${CONNECT_SRC.join(' ')};
