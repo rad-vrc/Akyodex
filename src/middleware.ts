@@ -36,33 +36,37 @@ function applySecurityHeaders(response: NextResponse, cspHeader: string, nonce: 
 
 /**
  * CSP Source Constants
- * Refactored into arrays for easier maintenance as requested in PR review.
+ * Refactored into arrays for easier maintenance.
+ * Criteria for extraction:
+ * - Directives containing external hosts that may change per deployment.
+ * - Directives likely to require sharing or frequent updates.
+ * - Complex lists where normalization (e.g. adding https://) is needed.
  */
 const SCRIPT_SRC = [
     "'self'",
-    "*.dify.dev",
-    "*.dify.ai",
-    "*.udify.app",
-    "udify.app",
-    "js.sentry-cdn.com",
-    "browser.sentry-cdn.com",
-    "*.sentry.io",
+    "https://*.dify.dev",
+    "https://*.dify.ai",
+    "https://*.udify.app",
+    "https://udify.app",
+    "https://js.sentry-cdn.com",
+    "https://browser.sentry-cdn.com",
+    "https://*.sentry.io",
     "https://analytics.google.com",
-    "googletagmanager.com",
-    "*.googletagmanager.com",
+    "https://googletagmanager.com",
+    "https://*.googletagmanager.com",
     "https://www.google-analytics.com",
     "https://api.github.com",
     "https://paulrosen.github.io",
     "https://cdn-cookieyes.com",
-    "fonts.googleapis.com",
+    "https://fonts.googleapis.com",
 ];
 
 const STYLE_SRC = [
     "'self'",
     "'unsafe-inline'",
-    "udify.app",
-    "*.udify.app",
-    "fonts.googleapis.com",
+    "https://udify.app",
+    "https://*.udify.app",
+    "https://fonts.googleapis.com",
 ];
 
 const IMG_SRC = [
@@ -70,24 +74,50 @@ const IMG_SRC = [
     "data:",
     "blob:",
     "https:",
-    "*.akyodex.com",
-    "*.vrchat.com",
-    "*.r2.cloudflarestorage.com",
-    "udify.app",
-    "*.udify.app",
+    "https://*.akyodex.com",
+    "https://*.vrchat.com",
+    "https://*.r2.cloudflarestorage.com",
+    "https://udify.app",
+    "https://*.udify.app",
 ];
 
 const CONNECT_SRC = [
     "'self'",
-    "*.dify.dev",
-    "*.dify.ai",
-    "*.udify.app",
-    "udify.app",
-    "*.r2.cloudflarestorage.com",
-    "*.sentry.io",
-    "browser.sentry-cdn.com",
+    "https://*.dify.dev",
+    "https://*.dify.ai",
+    "https://*.udify.app",
+    "https://udify.app",
+    "https://*.r2.cloudflarestorage.com",
+    "https://*.sentry.io",
+    "https://browser.sentry-cdn.com",
     "https://analytics.google.com",
     "https://images.akyodex.com",
+];
+
+const FONT_SRC = [
+    "'self'",
+    "data:",
+    "https://udify.app",
+    "https://*.udify.app",
+    "https://fonts.gstatic.com",
+];
+
+const FRAME_SRC = [
+    "'self'",
+    "https://udify.app",
+    "https://*.udify.app",
+];
+
+const MEDIA_SRC = [
+    "'self'",
+    "data:",
+    "mediastream:",
+    "blob:",
+];
+
+const WORKER_SRC = [
+    "'self'",
+    "blob:",
 ];
 
 export function middleware(request: NextRequest) {
@@ -121,11 +151,11 @@ export function middleware(request: NextRequest) {
     script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
     style-src ${STYLE_SRC.join(' ')};
     img-src ${IMG_SRC.join(' ')};
-    font-src 'self' data: udify.app *.udify.app fonts.gstatic.com;
+    font-src ${FONT_SRC.join(' ')};
     connect-src ${CONNECT_SRC.join(' ')};
-    frame-src 'self' udify.app *.udify.app;
-    worker-src 'self' blob:;
-    media-src 'self' data: mediastream: blob:;
+    frame-src ${FRAME_SRC.join(' ')};
+    worker-src ${WORKER_SRC.join(' ')};
+    media-src ${MEDIA_SRC.join(' ')};
     object-src 'none';
     base-uri 'self';
     form-action 'self';
