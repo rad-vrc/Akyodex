@@ -114,7 +114,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_R2_BASE: process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com',
   },
 
-  // State
+  // React strict mode
   reactStrictMode: true,
 
   // Optimization

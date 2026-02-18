@@ -99,7 +99,7 @@ const CONNECT_SRC = [
     "https://browser.sentry-cdn.com",
     "https://analytics.google.com",
     "https://www.google-analytics.com",
-    "https://api.github.com",
+    "https://api.github.com", // Data endpoint (moved from SCRIPT_SRC)
     "https://images.akyodex.com",
 ];
 
@@ -195,6 +195,8 @@ export function middleware(request: NextRequest) {
         const response = NextResponse.next();
         response.headers.set('x-akyo-lang', cookieLang);
         applySecurityHeaders(response, cspHeader, nonce);
+        // Refresh cookie expiry to maintain persistence
+        response.cookies.set(LANGUAGE_COOKIE, cookieLang, LANGUAGE_COOKIE_OPTIONS);
         return response;
     }
 
