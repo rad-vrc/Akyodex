@@ -379,6 +379,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       };
 
       let { response, result } = await uploadWithId(submitId);
+      // Initialize fallback result if needed to prevent ReferenceError in edge cases
+      if (!result) result = { success: false, error: 'アップロード結果を取得できませんでした' };
+
       let latestKnownId: string | null = null;
 
       // If ID collision happens, refetch latest ID and retry once with the same form payload.
@@ -391,7 +394,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         const retryId = latestKnownId ?? getNextSequentialId(submitId);
         if (retryId && retryId !== submitId) {
           submitId = retryId;
-          ({ response, result } = await uploadWithId(submitId));
+          const retryResult = await uploadWithId(submitId);
+          response = retryResult.response;
+          result = retryResult.result || { success: false, error: 'リトライ結果を取得できませんでした' };
         }
       }
 
