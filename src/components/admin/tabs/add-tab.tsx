@@ -259,7 +259,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       if (!infoResponse.ok) {
         const errorText = await infoResponse.text().catch(() => '');
         throw new Error(
-          `アバター情報取得に失敗しました (${infoResponse.status})${errorText ? `: ${errorText}` : ''
+          `アバター情報取得に失敗しました (${infoResponse.status})${
+            errorText ? `: ${errorText}` : ''
           }`
         );
       }
@@ -295,7 +296,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         );
       } else {
         alert(
-          `❌ 登録に失敗しました\n\n${error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
+          `❌ 登録に失敗しました\n\n${
+            error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
           }\n\nURLが正しいか、アバターが公開設定か確認してください。`
         );
       }
@@ -378,7 +380,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
 
       let { response, result } = await uploadWithId(submitId);
       // Initialize fallback result if needed to prevent ReferenceError in edge cases
-      if (!result) result = { success: false, error: 'Upload produced no result' };
+      if (!result) result = { success: false, error: 'アップロード結果を取得できませんでした' };
 
       let latestKnownId: string | null = null;
 
@@ -394,7 +396,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           submitId = retryId;
           const retryResult = await uploadWithId(submitId);
           response = retryResult.response;
-          result = retryResult.result || { success: false, error: 'Retry produced no result' };
+          result = retryResult.result || { success: false, error: 'リトライ結果を取得できませんでした' };
         }
       }
 
@@ -415,10 +417,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       // Success!
       alert(
         `✅ ${result.message}\n\n` +
-        `ID: #${submitId}\n` +
-        `アバター名: ${avatarName}\n` +
-        `作者: ${creatorName}\n\n` +
-        (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
+          `ID: #${submitId}\n` +
+          `アバター名: ${avatarName}\n` +
+          `作者: ${creatorName}\n\n` +
+          (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
       );
 
       // Reset form
@@ -440,8 +442,8 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       console.error('Form submission error:', error);
       alert(
         '❌ 登録に失敗しました\n\n' +
-        (error instanceof Error ? error.message : '不明なエラーが発生しました') +
-        '\n\nもう一度お試しください。'
+          (error instanceof Error ? error.message : '不明なエラーが発生しました') +
+          '\n\nもう一度お試しください。'
       );
     } finally {
       // Restore button state
@@ -704,12 +706,13 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             />
             {nicknameStatus.message && (
               <p
-                className={`mt-2 text-sm ${nicknameStatus.tone === 'error'
+                className={`mt-2 text-sm ${
+                  nicknameStatus.tone === 'error'
                     ? 'text-red-600'
                     : nicknameStatus.tone === 'success'
-                      ? 'text-green-600'
-                      : 'text-gray-600'
-                  }`}
+                    ? 'text-green-600'
+                    : 'text-gray-600'
+                }`}
               >
                 {nicknameStatus.message}
               </p>

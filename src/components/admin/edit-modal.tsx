@@ -499,7 +499,7 @@ export function EditModal({
     }
 
 
-    const submitBtn = formEl?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
     const originalText = submitBtn?.innerHTML || '';
 
     // Generate cropped image if available
@@ -641,12 +641,13 @@ export function EditModal({
                   />
                   {nicknameStatus.message && (
                     <p
-                      className={`mt-2 text-sm ${nicknameStatus.tone === 'error'
+                      className={`mt-2 text-sm ${
+                        nicknameStatus.tone === 'error'
                           ? 'text-red-600'
                           : nicknameStatus.tone === 'success'
-                            ? 'text-green-600'
-                            : 'text-gray-600'
-                        }`}
+                          ? 'text-green-600'
+                          : 'text-gray-600'
+                      }`}
                     >
                       {nicknameStatus.message}
                     </p>
@@ -693,12 +694,13 @@ export function EditModal({
                     </button>
                     {avatarNameStatus.message && (
                       <p
-                        className={`text-sm ${avatarNameStatus.tone === 'error'
+                        className={`text-sm ${
+                          avatarNameStatus.tone === 'error'
                             ? 'text-red-600'
                             : avatarNameStatus.tone === 'success'
-                              ? 'text-green-600'
-                              : 'text-gray-600'
-                          }`}
+                            ? 'text-green-600'
+                            : 'text-gray-600'
+                        }`}
                       >
                         {avatarNameStatus.message}
                       </p>
