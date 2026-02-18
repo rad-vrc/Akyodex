@@ -8,9 +8,7 @@
  * Creates a secure session cookie on successful authentication.
  */
 
-// Node.js runtime required for crypto.timingSafeEqual and setSessionCookie helper
-export const runtime = 'nodejs';
-
+import { connection } from 'next/server';
 import { timingSafeEqual } from 'crypto';
 import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
 import { createSessionToken } from '@/lib/session';
@@ -43,6 +41,7 @@ function timingSafeCompare(a: string, b: string): boolean {
 }
 
 export async function POST(request: Request) {
+  await connection();
   try {
     const body = await request.json();
     const { password } = body;

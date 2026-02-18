@@ -5,16 +5,15 @@
  * Returns: { duplicates: string[], message: string, isDuplicate: boolean }
  */
 
+import { connection } from 'next/server';
 // Phase 4: Using unified data module with JSON support
 import { getAkyoData } from '@/lib/akyo-data';
 import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess, validateOrigin } from '@/lib/api-helpers';
 
-// Node.js runtime is required because getAkyoData() can fall back to CSV parsing via akyo-data-server.
-export const runtime = 'nodejs';
-
 const MAX_DUPLICATE_CHECK_VALUE_LENGTH = 120;
 
 export async function POST(request: Request) {
+  await connection();
   try {
     // CSRF Protection: Validate Origin/Referer
     if (!validateOrigin(request)) {

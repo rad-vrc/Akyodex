@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess } from '@/lib/api-helpers';
 import { timingSafeEqual } from 'crypto';
 import { revalidatePath, revalidateTag } from 'next/cache';
@@ -35,9 +36,6 @@ import { revalidatePath, revalidateTag } from 'next/cache';
  * Environment Variables:
  * - REVALIDATE_SECRET: Secret token for authentication (required)
  */
-
-// Note: OpenNext/Cloudflare requires nodejs runtime for API routes
-export const runtime = 'nodejs';
 
 interface RevalidateRequest {
   paths?: string[];
@@ -110,6 +108,7 @@ function parseStringArray(
 }
 
 export async function POST(request: Request): Promise<Response> {
+  await connection();
   try {
     // Verify secret
     const secret = request.headers.get('x-revalidate-secret');
@@ -285,6 +284,7 @@ export async function POST(request: Request): Promise<Response> {
 
 // Health check endpoint
 export async function GET(): Promise<Response> {
+  await connection();
   return jsonSuccess({
     status: 'ok',
     endpoint: '/api/revalidate',

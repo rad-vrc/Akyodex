@@ -5,9 +5,10 @@
  * これによりクロスオリジンでもダウンロードが可能になる
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { connection, NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
+  await connection();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 

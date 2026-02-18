@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { jsonError } from '@/lib/api-helpers';
 import { isValidLanguage, type SupportedLanguage } from '@/lib/i18n';
 import fs from 'fs/promises';
@@ -65,9 +66,9 @@ async function fetchCsvFromCandidates(urls: string[]): Promise<string | null> {
  * - Replace fs.readFile with fetch() call
  * - Change runtime to 'edge'
  */
-export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
+  await connection();
   try {
     // クエリパラメータから言語を取得（デフォルトは日本語）
     const { searchParams } = new URL(request.url);

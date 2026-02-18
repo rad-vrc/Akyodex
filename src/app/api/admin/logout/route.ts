@@ -6,11 +6,11 @@
  * Clears the admin session cookie.
  */
 
+import { connection } from 'next/server';
 import { clearSessionCookie } from '@/lib/api-helpers';
 
-export const runtime = 'nodejs';
-
 export async function POST() {
+  await connection();
   try {
     await clearSessionCookie();
 
