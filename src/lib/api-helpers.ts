@@ -5,6 +5,7 @@
  */
 
 import { cookies } from 'next/headers';
+import { connection } from 'next/server';
 import { SessionData, validateSession as validateSessionToken } from './session';
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
@@ -17,6 +18,7 @@ export const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
  */
 export async function validateSession(): Promise<SessionData | null> {
   try {
+    await connection();
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get('admin_session')?.value;
 
@@ -223,7 +225,7 @@ export interface AkyoFormData {
   id: string;
   nickname: string;
   avatarName: string;
-  
+
   // 新フィールド
   category: string;
   author: string;
@@ -236,7 +238,7 @@ export interface AkyoFormData {
   creator: string;
   /** @deprecated use comment */
   notes: string;
-  
+
   avatarUrl: string;
   imageData?: string;
 }
@@ -251,6 +253,7 @@ export type AkyoFormParseResult =
  * @param maxAge - Cookie max age in seconds (default: 7 days)
  */
 export async function setSessionCookie(token: string, maxAge: number = 60 * 60 * 24 * 7): Promise<void> {
+  await connection();
   const cookieStore = await cookies();
 
   cookieStore.set('admin_session', token, {
@@ -266,6 +269,7 @@ export async function setSessionCookie(token: string, maxAge: number = 60 * 60 *
  * Clear session cookie (logout)
  */
 export async function clearSessionCookie(): Promise<void> {
+  await connection();
   const cookieStore = await cookies();
   cookieStore.delete('admin_session');
 }
@@ -278,7 +282,7 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
 
   const id = readField('id');
   const avatarName = readField('avatarName');
-  
+
   // 新旧フィールドの両方をサポート
   // 優先順位: author (新) > creator (旧)
   const author = readField('author') || readField('creator');
@@ -303,7 +307,7 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
   const imageData = typeof imageValue === 'string' && imageValue.trim().length > 0
     ? imageValue.trim()
     : undefined;
-    
+
   // 他のフィールドも新旧両方から取得
   const category = readField('category') || readField('attributes');
   const comment = readField('comment') || readField('notes');
@@ -316,12 +320,12 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
       nickname: readField('nickname'),
       avatarUrl: readField('avatarUrl'),
       imageData,
-      
+
       // 新フィールド
       author,
       category,
       comment,
-      
+
       // 旧フィールド (互換性維持)
       creator: author,
       attributes: category,

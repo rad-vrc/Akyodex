@@ -1,6 +1,7 @@
-export const runtime = 'nodejs';
+import { connection } from 'next/server';
 
 export async function GET() {
+  await connection();
   try {
     // TODO: 将来的にはR2/KVから画像マニフェストを取得
     // 現在は空のオブジェクトを返す（既存の画像フォールバック機構が動作する）

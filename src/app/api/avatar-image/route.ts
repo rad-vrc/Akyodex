@@ -12,10 +12,8 @@
  * - Fallback chain with CSV lookup
  */
 
+import { connection } from 'next/server';
 import { jsonError } from '@/lib/api-helpers';
-
-// Using Node.js runtime (edge runtime has issues with fetch caching and AbortController)
-export const runtime = 'nodejs';
 
 /**
  * Extract avtr ID from VRChat URL
@@ -80,6 +78,7 @@ async function getAvtrIdFromCsv(akyoId: string): Promise<string | null> {
  * GET /api/avatar-image?id=0001&w=512
  */
 export async function GET(request: Request) {
+  await connection();
   const { searchParams } = new URL(request.url);
 
   let avtr = searchParams.get('avtr');

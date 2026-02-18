@@ -23,10 +23,7 @@
  */
 
 import type { KVNamespace } from '@/types/kv';
-import { NextRequest } from 'next/server';
-
-// Note: OpenNext/Cloudflare requires nodejs runtime for API routes
-export const runtime = 'nodejs';
+import { connection, NextRequest } from 'next/server';
 
 function getKVNamespace(): KVNamespace | null {
   try {
@@ -50,6 +47,7 @@ interface MigrateRequest {
 }
 
 export async function POST(request: NextRequest): Promise<Response> {
+  await connection();
   try {
     // Verify secret
     const secret = request.headers.get('x-revalidate-secret');
@@ -223,6 +221,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 // Status endpoint - requires authentication
 export async function GET(request: NextRequest): Promise<Response> {
+  await connection();
   // Verify secret - same authentication as POST
   const secret = request.headers.get('x-revalidate-secret');
   const expectedSecret = process.env.REVALIDATE_SECRET;

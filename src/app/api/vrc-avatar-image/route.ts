@@ -3,12 +3,11 @@
  * VRChatのアバターページから画像を取得（高解像度）
  */
 
+import { connection } from 'next/server';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 
-// Edge Runtime compatible - uses only Web Standard APIs (fetch, URL, AbortController)
-export const runtime = 'nodejs';
-
 export async function GET(request: Request) {
+  await connection();
   const { searchParams } = new URL(request.url);
   const avtr = searchParams.get('avtr');
   const widthParam = searchParams.get('w') || '512';

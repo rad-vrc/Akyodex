@@ -8,13 +8,13 @@
  * - No Node.js-specific dependencies
  */
 
+import { connection } from 'next/server';
 import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 import type { VRChatAvatarInfo } from '@/types/akyo';
 
-export const runtime = 'nodejs';
-
 export async function GET(request: Request) {
+  await connection();
   const { searchParams } = new URL(request.url);
   const avtr = searchParams.get('avtr');
 

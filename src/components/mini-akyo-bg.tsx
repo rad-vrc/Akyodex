@@ -95,6 +95,7 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
   const seqU = useRef<number>(Math.random());
   const maintainTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const resizeHandler = useRef<(() => void) | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   // Low-discrepancy sequence for balanced placement
   const nextUniform = useCallback(() => {
@@ -192,11 +193,31 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
       }
       resizeHandler.current = () => {
         if (!containerRef.current) return;
-        const idealBase = Math.min(22, Math.max(10, Math.round(window.innerWidth / 110)));
-        const ideal = Math.min(Math.round(22 * FREQ_BOOST), Math.max(10, Math.round(idealBase * FREQ_BOOST)));
-        while (containerRef.current.children.length > ideal) {
-          containerRef.current.removeChild(containerRef.current.firstChild!);
-        }
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
+        rafRef.current = requestAnimationFrame(() => {
+          if (!containerRef.current) return;
+          const side = Math.sqrt(window.innerWidth * window.innerHeight);
+          let base = Math.round(side / 95);
+          base = Math.min(28, Math.max(10, base));
+          let ideal = Math.round(base * FREQ_BOOST);
+          ideal = Math.min(Math.round(28 * FREQ_BOOST), Math.max(10, ideal));
+
+          // Honor ?bgdensity if present
+          try {
+            const params = new URLSearchParams(window.location.search);
+            const dens = parseInt(params.get('bgdensity') || '', 10);
+            if (!isNaN(dens) && dens >= 6 && dens <= 50) {
+              ideal = dens;
+            }
+          } catch { /* ignore */ }
+
+          const container = containerRef.current;
+          while (container.children.length > ideal && container.firstElementChild) {
+            container.removeChild(container.firstElementChild);
+          }
+          rafRef.current = null;
+        });
       };
       window.addEventListener('resize', resizeHandler.current);
     };
@@ -210,6 +231,9 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
       }
       if (resizeHandler.current) {
         window.removeEventListener('resize', resizeHandler.current);
+      }
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
     };
   }, [spawnOne]);
