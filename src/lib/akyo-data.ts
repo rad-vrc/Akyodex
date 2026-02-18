@@ -47,6 +47,7 @@ const USE_JSON_DATA = process.env.NEXT_PUBLIC_USE_JSON_DATA !== 'false';
  */
 export const getAkyoData = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
+    'use cache';
     // Try KV first (Phase 5b)
     if (USE_KV_DATA) {
       try {
@@ -63,7 +64,7 @@ export const getAkyoData = cache(
         console.log('[getAkyoData] KV failed, trying JSON fallback:', error);
       }
     }
-    
+
     // Try JSON (Phase 4)
     if (USE_JSON_DATA) {
       try {
@@ -78,7 +79,7 @@ export const getAkyoData = cache(
         console.log('[getAkyoData] JSON failed, trying CSV fallback:', error);
       }
     }
-    
+
     // Fallback to CSV (legacy)
     console.log('[getAkyoData] Using CSV data source (fallback)');
     const { getAkyoData: getFromCSV } = await import('./akyo-data-server');
@@ -96,6 +97,7 @@ export const getAkyoData = cache(
  */
 export const getAkyoById = cache(
   async (id: string, lang: SupportedLanguage = 'ja'): Promise<AkyoData | null> => {
+    'use cache';
     const allData = await getAkyoData(lang);
     return findAkyoById(allData, id);
   }
@@ -110,6 +112,7 @@ export const getAkyoById = cache(
  */
 export const getAllCategories = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
+    'use cache';
     const data = await getAkyoData(lang);
     return extractCategories(data);
   }
@@ -124,6 +127,7 @@ export const getAllCategories = cache(
  */
 export const getAllAuthors = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
+    'use cache';
     const data = await getAkyoData(lang);
     return extractAuthors(data);
   }

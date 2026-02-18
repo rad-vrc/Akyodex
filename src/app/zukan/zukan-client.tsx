@@ -128,7 +128,7 @@ export function ZukanClient({
     ])
   );
 
-  // Keep the server-rendered language payload fresh in cache.
+  // Sync server-rendered language payload to cache
   useEffect(() => {
     languageDatasetCacheRef.current.set(serverLang, {
       items: initialData,
@@ -363,7 +363,7 @@ export function ZukanClient({
     setFavoritesOnly(!favoritesOnly);
   };
 
-  // 統計情報（useMemo で再計算を抑制 — data/filteredData が変わらない限りキャッシュ）
+  // 統計情報 (Moved after useState calls)
   const stats = useMemo(
     () => ({
       total: data.length,

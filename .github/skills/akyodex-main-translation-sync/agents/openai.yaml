@@ -1,0 +1,4 @@
+interface:
+  display_name: "Akyodex Translation Sync"
+  short_description: "Sync from main and regenerate EN/KO data with validation"
+  default_prompt: "Sync branch with main, regenerate EN/KO translations, validate CSV/TypeScript, and prepare PR to main."

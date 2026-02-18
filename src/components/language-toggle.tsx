@@ -32,13 +32,13 @@ export function LanguageToggle({
 }: LanguageToggleProps) {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>(initialLang);
   const [isChanging, setIsChanging] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const nextLanguage = getNextLanguage(currentLang);
   const nextLanguageLabel = LANGUAGE_NAMES[nextLanguage];
 
   // Read language from cookie on mount (client-side only)
   useEffect(() => {
-    // ロバストなパース: セミコロン後のスペース有無に関わらず対応
     const cookieLang = document.cookie
       .split(';')
       .find((row) => row.trim().startsWith('AKYO_LANG='))
@@ -48,6 +48,7 @@ export function LanguageToggle({
     if (cookieLang && SUPPORTED_LANGUAGES.includes(cookieLang as SupportedLanguage)) {
       setCurrentLang(cookieLang as SupportedLanguage);
     }
+    setIsMounted(true);
   }, []);
 
   const handleToggle = async () => {
@@ -84,7 +85,9 @@ export function LanguageToggle({
       aria-label={`Switch to ${nextLanguageLabel}`}
       title={`Switch to ${nextLanguageLabel}`}
     >
-      <span className="text-lg font-bold">{LANGUAGE_TOGGLE_LABELS[currentLang]}</span>
+      <span className="text-lg font-bold">
+        {isMounted ? LANGUAGE_TOGGLE_LABELS[currentLang] : LANGUAGE_TOGGLE_LABELS[initialLang]}
+      </span>
     </button>
   );
 }

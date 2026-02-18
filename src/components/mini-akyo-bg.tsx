@@ -186,17 +186,28 @@ export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
         }
       }, Math.round(1600 / FREQ_BOOST));
 
-      // Handle window resize
-      if (resizeHandler.current) {
-        window.removeEventListener('resize', resizeHandler.current);
-      }
+      // Handle window resize (throttled for mobile performance)
+      let resizeTicking = false;
       resizeHandler.current = () => {
-        if (!containerRef.current) return;
-        const idealBase = Math.min(22, Math.max(10, Math.round(window.innerWidth / 110)));
-        const ideal = Math.min(Math.round(22 * FREQ_BOOST), Math.max(10, Math.round(idealBase * FREQ_BOOST)));
-        while (containerRef.current.children.length > ideal) {
-          containerRef.current.removeChild(containerRef.current.firstChild!);
-        }
+        if (resizeTicking) return;
+        resizeTicking = true;
+
+        requestAnimationFrame(() => {
+          if (!containerRef.current) {
+            resizeTicking = false;
+            return;
+          }
+
+          const idealBase = Math.min(22, Math.max(10, Math.round(window.innerWidth / 110)));
+          const ideal = Math.min(Math.round(22 * FREQ_BOOST), Math.max(10, Math.round(idealBase * FREQ_BOOST)));
+
+          const container = containerRef.current;
+          while (container.children.length > ideal) {
+            container.removeChild(container.firstChild!);
+          }
+
+          resizeTicking = false;
+        });
       };
       window.addEventListener('resize', resizeHandler.current);
     };
