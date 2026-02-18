@@ -74,6 +74,10 @@ const STYLE_SRC = [
     "https://fonts.googleapis.com",
 ];
 
+/**
+ * Note: Broad 'https:' source was removed to harden the policy.
+ * Only explicit image hosts are allowed here.
+ */
 const IMG_SRC = [
     "'self'",
     "data:",
@@ -99,7 +103,7 @@ const CONNECT_SRC = [
     "https://browser.sentry-cdn.com",
     "https://analytics.google.com",
     "https://www.google-analytics.com",
-    "https://api.github.com", // Data endpoint (moved from SCRIPT_SRC)
+    "https://api.github.com", // Data endpoint (moved from SCRIPT_SRC as it doesn't host script)
     "https://images.akyodex.com",
 ];
 
