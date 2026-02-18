@@ -196,7 +196,7 @@ export async function POST(request: Request): Promise<Response> {
     const revalidatedTags: string[] = [];
     for (const tag of tags) {
       try {
-        revalidateTag(tag);
+        revalidateTag(tag, { expire: 0 });
         revalidatedTags.push(tag);
         console.log('[revalidate] Revalidated tag', { tag });
       } catch (error) {

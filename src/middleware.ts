@@ -4,6 +4,7 @@
  * Handles:
  * 1. Language detection (Cloudflare country, Accept-Language, Cookie)
  * 2. Admin route access (client component handles auth UI)
+ * 3. CSP nonce generation for Content Security Policy
  *
  * NOTE: Middleware runs in Edge Runtime (Node.js APIs not available).
  * Security is maintained through:
@@ -18,100 +19,217 @@ import { NextResponse } from 'next/server';
 
 const LANGUAGE_COOKIE = 'AKYO_LANG';
 
+/** Cookie options shared across all language cookie calls */
+const LANGUAGE_COOKIE_OPTIONS = {
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+    path: '/',
+    sameSite: 'lax' as const,
+    // Only set secure=true in production to allow local persistence on http://localhost
+    secure: process.env.NODE_ENV === 'production',
+};
+
+/** Apply common security headers (CSP + nonce) to a response */
+function applySecurityHeaders(response: NextResponse, cspHeader: string, nonce: string): void {
+    response.headers.set('Content-Security-Policy', cspHeader);
+    response.headers.set('x-nonce', nonce);
+}
+
+/**
+ * CSP Source Constants
+ * Refactored into arrays for easier maintenance.
+ * Criteria for extraction:
+ * - Directives containing external hosts that may change per deployment.
+ * - Directives likely to require sharing or frequent updates.
+ * - Complex lists where normalization (e.g. adding https://) is needed.
+ */
+const SCRIPT_SRC = [
+    "'self'",
+    "https://*.dify.dev",
+    "https://*.dify.ai",
+    "https://*.udify.app",
+    "https://udify.app",
+    "https://js.sentry-cdn.com",
+    "https://browser.sentry-cdn.com",
+    "https://*.sentry.io",
+    "https://analytics.google.com",
+    "https://googletagmanager.com",
+    "https://*.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://paulrosen.github.io",
+    "https://cdn-cookieyes.com",
+    "https://fonts.googleapis.com",
+];
+
+/**
+ * Note: 'unsafe-inline' is required for style-src because:
+ * 1. React's inline 'style={{...}}' attributes are used extensively throughout the app.
+ * 2. Browsers ignore 'unsafe-inline' if a nonce is present, which would block React attributes.
+ * 3. Third-party widgets (Dify, Sentry) also depend on inline styles.
+ */
+const STYLE_SRC = [
+    "'self'",
+    "'unsafe-inline'",
+    "https://udify.app",
+    "https://*.udify.app",
+    "https://fonts.googleapis.com",
+];
+
+/**
+ * Note: Broad 'https:' source was removed to harden the policy.
+ * Only explicit image hosts are allowed here.
+ */
+const IMG_SRC = [
+    "'self'",
+    "data:",
+    "blob:",
+    "https://imagedelivery.net",
+    "https://*.imagedelivery.net",
+    "https://*.akyodex.com",
+    "https://*.vrchat.com",
+    "https://*.vrcimg.com",
+    "https://*.r2.cloudflarestorage.com",
+    "https://udify.app",
+    "https://*.udify.app",
+];
+
+const CONNECT_SRC = [
+    "'self'",
+    "https://*.dify.dev",
+    "https://*.dify.ai",
+    "https://*.udify.app",
+    "https://udify.app",
+    "https://*.r2.cloudflarestorage.com",
+    "https://*.sentry.io",
+    "https://browser.sentry-cdn.com",
+    "https://analytics.google.com",
+    "https://www.google-analytics.com",
+    "https://api.github.com", // Data endpoint (moved from SCRIPT_SRC as it doesn't host script)
+    "https://images.akyodex.com",
+];
+
+const FONT_SRC = [
+    "'self'",
+    "data:",
+    "https://udify.app",
+    "https://*.udify.app",
+    "https://fonts.gstatic.com",
+];
+
+const FRAME_SRC = [
+    "'self'",
+    "https://udify.app",
+    "https://*.udify.app",
+];
+
+const MEDIA_SRC = [
+    "'self'",
+    "data:",
+    "mediastream:",
+    "blob:",
+];
+
+const WORKER_SRC = [
+    "'self'",
+    "blob:",
+];
+
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+    const { pathname } = request.nextUrl;
 
-  // Skip middleware for static files and API routes
-  if (
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/images') ||
-    pathname.includes('.')
-  ) {
-    return NextResponse.next();
-  }
+    /**
+     * Defensive check: redundant path exclusion.
+     * While the 'matcher' in the config handles most exclusions, this block
+     * serves as a defensive fallback to ensure static assets and API routes
+     * are never processed by the middleware logic.
+     *
+     * ASSUMPTION:
+     * - API routes (/api/*) are expected to return JSON only. If any API returns HTML
+     *   in the future, CSP headers must be manually applied or this block updated.
+     * - Static assets (with extensions) are bypassed to avoid CSP overhead.
+     *
+     * TODO: Audit and apply CSP for any HTML-returning API endpoints (e.g. OGP handlers).
+     */
+    if (
+        pathname.startsWith('/_next') ||
+        pathname.startsWith('/api') ||
+        pathname.startsWith('/images') ||
+        pathname.includes('.')
+    ) {
+        return NextResponse.next();
+    }
 
-  // Generate nonce for CSP (Edge Runtime compatible)
-  const randomBytes = crypto.getRandomValues(new Uint8Array(16));
-  const nonce = btoa(String.fromCharCode(...randomBytes));
+    // Generate nonce for CSP
+    const randomBytes = crypto.getRandomValues(new Uint8Array(16));
+    const nonce = btoa(String.fromCharCode(...randomBytes));
 
-  // Content Security Policy
-  // Note:
-  // - Browsers ignore 'unsafe-inline' when nonce/hash is present in script-src.
-  // - Dify injects a known inline bootstrap snippet; allow it via hash.
-  //   If Dify updates that snippet, this hash must be refreshed.
-  const cspHeader = `
+    // Content Security Policy
+    // Note: Dify injects a known inline bootstrap snippet; allow it via hash.
+    const difyHash = "'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4='";
+
+    const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4=' *.dify.dev *.dify.ai *.udify.app udify.app js.sentry-cdn.com browser.sentry-cdn.com *.sentry.io https://analytics.google.com googletagmanager.com *.googletagmanager.com https://www.google-analytics.com https://api.github.com https://paulrosen.github.io https://cdn-cookieyes.com fonts.googleapis.com;
-    style-src 'self' 'unsafe-inline' udify.app *.udify.app fonts.googleapis.com;
-    img-src 'self' data: blob: https: *.akyodex.com *.vrchat.com *.r2.cloudflarestorage.com udify.app *.udify.app;
-    font-src 'self' data: udify.app *.udify.app fonts.gstatic.com;
-    connect-src 'self' *.dify.dev *.dify.ai *.udify.app udify.app *.r2.cloudflarestorage.com *.sentry.io browser.sentry-cdn.com https://analytics.google.com https://images.akyodex.com;
-    frame-src 'self' udify.app *.udify.app;
-    worker-src 'self' blob:;
-    media-src 'self' data: mediastream: blob:;
+    script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
+    style-src ${STYLE_SRC.join(' ')};
+    img-src ${IMG_SRC.join(' ')};
+    font-src ${FONT_SRC.join(' ')};
+    connect-src ${CONNECT_SRC.join(' ')};
+    frame-src ${FRAME_SRC.join(' ')};
+    worker-src ${WORKER_SRC.join(' ')};
+    media-src ${MEDIA_SRC.join(' ')};
     object-src 'none';
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'self';
-    upgrade-insecure-requests;
+    ${process.env.NODE_ENV === 'production' ? 'upgrade-insecure-requests;' : ''}
   `
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+        .replace(/\s{2,}/g, ' ')
+        .trim();
 
-  // Allow /admin routes to load (client component handles auth UI)
-  if (pathname.startsWith('/admin')) {
+    // Allow /admin routes to load (client component handles auth UI)
+    if (pathname.startsWith('/admin')) {
+        const response = NextResponse.next();
+        applySecurityHeaders(response, cspHeader, nonce);
+        return response;
+    }
+
+    // Language detection for all other routes
+    // 1. Check cookie (user preference)
+    const cookieLang = request.cookies.get(LANGUAGE_COOKIE)?.value;
+    if (cookieLang && isValidLanguage(cookieLang)) {
+        const response = NextResponse.next();
+        response.headers.set('x-akyo-lang', cookieLang);
+        applySecurityHeaders(response, cspHeader, nonce);
+        // Refresh cookie expiry to maintain persistence
+        response.cookies.set(LANGUAGE_COOKIE, cookieLang, LANGUAGE_COOKIE_OPTIONS);
+        return response;
+    }
+
+    // 2. Check Cloudflare country header (most accurate)
+    const cfCountry = request.headers.get('cf-ipcountry');
+    if (cfCountry) {
+        const langFromCountry = getLanguageFromCountry(cfCountry);
+        const response = NextResponse.next();
+        response.headers.set('x-akyo-lang', langFromCountry);
+        applySecurityHeaders(response, cspHeader, nonce);
+        response.cookies.set(LANGUAGE_COOKIE, langFromCountry, LANGUAGE_COOKIE_OPTIONS);
+        return response;
+    }
+
+    // 3. Check Accept-Language header
+    const acceptLanguage = request.headers.get('accept-language');
+    const detectedLang = detectLanguageFromHeader(acceptLanguage);
+
     const response = NextResponse.next();
-    response.headers.set('Content-Security-Policy', cspHeader);
-    response.headers.set('x-nonce', nonce);
+    response.headers.set('x-akyo-lang', detectedLang);
+    applySecurityHeaders(response, cspHeader, nonce);
+    response.cookies.set(LANGUAGE_COOKIE, detectedLang, LANGUAGE_COOKIE_OPTIONS);
+
     return response;
-  }
-
-  // Language detection for all other routes
-  // 1. Check cookie (user preference)
-  const cookieLang = request.cookies.get(LANGUAGE_COOKIE)?.value;
-  if (cookieLang && isValidLanguage(cookieLang)) {
-    const response = NextResponse.next();
-    response.headers.set('x-akyo-lang', cookieLang);
-    response.headers.set('Content-Security-Policy', cspHeader);
-    response.headers.set('x-nonce', nonce);
-    return response;
-  }
-
-  // 2. Check Cloudflare country header (most accurate)
-  const cfCountry = request.headers.get('cf-ipcountry');
-  if (cfCountry) {
-    const langFromCountry = getLanguageFromCountry(cfCountry);
-    const response = NextResponse.next();
-    response.headers.set('x-akyo-lang', langFromCountry);
-    response.headers.set('Content-Security-Policy', cspHeader);
-    response.headers.set('x-nonce', nonce);
-    response.cookies.set(LANGUAGE_COOKIE, langFromCountry, {
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-      path: '/',
-    });
-    return response;
-  }
-
-  // 3. Check Accept-Language header
-  const acceptLanguage = request.headers.get('accept-language');
-  const detectedLang = detectLanguageFromHeader(acceptLanguage);
-
-  const response = NextResponse.next();
-  response.headers.set('x-akyo-lang', detectedLang);
-  response.headers.set('Content-Security-Policy', cspHeader);
-  response.headers.set('x-nonce', nonce);
-  response.cookies.set(LANGUAGE_COOKIE, detectedLang, {
-    maxAge: 60 * 60 * 24 * 365, // 1 year
-    path: '/',
-  });
-
-  return response;
 }
 
 export const config = {
-  matcher: [
-    // Match all routes except static files and API routes
-    '/((?!_next|api|images|.*\\.).*)',
-  ],
+    matcher: [
+        // Match all routes except static files and API routes
+        '/((?!_next|api|images|.*\\.).*)',
+    ],
 };
