@@ -10,19 +10,28 @@
 
 :root {
   /* メインカラー - パステル調の優しい色（既存と完全一致） */
-  --primary-pink: #ff6b9d; /* やさしいピンク */
-  --primary-yellow: #ffc107; /* 明るい黄色 */
-  --primary-blue: #66b2ff; /* 空色 */
-  --primary-green: #66d9a5; /* ミントグリーン */
-  --primary-orange: #ffa06d; /* やさしいオレンジ */
+  --primary-pink: #ff6b9d;
+  /* やさしいピンク */
+  --primary-yellow: #ffc107;
+  /* 明るい黄色 */
+  --primary-blue: #66b2ff;
+  /* 空色 */
+  --primary-green: #66d9a5;
+  /* ミントグリーン */
+  --primary-orange: #ffa06d;
+  /* やさしいオレンジ */
 
   /* 背景グラデーション */
-  --bg-gradient-start: #fff5e6; /* クリーム色 */
-  --bg-gradient-end: #e6f7ff; /* 薄い水色 */
+  --bg-gradient-start: #fff5e6;
+  /* クリーム色 */
+  --bg-gradient-end: #e6f7ff;
+  /* 薄い水色 */
 
   /* テキストカラー */
-  --text-primary: #4a4a4a; /* ソフトな黒 */
-  --text-secondary: #6b6b6b; /* グレー */
+  --text-primary: #4a4a4a;
+  /* ソフトな黒 */
+  --text-secondary: #6b6b6b;
+  /* グレー */
 
   /* カードの影 */
   --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
@@ -90,11 +99,9 @@ body::after {
 
 /* ヘッダーのデザイン */
 header {
-  background: linear-gradient(
-    135deg,
-    var(--primary-pink) 0%,
-    var(--primary-orange) 100%
-  ) !important;
+  background: linear-gradient(135deg,
+      var(--primary-pink) 0%,
+      var(--primary-orange) 100%) !important;
   border-radius: 0 0 30px 30px;
   box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
 }
@@ -109,12 +116,19 @@ header {
   display: inline-block;
   /* 多重縁取り効果 */
   text-shadow:
-    /* 内側の縁取り - ピンク */ -1px -1px 0 #ff6b9d, 1px -1px 0 #ff6b9d,
-    -1px 1px 0 #ff6b9d, 1px 1px 0 #ff6b9d, /* 中間の縁取り - オレンジ */ -2px -2px 0 #ffa06d,
+    /* 内側の縁取り - ピンク */
+    -1px -1px 0 #ff6b9d, 1px -1px 0 #ff6b9d,
+    -1px 1px 0 #ff6b9d, 1px 1px 0 #ff6b9d,
+    /* 中間の縁取り - オレンジ */
+    -2px -2px 0 #ffa06d,
     2px -2px 0 #ffa06d, -2px 2px 0 #ffa06d, 2px 2px 0 #ffa06d, -2px 0 0 #ffa06d, 2px 0 0 #ffa06d,
-    0 -2px 0 #ffa06d, 0 2px 0 #ffa06d, /* 外側の縁取り - 青 */ -3px -3px 0 #66b2ff,
+    0 -2px 0 #ffa06d, 0 2px 0 #ffa06d,
+    /* 外側の縁取り - 青 */
+    -3px -3px 0 #66b2ff,
     3px -3px 0 #66b2ff, -3px 3px 0 #66b2ff, 3px 3px 0 #66b2ff, -3px 0 0 #66b2ff, 3px 0 0 #66b2ff,
-    0 -3px 0 #66b2ff, 0 3px 0 #66b2ff, /* 影 */ 4px 4px 8px rgba(0, 0, 0, 0.3),
+    0 -3px 0 #66b2ff, 0 3px 0 #66b2ff,
+    /* 影 */
+    4px 4px 8px rgba(0, 0, 0, 0.3),
     6px 6px 12px rgba(0, 0, 0, 0.2);
   animation: gentle-bounce 3s ease-in-out infinite;
   letter-spacing: 0.05em;
@@ -125,10 +139,12 @@ header {
 }
 
 @keyframes logo-shine {
+
   0%,
   100% {
     filter: brightness(1);
   }
+
   50% {
     filter: brightness(1.2);
     transform: scale(1.05);
@@ -136,10 +152,12 @@ header {
 }
 
 @keyframes gentle-bounce {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
@@ -196,11 +214,9 @@ button,
 
 /* お気に入りボタン（コントラストを下げたピンク） */
 .favorite-btn {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 182, 193, 0.9),
-    rgba(255, 105, 180, 0.85)
-  ) !important;
+  background: linear-gradient(135deg,
+      rgba(255, 182, 193, 0.9),
+      rgba(255, 105, 180, 0.85)) !important;
   color: white !important;
   border-radius: 50% !important;
   width: 40px !important;
@@ -216,10 +232,12 @@ button,
 }
 
 @keyframes heart-pulse {
+
   0%,
   100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.08);
   }
@@ -232,16 +250,20 @@ button,
 }
 
 @keyframes heart-beat {
+
   0%,
   100% {
     transform: scale(1.15);
   }
+
   25% {
     transform: scale(1.25);
   }
+
   50% {
     transform: scale(1.15);
   }
+
   75% {
     transform: scale(1.28);
   }
@@ -303,23 +325,23 @@ select:focus {
 
 /* レインボーグラデーション背景（ホームページ用） */
 .rainbow-gradient {
-  background: linear-gradient(
-    135deg,
-    var(--primary-pink) 0%,
-    var(--primary-yellow) 25%,
-    var(--primary-blue) 50%,
-    var(--primary-green) 75%,
-    var(--primary-orange) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--primary-pink) 0%,
+      var(--primary-yellow) 25%,
+      var(--primary-blue) 50%,
+      var(--primary-green) 75%,
+      var(--primary-orange) 100%);
   background-size: 200% 200%;
   animation: rainbow-animation 15s ease infinite;
 }
 
 @keyframes rainbow-animation {
+
   0%,
   100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -331,10 +353,12 @@ select:focus {
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -363,10 +387,6 @@ select:focus {
   font-size: 0.75rem;
   transition: all 0.2s ease;
   white-space: nowrap;
-}
-
-.attribute-badge:hover {
-  transform: scale(1.05);
 }
 
 /* リスト表示用の小さいバッジ */
@@ -483,13 +503,16 @@ select:focus {
 }
 
 @keyframes star-bounce {
+
   0%,
   100% {
     transform: translateY(0) rotate(0deg) scale(1);
   }
+
   25% {
     transform: translateY(-3px) rotate(-15deg) scale(1.1);
   }
+
   75% {
     transform: translateY(-3px) rotate(15deg) scale(1.1);
   }
@@ -499,9 +522,11 @@ select:focus {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -616,6 +641,7 @@ select:focus {
 }
 
 @media (max-width: 640px) {
+
   .list-view-table th,
   .list-view-table td {
     padding: 0.5rem 0.5rem;
@@ -832,10 +858,12 @@ select:focus {
     transform: rotate(0deg) scale(1.2);
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
   }
+
   50% {
     transform: rotate(180deg) scale(1.3);
     filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1));
   }
+
   100% {
     transform: rotate(360deg) scale(1.2);
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
@@ -849,10 +877,12 @@ select:focus {
 }
 
 @keyframes pulse-glow {
+
   0%,
   100% {
     box-shadow: 0 0 20px 5px rgba(238, 120, 0, 0.6) !important;
   }
+
   50% {
     box-shadow: 0 0 30px 10px rgba(238, 120, 0, 0.9) !important;
   }
@@ -864,6 +894,7 @@ select:focus {
     opacity: 0;
     transform: scale(0.8) translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -898,6 +929,7 @@ select:focus {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -920,6 +952,7 @@ select:focus {
     transform: translateY(100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
