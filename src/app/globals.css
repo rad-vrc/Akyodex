@@ -507,8 +507,32 @@ select:focus {
   }
 }
 
+/* VRChatリンクボタン（カード一覧用）— ロゴのみ表示 */
+.vrchat-link-button {
+  background: none !important;
+  border: none !important;
+  padding: 0.125rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #000 !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease !important;
+  line-height: 1 !important;
+}
+
+.vrchat-link-button:hover {
+  transform: scale(1.1) !important;
+}
+
+.vrchat-link-button:active {
+  transform: scale(0.95) !important;
+}
+
 /* 三面図ダウンロードボタン（detail-buttonと同じグラデーション） */
 .reference-sheet-button {
+  transform: scale(0.9) !important;
+  transform-origin: right center !important;
   background: linear-gradient(135deg, #ff6b9d, #ffd93d, #6bcf7f, #4facfe) !important;
   background-size: 300% 300% !important;
   animation: rainbow-gradient 3s ease infinite !important;
@@ -530,14 +554,14 @@ select:focus {
 }
 
 .reference-sheet-button:hover {
-  transform: translateY(-2px) scale(1.05) !important;
+  transform: translateY(-2px) scale(0.945) !important;
   box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4), 0 8px 20px rgba(255, 217, 61, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
   border-color: #ffd93d !important;
 }
 
 .reference-sheet-button:active {
-  transform: translateY(-1px) scale(1.02) !important;
+  transform: translateY(-1px) scale(0.918) !important;
 }
 
 /* ボタンに波紋エフェクト */

@@ -361,6 +361,11 @@ export const UI_TEXTS = {
     en: 'Ref Sheet',
     ko: '3면도',
   },
+  'card.vrchat': {
+    ja: 'VRChatで見る',
+    en: 'View in VRChat',
+    ko: 'VRChat에서 보기',
+  },
 
   // === List view ===
   'list.appearance': {

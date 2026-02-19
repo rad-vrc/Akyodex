@@ -1,5 +1,6 @@
 'use client';
 
+import { IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
@@ -34,6 +35,22 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
     // 新しいウィンドウ/タブで開くとダウンロードがトリガーされる
     window.location.href = downloadUrl;
+  };
+
+  // VRChat アバターページを新タブで開く
+  const handleVRChatClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!akyo.avatarUrl) return;
+
+    try {
+      const url = new URL(akyo.avatarUrl);
+      if (url.protocol === 'https:' || url.protocol === 'http:') {
+        window.open(akyo.avatarUrl, '_blank', 'noopener,noreferrer');
+      }
+    } catch {
+      // Invalid URL — ignore silently
+    }
   };
 
   // 互換性のため新旧フィールドをチェック
@@ -76,31 +93,48 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID と 三面図DLボタン */}
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
-          <button
-            type="button"
-            onClick={handleDownloadClick}
-            className="reference-sheet-button"
-            title={t('card.download', lang)}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+        {/* ID・VRChatリンク・三面図DLボタン */}
+        <div className="grid grid-cols-3 items-center mb-1">
+          <span className="text-sm font-bold text-gray-500 justify-self-start">#{akyo.id}</span>
+          {/* VRChat アバターリンク（中央） */}
+          <div className="justify-self-center">
+            {akyo.avatarUrl && (
+              <button
+                type="button"
+                onClick={handleVRChatClick}
+                className="vrchat-link-button"
+                title={t('card.vrchat', lang)}
+                aria-label={t('card.vrchat', lang)}
+              >
+                <IconVRChat size="w-[2.31rem] h-[2.31rem]" />
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-1.5 justify-self-end">
+            {/* 三面図DL */}
+            <button
+              type="button"
+              onClick={handleDownloadClick}
+              className="reference-sheet-button"
+              title={t('card.download', lang)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            <span className="hidden sm:inline">{t('card.downloadLabel', lang)}</span>
-          </button>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              <span className="hidden sm:inline">{t('card.downloadLabel', lang)}</span>
+            </button>
+          </div>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
