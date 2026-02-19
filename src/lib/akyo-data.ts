@@ -53,9 +53,6 @@ const USE_JSON_DATA = process.env.NEXT_PUBLIC_USE_JSON_DATA !== 'false';
  */
 export const getAkyoData = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
-    'use cache';
-    cacheTag('akyo-data', `akyo-data-${lang}`);
-
     // Try KV first (Phase 5b)
     if (USE_KV_DATA) {
       try {
@@ -65,7 +62,7 @@ export const getAkyoData = cache(
           return data;
         }
       } catch (error) {
-        // Fall back to JSON without logging to avoid side effects in cache
+        // Fall back to JSON without logging
       }
     }
 
@@ -98,8 +95,6 @@ export const getAkyoData = cache(
  */
 export const getAkyoById = cache(
   async (id: string, lang: SupportedLanguage = 'ja'): Promise<AkyoData | null> => {
-    'use cache';
-    cacheTag('akyo-data', `akyo-data-${lang}`, `akyo-id-${id}`);
     const allData = await getAkyoData(lang);
     return findAkyoById(allData, id);
   }
@@ -114,8 +109,6 @@ export const getAkyoById = cache(
  */
 export const getAllCategories = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
-    'use cache';
-    cacheTag('akyo-data', `akyo-data-${lang}`, 'akyo-categories');
     const data = await getAkyoData(lang);
     return extractCategories(data);
   }
@@ -130,8 +123,6 @@ export const getAllCategories = cache(
  */
 export const getAllAuthors = cache(
   async (lang: SupportedLanguage = 'ja'): Promise<string[]> => {
-    'use cache';
-    cacheTag('akyo-data', `akyo-data-${lang}`, 'akyo-authors');
     const data = await getAkyoData(lang);
     return extractAuthors(data);
   }
