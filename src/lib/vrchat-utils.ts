@@ -1,3 +1,5 @@
+import type { MouseEvent as ReactMouseEvent } from 'react';
+
 /**
  * VRChat Utilities
  * Helper functions for VRChat avatar operations
@@ -73,7 +75,7 @@ export function extractVRChatAvatarId(avatarUrl: string | undefined): string | n
  * @param e - React or Native click event to stop propagation
  * @param url - The source URL to validate
  */
-export function safeOpenVRChatLink(e: React.MouseEvent | MouseEvent, url: string | undefined): void {
+export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string | undefined): void {
   e.stopPropagation();
 
   if (!url) return;
