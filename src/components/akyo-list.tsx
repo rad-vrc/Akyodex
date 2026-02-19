@@ -1,29 +1,63 @@
 'use client';
 
-import { IconInfoCircle } from '@/components/icons';
+import { IconInfoCircle, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
-import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
 
+/**
+ * Props for the AkyoList component
+ */
 interface AkyoListProps {
+  /** Array of Akyo data objects to display in the list */
   data: AkyoData[];
+  /** Currently selected language for translations (default: 'ja') */
   lang?: SupportedLanguage;
+  /** Optional callback when the favorite button is clicked */
   onToggleFavorite?: (id: string) => void;
+  /** Optional callback when a row is clicked to show details */
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
+/**
+ * AkyoList Component
+ * Displays a list (table) of Akyo avatars with basic information and action buttons.
+ * Optimized for desktop viewing and provides quick access to details and external links.
+ *
+ * @param props - Component properties
+ * @returns Table-based list element
+ */
 export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoListProps) {
+  /**
+   * Handles click on the favorite icon button
+   * @param e - Event object
+   * @param id - Akyo ID
+   */
   const handleFavoriteClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     onToggleFavorite?.(id);
   };
 
+  /**
+   * Handles click on the info/detail icon button
+   * @param e - Event object
+   * @param akyo - Akyo data object
+   */
   const handleDetailClick = (e: React.MouseEvent, akyo: AkyoData) => {
     e.stopPropagation();
     onShowDetail?.(akyo);
+  };
+
+  /**
+   * Handles click on the VRChat logo button to open the external detail page safely.
+   * @param e - React mouse event
+   * @param url - The target VRChat URL
+   */
+  const handleVRChatClick = (e: React.MouseEvent, url: string | undefined) => {
+    safeOpenVRChatLink(e, url);
   };
 
   return (
@@ -114,6 +148,19 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   {/* アクション */}
                   <td className="text-center">
                     <div className="flex items-center justify-center gap-1">
+                      {/* VRChatリンク */}
+                      {akyo.avatarUrl && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleVRChatClick(e, akyo.avatarUrl)}
+                          className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95"
+                          title={t('modal.vrchatOpen', lang)}
+                          aria-label={t('modal.vrchatOpen', lang)}
+                        >
+                          <IconVRChat size="w-10 h-10" className="text-black" overflow="visible" />
+                        </button>
+                      )}
+
                       {/* お気に入りボタン */}
                       <button
                         type="button"

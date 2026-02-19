@@ -32,14 +32,30 @@ import Image from 'next/image';
 import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+/**
+ * Props for the AkyoDetailModal component
+ */
 interface AkyoDetailModalProps {
+  /** The Akyo data object to display, or null if no detail is selected */
   akyo: AkyoData | null;
+  /** Whether the modal is currently visible */
   isOpen: boolean;
+  /** Callback to close the modal */
   onClose: () => void;
+  /** Optional callback when the favorite heart is clicked */
   onToggleFavorite?: (id: string) => void;
+  /** Currently selected language for translations (default: 'ja') */
   lang?: SupportedLanguage;
 }
 
+/**
+ * AkyoDetailModal Component
+ * A full-screen overlay modal displaying detailed information about a specific Akyo.
+ * Includes a large image preview with zoom functionality, metadata grid, and external links.
+ *
+ * @param props - Component properties
+ * @returns Modal element with backdrop
+ */
 export function AkyoDetailModal({
   akyo,
   isOpen,
@@ -388,9 +404,8 @@ export function AkyoDetailModal({
                 {/* Image Section with Zoom & Drag */}
                 <div className="relative">
                   <div
-                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none ${
-                      isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
-                    }`}
+                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
+                      }`}
                     style={{ touchAction: isZoomed ? 'none' : 'auto' }}
                     onClick={handleImageClick}
                     onDoubleClick={handleImageDoubleClick}
@@ -542,16 +557,15 @@ export function AkyoDetailModal({
                   <button
                     type="button"
                     onClick={handleFavoriteClick}
-                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
-                      localAkyo.isFavorite
+                    className={`flex-1 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${localAkyo.isFavorite
                         ? 'text-white hover:opacity-90'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
+                      }`}
                     style={
                       localAkyo.isFavorite
                         ? {
-                            background: 'linear-gradient(135deg, #FF6B9D, #FF8FA3)',
-                          }
+                          background: 'linear-gradient(135deg, #FF6B9D, #FF8FA3)',
+                        }
                         : undefined
                     }
                     aria-label={

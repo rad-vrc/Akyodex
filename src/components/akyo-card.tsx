@@ -1,30 +1,57 @@
 'use client';
 
+import { IconDownload, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
-import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
 
+/**
+ * Props for the AkyoCard component
+ */
 interface AkyoCardProps {
+  /** The Akyo data object to display */
   akyo: AkyoData;
+  /** Currently selected language for translations (default: 'ja') */
   lang?: SupportedLanguage;
+  /** Optional callback when the favorite button is clicked */
   onToggleFavorite?: (id: string) => void;
+  /** Optional callback when the card is clicked to show details */
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
+/**
+ * AkyoCard Component
+ * Displays a single Akyo avatar as a stylized card with an image, metadata, and action buttons.
+ * Supports image caching, language-aware labels, and interactive favorites.
+ *
+ * @param props - Component properties
+ * @returns Stylized card element
+ */
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
+  /**
+   * Handles clicks on the favorite heart icon button
+   * @param e - React mouse event
+   */
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(akyo.id);
   };
 
+  /**
+   * Handles clicks on the card body to open detail view
+   */
   const handleCardClick = () => {
     onShowDetail?.(akyo);
   };
 
-  // 三面図ダウンロード（サーバーサイドプロキシ経由でCORS回避）
+  /**
+   * Handles clicks on the reference sheet download button.
+   * Uses a server-side proxy to bypass CORS and force a download.
+   * @param e - React mouse event
+   */
   const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -34,6 +61,14 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
     // 新しいウィンドウ/タブで開くとダウンロードがトリガーされる
     window.location.href = downloadUrl;
+  };
+
+  /**
+   * Handles clicks on the VRChat logo button to open the external detail page safely.
+   * @param e - React mouse event
+   */
+  const handleVRChatClick = (e: React.MouseEvent) => {
+    safeOpenVRChatLink(e, akyo.avatarUrl);
   };
 
   // 互換性のため新旧フィールドをチェック
@@ -76,30 +111,29 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID と 三面図DLボタン */}
+        {/* ID と VRChatリンク と 三面図DLボタン */}
         <div className="flex items-center justify-between mb-1">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
+          {akyo.avatarUrl && (
+            <button
+              type="button"
+              onClick={handleVRChatClick}
+              className="vrchat-link-button flex-shrink-0 p-1 ml-1 transition-all hover:scale-110 active:scale-95"
+              title={t('modal.vrchatOpen', lang)}
+              aria-label={t('modal.vrchatOpen', lang)}
+            >
+              <IconVRChat size="w-12 h-12" className="text-black" overflow="visible" />
+            </button>
+          )}
           <button
             type="button"
             onClick={handleDownloadClick}
-            className="reference-sheet-button"
+            className="reference-sheet-button flex-shrink-0 scale-90"
             title={t('card.download', lang)}
+            aria-label={t('card.download', lang)}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            <span className="hidden sm:inline">{t('card.downloadLabel', lang)}</span>
+            <IconDownload />
+            <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>
 

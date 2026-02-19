@@ -1,3 +1,5 @@
+import type { MouseEvent as ReactMouseEvent } from 'react';
+
 /**
  * VRChat Utilities
  * Helper functions for VRChat avatar operations
@@ -55,7 +57,7 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
  * @param avatarUrl - The VRChat avatar URL (e.g., https://vrchat.com/home/avatar/avtr_xxx)
  * @returns The avatar ID (e.g., avtr_xxx) or null if not found
  */
-function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
+export function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
   if (!avatarUrl) {
     return null;
   }
@@ -63,6 +65,40 @@ function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
   // Match avtr_ followed by alphanumeric characters and hyphens
   const match = avatarUrl.match(/avtr_[A-Za-z0-9-]+/);
   return match ? match[0] : null;
+}
+
+/**
+ * Validates and opens a VRChat URL safely in a new tab.
+ * Extracts the avatar ID (avtr_...) to reconstruct a canonical URL, ensuring
+ * only valid avatar pages are opened.
+ *
+ * @param e - React or Native click event to stop propagation
+ * @param url - The source URL to validate
+ */
+export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string | undefined): void {
+  e.stopPropagation();
+
+  if (!url) return;
+
+  // 1. Try to extract avatar ID and reconstruct canonical URL (Safest)
+  const avtrId = extractVRChatAvatarId(url);
+  if (avtrId) {
+    const canonicalUrl = `https://vrchat.com/home/avatar/${avtrId}`;
+    window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  // 2. Fallback: Strict domain validation if no ID found (e.g. general VRC links)
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'https:' && parsed.hostname === 'vrchat.com') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      console.warn('[vrchat-utils] Blocked non-VRChat URL:', url);
+    }
+  } catch {
+    console.warn('[vrchat-utils] Invalid URL format:', url);
+  }
 }
 
 /**

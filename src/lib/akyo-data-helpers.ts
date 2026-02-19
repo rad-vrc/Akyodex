@@ -8,6 +8,9 @@
  */
 
 import type { AkyoData } from '@/types/akyo';
+/**
+ * Delimiter pattern for splitting multi-value strings in CSV (comma or Japanese ideographic comma)
+ */
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 /**
@@ -20,13 +23,13 @@ const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
  */
 export function extractCategories(data: AkyoData[]): string[] {
   const categoriesSet = new Set<string>();
-  
+
   data.forEach((akyo) => {
     const catStr = akyo.category || akyo.attribute || '';
     const cats = catStr.split(MULTI_VALUE_SPLIT_PATTERN).map((c) => c.trim()).filter(Boolean);
     cats.forEach((cat) => categoriesSet.add(cat));
   });
-  
+
   return Array.from(categoriesSet).sort();
 }
 
@@ -40,7 +43,7 @@ export function extractCategories(data: AkyoData[]): string[] {
  */
 export function extractAuthors(data: AkyoData[]): string[] {
   const authorsSet = new Set<string>();
-  
+
   data.forEach((akyo) => {
     const authorStr = akyo.author || akyo.creator || '';
     const authors = authorStr
@@ -49,13 +52,16 @@ export function extractAuthors(data: AkyoData[]): string[] {
       .filter(Boolean);
     authors.forEach((author) => authorsSet.add(author));
   });
-  
+
   return Array.from(authorsSet).sort();
 }
 
 /**
  * Parse category string and sort with the same logic as filter panel
  * (default JavaScript lexical sort).
+ * 
+ * @param category - Raw category string from data
+ * @returns Sorted array of trimmed category strings
  */
 export function parseAndSortCategories(category: string): string[] {
   return category
@@ -108,8 +114,12 @@ const CATEGORY_COLOR_MAP: Record<string, string> = {
 const DEFAULT_COLORS = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe'];
 
 /**
- * 文字列から決定的なハッシュ値を生成（簡易 djb2）
- * Math.random() の代わりに使用し、同一カテゴリ名には常に同じ色を返す
+ * Generates a deterministic hash value from a string (simple djb2 algorithm).
+ * Used instead of Math.random() to ensure consistent UI state (like colors)
+ * between SSR and CSR, preventing hydration mismatches.
+ *
+ * @param str - The string to hash
+ * @returns A non-negative 32-bit integer
  */
 function hashString(str: string): number {
   let hash = 5381;
