@@ -9,36 +9,13 @@
  */
 
 import { connection } from 'next/server';
-import { timingSafeEqual } from 'crypto';
-import { jsonError, jsonSuccess, setSessionCookie } from '@/lib/api-helpers';
+import { jsonError, jsonSuccess, setSessionCookie, timingSafeCompare } from '@/lib/api-helpers';
 import { createSessionToken } from '@/lib/session';
 import type { AdminRole } from '@/types/akyo';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 const MAX_AKYO_WORD_LENGTH = 256;
-
-/**
- * Timing-safe password comparison (Node.js crypto)
- * Prevents timing attacks by ensuring constant-time comparison
- */
-function timingSafeCompare(a: string, b: string): boolean {
-  try {
-    const bufA = Buffer.from(a, 'utf8');
-    const bufB = Buffer.from(b, 'utf8');
-    const maxLength = Math.max(bufA.length, bufB.length);
-    const paddedA = Buffer.alloc(maxLength);
-    const paddedB = Buffer.alloc(maxLength);
-    bufA.copy(paddedA);
-    bufB.copy(paddedB);
-
-    const isEqual = timingSafeEqual(paddedA, paddedB);
-    return isEqual && bufA.length === bufB.length;
-  } catch (error) {
-    console.error('[admin/login] timingSafeCompare failed:', error);
-    return false;
-  }
-}
 
 export async function POST(request: Request) {
   await connection();

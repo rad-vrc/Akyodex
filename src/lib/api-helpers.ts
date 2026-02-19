@@ -12,6 +12,41 @@ import { SessionData, validateSession as validateSessionToken } from './session'
 export const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001F\u007F-\u009F]/u;
 
 /**
+ * Timing-safe string comparison (Edge / Cloudflare Workers compatible)
+ *
+ * Uses the native crypto.subtle.timingSafeEqual provided by the
+ * Cloudflare Workers runtime for a true constant-time comparison
+ * implemented at the C++ level, immune to JIT optimisations.
+ *
+ * When lengths differ, compares the user value against itself (always
+ * true) and negates the result, following the Cloudflare-recommended
+ * pattern so that the comparison cost stays constant regardless of
+ * input length.  This avoids leaking the secret's length via timing.
+ *
+ * @see https://developers.cloudflare.com/workers/examples/protect-against-timing-attacks/
+ * @param a - First string  (typically the user-supplied value)
+ * @param b - Second string (typically the server secret)
+ * @returns true if strings are equal, false otherwise
+ */
+export function timingSafeCompare(a: string, b: string): boolean {
+  try {
+    const encoder = new TextEncoder();
+    const bufA = encoder.encode(a);
+    const bufB = encoder.encode(b);
+
+    // crypto.subtle.timingSafeEqual throws when lengths differ.
+    // Compare user input against itself (constant-time no-op) and
+    // negate so that length mismatches never leak timing information.
+    const lengthsMatch = bufA.byteLength === bufB.byteLength;
+    return lengthsMatch
+      ? crypto.subtle.timingSafeEqual(bufA, bufB)
+      : !crypto.subtle.timingSafeEqual(bufA, bufA);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Validate session from request cookies
  *
  * @returns SessionData if valid, null otherwise
