@@ -163,12 +163,17 @@ export function middleware(request: NextRequest) {
     const nonce = btoa(String.fromCharCode(...randomBytes));
 
     // Content Security Policy
-    // Note: Dify injects a known inline bootstrap snippet; allow it via hash.
+    // Note: Allow known inline snippets via hash.
+    // - difyHash: Dify bootstrap
+    // - nextHash1: Next.js internal hydration/bootstrap
+    // - nextHash2: Next.js internal routing/telemetry
     const difyHash = "'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4='";
+    const nextHash1 = "'sha256-Y0n4yPl6NVlsNk6tRgLx9lwZIIQI4C2KFbAECq/bFPE='";
+    const nextHash2 = "'sha256-7mu4H06fwDCjmnxxr/xNHyuQC6pLTHr4M2E4jXw5WZs='";
 
     const cspHeader = `
     default-src 'self';
-    script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
+    script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash} ${nextHash1} ${nextHash2};
     style-src ${STYLE_SRC.join(' ')};
     img-src ${IMG_SRC.join(' ')};
     font-src ${FONT_SRC.join(' ')};
