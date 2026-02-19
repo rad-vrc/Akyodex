@@ -112,9 +112,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <head suppressHydrationWarning>
-        <StructuredData />
-      </head>
+      <head suppressHydrationWarning />
       <body className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}>
         {/*
           Static elements that can be rendered in the initial shell.
@@ -125,8 +123,6 @@ export default function RootLayout({
             to capture bootstrap failures and hydration errors.
             Sentry CDN is whitelisted by domain in CSP, so nonce is not required. */}
         <Script src={sentryUrl} strategy="beforeInteractive" />
-        <WebVitals />
-        <ServiceWorkerRegister />
         {children}
 
         {/*
@@ -169,6 +165,9 @@ async function DynamicLayoutContent() {
           `,
         }}
       />
+      <StructuredData nonce={nonce} />
+      <WebVitals />
+      <ServiceWorkerRegister />
       {difyToken ? <DifyChatbot token={difyToken} /> : null}
     </>
   );

@@ -3,7 +3,11 @@
  * SEO最適化のためのSchema.org準拠の構造化データ
  */
 
-export function StructuredData() {
+interface StructuredDataProps {
+  nonce?: string;
+}
+
+export function StructuredData({ nonce }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -37,6 +41,7 @@ export function StructuredData() {
   return (
     <script
       type="application/ld+json"
+      nonce={nonce}
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
     />
   );
