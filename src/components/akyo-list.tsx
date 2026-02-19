@@ -1,6 +1,6 @@
 'use client';
 
-import { IconInfoCircle } from '@/components/icons';
+import { IconInfoCircle, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
@@ -24,6 +24,11 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
   const handleDetailClick = (e: React.MouseEvent, akyo: AkyoData) => {
     e.stopPropagation();
     onShowDetail?.(akyo);
+  };
+
+  const handleVRChatClick = (e: React.MouseEvent, url: string) => {
+    e.stopPropagation();
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -114,6 +119,18 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   {/* アクション */}
                   <td className="text-center">
                     <div className="flex items-center justify-center gap-1">
+                      {/* VRChatリンク */}
+                      {akyo.avatarUrl && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleVRChatClick(e, akyo.avatarUrl!)}
+                          className="list-action-btn"
+                          title={t('modal.vrchatOpen', lang)}
+                        >
+                          <IconVRChat size="w-5 h-5" className="text-orange-500" />
+                        </button>
+                      )}
+
                       {/* お気に入りボタン */}
                       <button
                         type="button"

@@ -1,5 +1,6 @@
 'use client';
 
+import { IconDownload, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
@@ -34,6 +35,13 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
     // 新しいウィンドウ/タブで開くとダウンロードがトリガーされる
     window.location.href = downloadUrl;
+  };
+
+  const handleVRChatClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (akyo.avatarUrl) {
+      window.open(akyo.avatarUrl, '_blank', 'noopener,noreferrer');
+    }
   };
 
   // 互換性のため新旧フィールドをチェック
@@ -76,29 +84,26 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID と 三面図DLボタン */}
+        {/* ID と VRChatリンク と 三面図DLボタン */}
         <div className="flex items-center justify-between mb-1">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
+          {akyo.avatarUrl && (
+            <button
+              type="button"
+              onClick={handleVRChatClick}
+              className="vrchat-link-button p-1 rounded-md transition-all hover:bg-orange-100 hover:scale-110 active:scale-95"
+              title={t('modal.vrchatOpen', lang)}
+            >
+              <IconVRChat size="w-6 h-6" className="text-orange-500" />
+            </button>
+          )}
           <button
             type="button"
             onClick={handleDownloadClick}
             className="reference-sheet-button"
             title={t('card.download', lang)}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
+            <IconDownload className="w-4 h-4" />
             <span className="hidden sm:inline">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>
