@@ -122,7 +122,7 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
               title={t('modal.vrchatOpen', lang)}
               aria-label={t('modal.vrchatOpen', lang)}
             >
-              <IconVRChat size="w-11 h-11" className="text-black" overflow="visible" />
+              <IconVRChat size="w-12 h-12" className="text-black" overflow="visible" />
             </button>
           )}
           <button
