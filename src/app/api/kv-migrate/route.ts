@@ -11,7 +11,7 @@
  * 2. Initializes new KV cache with fresh data from JSON
  *
  * Security:
- * - Requires REVALIDATE_SECRET header for authentication
+ * - Requires REVALIDATE_SECRET header for authentication (timing-safe)
  * - One-time migration operation
  *
  * Usage:
@@ -23,7 +23,8 @@
  */
 
 import type { KVNamespace } from '@/types/kv';
-import { connection, NextRequest } from 'next/server';
+import { jsonError, jsonSuccess, timingSafeCompare } from '@/lib/api-helpers';
+import { connection } from 'next/server';
 
 function getKVNamespace(): KVNamespace | null {
   try {
@@ -46,29 +47,27 @@ interface MigrateRequest {
   initializeNew?: boolean;
 }
 
-export async function POST(request: NextRequest): Promise<Response> {
-  await connection();
+export async function POST(request: Request): Promise<Response> {
   try {
-    // Verify secret
+    await connection();
+
+    // Verify secret with timing-safe comparison
     const secret = request.headers.get('x-revalidate-secret');
     const expectedSecret = process.env.REVALIDATE_SECRET;
 
     if (!expectedSecret) {
       console.error('[kv-migrate] REVALIDATE_SECRET is not configured');
-      return Response.json({ error: 'Server configuration error' }, { status: 500 });
+      return jsonError('Server configuration error', 500);
     }
 
-    if (!secret || secret !== expectedSecret) {
+    if (!secret || !timingSafeCompare(secret, expectedSecret)) {
       console.warn('[kv-migrate] Invalid or missing secret');
-      return Response.json({ error: 'Invalid secret' }, { status: 401 });
+      return jsonError('Invalid secret', 401);
     }
 
     const kv = getKVNamespace();
     if (!kv) {
-      return Response.json(
-        { error: 'KV namespace not available (not in Cloudflare environment)' },
-        { status: 503 }
-      );
+      return jsonError('KV namespace not available (not in Cloudflare environment)', 503);
     }
 
     // Parse request body
@@ -112,9 +111,8 @@ export async function POST(request: NextRequest): Promise<Response> {
               result.deletedKeys.push(key.name);
               console.log(`[kv-migrate] Deleted: ${key.name}`);
             } catch (error) {
-              const errMsg = `Failed to delete ${key.name}: ${error}`;
-              console.error(`[kv-migrate] ${errMsg}`);
-              result.errors.push(errMsg);
+              console.error(`[kv-migrate] Failed to delete ${key.name}:`, error);
+              result.errors.push(`Failed to delete ${key.name}`);
             }
           }
 
@@ -123,9 +121,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
         console.log(`[kv-migrate] Cleanup complete: ${result.deletedKeys.length} keys deleted`);
       } catch (error) {
-        const errMsg = `Cleanup failed: ${error}`;
-        console.error(`[kv-migrate] ${errMsg}`);
-        result.errors.push(errMsg);
+        console.error('[kv-migrate] Cleanup failed:', error);
+        result.errors.push('Cleanup failed');
       }
     }
 
@@ -196,56 +193,58 @@ export async function POST(request: NextRequest): Promise<Response> {
           `[kv-migrate] Initialization complete: ja=${kvResult.ja}, en=${kvResult.en}, ko=${kvResult.ko}, meta=${kvResult.metadata}`
         );
       } catch (error) {
-        const errMsg = `Initialization failed: ${error}`;
-        console.error(`[kv-migrate] ${errMsg}`);
-        result.errors.push(errMsg);
+        console.error('[kv-migrate] Initialization failed:', error);
+        result.errors.push('Initialization failed');
       }
     }
 
     const success = result.errors.length === 0;
-    const responseData = {
-      success,
+
+    if (success) {
+      return jsonSuccess({
+        timestamp: new Date().toISOString(),
+        ...result,
+      });
+    }
+
+    return jsonError('Migration completed with errors', 500, {
       timestamp: new Date().toISOString(),
       ...result,
-    };
-
-    // Return 500 status if any errors occurred
-    return Response.json(responseData, {
-      status: success ? 200 : 500,
     });
   } catch (error) {
     console.error('[kv-migrate] Unexpected error:', error);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    return jsonError('Internal server error', 500);
   }
 }
 
 // Status endpoint - requires authentication
-export async function GET(request: NextRequest): Promise<Response> {
-  await connection();
-  // Verify secret - same authentication as POST
-  const secret = request.headers.get('x-revalidate-secret');
-  const expectedSecret = process.env.REVALIDATE_SECRET;
-
-  if (!expectedSecret) {
-    console.error('[kv-migrate] REVALIDATE_SECRET is not configured');
-    return Response.json({ error: 'Server configuration error' }, { status: 500 });
-  }
-
-  if (!secret || secret !== expectedSecret) {
-    console.warn('[kv-migrate] GET: Invalid or missing secret');
-    return Response.json({ error: 'Invalid secret' }, { status: 401 });
-  }
-
-  const kv = getKVNamespace();
-
-  if (!kv) {
-    return Response.json({
-      status: 'unavailable',
-      message: 'KV namespace not available (not in Cloudflare environment)',
-    });
-  }
-
+export async function GET(request: Request): Promise<Response> {
   try {
+    await connection();
+
+    // Verify secret - same authentication as POST
+    const secret = request.headers.get('x-revalidate-secret');
+    const expectedSecret = process.env.REVALIDATE_SECRET;
+
+    if (!expectedSecret) {
+      console.error('[kv-migrate] REVALIDATE_SECRET is not configured');
+      return jsonError('Server configuration error', 500);
+    }
+
+    if (!secret || !timingSafeCompare(secret, expectedSecret)) {
+      console.warn('[kv-migrate] GET: Invalid or missing secret');
+      return jsonError('Invalid secret', 401);
+    }
+
+    const kv = getKVNamespace();
+
+    if (!kv) {
+      return jsonSuccess({
+        status: 'unavailable',
+        message: 'KV namespace not available (not in Cloudflare environment)',
+      });
+    }
+
     // List all keys to check current state
     const oldKeys: string[] = [];
     const newKeys: string[] = [];
@@ -265,7 +264,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       if (value) newKeys.push(key);
     }
 
-    return Response.json({
+    return jsonSuccess({
       status: 'ok',
       kvAvailable: true,
       oldFormatKeys: oldKeys,
@@ -274,9 +273,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       needsMigration: oldKeys.length > 0 || newKeys.length === 0,
     });
   } catch (error) {
-    return Response.json({
-      status: 'error',
-      message: `${error}`,
-    });
+    console.error('[kv-migrate] KV status check failed:', error);
+    return jsonError('Internal server error', 500);
   }
 }
