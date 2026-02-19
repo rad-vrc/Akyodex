@@ -94,17 +94,17 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
               className="vrchat-link-button p-1 transition-all hover:scale-110 active:scale-95"
               title={t('modal.vrchatOpen', lang)}
             >
-              <IconVRChat size="w-8 h-8" className="text-black" />
+              <IconVRChat size="w-9 h-9" className="text-black" />
             </button>
           )}
           <button
             type="button"
             onClick={handleDownloadClick}
-            className="reference-sheet-button"
+            className="reference-sheet-button scale-90"
             title={t('card.download', lang)}
           >
             <IconDownload className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('card.downloadLabel', lang)}</span>
+            <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>
 
