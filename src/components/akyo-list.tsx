@@ -124,10 +124,10 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                         <button
                           type="button"
                           onClick={(e) => handleVRChatClick(e, akyo.avatarUrl!)}
-                          className="vrchat-link-button p-1 transition-all hover:scale-110 active:scale-95"
+                          className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95"
                           title={t('modal.vrchatOpen', lang)}
                         >
-                          <IconVRChat size="w-7 h-7" className="text-black" />
+                          <IconVRChat size="w-7 h-7" className="text-black" overflow="visible" />
                         </button>
                       )}
 
