@@ -67,25 +67,35 @@ export function extractVRChatAvatarId(avatarUrl: string | undefined): string | n
 
 /**
  * Validates and opens a VRChat URL safely in a new tab.
- * Ensures the URL uses the https: protocol and restricts to vrchat.com domain for better security.
+ * Extracts the avatar ID (avtr_...) to reconstruct a canonical URL, ensuring
+ * only valid avatar pages are opened.
  *
  * @param e - React or Native click event to stop propagation
- * @param url - The target VRChat URL to open
+ * @param url - The source URL to validate
  */
 export function safeOpenVRChatLink(e: React.MouseEvent | MouseEvent, url: string | undefined): void {
   e.stopPropagation();
 
   if (!url) return;
 
+  // 1. Try to extract avatar ID and reconstruct canonical URL (Safest)
+  const avtrId = extractVRChatAvatarId(url);
+  if (avtrId) {
+    const canonicalUrl = `https://vrchat.com/home/avatar/${avtrId}`;
+    window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  // 2. Fallback: Strict domain validation if no ID found (e.g. general VRC links)
   try {
     const parsed = new URL(url);
-    // Allow only https and specifically vrchat.com domains for safety
-    if (parsed.protocol === 'https:' && parsed.hostname.endsWith('vrchat.com')) {
+    if (parsed.protocol === 'https:' && parsed.hostname === 'vrchat.com') {
       window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      console.warn('[vrchat-utils] Blocked non-VRChat URL:', url);
     }
   } catch {
-    // Silently ignore invalid URLs
-    console.warn('[vrchat-utils] Blocked opening invalid or insecure URL:', url);
+    console.warn('[vrchat-utils] Invalid URL format:', url);
   }
 }
 
