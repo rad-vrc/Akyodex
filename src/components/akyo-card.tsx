@@ -4,28 +4,54 @@ import { IconDownload, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
-import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
+import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
 
+/**
+ * Props for the AkyoCard component
+ */
 interface AkyoCardProps {
+  /** The Akyo data object to display */
   akyo: AkyoData;
+  /** Currently selected language for translations (default: 'ja') */
   lang?: SupportedLanguage;
+  /** Optional callback when the favorite button is clicked */
   onToggleFavorite?: (id: string) => void;
+  /** Optional callback when the card is clicked to show details */
   onShowDetail?: (akyo: AkyoData) => void;
 }
 
+/**
+ * AkyoCard Component
+ * Displays a single Akyo avatar as a stylized card with an image, metadata, and action buttons.
+ * Supports image caching, language-aware labels, and interactive favorites.
+ *
+ * @param props - Component properties
+ * @returns Stylized card element
+ */
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
+  /**
+   * Handles clicks on the favorite heart icon button
+   * @param e - React mouse event
+   */
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(akyo.id);
   };
 
+  /**
+   * Handles clicks on the card body to open detail view
+   */
   const handleCardClick = () => {
     onShowDetail?.(akyo);
   };
 
-  // 三面図ダウンロード（サーバーサイドプロキシ経由でCORS回避）
+  /**
+   * Handles clicks on the reference sheet download button.
+   * Uses a server-side proxy to bypass CORS and force a download.
+   * @param e - React mouse event
+   */
   const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -37,11 +63,12 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
     window.location.href = downloadUrl;
   };
 
+  /**
+   * Handles clicks on the VRChat logo button to open the external detail page safely.
+   * @param e - React mouse event
+   */
   const handleVRChatClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (akyo.avatarUrl) {
-      window.open(akyo.avatarUrl, '_blank', 'noopener,noreferrer');
-    }
+    safeOpenVRChatLink(e, akyo.avatarUrl);
   };
 
   // 互換性のため新旧フィールドをチェック
@@ -93,6 +120,7 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
               onClick={handleVRChatClick}
               className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95"
               title={t('modal.vrchatOpen', lang)}
+              aria-label={t('modal.vrchatOpen', lang)}
             >
               <IconVRChat size="w-10 h-10" className="text-black" overflow="visible" />
             </button>
@@ -102,8 +130,9 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
             onClick={handleDownloadClick}
             className="reference-sheet-button flex-shrink-0 scale-90"
             title={t('card.download', lang)}
+            aria-label={t('card.download', lang)}
           >
-            <IconDownload className="w-4 h-4" />
+            <IconDownload />
             <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>

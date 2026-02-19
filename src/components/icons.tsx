@@ -12,11 +12,24 @@
 
 import type { SVGProps } from 'react';
 
+/**
+ * Base properties for SVG Icon components
+ */
 interface IconProps extends SVGProps<SVGSVGElement> {
-  /** Icon size class (e.g., "w-4 h-4", "w-5 h-5") */
+  /** 
+   * Icon size class (Tailwind CSS classes like "w-4 h-4" or "w-5 h-5").
+   * Defaults to "w-4 h-4" in the wrapper component.
+   */
   size?: string;
 }
 
+/**
+ * Common Icon Wrapper Component
+ * Provides standard SVG structure, Tailwind sizing, and accessibility defaults (aria-hidden).
+ * 
+ * @param props - Component properties including size and children (paths)
+ * @returns Accessible SVG element
+ */
 function Icon({
   size = 'w-4 h-4',
   className = '',
@@ -41,7 +54,10 @@ function Icon({
 // Public page icons
 // ═══════════════════════════════════════
 
-/** Grid view (fa-th) */
+/** 
+ * Grid view icon (th-large equivalent) 
+ * @param props - Icon properties
+ */
 export function IconGrid({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -50,7 +66,10 @@ export function IconGrid({ size, className, ...props }: IconProps) {
   );
 }
 
-/** List view (fa-list) */
+/** 
+ * List view icon (list equivalent) 
+ * @param props - Icon properties
+ */
 export function IconList({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -59,7 +78,10 @@ export function IconList({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Settings gear (fa-cog) */
+/** 
+ * Settings gear icon (cog equivalent) 
+ * @param props - Icon properties
+ */
 export function IconCog({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -68,7 +90,10 @@ export function IconCog({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Heart (fa-heart) */
+/** 
+ * Heart icon for favorites
+ * @param props - Icon properties
+ */
 export function IconHeart({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -77,7 +102,10 @@ export function IconHeart({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Dice / random (fa-dice) */
+/** 
+ * Dice icon for random selection
+ * @param props - Icon properties
+ */
 export function IconDice({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 640 512" {...props}>
@@ -86,7 +114,10 @@ export function IconDice({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Info circle (fa-info-circle / fa-circle-info) */
+/** 
+ * Info circle icon for details
+ * @param props - Icon properties
+ */
 export function IconInfoCircle({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -95,7 +126,10 @@ export function IconInfoCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** External link (fa-external-link-alt) */
+/** 
+ * External link icon 
+ * @param props - Icon properties
+ */
 export function IconExternalLink({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -113,7 +147,10 @@ export function IconTag({ size, className, ...props }: IconProps) {
   );
 }
 
-/** User (fa-user) */
+/** 
+ * User profile icon 
+ * @param props - Icon properties
+ */
 export function IconUser({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>
@@ -122,7 +159,10 @@ export function IconUser({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Sparkles (fa-sparkles — using wand-magic-sparkles) */
+/** 
+ * Sparkles icon for special variants 
+ * @param props - Icon properties
+ */
 export function IconSparkles({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 576 512" {...props}>
@@ -372,7 +412,10 @@ export function IconSave({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Download (fa-download) */
+/** 
+ * Download icon 
+ * @param props - Icon properties
+ */
 export function IconDownload({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>

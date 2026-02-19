@@ -55,7 +55,7 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
  * @param avatarUrl - The VRChat avatar URL (e.g., https://vrchat.com/home/avatar/avtr_xxx)
  * @returns The avatar ID (e.g., avtr_xxx) or null if not found
  */
-function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
+export function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
   if (!avatarUrl) {
     return null;
   }
@@ -63,6 +63,30 @@ function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
   // Match avtr_ followed by alphanumeric characters and hyphens
   const match = avatarUrl.match(/avtr_[A-Za-z0-9-]+/);
   return match ? match[0] : null;
+}
+
+/**
+ * Validates and opens a VRChat URL safely in a new tab.
+ * Ensures the URL uses the https: protocol and restricts to vrchat.com domain for better security.
+ *
+ * @param e - React or Native click event to stop propagation
+ * @param url - The target VRChat URL to open
+ */
+export function safeOpenVRChatLink(e: React.MouseEvent | MouseEvent, url: string | undefined): void {
+  e.stopPropagation();
+
+  if (!url) return;
+
+  try {
+    const parsed = new URL(url);
+    // Allow only https and specifically vrchat.com domains for safety
+    if (parsed.protocol === 'https:' && parsed.hostname.endsWith('vrchat.com')) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  } catch {
+    // Silently ignore invalid URLs
+    console.warn('[vrchat-utils] Blocked opening invalid or insecure URL:', url);
+  }
 }
 
 /**
