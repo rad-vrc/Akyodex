@@ -138,7 +138,10 @@ export function IconExternalLink({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Tag (fa-tag) */
+/** 
+ * Tag icon (tag equivalent) 
+ * @param props - Icon properties
+ */
 export function IconTag({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>
@@ -180,7 +183,10 @@ export function IconVRChat({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Palette (fa-palette) */
+/** 
+ * Palette icon for color/category representation 
+ * @param props - Icon properties
+ */
 export function IconPalette({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -189,7 +195,10 @@ export function IconPalette({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Gift (fa-gift) */
+/** 
+ * Gift icon 
+ * @param props - Icon properties
+ */
 export function IconGift({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -198,7 +207,10 @@ export function IconGift({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Sort ascending / descending */
+/** 
+ * Sort ascending icon 
+ * @param props - Icon properties
+ */
 export function IconSortAsc({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 576 512" {...props}>
@@ -208,6 +220,10 @@ export function IconSortAsc({ size, className, ...props }: IconProps) {
   );
 }
 
+/** 
+ * Sort descending icon 
+ * @param props - Icon properties
+ */
 export function IconSortDesc({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 576 512" {...props}>
@@ -221,7 +237,10 @@ export function IconSortDesc({ size, className, ...props }: IconProps) {
 // Admin page icons
 // ═══════════════════════════════════════
 
-/** Shield (fa-shield-alt) */
+/** 
+ * Shield icon for admin/security 
+ * @param props - Icon properties
+ */
 export function IconShield({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -230,7 +249,10 @@ export function IconShield({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Home (fa-home) */
+/** 
+ * Home icon 
+ * @param props - Icon properties
+ */
 export function IconHome({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 576 512" {...props}>
@@ -239,7 +261,10 @@ export function IconHome({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Sign out (fa-sign-out-alt) */
+/** 
+ * Sign out icon 
+ * @param props - Icon properties
+ */
 export function IconSignOut({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -248,7 +273,10 @@ export function IconSignOut({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Lock (fa-lock) */
+/** 
+ * Lock icon for passwords/private content 
+ * @param props - Icon properties
+ */
 export function IconLock({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>
@@ -257,7 +285,10 @@ export function IconLock({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Sign in (fa-sign-in-alt) */
+/** 
+ * Sign in icon 
+ * @param props - Icon properties
+ */
 export function IconSignIn({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -266,7 +297,10 @@ export function IconSignIn({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Exclamation circle (fa-exclamation-circle) */
+/** 
+ * Exclamation circle icon for warnings 
+ * @param props - Icon properties
+ */
 export function IconExclamationCircle({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -275,7 +309,10 @@ export function IconExclamationCircle({ size, className, ...props }: IconProps) 
   );
 }
 
-/** Plus circle (fa-plus-circle) */
+/** 
+ * Plus circle icon 
+ * @param props - Icon properties
+ */
 export function IconPlusCircle({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -284,7 +321,10 @@ export function IconPlusCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Edit / pencil (fa-edit) */
+/** 
+ * Edit icon 
+ * @param props - Icon properties
+ */
 export function IconEdit({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -304,7 +344,10 @@ export function IconTools({ size, className, ...props }: IconProps) {
   return <IconCog size={size} className={className} {...props} />;
 }
 
-/** Tags (fa-tags) */
+/** 
+ * Multiple tags icon 
+ * @param props - Icon properties
+ */
 export function IconTags({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -313,7 +356,10 @@ export function IconTags({ size, className, ...props }: IconProps) {
   );
 }
 
-/** X / Close (fa-times) */
+/** 
+ * Close/X icon 
+ * @param props - Icon properties
+ */
 export function IconClose({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 384 512" {...props}>
@@ -322,7 +368,10 @@ export function IconClose({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Search (fa-search) */
+/** 
+ * Search icon 
+ * @param props - Icon properties
+ */
 export function IconSearch({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -331,7 +380,10 @@ export function IconSearch({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Check circle (fa-check-circle) */
+/** 
+ * Check circle icon for success 
+ * @param props - Icon properties
+ */
 export function IconCheckCircle({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -340,7 +392,10 @@ export function IconCheckCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Circle (fa-circle) */
+/** 
+ * Simple circle icon 
+ * @param props - Icon properties
+ */
 export function IconCircle({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -349,7 +404,10 @@ export function IconCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Cloud upload (fa-cloud-upload-alt) */
+/** 
+ * Cloud upload icon 
+ * @param props - Icon properties
+ */
 export function IconCloudUpload({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 640 512" {...props}>
@@ -358,7 +416,10 @@ export function IconCloudUpload({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Cloud download (fa-cloud-download-alt) */
+/** 
+ * Cloud download icon 
+ * @param props - Icon properties
+ */
 export function IconCloudDownload({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 640 512" {...props}>
@@ -367,7 +428,10 @@ export function IconCloudDownload({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Crop (fa-crop) */
+/** 
+ * Crop icon 
+ * @param props - Icon properties
+ */
 export function IconCrop({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -376,7 +440,10 @@ export function IconCrop({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Redo / refresh (fa-redo) */
+/** 
+ * Redo/refresh icon 
+ * @param props - Icon properties
+ */
 export function IconRedo({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -385,7 +452,10 @@ export function IconRedo({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Search plus / zoom in (fa-search-plus) */
+/** 
+ * Zoom in icon 
+ * @param props - Icon properties
+ */
 export function IconZoomIn({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -394,7 +464,10 @@ export function IconZoomIn({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Search minus / zoom out (fa-search-minus) */
+/** 
+ * Zoom out icon 
+ * @param props - Icon properties
+ */
 export function IconZoomOut({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
@@ -403,7 +476,10 @@ export function IconZoomOut({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Save / floppy disk (fa-save) */
+/** 
+ * Save icon 
+ * @param props - Icon properties
+ */
 export function IconSave({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>
@@ -424,7 +500,10 @@ export function IconDownload({ size, className, ...props }: IconProps) {
   );
 }
 
-/** Trash (fa-trash) */
+/** 
+ * Trash icon 
+ * @param props - Icon properties
+ */
 export function IconTrash({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>

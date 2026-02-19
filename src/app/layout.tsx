@@ -138,7 +138,11 @@ export default function RootLayout({
 }
 
 /**
- * Dynamic layout content requiring CSP nonce
+ * Dynamic layout content requiring CSP nonce.
+ * This function is async and calls headers() to retrieve the security nonce,
+ * allowing it to inject scripts and styles that are CSP-compliant.
+ *
+ * @returns React elements for dynamic scripts/styles
  */
 async function DynamicLayoutContent() {
   // Mark as dynamic for Next.js 16

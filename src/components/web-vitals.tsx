@@ -16,8 +16,11 @@ declare global {
 }
 
 /**
- * Web Vitals監視コンポーネント
- * CLS, FID, FCP, LCP, TTFBなどのパフォーマンス指標を測定
+ * WebVitals Component
+ * Monitors core web vitals (CLS, FID, FCP, LCP, TTFB) and reports them
+ * to Sentry in production environments.
+ * 
+ * @returns null (behavior-only component)
  */
 export function WebVitals() {
   useReportWebVitals((metric) => {
