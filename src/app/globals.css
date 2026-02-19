@@ -653,6 +653,11 @@ select:focus {
   background-color: #f3f4f6;
 }
 
+/* VRChatリンクボタンのカーソル設定 */
+.vrchat-link-button {
+  cursor: pointer !important;
+}
+
 .list-favorite-icon {
   font-size: 1.25rem;
   transition: transform 0.2s ease;
