@@ -105,74 +105,53 @@ const sentryUrl = 'https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.mi
 /**
  * Static Root Layout (Next.js 16 with PPR)
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="ja" suppressHydrationWarning>
-      <head suppressHydrationWarning />
-      <body className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}>
-        {/*
-          Static elements that can be rendered in the initial shell.
-          children (page content) is placed here to allow immediate rendering
-          without waiting for dynamic headers.
-        */}
-        {/* Sentry error monitoring — loaded in the static shell with beforeInteractive
-            to capture bootstrap failures and hydration errors.
-            Sentry CDN is whitelisted by domain in CSP, so nonce is not required. */}
-        <Script src={sentryUrl} strategy="beforeInteractive" />
-        {children}
-
-        {/*
-          Dynamic elements requiring headers() (nonce generation).
-          Wrapped in Suspense to prevent blocking the initial static shell.
-        */}
-        <Suspense fallback={null}>
-          <DynamicLayoutContent />
-        </Suspense>
-      </body>
-    </html>
-  );
-}
-
-/**
- * Dynamic layout content requiring CSP nonce.
- * This function is async and calls headers() to retrieve the security nonce,
- * allowing it to inject scripts and styles that are CSP-compliant.
- *
- * @returns React elements for dynamic scripts/styles
- */
-async function DynamicLayoutContent() {
-  // Mark as dynamic for Next.js 16
+  // Mark as dynamic for Consistent Nonce in App Router
+  // If we want reliable nonces for ALL scripts (including Next.js bootstrap),
+  // we must extract them at the top level.
   await connection();
   const headersList = await headers();
   const nonce = headersList.get('x-nonce') || undefined;
   const difyToken = process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN;
 
   return (
-    <>
-      <style
-        nonce={nonce}
-        dangerouslySetInnerHTML={{
-          __html: `
-            #dify-chatbot-bubble-button {
-              background-color: #EE7800 !important;
-            }
-            #dify-chatbot-bubble-window {
-              width: 24rem !important;
-              height: 40rem !important;
-              position: fixed !important;
-              inset: auto 1rem 1rem auto !important;
-            }
-          `,
-        }}
-      />
-      <StructuredData nonce={nonce} />
-      <WebVitals />
-      <ServiceWorkerRegister />
-      {difyToken ? <DifyChatbot token={difyToken} /> : null}
-    </>
+    <html lang="ja" suppressHydrationWarning>
+      <head suppressHydrationWarning />
+      <body className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}>
+        {/* Sentry error monitoring — loaded early with nonce */}
+        <Script src={sentryUrl} strategy="beforeInteractive" nonce={nonce} />
+
+        {children}
+
+        {/* Dynamic features and metadata */}
+        <style
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `
+              #dify-chatbot-bubble-button {
+                background-color: #EE7800 !important;
+              }
+              #dify-chatbot-bubble-window {
+                width: 24rem !important;
+                height: 40rem !important;
+                position: fixed !important;
+                inset: auto 1rem 1rem auto !important;
+              }
+            `,
+          }}
+        />
+        <StructuredData nonce={nonce} />
+        <WebVitals />
+        <ServiceWorkerRegister />
+        <Suspense fallback={null}>
+          {difyToken ? <DifyChatbot token={difyToken} /> : null}
+        </Suspense>
+      </body>
+    </html>
   );
 }
+

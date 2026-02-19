@@ -163,7 +163,8 @@ export function middleware(request: NextRequest) {
     const nonce = btoa(String.fromCharCode(...randomBytes));
 
     // Content Security Policy
-    // Note: Dify injects a known inline bootstrap snippet; allow it via hash.
+    // Note: Allow known inline snippets via hash.
+    // - difyHash: Dify bootstrap (external script interaction)
     const difyHash = "'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4='";
 
     const cspHeader = `

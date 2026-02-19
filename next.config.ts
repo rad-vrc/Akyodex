@@ -122,7 +122,7 @@ const nextConfig: NextConfig = {
   compress: true,
 
   // Next.js 16 features
-  cacheComponents: true,
+
 };
 
 export default nextConfig;
