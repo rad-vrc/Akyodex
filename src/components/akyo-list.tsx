@@ -157,7 +157,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                           title={t('modal.vrchatOpen', lang)}
                           aria-label={t('modal.vrchatOpen', lang)}
                         >
-                          <IconVRChat size="w-8 h-8" className="text-black" overflow="visible" />
+                          <IconVRChat size="w-9 h-9" className="text-black" overflow="visible" />
                         </button>
                       )}
 
