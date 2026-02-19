@@ -127,7 +127,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                           className="list-action-btn"
                           title={t('modal.vrchatOpen', lang)}
                         >
-                          <IconVRChat size="w-5 h-5" className="text-orange-500" />
+                          <IconVRChat size="w-5 h-5" className="text-black" />
                         </button>
                       )}
 
