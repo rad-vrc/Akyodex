@@ -100,10 +100,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ja" suppressHydrationWarning>
-      <head suppressHydrationWarning>
-        <link rel="dns-prefetch" href="https://images.akyodex.com" />
-        <link rel="preconnect" href="https://images.akyodex.com" crossOrigin="" />
-      </head>
+      <head suppressHydrationWarning />
       <body className={`${mPlusRounded.variable} antialiased`}>
         {children}
 
