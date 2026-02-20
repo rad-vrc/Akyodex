@@ -30,6 +30,20 @@ export default function cloudflareImageLoader({ src, width, quality }: ImageLoad
     return handleR2Fallback(src);
   }
 
+  if (src.includes('/api/avatar-image')) {
+    try {
+      const parsed = src.startsWith('http://') || src.startsWith('https://')
+        ? new URL(src)
+        : new URL(src, 'https://akyodex.com');
+
+      if (parsed.searchParams.get('bypassCloudflare') === '1') {
+        return handleR2Fallback(src);
+      }
+    } catch {
+      // Continue to normal extraction; truly invalid URLs should still fail later.
+    }
+  }
+
   // Extract image ID from src
   // Expected format: /0001.webp, https://images.akyodex.com/0001.webp, or direct ID "0001"
   const imageId = extractImageId(src);
@@ -91,9 +105,6 @@ function extractImageId(src: string): string | null {
       const parsed = src.startsWith('http://') || src.startsWith('https://')
         ? new URL(src)
         : new URL(src, 'https://akyodex.com');
-      if (parsed.searchParams.get('bypassCloudflare') === '1') {
-        return null;
-      }
       const id = parsed.searchParams.get('id');
       if (id && /^\d{1,4}$/.test(id)) {
         return id.padStart(4, '0');

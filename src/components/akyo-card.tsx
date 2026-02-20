@@ -34,6 +34,7 @@ interface AkyoCardProps {
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
   const primaryImageSrc = `/${akyo.id}.webp`;
   const apiFallbackImageSrc = `${buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}&bypassCloudflare=1`;
+  const placeholderImageSrc = '/images/placeholder.webp';
   const [imageSrc, setImageSrc] = useState(primaryImageSrc);
 
   /**
@@ -96,11 +97,13 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
           blurDataURL={generateBlurDataURL(akyo.id)}
           onError={() => {
             // R2/Cloudflare失敗時はAPI経由にフォールバックし、それでも失敗したらプレースホルダー。
-            if (imageSrc !== apiFallbackImageSrc) {
+            if (imageSrc !== apiFallbackImageSrc && imageSrc !== placeholderImageSrc) {
               setImageSrc(apiFallbackImageSrc);
               return;
             }
-            setImageSrc('/images/placeholder.webp');
+            if (imageSrc !== placeholderImageSrc) {
+              setImageSrc(placeholderImageSrc);
+            }
           }}
         />
 

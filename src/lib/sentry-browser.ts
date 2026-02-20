@@ -1,9 +1,8 @@
 import * as Sentry from '@sentry/nextjs';
-
-type SentryLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
+import type { SeverityLevel } from '@sentry/core';
 
 type SentryCaptureContext = {
-  level?: SentryLevel;
+  level?: SeverityLevel;
   tags?: Record<string, string>;
   extra?: Record<string, unknown>;
   fingerprint?: string[];
@@ -51,6 +50,9 @@ function enqueuePendingEvent(event: PendingEvent): void {
 }
 
 function flushPendingEvents(): void {
+  // With @sentry/nextjs module imports, Sentry.captureException / captureMessage are normally callable
+  // once HAS_BROWSER_SENTRY_DSN is true, so this retry queue (pendingEvents, pushRetry, scheduleRetryFlush)
+  // is a defensive safeguard only and capped by MAX_RETRY_ATTEMPTS.
   if (!HAS_BROWSER_SENTRY_DSN) {
     pendingEvents = [];
     return;

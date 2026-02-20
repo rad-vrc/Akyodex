@@ -30,8 +30,16 @@ function mirrorIfMissing(fileName) {
   }
 
   fs.mkdirSync(targetDir, { recursive: true });
-  fs.copyFileSync(sourcePath, targetPath);
-  console.log(`[fix-opennext-instrumentation] copied: ${fileName}`);
+  try {
+    fs.copyFileSync(sourcePath, targetPath);
+    console.log(`[fix-opennext-instrumentation] copied: ${fileName}`);
+  } catch (error) {
+    console.error(
+      `[fix-opennext-instrumentation] failed to copy ${fileName}: ${sourcePath} -> ${targetPath}`
+    );
+    console.error(error instanceof Error ? error.stack ?? error.message : error);
+    process.exit(1);
+  }
 }
 
 for (const fileName of filesToMirror) {
