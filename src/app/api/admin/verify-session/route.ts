@@ -8,11 +8,11 @@
 
 import { validateSessionToken } from '@/lib/session';
 import { cookies } from 'next/headers';
+import { connection } from 'next/server';
 import { jsonError } from '@/lib/api-helpers';
 
-export const runtime = 'nodejs';
-
 export async function GET() {
+  await connection();
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('admin_session');

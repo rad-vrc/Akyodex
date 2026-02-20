@@ -15,20 +15,20 @@ function computeSha256Base64(content) {
 }
 
 function extractConfiguredHash(middlewareSource) {
-  const scriptSrcMatch = middlewareSource.match(/script-src\s+'self'[\s\S]*?(?:;|$)/);
-  if (!scriptSrcMatch) {
-    throw new Error(`script-src directive not found in ${MIDDLEWARE_PATH}`);
-  }
+  // Extract all CSP hashes from the middleware source.
+  // This matches 'sha256-...' strings regardless of the directive structure.
+  // NOTE: This global search assumes exactly one hash exists in the middleware.
+  // If more hashes are added to other directives in the future, this regex
+  // should be refined to scope the search specifically to script-src.
+  const hashMatches = [...middlewareSource.matchAll(/'sha256-([^']+)'/g)].map((match) => match[1]);
 
-  // Assumption for MIDDLEWARE_PATH: script-src contains exactly one sha256 hash.
-  // If multiple hashes are added, this check must be updated to support an array.
-  const hashMatches = [...scriptSrcMatch[0].matchAll(/'sha256-([^']+)'/g)].map((match) => match[1]);
   if (hashMatches.length === 0) {
     throw new Error(`sha256 hash is not configured in ${MIDDLEWARE_PATH}`);
   }
+
   if (hashMatches.length !== 1) {
     throw new Error(
-      `expected exactly one sha256 hash in ${MIDDLEWARE_PATH}, but found ${hashMatches.length}: ${hashMatches.join(', ')}`
+      `Expected exactly one sha256 hash in ${MIDDLEWARE_PATH}, but found ${hashMatches.length}: ${hashMatches.join(', ')}`
     );
   }
 

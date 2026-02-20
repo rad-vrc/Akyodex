@@ -4,15 +4,24 @@ import { IconHome, IconShield, IconSignOut } from '@/components/icons';
 import type { AuthRole } from '@/types/akyo';
 import Link from 'next/link';
 
+/**
+ * Props for the AdminHeader component
+ */
 interface AdminHeaderProps {
+  /** Whether the admin is currently authenticated */
   isAuthenticated: boolean;
+  /** The current user's role (owner or admin) */
   userRole: AuthRole;
+  /** Callback to trigger logout */
   onLogout: () => void;
 }
 
 /**
  * Admin Header Component
- * 管理画面のヘッダー（完全再現）
+ * Provides navigation and auth status for the administrative dashboard.
+ *
+ * @param props - Component properties
+ * @returns Header element
  */
 export function AdminHeader({ isAuthenticated, userRole, onLogout }: AdminHeaderProps) {
   const roleText = userRole === 'owner' ? 'オーナー' : userRole === 'admin' ? '管理者' : '';

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { DifyChatbot } from '@/components/dify-chatbot';
 import { ServiceWorkerRegister } from '@/components/service-worker-register';
 import { StructuredData } from '@/components/structured-data';
@@ -5,6 +6,7 @@ import { WebVitals } from '@/components/web-vitals';
 import type { Metadata, Viewport } from 'next';
 import { Kosugi_Maru, M_PLUS_Rounded_1c, Noto_Sans_JP } from 'next/font/google';
 import { headers } from 'next/headers';
+import { connection } from 'next/server';
 import Script from 'next/script';
 import './globals.css';
 
@@ -27,10 +29,9 @@ const mPlusRounded = M_PLUS_Rounded_1c({
   subsets: ['latin'],
   weight: ['400', '500', '700', '900'],
   display: 'swap',
-  preload: false, // 日本語サブセット未対応のため preload を無効化
+  preload: false,
 });
 
-// Viewport設定（Next.js 15のベストプラクティス）
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -38,25 +39,17 @@ export const viewport: Viewport = {
   colorScheme: 'light',
 };
 
-// メタデータ設定
 export const metadata: Metadata = {
   metadataBase: new URL('https://akyodex.com'),
-
   title: {
     default: 'Akyoずかん-VRChatアバター Akyo図鑑- | Akyodex-VRChat Avatar Akyo Index',
     template: '%s | Akyoずかん',
   },
-
-  description:
-    'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
-
+  description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
   keywords: ['Akyo', 'Akyodex', 'VRChat', 'Avatar', 'VRChatアバター図鑑', 'Akyoずかん'],
-
   authors: [{ name: 'らど', url: 'https://akyodex.com' }],
-
   creator: 'らど',
   publisher: 'Akyodex',
-
   robots: {
     index: true,
     follow: true,
@@ -68,7 +61,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-
   alternates: {
     canonical: 'https://akyodex.com',
     languages: {
@@ -76,37 +68,23 @@ export const metadata: Metadata = {
       'en-US': 'https://akyodex.com',
     },
   },
-
-  // manifest.ts will be automatically detected by Next.js
-
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
     alternateLocale: ['en_US'],
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
-    description:
-      'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+    description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     url: 'https://akyodex.com',
     siteName: 'Akyoずかん',
-    images: [
-      {
-        url: '/images/logo-200.png',
-        width: 200,
-        height: 200,
-        alt: 'Akyoずかん ロゴ',
-      },
-    ],
+    images: [{ url: '/images/logo-200.png', width: 200, height: 200, alt: 'Akyoずかん ロゴ' }],
   },
-
   twitter: {
     card: 'summary',
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
-    description:
-      'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+    description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     images: ['/images/logo-200.png'],
     creator: '@akyodex',
   },
-
   icons: {
     icon: [
       { url: '/images/akyodexIcon-16.png', sizes: '16x16', type: 'image/png' },
@@ -119,35 +97,37 @@ export const metadata: Metadata = {
       { rel: 'icon', url: '/images/akyodexIcon-512.png', sizes: '512x512' },
     ],
   },
-
-  // 検証とアナリティクス用（必要に応じて追加）
-  verification: {
-    // google: 'your-google-site-verification',
-    // yandex: 'your-yandex-verification',
-    // bing: 'your-bing-verification',
-  },
-
-  // カテゴリー
   category: 'entertainment',
 };
 
 const sentryUrl = 'https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js';
 
+/**
+ * Static Root Layout (Next.js 16 with PPR)
+ */
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Get nonce from middleware
+  // Mark as dynamic for Consistent Nonce in App Router
+  // If we want reliable nonces for ALL scripts (including Next.js bootstrap),
+  // we must extract them at the top level.
+  await connection();
   const headersList = await headers();
   const nonce = headersList.get('x-nonce') || undefined;
   const difyToken = process.env.NEXT_PUBLIC_DIFY_CHATBOT_TOKEN;
 
   return (
     <html lang="ja" suppressHydrationWarning>
-      <head suppressHydrationWarning>
-        <StructuredData />
-        {/* Dify chatbot custom styles (must be in <head>) */}
+      <head suppressHydrationWarning />
+      <body className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}>
+        {/* Sentry error monitoring — loaded early with nonce */}
+        <Script src={sentryUrl} strategy="beforeInteractive" nonce={nonce} />
+
+        {children}
+
+        {/* Dynamic features and metadata */}
         <style
           nonce={nonce}
           dangerouslySetInnerHTML={{
@@ -164,22 +144,14 @@ export default async function RootLayout({
             `,
           }}
         />
-      </head>
-      <body
-        className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}
-      >
-        {/* Sentry エラー監視 — beforeInteractive でハイドレーション前にロードし、
-            ブートストラップ失敗やハイドレーション例外も確実にキャプチャする */}
-        <Script src={sentryUrl} strategy="beforeInteractive" {...(nonce && { nonce })} />
-        {/* Dify AI Chatbot — CSP nonce が Next.js <Script> の inline
-            dangerouslySetInnerHTML に正しく渡されない問題を回避するため、
-            クライアントコンポーネントで config 設定 + embed.min.js 読み込みを実施。
-            dynamicScript: true により document.body.onload 依存を排除。 */}
-        {difyToken ? <DifyChatbot token={difyToken} /> : null}
+        <StructuredData nonce={nonce} />
         <WebVitals />
         <ServiceWorkerRegister />
-        {children}
+        <Suspense fallback={null}>
+          {difyToken ? <DifyChatbot token={difyToken} /> : null}
+        </Suspense>
       </body>
     </html>
   );
 }
+

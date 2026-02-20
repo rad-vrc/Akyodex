@@ -10,6 +10,7 @@
  * This endpoint requires OWNER-ONLY authentication (not available to regular admins).
  */
 
+import { connection } from 'next/server';
 import { ensureAdminRequest, jsonError, validateAkyoId } from '@/lib/api-helpers';
 import { processAkyoCRUD } from '@/lib/akyo-crud-helpers';
 
@@ -22,9 +23,9 @@ import { processAkyoCRUD } from '@/lib/akyo-crud-helpers';
  * - GitHub API: Complex Node.js dependencies via Octokit
  * - R2 Buffer operations: Binary data handling with Node.js Buffer API
  */
-export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
+  await connection();
   try {
     const guard = await ensureAdminRequest(request, {
       requireOwner: true,

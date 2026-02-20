@@ -25,6 +25,7 @@
  */
 
 import { cache } from 'react';
+import { cacheTag } from 'next/cache';
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
 import { extractCategories, extractAuthors, findAkyoById } from './akyo-data-helpers';
@@ -40,7 +41,12 @@ const USE_JSON_DATA = process.env.NEXT_PUBLIC_USE_JSON_DATA !== 'false';
  * 
  * Fallback chain: KV → JSON → CSV
  * 
- * Wrapped with React cache() for automatic deduplication within a single request
+ * Dual-cache strategy:
+ * - react.cache(): Request-scoped memoization — deduplicates within a single
+ *   server request so multiple components calling getAkyoData() share one result.
+ * - 'use cache' + cacheTag: Next.js 16 server-side persistent cache — caches
+ *   across requests and is invalidated via revalidateTag('akyo-data').
+ * Both layers are intentional and complement each other.
  * 
  * @param lang - Language code (default: 'ja')
  * @returns Array of Akyo data
@@ -50,37 +56,30 @@ export const getAkyoData = cache(
     // Try KV first (Phase 5b)
     if (USE_KV_DATA) {
       try {
-        console.log('[getAkyoData] Trying KV data source');
         const { getAkyoDataFromKVOnly } = await import('./akyo-data-kv');
         const data = await getAkyoDataFromKVOnly(lang);
         if (data && data.length > 0) {
-          console.log(`[getAkyoData] KV success: ${data.length} avatars`);
           return data;
         }
-        // KV returned null (unavailable or empty), fall through to JSON
-        console.log('[getAkyoData] KV returned no data, trying JSON');
       } catch (error) {
-        console.log('[getAkyoData] KV failed, trying JSON fallback:', error);
+        // Fall back to JSON without logging
       }
     }
-    
+
     // Try JSON (Phase 4)
     if (USE_JSON_DATA) {
       try {
-        console.log('[getAkyoData] Using JSON data source');
         const { getAkyoDataFromJSON } = await import('./akyo-data-json');
         const data = await getAkyoDataFromJSON(lang);
         if (data && data.length > 0) {
-          console.log(`[getAkyoData] JSON success: ${data.length} avatars`);
           return data;
         }
       } catch (error) {
-        console.log('[getAkyoData] JSON failed, trying CSV fallback:', error);
+        // Fall back to CSV without logging
       }
     }
-    
+
     // Fallback to CSV (legacy)
-    console.log('[getAkyoData] Using CSV data source (fallback)');
     const { getAkyoData: getFromCSV } = await import('./akyo-data-server');
     return getFromCSV(lang);
   }
@@ -88,7 +87,7 @@ export const getAkyoData = cache(
 
 /**
  * Get single Akyo by ID
- * Wrapped with React cache() for automatic deduplication
+ * Dual-cache: react.cache() for request dedup + 'use cache' for persistent cache
  * 
  * @param id - 4-digit ID (e.g., "0001")
  * @param lang - Language code
@@ -103,7 +102,7 @@ export const getAkyoById = cache(
 
 /**
  * Get all unique categories (attributes) from the dataset
- * Wrapped with React cache() for automatic deduplication
+ * Dual-cache: react.cache() for request dedup + 'use cache' for persistent cache
  * 
  * @param lang - Language code
  * @returns Array of unique categories
@@ -117,7 +116,7 @@ export const getAllCategories = cache(
 
 /**
  * Get all unique authors (creators) from the dataset
- * Wrapped with React cache() for automatic deduplication
+ * Dual-cache: react.cache() for request dedup + 'use cache' for persistent cache
  * 
  * @param lang - Language code
  * @returns Array of unique authors

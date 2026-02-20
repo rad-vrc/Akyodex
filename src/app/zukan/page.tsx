@@ -18,11 +18,6 @@ import { ZukanClient } from './zukan-client';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { DEFAULT_LANGUAGE } from '@/lib/i18n';
 
-// Dynamic rendering to ensure CSP nonce consistency
-// middleware.ts generates a new nonce per request → layout.tsx reads it via headers()
-// Static/ISR would freeze the nonce in cached HTML, causing mismatch (Issue #270)
-export const dynamic = 'force-dynamic';
-
 // Dynamic metadata
 export const metadata: Metadata = {
   title: 'Akyoずかん - VRChatアバター Akyo図鑑',

@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Cloudflare Pages対応設定
+  // Cloudflare Pages compatibility settings
   images: {
     // Image optimization configuration
     // To enable Cloudflare Images:
@@ -9,18 +9,18 @@ const nextConfig: NextConfig = {
     // 2. Set NEXT_PUBLIC_CLOUDFLARE_IMAGES_ACCOUNT_HASH=your_account_hash
     // 3. Change unoptimized to false
     unoptimized: process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES !== 'true',
-    
+
     // Use custom loader when Cloudflare Images is enabled
     ...(process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true' && {
       loader: 'custom',
       loaderFile: './src/lib/cloudflare-image-loader.ts',
     }),
-    
+
     // Image formats and sizes
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    
+
     // Remote patterns for image sources
     remotePatterns: [
       {
@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    // Next.js 16対応: APIルート経由の画像読み込み
+    // Next.js 16 compatibility: local patterns for API image proxy
     localPatterns: [
       {
         pathname: '/api/avatar-image',
@@ -48,17 +48,16 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // 301リダイレクト（旧URL → 新URL）
+  // 301 Redirects (Legacy -> New)
   async redirects() {
     return [
-      // index.html (クエリパラメータなし) → /zukan
+      // index.html (no query) -> /zukan
       {
         source: '/index.html',
         destination: '/zukan',
-        permanent: true, // 301 Redirect
+        permanent: true,
       },
-      // index.html?id=XXX → /zukan?id=XXX
-      // Accepts alphanumeric IDs (e.g., 001, 0001, 612, etc.)
+      // index.html?id=XXX -> /zukan?id=XXX
       {
         source: '/index.html',
         has: [
@@ -69,12 +68,12 @@ const nextConfig: NextConfig = {
           },
         ],
         destination: '/zukan?id=:id',
-        permanent: true, // 301 Redirect
+        permanent: true,
       },
     ];
   },
 
-  // セキュリティヘッダー
+  // Security Headers
   async headers() {
     return [
       {
@@ -109,21 +108,21 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // i18n対応準備
-  i18n: undefined, // App Routerでは別の方法で実装
-
-  // 環境変数の検証（オプション）
+  // Environment variable validation
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://akyodex.com',
     NEXT_PUBLIC_R2_BASE: process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com',
   },
 
-  // パフォーマンス最適化
+  // React strict mode
   reactStrictMode: true,
-  
-  // 本番環境での最適化
+
+  // Optimization
   poweredByHeader: false,
   compress: true,
+
+  // Next.js 16 features
+
 };
 
 export default nextConfig;

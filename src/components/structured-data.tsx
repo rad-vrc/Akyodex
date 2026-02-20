@@ -1,9 +1,20 @@
 /**
- * 構造化データ（JSON-LD）コンポーネント
- * SEO最適化のためのSchema.org準拠の構造化データ
+ * Props for the StructuredData component
  */
+interface StructuredDataProps {
+  /** Optional CSP nonce for script execution */
+  nonce?: string;
+}
 
-export function StructuredData() {
+/**
+ * StructuredData Component
+ * Renders JSON-LD structured data for SEO optimization (Schema.org).
+ * Injects a script tag into the head or body with site-wide metadata.
+ *
+ * @param props - Component properties
+ * @returns JSON-LD script element
+ */
+export function StructuredData({ nonce }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -37,6 +48,7 @@ export function StructuredData() {
   return (
     <script
       type="application/ld+json"
+      nonce={nonce}
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
     />
   );

@@ -6,6 +6,7 @@
  * Finds the maximum ID in the CSV and returns the next available 4-digit ID.
  */
 
+import { connection } from 'next/server';
 import { jsonError, validateSession } from '@/lib/api-helpers';
 import { fetchCSVFromGitHub } from '@/lib/github-utils';
 import { formatAkyoId, parseAkyoIdNumber, pickLatestAkyoId, readNextIdHint } from '@/lib/next-id-state';
@@ -24,8 +25,6 @@ interface R2BucketBinding {
 interface NextIdEnv {
   AKYO_BUCKET?: R2BucketBinding;
 }
-
-export const runtime = 'nodejs';
 
 const DEFAULT_CSV_PATH = 'data/akyo-data-ja.csv';
 const GITHUB_CSV_URL =
@@ -202,6 +201,7 @@ async function resolveCsvNextId(bucket: R2BucketBinding | undefined): Promise<nu
 }
 
 export async function GET() {
+  await connection();
   // Validate admin session
   const session = await validateSession();
   if (!session) {

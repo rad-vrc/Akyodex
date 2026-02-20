@@ -1,5 +1,5 @@
-import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess } from '@/lib/api-helpers';
-import { timingSafeEqual } from 'crypto';
+import { connection } from 'next/server';
+import { CONTROL_CHARACTER_PATTERN, jsonError, jsonSuccess, timingSafeCompare } from '@/lib/api-helpers';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 /**
@@ -36,9 +36,6 @@ import { revalidatePath, revalidateTag } from 'next/cache';
  * - REVALIDATE_SECRET: Secret token for authentication (required)
  */
 
-// Note: OpenNext/Cloudflare requires nodejs runtime for API routes
-export const runtime = 'nodejs';
-
 interface RevalidateRequest {
   paths?: string[];
   tags?: string[];
@@ -58,23 +55,6 @@ const MAX_PATHS = 20;
 const MAX_TAGS = 20;
 const MAX_PATH_LENGTH = 200;
 const MAX_TAG_LENGTH = 120;
-
-function timingSafeCompare(a: string, b: string): boolean {
-  try {
-    const bufA = Buffer.from(a, 'utf8');
-    const bufB = Buffer.from(b, 'utf8');
-    const maxLength = Math.max(bufA.length, bufB.length);
-    const paddedA = Buffer.alloc(maxLength);
-    const paddedB = Buffer.alloc(maxLength);
-    bufA.copy(paddedA);
-    bufB.copy(paddedB);
-    const isEqual = timingSafeEqual(paddedA, paddedB);
-    return isEqual && bufA.length === bufB.length;
-  } catch (error) {
-    console.error('[revalidate] timingSafeCompare failed:', error);
-    return false;
-  }
-}
 
 function parseStringArray(
   value: unknown,
@@ -110,6 +90,7 @@ function parseStringArray(
 }
 
 export async function POST(request: Request): Promise<Response> {
+  await connection();
   try {
     // Verify secret
     const secret = request.headers.get('x-revalidate-secret');
@@ -196,7 +177,7 @@ export async function POST(request: Request): Promise<Response> {
     const revalidatedTags: string[] = [];
     for (const tag of tags) {
       try {
-        revalidateTag(tag);
+        revalidateTag(tag, { expire: 0 });
         revalidatedTags.push(tag);
         console.log('[revalidate] Revalidated tag', { tag });
       } catch (error) {
@@ -285,6 +266,7 @@ export async function POST(request: Request): Promise<Response> {
 
 // Health check endpoint
 export async function GET(): Promise<Response> {
+  await connection();
   return jsonSuccess({
     status: 'ok',
     endpoint: '/api/revalidate',

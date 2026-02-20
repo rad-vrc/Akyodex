@@ -14,6 +14,7 @@
  * This endpoint requires server-side authentication.
  */
 
+import { connection } from 'next/server';
 import type { AkyoFormParseResult } from '@/lib/api-helpers';
 import { ensureAdminRequest, jsonError, parseAkyoFormData } from '@/lib/api-helpers';
 import { processAkyoCRUD } from '@/lib/akyo-crud-helpers';
@@ -24,9 +25,9 @@ import { processAkyoCRUD } from '@/lib/akyo-crud-helpers';
  * - Uses GitHub API with complex Node.js dependencies
  * - Uses Buffer for R2 binary operations
  */
-export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
+  await connection();
   try {
     const guard = await ensureAdminRequest(request);
     if ('response' in guard) {

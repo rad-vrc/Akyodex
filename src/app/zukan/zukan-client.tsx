@@ -53,6 +53,10 @@ const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
 
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
+// Virtual scrolling constants
+const INITIAL_RENDER_COUNT = 60;
+const RENDER_CHUNK = 60;
+
 interface LanguageDatasetCacheEntry {
   items: AkyoData[];
   categories: string[];
@@ -112,23 +116,44 @@ export function ZukanClient({
     setError,
   } = useAkyoData(initialData);
 
-  // Dynamic categories/authors (may change on language switch)
+  // — State —
   const [currentCategories, setCurrentCategories] = useState(categories);
   const [currentAuthors, setCurrentAuthors] = useState(authors);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
+  const [categoryMatchMode, setCategoryMatchMode] = useState<'or' | 'and'>('or');
+  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [sortAscending, setSortAscending] = useState(true);
+  const [randomMode, setRandomMode] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
+
   const languageDatasetCacheRef = useRef<Map<SupportedLanguage, LanguageDatasetCacheEntry>>(
-    new Map([
-      [
-        serverLang,
-        {
-          items: initialData,
-          categories,
-          authors,
-        },
-      ],
-    ])
+    new Map([[serverLang, { items: initialData, categories, authors }]])
+  );
+  const tickingRef = useRef(false);
+  const filteredLengthRef = useRef(0);
+
+  // — Derived values —
+  const stats = useMemo(
+    () => ({
+      total: data.length,
+      displayed: filteredData.length,
+      favorites: data.filter((a) => a.isFavorite).length,
+    }),
+    [data, filteredData]
   );
 
-  // Keep the server-rendered language payload fresh in cache.
+  const activeFilterCount = useMemo(
+    () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
+    [selectedAttributes, selectedCreators, favoritesOnly]
+  );
+
+  // Sync server-rendered language payload to cache
   useEffect(() => {
     languageDatasetCacheRef.current.set(serverLang, {
       items: initialData,
@@ -176,19 +201,14 @@ export function ZukanClient({
             ? (wrappedData as AkyoData[])
             : undefined;
         if (!akyoItems) {
-          const payloadSummary = (() => {
-            if (jsonData && typeof jsonData === 'object' && !Array.isArray(jsonData)) {
-              const keys = Object.keys(jsonData as Record<string, unknown>);
-              return `{ keys: [${keys.join(', ')}] }`;
-            }
-            const raw = JSON.stringify(jsonData) ?? String(jsonData);
-            const MAX_LENGTH = 1000;
-            if (raw.length <= MAX_LENGTH) return raw;
-            return `${raw.slice(0, MAX_LENGTH)}...(truncated, ${raw.length} chars)`;
-          })();
+          // Sanitized summary — only safe metadata, no raw content
+          const payloadType = jsonData === null ? 'null'
+            : Array.isArray(jsonData) ? `array(${(jsonData as unknown[]).length})`
+            : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
+            : typeof jsonData;
 
           throw new Error(
-            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${payloadSummary}`
+            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${payloadType}`
           );
         }
 
@@ -222,27 +242,6 @@ export function ZukanClient({
     };
   }, [isReady, needsRefetch, lang, serverLang, refetchWithNewData, setLoading, setError]);
 
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
-  const [categoryMatchMode, setCategoryMatchMode] = useState<'or' | 'and'>('or');
-  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [sortAscending, setSortAscending] = useState(true);
-  const [randomMode, setRandomMode] = useState(false);
-  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
-
-  // Modal state
-  const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Virtual scrolling state (performance optimization)
-  const INITIAL_RENDER_COUNT = 60;
-  const RENDER_CHUNK = 60;
-  const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
-  const tickingRef = useRef(false);
-
   const handleShowDetail = (akyo: AkyoData) => {
     setSelectedAkyo(akyo);
     setIsModalOpen(true);
@@ -263,12 +262,14 @@ export function ZukanClient({
 
   // data が更新された際（cross-tab sync 等）、モーダルが開いていれば selectedAkyo を最新に同期
   useEffect(() => {
-    if (!selectedAkyo || !isModalOpen) return;
-    const latest = data.find((a) => a.id === selectedAkyo.id);
-    if (latest && latest.isFavorite !== selectedAkyo.isFavorite) {
-      setSelectedAkyo(latest);
-    }
-  }, [data, selectedAkyo, isModalOpen]);
+    if (!isModalOpen) return;
+    setSelectedAkyo((prev) => {
+      if (!prev) return prev;
+      const latest = data.find((a) => a.id === prev.id);
+      if (latest && latest.isFavorite !== prev.isFavorite) return latest;
+      return prev;
+    });
+  }, [data, isModalOpen]);
 
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
@@ -283,20 +284,26 @@ export function ZukanClient({
     randomMode,
   ]);
 
-  // Virtual scrolling: Infinite scroll handler
+  // Keep filteredData.length in a ref so handleScroll stays stable
+  useEffect(() => {
+    filteredLengthRef.current = filteredData.length;
+  }, [filteredData.length]);
+
+  // Virtual scrolling: Infinite scroll handler (stable — no state/derived deps)
   const handleScroll = useCallback(() => {
     if (tickingRef.current) return;
     tickingRef.current = true;
     requestAnimationFrame(() => {
-      const nearBottom = window.innerHeight + window.scrollY > document.body.offsetHeight - 800;
-      if (nearBottom && renderLimit < filteredData.length) {
-        setRenderLimit((prev) => Math.min(filteredData.length, prev + RENDER_CHUNK));
+      const nearBottom = window.innerHeight + window.scrollY > document.documentElement.scrollHeight - 800;
+      if (nearBottom) {
+        const len = filteredLengthRef.current;
+        setRenderLimit((prev) => (prev < len ? Math.min(len, prev + RENDER_CHUNK) : prev));
       }
       tickingRef.current = false;
     });
-  }, [renderLimit, filteredData.length]);
+  }, []);
 
-  // Attach scroll listener
+  // Attach scroll listener (runs once thanks to stable handleScroll)
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -334,7 +341,7 @@ export function ZukanClient({
 
   // ソート切替
   const handleSortToggle = () => {
-    setSortAscending(!sortAscending);
+    setSortAscending((prev) => !prev);
   };
 
   // ランダム表示
@@ -343,6 +350,12 @@ export function ZukanClient({
       setRandomMode(false);
     } else {
       setRandomMode(true);
+      // フィルタ状態をリセットしてからランダムフィルタを適用
+      setSearchQuery('');
+      setSelectedAttributes([]);
+      setCategoryMatchMode('or');
+      setSelectedCreators([]);
+      setFavoritesOnly(false);
       filterData(
         {
           searchQuery: '',
@@ -350,33 +363,13 @@ export function ZukanClient({
         },
         sortAscending
       );
-      setSearchQuery('');
-      setSelectedAttributes([]);
-      setCategoryMatchMode('or');
-      setSelectedCreators([]);
-      setFavoritesOnly(false);
     }
   };
 
   // お気に入りフィルター切替
   const handleFavoritesClick = () => {
-    setFavoritesOnly(!favoritesOnly);
+    setFavoritesOnly((prev) => !prev);
   };
-
-  // 統計情報（useMemo で再計算を抑制 — data/filteredData が変わらない限りキャッシュ）
-  const stats = useMemo(
-    () => ({
-      total: data.length,
-      displayed: filteredData.length,
-      favorites: data.filter((a) => a.isFavorite).length,
-    }),
-    [data, filteredData]
-  );
-
-  const activeFilterCount = useMemo(
-    () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
-    [selectedAttributes, selectedCreators, favoritesOnly]
-  );
 
   if (error) {
     return (
