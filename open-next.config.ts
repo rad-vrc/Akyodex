@@ -16,7 +16,7 @@ const cloudflareConfig = defineCloudflareConfig({
 const openNextConfig = {
   ...cloudflareConfig,
   // Prevent recursive build calls: OpenNext should run Next.js build directly.
-  buildCommand: 'npm run next:build',
+  buildCommand: 'npm run next:build:opennext',
 };
 
 export default openNextConfig;
