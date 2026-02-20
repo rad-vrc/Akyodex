@@ -25,6 +25,29 @@ export function ServiceWorkerRegister() {
       error: unknown,
       additional: Record<string, unknown> = {}
     ) => {
+      const sanitizeAdditionalSentryExtra = (
+        rawAdditional: Record<string, unknown>
+      ): Record<string, unknown> => {
+        const sanitized: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(rawAdditional)) {
+          // Defensive filtering: avoid forwarding URL/query/credential-like fields.
+          if (/(^|_|-)(url|href|query|search|token|email)(_|-|$)/i.test(key)) {
+            continue;
+          }
+
+          if (
+            typeof value === 'string' &&
+            (value.includes('://') || (value.includes('?') && (value.includes('=') || value.includes('&'))))
+          ) {
+            continue;
+          }
+
+          sanitized[key] = value;
+        }
+
+        return sanitized;
+      };
+
       const normalizedError = error instanceof Error ? error : new Error(String(error));
       const message = normalizedError.message;
       const name = normalizedError.name;
@@ -49,10 +72,9 @@ export function ServiceWorkerRegister() {
         extra: {
           errorName: name,
           errorMessage: message,
-          href: window.location.href,
           pathname: window.location.pathname,
           userAgent: navigator.userAgent,
-          ...additional,
+          ...sanitizeAdditionalSentryExtra(additional),
         },
       });
     };
