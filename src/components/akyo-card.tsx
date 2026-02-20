@@ -33,9 +33,15 @@ interface AkyoCardProps {
  */
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
   const cloudflareImagesEnabled = process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true';
+  const r2BaseUrl = (process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com').replace(
+    /\/$/,
+    ''
+  );
   const apiImageSrc = buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512);
   const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
-  const primaryImageSrc = cloudflareImagesEnabled ? `/${akyo.id}.webp` : apiImageSrc;
+  const primaryImageSrc = cloudflareImagesEnabled
+    ? `/${akyo.id}.webp`
+    : `${r2BaseUrl}/${akyo.id}.webp`;
   const placeholderImageSrc = '/images/placeholder.webp';
   const [imageSrc, setImageSrc] = useState(primaryImageSrc);
 
