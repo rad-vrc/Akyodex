@@ -4,7 +4,6 @@ import type { Metadata, Viewport } from 'next';
 import { M_PLUS_Rounded_1c } from 'next/font/google';
 import { headers } from 'next/headers';
 import { connection } from 'next/server';
-import Script from 'next/script';
 import './globals.css';
 
 const mPlusRounded = M_PLUS_Rounded_1c({
@@ -83,8 +82,6 @@ export const metadata: Metadata = {
   category: 'entertainment',
 };
 
-const sentryUrl = 'https://js.sentry-cdn.com/04aa2a0affc38215961ed0d62792d68b.min.js';
-
 /**
  * Static Root Layout (Next.js 16 with PPR)
  */
@@ -108,9 +105,6 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://images.akyodex.com" crossOrigin="" />
       </head>
       <body className={`${mPlusRounded.variable} antialiased`}>
-        {/* Sentry is non-critical for first paint, so defer it until window load */}
-        <Script src={sentryUrl} strategy="lazyOnload" nonce={nonce} />
-
         {children}
 
         {/* Dynamic features and metadata */}

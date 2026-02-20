@@ -69,8 +69,6 @@ const SCRIPT_SRC = [
   'https://*.dify.ai',
   'https://*.udify.app',
   'https://udify.app',
-  'https://js.sentry-cdn.com',
-  'https://browser.sentry-cdn.com',
   'https://*.sentry.io',
   'https://analytics.google.com',
   'https://googletagmanager.com',
@@ -121,7 +119,6 @@ const CONNECT_SRC = [
   'https://udify.app',
   'https://*.r2.cloudflarestorage.com',
   'https://*.sentry.io',
-  'https://browser.sentry-cdn.com',
   'https://analytics.google.com',
   'https://www.google-analytics.com',
   'https://api.github.com', // Data endpoint (moved from SCRIPT_SRC as it doesn't host script)

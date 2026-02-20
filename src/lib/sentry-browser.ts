@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/nextjs';
+
 type SentryLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
 
 type SentryCaptureContext = {
@@ -5,11 +7,6 @@ type SentryCaptureContext = {
   tags?: Record<string, string>;
   extra?: Record<string, unknown>;
   fingerprint?: string[];
-};
-
-type SentryClient = {
-  captureException?: (error: unknown, captureContext?: SentryCaptureContext) => string;
-  captureMessage?: (message: string, captureContext?: SentryCaptureContext) => string;
 };
 
 type PendingEvent =
@@ -32,19 +29,6 @@ const RETRY_DELAY_MS = 500;
 
 let pendingEvents: PendingEvent[] = [];
 let retryTimer: number | null = null;
-
-declare global {
-  interface Window {
-    Sentry?: SentryClient;
-  }
-}
-
-function getSentryClient(): SentryClient | undefined {
-  if (typeof window === 'undefined') {
-    return undefined;
-  }
-  return window.Sentry;
-}
 
 function scheduleRetryFlush(): void {
   if (typeof window === 'undefined' || retryTimer) {
@@ -70,17 +54,6 @@ function flushPendingEvents(): void {
     return;
   }
 
-  const sentry = getSentryClient();
-  if (!sentry) {
-    pendingEvents = pendingEvents
-      .map((event) => ({ ...event, attempts: event.attempts + 1 }))
-      .filter((event) => event.attempts < MAX_RETRY_ATTEMPTS);
-    if (pendingEvents.length > 0) {
-      scheduleRetryFlush();
-    }
-    return;
-  }
-
   const nextQueue: PendingEvent[] = [];
   const pushRetry = (event: PendingEvent): void => {
     const attempts = event.attempts + 1;
@@ -92,17 +65,9 @@ function flushPendingEvents(): void {
   for (const event of pendingEvents) {
     try {
       if (event.type === 'exception') {
-        if (!sentry.captureException) {
-          pushRetry(event);
-          continue;
-        }
-        sentry.captureException(event.error, event.captureContext);
+        Sentry.captureException(event.error, event.captureContext);
       } else {
-        if (!sentry.captureMessage) {
-          pushRetry(event);
-          continue;
-        }
-        sentry.captureMessage(event.message, event.captureContext);
+        Sentry.captureMessage(event.message, event.captureContext);
       }
     } catch {
       pushRetry(event);
@@ -119,21 +84,10 @@ export function captureExceptionSafely(
   error: unknown,
   captureContext?: SentryCaptureContext
 ): void {
-  const sentry = getSentryClient();
-  if (!sentry?.captureException) {
-    enqueuePendingEvent({
-      type: 'exception',
-      error,
-      captureContext,
-      attempts: 0,
-    });
-    return;
-  }
-
   flushPendingEvents();
 
   try {
-    sentry.captureException(error, captureContext);
+    Sentry.captureException(error, captureContext);
   } catch {
     enqueuePendingEvent({
       type: 'exception',
@@ -148,21 +102,10 @@ export function captureMessageSafely(
   message: string,
   captureContext?: SentryCaptureContext
 ): void {
-  const sentry = getSentryClient();
-  if (!sentry?.captureMessage) {
-    enqueuePendingEvent({
-      type: 'message',
-      message,
-      captureContext,
-      attempts: 0,
-    });
-    return;
-  }
-
   flushPendingEvents();
 
   try {
-    sentry.captureMessage(message, captureContext);
+    Sentry.captureMessage(message, captureContext);
   } catch {
     enqueuePendingEvent({
       type: 'message',
