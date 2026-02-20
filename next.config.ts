@@ -151,10 +151,8 @@ const sentryWrappedConfig = hasSentryBuildConfig
       silent: !process.env.CI,
       ...(process.env.NODE_ENV === 'production'
         ? {
-            webpack: {
-              treeshake: {
-                removeDebugLogging: true,
-              },
+            bundleSizeOptimizations: {
+              excludeDebugStatements: true,
             },
           }
         : {}),
