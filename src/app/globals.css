@@ -15,7 +15,7 @@
    * to avoid invalidating font-family declarations that reference them.
    */
   --font-kosugi-maru: 'Kosugi Maru';
-  --font-noto-sans-jp: 'Noto Sans JP';
+  --font-noto-sans-jp: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP';
 
   /* メインカラー - パステル調の優しい色（既存と完全一致） */
   --primary-pink: #ff6b9d;
@@ -969,4 +969,13 @@ select:focus {
 
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
