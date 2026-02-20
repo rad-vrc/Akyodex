@@ -172,12 +172,12 @@ const overridesById = {
   '0740': {
     Nickname: 'Mammoth Akyo',
     Comment:
-      "(Sasanoki's notes)\nAn Akyo that had been sleeping in permafrost. It was surprised to wake up and find things had become much warmer.",
+      "(Sasanoki's notes)\r\nAn Akyo that had been sleeping in permafrost. It was surprised to wake up and find things had become much warmer.",
   },
   '0741': {
     Nickname: 'Avocado Akyo',
     Comment:
-      "(Sasanoki's notes)\nHighly nutritious and also called the butter of the forest. Its deliciousness is popular even among Akyo.",
+      "(Sasanoki's notes)\r\nHighly nutritious and also called the butter of the forest. Its deliciousness is popular even among Akyo.",
   },
 };
 

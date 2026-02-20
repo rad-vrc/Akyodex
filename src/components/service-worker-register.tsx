@@ -30,6 +30,16 @@ export function ServiceWorkerRegister() {
       ): Record<string, unknown> => {
         const sanitized: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(rawAdditional)) {
+          if (key === 'scope' && typeof value === 'string') {
+            try {
+              const parsedScope = new URL(value, window.location.origin);
+              sanitized.scope = parsedScope.pathname || '/';
+            } catch {
+              sanitized.scope = '/';
+            }
+            continue;
+          }
+
           // Defensive filtering: avoid forwarding URL/query/credential-like fields.
           if (/(^|_|-)(url|href|query|search|token|email)(_|-|$)/i.test(key)) {
             continue;

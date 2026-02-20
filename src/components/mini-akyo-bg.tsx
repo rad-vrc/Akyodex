@@ -33,6 +33,7 @@ const CANDIDATES = [
 
 // Golden ratio for low-discrepancy sequence
 const PHI = 0.6180339887498949; // (sqrt(5)-1)/2
+const CROSS_ORIGIN_PROBE_TIMEOUT_MS = 2000;
 
 /** 値をクランプする純粋関数（コンポーネント外に配置して不要な再生成を防止） */
 function clamp(v: number, min: number, max: number): number {
@@ -85,7 +86,7 @@ async function resolveMiniAkyoUrl(): Promise<string | null> {
     // fetch すると CORS エラーが console に出るため。
     if (!isSameOriginUrl(path)) {
       try {
-        await probeImage(path);
+        await probeImage(path, CROSS_ORIGIN_PROBE_TIMEOUT_MS);
         return path;
       } catch {
         continue;

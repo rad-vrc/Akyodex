@@ -30,7 +30,7 @@ const LANGUAGE_COOKIE_OPTIONS = {
 
 /**
  * Create a response with:
- * - CSP/x-nonce headers on the response
+ * - CSP header on the response
  * - x-nonce/x-akyo-lang forwarded to request headers for App Router components
  */
 function createSecuredResponse(
@@ -52,11 +52,6 @@ function createSecuredResponse(
   });
 
   response.headers.set('Content-Security-Policy', cspHeader);
-  response.headers.set('x-nonce', nonce);
-  if (lang) {
-    response.headers.set('x-akyo-lang', lang);
-  }
-
   return response;
 }
 
@@ -247,7 +242,14 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all routes except static files and API routes
-    '/((?!_next|api|images|.*\\.).*)',
+    {
+      // Match all routes except static files and API routes
+      source: '/((?!_next|api|images|.*\\.).*)',
+      // Skip middleware execution for Next.js prefetch requests
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' },
+      ],
+    },
   ],
 };
