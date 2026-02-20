@@ -32,6 +32,7 @@ export function ServiceWorkerRegister() {
       const isExpectedError =
         message.includes('Service Workers are not supported') ||
         message.includes('The operation is insecure') ||
+        message.includes('Failed to register a ServiceWorker') ||
         name === 'SecurityError';
 
       if (isExpectedError) {

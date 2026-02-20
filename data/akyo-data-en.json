@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-02-16T11:44:51.790Z",
-  "count": 739,
+  "updatedAt": "2026-02-17T11:57:26.832Z",
+  "count": 741,
   "data": [
     {
       "id": "0001",
@@ -6218,7 +6218,7 @@
       "id": "0691",
       "nickname": "Sarracenia Flava Akyo",
       "avatarName": "Sarraceniakyo flava",
-      "category": "Plant",
+      "category": "Plant,Captive",
       "comment": "",
       "author": "long-potato",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f71ae964-f130-45fe-976d-a51d8caa1ed5"
@@ -6654,6 +6654,24 @@
       "comment": "Gotta catch Akyo!",
       "author": "kuro5963",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_f9bebc35-c78b-4755-8e75-0cd26881b3ae"
+    },
+    {
+      "id": "0740",
+      "nickname": "Mammoth Akyo",
+      "avatarName": "akyo_マンモス",
+      "category": "Animal,Animal/Mammoth,Quadruped,Revival,Body Part,Body Part/Nose,Environment・Weather,Environment・Weather/Snow・Ice,Sleep",
+      "comment": "(Sasanoki's notes)\nAn Akyo that was sleeping in the permafrost. When it woke up, it was surprised at how warm it had become.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_cb3ebbe2-3ab2-44b5-a782-f241134998b7"
+    },
+    {
+      "id": "0741",
+      "nickname": "Avocado Akyo",
+      "avatarName": "akyo_アボカド",
+      "category": "Plant,Nuts,Food,Food/Fruit",
+      "comment": "(Sasanoki's notes)\nHighly nutritious, also known as the butter of the forest. Its deliciousness is popular even among Akyo.",
+      "author": "ささのき",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef0fead6-7356-4acb-9f18-41bc93c82a73"
     }
   ]
 }
