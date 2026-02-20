@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "next:build": "next build",
+    "next:build:opennext": "next build && node scripts/fix-opennext-instrumentation.js",
     "build": "opennextjs-cloudflare build && node scripts/prepare-cloudflare-pages.js",
     "start": "next start",
     "lint": "eslint",
@@ -23,12 +24,16 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.16.5",
+    "@sentry/nextjs": "^10.39.0",
     "csv-parse": "^6.1.0",
     "csv-stringify": "^6.6.0",
     "next": "16.1.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "sanitize-html": "^2.17.0"
+  },
+  "overrides": {
+    "minimatch": "10.2.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

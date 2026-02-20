@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   // Cloudflare Pages compatibility settings
@@ -138,4 +139,24 @@ const nextConfig: NextConfig = {
 
 };
 
-export default nextConfig;
+const hasSentryBuildConfig = Boolean(
+  process.env.SENTRY_ORG && process.env.SENTRY_PROJECT && process.env.SENTRY_AUTH_TOKEN
+);
+
+const sentryWrappedConfig = hasSentryBuildConfig
+  ? withSentryConfig(nextConfig, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: !process.env.CI,
+      ...(process.env.NODE_ENV === 'production'
+        ? {
+            bundleSizeOptimizations: {
+              excludeDebugStatements: true,
+            },
+          }
+        : {}),
+    })
+  : nextConfig;
+
+export default sentryWrappedConfig;

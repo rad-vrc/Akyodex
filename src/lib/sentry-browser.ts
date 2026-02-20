@@ -1,15 +1,11 @@
-type SentryLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
+import * as Sentry from '@sentry/nextjs';
+import type { SeverityLevel } from '@sentry/core';
 
 type SentryCaptureContext = {
-  level?: SentryLevel;
+  level?: SeverityLevel;
   tags?: Record<string, string>;
   extra?: Record<string, unknown>;
   fingerprint?: string[];
-};
-
-type SentryClient = {
-  captureException?: (error: unknown, captureContext?: SentryCaptureContext) => string;
-  captureMessage?: (message: string, captureContext?: SentryCaptureContext) => string;
 };
 
 type PendingEvent =
@@ -29,22 +25,10 @@ type PendingEvent =
 const MAX_PENDING_EVENTS = 30;
 const MAX_RETRY_ATTEMPTS = 10;
 const RETRY_DELAY_MS = 500;
+const HAS_BROWSER_SENTRY_DSN = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN);
 
 let pendingEvents: PendingEvent[] = [];
 let retryTimer: number | null = null;
-
-declare global {
-  interface Window {
-    Sentry?: SentryClient;
-  }
-}
-
-function getSentryClient(): SentryClient | undefined {
-  if (typeof window === 'undefined') {
-    return undefined;
-  }
-  return window.Sentry;
-}
 
 function scheduleRetryFlush(): void {
   if (typeof window === 'undefined' || retryTimer) {
@@ -66,18 +50,15 @@ function enqueuePendingEvent(event: PendingEvent): void {
 }
 
 function flushPendingEvents(): void {
-  if (pendingEvents.length === 0) {
+  // With @sentry/nextjs module imports, Sentry.captureException / captureMessage are normally callable
+  // once HAS_BROWSER_SENTRY_DSN is true, so this retry queue (pendingEvents, pushRetry, scheduleRetryFlush)
+  // is a defensive safeguard only and capped by MAX_RETRY_ATTEMPTS.
+  if (!HAS_BROWSER_SENTRY_DSN) {
+    pendingEvents = [];
     return;
   }
 
-  const sentry = getSentryClient();
-  if (!sentry) {
-    pendingEvents = pendingEvents
-      .map((event) => ({ ...event, attempts: event.attempts + 1 }))
-      .filter((event) => event.attempts < MAX_RETRY_ATTEMPTS);
-    if (pendingEvents.length > 0) {
-      scheduleRetryFlush();
-    }
+  if (pendingEvents.length === 0) {
     return;
   }
 
@@ -92,17 +73,9 @@ function flushPendingEvents(): void {
   for (const event of pendingEvents) {
     try {
       if (event.type === 'exception') {
-        if (!sentry.captureException) {
-          pushRetry(event);
-          continue;
-        }
-        sentry.captureException(event.error, event.captureContext);
+        Sentry.captureException(event.error, event.captureContext);
       } else {
-        if (!sentry.captureMessage) {
-          pushRetry(event);
-          continue;
-        }
-        sentry.captureMessage(event.message, event.captureContext);
+        Sentry.captureMessage(event.message, event.captureContext);
       }
     } catch {
       pushRetry(event);
@@ -119,21 +92,14 @@ export function captureExceptionSafely(
   error: unknown,
   captureContext?: SentryCaptureContext
 ): void {
-  const sentry = getSentryClient();
-  if (!sentry?.captureException) {
-    enqueuePendingEvent({
-      type: 'exception',
-      error,
-      captureContext,
-      attempts: 0,
-    });
+  if (!HAS_BROWSER_SENTRY_DSN) {
     return;
   }
 
   flushPendingEvents();
 
   try {
-    sentry.captureException(error, captureContext);
+    Sentry.captureException(error, captureContext);
   } catch {
     enqueuePendingEvent({
       type: 'exception',
@@ -148,21 +114,14 @@ export function captureMessageSafely(
   message: string,
   captureContext?: SentryCaptureContext
 ): void {
-  const sentry = getSentryClient();
-  if (!sentry?.captureMessage) {
-    enqueuePendingEvent({
-      type: 'message',
-      message,
-      captureContext,
-      attempts: 0,
-    });
+  if (!HAS_BROWSER_SENTRY_DSN) {
     return;
   }
 
   flushPendingEvents();
 
   try {
-    sentry.captureMessage(message, captureContext);
+    Sentry.captureMessage(message, captureContext);
   } catch {
     enqueuePendingEvent({
       type: 'message',

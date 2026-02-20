@@ -22,6 +22,7 @@ declare global {
       // Server-side環境変数
       ADMIN_PASSWORD_OWNER?: string;
       ADMIN_PASSWORD_ADMIN?: string;
+      SENTRY_DSN?: string;
       SENTRY_ORG?: string;
       SENTRY_PROJECT?: string;
       SENTRY_AUTH_TOKEN?: string;

@@ -7,6 +7,7 @@ import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
+import { useState } from 'react';
 
 /**
  * Props for the AkyoCard component
@@ -31,6 +32,13 @@ interface AkyoCardProps {
  * @returns Stylized card element
  */
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
+  const cloudflareImagesEnabled = process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true';
+  const apiImageSrc = buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512);
+  const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
+  const primaryImageSrc = cloudflareImagesEnabled ? `/${akyo.id}.webp` : apiImageSrc;
+  const placeholderImageSrc = '/images/placeholder.webp';
+  const [imageSrc, setImageSrc] = useState(primaryImageSrc);
+
   /**
    * Handles clicks on the favorite heart icon button
    * @param e - React mouse event
@@ -81,18 +89,23 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
       {/* 画像 */}
       <div className="relative w-full aspect-[3/2] bg-gray-100">
         <Image
-          src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}
+          src={imageSrc}
           alt={akyo.avatarName || akyo.nickname}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
           loading="lazy"
-          unoptimized
           placeholder="blur"
           blurDataURL={generateBlurDataURL(akyo.id)}
-          onError={(e) => {
-            // フォールバック画像
-            const target = e.target as HTMLImageElement;
-            target.src = '/images/placeholder.webp';
+          onError={() => {
+            // R2/Cloudflare失敗時はAPI経由にフォールバックし、それでも失敗したらプレースホルダー。
+            if (imageSrc !== apiFallbackImageSrc && imageSrc !== placeholderImageSrc) {
+              setImageSrc(apiFallbackImageSrc);
+              return;
+            }
+            if (imageSrc !== placeholderImageSrc) {
+              setImageSrc(placeholderImageSrc);
+            }
           }}
         />
 
