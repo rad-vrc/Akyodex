@@ -139,20 +139,26 @@ const nextConfig: NextConfig = {
 
 };
 
-const hasSentryReleaseConfig = Boolean(
+const hasSentryBuildConfig = Boolean(
   process.env.SENTRY_ORG && process.env.SENTRY_PROJECT && process.env.SENTRY_AUTH_TOKEN
 );
 
-const sentryWrappedConfig = withSentryConfig(nextConfig, {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  silent: !process.env.CI,
-  webpack: {
-    treeshake: {
-      removeDebugLogging: true,
-    },
-  },
-});
+const sentryWrappedConfig = hasSentryBuildConfig
+  ? withSentryConfig(nextConfig, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      silent: !process.env.CI,
+      ...(process.env.NODE_ENV === 'production'
+        ? {
+            webpack: {
+              treeshake: {
+                removeDebugLogging: true,
+              },
+            },
+          }
+        : {}),
+    })
+  : nextConfig;
 
-export default hasSentryReleaseConfig ? sentryWrappedConfig : nextConfig;
+export default sentryWrappedConfig;

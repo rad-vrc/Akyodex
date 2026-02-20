@@ -7,5 +7,6 @@ if (dsn) {
     dsn,
     tracesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.1,
     sendDefaultPii: false,
+    environment: process.env.NODE_ENV ?? 'production',
   });
 }
