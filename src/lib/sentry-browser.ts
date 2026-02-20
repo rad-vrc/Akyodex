@@ -1,12 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
-import type { SeverityLevel } from '@sentry/core';
-
-type SentryCaptureContext = {
-  level?: SeverityLevel;
-  tags?: Record<string, string>;
-  extra?: Record<string, unknown>;
-  fingerprint?: string[];
-};
+type SentryCaptureContext = NonNullable<
+  Parameters<typeof Sentry.captureException>[1]
+>;
 
 type PendingEvent =
   | {
