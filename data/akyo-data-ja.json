@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-17T11:57:26.792Z",
-  "count": 741,
+  "updatedAt": "2026-02-20T15:21:35.255Z",
+  "count": 742,
   "data": [
     {
       "id": "0001",
@@ -6672,6 +6672,15 @@
       "comment": "（ささのきの手記）\n栄養価が高く森のバターとも呼ばれる。そのおいしさはakyoにも人気である",
       "author": "ささのき",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_ef0fead6-7356-4acb-9f18-41bc93c82a73"
+    },
+    {
+      "id": "0742",
+      "nickname": "カラフル回転Akyo",
+      "avatarName": "カラフル回転Akyo",
+      "category": "ギミック・特殊,ギミック・特殊/ダンス,チョコミント類",
+      "comment": "なんて洗練された腰の動き！",
+      "author": "roma38（ろま38）",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_7577b5fa-56c3-43f7-8771-dfdfb3a7b05b"
     }
   ]
 }
