@@ -35,7 +35,7 @@ export function ServiceWorkerRegister() {
               const parsedScope = new URL(value, window.location.origin);
               sanitized.scope = parsedScope.pathname || '/';
             } catch {
-              sanitized.scope = value;
+              sanitized.scope = '/';
             }
             continue;
           }
