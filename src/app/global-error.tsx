@@ -11,6 +11,7 @@
  */
 
 import { useEffect } from 'react';
+import { captureExceptionSafely } from '@/lib/sentry-browser';
 
 export default function GlobalError({
   error,
@@ -20,6 +21,16 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
+    captureExceptionSafely(error, {
+      level: 'fatal',
+      tags: {
+        boundary: 'global',
+        has_digest: String(Boolean(error.digest)),
+      },
+      extra: {
+        digest: error.digest,
+      },
+    });
     console.error('[Global Error Boundary]', error);
   }, [error]);
 

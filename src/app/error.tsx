@@ -9,6 +9,7 @@
  */
 
 import { useEffect } from 'react';
+import { captureExceptionSafely } from '@/lib/sentry-browser';
 
 export default function Error({
   error,
@@ -18,13 +19,16 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log to Sentry if available
-    if (typeof window !== 'undefined' && window.Sentry) {
-      window.Sentry.captureMessage(`Unhandled error: ${error.message}`, {
-        level: 'error',
-        extra: { digest: error.digest },
-      });
-    }
+    captureExceptionSafely(error, {
+      level: 'error',
+      tags: {
+        boundary: 'route',
+        has_digest: String(Boolean(error.digest)),
+      },
+      extra: {
+        digest: error.digest,
+      },
+    });
     console.error('[Error Boundary]', error);
   }, [error]);
 

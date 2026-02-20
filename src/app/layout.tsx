@@ -122,8 +122,8 @@ export default async function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <head suppressHydrationWarning />
       <body className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}>
-        {/* Sentry error monitoring — loaded early with nonce */}
-        <Script src={sentryUrl} strategy="beforeInteractive" nonce={nonce} />
+        {/* Hydration mismatch回避のため、SentryはafterInteractiveで読み込む */}
+        <Script src={sentryUrl} strategy="afterInteractive" nonce={nonce} />
 
         {children}
 
