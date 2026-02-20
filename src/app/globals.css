@@ -62,8 +62,7 @@
 
 /* 全体のフォント設定 - 丸みを帯びたフォント */
 body {
-  font-family: var(--font-m-plus-rounded), var(--font-kosugi-maru), 'Kosugi Maru', var(--font-noto-sans-jp),
-    'Noto Sans JP', sans-serif !important;
+  font-family: var(--font-m-plus-rounded), var(--font-kosugi-maru), var(--font-noto-sans-jp), sans-serif !important;
   color: var(--text-primary);
   background-color: var(--bg-gradient-start);
   min-height: 100vh;
@@ -972,10 +971,30 @@ select:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  :root *, :root *::before, :root *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
+  }
+
+  #dify-chatbot-bubble-button,
+  #dify-chatbot-bubble-button:hover,
+  #dify-chatbot-bubble-button.loading,
+  #dify-chatbot-bubble-button[data-loading='true'],
+  #dify-chatbot-bubble-button svg,
+  #dify-chatbot-bubble-button .loading-spinner,
+  #dify-chatbot-bubble-button [class*='loading'],
+  #dify-chatbot-bubble-button [class*='spinner'],
+  .detail-button,
+  .detail-button .animate-bounce,
+  .detail-button::after,
+  .reference-sheet-button,
+  .akyo-card,
+  .akyo-card img {
+    animation: none !important;
+    transition: none !important;
   }
 }
