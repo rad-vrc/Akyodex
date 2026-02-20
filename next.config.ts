@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.akyodex.com', // R2 fallback
-        pathname: '/images/**',
+        pathname: '/**',
       },
       {
         protocol: 'https',

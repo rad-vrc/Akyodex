@@ -17,12 +17,12 @@ import { AkyoList } from '@/components/akyo-list';
 import { FilterPanel } from '@/components/filter-panel';
 import { IconCog, IconGrid, IconList } from '@/components/icons';
 import { LanguageToggle } from '@/components/language-toggle';
-import { MiniAkyoBg } from '@/components/mini-akyo-bg';
 import { SearchBar } from '@/components/search-bar';
 import { useAkyoData } from '@/hooks/use-akyo-data';
 import { useLanguage } from '@/hooks/use-language';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -53,9 +53,15 @@ const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
 
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
+const DeferredMiniAkyoBg = dynamic(
+  () => import('@/components/mini-akyo-bg').then((mod) => mod.MiniAkyoBg),
+  { ssr: false }
+);
+
 // Virtual scrolling constants
-const INITIAL_RENDER_COUNT = 60;
-const RENDER_CHUNK = 60;
+const INITIAL_RENDER_COUNT = 30;
+const RENDER_CHUNK = 40;
+const MINI_AKYO_BG_DELAY_MS = 2500;
 
 interface LanguageDatasetCacheEntry {
   items: AkyoData[];
@@ -131,6 +137,7 @@ export function ZukanClient({
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
+  const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
 
   const languageDatasetCacheRef = useRef<Map<SupportedLanguage, LanguageDatasetCacheEntry>>(
     new Map([[serverLang, { items: initialData, categories, authors }]])
@@ -241,6 +248,16 @@ export function ZukanClient({
       controller.abort();
     };
   }, [isReady, needsRefetch, lang, serverLang, refetchWithNewData, setLoading, setError]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setIsMiniAkyoBgEnabled(true);
+    }, MINI_AKYO_BG_DELAY_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   const handleShowDetail = (akyo: AkyoData) => {
     setSelectedAkyo(akyo);
@@ -403,7 +420,7 @@ export function ZukanClient({
   return (
     <div className="min-h-screen pb-16 relative">
       {/* Mini Akyo Background Animation */}
-      <MiniAkyoBg />
+      {isMiniAkyoBgEnabled ? <DeferredMiniAkyoBg /> : null}
 
       {/* ヘッダー */}
       <header className="sticky top-0 z-50 p-4 sm:p-6">
