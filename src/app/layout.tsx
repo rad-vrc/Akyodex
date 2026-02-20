@@ -1,28 +1,11 @@
-import { Suspense } from 'react';
-import { DifyChatbot } from '@/components/dify-chatbot';
-import { ServiceWorkerRegister } from '@/components/service-worker-register';
+import { RuntimeFeatures } from '@/components/runtime-features';
 import { StructuredData } from '@/components/structured-data';
-import { WebVitals } from '@/components/web-vitals';
 import type { Metadata, Viewport } from 'next';
-import { Kosugi_Maru, M_PLUS_Rounded_1c, Noto_Sans_JP } from 'next/font/google';
+import { M_PLUS_Rounded_1c } from 'next/font/google';
 import { headers } from 'next/headers';
 import { connection } from 'next/server';
 import Script from 'next/script';
 import './globals.css';
-
-const notoSansJP = Noto_Sans_JP({
-  variable: '--font-noto-sans-jp',
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  display: 'swap',
-});
-
-const kosugiMaru = Kosugi_Maru({
-  variable: '--font-kosugi-maru',
-  subsets: ['latin'],
-  weight: ['400'],
-  display: 'swap',
-});
 
 const mPlusRounded = M_PLUS_Rounded_1c({
   variable: '--font-m-plus-rounded',
@@ -120,10 +103,13 @@ export default async function RootLayout({
 
   return (
     <html lang="ja" suppressHydrationWarning>
-      <head suppressHydrationWarning />
-      <body className={`${mPlusRounded.variable} ${kosugiMaru.variable} ${notoSansJP.variable} antialiased`}>
-        {/* Hydration mismatch回避のため、SentryはafterInteractiveで読み込む */}
-        <Script src={sentryUrl} strategy="afterInteractive" nonce={nonce} />
+      <head suppressHydrationWarning>
+        <link rel="dns-prefetch" href="https://images.akyodex.com" />
+        <link rel="preconnect" href="https://images.akyodex.com" crossOrigin="" />
+      </head>
+      <body className={`${mPlusRounded.variable} antialiased`}>
+        {/* Sentry is non-critical for first paint, so defer it until window load */}
+        <Script src={sentryUrl} strategy="lazyOnload" nonce={nonce} />
 
         {children}
 
@@ -145,11 +131,7 @@ export default async function RootLayout({
           }}
         />
         <StructuredData nonce={nonce} />
-        <WebVitals />
-        <ServiceWorkerRegister />
-        <Suspense fallback={null}>
-          {difyToken ? <DifyChatbot token={difyToken} /> : null}
-        </Suspense>
+        <RuntimeFeatures difyToken={difyToken} />
       </body>
     </html>
   );
