@@ -189,7 +189,9 @@ export function ZukanClient({
       setLoading(true);
       setError(null);
       try {
-        // Fetch JSON data for the detected language from CDN
+        // Language-switch JSON is fetched directly from R2 host.
+        // Regular image delivery stays on Next.js optimization path (`/_next/image`),
+        // so layout-level always-on preconnect is intentionally omitted.
         const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
         const response = await fetch(`${r2Base}/data/akyo-data-${lang}.json`, {
           signal: controller.signal,
