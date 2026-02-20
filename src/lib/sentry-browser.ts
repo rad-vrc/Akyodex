@@ -26,6 +26,7 @@ type PendingEvent =
 const MAX_PENDING_EVENTS = 30;
 const MAX_RETRY_ATTEMPTS = 10;
 const RETRY_DELAY_MS = 500;
+const HAS_BROWSER_SENTRY_DSN = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN);
 
 let pendingEvents: PendingEvent[] = [];
 let retryTimer: number | null = null;
@@ -50,6 +51,11 @@ function enqueuePendingEvent(event: PendingEvent): void {
 }
 
 function flushPendingEvents(): void {
+  if (!HAS_BROWSER_SENTRY_DSN) {
+    pendingEvents = [];
+    return;
+  }
+
   if (pendingEvents.length === 0) {
     return;
   }
@@ -84,6 +90,10 @@ export function captureExceptionSafely(
   error: unknown,
   captureContext?: SentryCaptureContext
 ): void {
+  if (!HAS_BROWSER_SENTRY_DSN) {
+    return;
+  }
+
   flushPendingEvents();
 
   try {
@@ -102,6 +112,10 @@ export function captureMessageSafely(
   message: string,
   captureContext?: SentryCaptureContext
 ): void {
+  if (!HAS_BROWSER_SENTRY_DSN) {
+    return;
+  }
+
   flushPendingEvents();
 
   try {

@@ -7,6 +7,7 @@ import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 /**
  * Props for the AkyoCard component
@@ -31,6 +32,14 @@ interface AkyoCardProps {
  * @returns Stylized card element
  */
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
+  const primaryImageSrc = `/${akyo.id}.webp`;
+  const apiFallbackImageSrc = `${buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}&bypassCloudflare=1`;
+  const [imageSrc, setImageSrc] = useState(primaryImageSrc);
+
+  useEffect(() => {
+    setImageSrc(primaryImageSrc);
+  }, [primaryImageSrc]);
+
   /**
    * Handles clicks on the favorite heart icon button
    * @param e - React mouse event
@@ -81,7 +90,7 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
       {/* 画像 */}
       <div className="relative w-full aspect-[3/2] bg-gray-100">
         <Image
-          src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}
+          src={imageSrc}
           alt={akyo.avatarName || akyo.nickname}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
@@ -90,8 +99,12 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
           placeholder="blur"
           blurDataURL={generateBlurDataURL(akyo.id)}
           onError={(e) => {
-            // フォールバック画像
+            // R2/Cloudflare失敗時はAPI経由にフォールバックし、それでも失敗したらプレースホルダー。
             const target = e.target as HTMLImageElement;
+            if (imageSrc !== apiFallbackImageSrc) {
+              setImageSrc(apiFallbackImageSrc);
+              return;
+            }
             target.src = '/images/placeholder.webp';
           }}
         />

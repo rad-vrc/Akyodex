@@ -66,6 +66,7 @@ export default function cloudflareImageLoader({ src, width, quality }: ImageLoad
  * - https://images.akyodex.com/0001.webp → 0001
  * - 0001 → 0001 (direct ID)
  * - /images/0001.webp → 0001 (legacy support)
+ * - /api/avatar-image?id=0001&w=512 → 0001
  */
 function extractImageId(src: string): string | null {
   // Pattern 1: /0001.webp → 0001 (R2 direct)
@@ -82,6 +83,25 @@ function extractImageId(src: string): string | null {
   // Pattern 4: Legacy /images/0001.webp → 0001
   const match4 = src.match(/\/images\/(\d{4})\.(webp|png|jpg|jpeg)/);
   if (match4) return match4[1];
+
+  // Pattern 5: API proxy path /api/avatar-image?id=0001&w=512 → 0001
+  // Supports both relative and absolute URLs.
+  if (src.includes('/api/avatar-image')) {
+    try {
+      const parsed = src.startsWith('http://') || src.startsWith('https://')
+        ? new URL(src)
+        : new URL(src, 'https://akyodex.com');
+      if (parsed.searchParams.get('bypassCloudflare') === '1') {
+        return null;
+      }
+      const id = parsed.searchParams.get('id');
+      if (id && /^\d{1,4}$/.test(id)) {
+        return id.padStart(4, '0');
+      }
+    } catch {
+      // no-op: fall through to null
+    }
+  }
 
   return null;
 }
