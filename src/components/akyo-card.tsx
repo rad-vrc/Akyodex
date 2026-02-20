@@ -84,9 +84,9 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
           src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}
           alt={akyo.avatarName || akyo.nickname}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
           loading="lazy"
-          unoptimized
           placeholder="blur"
           blurDataURL={generateBlurDataURL(akyo.id)}
           onError={(e) => {
