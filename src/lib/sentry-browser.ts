@@ -82,20 +82,30 @@ function flushPendingEvents(): void {
   }
 
   const nextQueue: PendingEvent[] = [];
+  const pushRetry = (event: PendingEvent): void => {
+    const attempts = event.attempts + 1;
+    if (attempts < MAX_RETRY_ATTEMPTS) {
+      nextQueue.push({ ...event, attempts });
+    }
+  };
+
   for (const event of pendingEvents) {
     try {
       if (event.type === 'exception') {
-        if (sentry.captureException) {
-          sentry.captureException(event.error, event.captureContext);
+        if (!sentry.captureException) {
+          pushRetry(event);
+          continue;
         }
-      } else if (sentry.captureMessage) {
+        sentry.captureException(event.error, event.captureContext);
+      } else {
+        if (!sentry.captureMessage) {
+          pushRetry(event);
+          continue;
+        }
         sentry.captureMessage(event.message, event.captureContext);
       }
     } catch {
-      const attempts = event.attempts + 1;
-      if (attempts < MAX_RETRY_ATTEMPTS) {
-        nextQueue.push({ ...event, attempts });
-      }
+      pushRetry(event);
     }
   }
 
