@@ -32,8 +32,10 @@ interface AkyoCardProps {
  * @returns Stylized card element
  */
 export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
-  const primaryImageSrc = `/${akyo.id}.webp`;
-  const apiFallbackImageSrc = `${buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512)}&bypassCloudflare=1`;
+  const cloudflareImagesEnabled = process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true';
+  const apiImageSrc = buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512);
+  const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
+  const primaryImageSrc = cloudflareImagesEnabled ? `/${akyo.id}.webp` : apiImageSrc;
   const placeholderImageSrc = '/images/placeholder.webp';
   const [imageSrc, setImageSrc] = useState(primaryImageSrc);
 
