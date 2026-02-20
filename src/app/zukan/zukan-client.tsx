@@ -59,8 +59,8 @@ const DeferredMiniAkyoBg = dynamic(
 );
 
 // Virtual scrolling constants
-const INITIAL_RENDER_COUNT = 30;
-const RENDER_CHUNK = 40;
+const INITIAL_RENDER_COUNT = 20;
+const RENDER_CHUNK = 30;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
 interface LanguageDatasetCacheEntry {
