@@ -9,6 +9,14 @@
  */
 
 :root {
+  /*
+   * Fallback font variables.
+   * layout.tsx may load only M PLUS for performance, so keep these vars defined
+   * to avoid invalidating font-family declarations that reference them.
+   */
+  --font-kosugi-maru: 'Kosugi Maru';
+  --font-noto-sans-jp: 'Noto Sans JP';
+
   /* メインカラー - パステル調の優しい色（既存と完全一致） */
   --primary-pink: #ff6b9d;
   /* やさしいピンク */
