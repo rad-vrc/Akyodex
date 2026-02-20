@@ -2,6 +2,9 @@ import * as Sentry from '@sentry/nextjs';
 type SentryCaptureContext = NonNullable<
   Parameters<typeof Sentry.captureException>[1]
 >;
+type SentryMessageCaptureContext = NonNullable<
+  Parameters<typeof Sentry.captureMessage>[1]
+>;
 
 type PendingEvent =
   | {
@@ -13,7 +16,7 @@ type PendingEvent =
   | {
     type: 'message';
     message: string;
-    captureContext?: SentryCaptureContext;
+    captureContext?: SentryMessageCaptureContext;
     attempts: number;
   };
 
@@ -107,7 +110,7 @@ export function captureExceptionSafely(
 
 export function captureMessageSafely(
   message: string,
-  captureContext?: SentryCaptureContext
+  captureContext?: SentryMessageCaptureContext
 ): void {
   if (!HAS_BROWSER_SENTRY_DSN) {
     return;
