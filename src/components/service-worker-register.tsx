@@ -1,5 +1,6 @@
 'use client';
 
+import { captureExceptionSafely } from '@/lib/sentry-browser';
 import { useEffect, useRef, useState } from 'react';
 
 /**
@@ -19,6 +20,42 @@ export function ServiceWorkerRegister() {
       return;
     }
 
+    const reportServiceWorkerError = (
+      phase: 'register' | 'update',
+      error: unknown,
+      additional: Record<string, unknown> = {}
+    ) => {
+      const normalizedError = error instanceof Error ? error : new Error(String(error));
+      const message = normalizedError.message;
+      const name = normalizedError.name;
+
+      const isExpectedError =
+        message.includes('Service Workers are not supported') ||
+        message.includes('The operation is insecure') ||
+        name === 'SecurityError';
+
+      if (isExpectedError) {
+        return;
+      }
+
+      captureExceptionSafely(normalizedError, {
+        level: 'error',
+        tags: {
+          area: 'service-worker',
+          phase,
+          online: String(navigator.onLine),
+        },
+        extra: {
+          errorName: name,
+          errorMessage: message,
+          href: window.location.href,
+          pathname: window.location.pathname,
+          userAgent: navigator.userAgent,
+          ...additional,
+        },
+      });
+    };
+
     // Register service worker
     const registerServiceWorker = async () => {
       try {
@@ -31,7 +68,10 @@ export function ServiceWorkerRegister() {
         console.log('[SW] Service Worker registered:', reg.scope);
 
         // Check for updates on initial load
-        reg.update();
+        void reg.update().catch((error) => {
+          console.error('[SW] Initial update check failed:', error);
+          reportServiceWorkerError('update', error, { scope: reg.scope, stage: 'initial-check' });
+        });
 
         // Listen for updates
         reg.addEventListener('updatefound', () => {
@@ -49,24 +89,20 @@ export function ServiceWorkerRegister() {
 
         // Check for updates every hour (ref で保持してクリーンアップ可能にする)
         updateIntervalRef.current = setInterval(() => {
-          reg.update();
+          void reg.update().catch((error) => {
+            console.error('[SW] Scheduled update check failed:', error);
+            reportServiceWorkerError('update', error, { scope: reg.scope, stage: 'scheduled-check' });
+          });
         }, 60 * 60 * 1000);
 
       } catch (error) {
         // Log detailed error information
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error('[SW] Registration failed:', errorMessage);
-        
-        // Don't report to Sentry for expected failures (e.g., private browsing, unsupported)
-        const isExpectedError = 
-          errorMessage.includes('Service Workers are not supported') ||
-          errorMessage.includes('The operation is insecure') ||
-          errorMessage.includes('Failed to register a ServiceWorker');
-        
-        if (!isExpectedError && typeof window !== 'undefined' && 'Sentry' in window) {
-          // Only report unexpected errors to Sentry
-          console.warn('[SW] Unexpected registration error, may be reported to Sentry');
-        }
+
+        reportServiceWorkerError('register', error, {
+          readyState: document.readyState,
+        });
       }
     };
 

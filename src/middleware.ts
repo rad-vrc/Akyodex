@@ -21,17 +21,43 @@ const LANGUAGE_COOKIE = 'AKYO_LANG';
 
 /** Cookie options shared across all language cookie calls */
 const LANGUAGE_COOKIE_OPTIONS = {
-    maxAge: 60 * 60 * 24 * 365, // 1 year
-    path: '/',
-    sameSite: 'lax' as const,
-    // Only set secure=true in production to allow local persistence on http://localhost
-    secure: process.env.NODE_ENV === 'production',
+  maxAge: 60 * 60 * 24 * 365, // 1 year
+  path: '/',
+  sameSite: 'lax' as const,
+  // Only set secure=true in production to allow local persistence on http://localhost
+  secure: process.env.NODE_ENV === 'production',
 };
 
-/** Apply common security headers (CSP + nonce) to a response */
-function applySecurityHeaders(response: NextResponse, cspHeader: string, nonce: string): void {
-    response.headers.set('Content-Security-Policy', cspHeader);
-    response.headers.set('x-nonce', nonce);
+/**
+ * Create a response with:
+ * - CSP/x-nonce headers on the response
+ * - x-nonce/x-akyo-lang forwarded to request headers for App Router components
+ */
+function createSecuredResponse(
+  request: NextRequest,
+  cspHeader: string,
+  nonce: string,
+  lang?: string
+): NextResponse {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  if (lang) {
+    requestHeaders.set('x-akyo-lang', lang);
+  }
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  response.headers.set('Content-Security-Policy', cspHeader);
+  response.headers.set('x-nonce', nonce);
+  if (lang) {
+    response.headers.set('x-akyo-lang', lang);
+  }
+
+  return response;
 }
 
 /**
@@ -43,21 +69,21 @@ function applySecurityHeaders(response: NextResponse, cspHeader: string, nonce: 
  * - Complex lists where normalization (e.g. adding https://) is needed.
  */
 const SCRIPT_SRC = [
-    "'self'",
-    "https://*.dify.dev",
-    "https://*.dify.ai",
-    "https://*.udify.app",
-    "https://udify.app",
-    "https://js.sentry-cdn.com",
-    "https://browser.sentry-cdn.com",
-    "https://*.sentry.io",
-    "https://analytics.google.com",
-    "https://googletagmanager.com",
-    "https://*.googletagmanager.com",
-    "https://www.google-analytics.com",
-    "https://paulrosen.github.io",
-    "https://cdn-cookieyes.com",
-    "https://fonts.googleapis.com",
+  "'self'",
+  'https://*.dify.dev',
+  'https://*.dify.ai',
+  'https://*.udify.app',
+  'https://udify.app',
+  'https://js.sentry-cdn.com',
+  'https://browser.sentry-cdn.com',
+  'https://*.sentry.io',
+  'https://analytics.google.com',
+  'https://googletagmanager.com',
+  'https://*.googletagmanager.com',
+  'https://www.google-analytics.com',
+  'https://paulrosen.github.io',
+  'https://cdn-cookieyes.com',
+  'https://fonts.googleapis.com',
 ];
 
 /**
@@ -67,11 +93,11 @@ const SCRIPT_SRC = [
  * 3. Third-party widgets (Dify, Sentry) also depend on inline styles.
  */
 const STYLE_SRC = [
-    "'self'",
-    "'unsafe-inline'",
-    "https://udify.app",
-    "https://*.udify.app",
-    "https://fonts.googleapis.com",
+  "'self'",
+  "'unsafe-inline'",
+  'https://udify.app',
+  'https://*.udify.app',
+  'https://fonts.googleapis.com',
 ];
 
 /**
@@ -79,95 +105,95 @@ const STYLE_SRC = [
  * Only explicit image hosts are allowed here.
  */
 const IMG_SRC = [
-    "'self'",
-    "data:",
-    "blob:",
-    "https://imagedelivery.net",
-    "https://*.imagedelivery.net",
-    "https://*.akyodex.com",
-    "https://*.vrchat.com",
-    "https://*.vrcimg.com",
-    "https://*.r2.cloudflarestorage.com",
-    "https://udify.app",
-    "https://*.udify.app",
+  "'self'",
+  'data:',
+  'blob:',
+  'https://imagedelivery.net',
+  'https://*.imagedelivery.net',
+  'https://*.akyodex.com',
+  'https://*.vrchat.com',
+  'https://*.vrcimg.com',
+  'https://*.r2.cloudflarestorage.com',
+  'https://udify.app',
+  'https://*.udify.app',
 ];
 
 const CONNECT_SRC = [
-    "'self'",
-    "https://*.dify.dev",
-    "https://*.dify.ai",
-    "https://*.udify.app",
-    "https://udify.app",
-    "https://*.r2.cloudflarestorage.com",
-    "https://*.sentry.io",
-    "https://browser.sentry-cdn.com",
-    "https://analytics.google.com",
-    "https://www.google-analytics.com",
-    "https://api.github.com", // Data endpoint (moved from SCRIPT_SRC as it doesn't host script)
-    "https://images.akyodex.com",
+  "'self'",
+  'https://*.dify.dev',
+  'https://*.dify.ai',
+  'https://*.udify.app',
+  'https://udify.app',
+  'https://*.r2.cloudflarestorage.com',
+  'https://*.sentry.io',
+  'https://browser.sentry-cdn.com',
+  'https://analytics.google.com',
+  'https://www.google-analytics.com',
+  'https://api.github.com', // Data endpoint (moved from SCRIPT_SRC as it doesn't host script)
+  'https://images.akyodex.com',
 ];
 
 const FONT_SRC = [
-    "'self'",
-    "data:",
-    "https://udify.app",
-    "https://*.udify.app",
-    "https://fonts.gstatic.com",
+  "'self'",
+  'data:',
+  'https://udify.app',
+  'https://*.udify.app',
+  'https://fonts.gstatic.com',
 ];
 
 const FRAME_SRC = [
-    "'self'",
-    "https://udify.app",
-    "https://*.udify.app",
+  "'self'",
+  'https://udify.app',
+  'https://*.udify.app',
 ];
 
 const MEDIA_SRC = [
-    "'self'",
-    "data:",
-    "mediastream:",
-    "blob:",
+  "'self'",
+  'data:',
+  'mediastream:',
+  'blob:',
 ];
 
 const WORKER_SRC = [
-    "'self'",
-    "blob:",
+  "'self'",
+  'blob:',
 ];
 
 export function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
-    /**
-     * Defensive check: redundant path exclusion.
-     * While the 'matcher' in the config handles most exclusions, this block
-     * serves as a defensive fallback to ensure static assets and API routes
-     * are never processed by the middleware logic.
-     *
-     * ASSUMPTION:
-     * - API routes (/api/*) are expected to return JSON only. If any API returns HTML
-     *   in the future, CSP headers must be manually applied or this block updated.
-     * - Static assets (with extensions) are bypassed to avoid CSP overhead.
-     *
-     * TODO: Audit and apply CSP for any HTML-returning API endpoints (e.g. OGP handlers).
-     */
-    if (
-        pathname.startsWith('/_next') ||
-        pathname.startsWith('/api') ||
-        pathname.startsWith('/images') ||
-        pathname.includes('.')
-    ) {
-        return NextResponse.next();
-    }
+  /**
+   * Defensive check: redundant path exclusion.
+   * While the 'matcher' in the config handles most exclusions, this block
+   * serves as a defensive fallback to ensure static assets and API routes
+   * are never processed by the middleware logic.
+   *
+   * ASSUMPTION:
+   * - API routes (/api/*) are expected to return JSON only. If any API returns HTML
+   *   in the future, CSP headers must be manually applied or this block updated.
+   * - Static assets (with extensions) are bypassed to avoid CSP overhead.
+   *
+   * TODO: Audit and apply CSP for any HTML-returning API endpoints (e.g. OGP handlers).
+   */
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/images') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next();
+  }
 
-    // Generate nonce for CSP
-    const randomBytes = crypto.getRandomValues(new Uint8Array(16));
-    const nonce = btoa(String.fromCharCode(...randomBytes));
+  // Generate nonce for CSP
+  const randomBytes = crypto.getRandomValues(new Uint8Array(16));
+  const nonce = btoa(String.fromCharCode(...randomBytes));
 
-    // Content Security Policy
-    // Note: Allow known inline snippets via hash.
-    // - difyHash: Dify bootstrap (external script interaction)
-    const difyHash = "'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4='";
+  // Content Security Policy
+  // Note: Allow known inline snippets via hash.
+  // - difyHash: Dify bootstrap (external script interaction)
+  const difyHash = "'sha256-r53Kt4G9CFjqxyzu6MVglOzjs5vcCE7jOdc6JGC6cC4='";
 
-    const cspHeader = `
+  const cspHeader = `
     default-src 'self';
     script-src ${SCRIPT_SRC.join(' ')} 'nonce-${nonce}' ${difyHash};
     style-src ${STYLE_SRC.join(' ')};
@@ -183,54 +209,45 @@ export function middleware(request: NextRequest) {
     frame-ancestors 'self';
     ${process.env.NODE_ENV === 'production' ? 'upgrade-insecure-requests;' : ''}
   `
-        .replace(/\s{2,}/g, ' ')
-        .trim();
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 
-    // Allow /admin routes to load (client component handles auth UI)
-    if (pathname.startsWith('/admin')) {
-        const response = NextResponse.next();
-        applySecurityHeaders(response, cspHeader, nonce);
-        return response;
-    }
+  // Allow /admin routes to load (client component handles auth UI)
+  if (pathname.startsWith('/admin')) {
+    return createSecuredResponse(request, cspHeader, nonce);
+  }
 
-    // Language detection for all other routes
-    // 1. Check cookie (user preference)
-    const cookieLang = request.cookies.get(LANGUAGE_COOKIE)?.value;
-    if (cookieLang && isValidLanguage(cookieLang)) {
-        const response = NextResponse.next();
-        response.headers.set('x-akyo-lang', cookieLang);
-        applySecurityHeaders(response, cspHeader, nonce);
-        // Refresh cookie expiry to maintain persistence
-        response.cookies.set(LANGUAGE_COOKIE, cookieLang, LANGUAGE_COOKIE_OPTIONS);
-        return response;
-    }
-
-    // 2. Check Cloudflare country header (most accurate)
-    const cfCountry = request.headers.get('cf-ipcountry');
-    if (cfCountry) {
-        const langFromCountry = getLanguageFromCountry(cfCountry);
-        const response = NextResponse.next();
-        response.headers.set('x-akyo-lang', langFromCountry);
-        applySecurityHeaders(response, cspHeader, nonce);
-        response.cookies.set(LANGUAGE_COOKIE, langFromCountry, LANGUAGE_COOKIE_OPTIONS);
-        return response;
-    }
-
-    // 3. Check Accept-Language header
-    const acceptLanguage = request.headers.get('accept-language');
-    const detectedLang = detectLanguageFromHeader(acceptLanguage);
-
-    const response = NextResponse.next();
-    response.headers.set('x-akyo-lang', detectedLang);
-    applySecurityHeaders(response, cspHeader, nonce);
-    response.cookies.set(LANGUAGE_COOKIE, detectedLang, LANGUAGE_COOKIE_OPTIONS);
-
+  // Language detection for all other routes
+  // 1. Check cookie (user preference)
+  const cookieLang = request.cookies.get(LANGUAGE_COOKIE)?.value;
+  if (cookieLang && isValidLanguage(cookieLang)) {
+    const response = createSecuredResponse(request, cspHeader, nonce, cookieLang);
+    // Refresh cookie expiry to maintain persistence
+    response.cookies.set(LANGUAGE_COOKIE, cookieLang, LANGUAGE_COOKIE_OPTIONS);
     return response;
+  }
+
+  // 2. Check Cloudflare country header (most accurate)
+  const cfCountry = request.headers.get('cf-ipcountry');
+  if (cfCountry) {
+    const langFromCountry = getLanguageFromCountry(cfCountry);
+    const response = createSecuredResponse(request, cspHeader, nonce, langFromCountry);
+    response.cookies.set(LANGUAGE_COOKIE, langFromCountry, LANGUAGE_COOKIE_OPTIONS);
+    return response;
+  }
+
+  // 3. Check Accept-Language header
+  const acceptLanguage = request.headers.get('accept-language');
+  const detectedLang = detectLanguageFromHeader(acceptLanguage);
+
+  const response = createSecuredResponse(request, cspHeader, nonce, detectedLang);
+  response.cookies.set(LANGUAGE_COOKIE, detectedLang, LANGUAGE_COOKIE_OPTIONS);
+  return response;
 }
 
 export const config = {
-    matcher: [
-        // Match all routes except static files and API routes
-        '/((?!_next|api|images|.*\\.).*)',
-    ],
+  matcher: [
+    // Match all routes except static files and API routes
+    '/((?!_next|api|images|.*\\.).*)',
+  ],
 };

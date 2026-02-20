@@ -1,19 +1,7 @@
 'use client';
 
+import { captureMessageSafely } from '@/lib/sentry-browser';
 import { useReportWebVitals } from 'next/web-vitals';
-
-// グローバルのSentry型定義
-declare global {
-  interface Window {
-    Sentry?: {
-      captureMessage: (message: string, options?: {
-        level?: string;
-        tags?: Record<string, string>;
-        extra?: Record<string, unknown>;
-      }) => void;
-    };
-  }
-}
 
 /**
  * WebVitals Component
@@ -24,33 +12,33 @@ declare global {
  */
 export function WebVitals() {
   useReportWebVitals((metric) => {
-    // 本番環境でのみログ出力またはアナリティクスに送信
-    if (process.env.NODE_ENV === 'production') {
-      // Sentryに送信する場合
-      if (typeof window !== 'undefined' && window.Sentry) {
-        window.Sentry.captureMessage(
-          `Web Vitals: ${metric.name}`,
-          {
-            level: 'info',
-            tags: {
-              web_vital: metric.name,
-            },
-            extra: {
-              value: metric.value,
-              rating: metric.rating,
-            },
-          }
-        );
-      }
-
-      // コンソールにログ出力（開発用）
+    if (process.env.NODE_ENV !== 'production') {
       console.log('[Web Vitals]', {
         name: metric.name,
         value: metric.value,
         rating: metric.rating,
         navigationType: metric.navigationType,
       });
+      return;
     }
+
+    // ノイズ削減: 悪化(poor)のみをSentryに送る
+    if (metric.rating !== 'poor') {
+      return;
+    }
+
+    captureMessageSafely(`Web Vitals degraded: ${metric.name}`, {
+      level: 'warning',
+      tags: {
+        web_vital: metric.name,
+        rating: metric.rating,
+      },
+      fingerprint: ['web-vitals', metric.name, metric.rating],
+      extra: {
+        value: metric.value,
+        navigationType: metric.navigationType,
+      },
+    });
   });
 
   return null;

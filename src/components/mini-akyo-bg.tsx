@@ -63,6 +63,16 @@ function probeImage(url: string, timeout = 8000): Promise<string> {
   });
 }
 
+/** 同一オリジン URL かどうかを判定（cross-origin fetch による CORS エラー回避用） */
+function isSameOriginUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url, window.location.origin);
+    return parsed.origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
 /** miniakyo.webp の URL をフォールバック付きで解決 */
 async function resolveMiniAkyoUrl(): Promise<string | null> {
   let fallback: string | null = null;
@@ -70,6 +80,17 @@ async function resolveMiniAkyoUrl(): Promise<string | null> {
 
   for (const path of CANDIDATES) {
     if (!fallback) fallback = path;
+
+    // Cross-origin は fetch せず <img> プローブのみで判定する。
+    // fetch すると CORS エラーが console に出るため。
+    if (!isSameOriginUrl(path)) {
+      try {
+        await probeImage(path);
+        return path;
+      } catch {
+        continue;
+      }
+    }
 
     try {
       const r = await fetch(path, { cache: 'no-cache' });

@@ -17,10 +17,14 @@ declare global {
       // Public環境変数
       NEXT_PUBLIC_SITE_URL: string;
       NEXT_PUBLIC_R2_BASE: string;
+      NEXT_PUBLIC_SENTRY_DSN?: string;
 
       // Server-side環境変数
       ADMIN_PASSWORD_OWNER?: string;
       ADMIN_PASSWORD_ADMIN?: string;
+      SENTRY_ORG?: string;
+      SENTRY_PROJECT?: string;
+      SENTRY_AUTH_TOKEN?: string;
       GITHUB_TOKEN?: string;
       GITHUB_REPO?: string;
       CLOUDFLARE_ACCOUNT_ID?: string;

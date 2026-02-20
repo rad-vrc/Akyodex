@@ -47,6 +47,7 @@ export function StructuredData({ nonce }: StructuredDataProps) {
 
   return (
     <script
+      id="website-structured-data"
       type="application/ld+json"
       nonce={nonce}
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
