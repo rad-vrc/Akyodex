@@ -61,12 +61,64 @@ const DeferredMiniAkyoBg = dynamic(
 // Virtual scrolling constants
 const INITIAL_RENDER_COUNT = 20;
 const RENDER_CHUNK = 30;
+const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
 interface LanguageDatasetCacheEntry {
   items: AkyoData[];
   categories: string[];
   authors: string[];
+}
+
+function normalizeAkyoItem(item: unknown): AkyoData | undefined {
+  if (!item || typeof item !== 'object') return undefined;
+
+  const raw = item as Record<string, unknown>;
+  const id = typeof raw.id === 'string' ? raw.id.trim() : '';
+  const avatarName = typeof raw.avatarName === 'string' ? raw.avatarName.trim() : '';
+  if (!id || !avatarName) return undefined;
+
+  const category =
+    typeof raw.category === 'string'
+      ? raw.category
+      : typeof raw.attribute === 'string'
+        ? raw.attribute
+        : '';
+  const comment =
+    typeof raw.comment === 'string'
+      ? raw.comment
+      : typeof raw.notes === 'string'
+        ? raw.notes
+        : '';
+  const author =
+    typeof raw.author === 'string'
+      ? raw.author
+      : typeof raw.creator === 'string'
+        ? raw.creator
+        : '';
+  const parsedCategory = Array.isArray(raw.parsedCategory)
+    ? raw.parsedCategory.filter((value): value is string => typeof value === 'string')
+    : undefined;
+  const parsedAuthor = Array.isArray(raw.parsedAuthor)
+    ? raw.parsedAuthor.filter((value): value is string => typeof value === 'string')
+    : undefined;
+
+  return {
+    id,
+    appearance: typeof raw.appearance === 'string' ? raw.appearance : '',
+    nickname: typeof raw.nickname === 'string' ? raw.nickname : '',
+    avatarName,
+    category,
+    comment,
+    author,
+    attribute: category,
+    notes: comment,
+    creator: author,
+    avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
+    isFavorite: typeof raw.isFavorite === 'boolean' ? raw.isFavorite : undefined,
+    parsedCategory: parsedCategory && parsedCategory.length > 0 ? parsedCategory : undefined,
+    parsedAuthor: parsedAuthor && parsedAuthor.length > 0 ? parsedAuthor : undefined,
+  };
 }
 
 function extractTaxonomy(
@@ -138,12 +190,14 @@ export function ZukanClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
+  const [refetchError, setRefetchError] = useState<string | null>(null);
 
   const languageDatasetCacheRef = useRef<Map<SupportedLanguage, LanguageDatasetCacheEntry>>(
     new Map([[serverLang, { items: initialData, categories, authors }]])
   );
   const tickingRef = useRef(false);
   const filteredLengthRef = useRef(0);
+  const dataLengthRef = useRef(data.length);
 
   // — Derived values —
   const stats = useMemo(
@@ -159,6 +213,12 @@ export function ZukanClient({
     () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
     [selectedAttributes, selectedCreators, favoritesOnly]
   );
+  const isLanguageRefetching = loading && needsRefetch && data.length > 0;
+  const languageStatusMessage = refetchError
+    ? refetchError
+    : isLanguageRefetching
+      ? t('loading.subtext', lang)
+      : null;
 
   // Sync server-rendered language payload to cache
   useEffect(() => {
@@ -169,6 +229,13 @@ export function ZukanClient({
     });
   }, [serverLang, initialData, categories, authors]);
 
+  // Clear stale refetch status when language returns to server-rendered baseline.
+  useEffect(() => {
+    if (lang === serverLang) {
+      setRefetchError(null);
+    }
+  }, [lang, serverLang]);
+
   // Refetch data when language differs from server-rendered language
   useEffect(() => {
     if (!isReady || !needsRefetch || lang === serverLang) return;
@@ -178,6 +245,7 @@ export function ZukanClient({
       refetchWithNewData(cachedDataset.items);
       setCurrentCategories(cachedDataset.categories);
       setCurrentAuthors(cachedDataset.authors);
+      setRefetchError(null);
       setError(null);
       return;
     }
@@ -188,35 +256,42 @@ export function ZukanClient({
     const fetchLanguageData = async () => {
       setLoading(true);
       setError(null);
+      setRefetchError(null);
       try {
-        // Fetch JSON data for the detected language from CDN
-        const r2Base = process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com';
-        const response = await fetch(`${r2Base}/data/akyo-data-${lang}.json`, {
+        // Route language-switch requests through server API so
+        // KV → JSON → CSV fallback strategy stays centralized.
+        const response = await fetch(`/api/akyo-data?lang=${encodeURIComponent(lang)}`, {
           signal: controller.signal,
         });
-        if (!response.ok) throw new Error('Failed to fetch data');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data (${response.status})`);
+        }
 
         const jsonData: unknown = await response.json();
         const wrappedData =
           jsonData && typeof jsonData === 'object'
             ? (jsonData as Record<string, unknown>).data
             : undefined;
-        // Handle both array format and wrapped format ({ data: [...] })
-        const akyoItems: AkyoData[] | undefined = Array.isArray(jsonData)
-          ? (jsonData as AkyoData[])
-          : Array.isArray(wrappedData)
-            ? (wrappedData as AkyoData[])
-            : undefined;
+        const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
+          ? wrappedData
+              .map(normalizeAkyoItem)
+              .filter((item): item is AkyoData => item !== undefined)
+          : undefined;
         if (!akyoItems) {
           // Sanitized summary — only safe metadata, no raw content
           const payloadType = jsonData === null ? 'null'
-            : Array.isArray(jsonData) ? `array(${(jsonData as unknown[]).length})`
             : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
             : typeof jsonData;
 
           throw new Error(
-            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${payloadType}`
+            `[ZukanClient] Empty or invalid JSON: expected { data: AkyoData[] } with items, got ${payloadType}`
           );
+        }
+
+        if (akyoItems.length === 0) {
+          console.warn('[ZukanClient] Empty language payload, keeping existing dataset.');
+          setRefetchError(t('error.languageUnavailable', lang));
+          return;
         }
 
         if (cancelled) return;
@@ -234,7 +309,12 @@ export function ZukanClient({
         if (cancelled) return;
         if (err instanceof Error && err.name === 'AbortError') return;
         console.error('[ZukanClient] Failed to refetch language data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load data');
+        const message = err instanceof Error ? err.message : t('error.title', lang);
+        if (dataLengthRef.current > 0) {
+          setRefetchError(message);
+          return;
+        }
+        setError(message);
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -305,6 +385,11 @@ export function ZukanClient({
   useEffect(() => {
     filteredLengthRef.current = filteredData.length;
   }, [filteredData.length]);
+
+  // Keep latest renderable-data state for non-blocking refetch failures.
+  useEffect(() => {
+    dataLengthRef.current = data.length;
+  }, [data.length]);
 
   // Virtual scrolling: Infinite scroll handler (stable — no state/derived deps)
   const handleScroll = useCallback(() => {
@@ -402,8 +487,8 @@ export function ZukanClient({
     );
   }
 
-  // Show loading skeleton when refetching data for different language
-  if (loading && needsRefetch) {
+  // Fallback only when we have no data to keep rendering.
+  if (loading && needsRefetch && data.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="akyo-card p-8 text-center space-y-4 animate-pulse">
@@ -456,6 +541,22 @@ export function ZukanClient({
 
       {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
+        <div className="fixed left-4 right-4 top-20 z-[80] pointer-events-none sm:left-auto sm:right-6 sm:top-24 sm:w-[420px]">
+          <div role="status" aria-live="polite" aria-atomic="true">
+            {languageStatusMessage ? (
+              <div
+                className={`rounded-xl px-4 py-3 text-sm shadow-sm ${
+                  refetchError
+                    ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
+                    : 'border border-sky-300 bg-sky-50/95 text-sky-900'
+                }`}
+              >
+                {languageStatusMessage}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
         {/* 検索バー */}
         <div className="akyo-card p-4 sm:p-6">
           <SearchBar
@@ -489,10 +590,11 @@ export function ZukanClient({
           <div id="zukan-filter-panel" className={isFilterPanelOpen ? 'block sm:block' : 'hidden sm:block'}>
             <FilterPanel
               // 動的に更新されるカテゴリ/作者を使用
-              categories={currentCategories || categories || attributes}
-              authors={currentAuthors || authors || creators}
-              attributes={currentCategories || categories || attributes}
-              creators={currentAuthors || authors || creators}
+              categories={currentCategories}
+              authors={currentAuthors}
+              // TODO: Remove legacy props once FilterPanel fully drops attribute/creator support.
+              attributes={currentCategories}
+              creators={currentAuthors}
               selectedAttributes={selectedAttributes}
               selectedCreators={selectedCreators}
               categoryMatchMode={categoryMatchMode}
@@ -550,13 +652,14 @@ export function ZukanClient({
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-            {filteredData.slice(0, renderLimit).map((akyo) => (
+            {filteredData.slice(0, renderLimit).map((akyo, index) => (
               <AkyoCard
                 key={akyo.id}
                 akyo={akyo}
                 lang={lang}
                 onToggleFavorite={toggleFavorite}
                 onShowDetail={handleShowDetail}
+                priority={index < PRIORITY_CARD_COUNT}
               />
             ))}
           </div>

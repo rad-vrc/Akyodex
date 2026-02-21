@@ -93,9 +93,10 @@ export function jsonError(
  */
 export function jsonSuccess<T extends Record<string, unknown>>(
   data: T,
-  status: number = 200
+  status: number = 200,
+  init?: Omit<ResponseInit, 'status'>
 ): Response {
-  return Response.json({ success: true, ...data }, { status });
+  return Response.json({ success: true, ...data }, { ...init, status });
 }
 
 /**
