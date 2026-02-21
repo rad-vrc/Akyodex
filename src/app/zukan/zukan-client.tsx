@@ -206,14 +206,14 @@ export function ZukanClient({
         const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
           ? (wrappedData as AkyoData[])
           : undefined;
-        if (!akyoItems) {
+        if (!akyoItems || akyoItems.length === 0) {
           // Sanitized summary — only safe metadata, no raw content
           const payloadType = jsonData === null ? 'null'
             : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
             : typeof jsonData;
 
           throw new Error(
-            `[ZukanClient] Invalid JSON format: expected { data: AkyoData[] }, got ${payloadType}`
+            `[ZukanClient] Empty or invalid JSON: expected { data: AkyoData[] } with items, got ${payloadType}`
           );
         }
 
