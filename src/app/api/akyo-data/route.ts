@@ -4,7 +4,6 @@ import { isValidLanguage } from '@/lib/i18n';
 import { connection } from 'next/server';
 
 export const runtime = 'nodejs';
-
 /**
  * GET /api/akyo-data?lang=ja|en|ko
  *
