@@ -61,6 +61,7 @@ const DeferredMiniAkyoBg = dynamic(
 // Virtual scrolling constants
 const INITIAL_RENDER_COUNT = 20;
 const RENDER_CHUNK = 30;
+const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
 interface LanguageDatasetCacheEntry {
@@ -212,6 +213,12 @@ export function ZukanClient({
     () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
     [selectedAttributes, selectedCreators, favoritesOnly]
   );
+  const isLanguageRefetching = loading && needsRefetch && data.length > 0;
+  const languageStatusMessage = refetchError
+    ? refetchError
+    : isLanguageRefetching
+      ? t('loading.subtext', lang)
+      : null;
 
   // Sync server-rendered language payload to cache
   useEffect(() => {
@@ -473,8 +480,8 @@ export function ZukanClient({
     );
   }
 
-  // Show loading skeleton when refetching data for different language
-  if (loading && needsRefetch) {
+  // Fallback only when we have no data to keep rendering.
+  if (loading && needsRefetch && data.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="akyo-card p-8 text-center space-y-4 animate-pulse">
@@ -526,13 +533,19 @@ export function ZukanClient({
 
       {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
-        {refetchError ? (
-          <div
-            className="rounded-xl border border-amber-300 bg-amber-50/95 px-4 py-3 text-sm text-amber-900 shadow-sm"
-            role="status"
-            aria-live="polite"
-          >
-            {refetchError}
+        {languageStatusMessage ? (
+          <div className="fixed left-4 right-4 top-20 z-[80] pointer-events-none sm:left-auto sm:right-6 sm:top-24 sm:w-[420px]">
+            <div
+              className={`rounded-xl px-4 py-3 text-sm shadow-sm ${
+                refetchError
+                  ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
+                  : 'border border-sky-300 bg-sky-50/95 text-sky-900'
+              }`}
+              role="status"
+              aria-live="polite"
+            >
+              {languageStatusMessage}
+            </div>
           </div>
         ) : null}
 
@@ -631,13 +644,14 @@ export function ZukanClient({
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-            {filteredData.slice(0, renderLimit).map((akyo) => (
+            {filteredData.slice(0, renderLimit).map((akyo, index) => (
               <AkyoCard
                 key={akyo.id}
                 akyo={akyo}
                 lang={lang}
                 onToggleFavorite={toggleFavorite}
                 onShowDetail={handleShowDetail}
+                priority={index < PRIORITY_CARD_COUNT}
               />
             ))}
           </div>
