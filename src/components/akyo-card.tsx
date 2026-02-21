@@ -146,11 +146,11 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleVRChatClick}
-              className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95 origin-left -ml-1 sm:-ml-0 scale-[1.2] sm:scale-100"
+              className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-[1.15] active:scale-100 origin-left -ml-2 sm:-ml-0 sm:hover:scale-110 sm:active:scale-95"
               title={t('modal.vrchatOpen', lang)}
               aria-label={t('modal.vrchatOpen', lang)}
             >
-              <IconVRChat size="w-12 h-12" className="text-black" overflow="visible" />
+              <IconVRChat size="w-[86px] h-[86px] sm:w-12 sm:h-12" className="text-black" overflow="visible" />
             </button>
           )}
           <button
