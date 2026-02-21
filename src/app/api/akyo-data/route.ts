@@ -29,6 +29,10 @@ export async function GET(request: Request) {
       data,
       lang,
       count: data.length,
+    }, 200, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=600',
+      },
     });
   } catch (error) {
     console.error('[api/akyo-data] Failed to fetch data:', error);
