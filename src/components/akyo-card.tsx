@@ -21,6 +21,8 @@ interface AkyoCardProps {
   onToggleFavorite?: (id: string) => void;
   /** Optional callback when the card is clicked to show details */
   onShowDetail?: (akyo: AkyoData) => void;
+  /** Prioritize image loading for above-the-fold cards */
+  priority?: boolean;
 }
 
 /**
@@ -31,7 +33,13 @@ interface AkyoCardProps {
  * @param props - Component properties
  * @returns Stylized card element
  */
-export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoCardProps) {
+export function AkyoCard({
+  akyo,
+  lang = 'ja',
+  onToggleFavorite,
+  onShowDetail,
+  priority = false,
+}: AkyoCardProps) {
   const cloudflareImagesEnabled = process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true';
   const r2BaseUrl = (process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com').replace(
     /\/$/,
@@ -100,7 +108,8 @@ export function AkyoCard({ akyo, lang = 'ja', onToggleFavorite, onShowDetail }: 
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : 'auto'}
           placeholder="blur"
           blurDataURL={generateBlurDataURL(akyo.id)}
           onError={() => {
