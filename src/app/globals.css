@@ -1012,8 +1012,10 @@ select:focus {
   .detail-button .animate-bounce,
   .detail-button::after,
   .reference-sheet-button,
+  .favorite-btn,
   .rainbow-gradient,
   .floating {
     animation: none !important;
+    backdrop-filter: none !important;
   }
 }

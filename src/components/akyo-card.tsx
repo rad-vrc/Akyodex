@@ -140,29 +140,36 @@ export function AkyoCard({
       {/* カード情報 */}
       <div className="p-4 space-y-2">
         {/* ID と VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
-          {akyo.avatarUrl && (
+        <div className="flex items-center mb-1 relative">
+          <span className="text-sm font-bold text-gray-500 mr-auto">#{akyo.id}</span>
+
+          <div className="flex items-center relative">
+            {akyo.avatarUrl && (
+              <button
+                type="button"
+                onClick={handleVRChatClick}
+                className="vrchat-link-button flex-shrink-0 p-1 transition-all absolute right-full mr-2 sm:static sm:mr-0"
+                title={t('modal.vrchatOpen', lang)}
+                aria-label={t('modal.vrchatOpen', lang)}
+              >
+                <IconVRChat
+                  size="w-[95px] h-[95px] sm:w-12 sm:h-12 hover:w-[109px] hover:h-[109px] sm:hover:w-[53px] sm:hover:h-[53px] active:w-[95px] active:h-[95px] sm:active:w-[46px] sm:active:h-[46px] transition-all"
+                  className="text-black"
+                  overflow="visible"
+                />
+              </button>
+            )}
             <button
               type="button"
-              onClick={handleVRChatClick}
-              className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-[1.15] active:scale-100 origin-left -translate-x-[19px] translate-y-[5px] sm:translate-x-0 sm:translate-y-0 sm:hover:scale-110 sm:active:scale-95"
-              title={t('modal.vrchatOpen', lang)}
-              aria-label={t('modal.vrchatOpen', lang)}
+              onClick={handleDownloadClick}
+              className="reference-sheet-button flex-shrink-0 flex flex-col items-center justify-center p-2 sm:p-0"
+              title={t('card.download', lang)}
+              aria-label={t('card.download', lang)}
             >
-              <IconVRChat size="w-[95px] h-[95px] sm:w-12 sm:h-12" className="text-black" overflow="visible" />
+              <IconDownload className="w-[22px] h-[22px] sm:w-4 sm:h-4 mb-0.5 sm:mb-0" />
+              <span className="text-[13.5px] sm:text-xs leading-none">{t('card.downloadLabel', lang)}</span>
             </button>
-          )}
-          <button
-            type="button"
-            onClick={handleDownloadClick}
-            className="reference-sheet-button flex-shrink-0 scale-[1.35] origin-right mr-2 sm:mr-0 sm:origin-center sm:scale-90"
-            title={t('card.download', lang)}
-            aria-label={t('card.download', lang)}
-          >
-            <IconDownload />
-            <span className="text-[10px] sm:text-xs leading-none pt-0.5">{t('card.downloadLabel', lang)}</span>
-          </button>
+          </div>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}

@@ -66,7 +66,17 @@ const RENDER_CHUNK = 30;
 const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
-const isMobile = () => typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT;
+function useIsMobile() {
+  const [mobile, setMobile] = useState(true);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handler = () => setMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    handler();
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return mobile;
+}
 
 interface LanguageDatasetCacheEntry {
   items: AkyoData[];
@@ -193,6 +203,7 @@ export function ZukanClient({
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(MOBILE_RENDER_LIMIT);
+  const isMobile = useIsMobile();
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
@@ -335,22 +346,20 @@ export function ZukanClient({
 
   // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
-    const mobile = isMobile();
-
     // 1. Dynamic rendering limit for mobile vs desktop
-    if (mobile) {
-      setRenderLimit(MOBILE_RENDER_LIMIT);
-    } else {
+    if (!isMobile) {
       setRenderLimit(DESKTOP_RENDER_LIMIT);
     }
 
     // 2. Delay or disable MiniAkyoBg depending on device
     // Consider it disabled completely on mobile to save CPU rendering.
     let timer: number | undefined;
-    if (!mobile) {
+    if (!isMobile) {
       timer = window.setTimeout(() => {
         setIsMiniAkyoBgEnabled(true);
       }, MINI_AKYO_BG_DELAY_MS);
+    } else {
+      setIsMiniAkyoBgEnabled(false);
     }
 
     return () => {
@@ -358,7 +367,7 @@ export function ZukanClient({
         window.clearTimeout(timer);
       }
     };
-  }, []);
+  }, [isMobile]);
 
   const handleShowDetail = (akyo: AkyoData) => {
     setSelectedAkyo(akyo);
@@ -391,7 +400,7 @@ export function ZukanClient({
 
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
-    setRenderLimit(isMobile() ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
+    setRenderLimit(isMobile ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
   }, [
     searchQuery,
     selectedAttributes,
@@ -400,6 +409,7 @@ export function ZukanClient({
     favoritesOnly,
     sortAscending,
     randomMode,
+    isMobile,
   ]);
 
   // Keep filteredData.length in a ref so handleScroll stays stable
@@ -671,7 +681,15 @@ export function ZukanClient({
             onShowDetail={handleShowDetail}
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6"
+            style={{
+              minHeight: (!isMobile && filteredData.length > 0)
+                // 420px card height + 24px gap = 444px per row
+                ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / 5) * 444 - 24}px`
+                : undefined
+            }}
+          >
             {filteredData.slice(0, renderLimit).map((akyo, index) => (
               <AkyoCard
                 key={akyo.id}
