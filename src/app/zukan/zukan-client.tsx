@@ -263,7 +263,7 @@ export function ZukanClient({
               .map(normalizeAkyoItem)
               .filter((item): item is AkyoData => item !== undefined)
           : undefined;
-        if (!akyoItems) {
+        if (!akyoItems || akyoItems.length === 0) {
           // Sanitized summary — only safe metadata, no raw content
           const payloadType = jsonData === null ? 'null'
             : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
