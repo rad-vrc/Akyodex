@@ -229,6 +229,13 @@ export function ZukanClient({
     });
   }, [serverLang, initialData, categories, authors]);
 
+  // Clear stale refetch status when language returns to server-rendered baseline.
+  useEffect(() => {
+    if (lang === serverLang) {
+      setRefetchError(null);
+    }
+  }, [lang, serverLang]);
+
   // Refetch data when language differs from server-rendered language
   useEffect(() => {
     if (!isReady || !needsRefetch || lang === serverLang) return;
