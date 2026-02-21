@@ -192,7 +192,7 @@ export function ZukanClient({
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [renderLimit, setRenderLimit] = useState(DESKTOP_RENDER_LIMIT);
+  const [renderLimit, setRenderLimit] = useState(MOBILE_RENDER_LIMIT);
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
