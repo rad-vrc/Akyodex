@@ -302,7 +302,7 @@ export function ZukanClient({
         if (cancelled) return;
         if (err instanceof Error && err.name === 'AbortError') return;
         console.error('[ZukanClient] Failed to refetch language data:', err);
-        const message = err instanceof Error ? err.message : t('error.failedToLoadData', lang);
+        const message = err instanceof Error ? err.message : t('error.title', lang);
         if (dataLengthRef.current > 0) {
           setRefetchError(message);
           return;
@@ -533,22 +533,21 @@ export function ZukanClient({
 
       {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
-        {languageStatusMessage ? (
-          <div className="fixed left-4 right-4 top-20 z-[80] pointer-events-none sm:left-auto sm:right-6 sm:top-24 sm:w-[420px]">
-            <div
-              className={`rounded-xl px-4 py-3 text-sm shadow-sm ${
-                refetchError
-                  ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
-                  : 'border border-sky-300 bg-sky-50/95 text-sky-900'
-              }`}
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {languageStatusMessage}
-            </div>
+        <div className="fixed left-4 right-4 top-20 z-[80] pointer-events-none sm:left-auto sm:right-6 sm:top-24 sm:w-[420px]">
+          <div role="status" aria-live="polite" aria-atomic="true">
+            {languageStatusMessage ? (
+              <div
+                className={`rounded-xl px-4 py-3 text-sm shadow-sm ${
+                  refetchError
+                    ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
+                    : 'border border-sky-300 bg-sky-50/95 text-sky-900'
+                }`}
+              >
+                {languageStatusMessage}
+              </div>
+            ) : null}
           </div>
-        ) : null}
+        </div>
 
         {/* 検索バー */}
         <div className="akyo-card p-4 sm:p-6">

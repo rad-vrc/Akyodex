@@ -137,11 +137,6 @@ export const UI_TEXTS = {
     en: 'Language data is currently unavailable. Keeping the current view.',
     ko: '언어 데이터를 사용할 수 없어 현재 화면을 유지합니다.',
   },
-  'error.failedToLoadData': {
-    ja: 'データの読み込みに失敗しました',
-    en: 'Failed to load data',
-    ko: '데이터 로딩에 실패했습니다',
-  },
   'loading.text': {
     ja: 'データを読み込んでいます...',
     en: 'Loading data...',
