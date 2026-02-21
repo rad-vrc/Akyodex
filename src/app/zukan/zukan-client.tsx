@@ -44,12 +44,7 @@ export interface ZukanClientProps {
   serverLang: SupportedLanguage;
 }
 
-const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
-  ja: '/images/logo.webp',
-  en: '/images/logo-US.webp',
-  ko: '/images/logo-KO.webp',
-  default: '/images/logo-US.webp',
-};
+const LOGO_SRC = '/images/logo.webp';
 
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
@@ -513,7 +508,7 @@ export function ZukanClient({
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
-              src={LOGO_BY_LANG[lang] || LOGO_BY_LANG.default}
+              src={LOGO_SRC}
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
