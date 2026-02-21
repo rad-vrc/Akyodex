@@ -69,6 +69,57 @@ interface LanguageDatasetCacheEntry {
   authors: string[];
 }
 
+function normalizeAkyoItem(item: unknown): AkyoData | undefined {
+  if (!item || typeof item !== 'object') return undefined;
+
+  const raw = item as Record<string, unknown>;
+  const id = typeof raw.id === 'string' ? raw.id.trim() : '';
+  const avatarName = typeof raw.avatarName === 'string' ? raw.avatarName.trim() : '';
+  if (!id || !avatarName) return undefined;
+
+  const category =
+    typeof raw.category === 'string'
+      ? raw.category
+      : typeof raw.attribute === 'string'
+        ? raw.attribute
+        : '';
+  const comment =
+    typeof raw.comment === 'string'
+      ? raw.comment
+      : typeof raw.notes === 'string'
+        ? raw.notes
+        : '';
+  const author =
+    typeof raw.author === 'string'
+      ? raw.author
+      : typeof raw.creator === 'string'
+        ? raw.creator
+        : '';
+  const parsedCategory = Array.isArray(raw.parsedCategory)
+    ? raw.parsedCategory.filter((value): value is string => typeof value === 'string')
+    : undefined;
+  const parsedAuthor = Array.isArray(raw.parsedAuthor)
+    ? raw.parsedAuthor.filter((value): value is string => typeof value === 'string')
+    : undefined;
+
+  return {
+    id,
+    appearance: typeof raw.appearance === 'string' ? raw.appearance : '',
+    nickname: typeof raw.nickname === 'string' ? raw.nickname : '',
+    avatarName,
+    category,
+    comment,
+    author,
+    attribute: category,
+    notes: comment,
+    creator: author,
+    avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
+    isFavorite: typeof raw.isFavorite === 'boolean' ? raw.isFavorite : undefined,
+    parsedCategory: parsedCategory && parsedCategory.length > 0 ? parsedCategory : undefined,
+    parsedAuthor: parsedAuthor && parsedAuthor.length > 0 ? parsedAuthor : undefined,
+  };
+}
+
 function extractTaxonomy(
   akyoItems: AkyoData[]
 ): Pick<LanguageDatasetCacheEntry, 'categories' | 'authors'> {
@@ -208,9 +259,11 @@ export function ZukanClient({
             ? (jsonData as Record<string, unknown>).data
             : undefined;
         const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
-          ? (wrappedData as AkyoData[])
+          ? wrappedData
+              .map(normalizeAkyoItem)
+              .filter((item): item is AkyoData => item !== undefined)
           : undefined;
-        if (!akyoItems || akyoItems.length === 0) {
+        if (!akyoItems) {
           // Sanitized summary — only safe metadata, no raw content
           const payloadType = jsonData === null ? 'null'
             : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
@@ -518,6 +571,7 @@ export function ZukanClient({
               // 動的に更新されるカテゴリ/作者を使用
               categories={currentCategories}
               authors={currentAuthors}
+              // TODO: Remove legacy props once FilterPanel fully drops attribute/creator support.
               attributes={currentCategories}
               creators={currentAuthors}
               selectedAttributes={selectedAttributes}
