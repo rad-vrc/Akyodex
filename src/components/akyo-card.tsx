@@ -161,7 +161,7 @@ export function AkyoCard({
             aria-label={t('card.download', lang)}
           >
             <IconDownload />
-            <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
+            <span className="text-[10px] sm:text-xs leading-none pt-0.5">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>
 
