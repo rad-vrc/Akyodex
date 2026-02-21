@@ -432,8 +432,7 @@ export function ZukanClient({
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
-              preload
-              loading="eager"
+              unoptimized
               fetchPriority="high"
               sizes="(max-width: 640px) 260px, 320px"
               className="logo-animation h-10 sm:h-12 w-auto"
