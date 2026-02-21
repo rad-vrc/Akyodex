@@ -138,12 +138,14 @@ export function ZukanClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
+  const [refetchError, setRefetchError] = useState<string | null>(null);
 
   const languageDatasetCacheRef = useRef<Map<SupportedLanguage, LanguageDatasetCacheEntry>>(
     new Map([[serverLang, { items: initialData, categories, authors }]])
   );
   const tickingRef = useRef(false);
   const filteredLengthRef = useRef(0);
+  const dataLengthRef = useRef(data.length);
 
   // — Derived values —
   const stats = useMemo(
@@ -178,6 +180,7 @@ export function ZukanClient({
       refetchWithNewData(cachedDataset.items);
       setCurrentCategories(cachedDataset.categories);
       setCurrentAuthors(cachedDataset.authors);
+      setRefetchError(null);
       setError(null);
       return;
     }
@@ -188,6 +191,7 @@ export function ZukanClient({
     const fetchLanguageData = async () => {
       setLoading(true);
       setError(null);
+      setRefetchError(null);
       try {
         // Route language-switch requests through server API so
         // KV → JSON → CSV fallback strategy stays centralized.
@@ -217,6 +221,12 @@ export function ZukanClient({
           );
         }
 
+        if (akyoItems.length === 0) {
+          console.warn('[ZukanClient] Empty language payload, keeping existing dataset.');
+          setRefetchError('Language data is currently unavailable. Showing existing data.');
+          return;
+        }
+
         if (cancelled) return;
 
         refetchWithNewData(akyoItems);
@@ -232,7 +242,12 @@ export function ZukanClient({
         if (cancelled) return;
         if (err instanceof Error && err.name === 'AbortError') return;
         console.error('[ZukanClient] Failed to refetch language data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load data');
+        const message = err instanceof Error ? err.message : 'Failed to load data';
+        if (dataLengthRef.current > 0) {
+          setRefetchError(message);
+          return;
+        }
+        setError(message);
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -303,6 +318,11 @@ export function ZukanClient({
   useEffect(() => {
     filteredLengthRef.current = filteredData.length;
   }, [filteredData.length]);
+
+  // Keep latest renderable-data state for non-blocking refetch failures.
+  useEffect(() => {
+    dataLengthRef.current = data.length;
+  }, [data.length]);
 
   // Virtual scrolling: Infinite scroll handler (stable — no state/derived deps)
   const handleScroll = useCallback(() => {
@@ -453,6 +473,16 @@ export function ZukanClient({
 
       {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
+        {refetchError ? (
+          <div
+            className="rounded-xl border border-amber-300 bg-amber-50/95 px-4 py-3 text-sm text-amber-900 shadow-sm"
+            role="status"
+            aria-live="polite"
+          >
+            {refetchError}
+          </div>
+        ) : null}
+
         {/* 検索バー */}
         <div className="akyo-card p-4 sm:p-6">
           <SearchBar
