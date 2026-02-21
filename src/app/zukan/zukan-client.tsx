@@ -283,7 +283,7 @@ export function ZukanClient({
 
         if (akyoItems.length === 0) {
           console.warn('[ZukanClient] Empty language payload, keeping existing dataset.');
-          setRefetchError('Language data is currently unavailable. Showing existing data.');
+          setRefetchError(t('error.languageUnavailable', lang));
           return;
         }
 
@@ -302,7 +302,7 @@ export function ZukanClient({
         if (cancelled) return;
         if (err instanceof Error && err.name === 'AbortError') return;
         console.error('[ZukanClient] Failed to refetch language data:', err);
-        const message = err instanceof Error ? err.message : 'Failed to load data';
+        const message = err instanceof Error ? err.message : t('error.failedToLoadData', lang);
         if (dataLengthRef.current > 0) {
           setRefetchError(message);
           return;
@@ -543,6 +543,7 @@ export function ZukanClient({
               }`}
               role="status"
               aria-live="polite"
+              aria-atomic="true"
             >
               {languageStatusMessage}
             </div>
