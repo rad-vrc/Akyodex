@@ -150,7 +150,7 @@ export function AkyoCard({
               title={t('modal.vrchatOpen', lang)}
               aria-label={t('modal.vrchatOpen', lang)}
             >
-              <IconVRChat size="w-[86px] h-[86px] sm:w-12 sm:h-12" className="text-black" overflow="visible" />
+              <IconVRChat size="w-[95px] h-[95px] sm:w-12 sm:h-12" className="text-black" overflow="visible" />
             </button>
           )}
           <button
