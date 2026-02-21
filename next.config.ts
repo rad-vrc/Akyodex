@@ -8,8 +8,9 @@ const nextConfig: NextConfig = {
     // To enable Cloudflare Images:
     // 1. Set NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES=true
     // 2. Set NEXT_PUBLIC_CLOUDFLARE_IMAGES_ACCOUNT_HASH=your_account_hash
-    // 3. Change unoptimized to false
-    unoptimized: process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES !== 'true',
+    // Keep Next.js optimization enabled by default so responsive srcset works
+    // for R2/remote images even when Cloudflare Images is disabled.
+    unoptimized: false,
 
     // Use custom loader when Cloudflare Images is enabled
     ...(process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true' && {

@@ -202,6 +202,8 @@ button,
   border: 3px solid transparent !important;
   background: linear-gradient(white, white) padding-box,
     linear-gradient(135deg, var(--primary-pink), var(--primary-yellow)) border-box !important;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 
 .akyo-card:hover {
