@@ -59,10 +59,14 @@ const DeferredMiniAkyoBg = dynamic(
 );
 
 // Virtual scrolling constants
-const INITIAL_RENDER_COUNT = 20;
+const MOBILE_BREAKPOINT = 768;
+const DESKTOP_RENDER_LIMIT = 20;
+const MOBILE_RENDER_LIMIT = 12;
 const RENDER_CHUNK = 30;
 const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
+
+const isMobile = () => typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT;
 
 interface LanguageDatasetCacheEntry {
   items: AkyoData[];
@@ -188,7 +192,7 @@ export function ZukanClient({
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT); // Initially set to constant, updated in useEffect
+  const [renderLimit, setRenderLimit] = useState(() => isMobile() ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
@@ -332,16 +336,15 @@ export function ZukanClient({
   // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
     // 1. Dynamic rendering limit for mobile vs desktop
-    const isMobile = window.innerWidth <= 768; // Tailwind md breakpoint
-    if (isMobile) {
-      setRenderLimit(12);
+    if (isMobile()) {
+      setRenderLimit(MOBILE_RENDER_LIMIT);
     } else {
-      setRenderLimit(20);
+      setRenderLimit(DESKTOP_RENDER_LIMIT);
     }
 
     // 2. Delay or disable MiniAkyoBg depending on device
     // Consider it disabled completely on mobile to save CPU rendering.
-    if (!isMobile) {
+    if (!isMobile()) {
       const timer = window.setTimeout(() => {
         setIsMiniAkyoBgEnabled(true);
       }, MINI_AKYO_BG_DELAY_MS);
@@ -383,8 +386,7 @@ export function ZukanClient({
 
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
-    const isMobile = window.innerWidth <= 768;
-    setRenderLimit(isMobile ? 12 : 20);
+    setRenderLimit(isMobile() ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
   }, [
     searchQuery,
     selectedAttributes,
@@ -559,8 +561,8 @@ export function ZukanClient({
             {languageStatusMessage ? (
               <div
                 className={`rounded-xl px-4 py-3 text-sm shadow-sm ${refetchError
-                    ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
-                    : 'border border-sky-300 bg-sky-50/95 text-sky-900'
+                  ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
+                  : 'border border-sky-300 bg-sky-50/95 text-sky-900'
                   }`}
               >
                 {languageStatusMessage}
