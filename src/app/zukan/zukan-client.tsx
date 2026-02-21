@@ -192,7 +192,7 @@ export function ZukanClient({
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [renderLimit, setRenderLimit] = useState(() => isMobile() ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
+  const [renderLimit, setRenderLimit] = useState(DESKTOP_RENDER_LIMIT);
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
@@ -335,8 +335,10 @@ export function ZukanClient({
 
   // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
+    const mobile = isMobile();
+
     // 1. Dynamic rendering limit for mobile vs desktop
-    if (isMobile()) {
+    if (mobile) {
       setRenderLimit(MOBILE_RENDER_LIMIT);
     } else {
       setRenderLimit(DESKTOP_RENDER_LIMIT);
@@ -344,15 +346,18 @@ export function ZukanClient({
 
     // 2. Delay or disable MiniAkyoBg depending on device
     // Consider it disabled completely on mobile to save CPU rendering.
-    if (!isMobile()) {
-      const timer = window.setTimeout(() => {
+    let timer: number | undefined;
+    if (!mobile) {
+      timer = window.setTimeout(() => {
         setIsMiniAkyoBgEnabled(true);
       }, MINI_AKYO_BG_DELAY_MS);
-
-      return () => {
-        window.clearTimeout(timer);
-      };
     }
+
+    return () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer);
+      }
+    };
   }, []);
 
   const handleShowDetail = (akyo: AkyoData) => {
