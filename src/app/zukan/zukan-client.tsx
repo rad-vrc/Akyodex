@@ -203,21 +203,17 @@ export function ZukanClient({
           jsonData && typeof jsonData === 'object'
             ? (jsonData as Record<string, unknown>).data
             : undefined;
-        // Handle both array format and wrapped format ({ data: [...] })
-        const akyoItems: AkyoData[] | undefined = Array.isArray(jsonData)
-          ? (jsonData as AkyoData[])
-          : Array.isArray(wrappedData)
-            ? (wrappedData as AkyoData[])
-            : undefined;
+        const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
+          ? (wrappedData as AkyoData[])
+          : undefined;
         if (!akyoItems) {
           // Sanitized summary — only safe metadata, no raw content
           const payloadType = jsonData === null ? 'null'
-            : Array.isArray(jsonData) ? `array(${(jsonData as unknown[]).length})`
             : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
             : typeof jsonData;
 
           throw new Error(
-            `[ZukanClient] Invalid JSON format: expected AkyoData[] or { data: AkyoData[] }, got ${payloadType}`
+            `[ZukanClient] Invalid JSON format: expected { data: AkyoData[] }, got ${payloadType}`
           );
         }
 
@@ -434,8 +430,6 @@ export function ZukanClient({
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
-              preload
-              loading="eager"
               fetchPriority="high"
               sizes="(max-width: 640px) 260px, 320px"
               className="logo-animation h-10 sm:h-12 w-auto"
@@ -492,10 +486,10 @@ export function ZukanClient({
           <div id="zukan-filter-panel" className={isFilterPanelOpen ? 'block sm:block' : 'hidden sm:block'}>
             <FilterPanel
               // 動的に更新されるカテゴリ/作者を使用
-              categories={currentCategories || categories || attributes}
-              authors={currentAuthors || authors || creators}
-              attributes={currentCategories || categories || attributes}
-              creators={currentAuthors || authors || creators}
+              categories={currentCategories}
+              authors={currentAuthors}
+              attributes={currentCategories}
+              creators={currentAuthors}
               selectedAttributes={selectedAttributes}
               selectedCreators={selectedCreators}
               categoryMatchMode={categoryMatchMode}

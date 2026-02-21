@@ -1,7 +1,9 @@
 import { jsonError, jsonSuccess } from '@/lib/api-helpers';
 import { getAkyoData } from '@/lib/akyo-data';
-import { isValidLanguage, type SupportedLanguage } from '@/lib/i18n';
+import { isValidLanguage } from '@/lib/i18n';
 import { connection } from 'next/server';
+
+export const runtime = 'nodejs';
 
 /**
  * GET /api/akyo-data?lang=ja|en|ko
@@ -20,7 +22,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const lang = langParam as SupportedLanguage;
+    const lang = langParam;
     const data = await getAkyoData(lang);
 
     return jsonSuccess({
@@ -33,4 +35,3 @@ export async function GET(request: Request) {
     return jsonError('Failed to load Akyo data', 500);
   }
 }
-
