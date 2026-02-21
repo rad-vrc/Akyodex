@@ -188,7 +188,7 @@ export function ZukanClient({
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT);
+  const [renderLimit, setRenderLimit] = useState(INITIAL_RENDER_COUNT); // Initially set to constant, updated in useEffect
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
@@ -274,14 +274,14 @@ export function ZukanClient({
             : undefined;
         const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
           ? wrappedData
-              .map(normalizeAkyoItem)
-              .filter((item): item is AkyoData => item !== undefined)
+            .map(normalizeAkyoItem)
+            .filter((item): item is AkyoData => item !== undefined)
           : undefined;
         if (!akyoItems) {
           // Sanitized summary — only safe metadata, no raw content
           const payloadType = jsonData === null ? 'null'
             : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
-            : typeof jsonData;
+              : typeof jsonData;
 
           throw new Error(
             `[ZukanClient] Empty or invalid JSON: expected { data: AkyoData[] } with items, got ${payloadType}`
@@ -329,14 +329,27 @@ export function ZukanClient({
     };
   }, [isReady, needsRefetch, lang, serverLang, refetchWithNewData, setLoading, setError]);
 
+  // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setIsMiniAkyoBgEnabled(true);
-    }, MINI_AKYO_BG_DELAY_MS);
+    // 1. Dynamic rendering limit for mobile vs desktop
+    const isMobile = window.innerWidth <= 768; // Tailwind md breakpoint
+    if (isMobile) {
+      setRenderLimit(12);
+    } else {
+      setRenderLimit(20);
+    }
 
-    return () => {
-      window.clearTimeout(timer);
-    };
+    // 2. Delay or disable MiniAkyoBg depending on device
+    // Consider it disabled completely on mobile to save CPU rendering.
+    if (!isMobile) {
+      const timer = window.setTimeout(() => {
+        setIsMiniAkyoBgEnabled(true);
+      }, MINI_AKYO_BG_DELAY_MS);
+
+      return () => {
+        window.clearTimeout(timer);
+      };
+    }
   }, []);
 
   const handleShowDetail = (akyo: AkyoData) => {
@@ -370,7 +383,8 @@ export function ZukanClient({
 
   // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
-    setRenderLimit(INITIAL_RENDER_COUNT);
+    const isMobile = window.innerWidth <= 768;
+    setRenderLimit(isMobile ? 12 : 20);
   }, [
     searchQuery,
     selectedAttributes,
@@ -517,7 +531,6 @@ export function ZukanClient({
               alt={t('logo.alt', lang)}
               width={1980}
               height={305}
-              unoptimized
               fetchPriority="high"
               sizes="(max-width: 640px) 260px, 320px"
               className="logo-animation h-10 sm:h-12 w-auto"
@@ -545,11 +558,10 @@ export function ZukanClient({
           <div role="status" aria-live="polite" aria-atomic="true">
             {languageStatusMessage ? (
               <div
-                className={`rounded-xl px-4 py-3 text-sm shadow-sm ${
-                  refetchError
+                className={`rounded-xl px-4 py-3 text-sm shadow-sm ${refetchError
                     ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
                     : 'border border-sky-300 bg-sky-50/95 text-sky-900'
-                }`}
+                  }`}
               >
                 {languageStatusMessage}
               </div>
