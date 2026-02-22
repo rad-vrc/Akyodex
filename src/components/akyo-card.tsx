@@ -139,38 +139,38 @@ export function AkyoCard({
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID と VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center justify-between mb-1 gap-2">
-          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
-
-          <div className="flex items-center gap-1 sm:gap-1.5 max-sm:flex-wrap max-sm:justify-end">
-            {akyo.avatarUrl && (
-              <button
-                type="button"
-                onClick={handleVRChatClick}
-                className="vrchat-link-button flex-shrink-0 p-1 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px] max-sm:hover:scale-105"
-                title={t('modal.vrchatOpen', lang)}
-                aria-label={t('modal.vrchatOpen', lang)}
-              >
-                <IconVRChat
-                  size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
-                  className="text-black flex-shrink-0"
-                  overflow="visible"
-                />
-              </button>
-            )}
+        {/* VRChatリンク と 三面図DLボタン */}
+        <div className="flex items-center mb-1">
+          {akyo.avatarUrl && (
             <button
               type="button"
-              onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 scale-90 max-sm:scale-100 max-sm:origin-right max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center"
-              title={t('card.download', lang)}
-              aria-label={t('card.download', lang)}
+              onClick={handleVRChatClick}
+              className="vrchat-link-button -ml-0.5 flex-shrink-0 p-0 transition-transform origin-left translate-y-[2px] scale-[1.1] hover:scale-[1.15] active:scale-[1.05] flex items-center justify-start min-h-[44px] min-w-[44px]"
+              title={t('modal.vrchatOpen', lang)}
+              aria-label={t('modal.vrchatOpen', lang)}
             >
-              <IconImage size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
-              <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
-              <span className="sm:hidden text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">DL</span>
+              <IconVRChat
+                size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
+                className="text-black flex-shrink-0"
+                overflow="visible"
+              />
             </button>
-          </div>
+          )}
+          <button
+            type="button"
+            onClick={handleDownloadClick}
+            className="reference-sheet-button ml-auto flex-shrink-0 origin-right scale-90 max-sm:scale-[1.2]"
+            title={t('card.download', lang)}
+            aria-label={t('card.download', lang)}
+          >
+            <IconDownload size="w-4 h-4" />
+            <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+          </button>
+        </div>
+
+        {/* ID（通称の直上） */}
+        <div className="mb-1">
+          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
