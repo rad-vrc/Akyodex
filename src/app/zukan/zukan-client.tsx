@@ -75,14 +75,14 @@ function useResponsiveLayout() {
       const mobile = w <= MOBILE_BREAKPOINT;
 
       let cols: number;
-      if (mobile) {
-        cols = 1;
-      } else if (w >= 1024) {
+      if (w >= 1024) {
         cols = 5;
       } else if (w >= 768) {
         cols = 3;
-      } else {
+      } else if (w >= 640) {
         cols = 2;
+      } else {
+        cols = 1;
       }
 
       setLayout({
