@@ -1040,4 +1040,9 @@ select:focus {
   .logo-animation {
     filter: none !important;
   }
+
+  .logo-animation:hover {
+    filter: none !important;
+    transform: none !important;
+  }
 }

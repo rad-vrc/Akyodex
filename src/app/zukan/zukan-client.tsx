@@ -67,12 +67,18 @@ const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
 function useResponsiveLayout() {
-  const [layout, setLayout] = useState({ isMobile: true, gridCols: 1 });
+  // SSR-intentional behavior: isMobile is undefined during SSR/initial render
+  // to avoid mismatched HTML. Visual stability is maintained by CSS (aspect ratio).
+  // The actual device width is determined on client mount.
+  const [layout, setLayout] = useState<{ isMobile: boolean | undefined; gridCols: number }>({
+    isMobile: undefined,
+    gridCols: 1,
+  });
 
   useEffect(() => {
     const handler = () => {
       const w = window.innerWidth;
-      const mobile = w <= MOBILE_BREAKPOINT;
+      const mobile = w < MOBILE_BREAKPOINT;
 
       let cols: number;
       if (w >= 1024) {
@@ -423,7 +429,6 @@ export function ZukanClient({
     });
   }, [data, isModalOpen]);
 
-  // Virtual scrolling: Reset render limit when filters change
   useEffect(() => {
     setRenderLimit(isMobile ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
   }, [
@@ -710,7 +715,7 @@ export function ZukanClient({
           <div
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6"
             style={{
-              minHeight: (!isMobile && filteredData.length > 0)
+              minHeight: (isMobile === false && filteredData.length > 0)
                 // 420px card height + 24px gap = 444px per row
                 ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / gridCols) * 444 - 24}px`
                 : undefined
