@@ -12,8 +12,6 @@
  */
 
 import { AkyoCard } from '@/components/akyo-card';
-import { AkyoDetailModal } from '@/components/akyo-detail-modal';
-import { AkyoList } from '@/components/akyo-list';
 import { FilterPanel } from '@/components/filter-panel';
 import { IconCog, IconGrid, IconList } from '@/components/icons';
 import { LanguageToggle } from '@/components/language-toggle';
@@ -55,6 +53,14 @@ const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 const DeferredMiniAkyoBg = dynamic(
   () => import('@/components/mini-akyo-bg').then((mod) => mod.MiniAkyoBg),
+  { ssr: false }
+);
+const DeferredAkyoDetailModal = dynamic(
+  () => import('@/components/akyo-detail-modal').then((mod) => mod.AkyoDetailModal),
+  { ssr: false }
+);
+const DeferredAkyoList = dynamic(
+  () => import('@/components/akyo-list').then((mod) => mod.AkyoList),
   { ssr: false }
 );
 
@@ -700,7 +706,7 @@ export function ZukanClient({
             <p className="text-[var(--text-secondary)]">{t('notfound.message', lang)}</p>
           </div>
         ) : viewMode === 'list' ? (
-          <AkyoList
+          <DeferredAkyoList
             data={filteredData.slice(0, renderLimit)}
             lang={lang}
             onToggleFavorite={toggleFavorite}
@@ -731,13 +737,15 @@ export function ZukanClient({
       </main>
 
       {/* Detail Modal */}
-      <AkyoDetailModal
-        akyo={selectedAkyo}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onToggleFavorite={handleModalFavoriteToggle}
-        lang={lang}
-      />
+      {isModalOpen || selectedAkyo ? (
+        <DeferredAkyoDetailModal
+          akyo={selectedAkyo}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onToggleFavorite={handleModalFavoriteToggle}
+          lang={lang}
+        />
+      ) : null}
 
       {/* Language Toggle Button - Top */}
       <LanguageToggle initialLang={lang} />

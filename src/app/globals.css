@@ -209,6 +209,14 @@ button,
   box-shadow: var(--card-hover-shadow);
 }
 
+/* デスクトップ向け: スクロール外のカード要素のGPU/CPU計算を省略してTBTを劇的に改善 */
+@media (min-width: 769px) {
+  .akyo-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 420px;
+  }
+}
+
 /* 画像のスタイル */
 .akyo-card img {
   border-radius: 15px !important;
