@@ -143,18 +143,18 @@ export function AkyoCard({
         <div className="flex items-center justify-between mb-1 gap-2">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5">
             {akyo.avatarUrl && (
               <button
                 type="button"
                 onClick={handleVRChatClick}
-                className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
+                className="vrchat-link-button flex-shrink-0 p-1 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px]"
                 title={t('modal.vrchatOpen', lang)}
                 aria-label={t('modal.vrchatOpen', lang)}
               >
                 <IconVRChat
                   size="w-[53px] h-[53px]"
-                  className="text-black transition-transform"
+                  className="text-black"
                   overflow="visible"
                 />
               </button>
@@ -162,12 +162,14 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 scale-90 md:-ml-[2px]"
+              className="reference-sheet-button flex-shrink-0"
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
-              <IconDownload className="w-4 h-4 mb-0.5" />
-              <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+              <div className="flex items-center gap-1 transform scale-90 origin-center justify-center">
+                <IconDownload size="w-4 h-4" className="mb-0.5" />
+                <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+              </div>
             </button>
           </div>
         </div>
