@@ -500,6 +500,18 @@ export function IconDownload({ size, className, ...props }: IconProps) {
   );
 }
 
+/**
+ * Image/photo icon
+ * @param props - Icon properties
+ */
+export function IconImage({ size, className, ...props }: IconProps) {
+  return (
+    <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
+      <path d="M64 80c-17.7 0-32 14.3-32 32V400c0 17.7 14.3 32 32 32H448c17.7 0 32-14.3 32-32V112c0-17.7-14.3-32-32-32H64zM0 112C0 76.7 28.7 48 64 48H448c35.3 0 64 28.7 64 64V400c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V112zM160 224a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM208 256L152 344H360L248 232c-6.2-6.2-16.4-6.2-22.6 0L208 249.4V256z" />
+    </Icon>
+  );
+}
+
 /** 
  * Trash icon 
  * @param props - Icon properties
