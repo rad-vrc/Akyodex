@@ -143,18 +143,18 @@ export function AkyoCard({
         <div className="flex items-center justify-between mb-1 gap-2">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
 
-          <div className="flex items-center gap-1 sm:gap-2 max-sm:flex-wrap max-sm:justify-end">
+          <div className="flex items-center gap-1 sm:gap-2">
             {akyo.avatarUrl && (
               <button
                 type="button"
                 onClick={handleVRChatClick}
-                className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95 flex items-center justify-center max-sm:hover:scale-105"
+                className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
                 title={t('modal.vrchatOpen', lang)}
                 aria-label={t('modal.vrchatOpen', lang)}
               >
                 <IconVRChat
-                  size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
-                  className="text-black transition-transform flex-shrink-0"
+                  size="w-12 h-12"
+                  className="text-black transition-transform"
                   overflow="visible"
                 />
               </button>
@@ -162,12 +162,12 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 scale-90 max-sm:scale-100 max-sm:origin-right max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center"
+              className="reference-sheet-button flex-shrink-0 scale-90"
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
-              <IconDownload size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
-              <span className="text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">{t('card.downloadLabel', lang)}</span>
+              <IconDownload className="w-4 h-4 mb-0.5" />
+              <span className="text-xs">{t('card.downloadLabel', lang)}</span>
             </button>
           </div>
         </div>
