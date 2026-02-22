@@ -430,7 +430,7 @@ export function ZukanClient({
   }, [data, isModalOpen]);
 
   useEffect(() => {
-    setRenderLimit(isMobile ? MOBILE_RENDER_LIMIT : DESKTOP_RENDER_LIMIT);
+    setRenderLimit(isMobile === false ? DESKTOP_RENDER_LIMIT : MOBILE_RENDER_LIMIT);
   }, [
     searchQuery,
     selectedAttributes,
