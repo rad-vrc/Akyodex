@@ -563,6 +563,13 @@ select:focus {
   text-decoration: none !important;
 }
 
+/* モバイル向けにパディングを上書き (max-sm:p-1の意図を反映するため) */
+@media (max-width: 640px) {
+  .reference-sheet-button {
+    padding: 0.25rem !important;
+  }
+}
+
 .reference-sheet-button:hover {
   transform: translateY(-2px) scale(1.05) !important;
   box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4), 0 8px 20px rgba(255, 217, 61, 0.3),
@@ -1012,9 +1019,13 @@ select:focus {
   .detail-button .animate-bounce,
   .detail-button::after,
   .reference-sheet-button,
-  .favorite-btn,
   .rainbow-gradient,
   .floating {
+    animation: none !important;
+  }
+
+  /* お気に入りボタン特有の重い処理を停止 */
+  .favorite-btn {
     animation: none !important;
     backdrop-filter: none !important;
   }

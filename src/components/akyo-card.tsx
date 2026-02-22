@@ -140,21 +140,21 @@ export function AkyoCard({
       {/* カード情報 */}
       <div className="p-4 space-y-2">
         {/* ID と VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center mb-1 relative">
-          <span className="text-sm font-bold text-gray-500 mr-auto">#{akyo.id}</span>
+        <div className="flex items-center justify-between mb-1 gap-2">
+          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
 
-          <div className="flex items-center relative">
+          <div className="flex items-center gap-1 sm:gap-2 max-sm:flex-wrap max-sm:justify-end">
             {akyo.avatarUrl && (
               <button
                 type="button"
                 onClick={handleVRChatClick}
-                className="vrchat-link-button flex-shrink-0 p-1 transition-all absolute right-full mr-2 sm:static sm:mr-0"
+                className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95 flex items-center justify-center max-sm:hover:scale-105"
                 title={t('modal.vrchatOpen', lang)}
                 aria-label={t('modal.vrchatOpen', lang)}
               >
                 <IconVRChat
-                  size="w-[95px] h-[95px] sm:w-12 sm:h-12 hover:w-[109px] hover:h-[109px] sm:hover:w-[53px] sm:hover:h-[53px] active:w-[95px] active:h-[95px] sm:active:w-[46px] sm:active:h-[46px] transition-all"
-                  className="text-black"
+                  size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
+                  className="text-black transition-transform flex-shrink-0"
                   overflow="visible"
                 />
               </button>
@@ -162,12 +162,12 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 flex flex-col items-center justify-center p-2 sm:p-0"
+              className="reference-sheet-button flex-shrink-0 scale-90 max-sm:scale-100 max-sm:origin-right max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center"
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
-              <IconDownload className="w-[22px] h-[22px] sm:w-4 sm:h-4 mb-0.5 sm:mb-0" />
-              <span className="text-[13.5px] sm:text-xs leading-none">{t('card.downloadLabel', lang)}</span>
+              <IconDownload size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
+              <span className="text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">{t('card.downloadLabel', lang)}</span>
             </button>
           </div>
         </div>

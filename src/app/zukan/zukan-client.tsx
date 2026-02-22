@@ -66,16 +66,46 @@ const RENDER_CHUNK = 30;
 const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
-function useIsMobile() {
-  const [mobile, setMobile] = useState(true);
+function useResponsiveLayout() {
+  const [layout, setLayout] = useState({ isMobile: true, gridCols: 1 });
+
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const handler = () => setMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    const handler = () => {
+      const w = window.innerWidth;
+      const mobile = w <= MOBILE_BREAKPOINT;
+
+      let cols: number;
+      if (w >= 1024) {
+        cols = 5;
+      } else if (w >= 768) {
+        cols = 3;
+      } else if (w >= 640) {
+        cols = 2;
+      } else {
+        cols = 1;
+      }
+
+      setLayout({
+        isMobile: mobile,
+        gridCols: cols,
+      });
+    };
     handler();
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+
+    let timeoutId: number;
+    const debouncedHandler = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(handler, 150);
+    };
+
+    window.addEventListener('resize', debouncedHandler);
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener('resize', debouncedHandler);
+    };
   }, []);
-  return mobile;
+
+  return layout;
 }
 
 interface LanguageDatasetCacheEntry {
@@ -202,8 +232,8 @@ export function ZukanClient({
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [renderLimit, setRenderLimit] = useState(MOBILE_RENDER_LIMIT);
-  const isMobile = useIsMobile();
+  const [renderLimit, setRenderLimit] = useState(DESKTOP_RENDER_LIMIT);
+  const { isMobile, gridCols } = useResponsiveLayout();
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
@@ -346,12 +376,7 @@ export function ZukanClient({
 
   // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
-    // 1. Dynamic rendering limit for mobile vs desktop
-    if (!isMobile) {
-      setRenderLimit(DESKTOP_RENDER_LIMIT);
-    }
-
-    // 2. Delay or disable MiniAkyoBg depending on device
+    // Delay or disable MiniAkyoBg depending on device
     // Consider it disabled completely on mobile to save CPU rendering.
     let timer: number | undefined;
     if (!isMobile) {
@@ -686,7 +711,7 @@ export function ZukanClient({
             style={{
               minHeight: (!isMobile && filteredData.length > 0)
                 // 420px card height + 24px gap = 444px per row
-                ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / 5) * 444 - 24}px`
+                ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / gridCols) * 444 - 24}px`
                 : undefined
             }}
           >
