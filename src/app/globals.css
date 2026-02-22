@@ -973,7 +973,10 @@ select:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root *, :root *::before, :root *::after {
+
+  :root *,
+  :root *::before,
+  :root *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     animation-delay: 0ms !important;
@@ -998,5 +1001,21 @@ select:focus {
   .akyo-card img {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* モバイル向けパフォーマンス最適化: 重い無限アニメーションと影を停止 */
+@media (max-width: 768px) {
+
+  .logo-text,
+  .detail-button,
+  .detail-button .animate-bounce,
+  .detail-button::after,
+  .reference-sheet-button,
+  .favorite-btn,
+  .rainbow-gradient,
+  .floating {
+    animation: none !important;
+    backdrop-filter: none !important;
   }
 }
