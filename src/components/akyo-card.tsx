@@ -139,10 +139,8 @@ export function AkyoCard({
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
-        {/* ID と VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center justify-between mb-1 gap-2">
-          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
-
+        {/* VRChatリンク と 三面図DLボタン */}
+        <div className="flex items-center justify-end mb-1 gap-2">
           <div className="flex items-center gap-1 sm:gap-1.5 max-sm:flex-wrap max-sm:justify-end">
             {akyo.avatarUrl && (
               <button
@@ -171,6 +169,11 @@ export function AkyoCard({
               <span className="sm:hidden text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">DL</span>
             </button>
           </div>
+        </div>
+
+        {/* ID（通称の直上） */}
+        <div className="mb-1">
+          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
