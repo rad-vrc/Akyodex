@@ -11,7 +11,8 @@ const mPlusRounded = M_PLUS_Rounded_1c({
   subsets: ['latin'],
   weight: ['400', '700'],
   display: 'swap',
-  preload: false,
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const viewport: Viewport = {
@@ -100,7 +101,11 @@ export default async function RootLayout({
 
   return (
     <html lang="ja" suppressHydrationWarning>
-      <head suppressHydrationWarning />
+      <head suppressHydrationWarning>
+        {/* Preconnect to image CDN to reduce LCP resource load delay */}
+        <link rel="preconnect" href="https://images.akyodex.com" />
+        <link rel="dns-prefetch" href="https://images.akyodex.com" />
+      </head>
       <body className={`${mPlusRounded.variable} antialiased`}>
         {children}
 
@@ -127,4 +132,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
