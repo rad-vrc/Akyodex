@@ -1,6 +1,6 @@
 'use client';
 
-import { IconImage, IconVRChat } from '@/components/icons';
+import { IconDownload, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
