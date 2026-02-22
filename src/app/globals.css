@@ -121,19 +121,6 @@ button,
   letter-spacing: 0 !important;
 }
 
-/* プライマリボタン */
-.bg-purple-600,
-.bg-purple-500 {
-  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange)) !important;
-  border: 2px solid transparent !important;
-}
-
-.bg-purple-600:hover,
-.bg-purple-500:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
-}
-
 /* Akyoカード */
 .akyo-card {
   background: white !important;
@@ -671,120 +658,6 @@ select:focus {
   }
 }
 
-/* Dify Chatbot Custom Styling */
-#dify-chatbot-container {
-  position: fixed;
-}
-
-#dify-chatbot-container[data-dify-load-state='error'] {
-  width: min(20rem, calc(100vw - 2rem));
-  max-width: 20rem;
-}
-
-#dify-chatbot-container.dify-chatbot-load-failed::before {
-  content: 'Chat temporarily unavailable. Please try again later.';
-  display: block;
-  padding: 0.75rem 0.875rem;
-  border-radius: 0.75rem;
-  background: rgba(17, 24, 39, 0.88);
-  color: #ffffff;
-  font-size: 0.8125rem;
-  line-height: 1.35;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(4px);
-}
-
-#dify-chatbot-bubble-button {
-  bottom: 24px !important;
-  right: 24px !important;
-  width: 56px !important;
-  height: 56px !important;
-  background-color: #ee7800 !important;
-  box-shadow: 0 4px 12px rgba(238, 120, 0, 0.4) !important;
-  border: 3px solid white !important;
-  transition: all 0.3s ease !important;
-}
-
-#dify-chatbot-bubble-button:hover {
-  transform: translateY(-4px) scale(1.05) !important;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6) !important;
-}
-
-@media (max-width: 640px) {
-  #dify-chatbot-bubble-button {
-    bottom: 20px !important;
-    right: 16px !important;
-    width: 48px !important;
-    height: 48px !important;
-  }
-}
-
-#dify-chatbot-bubble-window {
-  width: 24rem !important;
-  height: 40rem !important;
-  position: fixed !important;
-  inset: auto 1rem 1rem auto !important;
-}
-
-@media (max-width: 640px) {
-  #dify-chatbot-bubble-window {
-    inset: auto 1rem 1rem auto !important;
-  }
-}
-
-/* Dify Chatbot Loading Spinner - Make it more visible */
-#dify-chatbot-bubble-button svg,
-#dify-chatbot-bubble-button .loading-spinner,
-#dify-chatbot-bubble-button [class*='loading'],
-#dify-chatbot-bubble-button [class*='spinner'] {
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) !important;
-  animation: enhanced-spin 1s linear infinite !important;
-}
-
-/* Stop rotation animation when chat window is open */
-#dify-chatbot-bubble-button.chat-window-open svg,
-#dify-chatbot-bubble-button.chat-window-open .loading-spinner,
-#dify-chatbot-bubble-button.chat-window-open [class*='loading'],
-#dify-chatbot-bubble-button.chat-window-open [class*='spinner'] {
-  animation: none !important;
-}
-
-/* Enhanced spinning animation */
-@keyframes enhanced-spin {
-  0% {
-    transform: rotate(0deg) scale(1.2);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
-  }
-
-  50% {
-    transform: rotate(180deg) scale(1.3);
-    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1));
-  }
-
-  100% {
-    transform: rotate(360deg) scale(1.2);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
-  }
-}
-
-/* Add a pulsing background to the button during loading */
-#dify-chatbot-bubble-button.loading,
-#dify-chatbot-bubble-button[data-loading='true'] {
-  animation: pulse-glow 1.5s ease-in-out infinite !important;
-}
-
-@keyframes pulse-glow {
-
-  0%,
-  100% {
-    box-shadow: 0 0 20px 5px rgba(238, 120, 0, 0.6) !important;
-  }
-
-  50% {
-    box-shadow: 0 0 30px 10px rgba(238, 120, 0, 0.9) !important;
-  }
-}
-
 /* Modal Animations */
 @keyframes fadeInScale {
   0% {
@@ -805,42 +678,6 @@ select:focus {
 .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-}
-
-/* Admin Panel Styles (Finder Mode) */
-.admin-body {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-}
-
-/* Loading Spinner */
-.loading-spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Drop Zone */
-.drop-zone {
-  border: 2px dashed #cbd5e0;
-  transition: all 0.3s;
-}
-
-.drop-zone.dragover {
-  border-color: #667eea;
-  background-color: #f7fafc;
 }
 
 /* Service Worker Update Notification Animation */
@@ -873,14 +710,6 @@ select:focus {
     scroll-behavior: auto !important;
   }
 
-  #dify-chatbot-bubble-button,
-  #dify-chatbot-bubble-button:hover,
-  #dify-chatbot-bubble-button.loading,
-  #dify-chatbot-bubble-button[data-loading='true'],
-  #dify-chatbot-bubble-button svg,
-  #dify-chatbot-bubble-button .loading-spinner,
-  #dify-chatbot-bubble-button [class*='loading'],
-  #dify-chatbot-bubble-button [class*='spinner'],
   .detail-button,
   .detail-button .animate-bounce,
   .detail-button::after,
