@@ -162,7 +162,7 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 scale-90"
+              className="reference-sheet-button flex-shrink-0 scale-90 md:-ml-[2px]"
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
