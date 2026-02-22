@@ -166,7 +166,7 @@ export function AkyoCard({
           >
             <IconDownload className="max-sm:w-[22px] max-sm:h-[22px] max-sm:mb-0.5" />
             <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
-            <span className="sm:hidden text-[11px] leading-none pt-0.5">{t('card.downloadLabel', lang)}</span>
+            <span className="sm:hidden text-[12px] leading-none pt-0.5">{t('card.downloadLabel', lang)}</span>
           </button>
         </div>
 

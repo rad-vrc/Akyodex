@@ -69,13 +69,42 @@ const MINI_AKYO_BG_DELAY_MS = 2500;
 function useIsMobile() {
   const [mobile, setMobile] = useState(true);
   useEffect(() => {
-    if (typeof window === 'undefined') return;
     const handler = () => setMobile(window.innerWidth <= MOBILE_BREAKPOINT);
     handler();
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    let timeoutId: number;
+    const debouncedHandler = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(handler, 150);
+    };
+    window.addEventListener('resize', debouncedHandler);
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener('resize', debouncedHandler);
+    };
   }, []);
   return mobile;
+}
+
+function useGridColumns(isMobile: boolean) {
+  const [cols, setCols] = useState(5);
+  useEffect(() => {
+    const handler = () => {
+      const w = window.innerWidth;
+      setCols(isMobile ? 1 : w >= 1024 ? 5 : w >= 768 ? 3 : 2);
+    };
+    handler();
+    let timeoutId: number;
+    const debouncedHandler = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(handler, 150);
+    };
+    window.addEventListener('resize', debouncedHandler);
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener('resize', debouncedHandler);
+    };
+  }, [isMobile]);
+  return cols;
 }
 
 interface LanguageDatasetCacheEntry {
@@ -204,6 +233,7 @@ export function ZukanClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(MOBILE_RENDER_LIMIT);
   const isMobile = useIsMobile();
+  const gridCols = useGridColumns(isMobile);
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
@@ -686,7 +716,7 @@ export function ZukanClient({
             style={{
               minHeight: (!isMobile && filteredData.length > 0)
                 // 420px card height + 24px gap = 444px per row
-                ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / 5) * 444 - 24}px`
+                ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / gridCols) * 444 - 24}px`
                 : undefined
             }}
           >
