@@ -5,13 +5,12 @@ import { M_PLUS_Rounded_1c } from 'next/font/google';
 import { headers } from 'next/headers';
 import { connection } from 'next/server';
 import './globals.css';
-
 const mPlusRounded = M_PLUS_Rounded_1c({
   variable: '--font-m-plus-rounded',
   subsets: ['latin'],
   weight: ['400', '700'],
   display: 'swap',
-  preload: false,
+  preload: true,
 });
 
 export const viewport: Viewport = {
