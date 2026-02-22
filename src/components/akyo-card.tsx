@@ -140,34 +140,32 @@ export function AkyoCard({
       {/* カード情報 */}
       <div className="p-4 space-y-2">
         {/* VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center justify-end mb-1 gap-2">
-          <div className="flex items-center gap-1.5">
-            {akyo.avatarUrl && (
-              <button
-                type="button"
-                onClick={handleVRChatClick}
-                className="vrchat-link-button flex-shrink-0 p-1 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px] max-sm:hover:scale-105"
-                title={t('modal.vrchatOpen', lang)}
-                aria-label={t('modal.vrchatOpen', lang)}
-              >
-                <IconVRChat
-                  size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
-                  className="text-black flex-shrink-0"
-                  overflow="visible"
-                />
-              </button>
-            )}
+        <div className="flex items-center mb-1">
+          {akyo.avatarUrl && (
             <button
               type="button"
-              onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 scale-90 max-sm:scale-[1.2] max-sm:origin-right"
-              title={t('card.download', lang)}
-              aria-label={t('card.download', lang)}
+              onClick={handleVRChatClick}
+              className="vrchat-link-button flex-shrink-0 p-1 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px] max-sm:hover:scale-105"
+              title={t('modal.vrchatOpen', lang)}
+              aria-label={t('modal.vrchatOpen', lang)}
             >
-              <IconDownload size="w-4 h-4" />
-              <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+              <IconVRChat
+                size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
+                className="text-black flex-shrink-0"
+                overflow="visible"
+              />
             </button>
-          </div>
+          )}
+          <button
+            type="button"
+            onClick={handleDownloadClick}
+            className="reference-sheet-button ml-auto flex-shrink-0 scale-90 max-sm:scale-[1.2] max-sm:origin-right"
+            title={t('card.download', lang)}
+            aria-label={t('card.download', lang)}
+          >
+            <IconDownload size="w-4 h-4" />
+            <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+          </button>
         </div>
 
         {/* ID（通称の直上） */}
