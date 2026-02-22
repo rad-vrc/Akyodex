@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-20T16:06:56.902Z",
-  "count": 742,
+  "updatedAt": "2026-02-22T08:26:24.004Z",
+  "count": 743,
   "data": [
     {
       "id": "0001",
@@ -6681,6 +6681,15 @@
       "comment": "なんて洗練された腰の動き！",
       "author": "roma38（ろま38）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_7577b5fa-56c3-43f7-8771-dfdfb3a7b05b"
+    },
+    {
+      "id": "0743",
+      "nickname": "たこまめAkyo",
+      "avatarName": "まめたこ",
+      "category": "まめ,まめAkyo,動物,動物/タコ,動物/軟体,動物/海の生き物",
+      "comment": "たこAkyoもまめ化！どんどんふえるね！",
+      "author": "ふらっと（flat）",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_d363a4d0-aa60-462a-8643-81faf03cc61e"
     }
   ]
 }

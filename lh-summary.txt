@@ -1,0 +1,14 @@
+Score: 63
+FCP: 1.7 s
+LCP: 6.1 s
+TBT: 510 ms
+Speed Index: 3.7 s
+
+--- Top Opportunities ---
+Reduce unused JavaScript (-150ms)
+
+--- Top Diagnostics ---
+mainthread-work-breakdown: 7.8 s (score: 0)
+bootup-time: 1.0 s (score: 100)
+unminified-javascript:  (score: 100)
+unused-javascript: Est savings of 38 KiB (score: 0)

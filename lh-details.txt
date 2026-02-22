@@ -1,0 +1,8 @@
+
+--- Main Thread Breakdown ---
+Style & Layout : 3495.2799999999975ms
+Other : 2677.259999999961ms
+Script Evaluation : 948.0119999999918ms
+Rendering : 380.65599999999915ms
+Script Parsing & Compilation : 173.92800000000005ms
+Parse HTML & CSS : 105.34400000000002ms

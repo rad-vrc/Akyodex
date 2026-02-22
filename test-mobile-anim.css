@@ -1,0 +1,11 @@
+/* Disable infinite background animations on mobile to save CPU */
+@media (max-width: 768px) {
+
+    .detail-button,
+    .reference-sheet-button,
+    .favorite-btn,
+    .logo-text,
+    .rainbow-gradient {
+        animation: none !important;
+    }
+}

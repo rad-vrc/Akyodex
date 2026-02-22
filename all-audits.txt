@@ -1,0 +1,49 @@
+first-contentful-paint | First Contentful Paint | 1.7 s | 0.92
+largest-contentful-paint | Largest Contentful Paint | 6.1 s | 0.12
+speed-index | Speed Index | 3.7 s | 0.85
+screenshot-thumbnails | Screenshot Thumbnails |  | 1
+final-screenshot | Final Screenshot |  | 1
+total-blocking-time | Total Blocking Time | 510 ms | 0.57
+max-potential-fid | Max Potential First Input Delay | 240 ms | 0.51
+cumulative-layout-shift | Cumulative Layout Shift | 0 | 1
+server-response-time | Initial server response time was short | Root document took 20 ms | 1
+interactive | Time to Interactive | 6.2 s | 0.62
+user-timings | User Timing marks and measures |  | null
+redirects | Avoid multiple page redirects |  | 1
+mainthread-work-breakdown | Minimize main-thread work | 7.8 s | 0
+bootup-time | JavaScript execution time | 1.0 s | 1
+diagnostics | Diagnostics |  | 1
+network-requests | Network Requests |  | 1
+network-rtt | Network Round Trip Times | 0 ms | 1
+network-server-latency | Server Backend Latencies | 70 ms | 1
+main-thread-tasks | Tasks |  | 1
+metrics | Metrics |  | 1
+resource-summary | Resources Summary |  | 1
+layout-shifts | Avoid large layout shifts |  | null
+long-tasks | Avoid long main-thread tasks | 11 long tasks found | 1
+non-composited-animations | Avoid non-composited animations | 8 animated elements found | 1
+unsized-images | Image elements have explicit `width` and `height` |  | 1
+script-treemap-data | Script Treemap Data |  | 1
+total-byte-weight | Avoids enormous network payloads | Total size was 1,007 KiB | 1
+unminified-css | Minify CSS |  | 1
+unminified-javascript | Minify JavaScript |  | 1
+unused-css-rules | Reduce unused CSS |  | 1
+unused-javascript | Reduce unused JavaScript | Est savings of 38 KiB | 0
+bf-cache | Page prevented back/forward cache restoration | 3 failure reasons | 0
+cache-insight | Use efficient cache lifetimes | Est savings of 68 KiB | 0
+cls-culprits-insight | Layout shift culprits |  | 1
+document-latency-insight | Document request latency |  | 1
+dom-size-insight | Optimize DOM size |  | 1
+duplicated-javascript-insight | Duplicated JavaScript |  | 1
+font-display-insight | Font display |  | 1
+forced-reflow-insight | Forced reflow |  | 0
+image-delivery-insight | Improve image delivery | Est savings of 19 KiB | 0.5
+inp-breakdown-insight | INP breakdown |  | null
+lcp-breakdown-insight | LCP breakdown |  | 1
+lcp-discovery-insight | LCP request discovery |  | 1
+legacy-javascript-insight | Legacy JavaScript | Est savings of 13 KiB | 0
+modern-http-insight | Modern HTTP |  | 1
+network-dependency-tree-insight | Network dependency tree |  | 0
+render-blocking-insight | Render blocking requests | Est savings of 480 ms | 0
+third-parties-insight | 3rd parties |  | 1
+viewport-insight | Optimize viewport for mobile |  | 1

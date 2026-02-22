@@ -140,38 +140,29 @@ export function AkyoCard({
       {/* カード情報 */}
       <div className="p-4 space-y-2">
         {/* ID と VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center justify-between mb-1 gap-2">
+        <div className="flex items-center justify-between mb-1">
           <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
-
-          <div className="flex items-center gap-1 sm:gap-1.5 max-sm:flex-wrap max-sm:justify-end">
-            {akyo.avatarUrl && (
-              <button
-                type="button"
-                onClick={handleVRChatClick}
-                className="vrchat-link-button flex-shrink-0 p-1 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px] max-sm:hover:scale-105"
-                title={t('modal.vrchatOpen', lang)}
-                aria-label={t('modal.vrchatOpen', lang)}
-              >
-                <IconVRChat
-                  size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
-                  className="text-black flex-shrink-0"
-                  overflow="visible"
-                />
-              </button>
-            )}
+          {akyo.avatarUrl && (
             <button
               type="button"
-              onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 min-h-[44px] min-w-[44px] max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center"
-              title={t('card.download', lang)}
-              aria-label={t('card.download', lang)}
+              onClick={handleVRChatClick}
+              className="vrchat-link-button flex-shrink-0 p-1 ml-1 transition-all hover:scale-110 active:scale-95"
+              title={t('modal.vrchatOpen', lang)}
+              aria-label={t('modal.vrchatOpen', lang)}
             >
-              <div className="flex items-center gap-1 transform scale-90 max-sm:scale-100 origin-center justify-center max-sm:flex-col">
-                <IconDownload size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
-                <span className="text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">{t('card.downloadLabel', lang)}</span>
-              </div>
+              <IconVRChat size="w-12 h-12" className="text-black" overflow="visible" />
             </button>
-          </div>
+          )}
+          <button
+            type="button"
+            onClick={handleDownloadClick}
+            className="reference-sheet-button flex-shrink-0 scale-90"
+            title={t('card.download', lang)}
+            aria-label={t('card.download', lang)}
+          >
+            <IconDownload />
+            <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
+          </button>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}

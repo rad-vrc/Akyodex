@@ -1,0 +1,79 @@
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 346a8a3..70c9b39 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -209,6 +209,14 @@ button,
+   box-shadow: var(--card-hover-shadow);
+ }
+ 
++/* デスクトップ向け: スクロール外のカード要素のGPU/CPU計算を省略してTBTを劇的に改善 */
++@media (min-width: 769px) {
++  .akyo-card {
++    content-visibility: auto;
++    contain-intrinsic-size: auto 420px;
++  }
++}
++
+ /* 画像のスタイル */
+ .akyo-card img {
+   border-radius: 15px !important;
+diff --git a/src/app/zukan/zukan-client.tsx b/src/app/zukan/zukan-client.tsx
+index 0e4b6f8..71f657f 100644
+--- a/src/app/zukan/zukan-client.tsx
++++ b/src/app/zukan/zukan-client.tsx
+@@ -12,8 +12,6 @@
+  */
+ 
+ import { AkyoCard } from '@/components/akyo-card';
+-import { AkyoDetailModal } from '@/components/akyo-detail-modal';
+-import { AkyoList } from '@/components/akyo-list';
+ import { FilterPanel } from '@/components/filter-panel';
+ import { IconCog, IconGrid, IconList } from '@/components/icons';
+ import { LanguageToggle } from '@/components/language-toggle';
+@@ -57,6 +55,14 @@ const DeferredMiniAkyoBg = dynamic(
+   () => import('@/components/mini-akyo-bg').then((mod) => mod.MiniAkyoBg),
+   { ssr: false }
+ );
++const DeferredAkyoDetailModal = dynamic(
++  () => import('@/components/akyo-detail-modal').then((mod) => mod.AkyoDetailModal),
++  { ssr: false }
++);
++const DeferredAkyoList = dynamic(
++  () => import('@/components/akyo-list').then((mod) => mod.AkyoList),
++  { ssr: false }
++);
+ 
+ // Virtual scrolling constants
+ const MOBILE_BREAKPOINT = 768;
+@@ -700,7 +706,7 @@ export function ZukanClient({
+             <p className="text-[var(--text-secondary)]">{t('notfound.message', lang)}</p>
+           </div>
+         ) : viewMode === 'list' ? (
+-          <AkyoList
++          <DeferredAkyoList
+             data={filteredData.slice(0, renderLimit)}
+             lang={lang}
+             onToggleFavorite={toggleFavorite}
+@@ -731,13 +737,15 @@ export function ZukanClient({
+       </main>
+ 
+       {/* Detail Modal */}
+-      <AkyoDetailModal
+-        akyo={selectedAkyo}
+-        isOpen={isModalOpen}
+-        onClose={handleCloseModal}
+-        onToggleFavorite={handleModalFavoriteToggle}
+-        lang={lang}
+-      />
++      {isModalOpen || selectedAkyo ? (
++        <DeferredAkyoDetailModal
++          akyo={selectedAkyo}
++          isOpen={isModalOpen}
++          onClose={handleCloseModal}
++          onToggleFavorite={handleModalFavoriteToggle}
++          lang={lang}
++        />
++      ) : null}
+ 
+       {/* Language Toggle Button - Top */}
+       <LanguageToggle initialLang={lang} />
