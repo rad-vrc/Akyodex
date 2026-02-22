@@ -10,12 +10,10 @@
  * Client component handles language detection and refetching if needed.
  */
 
-import { Suspense } from 'react';
 import { Metadata } from 'next';
 // Phase 4: Using unified data module with JSON support
 import { getAkyoData, getAllCategories, getAllAuthors } from '@/lib/akyo-data';
 import { ZukanClient } from './zukan-client';
-import { LoadingSpinner } from '@/components/loading-spinner';
 import { DEFAULT_LANGUAGE } from '@/lib/i18n';
 
 // Dynamic metadata
@@ -51,16 +49,14 @@ export default async function ZukanPage() {
   ]);
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <ZukanClient
-        initialData={data}
-        categories={categories}
-        authors={authors}
-        // 互換性のため旧プロップスも渡す
-        attributes={categories}
-        creators={authors}
-        serverLang={lang}
-      />
-    </Suspense>
+    <ZukanClient
+      initialData={data}
+      categories={categories}
+      authors={authors}
+      // 互換性のため旧プロップスも渡す
+      attributes={categories}
+      creators={authors}
+      serverLang={lang}
+    />
   );
 }

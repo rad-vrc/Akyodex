@@ -1,17 +1,9 @@
 import { RuntimeFeatures } from '@/components/runtime-features';
 import { StructuredData } from '@/components/structured-data';
 import type { Metadata, Viewport } from 'next';
-import { M_PLUS_Rounded_1c } from 'next/font/google';
 import { headers } from 'next/headers';
 import { connection } from 'next/server';
 import './globals.css';
-const mPlusRounded = M_PLUS_Rounded_1c({
-  variable: '--font-m-plus-rounded',
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  display: 'swap',
-  preload: false,
-});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -100,7 +92,7 @@ export default async function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <head suppressHydrationWarning />
-      <body className={`${mPlusRounded.variable} antialiased`}>
+      <body className="antialiased">
         {children}
 
         {/* Dynamic features and metadata */}
