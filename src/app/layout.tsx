@@ -10,7 +10,7 @@ const mPlusRounded = M_PLUS_Rounded_1c({
   subsets: ['latin'],
   weight: ['400', '700'],
   display: 'swap',
-  preload: true,
+  preload: false,
 });
 
 export const viewport: Viewport = {

@@ -1020,4 +1020,9 @@ select:focus {
     animation: none !important;
     backdrop-filter: none !important;
   }
+
+  /* ロゴのGPU重いドロップシャドウを無効化 */
+  .logo-animation {
+    filter: none !important;
+  }
 }
