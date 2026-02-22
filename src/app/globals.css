@@ -202,13 +202,19 @@ button,
   border: 3px solid transparent !important;
   background: linear-gradient(white, white) padding-box,
     linear-gradient(135deg, var(--primary-pink), var(--primary-yellow)) border-box !important;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 420px;
 }
 
 .akyo-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--card-hover-shadow);
+}
+
+/* デスクトップ向け: スクロール外のカード要素のGPU/CPU計算を省略してTBTを劇的に改善 */
+@media (min-width: 769px) {
+  .akyo-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 420px;
+  }
 }
 
 /* 画像のスタイル */
@@ -1028,5 +1034,15 @@ select:focus {
   .favorite-btn {
     animation: none !important;
     backdrop-filter: none !important;
+  }
+
+  /* ロゴのGPU重いドロップシャドウを無効化 */
+  .logo-animation {
+    filter: none !important;
+  }
+
+  .logo-animation:hover {
+    filter: none !important;
+    transform: none !important;
   }
 }
