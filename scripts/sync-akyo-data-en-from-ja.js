@@ -179,6 +179,18 @@ const overridesById = {
     Comment:
       "(Sasanoki's notes)\r\nHighly nutritious and also called the butter of the forest. Its deliciousness is popular even among Akyo.",
   },
+  '0742': {
+    Nickname: 'Colorful Spinning Akyo',
+    Comment: 'What refined hip moves!',
+  },
+  '0743': {
+    Nickname: 'Octo-Bean Akyo',
+    Comment: "Even Octo Akyo has gone bean! They're multiplying fast!",
+  },
+  '0744': {
+    Nickname: 'Red Rust Akyo',
+    Comment: "Akyo never dies, even if its body rusts crimson.",
+  },
 };
 
 function parseCsv(filePath) {
