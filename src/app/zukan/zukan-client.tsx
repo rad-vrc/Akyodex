@@ -45,10 +45,10 @@ export interface ZukanClientProps {
 }
 
 const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
-  ja: '/images/logo.webp',
-  en: '/images/logo-US.webp',
-  ko: '/images/logo-KO.webp',
-  default: '/images/logo-US.webp',
+  ja: '/images/logo-mobile.webp',
+  en: '/images/logo-US-mobile.webp',
+  ko: '/images/logo-KO-mobile.webp',
+  default: '/images/logo-US-mobile.webp',
 };
 
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
@@ -576,12 +576,12 @@ export function ZukanClient({
             <Image
               src={LOGO_BY_LANG[lang] || LOGO_BY_LANG.default}
               alt={t('logo.alt', lang)}
-              width={1980}
-              height={305}
+              width={640}
+              height={99}
               unoptimized
               priority
               fetchPriority="high"
-              sizes="(max-width: 640px) 260px, 320px"
+              sizes="(max-width: 640px) 260px, (max-width: 1024px) 420px, 454px"
               className="logo-animation h-10 sm:h-12 w-auto"
             />
           </Link>
