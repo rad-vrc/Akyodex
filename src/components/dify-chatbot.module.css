@@ -1,0 +1,125 @@
+.difyHost {
+  /* Ensures this CSS module is attached when the chatbot runtime mounts */
+}
+
+:global(#dify-chatbot-container) {
+  position: fixed;
+}
+
+:global(#dify-chatbot-container[data-dify-load-state='error']) {
+  width: min(20rem, calc(100vw - 2rem));
+  max-width: 20rem;
+}
+
+:global(#dify-chatbot-container.dify-chatbot-load-failed::before) {
+  content: 'Chat temporarily unavailable. Please try again later.';
+  display: block;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  background: rgba(17, 24, 39, 0.88);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(4px);
+}
+
+:global(#dify-chatbot-bubble-button) {
+  bottom: 24px !important;
+  right: 24px !important;
+  width: 56px !important;
+  height: 56px !important;
+  background-color: #ee7800 !important;
+  box-shadow: 0 4px 12px rgba(238, 120, 0, 0.4) !important;
+  border: 3px solid white !important;
+  transition: all 0.3s ease !important;
+}
+
+:global(#dify-chatbot-bubble-button:hover) {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6) !important;
+}
+
+@media (max-width: 640px) {
+  :global(#dify-chatbot-bubble-button) {
+    bottom: 20px !important;
+    right: 16px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+:global(#dify-chatbot-bubble-window) {
+  width: 24rem !important;
+  height: 40rem !important;
+  position: fixed !important;
+  inset: auto 1rem 1rem auto !important;
+}
+
+@media (max-width: 640px) {
+  :global(#dify-chatbot-bubble-window) {
+    inset: auto 1rem 1rem auto !important;
+  }
+}
+
+:global(#dify-chatbot-bubble-button svg),
+:global(#dify-chatbot-bubble-button .loading-spinner),
+:global(#dify-chatbot-bubble-button [class*='loading']),
+:global(#dify-chatbot-bubble-button [class*='spinner']) {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) !important;
+  animation: enhanced-spin 1s linear infinite !important;
+}
+
+:global(#dify-chatbot-bubble-button.chat-window-open svg),
+:global(#dify-chatbot-bubble-button.chat-window-open .loading-spinner),
+:global(#dify-chatbot-bubble-button.chat-window-open [class*='loading']),
+:global(#dify-chatbot-bubble-button.chat-window-open [class*='spinner']) {
+  animation: none !important;
+}
+
+@keyframes enhanced-spin {
+  0% {
+    transform: rotate(0deg) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.3);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1));
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+}
+
+:global(#dify-chatbot-bubble-button.loading),
+:global(#dify-chatbot-bubble-button[data-loading='true']) {
+  animation: pulse-glow 1.5s ease-in-out infinite !important;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px 5px rgba(238, 120, 0, 0.6) !important;
+  }
+
+  50% {
+    box-shadow: 0 0 30px 10px rgba(238, 120, 0, 0.9) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(#dify-chatbot-bubble-button),
+  :global(#dify-chatbot-bubble-button:hover),
+  :global(#dify-chatbot-bubble-button.loading),
+  :global(#dify-chatbot-bubble-button[data-loading='true']),
+  :global(#dify-chatbot-bubble-button svg),
+  :global(#dify-chatbot-bubble-button .loading-spinner),
+  :global(#dify-chatbot-bubble-button [class*='loading']),
+  :global(#dify-chatbot-bubble-button [class*='spinner']) {
+    animation: none !important;
+    transition: none !important;
+  }
+}

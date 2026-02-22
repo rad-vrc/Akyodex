@@ -1,3 +1,4 @@
+import './admin.css';
 import { AdminClient } from './admin-client';
 // Phase 4: Using unified data module with JSON support
 import { getAllCategories, getAllAuthors, getAkyoData } from '@/lib/akyo-data';

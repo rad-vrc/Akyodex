@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import styles from './dify-chatbot.module.css';
 
 // Delay in milliseconds to wait for Dify chatbot to load before initializing observers
 const DIFY_LOAD_DELAY_MS = 2000;
@@ -253,6 +254,7 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
   useEffect(() => {
     const container = document.getElementById('dify-chatbot-container');
     if (!container) return;
+    container.classList.add(styles.difyHost);
 
     if (loadState === 'error') {
       container.classList.add('dify-chatbot-load-failed');
@@ -262,6 +264,10 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
 
     container.classList.remove('dify-chatbot-load-failed');
     container.setAttribute('data-dify-load-state', loadState);
+
+    return () => {
+      container.classList.remove(styles.difyHost);
+    };
   }, [loadState]);
 
   return null;
