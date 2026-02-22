@@ -73,9 +73,21 @@ function useResponsiveLayout() {
     const handler = () => {
       const w = window.innerWidth;
       const mobile = w <= MOBILE_BREAKPOINT;
+
+      let cols: number;
+      if (mobile) {
+        cols = 1;
+      } else if (w >= 1024) {
+        cols = 5;
+      } else if (w >= 768) {
+        cols = 3;
+      } else {
+        cols = 2;
+      }
+
       setLayout({
         isMobile: mobile,
-        gridCols: mobile ? 1 : w >= 1024 ? 5 : w >= 768 ? 3 : 2
+        gridCols: cols,
       });
     };
     handler();
