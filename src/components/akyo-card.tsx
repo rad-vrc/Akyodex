@@ -1,6 +1,6 @@
 'use client';
 
-import { IconImage, IconVRChat } from '@/components/icons';
+import { IconDownload, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
@@ -160,11 +160,11 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 scale-90"
+              className="reference-sheet-button flex-shrink-0 scale-90 max-sm:scale-[1.2] max-sm:origin-right"
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
-              <IconImage size="w-4 h-4" />
+              <IconDownload size="w-4 h-4" />
               <span className="text-xs">{t('card.downloadLabel', lang)}</span>
             </button>
           </div>
