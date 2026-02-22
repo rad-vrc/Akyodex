@@ -141,9 +141,9 @@ export function AkyoCard({
       <div className="p-4 space-y-2">
         {/* ID と VRChatリンク と 三面図DLボタン */}
         <div className="flex items-center justify-between mb-1 gap-2">
-          <span className="text-sm font-bold text-gray-500 mr-auto">#{akyo.id}</span>
+          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 max-sm:flex-wrap max-sm:justify-end">
             {akyo.avatarUrl && (
               <button
                 type="button"
@@ -154,7 +154,7 @@ export function AkyoCard({
               >
                 <IconVRChat
                   size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
-                  className="text-black transition-transform"
+                  className="text-black transition-transform flex-shrink-0"
                   overflow="visible"
                 />
               </button>
@@ -166,7 +166,7 @@ export function AkyoCard({
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
-              <IconDownload className="max-sm:w-[22px] max-sm:h-[22px] max-sm:mb-0.5" />
+              <IconDownload size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
               <span className="hidden sm:inline text-xs">{t('card.downloadLabel', lang)}</span>
               <span className="sm:hidden text-[12px] leading-none pt-0.5">{t('card.downloadLabel', lang)}</span>
             </button>

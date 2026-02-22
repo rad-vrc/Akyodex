@@ -67,15 +67,15 @@ const PRIORITY_CARD_COUNT = 2;
 const MINI_AKYO_BG_DELAY_MS = 2500;
 
 function useResponsiveLayout() {
-  const [layout, setLayout] = useState({ isMobile: true, gridCols: 5 });
+  const [layout, setLayout] = useState({ isMobile: true, gridCols: 1 });
 
   useEffect(() => {
     const handler = () => {
       const w = window.innerWidth;
-      const initIsMobile = w <= MOBILE_BREAKPOINT;
+      const mobile = w <= MOBILE_BREAKPOINT;
       setLayout({
-        isMobile: initIsMobile,
-        gridCols: initIsMobile ? 1 : w >= 1024 ? 5 : w >= 768 ? 3 : 2
+        isMobile: mobile,
+        gridCols: mobile ? 1 : w >= 1024 ? 5 : w >= 768 ? 3 : 2
       });
     };
     handler();
@@ -364,12 +364,7 @@ export function ZukanClient({
 
   // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
-    // 1. Dynamic rendering limit for mobile vs desktop
-    if (!isMobile) {
-      setRenderLimit(DESKTOP_RENDER_LIMIT);
-    }
-
-    // 2. Delay or disable MiniAkyoBg depending on device
+    // Delay or disable MiniAkyoBg depending on device
     // Consider it disabled completely on mobile to save CPU rendering.
     let timer: number | undefined;
     if (!isMobile) {
