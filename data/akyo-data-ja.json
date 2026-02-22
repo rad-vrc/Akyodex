@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-22T08:26:24.004Z",
-  "count": 743,
+  "updatedAt": "2026-02-22T15:23:59.499Z",
+  "count": 744,
   "data": [
     {
       "id": "0001",
@@ -6690,6 +6690,15 @@
       "comment": "たこAkyoもまめ化！どんどんふえるね！",
       "author": "ふらっと（flat）",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d363a4d0-aa60-462a-8643-81faf03cc61e"
+    },
+    {
+      "id": "0744",
+      "nickname": "赤サビAkyo",
+      "avatarName": "Akyo_RedRust",
+      "category": "歴史,状態,状態/経年劣化",
+      "comment": "Akyoは死なない。たとえその身が朱く錆びついても。",
+      "author": "らど⁄rad1031",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_d7cc59d7-0d2a-4554-878d-1b4848e62a86"
     }
   ]
 }
