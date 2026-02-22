@@ -162,14 +162,12 @@ export function AkyoCard({
             <button
               type="button"
               onClick={handleDownloadClick}
-              className="reference-sheet-button flex-shrink-0 min-h-[44px] min-w-[44px] max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center"
+              className="reference-sheet-button flex-shrink-0 scale-90 max-sm:scale-100 max-sm:origin-right max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center"
               title={t('card.download', lang)}
               aria-label={t('card.download', lang)}
             >
-              <div className="flex items-center gap-1 transform scale-90 max-sm:scale-100 origin-center justify-center max-sm:flex-col">
-                <IconDownload size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
-                <span className="text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">{t('card.downloadLabel', lang)}</span>
-              </div>
+              <IconDownload size="w-4 h-4 max-sm:w-[22px] max-sm:h-[22px]" className="max-sm:mb-0.5" />
+              <span className="text-xs max-sm:text-[12px] max-sm:leading-none max-sm:pt-0.5">{t('card.downloadLabel', lang)}</span>
             </button>
           </div>
         </div>
