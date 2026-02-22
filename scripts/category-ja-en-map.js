@@ -252,6 +252,8 @@ module.exports = {
   '集団・組織': 'Group・Organization',
   '集団・組織/魚頭族': 'Group・Organization/Fishhead Tribe',
   '正体不明': 'Unknown',
+  '状態': 'Condition',
+  '状態/経年劣化': 'Condition/Aging',
   '菌類': 'Fungus',
   'レア': 'Rare',
   '衣類・衣装': 'Clothing/Costume',
