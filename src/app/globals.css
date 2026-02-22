@@ -202,8 +202,6 @@ button,
   border: 3px solid transparent !important;
   background: linear-gradient(white, white) padding-box,
     linear-gradient(135deg, var(--primary-pink), var(--primary-yellow)) border-box !important;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 420px;
 }
 
 .akyo-card:hover {
@@ -563,3 +561,463 @@ select:focus {
   text-decoration: none !important;
 }
 
+.reference-sheet-button:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4), 0 8px 20px rgba(255, 217, 61, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  border-color: #ffd93d !important;
+}
+
+.reference-sheet-button:active {
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+/* ボタンに波紋エフェクト */
+.detail-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.detail-button:hover::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+}
+
+/* リスト表示のスタイル */
+.list-view-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* モバイルでの横スクロール */
+.list-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .list-scroll-wrapper table {
+    min-width: 720px;
+  }
+}
+
+.list-view-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.list-view-table thead {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  color: white;
+}
+
+.list-view-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.list-view-table th:last-child {
+  text-align: center;
+}
+
+.list-view-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.list-view-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.list-view-table td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+
+  .list-view-table th,
+  .list-view-table td {
+    padding: 0.5rem 0.5rem;
+  }
+}
+
+/* リストの画像 */
+.list-image-wrapper {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.list-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* リストのアクションボタン */
+.list-action-btn {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-action-btn:hover {
+  background-color: #f3f4f6;
+}
+
+/* VRChatリンクボタンのカーソル設定 */
+.vrchat-link-button {
+  cursor: pointer !important;
+}
+
+.list-favorite-icon {
+  font-size: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.list-action-btn:hover .list-favorite-icon {
+  transform: scale(1.15);
+}
+
+/* Language Toggle Button */
+/* Admin Button - Bottom Right (same style as Language Toggle) */
+.admin-button {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange)) !important;
+  color: white !important;
+  border: 3px solid white !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.admin-button:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.6) !important;
+}
+
+.admin-button:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Language Toggle Button - Top of stack */
+.language-toggle-btn {
+  position: fixed;
+  bottom: 168px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange)) !important;
+  color: white !important;
+  border: 3px solid white !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.language-toggle-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.6) !important;
+}
+
+.language-toggle-btn:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+@media (max-width: 640px) {
+  .admin-button {
+    bottom: 84px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .language-toggle-btn {
+    bottom: 148px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    font-size: 14px;
+  }
+}
+
+/* Dify Chatbot Custom Styling */
+#dify-chatbot-container {
+  position: fixed;
+}
+
+#dify-chatbot-container[data-dify-load-state='error'] {
+  width: min(20rem, calc(100vw - 2rem));
+  max-width: 20rem;
+}
+
+#dify-chatbot-container.dify-chatbot-load-failed::before {
+  content: 'Chat temporarily unavailable. Please try again later.';
+  display: block;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  background: rgba(17, 24, 39, 0.88);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(4px);
+}
+
+#dify-chatbot-bubble-button {
+  bottom: 24px !important;
+  right: 24px !important;
+  width: 56px !important;
+  height: 56px !important;
+  background-color: #ee7800 !important;
+  box-shadow: 0 4px 12px rgba(238, 120, 0, 0.4) !important;
+  border: 3px solid white !important;
+  transition: all 0.3s ease !important;
+}
+
+#dify-chatbot-bubble-button:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6) !important;
+}
+
+@media (max-width: 640px) {
+  #dify-chatbot-bubble-button {
+    bottom: 20px !important;
+    right: 16px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+#dify-chatbot-bubble-window {
+  width: 24rem !important;
+  height: 40rem !important;
+  position: fixed !important;
+  inset: auto 1rem 1rem auto !important;
+}
+
+@media (max-width: 640px) {
+  #dify-chatbot-bubble-window {
+    inset: auto 1rem 1rem auto !important;
+  }
+}
+
+/* Dify Chatbot Loading Spinner - Make it more visible */
+#dify-chatbot-bubble-button svg,
+#dify-chatbot-bubble-button .loading-spinner,
+#dify-chatbot-bubble-button [class*='loading'],
+#dify-chatbot-bubble-button [class*='spinner'] {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) !important;
+  animation: enhanced-spin 1s linear infinite !important;
+}
+
+/* Stop rotation animation when chat window is open */
+#dify-chatbot-bubble-button.chat-window-open svg,
+#dify-chatbot-bubble-button.chat-window-open .loading-spinner,
+#dify-chatbot-bubble-button.chat-window-open [class*='loading'],
+#dify-chatbot-bubble-button.chat-window-open [class*='spinner'] {
+  animation: none !important;
+}
+
+/* Enhanced spinning animation */
+@keyframes enhanced-spin {
+  0% {
+    transform: rotate(0deg) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.3);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1));
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+}
+
+/* Add a pulsing background to the button during loading */
+#dify-chatbot-bubble-button.loading,
+#dify-chatbot-bubble-button[data-loading='true'] {
+  animation: pulse-glow 1.5s ease-in-out infinite !important;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px 5px rgba(238, 120, 0, 0.6) !important;
+  }
+
+  50% {
+    box-shadow: 0 0 30px 10px rgba(238, 120, 0, 0.9) !important;
+  }
+}
+
+/* Modal Animations */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-show {
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Admin Panel Styles (Finder Mode) */
+.admin-body {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed #cbd5e0;
+  transition: all 0.3s;
+}
+
+.drop-zone.dragover {
+  border-color: #667eea;
+  background-color: #f7fafc;
+}
+
+/* Service Worker Update Notification Animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  :root *,
+  :root *::before,
+  :root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  #dify-chatbot-bubble-button,
+  #dify-chatbot-bubble-button:hover,
+  #dify-chatbot-bubble-button.loading,
+  #dify-chatbot-bubble-button[data-loading='true'],
+  #dify-chatbot-bubble-button svg,
+  #dify-chatbot-bubble-button .loading-spinner,
+  #dify-chatbot-bubble-button [class*='loading'],
+  #dify-chatbot-bubble-button [class*='spinner'],
+  .detail-button,
+  .detail-button .animate-bounce,
+  .detail-button::after,
+  .reference-sheet-button,
+  .akyo-card,
+  .akyo-card img {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* モバイル向けパフォーマンス最適化: 重い無限アニメーションと影を停止 */
+@media (max-width: 768px) {
+
+  .logo-text,
+  .detail-button,
+  .detail-button .animate-bounce,
+  .detail-button::after,
+  .reference-sheet-button,
+  .rainbow-gradient,
+  .floating {
+    animation: none !important;
+  }
+
+  /* お気に入りボタン特有の重い処理を停止 */
+  .favorite-btn {
+    animation: none !important;
+    backdrop-filter: none !important;
+  }
+}
