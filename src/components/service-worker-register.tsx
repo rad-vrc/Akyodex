@@ -90,12 +90,12 @@ export function ServiceWorkerRegister() {
     };
 
     const shouldIgnoreUpdateError = (error: unknown): boolean => {
-      const message = error instanceof Error ? error.message : String(error);
+      const message = (error instanceof Error ? error.message : String(error)).toLowerCase();
       return (
-        message.includes('Failed to update a ServiceWorker') ||
-        message.includes('The script resource is behind a redirect') ||
-        message.includes('A bad HTTP response code') ||
-        message.includes('Failed to fetch')
+        message.includes('failed to update a serviceworker') ||
+        message.includes('the script resource is behind a redirect') ||
+        message.includes('a bad http response code') ||
+        message.includes('failed to fetch')
       );
     };
 
