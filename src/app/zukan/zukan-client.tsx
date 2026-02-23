@@ -576,8 +576,8 @@ export function ZukanClient({
             <Image
               src={LOGO_BY_LANG[lang] || LOGO_BY_LANG.default}
               alt={t('logo.alt', lang)}
-              width={640}
-              height={99}
+              width={454}
+              height={70}
               unoptimized
               priority
               fetchPriority="high"
