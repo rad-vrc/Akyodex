@@ -37,6 +37,9 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       if (e.key !== FAVORITES_STORAGE_KEY) return;
       // キャッシュを無効化して最新の値を取得
       invalidateFavoritesCache();
+      // 別タブ更新を基準値として取り込み、次回の差分判定を正しくする
+      lastPersistedFavoritesRef.current = JSON.stringify(getFavorites());
+      favoritesDirtyRef.current = false;
       setData(prev => applyFavorites(prev));
       setFilteredData(prev => applyFavorites(prev));
     };
@@ -48,6 +51,9 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   useEffect(() => {
     if (!favoritesDirtyRef.current) return;
 
+    // ここでの早期 return は dirty フラグを意図的に残し、データ同期後に再判定するため
+    // saveFavorites / lastPersistedFavoritesRef / favoritesDirtyRef の更新は
+    // シリアライズ比較まで完了した成功経路でのみ行う
     // 初期SSRデータ（isFavorite未同期）で localStorage を空上書きしない
     if (data.length === 0) return;
     const hasFullySyncedFavoriteState = data.every((item) => typeof item.isFavorite === 'boolean');
