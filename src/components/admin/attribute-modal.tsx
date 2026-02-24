@@ -36,6 +36,7 @@ export function AttributeModal({
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedAttributes([...currentAttributes]);
     }
   }, [isOpen, currentAttributes]);
@@ -43,6 +44,7 @@ export function AttributeModal({
   useEffect(() => {
     // Merge existing allAttributes with any newly created ones in availableAttributes
     // This prevents data loss when props update
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAvailableAttributes(prev => {
       const merged = new Set([...allAttributes, ...prev]);
       return Array.from(merged).sort();

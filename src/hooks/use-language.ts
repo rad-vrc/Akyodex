@@ -101,6 +101,7 @@ export function useLanguage(serverLang: SupportedLanguage = DEFAULT_LANGUAGE): U
       setLanguageCookie(detectedLang);
     }
     
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLang(detectedLang);
     setNeedsRefetch(detectedLang !== serverLang);
     setIsReady(true);

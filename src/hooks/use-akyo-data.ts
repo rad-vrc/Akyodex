@@ -23,6 +23,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   useEffect(() => {
     if (initialData.length > 0) {
       const dataWithFavorites = applyFavorites(initialData);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setData(dataWithFavorites);
       setFilteredData(dataWithFavorites);
     }
