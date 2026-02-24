@@ -44,6 +44,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
   // dataの変更に合わせてお気に入りIDを永続化（state updater内の副作用を回避）
   useEffect(() => {
+    // 初期SSRデータ（isFavorite未同期）で localStorage を空上書きしない
+    if (data.length === 0) return;
+    const hasSyncedFavoriteState = data.some((item) => typeof item.isFavorite === 'boolean');
+    if (!hasSyncedFavoriteState) return;
+
     const favorites = data.filter((item) => item.isFavorite).map((item) => item.id);
     saveFavorites(favorites);
   }, [data]);
