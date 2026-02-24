@@ -1,7 +1,7 @@
 'use client';
 
 import type { AkyoData, AkyoFilterOptions } from '@/types/akyo';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /** localStorage のキー名 */
 const FAVORITES_STORAGE_KEY = 'akyoFavorites';
@@ -18,6 +18,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   const [filteredData, setFilteredData] = useState<AkyoData[]>(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const favoritesDirtyRef = useRef(false);
+  const lastPersistedFavoritesRef = useRef<string | null>(null);
 
   // クライアントサイドでお気に入り情報を復元
   useEffect(() => {
@@ -44,13 +46,23 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
   // dataの変更に合わせてお気に入りIDを永続化（state updater内の副作用を回避）
   useEffect(() => {
+    if (!favoritesDirtyRef.current) return;
+
     // 初期SSRデータ（isFavorite未同期）で localStorage を空上書きしない
     if (data.length === 0) return;
     const hasFullySyncedFavoriteState = data.every((item) => typeof item.isFavorite === 'boolean');
     if (!hasFullySyncedFavoriteState) return;
 
     const favorites = data.filter((item) => item.isFavorite).map((item) => item.id);
+    const serializedFavorites = JSON.stringify(favorites);
+    if (serializedFavorites === lastPersistedFavoritesRef.current) {
+      favoritesDirtyRef.current = false;
+      return;
+    }
+
     saveFavorites(favorites);
+    lastPersistedFavoritesRef.current = serializedFavorites;
+    favoritesDirtyRef.current = false;
   }, [data]);
 
   /**
@@ -144,6 +156,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const toggleFavoriteFlag = (items: AkyoData[]) =>
       items.map((akyo) => (akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo));
 
+    favoritesDirtyRef.current = true;
     setData((prevData) => toggleFavoriteFlag(prevData));
     setFilteredData((prevData) => toggleFavoriteFlag(prevData));
   }, []);
