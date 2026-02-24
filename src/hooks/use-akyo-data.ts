@@ -28,6 +28,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setData(dataWithFavorites);
       setFilteredData(dataWithFavorites);
+      // 初期復元時点の基準値を記録して、将来の差分判定を安定化させる
+      lastPersistedFavoritesRef.current = JSON.stringify(getFavorites());
     }
   }, [initialData]);
 
