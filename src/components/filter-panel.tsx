@@ -114,6 +114,7 @@ export function FilterPanel({
   useEffect(() => {
     categoryButtonRefs.current = categoryButtonRefs.current.slice(0, filteredCategories.length);
     if (filteredCategories.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFocusedCategoryIndex(-1);
       return;
     }
@@ -126,6 +127,7 @@ export function FilterPanel({
   useEffect(() => {
     authorButtonRefs.current = authorButtonRefs.current.slice(0, filteredAuthors.length);
     if (filteredAuthors.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFocusedAuthorIndex(-1);
       return;
     }

@@ -91,11 +91,13 @@ export function ServiceWorkerRegister() {
 
     const shouldIgnoreUpdateError = (error: unknown): boolean => {
       const message = (error instanceof Error ? error.message : String(error)).toLowerCase();
+      const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+      const isGenericNetworkError =
+        message.includes('a bad http response code') || message.includes('failed to fetch');
       return (
         message.includes('failed to update a serviceworker') ||
         message.includes('the script resource is behind a redirect') ||
-        message.includes('a bad http response code') ||
-        message.includes('failed to fetch')
+        (isOffline && isGenericNetworkError)
       );
     };
 

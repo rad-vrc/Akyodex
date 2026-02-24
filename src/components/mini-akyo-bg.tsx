@@ -113,8 +113,9 @@ interface MiniAkyoProps {
 export function MiniAkyoBg({ className = '' }: MiniAkyoProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [density, setDensity] = useState<number>(0);
+  const [seqSeed] = useState<number>(() => Math.random());
   const containerRef = useRef<HTMLDivElement>(null);
-  const seqU = useRef<number>(Math.random());
+  const seqU = useRef<number>(seqSeed);
   const maintainTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const resizeHandler = useRef<(() => void) | null>(null);
   const rafRef = useRef<number | null>(null);

@@ -48,6 +48,7 @@ export function LanguageToggle({
       ?.trim();
 
     if (cookieLang && SUPPORTED_LANGUAGES.includes(cookieLang as SupportedLanguage)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentLang(cookieLang as SupportedLanguage);
     }
     setIsMounted(true);
