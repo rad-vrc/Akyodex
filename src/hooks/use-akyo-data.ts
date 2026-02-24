@@ -130,24 +130,19 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
   // お気に入り機能
   const toggleFavorite = useCallback((id: string) => {
-    setData(prevData => {
-      const newData = prevData.map(akyo =>
-        akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo
-      );
+    const toggleFavoriteFlag = (items: AkyoData[]) =>
+      items.map((akyo) => (akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo));
 
-      // LocalStorageに保存
-      const favorites = newData.filter(a => a.isFavorite).map(a => a.id);
-      saveFavorites(favorites);
+    const newData = toggleFavoriteFlag(data);
+    const newFilteredData = toggleFavoriteFlag(filteredData);
 
-      return newData;
-    });
+    setData(newData);
+    setFilteredData(newFilteredData);
 
-    setFilteredData(prevData =>
-      prevData.map(akyo =>
-        akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo
-      )
-    );
-  }, []);
+    // LocalStorageへの書き込みはstate updater外で実行する
+    const favorites = newData.filter((a) => a.isFavorite).map((a) => a.id);
+    saveFavorites(favorites);
+  }, [data, filteredData]);
 
   return {
     data,
