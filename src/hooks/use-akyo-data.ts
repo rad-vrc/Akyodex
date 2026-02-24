@@ -46,8 +46,8 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   useEffect(() => {
     // 初期SSRデータ（isFavorite未同期）で localStorage を空上書きしない
     if (data.length === 0) return;
-    const hasSyncedFavoriteState = data.some((item) => typeof item.isFavorite === 'boolean');
-    if (!hasSyncedFavoriteState) return;
+    const hasFullySyncedFavoriteState = data.every((item) => typeof item.isFavorite === 'boolean');
+    if (!hasFullySyncedFavoriteState) return;
 
     const favorites = data.filter((item) => item.isFavorite).map((item) => item.id);
     saveFavorites(favorites);
