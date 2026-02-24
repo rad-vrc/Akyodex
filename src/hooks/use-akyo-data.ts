@@ -42,6 +42,12 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // dataの変更に合わせてお気に入りIDを永続化（state updater内の副作用を回避）
+  useEffect(() => {
+    const favorites = data.filter((item) => item.isFavorite).map((item) => item.id);
+    saveFavorites(favorites);
+  }, [data]);
+
   /**
    * 新しいデータでリフレッシュ（言語切り替え時などに使用）
    */
@@ -133,16 +139,9 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     const toggleFavoriteFlag = (items: AkyoData[]) =>
       items.map((akyo) => (akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo));
 
-    const newData = toggleFavoriteFlag(data);
-    const newFilteredData = toggleFavoriteFlag(filteredData);
-
-    setData(newData);
-    setFilteredData(newFilteredData);
-
-    // LocalStorageへの書き込みはstate updater外で実行する
-    const favorites = newData.filter((a) => a.isFavorite).map((a) => a.id);
-    saveFavorites(favorites);
-  }, [data, filteredData]);
+    setData((prevData) => toggleFavoriteFlag(prevData));
+    setFilteredData((prevData) => toggleFavoriteFlag(prevData));
+  }, []);
 
   return {
     data,
