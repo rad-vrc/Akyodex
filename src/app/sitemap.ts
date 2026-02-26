@@ -6,16 +6,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      url: baseUrl,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
       url: `${baseUrl}/zukan`,
       lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: 1,
     },
     // 追加のページがあればここに記述
   ];

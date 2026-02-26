@@ -35,19 +35,14 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://akyodex.com',
-    languages: {
-      'ja-JP': 'https://akyodex.com',
-      'en-US': 'https://akyodex.com',
-    },
+    canonical: 'https://akyodex.com/zukan',
   },
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
-    alternateLocale: ['en_US'],
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
     description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
-    url: 'https://akyodex.com',
+    url: 'https://akyodex.com/zukan',
     siteName: 'Akyoずかん',
     images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Akyoずかん ロゴ' }],
   },
@@ -118,4 +113,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
