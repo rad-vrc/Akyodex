@@ -20,10 +20,14 @@ import { DEFAULT_LANGUAGE } from '@/lib/i18n';
 export const metadata: Metadata = {
   title: 'Akyoずかん - VRChatアバター Akyo図鑑',
   description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
+  alternates: {
+    canonical: 'https://akyodex.com/zukan',
+  },
   openGraph: {
     title: 'Akyoずかん - VRChatアバター Akyo図鑑',
     description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     type: 'website',
+    url: 'https://akyodex.com/zukan',
     images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Akyoずかん ロゴ' }],
   },
 };

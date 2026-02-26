@@ -72,6 +72,18 @@ const nextConfig: NextConfig = {
         destination: '/zukan?id=:id',
         permanent: true,
       },
+      // Legacy share.html -> /zukan
+      {
+        source: '/share.html',
+        destination: '/zukan',
+        permanent: true,
+      },
+      // Legacy /share -> /zukan
+      {
+        source: '/share',
+        destination: '/zukan',
+        permanent: true,
+      },
     ];
   },
 
