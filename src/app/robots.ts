@@ -10,7 +10,6 @@ export default function robots(): MetadataRoute.Robots {
                     '/api/',
                     '/admin/',
                     '/offline/',
-                    '/_next/',
                     '/manifest.webmanifest',
                     '/sw.js',
                 ],
