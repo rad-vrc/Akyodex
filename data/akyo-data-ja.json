@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "ja",
-  "updatedAt": "2026-02-22T15:43:17.608Z",
-  "count": 744,
+  "updatedAt": "2026-02-27T15:16:56.290Z",
+  "count": 745,
   "data": [
     {
       "id": "0001",
@@ -6699,6 +6699,15 @@
       "comment": "Akyoは死なない。たとえその身が朱く錆びついても。",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d7cc59d7-0d2a-4554-878d-1b4848e62a86"
+    },
+    {
+      "id": "0745",
+      "nickname": "オオタチAkyo",
+      "avatarName": "OOAKYO",
+      "category": "パロディ,パロディ/ポケモン,器官,器官/しっぽ",
+      "comment": "オオタチAkyo、ゲットだぜ！",
+      "author": "teramo",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c44b9061-c61d-4f15-b9a0-6d0d92472cce"
     }
   ]
 }
