@@ -43,6 +43,10 @@ function pushBranch(pushArgs) {
     cwd: process.cwd(),
     encoding: "utf8",
     stdio: "inherit",
+    env: {
+      ...process.env,
+      AKYODEX_SKIP_POST_PUSH_CHECK: "1",
+    },
     shell: false,
   });
 
@@ -105,10 +109,14 @@ function loadOpenPullRequestsWithRetry(branch, options = {}) {
 }
 
 function main() {
-  const pushArgs = process.argv.slice(2);
+  const rawArgs = process.argv.slice(2);
+  const skipPush = rawArgs.includes("--skip-push");
+  const pushArgs = rawArgs.filter((arg) => arg !== "--skip-push");
 
   checkGhAvailable();
-  pushBranch(pushArgs);
+  if (!skipPush) {
+    pushBranch(pushArgs);
+  }
 
   const branch = getCurrentBranch();
   const prs = loadOpenPullRequestsWithRetry(branch);
