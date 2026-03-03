@@ -20,7 +20,8 @@
     "test:headed": "playwright test --headed",
     "test:csv": "node scripts/test-csv-quality.js",
     "data:convert": "npx tsx scripts/csv-to-json.ts",
-    "generate-ko-data": "node scripts/generate-ko-data.js"
+    "generate-ko-data": "node scripts/generate-ko-data.js",
+    "push:check-pr": "node scripts/push-and-check-pr-conflicts.js"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.16.5",

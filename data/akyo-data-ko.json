@@ -2,7 +2,7 @@
   "version": "1.0",
   "language": "ko",
   "updatedAt": "2026-03-03T10:25:49.495Z",
-  "count": 744,
+  "count": 745,
   "data": [
     {
       "id": "0001",
@@ -1977,7 +1977,7 @@
     },
     {
       "id": "0220",
-      "nickname": "개 Akyo",
+      "nickname": "시바이누 Akyo",
       "avatarName": "akyo_dog",
       "category": "동물,동물/개",
       "comment": "",
@@ -6699,6 +6699,15 @@
       "comment": "Akyo는 죽지 않는다. 그 몸이 붉게 녹슬더라도.",
       "author": "らど⁄rad1031",
       "avatarUrl": "https://vrchat.com/home/avatar/avtr_d7cc59d7-0d2a-4554-878d-1b4848e62a86"
+    },
+    {
+      "id": "0745",
+      "nickname": "다꼬리 Akyo",
+      "avatarName": "OOAKYO",
+      "category": "패러디,패러디/포켓몬,기관,기관/꼬리",
+      "comment": "다꼬리 Akyo, 겟이다제!",
+      "author": "teramo",
+      "avatarUrl": "https://vrchat.com/home/avatar/avtr_c44b9061-c61d-4f15-b9a0-6d0d92472cce"
     }
   ]
 }

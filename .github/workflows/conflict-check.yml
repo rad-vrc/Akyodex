@@ -1,0 +1,217 @@
+name: Conflict Check
+
+# PRへのpush、またはmainへのpush時（他PRが影響を受ける可能性）に実行
+on:
+  pull_request:
+    branches: [main]
+  # mainが更新されたとき、オープンPRの競合を再チェック
+  push:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  # PR push時: そのPR自身の競合をチェック
+  check-current-pr:
+    if: github.event_name == 'pull_request'
+    name: Check merge conflict
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch latest main
+        run: git fetch origin main
+
+      - name: Try merge with main
+        id: merge-test
+        run: |
+          git config user.email "ci@github.com"
+          git config user.name "CI"
+          if git merge --no-commit --no-ff origin/main 2>&1; then
+            echo "conflict=false" >> "$GITHUB_OUTPUT"
+            git merge --abort 2>/dev/null || true
+          else
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
+            # 競合ファイル一覧を取得
+            CONFLICTS=$(git diff --name-only --diff-filter=U | head -20)
+            echo "files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$CONFLICTS" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+            git merge --abort 2>/dev/null || true
+          fi
+
+      - name: Comment on PR if conflict detected
+        if: steps.merge-test.outputs.conflict == 'true'
+        uses: actions/github-script@v7
+        env:
+          CONFLICT_FILES: ${{ steps.merge-test.outputs.files }}
+        with:
+          script: |
+            const MARKER = '<!-- merge-conflict-bot -->';
+            const files = process.env.CONFLICT_FILES;
+            const body = [
+              MARKER,
+              '⚠️ **Merge Conflict Detected**',
+              '',
+              'このブランチは `main` と競合しています。マージ前に解決してください。',
+              '',
+              '**競合ファイル:**',
+              '```',
+              files,
+              '```',
+              '',
+              '解決方法:',
+              '```bash',
+              'git fetch origin main',
+              'git merge origin/main',
+              '# 競合を解決してコミット',
+              '```',
+            ].join('\n');
+
+            // 既存の競合コメントを探して更新（重複防止）
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(MARKER));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Remove stale conflict comment if resolved
+        if: steps.merge-test.outputs.conflict == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const MARKER = '<!-- merge-conflict-bot -->';
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(MARKER));
+            if (existing) {
+              await github.rest.issues.deleteComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+              });
+            }
+
+  # mainが更新されたとき: 全オープンPRの競合を再チェック
+  check-all-open-prs:
+    if: github.event_name == 'push'
+    name: Re-check open PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all open PRs for conflicts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const MARKER = '<!-- merge-conflict-bot -->';
+            const MAX_ATTEMPTS = 5;
+            const POLL_INTERVAL_MS = 3000;
+
+            const allPrs = await github.paginate(github.rest.pulls.list, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              base: 'main',
+              per_page: 100,
+            });
+
+            const MAX_PRS = 50;
+            const prs = allPrs.slice(0, MAX_PRS);
+            if (allPrs.length > MAX_PRS) {
+              core.info(`Open PRs (${allPrs.length}) exceed limit. Processing first ${MAX_PRS}.`);
+            }
+
+            for (const pr of prs) {
+              // mergeable 状態をポーリングで取得（計算中は null が返る）
+              let mergeable = null;
+              for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+                const { data: detail } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                });
+                mergeable = detail.mergeable;
+                if (mergeable !== null) break;
+                await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
+              }
+
+              if (mergeable === null) {
+                core.warning(`PR #${pr.number}: mergeable state still unknown after ${MAX_ATTEMPTS} attempts, skipping`);
+                continue;
+              }
+
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                per_page: 100,
+              });
+              const existing = comments.find(c => c.body && c.body.includes(MARKER));
+
+              if (mergeable === false) {
+                const body = [
+                  MARKER,
+                  '⚠️ **Merge Conflict Detected**',
+                  '',
+                  `\`main\` が更新され、このブランチ (\`${pr.head.ref}\`) と競合が発生しました。`,
+                  'マージ前に解決してください。',
+                  '',
+                  '解決方法:',
+                  '```bash',
+                  'git fetch origin main',
+                  'git merge origin/main',
+                  '# 競合を解決してコミット',
+                  '```',
+                ].join('\n');
+
+                if (existing) {
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: existing.id,
+                    body,
+                  });
+                } else {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    body,
+                  });
+                }
+              } else if (mergeable === true && existing) {
+                // 競合が解消された場合、古いコメントを削除
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                });
+              }
+            }
