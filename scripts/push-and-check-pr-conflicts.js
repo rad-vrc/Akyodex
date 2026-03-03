@@ -78,8 +78,30 @@ function isConflict(pr) {
   return pr.mergeable === "CONFLICTING" || pr.mergeStateStatus === "DIRTY";
 }
 
+function isPending(pr) {
+  return pr.mergeable === "UNKNOWN" || pr.mergeStateStatus === "UNKNOWN";
+}
+
 function formatPr(pr) {
   return `#${pr.number} ${pr.headRefName} -> ${pr.baseRefName} | mergeable=${pr.mergeable} | state=${pr.mergeStateStatus} | ${pr.url}`;
+}
+
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+function loadOpenPullRequestsWithRetry(branch, options = {}) {
+  const timeoutMs = options.timeoutMs || 20000;
+  const intervalMs = options.intervalMs || 2000;
+  const deadline = Date.now() + timeoutMs;
+  let prs = loadOpenPullRequests(branch);
+
+  while (prs.length > 0 && prs.some(isPending) && Date.now() < deadline) {
+    sleep(intervalMs);
+    prs = loadOpenPullRequests(branch);
+  }
+
+  return prs;
 }
 
 function main() {
@@ -89,7 +111,7 @@ function main() {
   pushBranch(pushArgs);
 
   const branch = getCurrentBranch();
-  const prs = loadOpenPullRequests(branch);
+  const prs = loadOpenPullRequestsWithRetry(branch);
 
   if (prs.length === 0) {
     console.log(`Push completed. No open PR found for branch '${branch}'.`);
@@ -101,6 +123,12 @@ function main() {
   console.log("Push completed. PR status:");
   for (const pr of prs) {
     console.log(`- ${formatPr(pr)}`);
+  }
+
+  if (prs.some(isPending)) {
+    console.error("");
+    console.error("PR merge status is still pending after retry. Re-run the check.");
+    process.exit(4);
   }
 
   if (conflicting.length > 0) {
