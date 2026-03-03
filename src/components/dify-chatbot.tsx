@@ -34,6 +34,7 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
 
   useEffect(() => {
     if (!token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoadState('error');
       return;
     }

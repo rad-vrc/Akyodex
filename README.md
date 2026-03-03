@@ -1,4 +1,4 @@
-# Akyodex - Next.js 15 + Cloudflare Pages
+# Akyodex - Next.js 16 + Cloudflare Pages
 
 **VRChat Avatar Encyclopedia**
 

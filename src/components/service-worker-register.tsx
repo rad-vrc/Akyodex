@@ -89,6 +89,18 @@ export function ServiceWorkerRegister() {
       });
     };
 
+    const shouldIgnoreUpdateError = (error: unknown): boolean => {
+      const message = (error instanceof Error ? error.message : String(error)).toLowerCase();
+      const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+      const isGenericNetworkError =
+        message.includes('a bad http response code') || message.includes('failed to fetch');
+      return (
+        message.includes('failed to update a serviceworker') ||
+        message.includes('the script resource is behind a redirect') ||
+        (isOffline && isGenericNetworkError)
+      );
+    };
+
     // Register service worker
     const registerServiceWorker = async () => {
       try {
@@ -102,6 +114,9 @@ export function ServiceWorkerRegister() {
 
         // Check for updates on initial load
         void reg.update().catch((error) => {
+          if (shouldIgnoreUpdateError(error)) {
+            return;
+          }
           console.error('[SW] Initial update check failed:', error);
           reportServiceWorkerError('update', error, { scope: reg.scope, stage: 'initial-check' });
         });
@@ -123,6 +138,9 @@ export function ServiceWorkerRegister() {
         // Check for updates every hour (ref で保持してクリーンアップ可能にする)
         updateIntervalRef.current = setInterval(() => {
           void reg.update().catch((error) => {
+            if (shouldIgnoreUpdateError(error)) {
+              return;
+            }
             console.error('[SW] Scheduled update check failed:', error);
             reportServiceWorkerError('update', error, { scope: reg.scope, stage: 'scheduled-check' });
           });
