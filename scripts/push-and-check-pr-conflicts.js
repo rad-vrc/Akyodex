@@ -31,7 +31,13 @@ function getCurrentBranch() {
 }
 
 function checkGhAvailable() {
-  const result = run("gh", ["--version"]);
+  let result;
+  try {
+    result = run("gh", ["--version"]);
+  } catch {
+    fail("`gh` CLI is required to verify PR merge conflicts after push.", 3);
+  }
+
   if (result.status !== 0) {
     fail("`gh` CLI is required to verify PR merge conflicts after push.", 3);
   }
@@ -110,10 +116,10 @@ function main() {
   const skipPush = rawArgs.includes("--skip-push");
   const pushArgs = rawArgs.filter((arg) => arg !== "--skip-push");
 
-  checkGhAvailable();
   if (!skipPush) {
     pushBranch(pushArgs);
   }
+  checkGhAvailable();
 
   const branch = getCurrentBranch();
   const prs = loadOpenPullRequestsWithRetry(branch);
