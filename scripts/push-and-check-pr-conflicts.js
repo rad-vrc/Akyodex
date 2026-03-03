@@ -43,10 +43,7 @@ function pushBranch(pushArgs) {
     cwd: process.cwd(),
     encoding: "utf8",
     stdio: "inherit",
-    env: {
-      ...process.env,
-      AKYODEX_SKIP_POST_PUSH_CHECK: "1",
-    },
+    // `shell: false` executes git.exe directly, so shell wrappers/aliases do not recurse here.
     shell: false,
   });
 
