@@ -143,7 +143,9 @@ export async function processAkyoCRUD(
                         if (displaySerialIndex >= 0) {
                             recordData.displaySerial = String(existingRecord[displaySerialIndex] || '').trim();
                         }
-                        recordData.displaySerial = recordData.displaySerial || id;
+                        if (!recordData.displaySerial) {
+                            recordData.displaySerial = getNextDisplaySerial(dataRecords, header, 'world');
+                        }
                     }
                 } else {
                     recordData.displaySerial = recordData.displaySerial || id;

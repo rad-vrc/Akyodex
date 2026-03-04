@@ -189,6 +189,10 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
     const attribute = rawRow['Category'] || '';
     const notes = rawRow['Comment'] || '';
     const creator = rawRow['Author'] || '';
+    const normalizedEntryType = (rawRow[ENTRY_TYPE_COLUMN] ?? '').trim().toLowerCase();
+    const normalizedDisplaySerial = (rawRow[DISPLAY_SERIAL_COLUMN] ?? '').trim();
+    const normalizedSourceUrl = (rawRow['SourceURL'] || rawRow['AvatarURL'] || '').trim();
+    const normalizedAvatarUrl = (rawRow['AvatarURL'] || rawRow['SourceURL'] || '').trim();
 
     data.push({
       id: rawRow['ID'] ?? '',
@@ -207,12 +211,12 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
       creator: creator,
 
       entryType:
-        rawRow[ENTRY_TYPE_COLUMN] === 'avatar' || rawRow[ENTRY_TYPE_COLUMN] === 'world'
-          ? rawRow[ENTRY_TYPE_COLUMN]
+        normalizedEntryType === 'avatar' || normalizedEntryType === 'world'
+          ? normalizedEntryType
           : undefined,
-      displaySerial: rawRow[DISPLAY_SERIAL_COLUMN] || undefined,
-      sourceUrl: rawRow['SourceURL'] || rawRow['AvatarURL'] || '',
-      avatarUrl: rawRow['AvatarURL'] || rawRow['SourceURL'] || '',
+      displaySerial: normalizedDisplaySerial || undefined,
+      sourceUrl: normalizedSourceUrl,
+      avatarUrl: normalizedAvatarUrl,
     });
   }
 
@@ -349,7 +353,6 @@ export function getNextDisplaySerial(
   }
 
   const displaySerialIndex = header.indexOf(DISPLAY_SERIAL_COLUMN);
-  const idIndex = header.indexOf('ID');
   let maxSerial = 0;
 
   for (const record of records) {
@@ -358,8 +361,7 @@ export function getNextDisplaySerial(
     }
 
     const serialSource =
-      (displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '') ||
-      (idIndex >= 0 ? String(record[idIndex] || '').trim() : '');
+      displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '';
     const parsed = Number.parseInt(serialSource, 10);
     if (!Number.isNaN(parsed)) {
       maxSerial = Math.max(maxSerial, parsed);

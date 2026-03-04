@@ -312,10 +312,23 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           throw new Error('有効なVRChatワールドURLを入力してください。');
         }
 
-        const [infoResult, imageResult] = await Promise.allSettled([
-          fetch(`/api/vrc-world-info?wrld=${wrldId}`),
-          fetch(`/api/vrc-world-image?wrld=${wrldId}&w=1024`),
-        ]);
+        const worldController = new AbortController();
+        const worldTimeoutId = window.setTimeout(() => worldController.abort(), 30_000);
+
+        const [infoResult, imageResult] = await (async () => {
+          try {
+            return await Promise.allSettled([
+              fetch(`/api/vrc-world-info?wrld=${encodeURIComponent(wrldId)}`, {
+                signal: worldController.signal,
+              }),
+              fetch(`/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`, {
+                signal: worldController.signal,
+              }),
+            ]);
+          } finally {
+            clearTimeout(worldTimeoutId);
+          }
+        })();
 
         let fetchedWorldName = '';
         let fetchedCreatorName = '';

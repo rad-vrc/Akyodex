@@ -2,8 +2,8 @@ import type { AkyoData, AkyoEntryType } from '@/types/akyo';
 
 export const WORLD_CATEGORY_MARKERS = new Set(['ワールド', 'world', '월드']);
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
-export const VRCHAT_AVATAR_ID_PATTERN = /^avtr_[A-Za-z0-9-]+$/;
-export const VRCHAT_WORLD_ID_PATTERN = /^wrld_[A-Za-z0-9-]+$/;
+export const VRCHAT_AVATAR_ID_PATTERN = /^avtr_[A-Za-z0-9-]{1,64}$/;
+export const VRCHAT_WORLD_ID_PATTERN = /^wrld_[A-Za-z0-9-]{1,64}$/;
 
 function getCategoryTokens(akyo: AkyoData): string[] {
   const rawCategory = akyo.category || akyo.attribute || '';

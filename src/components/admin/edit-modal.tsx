@@ -84,9 +84,12 @@ export function EditModal({
       const authorStr = akyo.author || akyo.creator || '';
       const commentStr = akyo.comment || akyo.notes || '';
 
+      const resolvedEntryType =
+        akyo.entryType || detectVrcEntryTypeFromUrl(getAkyoSourceUrl(akyo)) || 'avatar';
+
       setFormData({
-        entryType: akyo.entryType || detectVrcEntryTypeFromUrl(getAkyoSourceUrl(akyo)) || 'avatar',
-        displaySerial: akyo.displaySerial || akyo.id,
+        entryType: resolvedEntryType,
+        displaySerial: akyo.displaySerial || (resolvedEntryType === 'world' ? '' : akyo.id),
         nickname: akyo.nickname || '',
         avatarName: akyo.avatarName || '',
         categories: categoryStr ? categoryStr.split(/[、,]/).map(a => a.trim()) : [],
@@ -493,6 +496,10 @@ export function EditModal({
       alert('アバター名は必須です');
       return;
     }
+    if (isWorldEntry && !formData.nickname.trim()) {
+      alert('ワールド名（通称）は必須です');
+      return;
+    }
     if (!formData.author.trim()) {
       alert('作者は必須です');
       return;
@@ -536,8 +543,14 @@ export function EditModal({
     try {
       const submitData = new FormData();
       submitData.append('id', akyo.id);
+      const shouldClearDisplaySerialForWorldConversion =
+        isWorldEntry && akyo.entryType !== 'world' && formData.displaySerial === akyo.id;
+      const displaySerialForSubmit = shouldClearDisplaySerialForWorldConversion
+        ? ''
+        : formData.displaySerial;
+
       submitData.append('entryType', formData.entryType);
-      submitData.append('displaySerial', formData.displaySerial);
+      submitData.append('displaySerial', displaySerialForSubmit);
       submitData.append('nickname', formData.nickname);
       submitData.append('avatarName', isWorldEntry ? '' : formData.avatarName);
       submitData.append('sourceUrl', formData.sourceUrl);
