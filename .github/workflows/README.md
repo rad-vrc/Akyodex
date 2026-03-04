@@ -57,6 +57,7 @@
 | **Validate Resources** | `validate-cloudflare-resources.yml` | 毎日, Manual | R2/KV/CSV データの整合性チェック |
 | **Reusable Build** | `reusable-build.yml` | Workflow call | 共通ビルドロジック（DRY原則） |
 | **Next.js Health Check** | `nextjs-health-check.yml` | PR (コード変更時) | Next.js設定とベストプラクティス検証 |
+| **Conflict Check** | `conflict-check.yml` | PR, Push to main | PRマージ競合の自動検出・通知 |
 
 ### PRマージ前の必須チェック推奨
 
@@ -371,6 +372,46 @@ git checkout -b feature/my-feature
 git push origin feature/my-feature
 # → GitHub で PR 作成 → Health Check 自動実行
 ```
+
+---
+
+## PR 競合チェック (Conflict Check)
+
+**ファイル**: `.github/workflows/conflict-check.yml`
+
+### トリガー条件
+
+```yaml
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+```
+
+### 概要
+
+PR のマージ競合を自動検出し、PR コメントで通知するワークフロー。2つのジョブで構成されています:
+
+#### 1. check-current-pr (PR push 時)
+- PR ブランチを `main` とテストマージ
+- 競合がある場合、競合ファイル一覧をPRコメントに投稿
+- 競合が解消された場合、既存の競合コメントを自動削除
+
+#### 2. check-all-open-prs (main push 時)
+- `main` が更新されたとき、全オープンPR (最大50件) を再チェック
+- GitHub API の `mergeable` 状態をポーリング (最大5回、3秒間隔)
+- 新たに競合が発生したPRにコメントを投稿
+- 競合が解消されたPRのコメントを自動削除
+
+### ローカル補完ツール
+
+`npm run push:check-pr` (`scripts/push-and-check-pr-conflicts.js`) でローカルからも
+プッシュ後にPRの競合状態を確認できます。
+
+- `--skip-push`: プッシュをスキップしてPRチェックのみ実行
+- Exit code `2`: 競合あり
+- Exit code `4`: GitHub の計算が完了せず未確定
 
 ---
 
@@ -720,5 +761,5 @@ Could not list R2 buckets - check API token permissions
 
 ---
 
-**最終更新**: 2025-11-07
-**対応バージョン**: Next.js 15.5.2, Tailwind CSS 4.x, @opennextjs/cloudflare 1.11.0
+**最終更新**: 2026-03-04
+**対応バージョン**: Next.js 16.1.6, Tailwind CSS 4.x, @opennextjs/cloudflare 1.16.5

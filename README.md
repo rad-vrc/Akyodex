@@ -99,7 +99,7 @@ npm run dev
 - 📊 **多段データロード** - KV → JSON → CSV 自動フォールバック
 
 ### Project Status
-- ✅ **Next.js 15.5.10 + Cloudflare Pages** (OpenNext adapter)
+- ✅ **Next.js 16.1.6 + Cloudflare Pages** (OpenNext adapter)
 - ✅ **Security Hardening** (Timing attack, XSS prevention, Input validation)
 - ✅ **PWA Implementation** (Service Worker with 6 caching strategies)
 - ✅ **VRChat Image Fallback** (3-tier fallback: R2 → VRChat API → Placeholder)
@@ -148,7 +148,7 @@ npm run dev
 ┌─────────────────────────────────────────────────────────────┐
 │                    Cloudflare Pages                         │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │          Next.js 15 App (OpenNext Adapter)            │  │
+│  │          Next.js 16 App (OpenNext Adapter)            │  │
 │  │  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  │  │
 │  │  │   SSG Pages │  │ API Routes   │  │ Middleware  │  │  │
 │  │  │   (Static)  │  │ (Edge/Node)  │  │  (i18n+CSP) │  │  │
@@ -172,15 +172,15 @@ Data Source Priority: KV (~5ms) → JSON (~20ms) → CSV (~200ms)
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 15.5.10 (App Router)
-- **React**: 19.1.0 (Server/Client Components)
+- **Framework**: Next.js 16.1.6 (App Router)
+- **React**: 19.2.4 (Server/Client Components)
 - **Styling**: Tailwind CSS 4 (PostCSS plugin)
 - **Fonts**: Google Fonts (M PLUS Rounded 1c, Kosugi Maru, Noto Sans JP)
 - **PWA**: Custom Service Worker with 6 caching strategies
 
 ### Backend
 - **Runtime**: Cloudflare Pages (Edge + Node.js Runtime)
-- **Adapter**: @opennextjs/cloudflare ^1.16.4
+- **Adapter**: @opennextjs/cloudflare ^1.16.5
 - **Authentication**: HMAC-signed sessions (Web Crypto API)
 - **Session Storage**: Cloudflare KV
 - **File Storage**: Cloudflare R2
@@ -203,7 +203,7 @@ Data Source Priority: KV (~5ms) → JSON (~20ms) → CSV (~200ms)
 - **Testing**: Playwright (E2E tests)
 - **Dead Code Analysis**: Knip
 - **Git Workflow**: Feature branches → PR → main
-- **CI/CD**: Cloudflare Pages automatic deployment
+- **CI/CD**: Cloudflare Pages automatic deployment + PR conflict detection
 
 ---
 
@@ -272,10 +272,11 @@ Akyodex/
 │   │   ├── filter-panel.tsx         # Category/author filter
 │   │   ├── search-bar.tsx           # Search input
 │   │   ├── language-toggle.tsx      # Language switcher
-│   │   ├── loading-spinner.tsx      # Loading indicator
 │   │   ├── mini-akyo-bg.tsx         # Animated background
 │   │   ├── icons.tsx                # SVG icon components
 │   │   ├── dify-chatbot.tsx         # Dify chatbot loader/state handler
+│   │   ├── dify-chatbot.module.css  # Dify chatbot CSS module
+│   │   ├── runtime-features.tsx     # Deferred runtime features (Dify, etc.)
 │   │   ├── structured-data.tsx      # JSON-LD structured data
 │   │   ├── web-vitals.tsx           # Web Vitals reporting
 │   │   ├── service-worker-register.tsx  # SW registration
@@ -322,6 +323,7 @@ Akyodex/
 │   └── middleware.ts                # Edge middleware (i18n + CSP + nonce)
 │
 ├── scripts/                         # Utility scripts (ESLint excluded)
+│   ├── push-and-check-pr-conflicts.js # Push + PR merge conflict checker
 │   ├── csv-to-json.ts               # CSV → JSON conversion
 │   ├── fix-categories.js            # Japanese category fixes
 │   ├── fix-categories-en.js         # English category fixes
@@ -422,6 +424,9 @@ npm run test:csv         # CSV data quality checks
 
 # Data
 npm run data:convert     # Convert CSV to JSON (npx tsx scripts/csv-to-json.ts)
+
+# Git
+npm run push:check-pr    # Push and check open PR for merge conflicts
 ```
 
 ---
@@ -1223,6 +1228,14 @@ export const runtime = 'nodejs';
 - ✅ HMAC-signed sessions (replacing JWT)
 - ✅ Nonce-based CSP via middleware
 
+### Phase 10: Mobile Performance & Developer Tooling (Completed 2026-03)
+- ✅ Mobile LCP/TBT optimization (responsive layout hook, content-visibility, deferred CSS)
+- ✅ Mobile-specific logo payload reduction and card button restyling
+- ✅ Avatar ID placement above nickname in card view
+- ✅ PR conflict detection GitHub Actions workflow (`conflict-check.yml`)
+- ✅ Local push-and-check-pr-conflicts script for pre-merge conflict verification
+- ✅ Removed unused `loading-spinner` component and `IconImage` export
+
 ---
 
 ## 🤝 Contributing
@@ -1299,6 +1312,6 @@ For questions or issues:
 
 ---
 
-**Last Updated**: 2026-02-13  
+**Last Updated**: 2026-03-04  
 **Status**: ✅ Production Ready
 
