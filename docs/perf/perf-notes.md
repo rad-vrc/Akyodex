@@ -62,32 +62,36 @@ Reference run:
 ### Mobile Performance & UI Optimizations
 
 #### 1) Unified responsive layout hook
+
 - File: `src/app/zukan/zukan-client.tsx`
 - Consolidated window resize listeners into `useResponsiveLayout` with debounce.
-- Computes `isMobile`, `gridCols`, and `renderLimit` in one pass.
+- Computes `isMobile` and `gridCols` in one pass; `renderLimit` is updated by a separate `useEffect` that resets on filter/device changes.
 - SSR: initializes `renderLimit` to desktop value to avoid CLS.
 
 #### 2) Mobile animation disabling
+
 - File: `src/app/zukan/zukan-client.tsx`
 - Heavy mini-akyo background animations are now skipped on mobile.
 - Reduces TBT and overall main-thread work.
 
 #### 3) Card button restyling (mobile)
+
 - File: `src/components/akyo-card.tsx`
 - VRChat and reference sheet buttons rescaled and repositioned for mobile.
 - Reference button uses photo icon with "DL" label on mobile.
 - Avatar ID now displayed above nickname near the card title.
 
 #### 4) Non-critical CSS deferral
+
 - File: `src/app/globals.css`
 - Admin and chatbot styles deferred from zukan critical path.
 - Reduces initial CSS parsing cost on mobile.
 
 #### 5) Content-visibility restoration (desktop)
+
 - Desktop cards use `content-visibility: auto` to reduce off-screen rendering.
 - Mobile cards do not use `content-visibility` (dropped after testing showed no benefit).
 
 ### Regression Notes
 - Do **not** re-add `content-visibility` to mobile cards — it showed no improvement.
 - Keep SSR `renderLimit` initialized to desktop limit to prevent CLS.
-
