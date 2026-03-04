@@ -153,6 +153,11 @@ export function buildAvatarImageUrl(
   sourceUrl: string | undefined,
   width: number = 512
 ): string {
+  const wrldId = extractVRChatWorldId(sourceUrl);
+  if (wrldId) {
+    return `/api/vrc-world-image?wrld=${wrldId}&w=${width}`;
+  }
+
   const avtrId = extractVRChatAvatarId(sourceUrl);
 
   if (avtrId) {
