@@ -97,8 +97,8 @@ export function extractVRChatWorldId(worldUrl: string | undefined): string | nul
 
 /**
  * Validates and opens a VRChat URL safely in a new tab.
- * Extracts the avatar ID (avtr_...) to reconstruct a canonical URL, ensuring
- * only valid avatar pages are opened.
+ * Reconstructs a canonical avatar/world URL when a valid entity ID is present,
+ * and otherwise falls back to a strictly validated vrchat.com URL only.
  *
  * @param e - React or Native click event to stop propagation
  * @param url - The source URL to validate
@@ -142,11 +142,11 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
 }
 
 /**
- * Build avatar image URL with VRChat fallback support
+ * Build the catalog image URL using the source VRChat URL when an avatar ID is available.
  * @param id - The Akyo ID
- * @param avatarUrl - The VRChat avatar URL
+ * @param sourceUrl - The source VRChat URL (avatar/world)
  * @param width - The desired image width (default: 512)
- * @returns The constructed image URL with avtr parameter if available
+ * @returns The constructed image URL with avtr parameter when the source URL is an avatar
  */
 export function buildAvatarImageUrl(
   id: string,

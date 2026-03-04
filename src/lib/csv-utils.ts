@@ -9,7 +9,7 @@
 import type { AkyoData } from '@/types/akyo';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
-import { hydrateAkyoDataset } from './akyo-entry';
+import { hydrateAkyoDataset, WORLD_CATEGORY_MARKERS } from './akyo-entry';
 import type { GitHubCommitResponse, GitHubConfig } from './github-utils';
 import { commitCSVToGitHub, fetchCSVFromGitHub } from './github-utils';
 
@@ -19,7 +19,6 @@ const ENTRY_TYPE_COLUMN = 'EntryType';
 const DISPLAY_SERIAL_COLUMN = 'DisplaySerial';
 const AKYO_EXTENDED_COLUMNS = [SOURCE_URL_COLUMN, ENTRY_TYPE_COLUMN, DISPLAY_SERIAL_COLUMN];
 const WORLD_ENTRY_TYPE = 'world';
-const WORLD_CATEGORY_MARKERS = new Set(['ワールド', 'world', '월드']);
 
 /**
  * Parse CSV content into records
@@ -175,25 +174,12 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
   }
 
   const [header, ...dataRecords] = records;
+  const normalized = normalizeAkyoCsvShape(header, dataRecords);
   const data: AkyoData[] = [];
 
-  for (const record of dataRecords) {
-    // Skip records with column count mismatch (malformed data)
-    if (record.length !== header.length) {
-      // Only log first few mismatches to avoid spam
-      if (data.length < 5) {
-        console.warn('Column count mismatch - skipping record:', {
-          expected: header.length,
-          got: record.length,
-          firstColumn: record[0],
-          recordLength: record.length,
-        });
-      }
-      continue;
-    }
-
+  for (const record of normalized.dataRecords) {
     const rawRow: Record<string, string> = {};
-    header.forEach((headerName, index) => {
+    normalized.header.forEach((headerName, index) => {
       // Remove BOM and whitespace from header name just in case
       const safeHeader = headerName.trim().replace(/^\ufeff/, '');
       rawRow[safeHeader] = record[index] || '';

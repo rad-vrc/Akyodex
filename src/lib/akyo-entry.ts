@@ -1,6 +1,6 @@
 import type { AkyoData, AkyoEntryType } from '@/types/akyo';
 
-const WORLD_CATEGORY_MARKERS = new Set(['ワールド', 'world', '월드']);
+export const WORLD_CATEGORY_MARKERS = new Set(['ワールド', 'world', '월드']);
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 export const VRCHAT_AVATAR_ID_PATTERN = /^avtr_[A-Za-z0-9-]+$/;
 export const VRCHAT_WORLD_ID_PATTERN = /^wrld_[A-Za-z0-9-]+$/;
@@ -72,12 +72,25 @@ export function detectVrcEntryTypeFromUrl(url: string): AkyoEntryType | null {
     return null;
   }
 
-  if (/https?:\/\/vrchat\.com\/home\/avatar\/avtr_[A-Za-z0-9-]+/i.test(trimmedUrl)) {
-    return 'avatar';
-  }
+  try {
+    const parsedUrl = new URL(trimmedUrl);
+    const normalizedHost = parsedUrl.hostname.toLowerCase();
+    const normalizedPath = parsedUrl.pathname.toLowerCase();
 
-  if (/https?:\/\/vrchat\.com\/home\/world\/wrld_[A-Za-z0-9-]+/i.test(trimmedUrl)) {
-    return 'world';
+    if (
+      (parsedUrl.protocol === 'https:' || parsedUrl.protocol === 'http:') &&
+      normalizedHost === 'vrchat.com'
+    ) {
+      if (/^\/home\/avatar\/avtr_[a-z0-9-]{1,64}\/?$/i.test(normalizedPath)) {
+        return 'avatar';
+      }
+
+      if (/^\/home\/world\/wrld_[a-z0-9-]{1,64}\/?$/i.test(normalizedPath)) {
+        return 'world';
+      }
+    }
+  } catch {
+    return null;
   }
 
   return null;
@@ -88,7 +101,7 @@ export function extractVRChatAvatarIdFromUrl(url: string | undefined): string | 
     return null;
   }
 
-  const match = url.match(/avtr_[A-Za-z0-9-]+/);
+  const match = url.match(/\bavtr_[A-Za-z0-9-]{1,64}\b/);
   return match ? match[0] : null;
 }
 
@@ -97,7 +110,7 @@ export function extractVRChatWorldIdFromUrl(url: string | undefined): string | n
     return null;
   }
 
-  const match = url.match(/wrld_[A-Za-z0-9-]+/);
+  const match = url.match(/\bwrld_[A-Za-z0-9-]{1,64}\b/);
   return match ? match[0] : null;
 }
 

@@ -323,7 +323,7 @@ function main() {
       `[WARN] ${untranslatedCommentCount} untranslated comments (use --verbose for detailed rows)`
     );
   }
-  console.log(`\n✨ Korean data generated: ${koRows.length} avatars`);
+  console.log(`\n✨ Korean data generated: ${koRows.length} entries`);
   console.log('   Files:');
   console.log(`   - ${csvKoPath}`);
   console.log(`   - ${jsonKoPath}`);

@@ -322,16 +322,34 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
 
   const id = readField('id');
   const entryTypeRaw = readField('entryType');
-  const entryType: AkyoEntryType = entryTypeRaw === 'world' ? 'world' : 'avatar';
+  let entryType: AkyoEntryType = 'avatar';
+  if (entryTypeRaw) {
+    if (entryTypeRaw === 'avatar' || entryTypeRaw === 'world') {
+      entryType = entryTypeRaw;
+    } else {
+      return {
+        success: false,
+        status: 400,
+        error: 'entryType は avatar または world である必要があります',
+      };
+    }
+  }
   const displaySerial = readField('displaySerial') || undefined;
   const avatarName = readField('avatarName');
+  const nickname = readField('nickname');
   const sourceUrl = readField('sourceUrl') || readField('avatarUrl');
 
   // 新旧フィールドの両方をサポート
   // 優先順位: author (新) > creator (旧)
   const author = readField('author') || readField('creator');
 
-  if (!id || !author || !sourceUrl || (entryType === 'avatar' && !avatarName)) {
+  if (
+    !id ||
+    !author ||
+    !sourceUrl ||
+    (entryType === 'avatar' && !avatarName) ||
+    (entryType === 'world' && !nickname)
+  ) {
     return {
       success: false,
       status: 400,
@@ -363,7 +381,7 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
       entryType,
       displaySerial,
       avatarName,
-      nickname: readField('nickname'),
+      nickname,
       sourceUrl,
       avatarUrl: readField('avatarUrl') || sourceUrl,
       imageData,

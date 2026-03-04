@@ -112,7 +112,7 @@ export const getAkyoDataFromKVOnly = cache(
       const data = await kv.get<AkyoData[]>(key, { type: 'json' });
 
       if (data && Array.isArray(data) && data.length > 0) {
-        console.log(`[KV] Success: ${data.length} avatars (${lang})`);
+        console.log(`[KV] Success: ${data.length} entries (${lang})`);
         return hydrateAkyoDataset(data);
       }
 
@@ -154,7 +154,7 @@ export const getAkyoDataFromKVWithSource = cache(
       const data = await kv.get<AkyoData[]>(key, { type: 'json' });
 
       if (data && Array.isArray(data) && data.length > 0) {
-        console.log(`[KV] Success: ${data.length} avatars (${lang})`);
+        console.log(`[KV] Success: ${data.length} entries (${lang})`);
         return { data: hydrateAkyoDataset(data), source: 'kv' };
       }
 
