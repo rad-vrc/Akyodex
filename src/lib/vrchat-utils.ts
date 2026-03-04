@@ -3,6 +3,7 @@ import {
   detectVrcEntryTypeFromUrl,
   extractVRChatAvatarIdFromUrl,
   extractVRChatWorldIdFromUrl,
+  isValidVRChatEntityId,
 } from './akyo-entry';
 
 /**
@@ -21,13 +22,19 @@ export async function fetchVRChatEntityPage(
   entryType: 'avatar' | 'world',
   id: string
 ): Promise<string> {
-  // Security: Explicitly construct VRChat URL to prevent SSRF
-  // Only allow vrchat.com domain
-  const vrchatPageUrl = `https://vrchat.com/home/${entryType}/${id}`;
+  const trimmedId = id.trim();
+  if (!isValidVRChatEntityId(entryType, trimmedId)) {
+    throw new Error('Invalid VRChat entity ID');
+  }
 
-  // Validate URL is actually vrchat.com (defense in depth)
-  const parsedUrl = new URL(vrchatPageUrl);
-  if (parsedUrl.hostname !== 'vrchat.com') {
+  // Security: construct the request from fixed host + fixed path prefixes only.
+  const parsedUrl = new URL('https://vrchat.com');
+  parsedUrl.pathname =
+    entryType === 'avatar'
+      ? `/home/avatar/${encodeURIComponent(trimmedId)}`
+      : `/home/world/${encodeURIComponent(trimmedId)}`;
+
+  if (parsedUrl.hostname !== 'vrchat.com' || parsedUrl.protocol !== 'https:') {
     throw new Error('Invalid domain');
   }
 
@@ -36,7 +43,7 @@ export async function fetchVRChatEntityPage(
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
-    const pageResponse = await fetch(vrchatPageUrl, {
+    const pageResponse = await fetch(parsedUrl.toString(), {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept': 'text/html',
