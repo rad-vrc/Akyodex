@@ -4,7 +4,10 @@
  */
 
 import { connection } from 'next/server';
+import { jsonError } from '@/lib/api-helpers';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
+
+export const runtime = 'edge';
 
 const ALLOWED_IMAGE_HOSTS = new Set([
   'api.vrchat.cloud',
@@ -22,18 +25,52 @@ function isAllowedImageUrl(url: string): boolean {
   }
 }
 
+function extractMetaContent(html: string, name: string): string {
+  const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
+
+  for (const tag of metaTags) {
+    const contentMatch = tag.match(/\bcontent=["']([^"']+)["']/i);
+    if (!contentMatch?.[1]) {
+      continue;
+    }
+
+    if (new RegExp(`\\b(?:name|property)=["']${name.replace(':', '\\:')}["']`, 'i').test(tag)) {
+      return contentMatch[1];
+    }
+  }
+
+  return '';
+}
+
+function getErrorResponse(error: unknown, fallbackMessage: string): Response {
+  const message = error instanceof Error ? error.message : fallbackMessage;
+
+  if (error instanceof Error) {
+    const statusMatch = error.message.match(/returned (\d{3})/);
+    if (statusMatch) {
+      return jsonError(error.message, Number.parseInt(statusMatch[1], 10));
+    }
+
+    if (/timeout/i.test(error.message)) {
+      return jsonError(error.message, 504);
+    }
+  }
+
+  return jsonError(message, 500);
+}
+
 export async function GET(request: Request) {
   await connection();
   const { searchParams } = new URL(request.url);
   const wrld = searchParams.get('wrld');
 
   if (!wrld) {
-    return Response.json({ error: 'wrld parameter is required' }, { status: 400 });
+    return jsonError('wrld parameter is required', 400);
   }
 
   const wrldMatch = wrld.match(/^wrld_[A-Za-z0-9-]{1,50}$/);
   if (!wrldMatch) {
-    return Response.json({ error: 'Invalid wrld format' }, { status: 400 });
+    return jsonError('Invalid wrld format', 400);
   }
 
   const cleanWrld = wrldMatch[0];
@@ -42,18 +79,16 @@ export async function GET(request: Request) {
     const html = await fetchVRChatWorldPage(cleanWrld);
     let imageUrl = '';
 
-    const ogMatch = html.match(
-      /<meta[^>]+(?:property|name)=["']og:image["'][^>]+content=["']([^"']+)["']/i
-    );
-    if (ogMatch?.[1]) {
-      const candidate = ogMatch[1].startsWith('/') ? `https://vrchat.com${ogMatch[1]}` : ogMatch[1];
+    const ogImage = extractMetaContent(html, 'og:image');
+    if (ogImage) {
+      const candidate = ogImage.startsWith('/') ? `https://vrchat.com${ogImage}` : ogImage;
       if (isAllowedImageUrl(candidate)) {
         imageUrl = candidate;
       }
     }
 
     if (!isAllowedImageUrl(imageUrl)) {
-      return Response.json({ error: 'Valid image not found' }, { status: 404 });
+      return jsonError('Valid image not found', 404);
     }
 
     const controller = new AbortController();
@@ -72,10 +107,7 @@ export async function GET(request: Request) {
       clearTimeout(timeoutId);
 
       if (!imageResponse.ok) {
-        return Response.json(
-          { error: `Image fetch returned ${imageResponse.status}` },
-          { status: imageResponse.status }
-        );
+        return jsonError(`Image fetch returned ${imageResponse.status}`, imageResponse.status);
       }
 
       const imageData = await imageResponse.arrayBuffer();
@@ -90,12 +122,12 @@ export async function GET(request: Request) {
     } catch (imageFetchError) {
       clearTimeout(timeoutId);
       if (imageFetchError instanceof Error && imageFetchError.name === 'AbortError') {
-        return Response.json({ error: 'Image fetch timeout (30 seconds)' }, { status: 504 });
+        return jsonError('Image fetch timeout (30 seconds)', 504);
       }
       throw imageFetchError;
     }
   } catch (error) {
     console.error('[vrc-world-image] Error:', error);
-    return Response.json({ error: 'Failed to fetch VRChat world image' }, { status: 500 });
+    return getErrorResponse(error, 'Failed to fetch VRChat world image');
   }
 }

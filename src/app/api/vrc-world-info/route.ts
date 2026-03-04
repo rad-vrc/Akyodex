@@ -4,8 +4,11 @@
  */
 
 import { connection } from 'next/server';
+import { jsonError, jsonSuccess } from '@/lib/api-helpers';
 import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
+
+export const runtime = 'edge';
 
 interface VRChatWorldInfo {
   worldName: string;
@@ -19,21 +22,60 @@ function sanitize(value: string): string {
   return decodeHTMLEntities(stripHTMLTags(value));
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function extractMetaContent(html: string, names: string[]): string {
+  const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
+
+  for (const tag of metaTags) {
+    const contentMatch = tag.match(/\bcontent=["']([^"']+)["']/i);
+    if (!contentMatch?.[1]) {
+      continue;
+    }
+
+    const matchesName = names.some((name) =>
+      new RegExp(`\\b(?:name|property)=["']${escapeRegExp(name)}["']`, 'i').test(tag)
+    );
+
+    if (matchesName) {
+      return contentMatch[1];
+    }
+  }
+
+  return '';
+}
+
+function getErrorResponse(error: unknown, fallbackMessage: string): Response {
+  const message = error instanceof Error ? error.message : fallbackMessage;
+
+  if (error instanceof Error) {
+    const statusMatch = error.message.match(/returned (\d{3})/);
+    if (statusMatch) {
+      return jsonError(error.message, Number.parseInt(statusMatch[1], 10));
+    }
+
+    if (/timeout/i.test(error.message)) {
+      return jsonError(error.message, 504);
+    }
+  }
+
+  return jsonError(message, 500);
+}
+
 export async function GET(request: Request) {
   await connection();
   const { searchParams } = new URL(request.url);
   const wrld = searchParams.get('wrld');
 
   if (!wrld) {
-    return Response.json({ error: 'wrld parameter is required' }, { status: 400 });
+    return jsonError('wrld parameter is required', 400);
   }
 
   const wrldMatch = wrld.match(/^wrld_[A-Za-z0-9-]{1,50}$/);
   if (!wrldMatch) {
-    return Response.json(
-      { error: 'Invalid wrld format (must be wrld_[A-Za-z0-9-]{1,50})' },
-      { status: 400 }
-    );
+    return jsonError('Invalid wrld format (must be wrld_[A-Za-z0-9-]{1,50})', 400);
   }
 
   const cleanWrld = wrldMatch[0];
@@ -46,11 +88,9 @@ export async function GET(request: Request) {
     let creatorName = '';
     let description = '';
 
-    const ogTitleMatch = html.match(
-      /<meta[^>]+(?:property|name)=["']og:title["'][^>]+content=["']([^"']+)["']/i
-    );
-    if (ogTitleMatch?.[1]) {
-      fullTitle = ogTitleMatch[1].replace(/\s*-\s*VRChat\s*$/i, '').trim();
+    const ogTitle = extractMetaContent(html, ['og:title']);
+    if (ogTitle) {
+      fullTitle = ogTitle.replace(/\s*-\s*VRChat\s*$/i, '').trim();
     }
 
     if (!fullTitle) {
@@ -68,7 +108,7 @@ export async function GET(request: Request) {
     }
 
     if (!fullTitle) {
-      return Response.json({ error: 'Could not extract world name from page' }, { status: 404 });
+      return jsonError('Could not extract world name from page', 404);
     }
 
     const byIndex = fullTitle.lastIndexOf(' by ');
@@ -79,11 +119,13 @@ export async function GET(request: Request) {
       worldName = fullTitle;
     }
 
-    const descMatch = html.match(
-      /<meta[^>]+(?:name|property)=["'](?:description|og:description|twitter:description)["'][^>]+content=["']([^"']+)["']/i
-    );
-    if (descMatch?.[1]) {
-      description = descMatch[1].trim();
+    const ogDescription = extractMetaContent(html, [
+      'description',
+      'og:description',
+      'twitter:description',
+    ]);
+    if (ogDescription) {
+      description = ogDescription.trim();
     }
 
     const payload: VRChatWorldInfo = {
@@ -94,9 +136,9 @@ export async function GET(request: Request) {
       wrld: cleanWrld,
     };
 
-    return Response.json(payload);
+    return jsonSuccess({ ...payload });
   } catch (error) {
     console.error('[vrc-world-info] Error:', error);
-    return Response.json({ error: 'Failed to fetch VRChat world info' }, { status: 500 });
+    return getErrorResponse(error, 'Failed to fetch VRChat world info');
   }
 }
