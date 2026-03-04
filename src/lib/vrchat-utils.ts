@@ -78,6 +78,14 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
   return fetchVRChatEntityPage('avatar', avtr);
 }
 
+/**
+ * Fetch VRChat world page with security validation and timeout.
+ * Delegates to {@link fetchVRChatEntityPage} with the `world` entry type.
+ *
+ * @param wrld - The VRChat world ID or slug (e.g., wrld_xxx)
+ * @returns A promise that resolves to the HTML content of the world page
+ * @throws Error if the world ID is invalid, the request fails, or the request times out
+ */
 export async function fetchVRChatWorldPage(wrld: string): Promise<string> {
   return fetchVRChatEntityPage('world', wrld);
 }
@@ -91,6 +99,17 @@ export function extractVRChatAvatarId(avatarUrl: string | undefined): string | n
   return extractVRChatAvatarIdFromUrl(avatarUrl);
 }
 
+/**
+ * Extract VRChat world ID (wrld_xxx) from world URL.
+ * Delegates to {@link extractVRChatWorldIdFromUrl}.
+ *
+ * @param worldUrl - The VRChat world URL (e.g., https://vrchat.com/home/world/wrld_xxx)
+ * @returns The world ID (e.g., wrld_xxx), or null for undefined / invalid URLs
+ *
+ * @example
+ * extractVRChatWorldId('https://vrchat.com/home/world/wrld_xxx') // 'wrld_xxx'
+ * extractVRChatWorldId(undefined) // null
+ */
 export function extractVRChatWorldId(worldUrl: string | undefined): string | null {
   return extractVRChatWorldIdFromUrl(worldUrl);
 }
@@ -113,7 +132,7 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
   if (entryType === 'avatar') {
     const avtrId = extractVRChatAvatarId(url);
     if (avtrId) {
-      const canonicalUrl = `https://vrchat.com/home/avatar/${avtrId}`;
+      const canonicalUrl = `https://vrchat.com/home/avatar/${encodeURIComponent(avtrId)}`;
       window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
       return;
     }
@@ -122,7 +141,7 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
   if (entryType === 'world') {
     const wrldId = extractVRChatWorldId(url);
     if (wrldId) {
-      const canonicalUrl = `https://vrchat.com/home/world/${wrldId}`;
+      const canonicalUrl = `https://vrchat.com/home/world/${encodeURIComponent(wrldId)}`;
       window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
       return;
     }
@@ -142,11 +161,15 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
 }
 
 /**
- * Build the catalog image URL using the source VRChat URL when an avatar ID is available.
+ * Build the catalog image URL using the source VRChat URL.
+ * When a world ID is present, this returns the world image proxy endpoint.
+ * When an avatar ID is present, this returns the avatar image proxy endpoint.
+ * Otherwise, it falls back to the default avatar image endpoint by Akyo ID only.
+ *
  * @param id - The Akyo ID
  * @param sourceUrl - The source VRChat URL (avatar/world)
  * @param width - The desired image width (default: 512)
- * @returns The constructed image URL with avtr parameter when the source URL is an avatar
+ * @returns The constructed image URL for world, avatar, or default fallback cases
  */
 export function buildAvatarImageUrl(
   id: string,
