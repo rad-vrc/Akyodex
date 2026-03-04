@@ -354,18 +354,26 @@ export function getNextDisplaySerial(
 
   const displaySerialIndex = header.indexOf(DISPLAY_SERIAL_COLUMN);
   let maxSerial = 0;
+  let worldOrdinal = 0;
 
   for (const record of records) {
     if (!isWorldRecord(record, header)) {
       continue;
     }
 
+    worldOrdinal += 1;
+
     const serialSource =
       displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '';
     const parsed = Number.parseInt(serialSource, 10);
     if (!Number.isNaN(parsed)) {
       maxSerial = Math.max(maxSerial, parsed);
+      continue;
     }
+
+    // Keep server-side allocation aligned with hydrateAkyoDataset() fallback serials
+    // so legacy rows without persisted DisplaySerial still reserve their visible numbers.
+    maxSerial = Math.max(maxSerial, worldOrdinal);
   }
 
   return String(maxSerial + 1).padStart(4, '0');
