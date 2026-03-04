@@ -13,11 +13,14 @@ import path from 'path';
 
 interface AkyoData {
   id: string;
+  entryType?: 'avatar' | 'world';
+  displaySerial?: string;
   nickname: string;
   avatarName: string;
   category: string;
   comment: string;
   author: string;
+  sourceUrl?: string;
   avatarUrl: string;
 }
 
@@ -106,12 +109,18 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
 
     data.push({
       id: rawRow['ID'] ?? '',
+      entryType:
+        rawRow['EntryType'] === 'avatar' || rawRow['EntryType'] === 'world'
+          ? rawRow['EntryType']
+          : undefined,
+      displaySerial: rawRow['DisplaySerial'] || undefined,
       nickname: rawRow['Nickname'] ?? '',
       avatarName: rawRow['AvatarName'] ?? '',
       category: normalizeHierarchicalCategories(rawRow['Category'] ?? ''),
       comment: normalizeLineEndings(rawRow['Comment'] ?? ''),
       author: rawRow['Author'] ?? '',
-      avatarUrl: rawRow['AvatarURL'] ?? '',
+      sourceUrl: rawRow['SourceURL'] || rawRow['AvatarURL'] || '',
+      avatarUrl: rawRow['AvatarURL'] || rawRow['SourceURL'] || '',
     });
   }
 

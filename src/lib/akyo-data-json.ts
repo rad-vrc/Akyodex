@@ -21,6 +21,7 @@
 import type { SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData } from '@/types/akyo';
 import { cache } from 'react';
+import { hydrateAkyoDataset } from './akyo-entry';
 
 /**
  * Get the JSON data URL based on language and data source
@@ -158,14 +159,14 @@ export async function getAkyoDataFromJSONIfExists(
 function normalizeJsonData(json: unknown): AkyoData[] {
   // If it's an array, use directly
   if (Array.isArray(json)) {
-    return json.map(normalizeAkyoItem);
+    return hydrateAkyoDataset(json.map(normalizeAkyoItem));
   }
 
   // If it's an object with data array
   if (json && typeof json === 'object' && 'data' in json) {
     const wrapped = json as { data: unknown[] };
     if (Array.isArray(wrapped.data)) {
-      return wrapped.data.map(normalizeAkyoItem);
+      return hydrateAkyoDataset(wrapped.data.map(normalizeAkyoItem));
     }
   }
 
@@ -199,6 +200,13 @@ function normalizeAkyoItem(item: unknown): AkyoData {
     notes: comment,
     creator: author,
 
-    avatarUrl: String(raw.avatarUrl || ''),
+    entryType:
+      raw.entryType === 'avatar' || raw.entryType === 'world' ? raw.entryType : undefined,
+    displaySerial:
+      typeof raw.displaySerial === 'string' && raw.displaySerial.trim()
+        ? raw.displaySerial.trim()
+        : undefined,
+    sourceUrl: String(raw.sourceUrl || raw.avatarUrl || ''),
+    avatarUrl: String(raw.avatarUrl || raw.sourceUrl || ''),
   };
 }

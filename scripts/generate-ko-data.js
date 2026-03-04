@@ -230,7 +230,7 @@ function main() {
   validateParsedRows(records, csvJaPath);
   console.log(`   Found ${dataRows.length} rows`);
 
-  // Header: ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL
+  // Header keeps legacy columns plus any newer optional columns.
   const headerMap = {};
   header.forEach((h, i) => {
     headerMap[h.trim().replace(/^\ufeff/, '')] = i;
@@ -263,18 +263,25 @@ function main() {
     const comment = row[headerMap['Comment']] || '';
     const author = row[headerMap['Author']] || '';
     const avatarUrl = row[headerMap['AvatarURL']] || '';
+    const sourceUrl = headerMap['SourceURL'] != null ? row[headerMap['SourceURL']] || '' : '';
+    const entryType = headerMap['EntryType'] != null ? row[headerMap['EntryType']] || '' : '';
+    const displaySerial =
+      headerMap['DisplaySerial'] != null ? row[headerMap['DisplaySerial']] || '' : '';
 
     const existingKoComment = existingKoCommentMap.get(id) || '';
+    const outRow = Array(header.length).fill('');
+    outRow[headerMap['ID']] = id;
+    outRow[headerMap['Nickname']] = translateNickname(nickname);
+    outRow[headerMap['AvatarName']] = avatarName; // Keep as-is
+    outRow[headerMap['Category']] = translateCategory(category);
+    outRow[headerMap['Comment']] = translateComment(comment, existingKoComment);
+    outRow[headerMap['Author']] = author; // Keep as-is
+    outRow[headerMap['AvatarURL']] = avatarUrl; // Keep as-is
+    if (headerMap['SourceURL'] != null) outRow[headerMap['SourceURL']] = sourceUrl || avatarUrl;
+    if (headerMap['EntryType'] != null) outRow[headerMap['EntryType']] = entryType;
+    if (headerMap['DisplaySerial'] != null) outRow[headerMap['DisplaySerial']] = displaySerial;
 
-    return [
-      id,
-      translateNickname(nickname),
-      avatarName, // Keep as-is
-      translateCategory(category),
-      translateComment(comment, existingKoComment),
-      author, // Keep as-is
-      avatarUrl, // Keep as-is
-    ];
+    return outRow;
   });
 
   // === Write Korean CSV ===
@@ -290,13 +297,22 @@ function main() {
   console.log('📝 Writing Korean JSON...');
   const jsonKoPath = path.join(dataDir, 'akyo-data-ko.json');
   const jsonData = koRows.map((row) => ({
-    id: row[0],
-    nickname: row[1],
-    avatarName: row[2],
-    category: row[3],
-    comment: row[4],
-    author: row[5],
-    avatarUrl: row[6],
+    id: row[headerMap['ID']],
+    entryType: headerMap['EntryType'] != null ? row[headerMap['EntryType']] || undefined : undefined,
+    displaySerial:
+      headerMap['DisplaySerial'] != null ? row[headerMap['DisplaySerial']] || undefined : undefined,
+    nickname: row[headerMap['Nickname']],
+    avatarName: row[headerMap['AvatarName']],
+    category: row[headerMap['Category']],
+    comment: row[headerMap['Comment']],
+    author: row[headerMap['Author']],
+    sourceUrl:
+      headerMap['SourceURL'] != null
+        ? row[headerMap['SourceURL']] || row[headerMap['AvatarURL']]
+        : row[headerMap['AvatarURL']],
+    avatarUrl:
+      row[headerMap['AvatarURL']] ||
+      (headerMap['SourceURL'] != null ? row[headerMap['SourceURL']] : ''),
   }));
   fs.writeFileSync(jsonKoPath, JSON.stringify(jsonData, null, 2), 'utf-8');
   console.log(`   ✅ ${jsonKoPath}`);

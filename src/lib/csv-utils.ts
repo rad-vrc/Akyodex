@@ -9,8 +9,17 @@
 import type { AkyoData } from '@/types/akyo';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
+import { hydrateAkyoDataset } from './akyo-entry';
 import type { GitHubCommitResponse, GitHubConfig } from './github-utils';
 import { commitCSVToGitHub, fetchCSVFromGitHub } from './github-utils';
+
+const BASE_AKYO_CSV_COLUMNS = ['ID', 'Nickname', 'AvatarName', 'Category', 'Comment', 'Author', 'AvatarURL'];
+const SOURCE_URL_COLUMN = 'SourceURL';
+const ENTRY_TYPE_COLUMN = 'EntryType';
+const DISPLAY_SERIAL_COLUMN = 'DisplaySerial';
+const AKYO_EXTENDED_COLUMNS = [SOURCE_URL_COLUMN, ENTRY_TYPE_COLUMN, DISPLAY_SERIAL_COLUMN];
+const WORLD_ENTRY_TYPE = 'world';
+const WORLD_CATEGORY_MARKERS = new Set(['ワールド', 'world', '월드']);
 
 /**
  * Parse CSV content into records
@@ -37,6 +46,51 @@ function parseCSV(content: string): string[][] {
   }
 }
 
+function normalizeAkyoCsvShape(header: string[], dataRecords: string[][]): {
+  header: string[];
+  dataRecords: string[][];
+} {
+  const normalizedHeader = [...header];
+
+  for (const column of AKYO_EXTENDED_COLUMNS) {
+    if (!normalizedHeader.includes(column)) {
+      normalizedHeader.push(column);
+    }
+  }
+
+  const normalizedRows = dataRecords.map((row) =>
+    normalizedHeader.map((_, index) => row[index] || '')
+  );
+
+  return {
+    header: normalizedHeader,
+    dataRecords: normalizedRows,
+  };
+}
+
+function isWorldRecord(record: string[], header: string[]): boolean {
+  const entryTypeIndex = header.indexOf(ENTRY_TYPE_COLUMN);
+  const categoryIndex = header.indexOf('Category');
+
+  const explicitEntryType = entryTypeIndex >= 0 ? String(record[entryTypeIndex] || '').trim() : '';
+  if (explicitEntryType === 'world') {
+    return true;
+  }
+  if (explicitEntryType === 'avatar') {
+    return false;
+  }
+
+  const rawCategory = categoryIndex >= 0 ? String(record[categoryIndex] || '') : '';
+  if (!rawCategory) {
+    return false;
+  }
+
+  return rawCategory
+    .split(/[、,]/)
+    .map((token) => token.trim().toLowerCase())
+    .some((token) => WORLD_CATEGORY_MARKERS.has(token));
+}
+
 export async function loadAkyoCsv(options: {
   csvFileName?: string;
   githubConfig?: GitHubConfig;
@@ -50,9 +104,10 @@ export async function loadAkyoCsv(options: {
   }
 
   const [header, ...dataRecords] = records;
+  const normalized = normalizeAkyoCsvShape(header, dataRecords);
   return {
-    header,
-    dataRecords,
+    header: normalized.header,
+    dataRecords: normalized.dataRecords,
     fileSha: csvFile.sha,
   };
 }
@@ -164,12 +219,18 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
       attribute: attribute,
       notes: notes,
       creator: creator,
-      
-      avatarUrl: rawRow['AvatarURL'] ?? '',
+
+      entryType:
+        rawRow[ENTRY_TYPE_COLUMN] === 'avatar' || rawRow[ENTRY_TYPE_COLUMN] === 'world'
+          ? rawRow[ENTRY_TYPE_COLUMN]
+          : undefined,
+      displaySerial: rawRow[DISPLAY_SERIAL_COLUMN] || undefined,
+      sourceUrl: rawRow['SourceURL'] || rawRow['AvatarURL'] || '',
+      avatarUrl: rawRow['AvatarURL'] || rawRow['SourceURL'] || '',
     });
   }
 
-  return data;
+  return hydrateAkyoDataset(data);
 }
 
 /**
@@ -244,26 +305,80 @@ export function createAkyoRecord(data: {
   id: string;
   nickname?: string;
   avatarName: string;
+  entryType?: 'avatar' | 'world';
+  displaySerial?: string;
   category?: string;
   author?: string;
   comment?: string;
+  sourceUrl?: string;
   avatarUrl?: string;
   /** backward compat */
   attributes?: string;
   creator?: string;
   notes?: string;
-}): string[] {
+}, header: string[] = [...BASE_AKYO_CSV_COLUMNS, ...AKYO_EXTENDED_COLUMNS]): string[] {
   const category = data.category ?? data.attributes ?? '';
   const author = data.author ?? data.creator ?? '';
   const comment = data.comment ?? data.notes ?? '';
+  const normalizedEntryType = data.entryType === 'world' ? 'world' : 'avatar';
+  const normalizedAvatarUrl = data.avatarUrl || data.sourceUrl || '';
+  const normalizedSourceUrl = data.sourceUrl || data.avatarUrl || '';
+  const normalizedDisplaySerial = data.displaySerial || '';
 
-  return [
-    sanitizeCsvCell(data.id),
-    sanitizeCsvCell(data.nickname || ''),
-    sanitizeCsvCell(data.avatarName),
-    sanitizeCsvCell(category),
-    sanitizeCsvCell(comment),
-    sanitizeCsvCell(author),
-    sanitizeCsvCell(data.avatarUrl || ''),
-  ];
+  return header.map((columnName) => {
+    switch (columnName) {
+      case 'ID':
+        return sanitizeCsvCell(data.id);
+      case 'Nickname':
+        return sanitizeCsvCell(data.nickname || '');
+      case 'AvatarName':
+        return sanitizeCsvCell(data.avatarName);
+      case 'Category':
+        return sanitizeCsvCell(category);
+      case 'Comment':
+        return sanitizeCsvCell(comment);
+      case 'Author':
+        return sanitizeCsvCell(author);
+      case 'AvatarURL':
+        return sanitizeCsvCell(normalizedAvatarUrl);
+      case SOURCE_URL_COLUMN:
+        return sanitizeCsvCell(normalizedSourceUrl);
+      case ENTRY_TYPE_COLUMN:
+        return sanitizeCsvCell(normalizedEntryType);
+      case DISPLAY_SERIAL_COLUMN:
+        return sanitizeCsvCell(normalizedDisplaySerial);
+      default:
+        return '';
+    }
+  });
+}
+
+export function getNextDisplaySerial(
+  records: string[][],
+  header: string[],
+  entryType: 'avatar' | 'world'
+): string {
+  if (entryType !== WORLD_ENTRY_TYPE) {
+    return '';
+  }
+
+  const displaySerialIndex = header.indexOf(DISPLAY_SERIAL_COLUMN);
+  const idIndex = header.indexOf('ID');
+  let maxSerial = 0;
+
+  for (const record of records) {
+    if (!isWorldRecord(record, header)) {
+      continue;
+    }
+
+    const serialSource =
+      (displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '') ||
+      (idIndex >= 0 ? String(record[idIndex] || '').trim() : '');
+    const parsed = Number.parseInt(serialSource, 10);
+    if (!Number.isNaN(parsed)) {
+      maxSerial = Math.max(maxSerial, parsed);
+    }
+  }
+
+  return String(maxSerial + 1).padStart(4, '0');
 }

@@ -6,6 +6,7 @@
 
 import { cookies } from 'next/headers';
 import { connection } from 'next/server';
+import type { AkyoEntryType } from '@/types/akyo';
 import { SessionData, validateSession as validateSessionToken } from './session';
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional input validation for control chars
@@ -261,6 +262,9 @@ export interface AkyoFormData {
   id: string;
   nickname: string;
   avatarName: string;
+  entryType: AkyoEntryType;
+  displaySerial?: string;
+  sourceUrl: string;
 
   // 新フィールド
   category: string;
@@ -317,13 +321,17 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
   };
 
   const id = readField('id');
+  const entryTypeRaw = readField('entryType');
+  const entryType: AkyoEntryType = entryTypeRaw === 'world' ? 'world' : 'avatar';
+  const displaySerial = readField('displaySerial') || undefined;
   const avatarName = readField('avatarName');
+  const sourceUrl = readField('sourceUrl') || readField('avatarUrl');
 
   // 新旧フィールドの両方をサポート
   // 優先順位: author (新) > creator (旧)
   const author = readField('author') || readField('creator');
 
-  if (!id || !avatarName || !author) {
+  if (!id || !author || !sourceUrl || (entryType === 'avatar' && !avatarName)) {
     return {
       success: false,
       status: 400,
@@ -352,9 +360,12 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
     success: true,
     data: {
       id,
+      entryType,
+      displaySerial,
       avatarName,
       nickname: readField('nickname'),
-      avatarUrl: readField('avatarUrl'),
+      sourceUrl,
+      avatarUrl: readField('avatarUrl') || sourceUrl,
       imageData,
 
       // 新フィールド

@@ -1,20 +1,29 @@
 import type { MouseEvent as ReactMouseEvent } from 'react';
+import {
+  detectVrcEntryTypeFromUrl,
+  extractVRChatAvatarIdFromUrl,
+  extractVRChatWorldIdFromUrl,
+} from './akyo-entry';
 
 /**
  * VRChat Utilities
- * Helper functions for VRChat avatar operations
+ * Helper functions for VRChat entity operations
  */
 
 /**
- * Fetch VRChat avatar page with security validation and timeout
- * @param avtr - The VRChat avatar ID (e.g., avtr_xxx)
- * @returns The HTML content of the avatar page
+ * Fetch VRChat entity page with security validation and timeout
+ * @param entryType - The VRChat entity type
+ * @param id - The VRChat ID (e.g., avtr_xxx / wrld_xxx)
+ * @returns The HTML content of the entity page
  * @throws Error if the request fails or times out
  */
-export async function fetchVRChatPage(avtr: string): Promise<string> {
+export async function fetchVRChatEntityPage(
+  entryType: 'avatar' | 'world',
+  id: string
+): Promise<string> {
   // Security: Explicitly construct VRChat URL to prevent SSRF
   // Only allow vrchat.com domain
-  const vrchatPageUrl = `https://vrchat.com/home/avatar/${avtr}`;
+  const vrchatPageUrl = `https://vrchat.com/home/${entryType}/${id}`;
 
   // Validate URL is actually vrchat.com (defense in depth)
   const parsedUrl = new URL(vrchatPageUrl);
@@ -53,18 +62,30 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
 }
 
 /**
+ * Fetch VRChat avatar page with security validation and timeout
+ * @param avtr - The VRChat avatar ID (e.g., avtr_xxx)
+ * @returns The HTML content of the avatar page
+ * @throws Error if the request fails or times out
+ */
+export async function fetchVRChatPage(avtr: string): Promise<string> {
+  return fetchVRChatEntityPage('avatar', avtr);
+}
+
+export async function fetchVRChatWorldPage(wrld: string): Promise<string> {
+  return fetchVRChatEntityPage('world', wrld);
+}
+
+/**
  * Extract VRChat avatar ID (avtr_xxx) from avatar URL
  * @param avatarUrl - The VRChat avatar URL (e.g., https://vrchat.com/home/avatar/avtr_xxx)
  * @returns The avatar ID (e.g., avtr_xxx) or null if not found
  */
 export function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
-  if (!avatarUrl) {
-    return null;
-  }
+  return extractVRChatAvatarIdFromUrl(avatarUrl);
+}
 
-  // Match avtr_ followed by alphanumeric characters and hyphens
-  const match = avatarUrl.match(/avtr_[A-Za-z0-9-]+/);
-  return match ? match[0] : null;
+export function extractVRChatWorldId(worldUrl: string | undefined): string | null {
+  return extractVRChatWorldIdFromUrl(worldUrl);
 }
 
 /**
@@ -80,15 +101,27 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
 
   if (!url) return;
 
-  // 1. Try to extract avatar ID and reconstruct canonical URL (Safest)
-  const avtrId = extractVRChatAvatarId(url);
-  if (avtrId) {
-    const canonicalUrl = `https://vrchat.com/home/avatar/${avtrId}`;
-    window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
-    return;
+  const entryType = detectVrcEntryTypeFromUrl(url);
+
+  if (entryType === 'avatar') {
+    const avtrId = extractVRChatAvatarId(url);
+    if (avtrId) {
+      const canonicalUrl = `https://vrchat.com/home/avatar/${avtrId}`;
+      window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
   }
 
-  // 2. Fallback: Strict domain validation if no ID found (e.g. general VRC links)
+  if (entryType === 'world') {
+    const wrldId = extractVRChatWorldId(url);
+    if (wrldId) {
+      const canonicalUrl = `https://vrchat.com/home/world/${wrldId}`;
+      window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+  }
+
+  // Fallback: Strict domain validation if no canonical entity URL can be reconstructed
   try {
     const parsed = new URL(url);
     if (parsed.protocol === 'https:' && parsed.hostname === 'vrchat.com') {
@@ -110,10 +143,10 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
  */
 export function buildAvatarImageUrl(
   id: string,
-  avatarUrl: string | undefined,
+  sourceUrl: string | undefined,
   width: number = 512
 ): string {
-  const avtrId = extractVRChatAvatarId(avatarUrl);
+  const avtrId = extractVRChatAvatarId(sourceUrl);
 
   if (avtrId) {
     return `/api/avatar-image?id=${id}&avtr=${avtrId}&w=${width}`;

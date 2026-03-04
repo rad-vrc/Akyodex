@@ -162,6 +162,16 @@ export const UI_TEXTS = {
     en: 'Showing {count}',
     ko: '{count}건 표시',
   },
+  'stats.totalBreakdown': {
+    ja: '全{avatars}体 / {worlds}ワールド',
+    en: 'Total {avatars} avatars / {worlds} worlds',
+    ko: '전체 {avatars}개 아바타 / {worlds}개 월드',
+  },
+  'stats.displayedBreakdown': {
+    ja: '表示{avatars}体 / {worlds}ワールド',
+    en: 'Showing {avatars} avatars / {worlds} worlds',
+    ko: '{avatars}개 아바타 / {worlds}개 월드 표시',
+  },
   'search.placeholder': {
     ja: '名前・通称・作者で検索...',
     en: 'Search by name, nickname, author...',

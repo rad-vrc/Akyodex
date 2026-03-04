@@ -83,6 +83,7 @@ export function AdminTabs({ userRole, attributes, creators, akyoData }: AdminTab
       <div className="bg-white rounded-xl shadow-lg p-6">
         {activeTab === 'add' && (
           <AddTab
+            userRole={userRole}
             attributes={attributes}
             creators={creators}
           />

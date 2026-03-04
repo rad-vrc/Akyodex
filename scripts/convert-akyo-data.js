@@ -4,8 +4,8 @@
  * CSV → JSON 変換スクリプト
  * - data/akyo-data-ja.csv → data/akyo-data-ja.json
  * - data/akyo-data-en.csv → data/akyo-data-en.json
- * - CSV の列: ID, Nickname, AvatarName, Category, Comment, Author, AvatarURL
- * - JSON の列: id, nickname, avatarName, category, comment, author, avatarUrl
+ * - CSV の列: 旧7列 + 追加列（SourceURL, EntryType, DisplaySerial）に対応
+ * - JSON の列: id, nickname, avatarName, category, comment, author, avatarUrl, sourceUrl, entryType, displaySerial
  */
 
 const fs = require('fs');
@@ -78,20 +78,28 @@ function convertCsvToJson(csvPath, jsonPath) {
   for (const line of lines) {
     const cols = parseCsvLine(line);
 
-    if (cols.length !== 7) {
+    if (cols.length < 7) {
       // 想定外の行はスキップして警告
-      console.warn(`列数が想定外のためスキップ: (想定 7 列, 実際 ${cols.length} 列) ${line}`);
+      console.warn(`列数が想定外のためスキップ: (想定 最低7列, 実際 ${cols.length} 列) ${line}`);
       continue;
     }
 
     const item = {
       id: normalizeValue(cols[0]).padStart(4, '0'),
+      entryType:
+        normalizeValue(cols[8] || '') === 'world'
+          ? 'world'
+          : normalizeValue(cols[8] || '') === 'avatar'
+          ? 'avatar'
+          : undefined,
+      displaySerial: normalizeValue(cols[9] || '') || undefined,
       nickname: normalizeValue(cols[1]),
       avatarName: normalizeValue(cols[2]),
       category: normalizeValue(cols[3]),
       comment: normalizeValue(cols[4]),
       author: normalizeValue(cols[5]),
       avatarUrl: normalizeValue(cols[6]),
+      sourceUrl: normalizeValue(cols[7] || cols[6]),
     };
 
     items.push(item);

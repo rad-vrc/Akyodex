@@ -3,11 +3,14 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
+import { detectVrcEntryTypeFromUrl, extractVRChatWorldIdFromUrl } from '@/lib/akyo-entry';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 import { ADD_TAB_DRAFT_KEY } from '../draft-keys';
+import type { AdminRole } from '@/types/akyo';
 
 interface AddTabProps {
+  userRole: AdminRole;
   // 新フィールド
   categories?: string[];
   authors?: string[];
@@ -19,7 +22,7 @@ interface AddTabProps {
 interface AddTabDraft {
   nickname: string;
   categories: string[];
-  avatarUrl: string;
+  sourceUrl: string;
   comment: string;
   customCategories: string[];
 }
@@ -30,7 +33,7 @@ function createDefaultFormData() {
     avatarName: '',
     categories: [] as string[],
     author: '',
-    avatarUrl: '',
+    sourceUrl: '',
     comment: '',
   };
 }
@@ -75,7 +78,7 @@ function normalizeStringList(value: unknown): string[] {
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
  */
-export function AddTab({ categories, authors, attributes, creators }: AddTabProps) {
+export function AddTab({ userRole, categories, authors, attributes, creators }: AddTabProps) {
   // 新旧フィールドのマージ
   const [customCategories, setCustomCategories] = useState<string[]>([]);
   const allAttributes = Array.from(
@@ -102,7 +105,12 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
         ...prev,
         nickname: typeof parsed.nickname === 'string' ? parsed.nickname : prev.nickname,
         categories: normalizeStringList(parsed.categories),
-        avatarUrl: typeof parsed.avatarUrl === 'string' ? parsed.avatarUrl : prev.avatarUrl,
+        sourceUrl:
+          typeof parsed.sourceUrl === 'string'
+            ? parsed.sourceUrl
+            : typeof (parsed as { avatarUrl?: unknown }).avatarUrl === 'string'
+            ? ((parsed as { avatarUrl: string }).avatarUrl)
+            : prev.sourceUrl,
         comment: typeof parsed.comment === 'string' ? parsed.comment : prev.comment,
       }));
       setCustomCategories(normalizeStringList(parsed.customCategories));
@@ -119,14 +127,14 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     const draft: AddTabDraft = {
       nickname: formData.nickname,
       categories: normalizeStringList(formData.categories),
-      avatarUrl: formData.avatarUrl,
+      sourceUrl: formData.sourceUrl,
       comment: formData.comment,
       customCategories: normalizeStringList(customCategories),
     };
     sessionStorage.setItem(ADD_TAB_DRAFT_KEY, JSON.stringify(draft));
   }, [
     customCategories,
-    formData.avatarUrl,
+    formData.sourceUrl,
     formData.categories,
     formData.comment,
     formData.nickname,
@@ -180,6 +188,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
     tone: 'neutral' as 'neutral' | 'success' | 'error',
   });
   const [checkingNickname, setCheckingNickname] = useState(false);
+  const detectedEntryType = detectVrcEntryTypeFromUrl(formData.sourceUrl);
 
   // Update image transform when position or scale changes
   useEffect(() => {
@@ -192,152 +201,215 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate VRChat URL is required
-    const url = formData.avatarUrl.trim();
+    const url = formData.sourceUrl.trim();
     if (!url) {
       alert('VRChat URLは必須です');
       return;
     }
 
-    const match = url.match(/avtr_[A-Za-z0-9-]+/);
-    if (!match) {
+    const entryType = detectVrcEntryTypeFromUrl(url);
+    if (!entryType) {
       alert(
-        '有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...'
+        '有効なVRChatアバター/ワールドURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...\nまたは: https://vrchat.com/home/world/wrld_xxx...'
       );
       return;
     }
 
-    // Validate categories
-    if (formData.categories.length === 0) {
+    const resolvedCategories = Array.from(
+      new Set(entryType === 'world' ? ['ワールド', ...formData.categories] : formData.categories)
+    );
+    if (resolvedCategories.length === 0) {
       alert('カテゴリを1つ以上選択してください');
       return;
     }
 
-    // Check for nickname duplicates (if nickname provided)
     if (nicknameStatus.tone === 'error') {
       if (!confirm('重複する通称が検出されました。\n登録を続行しますか？')) {
         return;
       }
     }
 
-    // Refresh next ID in background while running expensive avatar/image steps.
-    // This avoids stale IDs without adding extra blocking at submit time.
-    const nextIdRefreshPromise = fetchNextId();
-
-    const avtrId = match[0];
-
-    // Show loading state
     const formEl = formRef.current;
     if (!formEl) {
       console.error('Form element not found on submit');
       return;
     }
+
     const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
     const originalText = submitBtn?.innerHTML || '';
+    const restoreSubmitButton = () => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    };
+
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = '💾 VRChat情報取得中...';
     }
 
-    // ===== Step 1: Fetch avatar info and image from VRChat =====
-    let avatarName = '';
-    let creatorName = '';
+    const nextIdRefreshPromise = fetchNextId();
+    let resolvedNickname = formData.nickname.trim();
+    let resolvedAvatarName = '';
+    let resolvedAuthor = '';
     let imageFile: File | null = null;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-
     try {
-      // Fetch avatar info and image in parallel
-      const [infoResponse, imageResponse] = await Promise.all([
-        fetch(`/api/vrc-avatar-info?avtr=${avtrId}`, { signal: controller.signal }),
-        fetch(`/api/vrc-avatar-image?avtr=${avtrId}&w=1024`, { signal: controller.signal }),
-      ]);
-      clearTimeout(timeoutId);
+      if (entryType === 'avatar') {
+        const match = url.match(/avtr_[A-Za-z0-9-]+/);
+        if (!match) {
+          throw new Error('有効なVRChatアバターURLを入力してください。');
+        }
 
-      // Process avatar info
-      if (!infoResponse.ok) {
-        const errorText = await infoResponse.text().catch(() => '');
-        throw new Error(
-          `アバター情報取得に失敗しました (${infoResponse.status})${
-            errorText ? `: ${errorText}` : ''
-          }`
-        );
-      }
-      const infoData = await infoResponse.json();
-      avatarName = infoData.avatarName || '';
-      creatorName = infoData.creatorName || '';
+        const avtrId = match[0];
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-      if (!avatarName) {
-        throw new Error('アバター名を取得できませんでした。URLが正しいか確認してください。');
-      }
-      if (!creatorName) {
-        throw new Error('作者名を取得できませんでした。URLが正しいか確認してください。');
-      }
+        try {
+          const [infoResponse, imageResponse] = await Promise.all([
+            fetch(`/api/vrc-avatar-info?avtr=${avtrId}`, { signal: controller.signal }),
+            fetch(`/api/vrc-avatar-image?avtr=${avtrId}&w=1024`, { signal: controller.signal }),
+          ]);
+          clearTimeout(timeoutId);
 
-      // Process image
-      if (!imageResponse.ok) {
-        throw new Error(`画像取得に失敗しました (${imageResponse.status})`);
-      }
-      const blob = await imageResponse.blob();
-      imageFile = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.error('VRChat情報取得エラー:', error);
+          if (!infoResponse.ok) {
+            const errorText = await infoResponse.text().catch(() => '');
+            throw new Error(
+              `アバター情報取得に失敗しました (${infoResponse.status})${
+                errorText ? `: ${errorText}` : ''
+              }`
+            );
+          }
 
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }
+          const infoData = (await infoResponse.json()) as {
+            avatarName?: string;
+            creatorName?: string;
+          };
+          resolvedAvatarName = infoData.avatarName?.trim() || '';
+          resolvedAuthor = infoData.creatorName?.trim() || '';
 
-      if (error instanceof Error && error.name === 'AbortError') {
-        alert(
-          '❌ 登録に失敗しました\n\nリクエストがタイムアウトしました。\nもう一度お試しください。'
-        );
+          if (!resolvedAvatarName) {
+            throw new Error('アバター名を取得できませんでした。URLが正しいか確認してください。');
+          }
+          if (!resolvedAuthor) {
+            throw new Error('作者名を取得できませんでした。URLが正しいか確認してください。');
+          }
+
+          if (!imageResponse.ok) {
+            throw new Error(`画像取得に失敗しました (${imageResponse.status})`);
+          }
+
+          const blob = await imageResponse.blob();
+          imageFile = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
+        } catch (error) {
+          clearTimeout(timeoutId);
+          throw error;
+        }
       } else {
-        alert(
-          `❌ 登録に失敗しました\n\n${
-            error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
-          }\n\nURLが正しいか、アバターが公開設定か確認してください。`
-        );
+        const wrldId = extractVRChatWorldIdFromUrl(url);
+        if (!wrldId) {
+          throw new Error('有効なVRChatワールドURLを入力してください。');
+        }
+
+        const [infoResult, imageResult] = await Promise.allSettled([
+          fetch(`/api/vrc-world-info?wrld=${wrldId}`),
+          fetch(`/api/vrc-world-image?wrld=${wrldId}&w=1024`),
+        ]);
+
+        let fetchedWorldName = '';
+        let fetchedCreatorName = '';
+
+        if (infoResult.status === 'fulfilled' && infoResult.value.ok) {
+          const infoData = (await infoResult.value.json()) as {
+            worldName?: string;
+            creatorName?: string;
+          };
+          fetchedWorldName = infoData.worldName?.trim() || '';
+          fetchedCreatorName = infoData.creatorName?.trim() || '';
+        } else if (infoResult.status === 'rejected') {
+          console.warn('[add-tab] Failed to fetch world info:', infoResult.reason);
+        } else if (infoResult.status === 'fulfilled') {
+          console.warn('[add-tab] World info response was not ok:', infoResult.value.status);
+        }
+
+        resolvedAuthor = formData.author.trim() || fetchedCreatorName;
+        resolvedNickname = formData.nickname.trim() || fetchedWorldName;
+
+        if (
+          resolvedNickname !== formData.nickname ||
+          resolvedAuthor !== formData.author ||
+          resolvedCategories.length !== formData.categories.length
+        ) {
+          setFormData((prev) => ({
+            ...prev,
+            nickname: resolvedNickname || prev.nickname,
+            author: resolvedAuthor || prev.author,
+            categories: resolvedCategories,
+          }));
+        }
+
+        if (!resolvedNickname || !resolvedAuthor) {
+          restoreSubmitButton();
+          alert(
+            'ワールド情報の自動取得が一部不足しました。通称欄と作者欄を確認して、もう一度登録してください。'
+          );
+          return;
+        }
+
+        if (imageResult.status === 'fulfilled' && imageResult.value.ok) {
+          const blob = await imageResult.value.blob();
+          imageFile = new File([blob], `${wrldId}.webp`, { type: blob.type || 'image/webp' });
+        } else if (imageResult.status === 'rejected') {
+          console.warn('[add-tab] Failed to fetch world image:', imageResult.reason);
+        } else if (imageResult.status === 'fulfilled') {
+          console.warn('[add-tab] World image response was not ok:', imageResult.value.status);
+        }
       }
+    } catch (error) {
+      console.error('VRChat情報取得エラー:', error);
+      restoreSubmitButton();
+
+      alert(
+        `❌ 登録に失敗しました\n\n${
+          error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
+        }\n\nURLが正しいか、対象が公開設定か確認してください。`
+      );
       return;
     }
 
-    // Update button text
-    if (submitBtn) {
-      submitBtn.textContent = '💾 画像処理中...';
-    }
-
-    // ===== Step 2: Process image for cropping preview =====
-    // Load image into cropping preview
-    await new Promise<void>((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (readerEvent) => {
-        const imgSrc = readerEvent.target?.result as string;
-        setOriginalImageSrc(imgSrc);
-        setShowImagePreview(true);
-        // Give time for image to load
-        setTimeout(resolve, 100);
-      };
-      reader.readAsDataURL(imageFile!);
-    });
-
-    // Generate cropped image
     let croppedImageData: string | null = null;
-    // Wait a bit more for the image element to be ready
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    croppedImageData = await generateCroppedImage();
-    if (!croppedImageData) {
-      // If cropping fails, use original image
-      const reader = new FileReader();
-      croppedImageData = await new Promise<string>((resolve) => {
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(imageFile!);
+    if (imageFile) {
+      if (submitBtn) {
+        submitBtn.textContent = '💾 画像処理中...';
+      }
+
+      await new Promise<void>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+          const imgSrc = readerEvent.target?.result as string;
+          setOriginalImageSrc(imgSrc);
+          setShowImagePreview(true);
+          setTimeout(resolve, 100);
+        };
+        reader.readAsDataURL(imageFile);
       });
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      croppedImageData = await generateCroppedImage();
+
+      if (!croppedImageData) {
+        const reader = new FileReader();
+        croppedImageData = await new Promise<string>((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(imageFile);
+        });
+      }
+    } else {
+      setShowImagePreview(false);
+      setOriginalImageSrc(null);
     }
 
-    // Update button text for final submission
     if (submitBtn) {
       submitBtn.textContent = '💾 登録中...';
     }
@@ -347,25 +419,27 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       const refreshedId = await nextIdRefreshPromise;
       submitId = pickLatestId(submitId, refreshedId);
 
+      const displayName = entryType === 'world' ? resolvedNickname : resolvedAvatarName;
+
       const buildSubmitData = (id: string) => {
         const submitData = new FormData();
         submitData.append('id', id);
-        submitData.append('nickname', formData.nickname);
-        submitData.append('avatarName', avatarName);
-        submitData.append('avatarUrl', formData.avatarUrl);
-
-        // 新フィールド (VRChatから取得した作者名を使用)
-        submitData.append('author', creatorName);
-        submitData.append('category', formData.categories.join(','));
+        submitData.append('entryType', entryType);
+        submitData.append('nickname', resolvedNickname);
+        submitData.append('avatarName', entryType === 'world' ? '' : resolvedAvatarName);
+        submitData.append('sourceUrl', url);
+        submitData.append('avatarUrl', url);
+        submitData.append('author', resolvedAuthor);
+        submitData.append('category', resolvedCategories.join(','));
         submitData.append('comment', formData.comment);
-
-        // 旧フィールド (互換性のため)
-        submitData.append('creator', creatorName);
-        submitData.append('attributes', formData.categories.join(','));
+        submitData.append('creator', resolvedAuthor);
+        submitData.append('attributes', resolvedCategories.join(','));
         submitData.append('notes', formData.comment);
 
-        // Always include image data (fetched from VRChat)
-        submitData.append('imageData', croppedImageData!);
+        if (croppedImageData) {
+          submitData.append('imageData', croppedImageData);
+        }
+
         return submitData;
       };
 
@@ -379,12 +453,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       };
 
       let { response, result } = await uploadWithId(submitId);
-      // Initialize fallback result if needed to prevent ReferenceError in edge cases
       if (!result) result = { success: false, error: 'アップロード結果を取得できませんでした' };
 
       let latestKnownId: string | null = null;
 
-      // If ID collision happens, refetch latest ID and retry once with the same form payload.
       if ((!response.ok || !result.success) && response.status === 409) {
         const latestId = await fetchNextId();
         if (latestId) {
@@ -396,7 +468,10 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           submitId = retryId;
           const retryResult = await uploadWithId(submitId);
           response = retryResult.response;
-          result = retryResult.result || { success: false, error: 'リトライ結果を取得できませんでした' };
+          result = retryResult.result || {
+            success: false,
+            error: 'リトライ結果を取得できませんでした',
+          };
         }
       }
 
@@ -406,24 +481,25 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             submitId,
             latestKnownId ?? (await fetchNextId()) ?? getNextSequentialId(submitId)
           );
-          const latestHint = latestId
-            ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
-            : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。';
+          const latestHint =
+            userRole === 'owner'
+              ? latestId
+                ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
+                : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。'
+              : '\n\nしばらく待ってから再度登録してください。';
           throw new Error((result.error || 'IDが重複しています') + latestHint);
         }
         throw new Error(result.error || 'サーバーエラーが発生しました');
       }
 
-      // Success!
       alert(
         `✅ ${result.message}\n\n` +
           `ID: #${submitId}\n` +
-          `アバター名: ${avatarName}\n` +
-          `作者: ${creatorName}\n\n` +
+          `${entryType === 'world' ? '名称' : 'アバター名'}: ${displayName}\n` +
+          `作者: ${resolvedAuthor}\n\n` +
           (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
       );
 
-      // Reset form
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem(ADD_TAB_DRAFT_KEY);
       }
@@ -432,7 +508,6 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
       setOriginalImageSrc(null);
       setNicknameStatus({ message: '', tone: 'neutral' });
 
-      // Increment next ID for next registration
       const currentId = parseInt(submitId, 10);
       if (!isNaN(currentId)) {
         const nextSequentialId = (currentId + 1).toString().padStart(4, '0');
@@ -446,11 +521,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           '\n\nもう一度お試しください。'
       );
     } finally {
-      // Restore button state
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }
+      restoreSubmitButton();
     }
   };
 
@@ -632,7 +703,7 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
   return (
     <div>
       <h2 className="text-xl font-bold text-gray-800 mb-6">
-        <IconPlusCircle size="w-5 h-5" className="text-red-500 mr-2" /> 新しいAkyoを登録
+        <IconPlusCircle size="w-5 h-5" className="text-red-500 mr-2" /> 新しいAkyoアバター/ワールドを登録
       </h2>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -640,14 +711,25 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
           {/* ID（自動採番） */}
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-1">ID（自動採番）</label>
-            <input
-              type="text"
-              value={nextId}
-              disabled
-              className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
-            />
+            {userRole === 'owner' ? (
+              <input
+                type="text"
+                value={nextId}
+                disabled
+                className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
+              />
+            ) : (
+              <input
+                type="text"
+                value="登録時に自動割り当て"
+                disabled
+                className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
+              />
+            )}
             <p className="mt-2 text-xs text-gray-500 leading-snug">
-              画像IDの自動割り当てはローカルに保存された画像を優先的に参照し、未使用の番号（CSV未登録の画像も含む）から決定されます。
+              {userRole === 'owner'
+                ? '画像IDの自動割り当てはローカルに保存された画像を優先的に参照し、未使用の番号（CSV未登録の画像も含む）から決定されます。'
+                : 'IDは登録時に自動で割り当てられます。'}
             </p>
           </div>
 
@@ -719,14 +801,16 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             )}
           </div>
 
-          {/* アバター名（登録時にURLから自動取得） */}
+          {/* 名称 */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">
-              アバター名（登録時に自動取得）
-            </label>
+            <label className="block text-gray-700 text-sm font-medium mb-1">名称</label>
             <input
               type="text"
-              value="登録時にVRChat URLから自動取得"
+              value={
+                detectedEntryType === 'world'
+                  ? 'ワールド名は上の「通称」欄を名称として使用します'
+                  : '登録時にVRChat URLから自動取得'
+              }
               disabled
               className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
             />
@@ -764,34 +848,51 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             </div>
           </div>
 
-          {/* 作者（登録時に自動取得） */}
+          {/* 作者 */}
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-1">
-              作者（登録時に自動取得）
+              作者（自動取得 / 必要時は手動入力）
             </label>
-            <input
-              type="text"
-              value="登録時にVRChat URLから自動取得"
-              disabled
-              className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
-            />
+            {detectedEntryType === 'world' ? (
+              <input
+                type="text"
+                value={formData.author}
+                onChange={(e) => handleInputChange('author', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="取得失敗時はここで補完できます"
+              />
+            ) : (
+              <input
+                type="text"
+                value="登録時にVRChat URLから自動取得"
+                disabled
+                className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
+              />
+            )}
           </div>
 
           {/* VRChat URL */}
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-1">
-              VRChat URL <span className="text-red-500">*</span>
+              VRChat URL（アバターまたはワールド） <span className="text-red-500">*</span>
             </label>
             <input
               type="url"
-              value={formData.avatarUrl}
-              onChange={(e) => handleInputChange('avatarUrl', e.target.value)}
+              value={formData.sourceUrl}
+              onChange={(e) => handleInputChange('sourceUrl', e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="https://vrchat.com/home/avatar/avtr_..."
+              placeholder="https://vrchat.com/home/avatar/avtr_... または https://vrchat.com/home/world/wrld_..."
             />
+            {detectedEntryType && (
+              <p className="mt-2 text-xs font-medium text-blue-600">
+                検出: {detectedEntryType === 'world' ? 'ワールド' : 'アバター'}
+              </p>
+            )}
             <p className="mt-2 text-xs text-gray-500 leading-snug">
-              登録ボタンを押すと、このURLからアバター名・作者名・画像が自動的に取得されます。
+              {detectedEntryType === 'world'
+                ? 'ワールドURLとして検出しました。登録時に名称・作者・画像を取得し、足りない項目だけ手動で補完できます。'
+                : '登録ボタンを押すと、このURLから名称・作者名・画像が自動的に取得されます。'}
             </p>
           </div>
         </div>
@@ -817,7 +918,9 @@ export function AddTab({ categories, authors, attributes, creators }: AddTabProp
             <IconCloudDownload size="w-10 h-10" className="text-blue-400 mb-2 mx-auto" />
             <p className="text-gray-600 font-medium">VRChat URLから自動取得</p>
             <p className="text-sm text-gray-500 mt-1">
-              登録ボタンを押すと、VRChatから画像を自動的に取得します
+              {detectedEntryType === 'world'
+                ? 'ワールドURLでもサムネイル取得を試み、失敗時は画像なしで登録できます'
+                : '登録ボタンを押すと、URL種別に応じてVRChatから画像を自動的に取得します'}
             </p>
           </div>
 

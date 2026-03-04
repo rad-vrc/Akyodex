@@ -2,6 +2,7 @@
 
 import { IconDownload, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
+import { formatDisplayId, getAkyoSourceUrl, resolveEntryType } from '@/lib/akyo-entry';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
@@ -45,7 +46,8 @@ export function AkyoCard({
     /\/$/,
     ''
   );
-  const apiImageSrc = buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 512);
+  const sourceUrl = getAkyoSourceUrl(akyo);
+  const apiImageSrc = buildAvatarImageUrl(akyo.id, sourceUrl, 512);
   const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
   const primaryImageSrc = cloudflareImagesEnabled
     ? `/${akyo.id}.webp`
@@ -90,13 +92,15 @@ export function AkyoCard({
    * @param e - React mouse event
    */
   const handleVRChatClick = (e: React.MouseEvent) => {
-    safeOpenVRChatLink(e, akyo.avatarUrl);
+    safeOpenVRChatLink(e, sourceUrl);
   };
 
   // 互換性のため新旧フィールドをチェック
   const category = akyo.category || akyo.attribute;
   const author = akyo.author || akyo.creator;
   const sortedCategories = category ? parseAndSortCategories(category) : [];
+  const entryType = resolveEntryType(akyo);
+  const isWorldEntry = entryType === 'world';
 
   return (
     <div className="akyo-card cursor-pointer" onClick={handleCardClick}>
@@ -141,7 +145,7 @@ export function AkyoCard({
       <div className="p-4 space-y-2">
         {/* VRChatリンク と 三面図DLボタン */}
         <div className="flex items-center mb-1">
-          {akyo.avatarUrl && (
+          {sourceUrl && (
             <button
               type="button"
               onClick={handleVRChatClick}
@@ -156,21 +160,23 @@ export function AkyoCard({
               />
             </button>
           )}
-          <button
-            type="button"
-            onClick={handleDownloadClick}
-            className="reference-sheet-button ml-auto flex-shrink-0 origin-right scale-90 max-sm:scale-[1.2]"
-            title={t('card.download', lang)}
-            aria-label={t('card.download', lang)}
-          >
-            <IconDownload size="w-4 h-4" />
-            <span className="text-xs">{t('card.downloadLabel', lang)}</span>
-          </button>
+          {!isWorldEntry && (
+            <button
+              type="button"
+              onClick={handleDownloadClick}
+              className="reference-sheet-button ml-auto flex-shrink-0 origin-right scale-90 max-sm:scale-[1.2]"
+              title={t('card.download', lang)}
+              aria-label={t('card.download', lang)}
+            >
+              <IconDownload size="w-4 h-4" />
+              <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+            </button>
+          )}
         </div>
 
         {/* ID（通称の直上） */}
         <div className="mb-1">
-          <span className="text-sm font-bold text-gray-500">#{akyo.id}</span>
+          <span className="text-sm font-bold text-gray-500">{formatDisplayId(akyo)}</span>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
@@ -202,7 +208,7 @@ export function AkyoCard({
 
         {/* 作者情報 - 元の実装と同じ形式 (改行あり、:付き) */}
         <p className="text-xs text-gray-600 mb-2 whitespace-pre-line">
-          {akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
+          {!isWorldEntry && akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
             <>
               {t('card.avatarName', lang)}: {akyo.avatarName}
               {'\n'}

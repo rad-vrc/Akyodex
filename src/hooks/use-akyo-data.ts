@@ -1,6 +1,7 @@
 'use client';
 
 import type { AkyoData, AkyoFilterOptions } from '@/types/akyo';
+import { formatDisplayId } from '@/lib/akyo-entry';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /** localStorage のキー名 */
@@ -130,6 +131,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       filtered = filtered.filter(
         (akyo) =>
           (akyo.id || '').toLowerCase().includes(query) ||
+          formatDisplayId(akyo).toLowerCase().includes(query) ||
           (akyo.nickname || '').toLowerCase().includes(query) ||
           (akyo.avatarName || '').toLowerCase().includes(query) ||
           (akyo.category || akyo.attribute || '').toLowerCase().includes(query) ||

@@ -2,6 +2,7 @@
 
 import { IconInfoCircle, IconVRChat } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
+import { formatDisplayId, getAkyoSourceUrl, resolveEntryType } from '@/lib/akyo-entry';
 import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
@@ -79,17 +80,19 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
               const category = akyo.category || akyo.attribute || '';
               const author = akyo.author || akyo.creator || '';
               const sortedCategories = parseAndSortCategories(category);
+              const isWorldEntry = resolveEntryType(akyo) === 'world';
+              const sourceUrl = getAkyoSourceUrl(akyo);
 
               return (
                 <tr key={akyo.id}>
                   {/* No. */}
-                  <td className="font-mono text-sm">#{akyo.id}</td>
+                  <td className="font-mono text-sm">{formatDisplayId(akyo)}</td>
 
                   {/* 見た目 */}
                   <td>
                     <div className="list-image-wrapper">
                       <Image
-                        src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 96)}
+                        src={buildAvatarImageUrl(akyo.id, sourceUrl, 96)}
                         alt={akyo.avatarName || akyo.nickname}
                         width={48}
                         height={48}
@@ -111,7 +114,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                     <div className="font-medium text-[var(--text-primary)]">
                       {akyo.nickname || akyo.avatarName}
                     </div>
-                    {akyo.nickname && akyo.avatarName && (
+                    {!isWorldEntry && akyo.nickname && akyo.avatarName && (
                       <div className="text-xs text-[var(--text-secondary)]">
                         {akyo.nickname === akyo.avatarName
                           ? `${t('card.avatarName', lang)}: ${akyo.avatarName}`
@@ -149,10 +152,10 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   <td className="text-center">
                     <div className="flex items-center justify-center gap-1">
                       {/* VRChatリンク */}
-                      {akyo.avatarUrl && (
+                      {sourceUrl && (
                         <button
                           type="button"
-                          onClick={(e) => handleVRChatClick(e, akyo.avatarUrl)}
+                          onClick={(e) => handleVRChatClick(e, sourceUrl)}
                           className="vrchat-link-button flex-shrink-0 p-1 transition-all hover:scale-110 active:scale-95"
                           title={t('modal.vrchatOpen', lang)}
                           aria-label={t('modal.vrchatOpen', lang)}

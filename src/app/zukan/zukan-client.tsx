@@ -19,6 +19,7 @@ import { IconCog, IconGrid, IconList } from '@/components/icons';
 import { LanguageToggle } from '@/components/language-toggle';
 import { SearchBar } from '@/components/search-bar';
 import { useAkyoData } from '@/hooks/use-akyo-data';
+import { resolveEntryType } from '@/lib/akyo-entry';
 import { useLanguage } from '@/hooks/use-language';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
@@ -126,7 +127,7 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
   const raw = item as Record<string, unknown>;
   const id = typeof raw.id === 'string' ? raw.id.trim() : '';
   const avatarName = typeof raw.avatarName === 'string' ? raw.avatarName.trim() : '';
-  if (!id || !avatarName) return undefined;
+  const nickname = typeof raw.nickname === 'string' ? raw.nickname.trim() : '';
 
   const category =
     typeof raw.category === 'string'
@@ -146,6 +147,38 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
       : typeof raw.creator === 'string'
         ? raw.creator
         : '';
+  const explicitEntryType =
+    raw.entryType === 'avatar' || raw.entryType === 'world' ? raw.entryType : undefined;
+  const entryType =
+    explicitEntryType ||
+    resolveEntryType({
+      id,
+      appearance: typeof raw.appearance === 'string' ? raw.appearance : '',
+      nickname,
+      avatarName,
+      category,
+      comment,
+      author,
+      attribute: category,
+      notes: comment,
+      creator: author,
+      sourceUrl:
+        typeof raw.sourceUrl === 'string' && raw.sourceUrl.trim()
+          ? raw.sourceUrl.trim()
+          : typeof raw.avatarUrl === 'string'
+            ? raw.avatarUrl
+            : '',
+      avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
+    });
+  const displaySerial =
+    typeof raw.displaySerial === 'string' && raw.displaySerial.trim()
+      ? raw.displaySerial.trim()
+      : undefined;
+
+  if (!id) return undefined;
+  if (entryType === 'world' && !nickname) return undefined;
+  if (entryType === 'avatar' && !avatarName) return undefined;
+
   const parsedCategory = Array.isArray(raw.parsedCategory)
     ? raw.parsedCategory.filter((value): value is string => typeof value === 'string')
     : undefined;
@@ -155,8 +188,10 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
 
   return {
     id,
+    entryType,
+    displaySerial,
     appearance: typeof raw.appearance === 'string' ? raw.appearance : '',
-    nickname: typeof raw.nickname === 'string' ? raw.nickname : '',
+    nickname,
     avatarName,
     category,
     comment,
@@ -164,6 +199,12 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
     attribute: category,
     notes: comment,
     creator: author,
+    sourceUrl:
+      typeof raw.sourceUrl === 'string' && raw.sourceUrl.trim()
+        ? raw.sourceUrl.trim()
+        : typeof raw.avatarUrl === 'string'
+          ? raw.avatarUrl
+          : '',
     avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
     isFavorite: typeof raw.isFavorite === 'boolean' ? raw.isFavorite : undefined,
     parsedCategory: parsedCategory && parsedCategory.length > 0 ? parsedCategory : undefined,
@@ -251,14 +292,36 @@ export function ZukanClient({
   const dataLengthRef = useRef(data.length);
 
   // — Derived values —
-  const stats = useMemo(
-    () => ({
-      total: data.length,
-      displayed: filteredData.length,
-      favorites: data.filter((a) => a.isFavorite).length,
-    }),
-    [data, filteredData]
-  );
+  const stats = useMemo(() => {
+    const summarizeByEntryType = (items: AkyoData[]) =>
+      items.reduce(
+        (acc, item) => {
+          if (resolveEntryType(item) === 'world') {
+            acc.worlds += 1;
+          } else {
+            acc.avatars += 1;
+          }
+
+          if (item.isFavorite) {
+            acc.favorites += 1;
+          }
+
+          return acc;
+        },
+        { avatars: 0, worlds: 0, favorites: 0 }
+      );
+
+    const totalSummary = summarizeByEntryType(data);
+    const displayedSummary = summarizeByEntryType(filteredData);
+
+    return {
+      totalAvatars: totalSummary.avatars,
+      totalWorlds: totalSummary.worlds,
+      displayedAvatars: displayedSummary.avatars,
+      displayedWorlds: displayedSummary.worlds,
+      favorites: totalSummary.favorites,
+    };
+  }, [data, filteredData]);
 
   const activeFilterCount = useMemo(
     () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
@@ -589,10 +652,14 @@ export function ZukanClient({
           {/* 統計情報 */}
           <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {t('stats.total', lang).replace('{count}', String(stats.total))}
+              {t('stats.totalBreakdown', lang)
+                .replace('{avatars}', String(stats.totalAvatars))
+                .replace('{worlds}', String(stats.totalWorlds))}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {t('stats.displayed', lang).replace('{count}', String(stats.displayed))}
+              {t('stats.displayedBreakdown', lang)
+                .replace('{avatars}', String(stats.displayedAvatars))
+                .replace('{worlds}', String(stats.displayedWorlds))}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
               ❤️{stats.favorites}

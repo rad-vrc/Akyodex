@@ -27,6 +27,7 @@ import type { AkyoData } from '@/types/akyo';
 import type { KVMetadata, KVNamespace } from '@/types/kv';
 import { KV_KEYS } from '@/types/kv';
 import { cache } from 'react';
+import { hydrateAkyoDataset } from './akyo-entry';
 
 /**
  * Get KV namespace from Cloudflare context
@@ -112,7 +113,7 @@ export const getAkyoDataFromKVOnly = cache(
 
       if (data && Array.isArray(data) && data.length > 0) {
         console.log(`[KV] Success: ${data.length} avatars (${lang})`);
-        return data;
+        return hydrateAkyoDataset(data);
       }
 
       // KV data not found for requested language
@@ -154,7 +155,7 @@ export const getAkyoDataFromKVWithSource = cache(
 
       if (data && Array.isArray(data) && data.length > 0) {
         console.log(`[KV] Success: ${data.length} avatars (${lang})`);
-        return { data, source: 'kv' };
+        return { data: hydrateAkyoDataset(data), source: 'kv' };
       }
 
       // KV data not found for requested language

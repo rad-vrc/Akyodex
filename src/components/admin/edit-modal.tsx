@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { IconClose, IconCloudUpload, IconCrop, IconEdit, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
+import { detectVrcEntryTypeFromUrl, getAkyoSourceUrl } from '@/lib/akyo-entry';
 import type { AkyoData } from '@/types/akyo';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from './attribute-modal';
@@ -32,11 +33,14 @@ export function EditModal({
   onSuccess,
 }: EditModalProps) {
   const [formData, setFormData] = useState({
+    entryType: 'avatar' as 'avatar' | 'world',
+    displaySerial: '',
     nickname: '',
     avatarName: '',
     // UI上は複数選択UIを維持するため配列で扱う
     categories: [] as string[],
     author: '',
+    sourceUrl: '',
     avatarUrl: '',
     comment: '',
   });
@@ -81,11 +85,14 @@ export function EditModal({
       const commentStr = akyo.comment || akyo.notes || '';
 
       setFormData({
+        entryType: akyo.entryType || detectVrcEntryTypeFromUrl(getAkyoSourceUrl(akyo)) || 'avatar',
+        displaySerial: akyo.displaySerial || akyo.id,
         nickname: akyo.nickname || '',
         avatarName: akyo.avatarName || '',
         categories: categoryStr ? categoryStr.split(/[、,]/).map(a => a.trim()) : [],
         author: authorStr,
-        avatarUrl: akyo.avatarUrl || '',
+        sourceUrl: getAkyoSourceUrl(akyo),
+        avatarUrl: akyo.avatarUrl || getAkyoSourceUrl(akyo),
         comment: commentStr,
       });
       setShowImagePreview(false);
@@ -121,6 +128,8 @@ export function EditModal({
       setImageY(0);
     }
   };
+
+  const isWorldEntry = formData.entryType === 'world';
 
   const zoomImage = (factor: number) => {
     setImageScale(prev => {
@@ -370,7 +379,12 @@ export function EditModal({
   // ... (VRChat連携ロジックは変更なし) ...
   // VRChat URLからアバター名を取得
   const handleFetchAvatarName = async () => {
-    const url = formData.avatarUrl.trim();
+    if (isWorldEntry) {
+      alert('ワールドは通称欄を名称として使用します');
+      return;
+    }
+
+    const url = formData.sourceUrl.trim();
     if (!url) {
       alert('VRChat URLを入力してください');
       return;
@@ -417,7 +431,12 @@ export function EditModal({
 
   // VRChat URLから画像を取得
   const handleFetchImage = async () => {
-    const url = formData.avatarUrl.trim();
+    if (isWorldEntry) {
+      alert('ワールド画像は登録画面の自動取得を利用してください。必要なら手動で画像をアップロードしてください。');
+      return;
+    }
+
+    const url = formData.sourceUrl.trim();
     if (!url) {
       alert('VRChat URLを入力してください');
       return;
@@ -470,7 +489,7 @@ export function EditModal({
     if (!akyo) return;
 
     // Validate required fields
-    if (!formData.avatarName.trim()) {
+    if (!isWorldEntry && !formData.avatarName.trim()) {
       alert('アバター名は必須です');
       return;
     }
@@ -517,9 +536,12 @@ export function EditModal({
     try {
       const submitData = new FormData();
       submitData.append('id', akyo.id);
+      submitData.append('entryType', formData.entryType);
+      submitData.append('displaySerial', formData.displaySerial);
       submitData.append('nickname', formData.nickname);
-      submitData.append('avatarName', formData.avatarName);
-      submitData.append('avatarUrl', formData.avatarUrl);
+      submitData.append('avatarName', isWorldEntry ? '' : formData.avatarName);
+      submitData.append('sourceUrl', formData.sourceUrl);
+      submitData.append('avatarUrl', formData.avatarUrl || formData.sourceUrl);
 
       // 新フィールド
       submitData.append('author', formData.author);
@@ -549,7 +571,7 @@ export function EditModal({
       alert(
         `✅ ${result.message}\n\n` +
         `ID: #${akyo.id}\n` +
-        `アバター名: ${formData.avatarName}\n` +
+        `${isWorldEntry ? '名称' : 'アバター名'}: ${isWorldEntry ? formData.nickname : formData.avatarName}\n` +
         `作者: ${formData.author}\n\n` +
         (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
       );
@@ -657,55 +679,66 @@ export function EditModal({
                 {/* アバター名 */}
                 <div>
                   <label className="block text-gray-700 text-sm font-medium mb-1">
-                    アバター名
+                    {isWorldEntry ? '名称' : 'アバター名'}
                   </label>
-                  <input
-                    type="text"
-                    value={formData.avatarName}
-                    onChange={(e) => {
-                      handleInputChange('avatarName', e.target.value);
-                      setAvatarNameStatus({ message: '', tone: 'neutral' });
-                    }}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="例: Akyo origin"
-                  />
-                  <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={handleCheckAvatarNameDuplicate}
-                      disabled={checkingAvatarName}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {checkingAvatarName ? (
-                        <>
-                          <svg className="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          確認中...
-                        </>
-                      ) : (
-                        <>
-                          <IconSearch size="w-4 h-4" />
-                          同じアバター名が既に登録されているか確認
-                        </>
-                      )}
-                    </button>
-                    {avatarNameStatus.message && (
-                      <p
-                        className={`text-sm ${
-                          avatarNameStatus.tone === 'error'
-                            ? 'text-red-600'
-                            : avatarNameStatus.tone === 'success'
-                            ? 'text-green-600'
-                            : 'text-gray-600'
-                        }`}
-                      >
-                        {avatarNameStatus.message}
-                      </p>
-                    )}
-                  </div>
+                  {isWorldEntry ? (
+                    <input
+                      type="text"
+                      value="ワールドは「通称」欄を名称として使用します"
+                      disabled
+                      className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
+                    />
+                  ) : (
+                    <>
+                      <input
+                        type="text"
+                        value={formData.avatarName}
+                        onChange={(e) => {
+                          handleInputChange('avatarName', e.target.value);
+                          setAvatarNameStatus({ message: '', tone: 'neutral' });
+                        }}
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="例: Akyo origin"
+                      />
+                      <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleCheckAvatarNameDuplicate}
+                          disabled={checkingAvatarName}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-orange-200 text-orange-700 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {checkingAvatarName ? (
+                            <>
+                              <svg className="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              確認中...
+                            </>
+                          ) : (
+                            <>
+                              <IconSearch size="w-4 h-4" />
+                              同じアバター名が既に登録されているか確認
+                            </>
+                          )}
+                        </button>
+                        {avatarNameStatus.message && (
+                          <p
+                            className={`text-sm ${
+                              avatarNameStatus.tone === 'error'
+                                ? 'text-red-600'
+                                : avatarNameStatus.tone === 'success'
+                                ? 'text-green-600'
+                                : 'text-gray-600'
+                            }`}
+                          >
+                            {avatarNameStatus.message}
+                          </p>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* カテゴリ (旧: 属性) */}
@@ -765,7 +798,7 @@ export function EditModal({
                         onClick={handleFetchAvatarName}
                         disabled={fetchingName}
                         className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="VRChat URLからアバター名を自動取得"
+                        title={isWorldEntry ? 'ワールドでは利用できません' : 'VRChat URLからアバター名を自動取得'}
                       >
                         {fetchingName ? (
                           <>
@@ -780,7 +813,7 @@ export function EditModal({
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                             </svg>
-                            <span>URLからアバター名を取得</span>
+                            <span>{isWorldEntry ? '名称自動取得は不要' : 'URLからアバター名を取得'}</span>
                           </>
                         )}
                       </button>
@@ -789,7 +822,7 @@ export function EditModal({
                         onClick={handleFetchImage}
                         disabled={fetchingImage}
                         className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center gap-1.5 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="VRChat URLから画像を自動取得"
+                        title={isWorldEntry ? 'ワールドでは既存URLからの画像再取得は非対応です' : 'VRChat URLから画像を自動取得'}
                       >
                         {fetchingImage ? (
                           <>
@@ -804,7 +837,7 @@ export function EditModal({
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
-                            <span>URLから画像を取得</span>
+                            <span>{isWorldEntry ? 'ワールド画像は手動更新' : 'URLから画像を取得'}</span>
                           </>
                         )}
                       </button>
@@ -812,8 +845,11 @@ export function EditModal({
                   </div>
                   <input
                     type="url"
-                    value={formData.avatarUrl}
-                    onChange={(e) => handleInputChange('avatarUrl', e.target.value)}
+                    value={formData.sourceUrl}
+                    onChange={(e) => {
+                      handleInputChange('sourceUrl', e.target.value);
+                      handleInputChange('avatarUrl', e.target.value);
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="https://vrchat.com/..."
                   />

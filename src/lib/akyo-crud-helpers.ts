@@ -13,6 +13,7 @@ import {
     filterOutRecordById,
     findRecordById,
     formatAkyoCommitMessage,
+    getNextDisplaySerial,
     loadAkyoCsv,
     replaceRecordById,
 } from './csv-utils';
@@ -51,6 +52,9 @@ export async function processAkyoCRUD(
     const { 
         nickname, 
         avatarName, 
+        entryType,
+        displaySerial,
+        sourceUrl,
         avatarUrl, 
         imageData,
         category,
@@ -64,6 +68,9 @@ export async function processAkyoCRUD(
         : { 
             nickname: '', 
             avatarName: '', 
+            entryType: 'avatar',
+            displaySerial: undefined,
+            sourceUrl: '',
             avatarUrl: '', 
             imageData: undefined,
             category: '',
@@ -87,15 +94,18 @@ export async function processAkyoCRUD(
         // 将来的にcreateAkyoRecordの引数も更新する必要があるが、
         // 現時点ではcsv-utils.ts側の変更を最小限にするため、
         // 新旧フィールドをマッピングして渡す（またはcreateAkyoRecord側で処理する）
-        const recordData = {
+        const recordData: Parameters<typeof createAkyoRecord>[0] = {
             id,
             nickname,
             avatarName,
+            entryType: entryType as Parameters<typeof createAkyoRecord>[0]['entryType'],
+            displaySerial,
+            sourceUrl,
             // 新フィールドを優先
             attributes: category || attributes,
             creator: author || creator,
             notes: comment || notes,
-            avatarUrl,
+            avatarUrl: sourceUrl || avatarUrl,
         };
 
         switch (operation) {
@@ -106,8 +116,14 @@ export async function processAkyoCRUD(
                     return jsonError(`ID ${id} は既に使用されています`, 409);
                 }
 
+                if (recordData.entryType === 'world') {
+                    recordData.displaySerial = getNextDisplaySerial(dataRecords, header, 'world');
+                } else {
+                    recordData.displaySerial = recordData.displaySerial || id;
+                }
+
                 // Create and add new record
-                const newRecord = createAkyoRecord(recordData);
+                const newRecord = createAkyoRecord(recordData, header);
                 updatedRecords = [...dataRecords, newRecord];
                 commitMessageAction = 'Add';
                 successMessage = 'Akyoを登録しました';
@@ -121,8 +137,19 @@ export async function processAkyoCRUD(
                     return jsonError(`ID: ${id} が見つかりませんでした`, 404);
                 }
 
+                if (recordData.entryType === 'world') {
+                    if (!recordData.displaySerial) {
+                        const displaySerialIndex = header.indexOf('DisplaySerial');
+                        if (displaySerialIndex >= 0) {
+                            recordData.displaySerial = String(existingRecord[displaySerialIndex] || '').trim();
+                        }
+                    }
+                } else {
+                    recordData.displaySerial = recordData.displaySerial || id;
+                }
+
                 // Create updated record
-                const updatedRecord = createAkyoRecord(recordData);
+                const updatedRecord = createAkyoRecord(recordData, header);
                 updatedRecords = replaceRecordById(dataRecords, id, updatedRecord);
                 commitMessageAction = 'Update';
                 successMessage = 'Akyoを更新しました';
@@ -147,7 +174,7 @@ export async function processAkyoCRUD(
         const commitMessage = formatAkyoCommitMessage(
             commitMessageAction as 'Add' | 'Update' | 'Delete',
             id,
-            avatarName || ''
+            avatarName || nickname || ''
         );
         const commitData = await commitAkyoCsv({
             header,
