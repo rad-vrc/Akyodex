@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-03-04T04:52:50.700Z",
-  "count": 798,
+  "updatedAt": "2026-03-04T09:39:24.259Z",
+  "count": 810,
   "data": [
     {
       "id": "0001",
@@ -7458,7 +7458,7 @@
       "id": "0746",
       "nickname": "Japan Street 0․448",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "［重要］VRC側のバグで偶に＂0MB＂になって入れなくなる場合があります、再アップロードで直せるので入れない場合は連絡ください。「どこかにありそうな、日本らしい街。」 日本の街並みを再現することを目標に、モデル持ち寄りにより共同で開発されているワールドです。ワールド制作協力者は随時募集中！ コンタクト≻≻ discord˸ YhK4gXr twitter˸ EngineerNeet",
       "author": "NEET ENGINEER",
       "sourceUrl": "https://vrchat.com/home/world/wrld_02cb84c8-446a-484b-b52b-2c1777e55f8d",
@@ -7488,7 +7488,7 @@
       "id": "0749",
       "nickname": "‐ふくらめ‐あきょうの森（-Bulge-AkyoForest）",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "‐ふくらめ‐あきょうの森 正式版プレリリース！！Ugaiさん作Akyoを使用、レイブパーティーをしています。（Uses Akyo Made by Ugai‚They have a rave party․）",
       "author": "Holimond",
       "sourceUrl": "https://vrchat.com/home/world/wrld_aab373f6-a735-4c4d-b74f-69b64b4cb070",
@@ -7498,7 +7498,7 @@
       "id": "0750",
       "nickname": "Akyo研究学会",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "Akyo研究学会",
       "author": "Holimond",
       "sourceUrl": "https://vrchat.com/home/world/wrld_c0259ae2-4db3-42ab-be47-3e7b2d6094ad",
@@ -7508,7 +7508,7 @@
       "id": "0751",
       "nickname": "PLANET AKYO REDUX",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "Wait․․․ It's all akyo？ （EVEN BETTER THAN BEFOREǃ）",
       "author": "yeaboi",
       "sourceUrl": "https://vrchat.com/home/world/wrld_6a21a8a5-db8a-4ea7-b19c-113c4ce8ee9d",
@@ -7538,7 +7538,7 @@
       "id": "0754",
       "nickname": "Himiko Avatar World",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "The contents of this world are provided by volunteers․ Update 20260101",
       "author": "bbbbb_himiko",
       "sourceUrl": "https://vrchat.com/home/world/wrld_24009ebc-87e4-40a0-ad24-bc11cb3c0cf4",
@@ -7555,6 +7555,16 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_d02e5ecd-faf5-4569-bab8-228fcd314458"
     },
     {
+      "id": "0799",
+      "nickname": "黄金楽園（おきんきんランド）VCC",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "金はいいよなァ～！金最高～！おきんきんランドとは、黄金の、黄金による、黄金の為のテーマパークである。",
+      "author": "（Ｋ）けーちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_2ebe7a5f-a0b0-4459-9452-1583480d9b43",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_2ebe7a5f-a0b0-4459-9452-1583480d9b43"
+    },
+    {
       "id": "0756",
       "nickname": "Akyo House",
       "avatarName": "",
@@ -7568,7 +7578,7 @@
       "id": "0757",
       "nickname": "sasanoki pedestal",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "ささのき商店で販売しているアバターのペデスタルが置いてあります。akyoもあるよます。akyoペデスタルもあるよ",
       "author": "ささのき",
       "sourceUrl": "https://vrchat.com/home/world/wrld_e5cca1d9-4146-4a79-8f5c-15750ee93e76",
@@ -7595,6 +7605,16 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_0c353cc5-1f2b-47f7-b757-fad8cc65d244"
     },
     {
+      "id": "0800",
+      "nickname": "KAYA Avatar World with FISHHEAD",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "kayaのアバターワールドです。マンボウやウーパールーパー、古生物などQuest対応パブリックアバターがあります。 This is KAYA's avatar world․ There are Quest compatible public avatars such as Sunfish‚axolotl‚ and paleontology․",
+      "author": "カヤ（kaya）",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_af5755ca-e00d-4197-a9ee-af8e4fcd4ab5",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_af5755ca-e00d-4197-a9ee-af8e4fcd4ab5"
+    },
+    {
       "id": "0760",
       "nickname": "Akyoの惑星",
       "avatarName": "",
@@ -7608,11 +7628,21 @@
       "id": "0761",
       "nickname": "Akyo Gallery",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "VRChatに生息するふしぎないきもの＂Akyo＂。そんなAkyoのAkyoによる写真館です。旧Twitterにて＃あきょさつ で投稿された写真や掲載許可を頂いた写真を展示していきます。展示内容は随時更新予定なのでお気軽にいらしてくださいね。2025⁄04⁄08更新",
       "author": "らど⁄rad1031",
       "sourceUrl": "https://vrchat.com/home/world/wrld_7e245366-447a-46db-8672-7d187bb946c0",
       "avatarUrl": "https://vrchat.com/home/world/wrld_7e245366-447a-46db-8672-7d187bb946c0"
+    },
+    {
+      "id": "0801",
+      "nickname": "Avatar Museum 9",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "「アバターだけの展示会」 AvatarMuseum9 アバターとポスターだけを展示するシンプルな展示会です。This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_24334308-42cb-4b50-8670-7a4bd052be66",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_24334308-42cb-4b50-8670-7a4bd052be66"
     },
     {
       "id": "0762",
@@ -7635,10 +7665,30 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_81a88d7d-ce7a-4961-8a94-9040e6f77a1c"
     },
     {
+      "id": "0802",
+      "nickname": "喰葉園 - Kuraba garden",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "色々な食中植物が生えている庭です。 お散歩をしながら食べられ比べができます。 テレポーターから飛んだ場所以外の捕虫葉に落ちるとほぼ助からないので、一頻り絶望する虫の気持ちを楽しんだらリスポーンしてください。",
+      "author": "long-potato",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_49631f04-e908-4247-91a2-0e8e8a8acec2",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_49631f04-e908-4247-91a2-0e8e8a8acec2"
+    },
+    {
+      "id": "0803",
+      "nickname": "Avatar Museum 10",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum10 アバターとポスターだけを展示するシンプルな展示会です。This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_2374cdf4-7c1f-47ab-9133-b6e9bf76811f",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_2374cdf4-7c1f-47ab-9133-b6e9bf76811f"
+    },
+    {
       "id": "0764",
       "nickname": "ぐるメガ宿舎",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "・麻雀・オセロ・ビリヤード・イメージパッド・アバターフィギュア・ASMRグッズ・ラジオブース・Akyoが5体隠れているよ！",
       "author": "ウロVRC",
       "sourceUrl": "https://vrchat.com/home/world/wrld_63f214f3-0a11-47cb-abf7-19da8ef9ad4f",
@@ -7648,7 +7698,7 @@
       "id": "0765",
       "nickname": "ネコノミ'sアバターワールド - nekonomi's AvatarWorld",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "nekononomiconが作成したものとかいろいろ置いてある感じがします。",
       "author": "nekononomicon",
       "sourceUrl": "https://vrchat.com/home/world/wrld_684a6399-b1e2-4e16-8965-cf1d883a3a0a",
@@ -7705,6 +7755,26 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_6cd0aecc-1d81-497d-9c97-f173fef125a0"
     },
     {
+      "id": "0804",
+      "nickname": "キツネツキ制作物展示場 -kitsune_tsuki works exhibition-",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "キツネツキの制作したアバターなどの3D作品を展示しています。 半分ぐらいクトゥルフ神話生物です This is an exhibition of avatars and other 3D works created by kitsune_tsuki․ About half of them are creatures from the Cthulhu Mythos․",
+      "author": "kitsune_tsuki",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_53d04329-e780-4a88-9388-61d1c53892a2",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_53d04329-e780-4a88-9388-61d1c53892a2"
+    },
+    {
+      "id": "0805",
+      "nickname": "Avatar Museum 12",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum12 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_5da8116b-1fc7-4197-a0b6-09a231e93a66",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_5da8116b-1fc7-4197-a0b6-09a231e93a66"
+    },
+    {
       "id": "0771",
       "nickname": "亜京湯",
       "avatarName": "",
@@ -7725,6 +7795,16 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_32ec8f47-0f0e-418d-b937-503a37bb82a9"
     },
     {
+      "id": "0806",
+      "nickname": "FISH EXPO 2025 OSAKANA JAPAN",
+      "avatarName": "",
+      "category": "World",
+      "comment": "फिश एक्सपो एक フィッシュヘッド प्रदर्शनी है जिसका विष 展示会य आभासी दुनिया का安全 उज्ज्वल保険加入 भविष्य है‚ जो अपेक्षाकृत सुरक्षित है।ी",
+      "author": "long-potato",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_e35c3663-9c35-494e-bee6-20e827a8be62",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_e35c3663-9c35-494e-bee6-20e827a8be62"
+    },
+    {
       "id": "0773",
       "nickname": "マンハッタン",
       "avatarName": "",
@@ -7735,10 +7815,20 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_73fce025-ab81-4a5d-beb7-66cc64d79186"
     },
     {
+      "id": "0807",
+      "nickname": "Avatar Museum 11",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum11 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_4ab9edc5-27b8-4bbb-8680-111ec672353e",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_4ab9edc5-27b8-4bbb-8680-111ec672353e"
+    },
+    {
       "id": "0774",
       "nickname": "百狐Akyo - The Night Parade of One Hundred Fox Akyos",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "狐Akyo100匹とちびうこんちゃんのいる少し暗めなチルワールドです。（導入が暗い場所です。暗いのが苦手な方は要注意） ちょっとかわったAkyoが10匹います。探してみてね！透明、触ると変形、伸びる、カメラ付き、カメラに映らない or カメラにしか映らない、アバターペデスタルなど",
       "author": "Akiaki／あきあき",
       "sourceUrl": "https://vrchat.com/home/world/wrld_a9852c99-dc40-4dcf-84df-99522249a8b2",
@@ -7778,7 +7868,7 @@
       "id": "0778",
       "nickname": "nooktown",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "Bird sounds‚ wind sounds‚ avatar‚ opt mirror",
       "author": "uqai",
       "sourceUrl": "https://vrchat.com/home/world/wrld_3f9fe99e-63ae-4be8-8e38-1ce69e176e7a",
@@ -7935,6 +8025,16 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_18a5ed3e-349b-44fe-8325-26d8cbc76a43"
     },
     {
+      "id": "0808",
+      "nickname": "Avatar Museum 13",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum13 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_8ca15987-54f5-46c7-bb53-60a5c69582be",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_8ca15987-54f5-46c7-bb53-60a5c69582be"
+    },
+    {
       "id": "0794",
       "nickname": "雨音 ⁄ Rain Sounds",
       "avatarName": "",
@@ -7948,11 +8048,21 @@
       "id": "0795",
       "nickname": "Akyo Avatar World",
       "avatarName": "",
-      "category": "World",
+      "category": "World,World/Pedestal",
       "comment": "A fun little world dedicated to Akyoǃ Some alternative dancer avatars are to come soonǃ Want to have your own Akyo placed here too? Contact me-Nya~",
       "author": "Smug Kitty",
       "sourceUrl": "https://vrchat.com/home/world/wrld_f6bb5781-32cc-4e02-946a-d20ec86da865",
       "avatarUrl": "https://vrchat.com/home/world/wrld_f6bb5781-32cc-4e02-946a-d20ec86da865"
+    },
+    {
+      "id": "0809",
+      "nickname": "ベイクギミック用のモデルをハイポリに作りすぎて仕方なく普通にベイクしたやつ",
+      "avatarName": "",
+      "category": "World",
+      "comment": "今日も君はテロメアの犠牲により生かされている",
+      "author": "NEET ENGINEER",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_4e027972-e36c-40e0-b348-b76c3db34991",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_4e027972-e36c-40e0-b348-b76c3db34991"
     },
     {
       "id": "0796",
@@ -7963,6 +8073,16 @@
       "author": "くろくま_",
       "sourceUrl": "https://vrchat.com/home/world/wrld_d8a7745e-1659-45c1-bbc3-782b5114b417",
       "avatarUrl": "https://vrchat.com/home/world/wrld_d8a7745e-1659-45c1-bbc3-782b5114b417"
+    },
+    {
+      "id": "0810",
+      "nickname": "FketReal2025inEarth",
+      "avatarName": "",
+      "category": "World",
+      "comment": "ここで起きたことは全て現実に基づいています。",
+      "author": "甘水あみ",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_63d29ae7-c04b-4c56-bdb8-1f6f8721e5d3",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_63d29ae7-c04b-4c56-bdb8-1f6f8721e5d3"
     },
     {
       "id": "0797",

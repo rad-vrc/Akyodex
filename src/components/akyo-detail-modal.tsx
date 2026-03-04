@@ -99,9 +99,16 @@ export function AkyoDetailModal({
   // 画像URLがリセットされるのを防ぐ
   useEffect(() => {
     if (localAkyo) {
-      const pngUrl = `${r2Base}/${localAkyo.id}.png`;
-      setImageUrl(pngUrl);
-      setImageLoadAttempt(0);
+      const nextSourceUrl = getAkyoSourceUrl(localAkyo);
+      const isWorldEntry = resolveEntryType(localAkyo) === 'world';
+      if (isWorldEntry) {
+        setImageUrl(buildAvatarImageUrl(localAkyo.id, nextSourceUrl, 800));
+        setImageLoadAttempt(1);
+      } else {
+        const pngUrl = `${r2Base}/${localAkyo.id}.png`;
+        setImageUrl(pngUrl);
+        setImageLoadAttempt(0);
+      }
       setIsZoomed(false); // ズーム状態もリセット
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- localAkyo.id の変更時のみ発火させたい
