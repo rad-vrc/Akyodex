@@ -34,7 +34,12 @@ export function getDisplaySerial(akyo: AkyoData): string {
 }
 
 export function getAkyoSourceUrl(akyo: Pick<AkyoData, 'sourceUrl' | 'avatarUrl'>): string {
-  return (akyo.sourceUrl || akyo.avatarUrl || '').trim();
+  const sourceUrl = akyo.sourceUrl?.trim();
+  if (sourceUrl) {
+    return sourceUrl;
+  }
+
+  return akyo.avatarUrl?.trim() || '';
 }
 
 export function formatDisplayId(akyo: AkyoData): string {

@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       return Response.json({ error: 'Could not extract world name from page' }, { status: 404 });
     }
 
-    const byIndex = fullTitle.indexOf(' by ');
+    const byIndex = fullTitle.lastIndexOf(' by ');
     if (byIndex !== -1) {
       worldName = fullTitle.substring(0, byIndex).trim();
       creatorName = fullTitle.substring(byIndex + 4).trim();

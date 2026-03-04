@@ -23,6 +23,7 @@ interface AddTabDraft {
   nickname: string;
   categories: string[];
   sourceUrl: string;
+  author: string;
   comment: string;
   customCategories: string[];
 }
@@ -111,6 +112,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
             : typeof (parsed as { avatarUrl?: unknown }).avatarUrl === 'string'
             ? ((parsed as { avatarUrl: string }).avatarUrl)
             : prev.sourceUrl,
+        author: typeof parsed.author === 'string' ? parsed.author : prev.author,
         comment: typeof parsed.comment === 'string' ? parsed.comment : prev.comment,
       }));
       setCustomCategories(normalizeStringList(parsed.customCategories));
@@ -128,6 +130,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
       nickname: formData.nickname,
       categories: normalizeStringList(formData.categories),
       sourceUrl: formData.sourceUrl,
+      author: formData.author,
       comment: formData.comment,
       customCategories: normalizeStringList(customCategories),
     };
@@ -135,6 +138,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
   }, [
     customCategories,
     formData.sourceUrl,
+    formData.author,
     formData.categories,
     formData.comment,
     formData.nickname,
@@ -723,9 +727,12 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* ID（自動採番） */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">ID（自動採番）</label>
+            <label htmlFor="add-tab-id" className="block text-gray-700 text-sm font-medium mb-1">
+              ID（自動採番）
+            </label>
             {userRole === 'owner' ? (
               <input
+                id="add-tab-id"
                 type="text"
                 value={nextId}
                 disabled
@@ -733,6 +740,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               />
             ) : (
               <input
+                id="add-tab-id"
                 type="text"
                 value="登録時に自動割り当て"
                 disabled
@@ -749,7 +757,9 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           {/* 通称 */}
           <div>
             <div className="flex items-center justify-between gap-2">
-              <label className="block text-gray-700 text-sm font-medium">通称</label>
+              <label htmlFor="add-tab-nickname" className="block text-gray-700 text-sm font-medium">
+                通称
+              </label>
               <button
                 type="button"
                 onClick={handleCheckNicknameDuplicate}
@@ -789,6 +799,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               </button>
             </div>
             <input
+              id="add-tab-nickname"
               type="text"
               value={formData.nickname}
               onChange={(e) => {
@@ -816,8 +827,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* 名称 */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">名称</label>
+            <label htmlFor="add-tab-name" className="block text-gray-700 text-sm font-medium mb-1">
+              名称
+            </label>
             <input
+              id="add-tab-name"
               type="text"
               value={
                 detectedEntryType === 'world'
@@ -863,11 +877,12 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* 作者 */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">
+            <label htmlFor="add-tab-author" className="block text-gray-700 text-sm font-medium mb-1">
               作者（自動取得 / 必要時は手動入力）
             </label>
             {detectedEntryType === 'world' ? (
               <input
+                id="add-tab-author"
                 type="text"
                 value={formData.author}
                 onChange={(e) => handleInputChange('author', e.target.value)}
@@ -876,6 +891,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               />
             ) : (
               <input
+                id="add-tab-author"
                 type="text"
                 value="登録時にVRChat URLから自動取得"
                 disabled
@@ -886,10 +902,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* VRChat URL */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">
+            <label htmlFor="add-tab-source-url" className="block text-gray-700 text-sm font-medium mb-1">
               VRChat URL（アバターまたはワールド） <span className="text-red-500">*</span>
             </label>
             <input
+              id="add-tab-source-url"
               type="url"
               value={formData.sourceUrl}
               onChange={(e) => handleInputChange('sourceUrl', e.target.value)}
@@ -912,8 +929,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
         {/* おまけ情報（comment） */}
         <div>
-          <label className="block text-gray-700 text-sm font-medium mb-1">おまけ情報</label>
+          <label htmlFor="add-tab-comment" className="block text-gray-700 text-sm font-medium mb-1">
+            おまけ情報
+          </label>
           <textarea
+            id="add-tab-comment"
             value={formData.comment}
             onChange={(e) => handleInputChange('comment', e.target.value)}
             rows={3}
