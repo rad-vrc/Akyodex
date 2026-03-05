@@ -8,7 +8,7 @@ import { jsonError } from '@/lib/api-helpers';
 import { VRCHAT_WORLD_ID_PATTERN } from '@/lib/akyo-entry';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 const ALLOWED_IMAGE_HOSTS = new Set([
   'api.vrchat.cloud',
