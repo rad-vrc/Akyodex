@@ -5,6 +5,7 @@
 
 import { connection } from 'next/server';
 import { jsonError } from '@/lib/api-helpers';
+import { VRCHAT_WORLD_ID_PATTERN } from '@/lib/akyo-entry';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
 
 export const runtime = 'edge';
@@ -25,6 +26,10 @@ function isAllowedImageUrl(url: string): boolean {
   }
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function extractMetaContent(html: string, name: string): string {
   const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
 
@@ -34,7 +39,7 @@ function extractMetaContent(html: string, name: string): string {
       continue;
     }
 
-    if (new RegExp(`\\b(?:name|property)=["']${name.replace(':', '\\:')}["']`, 'i').test(tag)) {
+    if (new RegExp(`\\b(?:name|property)=["']${escapeRegExp(name)}["']`, 'i').test(tag)) {
       return contentMatch[1];
     }
   }
@@ -68,12 +73,10 @@ export async function GET(request: Request) {
     return jsonError('wrld parameter is required', 400);
   }
 
-  const wrldMatch = wrld.match(/^wrld_[A-Za-z0-9-]{1,50}$/);
-  if (!wrldMatch) {
-    return jsonError('Invalid wrld format', 400);
+  const cleanWrld = wrld.trim();
+  if (!VRCHAT_WORLD_ID_PATTERN.test(cleanWrld)) {
+    return jsonError('Invalid wrld format (must be wrld_[A-Za-z0-9-]{1,64})', 400);
   }
-
-  const cleanWrld = wrldMatch[0];
 
   try {
     const html = await fetchVRChatWorldPage(cleanWrld);
