@@ -9,7 +9,7 @@ import { VRCHAT_WORLD_ID_PATTERN } from '@/lib/akyo-entry';
 import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 interface VRChatWorldInfo {
   worldName: string;

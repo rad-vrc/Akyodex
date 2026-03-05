@@ -353,27 +353,51 @@ export function getNextDisplaySerial(
   }
 
   const displaySerialIndex = header.indexOf(DISPLAY_SERIAL_COLUMN);
-  let maxSerial = 0;
-  let worldOrdinal = 0;
+  const usedSerials = new Set<number>();
 
   for (const record of records) {
     if (!isWorldRecord(record, header)) {
       continue;
     }
 
-    worldOrdinal += 1;
+    const serialSource =
+      displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '';
+    const parsed = Number.parseInt(serialSource, 10);
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      usedSerials.add(parsed);
+    }
+  }
+
+  let nextFallbackSerial = 1;
+  const allocateFallbackSerial = () => {
+    while (usedSerials.has(nextFallbackSerial)) {
+      nextFallbackSerial += 1;
+    }
+    const allocated = nextFallbackSerial;
+    usedSerials.add(allocated);
+    nextFallbackSerial += 1;
+    return allocated;
+  };
+
+  let maxSerial = 0;
+
+  for (const record of records) {
+    if (!isWorldRecord(record, header)) {
+      continue;
+    }
 
     const serialSource =
       displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '';
     const parsed = Number.parseInt(serialSource, 10);
-    if (!Number.isNaN(parsed)) {
+    if (!Number.isNaN(parsed) && parsed > 0) {
       maxSerial = Math.max(maxSerial, parsed);
       continue;
     }
 
     // Keep server-side allocation aligned with hydrateAkyoDataset() fallback serials
     // so legacy rows without persisted DisplaySerial still reserve their visible numbers.
-    maxSerial = Math.max(maxSerial, worldOrdinal);
+    const fallbackSerial = allocateFallbackSerial();
+    maxSerial = Math.max(maxSerial, fallbackSerial);
   }
 
   return String(maxSerial + 1).padStart(4, '0');
