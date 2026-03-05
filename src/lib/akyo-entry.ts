@@ -48,25 +48,49 @@ export function formatDisplayId(akyo: AkyoData): string {
 }
 
 export function hydrateAkyoDataset(entries: AkyoData[]): AkyoData[] {
-  let worldFallbackSerial = 0;
+  const usedWorldSerials = new Set<number>();
+  for (const entry of entries) {
+    if (resolveEntryType(entry) !== 'world') {
+      continue;
+    }
+    const parsed = Number.parseInt(entry.displaySerial?.trim() || '', 10);
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      usedWorldSerials.add(parsed);
+    }
+  }
+
+  let nextFallbackWorldSerial = 1;
+  const allocateWorldFallbackSerial = () => {
+    while (usedWorldSerials.has(nextFallbackWorldSerial)) {
+      nextFallbackWorldSerial += 1;
+    }
+    const serial = nextFallbackWorldSerial;
+    usedWorldSerials.add(serial);
+    nextFallbackWorldSerial += 1;
+    return String(serial).padStart(4, '0');
+  };
 
   return entries.map((entry) => {
     const entryType = resolveEntryType(entry);
     const sourceUrl = getAkyoSourceUrl(entry);
-
-    if (entryType === 'world') {
-      worldFallbackSerial += 1;
-    }
+    const rawDisplaySerial = entry.displaySerial?.trim() || '';
 
     return {
       ...entry,
       entryType,
       sourceUrl,
-      displaySerial:
-        entry.displaySerial?.trim() ||
-        (entryType === 'world'
-          ? String(worldFallbackSerial).padStart(4, '0')
-          : entry.id),
+      displaySerial: (() => {
+        if (entryType !== 'world') {
+          return rawDisplaySerial || entry.id;
+        }
+
+        const parsed = Number.parseInt(rawDisplaySerial, 10);
+        if (!Number.isNaN(parsed) && parsed > 0) {
+          return String(parsed).padStart(4, '0');
+        }
+
+        return allocateWorldFallbackSerial();
+      })(),
     };
   });
 }

@@ -286,6 +286,16 @@ export function EditModal({
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleSourceUrlChange = (value: string) => {
+    const detectedEntryType = detectVrcEntryTypeFromUrl(value.trim());
+    setFormData((prev) => ({
+      ...prev,
+      sourceUrl: value,
+      avatarUrl: value,
+      entryType: detectedEntryType ?? prev.entryType,
+    }));
+  };
+
   // ... (重複チェック系ロジックは変更なし) ...
   // Duplicate check for nickname
   const handleCheckNicknameDuplicate = async () => {
@@ -629,8 +639,11 @@ export function EditModal({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* ID（変更不可） */}
                 <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-1">ID（変更不可）</label>
+                  <label htmlFor="edit-id" className="block text-gray-700 text-sm font-medium mb-1">
+                    ID（変更不可）
+                  </label>
                   <input
+                    id="edit-id"
                     type="text"
                     value={akyo.id}
                     disabled
@@ -641,7 +654,9 @@ export function EditModal({
                 {/* 通称 */}
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <label className="block text-gray-700 text-sm font-medium">通称</label>
+                    <label htmlFor="edit-nickname" className="block text-gray-700 text-sm font-medium">
+                      通称
+                    </label>
                     <button
                       type="button"
                       onClick={handleCheckNicknameDuplicate}
@@ -665,6 +680,7 @@ export function EditModal({
                     </button>
                   </div>
                   <input
+                    id="edit-nickname"
                     type="text"
                     value={formData.nickname}
                     onChange={(e) => {
@@ -691,11 +707,15 @@ export function EditModal({
 
                 {/* アバター名 */}
                 <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-1">
+                  <label
+                    htmlFor={isWorldEntry ? 'edit-world-name-note' : 'edit-avatar-name'}
+                    className="block text-gray-700 text-sm font-medium mb-1"
+                  >
                     {isWorldEntry ? '名称' : 'アバター名'}
                   </label>
                   {isWorldEntry ? (
                     <input
+                      id="edit-world-name-note"
                       type="text"
                       value="ワールドは「通称」欄を名称として使用します"
                       disabled
@@ -704,6 +724,7 @@ export function EditModal({
                   ) : (
                     <>
                       <input
+                        id="edit-avatar-name"
                         type="text"
                         value={formData.avatarName}
                         onChange={(e) => {
@@ -797,8 +818,11 @@ export function EditModal({
 
                 {/* 作者 */}
                 <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-1">作者</label>
+                  <label htmlFor="edit-author" className="block text-gray-700 text-sm font-medium mb-1">
+                    作者
+                  </label>
                   <input
+                    id="edit-author"
                     type="text"
                     value={formData.author}
                     onChange={(e) => handleInputChange('author', e.target.value)}
@@ -811,7 +835,9 @@ export function EditModal({
                 {/* VRChat URL */}
                 <div>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1">
-                    <label className="text-gray-700 text-sm font-medium">VRChat URL</label>
+                    <label htmlFor="edit-source-url" className="text-gray-700 text-sm font-medium">
+                      VRChat URL
+                    </label>
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                       <button
                         type="button"
@@ -864,11 +890,11 @@ export function EditModal({
                     </div>
                   </div>
                   <input
+                    id="edit-source-url"
                     type="url"
                     value={formData.sourceUrl}
                     onChange={(e) => {
-                      handleInputChange('sourceUrl', e.target.value);
-                      handleInputChange('avatarUrl', e.target.value);
+                      handleSourceUrlChange(e.target.value);
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="https://vrchat.com/..."
@@ -878,8 +904,11 @@ export function EditModal({
 
               {/* おまけ情報（comment） */}
               <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">おまけ情報</label>
+                <label htmlFor="edit-comment" className="block text-gray-700 text-sm font-medium mb-1">
+                  おまけ情報
+                </label>
                 <textarea
+                  id="edit-comment"
                   value={formData.comment}
                   onChange={(e) => handleInputChange('comment', e.target.value)}
                   rows={3}
@@ -890,7 +919,9 @@ export function EditModal({
 
               {/* 画像アップロード */}
               <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">画像</label>
+                <label htmlFor="edit-image-file" className="block text-gray-700 text-sm font-medium mb-1">
+                  画像
+                </label>
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
@@ -899,6 +930,7 @@ export function EditModal({
                   <IconCloudUpload size="w-10 h-10" className="text-gray-400 mb-2 mx-auto" />
                   <p className="text-gray-600">画像をドラッグ&ドロップ または</p>
                   <input
+                    id="edit-image-file"
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileInputChange}

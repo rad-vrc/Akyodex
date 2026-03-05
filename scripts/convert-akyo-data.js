@@ -56,6 +56,26 @@ function normalizeValue(value) {
   return value.replace(/\r/g, '');
 }
 
+function getColumnValue(
+  headerIndexMap,
+  cols,
+  aliases,
+  fallbackIndex = -1
+) {
+  for (const alias of aliases) {
+    const index = headerIndexMap.get(alias.toLowerCase());
+    if (typeof index === 'number') {
+      return normalizeValue(String(cols[index] ?? ''));
+    }
+  }
+
+  if (fallbackIndex >= 0) {
+    return normalizeValue(String(cols[fallbackIndex] ?? ''));
+  }
+
+  return '';
+}
+
 function convertCsvToJson(csvPath, jsonPath) {
   if (!fs.existsSync(csvPath)) {
     console.warn(`⚠️ CSVファイルが存在しません: ${csvPath}`);
@@ -70,8 +90,16 @@ function convertCsvToJson(csvPath, jsonPath) {
     return 0;
   }
 
-  // 先頭行はヘッダーとしてスキップ
-  lines.shift();
+  // 先頭行はヘッダー
+  const headerLine = lines.shift();
+  if (!headerLine) {
+    console.warn(`⚠️ CSVヘッダーを取得できません: ${csvPath}`);
+    return 0;
+  }
+  const headerColumns = parseCsvLine(headerLine).map((column) => normalizeValue(column).trim());
+  const headerIndexMap = new Map(
+    headerColumns.map((columnName, index) => [columnName.toLowerCase(), index])
+  );
 
   const items = [];
 
@@ -84,22 +112,28 @@ function convertCsvToJson(csvPath, jsonPath) {
       continue;
     }
 
+    const id = getColumnValue(headerIndexMap, cols, ['id'], 0).padStart(4, '0');
+    const nickname = getColumnValue(headerIndexMap, cols, ['nickname'], 1);
+    const avatarName = getColumnValue(headerIndexMap, cols, ['avatarname'], 2);
+    const category = getColumnValue(headerIndexMap, cols, ['category', 'attributes'], 3);
+    const comment = getColumnValue(headerIndexMap, cols, ['comment', 'notes'], 4);
+    const author = getColumnValue(headerIndexMap, cols, ['author', 'creator'], 5);
+    const avatarUrl = getColumnValue(headerIndexMap, cols, ['avatarurl'], 6);
+    const sourceUrl = getColumnValue(headerIndexMap, cols, ['sourceurl'], 7) || avatarUrl;
+    const entryTypeRaw = getColumnValue(headerIndexMap, cols, ['entrytype'], 8).toLowerCase();
+    const displaySerial = getColumnValue(headerIndexMap, cols, ['displayserial'], 9);
+
     const item = {
-      id: normalizeValue(cols[0]).padStart(4, '0'),
-      entryType:
-        normalizeValue(cols[8] || '') === 'world'
-          ? 'world'
-          : normalizeValue(cols[8] || '') === 'avatar'
-          ? 'avatar'
-          : undefined,
-      displaySerial: normalizeValue(cols[9] || '') || undefined,
-      nickname: normalizeValue(cols[1]),
-      avatarName: normalizeValue(cols[2]),
-      category: normalizeValue(cols[3]),
-      comment: normalizeValue(cols[4]),
-      author: normalizeValue(cols[5]),
-      avatarUrl: normalizeValue(cols[6]),
-      sourceUrl: normalizeValue(cols[7] || cols[6]),
+      id,
+      entryType: entryTypeRaw === 'world' ? 'world' : entryTypeRaw === 'avatar' ? 'avatar' : undefined,
+      displaySerial: displaySerial || undefined,
+      nickname,
+      avatarName,
+      category,
+      comment,
+      author,
+      avatarUrl,
+      sourceUrl,
     };
 
     items.push(item);

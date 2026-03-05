@@ -19,7 +19,7 @@ import { IconCog, IconGrid, IconList } from '@/components/icons';
 import { LanguageToggle } from '@/components/language-toggle';
 import { SearchBar } from '@/components/search-bar';
 import { useAkyoData } from '@/hooks/use-akyo-data';
-import { resolveEntryType } from '@/lib/akyo-entry';
+import { detectVrcEntryTypeFromUrl, resolveEntryType } from '@/lib/akyo-entry';
 import { useLanguage } from '@/hooks/use-language';
 import { t, type SupportedLanguage } from '@/lib/i18n';
 import type { AkyoData, ViewMode } from '@/types/akyo';
@@ -147,10 +147,18 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
       : typeof raw.creator === 'string'
         ? raw.creator
         : '';
+  const sourceUrlCandidate =
+    typeof raw.sourceUrl === 'string' && raw.sourceUrl.trim()
+      ? raw.sourceUrl.trim()
+      : typeof raw.avatarUrl === 'string'
+        ? raw.avatarUrl
+        : '';
   const explicitEntryType =
     raw.entryType === 'avatar' || raw.entryType === 'world' ? raw.entryType : undefined;
+  const urlDetectedEntryType = detectVrcEntryTypeFromUrl(sourceUrlCandidate);
   const entryType =
     explicitEntryType ||
+    urlDetectedEntryType ||
     resolveEntryType({
       id,
       appearance: typeof raw.appearance === 'string' ? raw.appearance : '',
@@ -162,12 +170,7 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
       attribute: category,
       notes: comment,
       creator: author,
-      sourceUrl:
-        typeof raw.sourceUrl === 'string' && raw.sourceUrl.trim()
-          ? raw.sourceUrl.trim()
-          : typeof raw.avatarUrl === 'string'
-            ? raw.avatarUrl
-            : '',
+      sourceUrl: sourceUrlCandidate,
       avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
     });
   const displaySerial =
@@ -199,12 +202,7 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
     attribute: category,
     notes: comment,
     creator: author,
-    sourceUrl:
-      typeof raw.sourceUrl === 'string' && raw.sourceUrl.trim()
-        ? raw.sourceUrl.trim()
-        : typeof raw.avatarUrl === 'string'
-          ? raw.avatarUrl
-          : '',
+    sourceUrl: sourceUrlCandidate,
     avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
     isFavorite: typeof raw.isFavorite === 'boolean' ? raw.isFavorite : undefined,
     parsedCategory: parsedCategory && parsedCategory.length > 0 ? parsedCategory : undefined,
@@ -387,9 +385,19 @@ export function ZukanClient({
             ? (jsonData as Record<string, unknown>).data
             : undefined;
         const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
-          ? wrappedData
-            .map(normalizeAkyoItem)
-            .filter((item): item is AkyoData => item !== undefined)
+          ? (() => {
+              const normalizedItems = wrappedData.map(normalizeAkyoItem);
+              const validItems = normalizedItems.filter(
+                (item): item is AkyoData => item !== undefined
+              );
+              const droppedCount = normalizedItems.length - validItems.length;
+              if (droppedCount > 0) {
+                console.warn(
+                  `[ZukanClient] Dropped ${droppedCount} invalid entries while normalizing language payload`
+                );
+              }
+              return validItems;
+            })()
           : undefined;
         if (!akyoItems) {
           // Sanitized summary — only safe metadata, no raw content

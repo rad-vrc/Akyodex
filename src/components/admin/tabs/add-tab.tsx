@@ -75,6 +75,15 @@ function normalizeStringList(value: unknown): string[] {
   return Array.from(new Set(normalized));
 }
 
+function shouldResetWorldMetadata(previousUrl: string, nextUrl: string): boolean {
+  const previousType = detectVrcEntryTypeFromUrl(previousUrl);
+  const nextType = detectVrcEntryTypeFromUrl(nextUrl);
+  if (nextType !== 'world') {
+    return false;
+  }
+  return previousUrl.trim() !== nextUrl.trim() || previousType !== 'world';
+}
+
 /**
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
@@ -319,36 +328,30 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
         const worldController = new AbortController();
         const worldTimeoutId = window.setTimeout(() => worldController.abort(), 30_000);
 
-        const [infoResult, imageResult] = await (async () => {
-          try {
-            return await Promise.allSettled([
-              fetch(`/api/vrc-world-info?wrld=${encodeURIComponent(wrldId)}`, {
-                signal: worldController.signal,
-              }),
-              fetch(`/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`, {
-                signal: worldController.signal,
-              }),
-            ]);
-          } finally {
-            clearTimeout(worldTimeoutId);
-          }
-        })();
-
-        let fetchedWorldName = '';
-        let fetchedCreatorName = '';
-
-        if (infoResult.status === 'fulfilled' && infoResult.value.ok) {
-          const infoData = (await infoResult.value.json()) as {
-            worldName?: string;
-            creatorName?: string;
-          };
-          fetchedWorldName = infoData.worldName?.trim() || '';
-          fetchedCreatorName = infoData.creatorName?.trim() || '';
-        } else if (infoResult.status === 'rejected') {
-          console.warn('[add-tab] Failed to fetch world info:', infoResult.reason);
-        } else if (infoResult.status === 'fulfilled') {
-          console.warn('[add-tab] World info response was not ok:', infoResult.value.status);
+        let infoResponse: Response;
+        try {
+          infoResponse = await fetch(`/api/vrc-world-info?wrld=${encodeURIComponent(wrldId)}`, {
+            signal: worldController.signal,
+          });
+        } finally {
+          clearTimeout(worldTimeoutId);
         }
+
+        if (!infoResponse.ok) {
+          const errorText = await infoResponse.text().catch(() => '');
+          throw new Error(
+            `ワールド情報取得に失敗しました (${infoResponse.status})${
+              errorText ? `: ${errorText}` : ''
+            }`
+          );
+        }
+
+        const infoData = (await infoResponse.json()) as {
+          worldName?: string;
+          creatorName?: string;
+        };
+        const fetchedWorldName = infoData.worldName?.trim() || '';
+        const fetchedCreatorName = infoData.creatorName?.trim() || '';
 
         resolvedAuthor = formData.author.trim() || fetchedCreatorName;
         resolvedNickname = formData.nickname.trim() || fetchedWorldName;
@@ -374,13 +377,18 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           return;
         }
 
-        if (imageResult.status === 'fulfilled' && imageResult.value.ok) {
-          const blob = await imageResult.value.blob();
-          imageFile = new File([blob], `${wrldId}.webp`, { type: blob.type || 'image/webp' });
-        } else if (imageResult.status === 'rejected') {
-          console.warn('[add-tab] Failed to fetch world image:', imageResult.reason);
-        } else if (imageResult.status === 'fulfilled') {
-          console.warn('[add-tab] World image response was not ok:', imageResult.value.status);
+        try {
+          const imageResponse = await fetch(
+            `/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`
+          );
+          if (imageResponse.ok) {
+            const blob = await imageResponse.blob();
+            imageFile = new File([blob], `${wrldId}.webp`, { type: blob.type || 'image/webp' });
+          } else {
+            console.warn('[add-tab] World image response was not ok:', imageResponse.status);
+          }
+        } catch (imageError) {
+          console.warn('[add-tab] Failed to fetch world image:', imageError);
         }
       }
     } catch (error) {
@@ -543,6 +551,15 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
   };
 
   const handleInputChange = (field: string, value: string | string[]) => {
+    if (field === 'sourceUrl' && typeof value === 'string') {
+      setFormData((prev) => ({
+        ...prev,
+        sourceUrl: value,
+        ...(shouldResetWorldMetadata(prev.sourceUrl, value) ? { nickname: '', author: '' } : {}),
+      }));
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 

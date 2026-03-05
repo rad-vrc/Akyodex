@@ -19,7 +19,7 @@ interface VRChatWorldInfo {
 }
 
 function sanitize(value: string): string {
-  return decodeHTMLEntities(stripHTMLTags(value));
+  return stripHTMLTags(decodeHTMLEntities(value)).trim();
 }
 
 function escapeRegExp(value: string): string {

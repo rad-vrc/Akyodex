@@ -31,7 +31,7 @@ import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
 import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
  * Props for the AkyoDetailModal component
@@ -66,6 +66,23 @@ export function AkyoDetailModal({
 }: AkyoDetailModalProps) {
   const [localAkyo, setLocalAkyo] = useState<AkyoData | null>(akyo);
   const sourceUrl = localAkyo ? getAkyoSourceUrl(localAkyo) : undefined;
+  const safeSourceUrl = useMemo(() => {
+    if (!sourceUrl) return null;
+
+    try {
+      const parsed = new URL(sourceUrl);
+      if (
+        (parsed.protocol === 'https:' || parsed.protocol === 'http:') &&
+        parsed.hostname.toLowerCase() === 'vrchat.com'
+      ) {
+        return parsed.toString();
+      }
+    } catch {
+      return null;
+    }
+
+    return null;
+  }, [sourceUrl]);
 
   // 三面図（PNG）優先、WebPフォールバック用の状態
   // Note: Hooks はすべて早期リターンの前に配置する必要がある (React Hooks ルール)
@@ -319,20 +336,11 @@ export function AkyoDetailModal({
   };
 
   const handleVRChatOpen = () => {
-    if (sourceUrl) {
-      // Security: Validate URL scheme before opening
-      try {
-        const url = new URL(sourceUrl);
-        if ((url.protocol === 'https:' || url.protocol === 'http:') && url.hostname === 'vrchat.com') {
-          window.open(sourceUrl, '_blank', 'noopener,noreferrer');
-        } else {
-          console.error('Invalid URL:', url.toString());
-          alert('無効なURLです');
-        }
-      } catch (error) {
-        console.error('Invalid URL:', error);
-        alert('無効なURLです');
-      }
+    if (safeSourceUrl) {
+      window.open(safeSourceUrl, '_blank', 'noopener,noreferrer');
+    } else if (sourceUrl) {
+      console.error('Invalid URL:', sourceUrl);
+      alert('無効なURLです');
     }
   };
 
@@ -524,14 +532,14 @@ export function AkyoDetailModal({
                 </div>
 
                 {/* VRChat URL Section */}
-                {sourceUrl && (
+                {safeSourceUrl && (
                   <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-2">
                       {t('modal.vrchatUrl', lang)}
                     </h3>
                     <div className="bg-blue-50 rounded-lg p-4">
                       <a
-                        href={sourceUrl}
+                        href={safeSourceUrl}
                         onClick={(e) => {
                           e.preventDefault();
                           handleVRChatOpen();
@@ -539,7 +547,7 @@ export function AkyoDetailModal({
                         className="text-blue-600 hover:text-blue-800 text-sm break-all cursor-pointer"
                       >
                         <IconExternalLink size="w-3.5 h-3.5" className="mr-1" />
-                        {sourceUrl}
+                        {safeSourceUrl}
                       </a>
                     </div>
                   </div>
@@ -590,7 +598,7 @@ export function AkyoDetailModal({
                   </button>
 
                   {/* VRChat Button - Orange Gradient (not purple!) */}
-                  {sourceUrl && (
+                  {safeSourceUrl && (
                     <button
                       type="button"
                       onClick={handleVRChatOpen}
