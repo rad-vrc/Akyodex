@@ -5,6 +5,7 @@
 
 import { connection } from 'next/server';
 import { jsonError, jsonSuccess } from '@/lib/api-helpers';
+import { VRCHAT_WORLD_ID_PATTERN } from '@/lib/akyo-entry';
 import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
 
@@ -73,12 +74,10 @@ export async function GET(request: Request) {
     return jsonError('wrld parameter is required', 400);
   }
 
-  const wrldMatch = wrld.match(/^wrld_[A-Za-z0-9-]{1,50}$/);
-  if (!wrldMatch) {
-    return jsonError('Invalid wrld format (must be wrld_[A-Za-z0-9-]{1,50})', 400);
+  const cleanWrld = wrld.trim();
+  if (!VRCHAT_WORLD_ID_PATTERN.test(cleanWrld)) {
+    return jsonError('Invalid wrld format (must be wrld_[A-Za-z0-9-]{1,64})', 400);
   }
-
-  const cleanWrld = wrldMatch[0];
 
   try {
     const html = await fetchVRChatWorldPage(cleanWrld);
