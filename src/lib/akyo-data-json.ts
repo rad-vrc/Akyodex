@@ -18,10 +18,10 @@
  * - Near-instant updates via on-demand revalidation
  */
 
-import type { SupportedLanguage } from '@/lib/i18n';
-import type { AkyoData } from '@/types/akyo';
-import { cache } from 'react';
-import { hydrateAkyoDataset } from './akyo-entry';
+import type { SupportedLanguage } from "@/lib/i18n";
+import type { AkyoData } from "@/types/akyo";
+import { cache } from "react";
+import { hydrateAkyoDataset } from "./akyo-entry";
 
 /**
  * Get the JSON data URL based on language and data source
@@ -36,9 +36,9 @@ function getJsonUrl(lang: SupportedLanguage): string {
   }
 
   // Fallback to GitHub raw (for backward compatibility)
-  const githubOwner = process.env.GITHUB_REPO_OWNER || 'rad-vrc';
-  const githubRepo = process.env.GITHUB_REPO_NAME || 'Akyodex';
-  const githubBranch = process.env.GITHUB_BRANCH || 'main';
+  const githubOwner = process.env.GITHUB_REPO_OWNER || "rad-vrc";
+  const githubRepo = process.env.GITHUB_REPO_NAME || "Akyodex";
+  const githubBranch = process.env.GITHUB_BRANCH || "main";
 
   return `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}/data/${jsonFileName}`;
 }
@@ -51,14 +51,14 @@ function getJsonUrl(lang: SupportedLanguage): string {
  */
 async function fetchAndNormalizeAkyoJson(
   url: string,
-  lang: SupportedLanguage
+  lang: SupportedLanguage,
 ): Promise<AkyoData[] | null> {
   const response = await fetch(url, {
     next: {
       revalidate: 3600, // ISR: 1 hour (fallback)
-      tags: ['akyo-data', `akyo-data-${lang}`],
+      tags: ["akyo-data", `akyo-data-${lang}`],
     },
-    headers: { Accept: 'application/json' },
+    headers: { Accept: "application/json" },
   });
 
   if (!response.ok) {
@@ -79,7 +79,7 @@ async function fetchAndNormalizeAkyoJson(
  * @returns Array of Akyo data
  */
 export const getAkyoDataFromJSON = cache(
-  async (lang: SupportedLanguage = 'ja'): Promise<AkyoData[]> => {
+  async (lang: SupportedLanguage = "ja"): Promise<AkyoData[]> => {
     const url = getJsonUrl(lang);
 
     console.log(`[getAkyoDataFromJSON] Fetching ${lang} JSON from: ${url}`);
@@ -88,18 +88,24 @@ export const getAkyoDataFromJSON = cache(
       const data = await fetchAndNormalizeAkyoJson(url, lang);
 
       if (data) {
-        console.log(`[getAkyoDataFromJSON] Success: ${data.length} avatars (${lang})`);
+        console.log(
+          `[getAkyoDataFromJSON] Success: ${data.length} avatars (${lang})`,
+        );
         return data;
       }
 
       // null means 404 / not found — fall back to Japanese for non-ja
-      if (lang !== 'ja') {
-        console.log(`[getAkyoDataFromJSON] ${lang} JSON not found, falling back to Japanese`);
-        const jaUrl = getJsonUrl('ja');
-        const jaData = await fetchAndNormalizeAkyoJson(jaUrl, 'ja');
+      if (lang !== "ja") {
+        console.log(
+          `[getAkyoDataFromJSON] ${lang} JSON not found, falling back to Japanese`,
+        );
+        const jaUrl = getJsonUrl("ja");
+        const jaData = await fetchAndNormalizeAkyoJson(jaUrl, "ja");
 
         if (jaData) {
-          console.log(`[getAkyoDataFromJSON] Fallback success: ${jaData.length} avatars (ja)`);
+          console.log(
+            `[getAkyoDataFromJSON] Fallback success: ${jaData.length} avatars (ja)`,
+          );
           return jaData;
         }
       }
@@ -110,11 +116,13 @@ export const getAkyoDataFromJSON = cache(
       // This ensures malformed JSON doesn't silently serve Japanese data
       console.error(`[getAkyoDataFromJSON] Error for ${lang}:`, error);
 
-      console.log(`[getAkyoDataFromJSON] Falling back to CSV method for ${lang}...`);
-      const { getAkyoData } = await import('./akyo-data-server');
+      console.log(
+        `[getAkyoDataFromJSON] Falling back to CSV method for ${lang}...`,
+      );
+      const { getAkyoData } = await import("./akyo-data-server");
       return getAkyoData(lang);
     }
-  }
+  },
 );
 
 /**
@@ -129,7 +137,7 @@ export const getAkyoDataFromJSON = cache(
  * @returns Array of Akyo data, or null if the requested language is unavailable
  */
 export async function getAkyoDataFromJSONIfExists(
-  lang: SupportedLanguage
+  lang: SupportedLanguage,
 ): Promise<AkyoData[] | null> {
   const url = getJsonUrl(lang);
 
@@ -143,11 +151,16 @@ export async function getAkyoDataFromJSONIfExists(
       return null;
     }
 
-    console.log(`[getAkyoDataFromJSONIfExists] Success: ${data.length} avatars (${lang})`);
+    console.log(
+      `[getAkyoDataFromJSONIfExists] Success: ${data.length} avatars (${lang})`,
+    );
     return data;
   } catch (error) {
     // Parse errors also mean the file is unusable for this language
-    console.warn(`[getAkyoDataFromJSONIfExists] Error fetching ${lang}:`, error);
+    console.warn(
+      `[getAkyoDataFromJSONIfExists] Error fetching ${lang}:`,
+      error,
+    );
     return null;
   }
 }
@@ -163,14 +176,14 @@ function normalizeJsonData(json: unknown): AkyoData[] {
   }
 
   // If it's an object with data array
-  if (json && typeof json === 'object' && 'data' in json) {
+  if (json && typeof json === "object" && "data" in json) {
     const wrapped = json as { data: unknown[] };
     if (Array.isArray(wrapped.data)) {
       return hydrateAkyoDataset(wrapped.data.map(normalizeAkyoItem));
     }
   }
 
-  console.warn('[normalizeJsonData] Unexpected JSON format:', typeof json);
+  console.warn("[normalizeJsonData] Unexpected JSON format:", typeof json);
   return [];
 }
 
@@ -180,15 +193,26 @@ function normalizeJsonData(json: unknown): AkyoData[] {
 function normalizeAkyoItem(item: unknown): AkyoData {
   const raw = item as Record<string, unknown>;
 
-  const category = String(raw.category || raw.attribute || '');
-  const comment = String(raw.comment || raw.notes || '');
-  const author = String(raw.author || raw.creator || '');
+  const id = String(raw.id || "");
+  const category = String(raw.category || raw.attribute || "");
+  const comment = String(raw.comment || raw.notes || "");
+  const author = String(raw.author || raw.creator || "");
+  const entryType =
+    raw.entryType === "avatar" || raw.entryType === "world"
+      ? raw.entryType
+      : undefined;
+  const displaySerial =
+    typeof raw.displaySerial === "string" && raw.displaySerial.trim()
+      ? raw.displaySerial.trim()
+      : entryType === "avatar"
+        ? id
+        : undefined;
 
   return {
-    id: String(raw.id || ''),
-    appearance: '', // Deprecated field
-    nickname: String(raw.nickname || ''),
-    avatarName: String(raw.avatarName || ''),
+    id,
+    appearance: "", // Deprecated field
+    nickname: String(raw.nickname || ""),
+    avatarName: String(raw.avatarName || ""),
 
     // Standardized fields
     category,
@@ -200,13 +224,9 @@ function normalizeAkyoItem(item: unknown): AkyoData {
     notes: comment,
     creator: author,
 
-    entryType:
-      raw.entryType === 'avatar' || raw.entryType === 'world' ? raw.entryType : undefined,
-    displaySerial:
-      typeof raw.displaySerial === 'string' && raw.displaySerial.trim()
-        ? raw.displaySerial.trim()
-        : undefined,
-    sourceUrl: String(raw.sourceUrl || raw.avatarUrl || ''),
-    avatarUrl: String(raw.avatarUrl || raw.sourceUrl || ''),
+    entryType,
+    displaySerial,
+    sourceUrl: String(raw.sourceUrl || raw.avatarUrl || ""),
+    avatarUrl: String(raw.avatarUrl || raw.sourceUrl || ""),
   };
 }

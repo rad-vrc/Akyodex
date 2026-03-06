@@ -1,11 +1,12 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-03-04T10:47:39.379Z",
+  "updatedAt": "2026-03-06T14:05:54.985Z",
   "count": 811,
   "data": [
     {
       "id": "0001",
+      "entryType": "avatar",
       "nickname": "Origin Akyo",
       "avatarName": "Akyo origin",
       "category": "Mint Chocolate",
@@ -16,6 +17,7 @@
     },
     {
       "id": "0002",
+      "entryType": "avatar",
       "nickname": "Mint Chocolate Akyo",
       "avatarName": "Akyo alt",
       "category": "Mint Chocolate",
@@ -26,6 +28,7 @@
     },
     {
       "id": "0003",
+      "entryType": "avatar",
       "nickname": "Red Mint Chocolate Akyo",
       "avatarName": "Red basic Akyo",
       "category": "Mint Chocolate",
@@ -36,6 +39,7 @@
     },
     {
       "id": "0004",
+      "entryType": "avatar",
       "nickname": "Green Mint Chocolate Akyo",
       "avatarName": "Green basic Akyo",
       "category": "Mint Chocolate",
@@ -46,6 +50,7 @@
     },
     {
       "id": "0005",
+      "entryType": "avatar",
       "nickname": "Blue Mint Chocolate Akyo",
       "avatarName": "Blue basic Akyo",
       "category": "Mint Chocolate",
@@ -56,6 +61,7 @@
     },
     {
       "id": "0006",
+      "entryType": "avatar",
       "nickname": "Yellow Mint Chocolate Akyo",
       "avatarName": "Yellow basic Akyo",
       "category": "Mint Chocolate",
@@ -66,6 +72,7 @@
     },
     {
       "id": "0007",
+      "entryType": "avatar",
       "nickname": "Black Mint Chocolate Akyo",
       "avatarName": "Black basic Akyo",
       "category": "Mint Chocolate",
@@ -76,6 +83,7 @@
     },
     {
       "id": "0008",
+      "entryType": "avatar",
       "nickname": "White Mint Chocolate Akyo",
       "avatarName": "White basic Akyo",
       "category": "Mint Chocolate",
@@ -86,6 +94,7 @@
     },
     {
       "id": "0009",
+      "entryType": "avatar",
       "nickname": "Gray Mint Chocolate Akyo",
       "avatarName": "Gray basic Akyo",
       "category": "Mint Chocolate",
@@ -96,6 +105,7 @@
     },
     {
       "id": "0010",
+      "entryType": "avatar",
       "nickname": "Mini Mint Chocolate Akyo",
       "avatarName": "ミニミニAkyoAkyo",
       "category": "Mint Chocolate",
@@ -106,6 +116,7 @@
     },
     {
       "id": "0011",
+      "entryType": "avatar",
       "nickname": "Super Versatile Akyo",
       "avatarName": "スーパー汎用Akyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -116,6 +127,7 @@
     },
     {
       "id": "0012",
+      "entryType": "avatar",
       "nickname": "Super Staff Akyo",
       "avatarName": "スーパースタッフAkyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -126,6 +138,7 @@
     },
     {
       "id": "0013",
+      "entryType": "avatar",
       "nickname": "Super Warp Akyo",
       "avatarName": "スーパーワープAkyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -136,6 +149,7 @@
     },
     {
       "id": "0014",
+      "entryType": "avatar",
       "nickname": "Super Flying Delivery Akyo",
       "avatarName": "スーパーフライング運送Akyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -146,6 +160,7 @@
     },
     {
       "id": "0015",
+      "entryType": "avatar",
       "nickname": "Run Akyo",
       "avatarName": "Akyo Run",
       "category": "Mint Chocolate",
@@ -156,6 +171,7 @@
     },
     {
       "id": "0016",
+      "entryType": "avatar",
       "nickname": "Valve Akyo",
       "avatarName": "Akyo Valve",
       "category": "Mint Chocolate",
@@ -166,6 +182,7 @@
     },
     {
       "id": "0017",
+      "entryType": "avatar",
       "nickname": "N/A",
       "avatarName": "Akyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -176,6 +193,7 @@
     },
     {
       "id": "0018",
+      "entryType": "avatar",
       "nickname": "Humanoid Akyo",
       "avatarName": "Humanoid Akyo v1․71 Multi Clothes",
       "category": "Animal,Human",
@@ -186,6 +204,7 @@
     },
     {
       "id": "0019",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Fox Akyo",
       "avatarName": "KTNTK_Akyo",
       "category": "Animal,Animal/Fox",
@@ -196,6 +215,7 @@
     },
     {
       "id": "0020",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Ghost Fox Akyo",
       "avatarName": "sAKYOn_Ghost",
       "category": "Animal,Animal/Fox,Fictional Being,Fictional Being/Yokai・Ghost",
@@ -206,6 +226,7 @@
     },
     {
       "id": "0021",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Melted Fox Akyo",
       "avatarName": "Melt_sakyon",
       "category": "Animal,Animal/Fox",
@@ -216,6 +237,7 @@
     },
     {
       "id": "0022",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Long-Leg Fox Akyo",
       "avatarName": "sAKYOn_？",
       "category": "Animal,Animal/Fox",
@@ -226,6 +248,7 @@
     },
     {
       "id": "0023",
+      "entryType": "avatar",
       "nickname": "Uuga Eats Akyo",
       "avatarName": "Uuga Eats",
       "category": "Mint Chocolate,Role・Status,Role・Status/Delivery Worker",
@@ -236,6 +259,7 @@
     },
     {
       "id": "0024",
+      "entryType": "avatar",
       "nickname": "Akyongelion",
       "avatarName": "Akyongelion Type-08",
       "category": "Vehicle,Military・Weapons",
@@ -246,6 +270,7 @@
     },
     {
       "id": "0025",
+      "entryType": "avatar",
       "nickname": "Akyosu",
       "avatarName": "Akyosu",
       "category": "Parody,Parody/Evangelion",
@@ -256,6 +281,7 @@
     },
     {
       "id": "0026",
+      "entryType": "avatar",
       "nickname": "Cordyceps Akyo",
       "avatarName": "Toutyuakyo_冬虫亜京",
       "category": "Animal,Animal/Bug,Season・Event",
@@ -266,6 +292,7 @@
     },
     {
       "id": "0027",
+      "entryType": "avatar",
       "nickname": "Spoon Fork Akyo",
       "avatarName": "spoon_fork_akyo",
       "category": "Daily Necessities",
@@ -276,6 +303,7 @@
     },
     {
       "id": "0028",
+      "entryType": "avatar",
       "nickname": "Robot Akyo（Sample）",
       "avatarName": "AkyoRobotSample",
       "category": "Military・Weapons,Electronic",
@@ -286,6 +314,7 @@
     },
     {
       "id": "0029",
+      "entryType": "avatar",
       "nickname": "Duffle Coat Akyo",
       "avatarName": "Duffel coat_Akyo",
       "category": "Mint Chocolate,Fashion,Fashion/Warm Clothing",
@@ -296,6 +325,7 @@
     },
     {
       "id": "0030",
+      "entryType": "avatar",
       "nickname": "Down Vest Akyo",
       "avatarName": "Downvest_Akyo",
       "category": "Mint Chocolate,Fashion,Fashion/Warm Clothing",
@@ -306,6 +336,7 @@
     },
     {
       "id": "0031",
+      "entryType": "avatar",
       "nickname": "Raymarch Akyo",
       "avatarName": "RaymarchAkyo",
       "category": "Mint Chocolate",
@@ -316,6 +347,7 @@
     },
     {
       "id": "0032",
+      "entryType": "avatar",
       "nickname": "Look Akyo",
       "avatarName": "LookAkyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -326,6 +358,7 @@
     },
     {
       "id": "0033",
+      "entryType": "avatar",
       "nickname": "Mystic Akyo",
       "avatarName": "akyo_mystic",
       "category": "Gimmick・Special",
@@ -336,6 +369,7 @@
     },
     {
       "id": "0034",
+      "entryType": "avatar",
       "nickname": "Sea Slug Akyo",
       "avatarName": "UMIUSHI_AKYO_BLUE",
       "category": "Animal,Animal/Sea Slug,Animal/Marine Life",
@@ -346,6 +380,7 @@
     },
     {
       "id": "0035",
+      "entryType": "avatar",
       "nickname": "Mystic Sea Slug Akyo",
       "avatarName": "akyo_mystic_umiushi",
       "category": "Animal,Animal/Sea Slug,Gimmick・Special,Animal/Marine Life",
@@ -356,6 +391,7 @@
     },
     {
       "id": "0036",
+      "entryType": "avatar",
       "nickname": "Neo Sea Slug Akyo",
       "avatarName": "neo_umiushi_akyo",
       "category": "Animal,Animal/Sea Slug,Animal/Marine Life",
@@ -366,6 +402,7 @@
     },
     {
       "id": "0037",
+      "entryType": "avatar",
       "nickname": "Pitcher Plant Akyo",
       "avatarName": "ウツボカズラAkyo",
       "category": "Plant",
@@ -376,6 +413,7 @@
     },
     {
       "id": "0038",
+      "entryType": "avatar",
       "nickname": "Toon Akyo",
       "avatarName": "Toon Akyo!",
       "category": "Gimmick・Special,Parody,Parody/Disney",
@@ -386,6 +424,7 @@
     },
     {
       "id": "0039",
+      "entryType": "avatar",
       "nickname": "Cactus Akyo",
       "avatarName": "アキョテン",
       "category": "Plant",
@@ -396,6 +435,7 @@
     },
     {
       "id": "0040",
+      "entryType": "avatar",
       "nickname": "Roast Akyo",
       "avatarName": "Roast_Akyo",
       "category": "Food,Meat",
@@ -406,6 +446,7 @@
     },
     {
       "id": "0041",
+      "entryType": "avatar",
       "nickname": "Veiled Lady Mushroom Akyo",
       "avatarName": "キヌガサAkyo",
       "category": "Fungus",
@@ -416,6 +457,7 @@
     },
     {
       "id": "0042",
+      "entryType": "avatar",
       "nickname": "64 Polygon Akyo",
       "avatarName": "64Akyo",
       "category": "Low-poly,Gimmick・Special",
@@ -426,6 +468,7 @@
     },
     {
       "id": "0043",
+      "entryType": "avatar",
       "nickname": "Southern Tamandua Akyo",
       "avatarName": "ミナミコアリクイAkyo",
       "category": "Animal,Animal/Anteater",
@@ -436,6 +479,7 @@
     },
     {
       "id": "0044",
+      "entryType": "avatar",
       "nickname": "Moss Akyo",
       "avatarName": "Moss",
       "category": "Plant,Moss",
@@ -446,6 +490,7 @@
     },
     {
       "id": "0045",
+      "entryType": "avatar",
       "nickname": "Wood Akyo",
       "avatarName": "Wood",
       "category": "Plant,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Shape・Texture,Shape・Texture/Hard",
@@ -456,6 +501,7 @@
     },
     {
       "id": "0046",
+      "entryType": "avatar",
       "nickname": "Marble Akyo",
       "avatarName": "Marble",
       "category": "Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard",
@@ -466,6 +512,7 @@
     },
     {
       "id": "0047",
+      "entryType": "avatar",
       "nickname": "Konjac Akyo",
       "avatarName": "konjacAkyo",
       "category": "Food",
@@ -476,6 +523,7 @@
     },
     {
       "id": "0048",
+      "entryType": "avatar",
       "nickname": "UFO Akyo",
       "avatarName": "UFAkyo",
       "category": "Vehicle,Vehicle/Aviation,Unknown UMAkyo,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Hypoxia Resistance,Skill・Trait/Zero-G Resistance,Gimmick・Special",
@@ -486,6 +534,7 @@
     },
     {
       "id": "0049",
+      "entryType": "avatar",
       "nickname": "Research Vessel MU-KYO",
       "avatarName": "調査船MU-KYO",
       "category": "Vehicle,Parody,Parody/Muy",
@@ -496,6 +545,7 @@
     },
     {
       "id": "0050",
+      "entryType": "avatar",
       "nickname": "Just Baked Sweet Potato Akyo",
       "avatarName": "JustやきいもAkyo",
       "category": "Food,Gimmick・Special,Food/Dish",
@@ -506,6 +556,7 @@
     },
     {
       "id": "0051",
+      "entryType": "avatar",
       "nickname": "Lemon Akyo",
       "avatarName": "レモンAkyo",
       "category": "Food,Food/Fruit",
@@ -516,6 +567,7 @@
     },
     {
       "id": "0052",
+      "entryType": "avatar",
       "nickname": "Goat Akyo",
       "avatarName": "％＆＠＄＃ヤギAkyo",
       "category": "Animal,Animal/Goat",
@@ -526,6 +578,7 @@
     },
     {
       "id": "0053",
+      "entryType": "avatar",
       "nickname": "Devil Goat Akyo",
       "avatarName": "デビルヤギAkyo",
       "category": "Animal,Animal/Goat,Fictional Being,Devil・Succubus",
@@ -536,6 +589,7 @@
     },
     {
       "id": "0054",
+      "entryType": "avatar",
       "nickname": "Cheese Gyudon Akyo",
       "avatarName": "cheese_gyuakyo_v0․9",
       "category": "Food,Food/Dish,Meat",
@@ -546,6 +600,7 @@
     },
     {
       "id": "0055",
+      "entryType": "avatar",
       "nickname": "Skin Akyo",
       "avatarName": "皮Akyo",
       "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Material・Raw Material/Animal,Real Photo",
@@ -556,6 +611,7 @@
     },
     {
       "id": "0056",
+      "entryType": "avatar",
       "nickname": "Meat Akyo",
       "avatarName": "肉Akyo",
       "category": "Animal,Animal/Fox,Food,Meat,Real Photo",
@@ -566,6 +622,7 @@
     },
     {
       "id": "0057",
+      "entryType": "avatar",
       "nickname": "Topiary Akyo",
       "avatarName": "トピアリーAkyo",
       "category": "Plant",
@@ -576,6 +633,7 @@
     },
     {
       "id": "0058",
+      "entryType": "avatar",
       "nickname": "Cyber Akyo",
       "avatarName": "CyberAkyo",
       "category": "Mint Chocolate,Parody,Parody/Cyberpunk,Electronic",
@@ -586,6 +644,7 @@
     },
     {
       "id": "0059",
+      "entryType": "avatar",
       "nickname": "Ground Self-Defense Force Akyo",
       "avatarName": "陸自Akyo",
       "category": "Role・Status,Role・Status/Soldier,Role・Status/Civil Servant,Fashion,Fashion/Camouflage",
@@ -596,6 +655,7 @@
     },
     {
       "id": "0060",
+      "entryType": "avatar",
       "nickname": "Farmer Akyo",
       "avatarName": "NOKYO",
       "category": "Role・Status,Role・Status/Farmer,Daily Necessities",
@@ -606,6 +666,7 @@
     },
     {
       "id": "0061",
+      "entryType": "avatar",
       "nickname": "Cedar Moss Akyo",
       "avatarName": "sugigokeakyo",
       "category": "Plant,Moss",
@@ -616,6 +677,7 @@
     },
     {
       "id": "0062",
+      "entryType": "avatar",
       "nickname": "Sunfish Akyo",
       "avatarName": "ManbowAkyo",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -626,6 +688,7 @@
     },
     {
       "id": "0063",
+      "entryType": "avatar",
       "nickname": "Wiles Akyo",
       "avatarName": "ワイルズAkyo",
       "category": "Mint Chocolate,Low-poly",
@@ -636,6 +699,7 @@
     },
     {
       "id": "0064",
+      "entryType": "avatar",
       "nickname": "Denim Akyo",
       "avatarName": "Akyo_Denim",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -646,6 +710,7 @@
     },
     {
       "id": "0065",
+      "entryType": "avatar",
       "nickname": "Magma Akyo",
       "avatarName": "Akyo_Magma",
       "category": "Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard",
@@ -656,6 +721,7 @@
     },
     {
       "id": "0066",
+      "entryType": "avatar",
       "nickname": "Watcher Akyo",
       "avatarName": "Akyo_Watcher",
       "category": "Gimmick・Special",
@@ -666,6 +732,7 @@
     },
     {
       "id": "0067",
+      "entryType": "avatar",
       "nickname": "Stealth Akyo",
       "avatarName": "Akyo_Stealth",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Fashion,Fashion/Camouflage",
@@ -676,6 +743,7 @@
     },
     {
       "id": "0068",
+      "entryType": "avatar",
       "nickname": "TIA Shirts Akyo",
       "avatarName": "Akyo_Shirt_TIA",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -686,6 +754,7 @@
     },
     {
       "id": "0069",
+      "entryType": "avatar",
       "nickname": "Error Akyo",
       "avatarName": "errorAkyo",
       "category": "Gimmick・Special",
@@ -696,6 +765,7 @@
     },
     {
       "id": "0070",
+      "entryType": "avatar",
       "nickname": "This is Cat Akyo",
       "avatarName": "AKYo-040-jp",
       "category": "Parody,Parody/SCP,Animal,Animal/Cat",
@@ -706,6 +776,7 @@
     },
     {
       "id": "0071",
+      "entryType": "avatar",
       "nickname": "Mona Lisa Akyo",
       "avatarName": "monAkyoriza",
       "category": "Mint Chocolate,Art",
@@ -716,6 +787,7 @@
     },
     {
       "id": "0072",
+      "entryType": "avatar",
       "nickname": "TV Akyo",
       "avatarName": "TVideoAkyo",
       "category": "Mint Chocolate,Military・Weapons,Appliances・Furniture",
@@ -726,6 +798,7 @@
     },
     {
       "id": "0073",
+      "entryType": "avatar",
       "nickname": "Zundamon Akyo",
       "avatarName": "Akyodamon_yousei",
       "category": "Parody,Parody/Zundamon",
@@ -736,6 +809,7 @@
     },
     {
       "id": "0074",
+      "entryType": "avatar",
       "nickname": "Relaxed Anubis Akyo",
       "avatarName": "Yurumeno_Akyobis",
       "category": "Fictional Being,Fictional Being/God",
@@ -746,6 +820,7 @@
     },
     {
       "id": "0075",
+      "entryType": "avatar",
       "nickname": "Election Poster Akyo",
       "avatarName": "senAkyoposter",
       "category": "Mint Chocolate,Art",
@@ -756,6 +831,7 @@
     },
     {
       "id": "0076",
+      "entryType": "avatar",
       "nickname": "Sugar Akyo",
       "avatarName": "SugarpotAkyo",
       "category": "Seasoning",
@@ -766,6 +842,7 @@
     },
     {
       "id": "0077",
+      "entryType": "avatar",
       "nickname": "Beksinski Akyo",
       "avatarName": "BeksinskiAkyo",
       "category": "Art",
@@ -776,6 +853,7 @@
     },
     {
       "id": "0078",
+      "entryType": "avatar",
       "nickname": "Turret Akyo",
       "avatarName": "TurretAkyo",
       "category": "Military・Weapons",
@@ -786,6 +864,7 @@
     },
     {
       "id": "0079",
+      "entryType": "avatar",
       "nickname": "Wanna Be Crab Akyo",
       "avatarName": "KanininaritaiAkyo",
       "category": "Animal,Animal/Crab,Animal/Marine Life",
@@ -796,6 +875,7 @@
     },
     {
       "id": "0080",
+      "entryType": "avatar",
       "nickname": "Rene Magritte Akyo",
       "avatarName": "Rene_MAkyoritte",
       "category": "Animal,Animal/Fish,Art,Animal/Marine Life",
@@ -806,6 +886,7 @@
     },
     {
       "id": "0081",
+      "entryType": "avatar",
       "nickname": "Carbuncle Akyo",
       "avatarName": "カーバンクルAkyo",
       "category": "Fictional Being,Fictional Being/Mythical Beast・Spirit",
@@ -816,6 +897,7 @@
     },
     {
       "id": "0082",
+      "entryType": "avatar",
       "nickname": "DDT-AKYO",
       "avatarName": "DDT-AKYO",
       "category": "Parody,Parody/Dondon-tei",
@@ -826,6 +908,7 @@
     },
     {
       "id": "0083",
+      "entryType": "avatar",
       "nickname": "Mole Akyo",
       "avatarName": "もぐらAkyo",
       "category": "Animal,Animal/Mole",
@@ -836,6 +919,7 @@
     },
     {
       "id": "0084",
+      "entryType": "avatar",
       "nickname": "Elephant Jellyfish Akyo",
       "avatarName": "ゾウクラゲAkyo",
       "category": "Animal,Animal/Jellyfish,Animal/Marine Life",
@@ -846,6 +930,7 @@
     },
     {
       "id": "0085",
+      "entryType": "avatar",
       "nickname": "Tacos Akyo",
       "avatarName": "タコスAkyo",
       "category": "Food,Food/Dish",
@@ -856,6 +941,7 @@
     },
     {
       "id": "0086",
+      "entryType": "avatar",
       "nickname": "If I Could Be a Piano Akyo",
       "avatarName": "もしもピアノになれたならAkyo",
       "category": "Music・Instrument,Wish",
@@ -866,6 +952,7 @@
     },
     {
       "id": "0087",
+      "entryType": "avatar",
       "nickname": "School Swimsuit Akyo",
       "avatarName": "スク水あきょう",
       "category": "Fashion,Fashion/Swimsuit,School",
@@ -876,6 +963,7 @@
     },
     {
       "id": "0088",
+      "entryType": "avatar",
       "nickname": "Garden Eel Akyo",
       "avatarName": "ちんあきょー",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -886,6 +974,7 @@
     },
     {
       "id": "0089",
+      "entryType": "avatar",
       "nickname": "Undulation Akyo",
       "avatarName": "UneAkyo",
       "category": "Gimmick・Special",
@@ -896,6 +985,7 @@
     },
     {
       "id": "0090",
+      "entryType": "avatar",
       "nickname": "Clone Akyo",
       "avatarName": "BunshinAkyo",
       "category": "Gimmick・Special",
@@ -906,6 +996,7 @@
     },
     {
       "id": "0091",
+      "entryType": "avatar",
       "nickname": "Stained Glass Akyo",
       "avatarName": "StainedGlassAkyo",
       "category": "Art,Material・Raw Material,Material・Raw Material/Glass,Shape・Texture,Shape・Texture/Hard",
@@ -916,6 +1007,7 @@
     },
     {
       "id": "0092",
+      "entryType": "avatar",
       "nickname": "Disappearing Akyo",
       "avatarName": "KieruAkyo",
       "category": "Gimmick・Special",
@@ -926,6 +1018,7 @@
     },
     {
       "id": "0093",
+      "entryType": "avatar",
       "nickname": "UV Unwrap Akyo",
       "avatarName": "UVtenkaiAkyo",
       "category": "Gimmick・Special",
@@ -936,6 +1029,7 @@
     },
     {
       "id": "0094",
+      "entryType": "avatar",
       "nickname": "Color Change Akyo",
       "avatarName": "ColorChangeAkyo",
       "category": "Gimmick・Special",
@@ -946,6 +1040,7 @@
     },
     {
       "id": "0095",
+      "entryType": "avatar",
       "nickname": "Random Noise Akyo",
       "avatarName": "RandomNoiseAkyo",
       "category": "Gimmick・Special",
@@ -956,6 +1051,7 @@
     },
     {
       "id": "0096",
+      "entryType": "avatar",
       "nickname": "Distortion Akyo",
       "avatarName": "DistortionAkyo",
       "category": "Gimmick・Special",
@@ -966,6 +1062,7 @@
     },
     {
       "id": "0097",
+      "entryType": "avatar",
       "nickname": "Mosaic Akyo",
       "avatarName": "MosaicAkyo",
       "category": "Gimmick・Special",
@@ -976,6 +1073,7 @@
     },
     {
       "id": "0098",
+      "entryType": "avatar",
       "nickname": "About to Fall Akyo",
       "avatarName": "OtisouAkyo",
       "category": "Gimmick・Special",
@@ -986,6 +1084,7 @@
     },
     {
       "id": "0099",
+      "entryType": "avatar",
       "nickname": "Wave Akyo",
       "avatarName": "HadouAkyo",
       "category": "Gimmick・Special",
@@ -996,6 +1095,7 @@
     },
     {
       "id": "0100",
+      "entryType": "avatar",
       "nickname": "Hypnosis Akyo",
       "avatarName": "HypnosisAkyo",
       "category": "Gimmick・Special",
@@ -1006,6 +1106,7 @@
     },
     {
       "id": "0101",
+      "entryType": "avatar",
       "nickname": "Sucked-In Akyo",
       "avatarName": "SuikomareruAkyo",
       "category": "Gimmick・Special",
@@ -1016,6 +1117,7 @@
     },
     {
       "id": "0102",
+      "entryType": "avatar",
       "nickname": "Glitch Akyo",
       "avatarName": "GlitchAKyo",
       "category": "Electronic",
@@ -1026,6 +1128,7 @@
     },
     {
       "id": "0103",
+      "entryType": "avatar",
       "nickname": "Voxel Akyo",
       "avatarName": "BoxelAkyo",
       "category": "Material・Raw Material,Dimension,Dimension/3D",
@@ -1036,6 +1139,7 @@
     },
     {
       "id": "0104",
+      "entryType": "avatar",
       "nickname": "Rainbow Akyo",
       "avatarName": "RainbowAkyo",
       "category": "Color,Mint Chocolate",
@@ -1046,6 +1150,7 @@
     },
     {
       "id": "0105",
+      "entryType": "avatar",
       "nickname": "Sau Akyo",
       "avatarName": "SauAkyo",
       "category": "Parody,Parody/Person",
@@ -1056,6 +1161,7 @@
     },
     {
       "id": "0106",
+      "entryType": "avatar",
       "nickname": "Disappearing Akyo 3.0",
       "avatarName": "KieruAkyo3․0",
       "category": "Gimmick・Special",
@@ -1066,6 +1172,7 @@
     },
     {
       "id": "0107",
+      "entryType": "avatar",
       "nickname": "Salamander Akyo",
       "avatarName": "SalamanderAkyo",
       "category": "Fictional Being,Fictional Being/Mythical Beast・Spirit",
@@ -1076,6 +1183,7 @@
     },
     {
       "id": "0108",
+      "entryType": "avatar",
       "nickname": "Melted Akyo",
       "avatarName": "MeltedAkyo",
       "category": "Gimmick・Special",
@@ -1086,6 +1194,7 @@
     },
     {
       "id": "0109",
+      "entryType": "avatar",
       "nickname": "Real Akyo",
       "avatarName": "RealAlyo_Light",
       "category": "Art,Real Photo",
@@ -1096,6 +1205,7 @@
     },
     {
       "id": "0110",
+      "entryType": "avatar",
       "nickname": "Chubby Akyo",
       "avatarName": "Akyo_debu",
       "category": "Body Type,Body Type/Plump",
@@ -1106,6 +1216,7 @@
     },
     {
       "id": "0111",
+      "entryType": "avatar",
       "nickname": "Angel Akyo",
       "avatarName": "Akyo Angel",
       "category": "Fictional Being,Fictional Being/God",
@@ -1116,6 +1227,7 @@
     },
     {
       "id": "0112",
+      "entryType": "avatar",
       "nickname": "Cyber Akyo",
       "avatarName": "さいばーあきょう",
       "category": "Electronic",
@@ -1126,6 +1238,7 @@
     },
     {
       "id": "0113",
+      "entryType": "avatar",
       "nickname": "Theremin Akyo",
       "avatarName": "テルミンAkyo",
       "category": "Music・Instrument",
@@ -1136,6 +1249,7 @@
     },
     {
       "id": "0114",
+      "entryType": "avatar",
       "nickname": "Fluffy Akyo",
       "avatarName": "ふわふわAkyo",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Fluffy",
@@ -1146,6 +1260,7 @@
     },
     {
       "id": "0115",
+      "entryType": "avatar",
       "nickname": "Festival Akyo",
       "avatarName": "matsuri akyo ＋pen",
       "category": "Season・Event",
@@ -1156,6 +1271,7 @@
     },
     {
       "id": "0116",
+      "entryType": "avatar",
       "nickname": "Hinata Akyo",
       "avatarName": "HinataAkyo",
       "category": "Pretty,Season・Event,Season・Event/VRChat",
@@ -1166,6 +1282,7 @@
     },
     {
       "id": "0117",
+      "entryType": "avatar",
       "nickname": "Medjed Akyo",
       "avatarName": "メジェドAkyo",
       "category": "Fictional Being,Fictional Being/God",
@@ -1176,6 +1293,7 @@
     },
     {
       "id": "0118",
+      "entryType": "avatar",
       "nickname": "Amago-Carrying Akyo",
       "avatarName": "AMAGOAkyo",
       "category": "Animal,Animal/Marine Life",
@@ -1186,6 +1304,7 @@
     },
     {
       "id": "0119",
+      "entryType": "avatar",
       "nickname": "Bonito-Carrying Akyo",
       "avatarName": "KATUO＿Akyo",
       "category": "Animal,Animal/Marine Life",
@@ -1196,6 +1315,7 @@
     },
     {
       "id": "0120",
+      "entryType": "avatar",
       "nickname": "Grass Akyo",
       "avatarName": "KUSAAkyo",
       "category": "Plant",
@@ -1206,6 +1326,7 @@
     },
     {
       "id": "0121",
+      "entryType": "avatar",
       "nickname": "Sparkly Akyo",
       "avatarName": "KIRAKIRAAkyo",
       "category": "Gimmick・Special",
@@ -1216,6 +1337,7 @@
     },
     {
       "id": "0122",
+      "entryType": "avatar",
       "nickname": "Amazing Halo Akyo",
       "avatarName": "後光がなんかすごいAkyo",
       "category": "Fictional Being,Fictional Being/God",
@@ -1226,6 +1348,7 @@
     },
     {
       "id": "0123",
+      "entryType": "avatar",
       "nickname": "Bubble Akyo",
       "avatarName": "泡Akyo",
       "category": "Gimmick・Special",
@@ -1236,6 +1359,7 @@
     },
     {
       "id": "0124",
+      "entryType": "avatar",
       "nickname": "Diffraction Grating Akyo",
       "avatarName": "回折格子Akyo",
       "category": "Material・Raw Material,Material・Raw Material/Glass",
@@ -1246,6 +1370,7 @@
     },
     {
       "id": "0125",
+      "entryType": "avatar",
       "nickname": "Chromatophore Optical Camouflage Akyo",
       "avatarName": "色胞光学迷彩Akyo",
       "category": "Gimmick・Special",
@@ -1256,6 +1381,7 @@
     },
     {
       "id": "0126",
+      "entryType": "avatar",
       "nickname": "Leopard Gecko Akyo",
       "avatarName": "ヒョウモントカゲモドキAkyo",
       "category": "Animal,Animal/Gecko",
@@ -1266,6 +1392,7 @@
     },
     {
       "id": "0127",
+      "entryType": "avatar",
       "nickname": "Okinawa Rail Akyo Akyo",
       "avatarName": "ヤンバルクイナAkyo",
       "category": "Animal,Animal/Bird",
@@ -1276,6 +1403,7 @@
     },
     {
       "id": "0128",
+      "entryType": "avatar",
       "nickname": "Particle Akyo",
       "avatarName": "Akyo",
       "category": "Gimmick・Special",
@@ -1286,6 +1414,7 @@
     },
     {
       "id": "0129",
+      "entryType": "avatar",
       "nickname": "Grilled Akyo",
       "avatarName": "yaki AKYO",
       "category": "Food,Food/Dish",
@@ -1296,6 +1425,7 @@
     },
     {
       "id": "0130",
+      "entryType": "avatar",
       "nickname": "Tail Meat Akyo",
       "avatarName": "ぼんじり（お徳用）",
       "category": "Food,Food/Dish",
@@ -1306,6 +1436,7 @@
     },
     {
       "id": "0131",
+      "entryType": "avatar",
       "nickname": "Dancer Akyo",
       "avatarName": "踊り子Akyo",
       "category": "Role・Status",
@@ -1316,6 +1447,7 @@
     },
     {
       "id": "0132",
+      "entryType": "avatar",
       "nickname": "Gucci Akyo",
       "avatarName": "Gucci Akyo",
       "category": "Fashion",
@@ -1326,6 +1458,7 @@
     },
     {
       "id": "0133",
+      "entryType": "avatar",
       "nickname": "Suama Akyo",
       "avatarName": "akyo_suama",
       "category": "Food,Food/Sweets",
@@ -1336,6 +1469,7 @@
     },
     {
       "id": "0134",
+      "entryType": "avatar",
       "nickname": "Amethyst Akyo",
       "avatarName": "AmethystAkyo",
       "category": "Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard",
@@ -1346,6 +1480,7 @@
     },
     {
       "id": "0135",
+      "entryType": "avatar",
       "nickname": "Cardboard Akyo",
       "avatarName": "akyo snake",
       "category": "Parody,Parody/Metal Gear Solid",
@@ -1356,6 +1491,7 @@
     },
     {
       "id": "0136",
+      "entryType": "avatar",
       "nickname": "Shiitake Mushroom Akyo",
       "avatarName": "akyo_poopake",
       "category": "Food,Food/Vegetable,Fungus",
@@ -1366,6 +1502,7 @@
     },
     {
       "id": "0137",
+      "entryType": "avatar",
       "nickname": "USSR Akyo",
       "avatarName": "akyo_soren",
       "category": "History",
@@ -1376,6 +1513,7 @@
     },
     {
       "id": "0138",
+      "entryType": "avatar",
       "nickname": "Jong Akyo",
       "avatarName": "akyo_jon",
       "category": "Parody,Parody/Person",
@@ -1386,6 +1524,7 @@
     },
     {
       "id": "0139",
+      "entryType": "avatar",
       "nickname": "Olaf Akyo",
       "avatarName": "akyo_orf",
       "category": "Season・Event,Environment・Weather,Material・Raw Material,Shape・Texture,Shape・Texture/Cold,Season・Event/Winter",
@@ -1396,6 +1535,7 @@
     },
     {
       "id": "0140",
+      "entryType": "avatar",
       "nickname": "Window Akyo",
       "avatarName": "akyo_window",
       "category": "Appliances・Furniture",
@@ -1406,6 +1546,7 @@
     },
     {
       "id": "0141",
+      "entryType": "avatar",
       "nickname": "Cake Akyo",
       "avatarName": "cake",
       "category": "Food,Food/Sweets",
@@ -1416,6 +1557,7 @@
     },
     {
       "id": "0142",
+      "entryType": "avatar",
       "nickname": "Mandarin Orange Akyo",
       "avatarName": "sau",
       "category": "Food,Food/Fruit",
@@ -1426,6 +1568,7 @@
     },
     {
       "id": "0143",
+      "entryType": "avatar",
       "nickname": "Music Akyo",
       "avatarName": "akyo_music_01",
       "category": "Music・Instrument",
@@ -1436,6 +1579,7 @@
     },
     {
       "id": "0144",
+      "entryType": "avatar",
       "nickname": "Snail Akyo",
       "avatarName": "snileakyo",
       "category": "Animal,Animal/Snail",
@@ -1446,6 +1590,7 @@
     },
     {
       "id": "0145",
+      "entryType": "avatar",
       "nickname": "Menses Akyo",
       "avatarName": "メンシス学派",
       "category": "Gimmick・Special",
@@ -1456,6 +1601,7 @@
     },
     {
       "id": "0146",
+      "entryType": "avatar",
       "nickname": "Venice Akyo",
       "avatarName": "Venice Akyo",
       "category": "History,Parody,Parody/VRChat",
@@ -1466,6 +1612,7 @@
     },
     {
       "id": "0147",
+      "entryType": "avatar",
       "nickname": "Nu Akyo",
       "avatarName": "νAkyo",
       "category": "Electronic",
@@ -1476,6 +1623,7 @@
     },
     {
       "id": "0148",
+      "entryType": "avatar",
       "nickname": "J2m3 Akyo",
       "avatarName": "J2m3",
       "category": "Vehicle,Vehicle/Aviation,Skill・Trait,Skill・Trait/Flying,Military・Weapons",
@@ -1486,6 +1634,7 @@
     },
     {
       "id": "0149",
+      "entryType": "avatar",
       "nickname": "Virtual Bayroi 4 Akyo",
       "avatarName": "virtual bayroi 4",
       "category": "Electronic",
@@ -1496,6 +1645,7 @@
     },
     {
       "id": "0150",
+      "entryType": "avatar",
       "nickname": "Hinyo Akyo",
       "avatarName": "Hinyo",
       "category": "Gimmick・Special",
@@ -1506,6 +1656,7 @@
     },
     {
       "id": "0151",
+      "entryType": "avatar",
       "nickname": "Cow Akyo",
       "avatarName": "Akyo Cow 256",
       "category": "Animal,Animal/Cow",
@@ -1516,6 +1667,7 @@
     },
     {
       "id": "0152",
+      "entryType": "avatar",
       "nickname": "Poncho Akyo",
       "avatarName": "akyo___________雨",
       "category": "Fashion,Environment・Weather,Environment・Weather/Rain",
@@ -1526,6 +1678,7 @@
     },
     {
       "id": "0153",
+      "entryType": "avatar",
       "nickname": "Halloween Akyo",
       "avatarName": "akyo__________コスプレ",
       "category": "Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
@@ -1536,6 +1689,7 @@
     },
     {
       "id": "0154",
+      "entryType": "avatar",
       "nickname": "Construction Akyo",
       "avatarName": "akyo____安全",
       "category": "Mint Chocolate,Role・Status",
@@ -1546,6 +1700,7 @@
     },
     {
       "id": "0155",
+      "entryType": "avatar",
       "nickname": "Towel Akyo",
       "avatarName": "akyo____タオル",
       "category": "Daily Necessities,Equipment,Equipment/Bath",
@@ -1556,6 +1711,7 @@
     },
     {
       "id": "0156",
+      "entryType": "avatar",
       "nickname": "Aloha Akyo",
       "avatarName": "akyo____アロハ",
       "category": "Fashion",
@@ -1566,6 +1722,7 @@
     },
     {
       "id": "0157",
+      "entryType": "avatar",
       "nickname": "Reindeer Akyo",
       "avatarName": "akyo___トナカイ",
       "category": "Animal,Animal/Reindeer",
@@ -1576,6 +1733,7 @@
     },
     {
       "id": "0158",
+      "entryType": "avatar",
       "nickname": "Santa Akyo",
       "avatarName": "akyo___サンタ",
       "category": "Fashion,Season・Event,Season・Event/Christmas",
@@ -1586,6 +1744,7 @@
     },
     {
       "id": "0159",
+      "entryType": "avatar",
       "nickname": "Fox Akyo",
       "avatarName": "akyo__fox",
       "category": "Animal,Animal/Fox",
@@ -1596,6 +1755,7 @@
     },
     {
       "id": "0160",
+      "entryType": "avatar",
       "nickname": "Ermine Akyo",
       "avatarName": "akyo__fox2",
       "category": "Animal,Animal/Ermine",
@@ -1606,6 +1766,7 @@
     },
     {
       "id": "0161",
+      "entryType": "avatar",
       "nickname": "Fox Akyo 2",
       "avatarName": "akyo__fox3",
       "category": "Animal,Animal/Fox",
@@ -1616,6 +1777,7 @@
     },
     {
       "id": "0162",
+      "entryType": "avatar",
       "nickname": "Sushi Akyo",
       "avatarName": "akyo__すし",
       "category": "Food,Food/Dish,Food/Sushi",
@@ -1626,6 +1788,7 @@
     },
     {
       "id": "0163",
+      "entryType": "avatar",
       "nickname": "Bear Akyo",
       "avatarName": "akyo__くま",
       "category": "Animal,Animal/Bear",
@@ -1636,6 +1799,7 @@
     },
     {
       "id": "0164",
+      "entryType": "avatar",
       "nickname": "Bear Akyo 2",
       "avatarName": "akyo__くま２",
       "category": "Animal,Animal/Bear",
@@ -1646,6 +1810,7 @@
     },
     {
       "id": "0165",
+      "entryType": "avatar",
       "nickname": "Kagami Mochi Akyo",
       "avatarName": "akyo__もち",
       "category": "Food,Food/Sweets,Season・Event,Season・Event/New Year",
@@ -1656,6 +1821,7 @@
     },
     {
       "id": "0166",
+      "entryType": "avatar",
       "nickname": "Mouse Akyo",
       "avatarName": "akyo__rat",
       "category": "Animal,Animal/Mouse",
@@ -1666,6 +1832,7 @@
     },
     {
       "id": "0167",
+      "entryType": "avatar",
       "nickname": "Eggplant Akyo",
       "avatarName": "akyo__ナス",
       "category": "Food,Food/Vegetable",
@@ -1676,6 +1843,7 @@
     },
     {
       "id": "0168",
+      "entryType": "avatar",
       "nickname": "Mikan-chan Akyo",
       "avatarName": "akyo__mikan",
       "category": "Food,Food/Fruit",
@@ -1686,6 +1854,7 @@
     },
     {
       "id": "0169",
+      "entryType": "avatar",
       "nickname": "Dragon Akyo",
       "avatarName": "akyo_どらごん 1․52",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
@@ -1696,6 +1865,7 @@
     },
     {
       "id": "0170",
+      "entryType": "avatar",
       "nickname": "Demon Akyo",
       "avatarName": "skyo__oni",
       "category": "Fictional Being,Fictional Being/Yokai・Ghost",
@@ -1706,6 +1876,7 @@
     },
     {
       "id": "0171",
+      "entryType": "avatar",
       "nickname": "Half Akyo",
       "avatarName": "akyo_half",
       "category": "Body Type",
@@ -1716,6 +1887,7 @@
     },
     {
       "id": "0172",
+      "entryType": "avatar",
       "nickname": "Kappa Akyo",
       "avatarName": "akyo_kappa",
       "category": "Fictional Being,Fictional Being/Yokai・Ghost",
@@ -1726,6 +1898,7 @@
     },
     {
       "id": "0173",
+      "entryType": "avatar",
       "nickname": "Raccoon Dog Akyo",
       "avatarName": "akyo_tanuki",
       "category": "Animal,Animal/Tanuki",
@@ -1736,6 +1909,7 @@
     },
     {
       "id": "0174",
+      "entryType": "avatar",
       "nickname": "Burger Akyo",
       "avatarName": "akyoバーガー",
       "category": "Food,Food/Dish",
@@ -1746,6 +1920,7 @@
     },
     {
       "id": "0175",
+      "entryType": "avatar",
       "nickname": "Chikuwa Akyo",
       "avatarName": "akyo_ちくわ",
       "category": "Food,Food/Dish",
@@ -1756,6 +1931,7 @@
     },
     {
       "id": "0176",
+      "entryType": "avatar",
       "nickname": "Nurse Akyo",
       "avatarName": "akyo_ナース",
       "category": "Role・Status,Role・Status/Healthcare Worker",
@@ -1766,6 +1942,7 @@
     },
     {
       "id": "0177",
+      "entryType": "avatar",
       "nickname": "Muffler Akyo",
       "avatarName": "akyo_マフラー",
       "category": "Fashion",
@@ -1776,6 +1953,7 @@
     },
     {
       "id": "0178",
+      "entryType": "avatar",
       "nickname": "Penguin Akyo",
       "avatarName": "akyo_ペンギン",
       "category": "Animal,Animal/Marine Life,Animal/Penguin,Animal/Bird",
@@ -1786,6 +1964,7 @@
     },
     {
       "id": "0179",
+      "entryType": "avatar",
       "nickname": "Shark Akyo",
       "avatarName": "akyo_shark",
       "category": "Animal,Animal/Marine Life,Animal/Shark",
@@ -1796,6 +1975,7 @@
     },
     {
       "id": "0180",
+      "entryType": "avatar",
       "nickname": "Rabbit Akyo",
       "avatarName": "akyo_うさぎ",
       "category": "Animal,Animal/Rabbit",
@@ -1806,6 +1986,7 @@
     },
     {
       "id": "0181",
+      "entryType": "avatar",
       "nickname": "Dandelion Akyo",
       "avatarName": "akyo_たんぽぽ",
       "category": "Plant",
@@ -1816,6 +1997,7 @@
     },
     {
       "id": "0182",
+      "entryType": "avatar",
       "nickname": "Sister Akyo",
       "avatarName": "akyo_シスター",
       "category": "Role・Status",
@@ -1826,6 +2008,7 @@
     },
     {
       "id": "0183",
+      "entryType": "avatar",
       "nickname": "Fox Sister Akyo",
       "avatarName": "akyo_狐シスター",
       "category": "Animal,Animal/Fox,Role・Status",
@@ -1836,6 +2019,7 @@
     },
     {
       "id": "0184",
+      "entryType": "avatar",
       "nickname": "Postal Akyo",
       "avatarName": "akyo_郵便",
       "category": "Role・Status,Role・Status/Delivery Worker",
@@ -1846,6 +2030,7 @@
     },
     {
       "id": "0185",
+      "entryType": "avatar",
       "nickname": "Pudding Akyo",
       "avatarName": "akyo_プリン",
       "category": "Food,Food/Sweets",
@@ -1856,6 +2041,7 @@
     },
     {
       "id": "0186",
+      "entryType": "avatar",
       "nickname": "Japanese Radish Akyo",
       "avatarName": "akyo_だいこん",
       "category": "Food,Food/Vegetable",
@@ -1866,6 +2052,7 @@
     },
     {
       "id": "0187",
+      "entryType": "avatar",
       "nickname": "Cow Akyo",
       "avatarName": "akyo_うし",
       "category": "Animal,Animal/Cow",
@@ -1876,6 +2063,7 @@
     },
     {
       "id": "0188",
+      "entryType": "avatar",
       "nickname": "Coffee Akyo",
       "avatarName": "akyo_coffee",
       "category": "Drink",
@@ -1886,6 +2074,7 @@
     },
     {
       "id": "0189",
+      "entryType": "avatar",
       "nickname": "Indian Akyo",
       "avatarName": "akyo_いんでぃあん",
       "category": "Fashion",
@@ -1896,6 +2085,7 @@
     },
     {
       "id": "0190",
+      "entryType": "avatar",
       "nickname": "Tropical Akyo 1",
       "avatarName": "akyo_トロピカル",
       "category": "Season・Event",
@@ -1906,6 +2096,7 @@
     },
     {
       "id": "0191",
+      "entryType": "avatar",
       "nickname": "Tropical Akyo 2",
       "avatarName": "akyoトロピカル２",
       "category": "Season・Event",
@@ -1916,6 +2107,7 @@
     },
     {
       "id": "0192",
+      "entryType": "avatar",
       "nickname": "Tropical Akyo 3",
       "avatarName": "akyo_トロピカル３",
       "category": "Season・Event",
@@ -1926,6 +2118,7 @@
     },
     {
       "id": "0193",
+      "entryType": "avatar",
       "nickname": "Ninja Akyo",
       "avatarName": "akyo_ninja",
       "category": "Role・Status,Country,Country/Japan",
@@ -1936,6 +2129,7 @@
     },
     {
       "id": "0194",
+      "entryType": "avatar",
       "nickname": "Banana Akyo",
       "avatarName": "akyo_banana",
       "category": "Food,Food/Fruit",
@@ -1946,6 +2140,7 @@
     },
     {
       "id": "0195",
+      "entryType": "avatar",
       "nickname": "Hedgehog Akyo",
       "avatarName": "akyo_ハリネズミ",
       "category": "Animal,Animal/Hedgehog",
@@ -1956,6 +2151,7 @@
     },
     {
       "id": "0196",
+      "entryType": "avatar",
       "nickname": "Morning Glory Akyo",
       "avatarName": "akyo_asagao",
       "category": "Plant",
@@ -1966,6 +2162,7 @@
     },
     {
       "id": "0197",
+      "entryType": "avatar",
       "nickname": "Red Bean Rice Akyo",
       "avatarName": "akyo_sekihan",
       "category": "Food,Food/Dish",
@@ -1976,6 +2173,7 @@
     },
     {
       "id": "0198",
+      "entryType": "avatar",
       "nickname": "Bunny Akyo",
       "avatarName": "akyo_バニー",
       "category": "Fashion,Pretty",
@@ -1986,6 +2184,7 @@
     },
     {
       "id": "0199",
+      "entryType": "avatar",
       "nickname": "Alpaca Akyo",
       "avatarName": "akyo_アルパカ",
       "category": "Animal,Animal/Alpaca,Quadruped",
@@ -1996,6 +2195,7 @@
     },
     {
       "id": "0200",
+      "entryType": "avatar",
       "nickname": "Alpaca Akyo 2",
       "avatarName": "akyo_アルパカ2",
       "category": "Animal,Animal/Alpaca",
@@ -2006,6 +2206,7 @@
     },
     {
       "id": "0201",
+      "entryType": "avatar",
       "nickname": "Tororo Akyo",
       "avatarName": "akyo_TORORO",
       "category": "Parody,Parody/Totoro",
@@ -2016,6 +2217,7 @@
     },
     {
       "id": "0202",
+      "entryType": "avatar",
       "nickname": "Tororo Akyo 2",
       "avatarName": "akyo_TORORO2",
       "category": "Parody,Parody/Totoro",
@@ -2026,6 +2228,7 @@
     },
     {
       "id": "0203",
+      "entryType": "avatar",
       "nickname": "Yukata Akyo",
       "avatarName": "akyo_yukata1",
       "category": "Fashion",
@@ -2036,6 +2239,7 @@
     },
     {
       "id": "0204",
+      "entryType": "avatar",
       "nickname": "Fall Akyo",
       "avatarName": "akyo_fall",
       "category": "Parody,Parody/Fall Guys",
@@ -2046,6 +2250,7 @@
     },
     {
       "id": "0205",
+      "entryType": "avatar",
       "nickname": "Chick Akyo",
       "avatarName": "akyo_hiyoko",
       "category": "Animal,Animal/Bird",
@@ -2056,6 +2261,7 @@
     },
     {
       "id": "0206",
+      "entryType": "avatar",
       "nickname": "Seaside Akyo",
       "avatarName": "akyo_sea",
       "category": "Environment・Weather,Skill・Trait,Skill・Trait/Diving",
@@ -2066,6 +2272,7 @@
     },
     {
       "id": "0207",
+      "entryType": "avatar",
       "nickname": "Foot Soldier Akyo",
       "avatarName": "akyo_asigaru2",
       "category": "Role・Status,Role・Status/Soldier,Military・Weapons,Country,Country/Japan",
@@ -2076,6 +2283,7 @@
     },
     {
       "id": "0208",
+      "entryType": "avatar",
       "nickname": "Ghost Akyo",
       "avatarName": "akyo_ghost 3․0",
       "category": "Fictional Being,Fictional Being/Yokai・Ghost",
@@ -2086,6 +2294,7 @@
     },
     {
       "id": "0209",
+      "entryType": "avatar",
       "nickname": "Franken Akyo",
       "avatarName": "akyo_フランケン",
       "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
@@ -2096,6 +2305,7 @@
     },
     {
       "id": "0210",
+      "entryType": "avatar",
       "nickname": "Mummy Akyo",
       "avatarName": "akyo_ミイラ",
       "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
@@ -2106,6 +2316,7 @@
     },
     {
       "id": "0211",
+      "entryType": "avatar",
       "nickname": "Sweet Potato Akyo",
       "avatarName": "akyo_サツマイモ",
       "category": "Food,Food/Vegetable",
@@ -2116,6 +2327,7 @@
     },
     {
       "id": "0212",
+      "entryType": "avatar",
       "nickname": "Coat Fox Akyo",
       "avatarName": "akyo_coat",
       "category": "Animal,Animal/Fox",
@@ -2126,6 +2338,7 @@
     },
     {
       "id": "0213",
+      "entryType": "avatar",
       "nickname": "Lion Dance Akyo",
       "avatarName": "akyo_sisimai",
       "category": "Season・Event",
@@ -2136,6 +2349,7 @@
     },
     {
       "id": "0214",
+      "entryType": "avatar",
       "nickname": "Shrine Maiden Fox Akyo",
       "avatarName": "akyo_miko",
       "category": "Animal,Animal/Fox,Role・Status",
@@ -2146,6 +2360,7 @@
     },
     {
       "id": "0215",
+      "entryType": "avatar",
       "nickname": "Sheep Akyo",
       "avatarName": "akyo_sheep",
       "category": "Animal,Animal/Sheep,Quadruped",
@@ -2156,6 +2371,7 @@
     },
     {
       "id": "0216",
+      "entryType": "avatar",
       "nickname": "Low-Poly Fox Akyo",
       "avatarName": "akyo_狐ローポリ",
       "category": "Animal,Animal/Fox,Low-poly",
@@ -2166,6 +2382,7 @@
     },
     {
       "id": "0217",
+      "entryType": "avatar",
       "nickname": "Among Akyo",
       "avatarName": "akyo_among",
       "category": "Parody,Parody/Among Us",
@@ -2176,6 +2393,7 @@
     },
     {
       "id": "0218",
+      "entryType": "avatar",
       "nickname": "Egyptian Pharaoh Akyo",
       "avatarName": "akyo_ファラオ",
       "category": "History,Country,Country/Egypt,Role・Status,Role・Status/Royalty,Ruler",
@@ -2186,6 +2404,7 @@
     },
     {
       "id": "0219",
+      "entryType": "avatar",
       "nickname": "Fox Taiyaki Akyo",
       "avatarName": "akyo_taiyaki",
       "category": "Animal,Animal/Fox,Food,Food/Dish",
@@ -2196,6 +2415,7 @@
     },
     {
       "id": "0220",
+      "entryType": "avatar",
       "nickname": "Shiba Inu Akyo",
       "avatarName": "akyo_dog",
       "category": "Animal,Animal/Dog",
@@ -2206,6 +2426,7 @@
     },
     {
       "id": "0221",
+      "entryType": "avatar",
       "nickname": "Corn Akyo",
       "avatarName": "akyo_Corn",
       "category": "Food,Food/Vegetable",
@@ -2216,6 +2437,7 @@
     },
     {
       "id": "0222",
+      "entryType": "avatar",
       "nickname": "Pirate Akyo",
       "avatarName": "akyo_kaizoku",
       "category": "Role・Status",
@@ -2226,6 +2448,7 @@
     },
     {
       "id": "0223",
+      "entryType": "avatar",
       "nickname": "Fox Akyo V2",
       "avatarName": "akyo_fox V2",
       "category": "Animal,Animal/Fox",
@@ -2236,6 +2459,7 @@
     },
     {
       "id": "0224",
+      "entryType": "avatar",
       "nickname": "Carrot Akyo",
       "avatarName": "akyo_にんじん",
       "category": "Food,Food/Vegetable",
@@ -2246,6 +2470,7 @@
     },
     {
       "id": "0225",
+      "entryType": "avatar",
       "nickname": "Cleaning Akyo",
       "avatarName": "akyo___おそうじ 0․303",
       "category": "Role・Status,Daily Necessities",
@@ -2256,6 +2481,7 @@
     },
     {
       "id": "0226",
+      "entryType": "avatar",
       "nickname": "Tiger Akyo",
       "avatarName": "akyo_tora",
       "category": "Animal,Animal/Tiger",
@@ -2266,6 +2492,7 @@
     },
     {
       "id": "0227",
+      "entryType": "avatar",
       "nickname": "Furisode Fox Akyo",
       "avatarName": "きつねkyo_振袖",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/New Year",
@@ -2276,6 +2503,7 @@
     },
     {
       "id": "0228",
+      "entryType": "avatar",
       "nickname": "Nine-Tailed Fox Akyo",
       "avatarName": "akyo_fox9 1․55",
       "category": "Animal,Animal/Fox",
@@ -2286,6 +2514,7 @@
     },
     {
       "id": "0229",
+      "entryType": "avatar",
       "nickname": "Fried Akyo",
       "avatarName": "akyo_Fried 1․4",
       "category": "Food,Food/Dish",
@@ -2296,6 +2525,7 @@
     },
     {
       "id": "0230",
+      "entryType": "avatar",
       "nickname": "Maid Fox Akyo",
       "avatarName": "akyo___メイド 1․74",
       "category": "Animal,Animal/Fox,Role・Status,Pretty",
@@ -2306,6 +2536,7 @@
     },
     {
       "id": "0231",
+      "entryType": "avatar",
       "nickname": "Shaved Ice Akyo",
       "avatarName": "akyo_かき氷 1․061",
       "category": "Food,Food/Sweets",
@@ -2316,6 +2547,7 @@
     },
     {
       "id": "0232",
+      "entryType": "avatar",
       "nickname": "Infantry Akyo",
       "avatarName": "akyo__歩兵",
       "category": "Role・Status,Role・Status/Soldier",
@@ -2326,6 +2558,7 @@
     },
     {
       "id": "0233",
+      "entryType": "avatar",
       "nickname": "Glasses Akyo",
       "avatarName": "akyo__papipo 1․01",
       "category": "Fashion,Fashion/Glasses,Parody,Parody/Person",
@@ -2336,6 +2569,7 @@
     },
     {
       "id": "0234",
+      "entryType": "avatar",
       "nickname": "Chinese Cabbage Akyo",
       "avatarName": "akyo_hakusai 1․03",
       "category": "Food,Food/Vegetable",
@@ -2346,6 +2580,7 @@
     },
     {
       "id": "0235",
+      "entryType": "avatar",
       "nickname": "Bamboo Shoot Akyo",
       "avatarName": "akyo_たけのこ",
       "category": "Food,Food/Vegetable",
@@ -2356,6 +2591,7 @@
     },
     {
       "id": "0236",
+      "entryType": "avatar",
       "nickname": "Pizza Akyo",
       "avatarName": "akyo__pizza",
       "category": "Food,Food/Dish",
@@ -2366,6 +2602,7 @@
     },
     {
       "id": "0237",
+      "entryType": "avatar",
       "nickname": "Dracula Akyo",
       "avatarName": "akyo__Helloween",
       "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
@@ -2376,6 +2613,7 @@
     },
     {
       "id": "0238",
+      "entryType": "avatar",
       "nickname": "Ghost Fox Akyo",
       "avatarName": "ローポリきつねyu-rei",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost,Low-poly",
@@ -2386,6 +2624,7 @@
     },
     {
       "id": "0239",
+      "entryType": "avatar",
       "nickname": "Idol Fox Akyo",
       "avatarName": "akyo きつねidol",
       "category": "Animal,Animal/Fox,Role・Status,Pretty",
@@ -2396,6 +2635,7 @@
     },
     {
       "id": "0240",
+      "entryType": "avatar",
       "nickname": "Baked Sweet Potato Akyo",
       "avatarName": "akyo_yakiimo",
       "category": "Food,Food/Dish",
@@ -2406,6 +2646,7 @@
     },
     {
       "id": "0241",
+      "entryType": "avatar",
       "nickname": "Chair Akyo",
       "avatarName": "akyo_isu",
       "category": "Appliances・Furniture",
@@ -2416,6 +2657,7 @@
     },
     {
       "id": "0242",
+      "entryType": "avatar",
       "nickname": "Traveling Fox Akyo / Poncho Fox Akyo",
       "avatarName": "fox pontyo 0․4",
       "category": "Animal,Animal/Fox,Fashion,Environment・Weather,Environment・Weather/Rain",
@@ -2426,6 +2668,7 @@
     },
     {
       "id": "0243",
+      "entryType": "avatar",
       "nickname": "Cat Akyo",
       "avatarName": "akyo_cat 1․07",
       "category": "Animal,Animal/Cat",
@@ -2436,6 +2679,7 @@
     },
     {
       "id": "0244",
+      "entryType": "avatar",
       "nickname": "Husky Akyo",
       "avatarName": "akyo_husky",
       "category": "Animal,Animal/Dog",
@@ -2446,6 +2690,7 @@
     },
     {
       "id": "0245",
+      "entryType": "avatar",
       "nickname": "Sweet Red Bean Soup Akyo",
       "avatarName": "akyo_osiruko",
       "category": "Food,Food/Sweets",
@@ -2456,6 +2701,7 @@
     },
     {
       "id": "0246",
+      "entryType": "avatar",
       "nickname": "Fox Udon Akyo",
       "avatarName": "akyo_fox_udon",
       "category": "Animal,Animal/Fox,Food,Food/Dish",
@@ -2466,6 +2712,7 @@
     },
     {
       "id": "0247",
+      "entryType": "avatar",
       "nickname": "Cherry Blossom Fox Akyo",
       "avatarName": "akyo fox sakura",
       "category": "Animal,Animal/Fox,Plant",
@@ -2476,6 +2723,7 @@
     },
     {
       "id": "0248",
+      "entryType": "avatar",
       "nickname": "Summer Fox Akyo",
       "avatarName": "akyo fox summer",
       "category": "Animal,Animal/Fox,Season・Event",
@@ -2486,6 +2734,7 @@
     },
     {
       "id": "0249",
+      "entryType": "avatar",
       "nickname": "Cabbage Akyo",
       "avatarName": "akyo_kyabetu",
       "category": "Food,Food/Vegetable",
@@ -2496,6 +2745,7 @@
     },
     {
       "id": "0250",
+      "entryType": "avatar",
       "nickname": "Watermelon Akyo",
       "avatarName": "akyo_スイカ",
       "category": "Food,Food/Fruit",
@@ -2506,6 +2756,7 @@
     },
     {
       "id": "0251",
+      "entryType": "avatar",
       "nickname": "HorseAkyo",
       "avatarName": "akyo_uma",
       "category": "Animal,Animal/Horse,Quadruped,Season・Event,Season・Event/New Year",
@@ -2516,6 +2767,7 @@
     },
     {
       "id": "0252",
+      "entryType": "avatar",
       "nickname": "Hot Dog Akyo",
       "avatarName": "akyo_hotdog",
       "category": "Food,Food/Dish",
@@ -2526,6 +2778,7 @@
     },
     {
       "id": "0253",
+      "entryType": "avatar",
       "nickname": "Construction Site Cat Akyo",
       "avatarName": "akyo_ねこG",
       "category": "Animal,Animal/Cat",
@@ -2536,6 +2789,7 @@
     },
     {
       "id": "0254",
+      "entryType": "avatar",
       "nickname": "Chili Pepper Akyo",
       "avatarName": "akyo_tougarasi",
       "category": "Food,Food/Vegetable",
@@ -2546,6 +2800,7 @@
     },
     {
       "id": "0255",
+      "entryType": "avatar",
       "nickname": "Triceratops Akyo",
       "avatarName": "akyo_トリケラ",
       "category": "Animal,Animal/Dinosaur,Quadruped",
@@ -2556,6 +2811,7 @@
     },
     {
       "id": "0256",
+      "entryType": "avatar",
       "nickname": "Stegosaurus Akyo",
       "avatarName": "akyo_sutego",
       "category": "Animal,Animal/Dinosaur,Quadruped",
@@ -2566,6 +2822,7 @@
     },
     {
       "id": "0257",
+      "entryType": "avatar",
       "nickname": "Pteranodon Akyo",
       "avatarName": "akyo_putera",
       "category": "Animal,Animal/Dinosaur",
@@ -2576,6 +2833,7 @@
     },
     {
       "id": "0258",
+      "entryType": "avatar",
       "nickname": "Hot Fox Akyo",
       "avatarName": "akyo_hotfox",
       "category": "Animal,Animal/Fox",
@@ -2586,6 +2844,7 @@
     },
     {
       "id": "0259",
+      "entryType": "avatar",
       "nickname": "T-Rex Akyo",
       "avatarName": "akyo_ティラノ",
       "category": "Animal,Animal/Dinosaur",
@@ -2596,6 +2855,7 @@
     },
     {
       "id": "0260",
+      "entryType": "avatar",
       "nickname": "Panda Akyo",
       "avatarName": "akyo_panda",
       "category": "Animal,Animal/Panda",
@@ -2606,6 +2866,7 @@
     },
     {
       "id": "0261",
+      "entryType": "avatar",
       "nickname": "Pineapple Akyo",
       "avatarName": "akyo_pain",
       "category": "Food,Food/Fruit",
@@ -2616,6 +2877,7 @@
     },
     {
       "id": "0262",
+      "entryType": "avatar",
       "nickname": "Snake Akyo",
       "avatarName": "akyo_hebi",
       "category": "Animal,Animal/Snake",
@@ -2626,6 +2888,7 @@
     },
     {
       "id": "0263",
+      "entryType": "avatar",
       "nickname": "Paper Akyo",
       "avatarName": "akyo_paper",
       "category": "Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood",
@@ -2636,6 +2899,7 @@
     },
     {
       "id": "0264",
+      "entryType": "avatar",
       "nickname": "Sleepwear Cat Akyo",
       "avatarName": "akyo_fox nemaki",
       "category": "Animal,Animal/Fox",
@@ -2646,6 +2910,7 @@
     },
     {
       "id": "0265",
+      "entryType": "avatar",
       "nickname": "Pancake Akyo",
       "avatarName": "akyo_hotcake",
       "category": "Food,Food/Sweets",
@@ -2656,6 +2921,7 @@
     },
     {
       "id": "0266",
+      "entryType": "avatar",
       "nickname": "Rice DumplingAkyo",
       "avatarName": "akyo_siratama",
       "category": "Food,Food/Sweets",
@@ -2666,6 +2932,7 @@
     },
     {
       "id": "0267",
+      "entryType": "avatar",
       "nickname": "Pon de Ring Akyo",
       "avatarName": "akyo_ponde",
       "category": "Food,Food/Sweets,Parody,Parody/Mister Donut",
@@ -2676,6 +2943,7 @@
     },
     {
       "id": "0268",
+      "entryType": "avatar",
       "nickname": "Yokan Akyo",
       "avatarName": "akyo_youkan",
       "category": "Food,Food/Sweets",
@@ -2686,6 +2954,7 @@
     },
     {
       "id": "0269",
+      "entryType": "avatar",
       "nickname": "Sleepwear Cat Akyo",
       "avatarName": "akyo_neko nemaki",
       "category": "Animal,Animal/Cat",
@@ -2696,6 +2965,7 @@
     },
     {
       "id": "0270",
+      "entryType": "avatar",
       "nickname": "Castella Akyo",
       "avatarName": "akyo_kasutera",
       "category": "Food,Food/Sweets",
@@ -2706,6 +2976,7 @@
     },
     {
       "id": "0271",
+      "entryType": "avatar",
       "nickname": "Takoyaki Akyo",
       "avatarName": "akyo_takosan",
       "category": "Food,Food/Bento",
@@ -2716,6 +2987,7 @@
     },
     {
       "id": "0272",
+      "entryType": "avatar",
       "nickname": "Mayonnaise Akyo",
       "avatarName": "akyo_mayo",
       "category": "Seasoning",
@@ -2726,6 +2998,7 @@
     },
     {
       "id": "0273",
+      "entryType": "avatar",
       "nickname": "Gyoza Akyo",
       "avatarName": "akyo_ギョーザ",
       "category": "Food,Food/Dish",
@@ -2736,6 +3009,7 @@
     },
     {
       "id": "0274",
+      "entryType": "avatar",
       "nickname": "Cup Ice Cream Akyo",
       "avatarName": "akyo_cup ice",
       "category": "Food,Food/Sweets",
@@ -2746,6 +3020,7 @@
     },
     {
       "id": "0275",
+      "entryType": "avatar",
       "nickname": "Ramen Akyo",
       "avatarName": "akyo_ramen",
       "category": "Food,Food/Dish",
@@ -2756,6 +3031,7 @@
     },
     {
       "id": "0276",
+      "entryType": "avatar",
       "nickname": "Battery Akyo",
       "avatarName": "akyo_battery",
       "category": "Electronic",
@@ -2766,6 +3042,7 @@
     },
     {
       "id": "0277",
+      "entryType": "avatar",
       "nickname": "Dango Akyo",
       "avatarName": "akyo_dango",
       "category": "Food,Food/Sweets",
@@ -2776,6 +3053,7 @@
     },
     {
       "id": "0278",
+      "entryType": "avatar",
       "nickname": "Letter Pack Akyo",
       "avatarName": "akyo_Lpack",
       "category": "Gift",
@@ -2786,6 +3064,7 @@
     },
     {
       "id": "0279",
+      "entryType": "avatar",
       "nickname": "French Fries Akyo",
       "avatarName": "akyo_フライドポテト",
       "category": "Food,Food/Dish",
@@ -2796,6 +3075,7 @@
     },
     {
       "id": "0280",
+      "entryType": "avatar",
       "nickname": "Shark Akyo 2",
       "avatarName": "akyo サメ 1․5",
       "category": "Animal,Animal/Marine Life,Animal/Shark",
@@ -2806,6 +3086,7 @@
     },
     {
       "id": "0281",
+      "entryType": "avatar",
       "nickname": "Seal Akyo",
       "avatarName": "akyo_あざらし",
       "category": "Animal,Animal/Marine Life,Animal/Seal",
@@ -2816,6 +3097,7 @@
     },
     {
       "id": "0282",
+      "entryType": "avatar",
       "nickname": "Kid Akyo",
       "avatarName": "akyo_kids",
       "category": "Fashion,Fashion/Hat,Bandage,Age Group,Age Group/Child",
@@ -2826,6 +3108,7 @@
     },
     {
       "id": "0283",
+      "entryType": "avatar",
       "nickname": "Natto Akyo",
       "avatarName": "akyo_nattou",
       "category": "Food,Food/Vegetable,Food/Dish",
@@ -2836,6 +3119,7 @@
     },
     {
       "id": "0284",
+      "entryType": "avatar",
       "nickname": "Jellyfish Akyo",
       "avatarName": "akyo_kurage",
       "category": "Animal,Animal/Marine Life,Animal/Jellyfish",
@@ -2846,6 +3130,7 @@
     },
     {
       "id": "0285",
+      "entryType": "avatar",
       "nickname": "Eraser Akyo",
       "avatarName": "akyo_kesigomu",
       "category": "Daily Necessities,School,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -2856,6 +3141,7 @@
     },
     {
       "id": "0286",
+      "entryType": "avatar",
       "nickname": "Jiangshi Akyo",
       "avatarName": "akyo_キョンシー",
       "category": "Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost",
@@ -2866,6 +3152,7 @@
     },
     {
       "id": "0287",
+      "entryType": "avatar",
       "nickname": "Shampoo Akyo",
       "avatarName": "akyo_シャンプー",
       "category": "Daily Necessities,Equipment,Equipment/Bath",
@@ -2876,6 +3163,7 @@
     },
     {
       "id": "0288",
+      "entryType": "avatar",
       "nickname": "Brachiosaurus Akyo",
       "avatarName": "akyo_ブラキオ",
       "category": "Animal,Animal/Dinosaur,Quadruped",
@@ -2886,6 +3174,7 @@
     },
     {
       "id": "0289",
+      "entryType": "avatar",
       "nickname": "Koinobori Akyo",
       "avatarName": "akyo_こいのぼり",
       "category": "Season・Event",
@@ -2896,6 +3185,7 @@
     },
     {
       "id": "0290",
+      "entryType": "avatar",
       "nickname": "Kashiwa Mochi Akyo",
       "avatarName": "akyo_かしわもち",
       "category": "Food,Food/Sweets",
@@ -2906,6 +3196,7 @@
     },
     {
       "id": "0291",
+      "entryType": "avatar",
       "nickname": "Plesiosaurus Akyo",
       "avatarName": "akyo_プレシオ",
       "category": "Animal,Animal/Dinosaur,Quadruped",
@@ -2916,6 +3207,7 @@
     },
     {
       "id": "0292",
+      "entryType": "avatar",
       "nickname": "Teru Teru Bozu Akyo",
       "avatarName": "akyo_teruteru",
       "category": "Season・Event",
@@ -2926,6 +3218,7 @@
     },
     {
       "id": "0293",
+      "entryType": "avatar",
       "nickname": "Paper Lantern Akyo",
       "avatarName": "akyo_tyoutin",
       "category": "Animal,Animal/Marine Life,Animal/Fish",
@@ -2936,6 +3229,7 @@
     },
     {
       "id": "0294",
+      "entryType": "avatar",
       "nickname": "Wild Boar Akyo",
       "avatarName": "akyo_いのしし",
       "category": "Animal,Animal/Boar",
@@ -2946,6 +3240,7 @@
     },
     {
       "id": "0295",
+      "entryType": "avatar",
       "nickname": "Sunflower Akyo",
       "avatarName": "akyo_himawari",
       "category": "Plant",
@@ -2956,6 +3251,7 @@
     },
     {
       "id": "0296",
+      "entryType": "avatar",
       "nickname": "Toast Fox Akyo",
       "avatarName": "akyo_きつねトースト",
       "category": "Animal,Animal/Fox",
@@ -2966,6 +3262,7 @@
     },
     {
       "id": "0297",
+      "entryType": "avatar",
       "nickname": "Kangaroo Akyo",
       "avatarName": "akyo_カンガルー",
       "category": "Animal,Animal/Kangaroo",
@@ -2976,6 +3273,7 @@
     },
     {
       "id": "0298",
+      "entryType": "avatar",
       "nickname": "Village Akyo",
       "avatarName": "akyo_house",
       "category": "Mint Chocolate,Building",
@@ -2986,6 +3284,7 @@
     },
     {
       "id": "0299",
+      "entryType": "avatar",
       "nickname": "Rabbit Akyo 2",
       "avatarName": "akyo_usagi2",
       "category": "Animal,Animal/Rabbit",
@@ -2996,6 +3295,7 @@
     },
     {
       "id": "0300",
+      "entryType": "avatar",
       "nickname": "Adventure Fox Akyo",
       "avatarName": "akyo_きつねぼうけん",
       "category": "Animal,Animal/Fox",
@@ -3006,6 +3306,7 @@
     },
     {
       "id": "0301",
+      "entryType": "avatar",
       "nickname": "Chef Fox Akyo",
       "avatarName": "akyo_コックさん",
       "category": "Animal,Animal/Fox,Role・Status",
@@ -3016,6 +3317,7 @@
     },
     {
       "id": "0302",
+      "entryType": "avatar",
       "nickname": "Police Fox Akyo",
       "avatarName": "akyo_foxKeikan 1․3",
       "category": "Animal,Animal/Fox,Role・Status,Role・Status/Civil Servant",
@@ -3026,6 +3328,7 @@
     },
     {
       "id": "0303",
+      "entryType": "avatar",
       "nickname": "Kiwi Akyo",
       "avatarName": "akyo_キーウイ",
       "category": "Animal,Animal/Bird",
@@ -3036,6 +3339,7 @@
     },
     {
       "id": "0304",
+      "entryType": "avatar",
       "nickname": "Molting Fox Akyo",
       "avatarName": "akyo_きつね換毛期",
       "category": "Animal,Animal/Fox",
@@ -3046,6 +3350,7 @@
     },
     {
       "id": "0305",
+      "entryType": "avatar",
       "nickname": "Pudding Ice Akyo",
       "avatarName": "akyo_プリンアイス",
       "category": "Food,Food/Sweets",
@@ -3056,6 +3361,7 @@
     },
     {
       "id": "0306",
+      "entryType": "avatar",
       "nickname": "Space Fox Akyo",
       "avatarName": "akyo_fox space 1․07",
       "category": "Animal,Animal/Fox,Environment・Weather,Role・Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
@@ -3066,6 +3372,7 @@
     },
     {
       "id": "0307",
+      "entryType": "avatar",
       "nickname": "Sparrow Akyo",
       "avatarName": "akyo_すずめ",
       "category": "Animal,Animal/Sparrow,Animal/Bird",
@@ -3076,6 +3383,7 @@
     },
     {
       "id": "0308",
+      "entryType": "avatar",
       "nickname": "Firefighter Fox Akyo",
       "avatarName": "akyo_fox syoubou 0․4",
       "category": "Animal,Animal/Fox,Role・Status,Role・Status/Civil Servant",
@@ -3086,6 +3394,7 @@
     },
     {
       "id": "0309",
+      "entryType": "avatar",
       "nickname": "Shrimp Tempura Akyo",
       "avatarName": "akyo_sakaban 0․7",
       "category": "Animal,Animal/Marine Life",
@@ -3096,6 +3405,7 @@
     },
     {
       "id": "0310",
+      "entryType": "avatar",
       "nickname": "Warabi Mochi Akyo",
       "avatarName": "akyo_warabimoti",
       "category": "Food,Food/Sweets",
@@ -3106,6 +3416,7 @@
     },
     {
       "id": "0311",
+      "entryType": "avatar",
       "nickname": "Hydrangea Akyo",
       "avatarName": "akyo_azisai",
       "category": "Plant",
@@ -3116,6 +3427,7 @@
     },
     {
       "id": "0312",
+      "entryType": "avatar",
       "nickname": "Broccoli Akyo",
       "avatarName": "akyo_ブロッコリー",
       "category": "Food,Food/Vegetable",
@@ -3126,6 +3438,7 @@
     },
     {
       "id": "0313",
+      "entryType": "avatar",
       "nickname": "Doctor Fox Akyo",
       "avatarName": "akyo_きつねいしゃ",
       "category": "Animal,Animal/Fox,Role・Status,Role・Status/Healthcare Worker",
@@ -3136,6 +3449,7 @@
     },
     {
       "id": "0314",
+      "entryType": "avatar",
       "nickname": "British Fox Akyo",
       "avatarName": "akyo_きつね英国",
       "category": "Animal,Animal/Fox",
@@ -3146,6 +3460,7 @@
     },
     {
       "id": "0315",
+      "entryType": "avatar",
       "nickname": "Blackboard Eraser Akyo",
       "avatarName": "akyo_こくばんけし",
       "category": "Daily Necessities,School",
@@ -3156,6 +3471,7 @@
     },
     {
       "id": "0316",
+      "entryType": "avatar",
       "nickname": "Sushi Akyo 2",
       "avatarName": "akyo_sushi",
       "category": "Food,Food/Dish,Food/Sushi",
@@ -3166,6 +3482,7 @@
     },
     {
       "id": "0317",
+      "entryType": "avatar",
       "nickname": "Omurice Akyo",
       "avatarName": "akyo_オムライス",
       "category": "Food,Food/Dish",
@@ -3176,6 +3493,7 @@
     },
     {
       "id": "0318",
+      "entryType": "avatar",
       "nickname": "Elephant Akyo",
       "avatarName": "akyo_ぞう",
       "category": "Animal,Animal/Elephant,Quadruped,Body Part,Body Part/Nose",
@@ -3186,6 +3504,7 @@
     },
     {
       "id": "0319",
+      "entryType": "avatar",
       "nickname": "High School Girl Fox Akyo",
       "avatarName": "akyo_きつねjk",
       "category": "Animal,Animal/Fox",
@@ -3196,6 +3515,7 @@
     },
     {
       "id": "0320",
+      "entryType": "avatar",
       "nickname": "High School Cheerleader Fox Akyo",
       "avatarName": "akyo_チアきつね",
       "category": "Animal,Animal/Fox",
@@ -3206,6 +3526,7 @@
     },
     {
       "id": "0321",
+      "entryType": "avatar",
       "nickname": "Green Onion Akyo",
       "avatarName": "akyo_ねぎ",
       "category": "Food,Food/Vegetable",
@@ -3216,6 +3537,7 @@
     },
     {
       "id": "0322",
+      "entryType": "avatar",
       "nickname": "Tanuki Soba Akyo",
       "avatarName": "akyo_たぬきそば",
       "category": "Food,Food/Dish,Animal,Animal/Tanuki",
@@ -3226,6 +3548,7 @@
     },
     {
       "id": "0323",
+      "entryType": "avatar",
       "nickname": "Unagi Don Akyo",
       "avatarName": "akyo_うな重",
       "category": "Food,Food/Dish",
@@ -3236,6 +3559,7 @@
     },
     {
       "id": "0324",
+      "entryType": "avatar",
       "nickname": "Watermelon Popsicle Akyo",
       "avatarName": "akyo_スイカアイス",
       "category": "Food,Food/Fruit,Food/Sweets",
@@ -3246,6 +3570,7 @@
     },
     {
       "id": "0325",
+      "entryType": "avatar",
       "nickname": "Red Panda Akyo",
       "avatarName": "akyo_レッサーパンダ",
       "category": "Animal,Animal/Red Panda",
@@ -3256,6 +3581,7 @@
     },
     {
       "id": "0326",
+      "entryType": "avatar",
       "nickname": "Red Panda Akyo 2",
       "avatarName": "akyo_レッサパンダ2",
       "category": "Animal,Animal/Red Panda",
@@ -3266,6 +3592,7 @@
     },
     {
       "id": "0327",
+      "entryType": "avatar",
       "nickname": "Welder Akyo",
       "avatarName": "akyo_yousetu",
       "category": "Mint Chocolate",
@@ -3276,6 +3603,7 @@
     },
     {
       "id": "0328",
+      "entryType": "avatar",
       "nickname": "Wyvern Akyo",
       "avatarName": "akyo_わいばーん 0․9",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
@@ -3286,6 +3614,7 @@
     },
     {
       "id": "0329",
+      "entryType": "avatar",
       "nickname": "Winter Fox Akyo",
       "avatarName": "akyo_きつね冬",
       "category": "Animal,Animal/Fox,Season・Event",
@@ -3296,6 +3625,7 @@
     },
     {
       "id": "0330",
+      "entryType": "avatar",
       "nickname": "Fruit Fox Akyo",
       "avatarName": "akyo_fox fruits",
       "category": "Animal,Animal/Fox,Food,Food/Fruit",
@@ -3306,6 +3636,7 @@
     },
     {
       "id": "0331",
+      "entryType": "avatar",
       "nickname": "Jizo Akyo",
       "avatarName": "akyo_ozizou",
       "category": "Statue",
@@ -3316,6 +3647,7 @@
     },
     {
       "id": "0332",
+      "entryType": "avatar",
       "nickname": "Samurai Akyo",
       "avatarName": "akyo_samurai",
       "category": "History,Role・Status,Role・Status/Soldier,Military・Weapons,Country,Country/Japan",
@@ -3326,6 +3658,7 @@
     },
     {
       "id": "0333",
+      "entryType": "avatar",
       "nickname": "Fox Samurai Akyo",
       "avatarName": "akyo_きつね侍",
       "category": "Animal,Animal/Fox,History,Role・Status,Role・Status/Soldier,Military・Weapons,Country,Country/Japan",
@@ -3336,6 +3669,7 @@
     },
     {
       "id": "0334",
+      "entryType": "avatar",
       "nickname": "Detective Fox Akyo",
       "avatarName": "akyo_fox探偵",
       "category": "Animal,Animal/Fox,Role・Status",
@@ -3346,6 +3680,7 @@
     },
     {
       "id": "0335",
+      "entryType": "avatar",
       "nickname": "Cake Akyo",
       "avatarName": "akyo_cake",
       "category": "Food,Food/Sweets",
@@ -3356,6 +3691,7 @@
     },
     {
       "id": "0336",
+      "entryType": "avatar",
       "nickname": "Haniwa Akyo",
       "avatarName": "akyo_haniwa",
       "category": "History,Statue",
@@ -3366,6 +3702,7 @@
     },
     {
       "id": "0337",
+      "entryType": "avatar",
       "nickname": "Lion Akyo",
       "avatarName": "akyo_ライオン",
       "category": "Animal,Animal/Lion",
@@ -3376,6 +3713,7 @@
     },
     {
       "id": "0338",
+      "entryType": "avatar",
       "nickname": "Lon Akyo",
       "avatarName": "akyo_ryuu",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
@@ -3386,6 +3724,7 @@
     },
     {
       "id": "0339",
+      "entryType": "avatar",
       "nickname": "Loyal Fox Akyo",
       "avatarName": "akyo_fox okitune",
       "category": "Animal,Animal/Fox",
@@ -3396,6 +3735,7 @@
     },
     {
       "id": "0340",
+      "entryType": "avatar",
       "nickname": "Cornet Akyo",
       "avatarName": "akyo_コロネ",
       "category": "Food,Food/Sweets",
@@ -3406,6 +3746,7 @@
     },
     {
       "id": "0341",
+      "entryType": "avatar",
       "nickname": "Mount Fuji Akyo",
       "avatarName": "akyo_huzisan",
       "category": "Environment・Weather,Environment・Weather/Mountain",
@@ -3416,6 +3757,7 @@
     },
     {
       "id": "0342",
+      "entryType": "avatar",
       "nickname": "Lunch Fox Akyo",
       "avatarName": "akyo_foxBENTOU",
       "category": "Animal,Animal/Fox,Food,Food/Dish",
@@ -3426,6 +3768,7 @@
     },
     {
       "id": "0343",
+      "entryType": "avatar",
       "nickname": "Sandwich Fox Akyo",
       "avatarName": "akyo_きつねサンド",
       "category": "Animal,Animal/Fox",
@@ -3436,6 +3779,7 @@
     },
     {
       "id": "0344",
+      "entryType": "avatar",
       "nickname": "Kids Meal Akyo",
       "avatarName": "akyo_お子様ランチ",
       "category": "Food,Food/Dish",
@@ -3446,6 +3790,7 @@
     },
     {
       "id": "0345",
+      "entryType": "avatar",
       "nickname": "Down Jacket Fox Akyo",
       "avatarName": "akyo_きつねダウン",
       "category": "Animal,Animal/Fox",
@@ -3456,6 +3801,7 @@
     },
     {
       "id": "0346",
+      "entryType": "avatar",
       "nickname": "Magical Fox Akyo",
       "avatarName": "akyo_FoxMagic",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Fashion,Fashion/Roleplay",
@@ -3466,6 +3812,7 @@
     },
     {
       "id": "0347",
+      "entryType": "avatar",
       "nickname": "Halloween Pumpkin Akyo",
       "avatarName": "akyo_ハロウィンカボチャ",
       "category": "Season・Event,Season・Event/Halloween",
@@ -3476,6 +3823,7 @@
     },
     {
       "id": "0348",
+      "entryType": "avatar",
       "nickname": "Magical Dragon Akyo",
       "avatarName": "akyo_DragonMagic",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Skill・Trait/Magic,Animal,Fictional Being/Dragon,Fashion,Fashion/Roleplay",
@@ -3486,6 +3834,7 @@
     },
     {
       "id": "0349",
+      "entryType": "avatar",
       "nickname": "Dragon Set Akyo",
       "avatarName": "akyo_どらごんセット",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
@@ -3496,6 +3845,7 @@
     },
     {
       "id": "0350",
+      "entryType": "avatar",
       "nickname": "Detective Dragon Akyo",
       "avatarName": "akyo_どらごん探偵",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Role・Status,Fictional Being/Dragon",
@@ -3506,6 +3856,7 @@
     },
     {
       "id": "0351",
+      "entryType": "avatar",
       "nickname": "Angel Fox Akyo",
       "avatarName": "akyo engel",
       "category": "Animal,Animal/Fox,Fictional Being,Fictional Being/God",
@@ -3516,6 +3867,7 @@
     },
     {
       "id": "0352",
+      "entryType": "avatar",
       "nickname": "Ezo Akyo",
       "avatarName": "akyo_エゾ",
       "category": "Animal,Animal/Bird",
@@ -3526,6 +3878,7 @@
     },
     {
       "id": "0353",
+      "entryType": "avatar",
       "nickname": "Coat Fox Akyo 4",
       "avatarName": "akyo_foxCoat4",
       "category": "Animal,Animal/Fox",
@@ -3536,6 +3889,7 @@
     },
     {
       "id": "0354",
+      "entryType": "avatar",
       "nickname": "Christmas Tree Akyo",
       "avatarName": "akyo_ツリー",
       "category": "Plant,Season・Event,Season・Event/Christmas",
@@ -3546,6 +3900,7 @@
     },
     {
       "id": "0355",
+      "entryType": "avatar",
       "nickname": "Potato Akyo",
       "avatarName": "akyo_じゃがいも",
       "category": "Food,Food/Vegetable",
@@ -3556,6 +3911,7 @@
     },
     {
       "id": "0356",
+      "entryType": "avatar",
       "nickname": "Orca Akyo",
       "avatarName": "akyo_シャチ",
       "category": "Animal,Animal/Marine Life,Animal/Orca",
@@ -3566,6 +3922,7 @@
     },
     {
       "id": "0357",
+      "entryType": "avatar",
       "nickname": "Knight Dragon Akyo",
       "avatarName": "akyo_どらごんないと",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Season・Event,Season・Event/Halloween,Animal,Fictional Being/Dragon,Fashion,Fashion/Roleplay,Role・Status,Military・Weapons,Role・Status/Soldier",
@@ -3576,6 +3933,7 @@
     },
     {
       "id": "0358",
+      "entryType": "avatar",
       "nickname": "Bath Fox Akyo",
       "avatarName": "akyo_foxBath",
       "category": "Animal,Animal/Fox,Fashion,Equipment,Equipment/Bath",
@@ -3586,6 +3944,7 @@
     },
     {
       "id": "0359",
+      "entryType": "avatar",
       "nickname": "King Akyo",
       "avatarName": "akyo_king",
       "category": "Role・Status,Role・Status/Royalty,Ruler,Fashion,Fashion/Beard",
@@ -3596,6 +3955,7 @@
     },
     {
       "id": "0360",
+      "entryType": "avatar",
       "nickname": "Wedding Dragon Akyo",
       "avatarName": "akyo_どらごん振袖",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Season・Event,Season・Event/New Year",
@@ -3606,6 +3966,7 @@
     },
     {
       "id": "0361",
+      "entryType": "avatar",
       "nickname": "Daruma Akyo",
       "avatarName": "akyo_daruma",
       "category": "Appliances・Furniture,History,Season・Event,Season・Event/New Year",
@@ -3616,6 +3977,7 @@
     },
     {
       "id": "0362",
+      "entryType": "avatar",
       "nickname": "Tomato Akyo",
       "avatarName": "akyo_とまと",
       "category": "Food,Food/Vegetable",
@@ -3626,6 +3988,7 @@
     },
     {
       "id": "0363",
+      "entryType": "avatar",
       "nickname": "Squirrel Akyo",
       "avatarName": "akyo_リス",
       "category": "Animal,Animal/Squirrel",
@@ -3636,6 +3999,7 @@
     },
     {
       "id": "0364",
+      "entryType": "avatar",
       "nickname": "Melon Soda Akyo",
       "avatarName": "akyo_メロンソーダ 1․1",
       "category": "Food,Food/Fruit,Drink",
@@ -3646,6 +4010,7 @@
     },
     {
       "id": "0365",
+      "entryType": "avatar",
       "nickname": "Akabeko Akyo",
       "avatarName": "akyo_赤べこ",
       "category": "Appliances・Furniture,History",
@@ -3656,6 +4021,7 @@
     },
     {
       "id": "0366",
+      "entryType": "avatar",
       "nickname": "Fox Wedding Akyo",
       "avatarName": "akyo_きつねの嫁入り",
       "category": "Animal,Animal/Fox,Fashion,Season・Event,Season・Event/Romance,Pretty",
@@ -3666,6 +4032,7 @@
     },
     {
       "id": "0367",
+      "entryType": "avatar",
       "nickname": "Melon Akyo",
       "avatarName": "akyo_メロン",
       "category": "Food,Food/Fruit",
@@ -3676,6 +4043,7 @@
     },
     {
       "id": "0368",
+      "entryType": "avatar",
       "nickname": "Wedding Groom Akyo",
       "avatarName": "akyo_狐の嫁入り2",
       "category": "Animal,Animal/Fox,Fashion,Season・Event,Season・Event/Romance",
@@ -3686,6 +4054,7 @@
     },
     {
       "id": "0369",
+      "entryType": "avatar",
       "nickname": "Wedding Attendant Fox Akyo",
       "avatarName": "akyo_きつね つきそい",
       "category": "Animal,Animal/Fox",
@@ -3696,6 +4065,7 @@
     },
     {
       "id": "0370",
+      "entryType": "avatar",
       "nickname": "Chocolate Akyo",
       "avatarName": "akyo_choco",
       "category": "Food,Food/Sweets",
@@ -3706,6 +4076,7 @@
     },
     {
       "id": "0371",
+      "entryType": "avatar",
       "nickname": "Banana Akyo 2",
       "avatarName": "akyo_バナナ",
       "category": "Food,Food/Fruit",
@@ -3716,6 +4087,7 @@
     },
     {
       "id": "0372",
+      "entryType": "avatar",
       "nickname": "Green Tea Akyo",
       "avatarName": "akyo_緑茶",
       "category": "Drink",
@@ -3726,6 +4098,7 @@
     },
     {
       "id": "0373",
+      "entryType": "avatar",
       "nickname": "Loader Akyo",
       "avatarName": "akyo_ローダー",
       "category": "Mint Chocolate,Military・Weapons",
@@ -3736,6 +4109,7 @@
     },
     {
       "id": "0374",
+      "entryType": "avatar",
       "nickname": "Giraffe Akyo",
       "avatarName": "akyo_キリン",
       "category": "Animal,Animal/Giraffe,Quadruped",
@@ -3746,6 +4120,7 @@
     },
     {
       "id": "0375",
+      "entryType": "avatar",
       "nickname": "Loader Akyo 2/Loader Fox Akyo",
       "avatarName": "akyo_ローダー2",
       "category": "Animal,Animal/Fox,Mint Chocolate,Military・Weapons",
@@ -3756,6 +4131,7 @@
     },
     {
       "id": "0376",
+      "entryType": "avatar",
       "nickname": "Tenmusu Akyo",
       "avatarName": "akyo_天むす",
       "category": "Food,Food/Dish",
@@ -3766,6 +4142,7 @@
     },
     {
       "id": "0377",
+      "entryType": "avatar",
       "nickname": "Hamster Akyo",
       "avatarName": "akyo_ハムスター",
       "category": "Animal,Animal/Hamster",
@@ -3776,6 +4153,7 @@
     },
     {
       "id": "0378",
+      "entryType": "avatar",
       "nickname": "Scarf Fox Akyo",
       "avatarName": "akyo_きつねスカーフ",
       "category": "Animal,Animal/Fox",
@@ -3786,6 +4164,7 @@
     },
     {
       "id": "0379",
+      "entryType": "avatar",
       "nickname": "Toast Fox Akyo 2",
       "avatarName": "akyo_foxトースト2",
       "category": "Animal,Animal/Fox",
@@ -3796,6 +4175,7 @@
     },
     {
       "id": "0380",
+      "entryType": "avatar",
       "nickname": "Squid Akyo",
       "avatarName": "akyo_イカ",
       "category": "Animal,Animal/Marine Life",
@@ -3806,6 +4186,7 @@
     },
     {
       "id": "0381",
+      "entryType": "avatar",
       "nickname": "Whale Akyo",
       "avatarName": "akyo_くじら",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -3816,6 +4197,7 @@
     },
     {
       "id": "0382",
+      "entryType": "avatar",
       "nickname": "Frog Akyo",
       "avatarName": "akyo_カエル",
       "category": "Animal,Animal/Frog,Animal/Amphibian",
@@ -3826,6 +4208,7 @@
     },
     {
       "id": "0383",
+      "entryType": "avatar",
       "nickname": "Japanese Maid Fox Akyo",
       "avatarName": "akyo_きつね和メイド",
       "category": "Animal,Animal/Fox,Role・Status,Pretty",
@@ -3836,6 +4219,7 @@
     },
     {
       "id": "0384",
+      "entryType": "avatar",
       "nickname": "Ermine Akyo 3.0",
       "avatarName": "akyo_オコジョ3․0",
       "category": "Animal,Animal/Ermine",
@@ -3846,6 +4230,7 @@
     },
     {
       "id": "0385",
+      "entryType": "avatar",
       "nickname": "Bread Loaf Akyo",
       "avatarName": "akyo_to-st",
       "category": "Food,Food/Dish",
@@ -3856,6 +4241,7 @@
     },
     {
       "id": "0386",
+      "entryType": "avatar",
       "nickname": "Bread Loaf Fox Akyo",
       "avatarName": "akyo_to-st fox",
       "category": "Animal,Animal/Fox,Food,Food/Dish",
@@ -3866,6 +4252,7 @@
     },
     {
       "id": "0387",
+      "entryType": "avatar",
       "nickname": "Light Bulb Akyo",
       "avatarName": "akyo_電球",
       "category": "Appliances・Furniture",
@@ -3876,6 +4263,7 @@
     },
     {
       "id": "0388",
+      "entryType": "avatar",
       "nickname": "Melon Bread Akyo",
       "avatarName": "akyo_メロンパン",
       "category": "Food,Food/Fruit,Food/Sweets,Food/Dish",
@@ -3886,6 +4274,7 @@
     },
     {
       "id": "0389",
+      "entryType": "avatar",
       "nickname": "Castella Akyo 2",
       "avatarName": "akyo_カステラt",
       "category": "Food,Food/Sweets",
@@ -3896,6 +4285,7 @@
     },
     {
       "id": "0390",
+      "entryType": "avatar",
       "nickname": "Grilled Akyo",
       "avatarName": "akyo_yaki",
       "category": "Food,Food/Dish",
@@ -3906,6 +4296,7 @@
     },
     {
       "id": "0391",
+      "entryType": "avatar",
       "nickname": "Uncle Akyo/Akyo Oji",
       "avatarName": "akyo_ozi",
       "category": "Role・Status,Role・Status/Farmer,Age Group,Age Group/Elderly,Fashion,Fashion/Beard",
@@ -3916,6 +4307,7 @@
     },
     {
       "id": "0392",
+      "entryType": "avatar",
       "nickname": "Ramune Akyo",
       "avatarName": "akyo_ラムネ",
       "category": "Food,Food/Sweets,Drink",
@@ -3926,6 +4318,7 @@
     },
     {
       "id": "0393",
+      "entryType": "avatar",
       "nickname": "Lord Akyo",
       "avatarName": "akyo_tono",
       "category": "Role・Status,Ruler,Country,Country/Japan,History,Fashion,Fashion/Hair Style,Fashion/Hair Style/Chonmage",
@@ -3936,6 +4329,7 @@
     },
     {
       "id": "0394",
+      "entryType": "avatar",
       "nickname": "Submarine Akyo",
       "avatarName": "akyo_せんすい",
       "category": "Role・Status,Skill・Trait,Skill・Trait/Diving",
@@ -3946,6 +4340,7 @@
     },
     {
       "id": "0395",
+      "entryType": "avatar",
       "nickname": "Crow Tengu Akyo",
       "avatarName": "akyo_からすてんぐ",
       "category": "Fictional Being,Fictional Being/Yokai・Ghost,Animal,Animal/Bird",
@@ -3956,6 +4351,7 @@
     },
     {
       "id": "0396",
+      "entryType": "avatar",
       "nickname": "Black Cat Akyo",
       "avatarName": "akyo_kuroneko",
       "category": "Animal,Animal/Cat",
@@ -3966,6 +4362,7 @@
     },
     {
       "id": "0397",
+      "entryType": "avatar",
       "nickname": "Loader Akyo 3/Loader Black Cat Akyo",
       "avatarName": "akyoローダー3",
       "category": "Animal,Animal/Cat,Mint Chocolate,Military・Weapons",
@@ -3976,6 +4373,7 @@
     },
     {
       "id": "0398",
+      "entryType": "avatar",
       "nickname": "Cherry Blossom Akyo",
       "avatarName": "akyo_sakura",
       "category": "Plant",
@@ -3986,6 +4384,7 @@
     },
     {
       "id": "0399",
+      "entryType": "avatar",
       "nickname": "Mask Akyo",
       "avatarName": "akyo_omen",
       "category": "Parody,Parody/Strange Houses",
@@ -3996,6 +4395,7 @@
     },
     {
       "id": "0400",
+      "entryType": "avatar",
       "nickname": "Sumo Wrestler Akyo",
       "avatarName": "akyo_rikishi",
       "category": "Role・Status,Country,Country/Japan",
@@ -4006,6 +4406,7 @@
     },
     {
       "id": "0401",
+      "entryType": "avatar",
       "nickname": "Summer Akyo",
       "avatarName": "akyo_なつ",
       "category": "Season・Event",
@@ -4016,6 +4417,7 @@
     },
     {
       "id": "0402",
+      "entryType": "avatar",
       "nickname": "Fishing Akyo",
       "avatarName": "akyo_つり",
       "category": "Role・Status",
@@ -4026,6 +4428,7 @@
     },
     {
       "id": "0403",
+      "entryType": "avatar",
       "nickname": "Messy Akyo",
       "avatarName": "akyo_モサモサ",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Shaggy",
@@ -4036,6 +4439,7 @@
     },
     {
       "id": "0404",
+      "entryType": "avatar",
       "nickname": "Pudding Fox Akyo",
       "avatarName": "akyo_きつねプリン",
       "category": "Animal,Animal/Fox,Food,Food/Sweets",
@@ -4046,6 +4450,7 @@
     },
     {
       "id": "0405",
+      "entryType": "avatar",
       "nickname": "Mizu Manju Akyo",
       "avatarName": "akyo_水まんじゅう",
       "category": "Food,Food/Sweets,Drink",
@@ -4056,6 +4461,7 @@
     },
     {
       "id": "0406",
+      "entryType": "avatar",
       "nickname": "Akyoberus/Cerberus Akyo",
       "avatarName": "アキョベロス",
       "category": "Animal,Animal/Dog,Fictional Being,Fictional Being/Mythical Beast・Spirit",
@@ -4066,6 +4472,7 @@
     },
     {
       "id": "0407",
+      "entryType": "avatar",
       "nickname": "Cafe Fox Akyo",
       "avatarName": "akyo_きつねcafe",
       "category": "Animal,Animal/Fox",
@@ -4076,6 +4483,7 @@
     },
     {
       "id": "0408",
+      "entryType": "avatar",
       "nickname": "Artist Fox Akyo",
       "avatarName": "akyo_fox art",
       "category": "Animal,Animal/Fox",
@@ -4086,6 +4494,7 @@
     },
     {
       "id": "0409",
+      "entryType": "avatar",
       "nickname": "Swan Akyo",
       "avatarName": "akyo_はくちょう",
       "category": "Animal,Animal/Bird",
@@ -4096,6 +4505,7 @@
     },
     {
       "id": "0410",
+      "entryType": "avatar",
       "nickname": "Ground Combat Fox Akyo",
       "avatarName": "陸戦型きつねakyo",
       "category": "Animal,Animal/Fox",
@@ -4106,6 +4516,7 @@
     },
     {
       "id": "0411",
+      "entryType": "avatar",
       "nickname": "Red Fox Akyo",
       "avatarName": "赤きつねakyo 1․1",
       "category": "Animal,Animal/Fox",
@@ -4116,6 +4527,7 @@
     },
     {
       "id": "0412",
+      "entryType": "avatar",
       "nickname": "Tibetan Fox Akyo",
       "avatarName": "チベスナきつねakyo",
       "category": "Animal,Animal/Fox",
@@ -4126,6 +4538,7 @@
     },
     {
       "id": "0413",
+      "entryType": "avatar",
       "nickname": "Wasabi Akyo",
       "avatarName": "わさびakyo",
       "category": "Food,Food/Vegetable,Seasoning",
@@ -4136,6 +4549,7 @@
     },
     {
       "id": "0414",
+      "entryType": "avatar",
       "nickname": "Bikini Fox Akyo",
       "avatarName": "きつねビキニ",
       "category": "Animal,Animal/Fox",
@@ -4146,6 +4560,7 @@
     },
     {
       "id": "0415",
+      "entryType": "avatar",
       "nickname": "Frilly Swimsuit Fox Akyo",
       "avatarName": "きつねakyoフリル水着",
       "category": "Animal,Animal/Fox,Fashion,Fashion/Swimsuit,Pretty",
@@ -4156,6 +4571,7 @@
     },
     {
       "id": "0416",
+      "entryType": "avatar",
       "nickname": "Tofu Akyo A",
       "avatarName": "akyo_touhu",
       "category": "Food,Food/Vegetable,Food/Dish",
@@ -4166,6 +4582,7 @@
     },
     {
       "id": "0417",
+      "entryType": "avatar",
       "nickname": "Tofu Akyo B",
       "avatarName": "akyoBOXtouhu",
       "category": "Food,Food/Vegetable,Food/Dish",
@@ -4176,6 +4593,7 @@
     },
     {
       "id": "0418",
+      "entryType": "avatar",
       "nickname": "Miso Soup Akyo",
       "avatarName": "akyo_‚isosiru",
       "category": "Food,Food/Dish",
@@ -4186,6 +4604,7 @@
     },
     {
       "id": "0419",
+      "entryType": "avatar",
       "nickname": "Tapioca Akyo",
       "avatarName": "akyo_タピオカ",
       "category": "Drink",
@@ -4196,6 +4615,7 @@
     },
     {
       "id": "0420",
+      "entryType": "avatar",
       "nickname": "Harvest Festival Akyo",
       "avatarName": "アキョおじ収穫祭",
       "category": "Season・Event",
@@ -4206,6 +4626,7 @@
     },
     {
       "id": "0421",
+      "entryType": "avatar",
       "nickname": "Leaf Akyo",
       "avatarName": "akyo_happa",
       "category": "Plant,Parody,Parody/Pikmin",
@@ -4216,6 +4637,7 @@
     },
     {
       "id": "0422",
+      "entryType": "avatar",
       "nickname": "Poncho Fox Akyo",
       "avatarName": "きつねポンチョ",
       "category": "Animal,Animal/Fox,Fashion,Environment・Weather,Environment・Weather/Rain",
@@ -4226,6 +4648,7 @@
     },
     {
       "id": "0423",
+      "entryType": "avatar",
       "nickname": "Shaved Ice Fox Akyo",
       "avatarName": "akyo_きつねかき氷",
       "category": "Animal,Animal/Fox,Food,Food/Sweets",
@@ -4236,6 +4659,7 @@
     },
     {
       "id": "0424",
+      "entryType": "avatar",
       "nickname": "Candy Apple Akyo",
       "avatarName": "akyo_りんごあめ",
       "category": "Food,Food/Fruit,Food/Sweets",
@@ -4246,6 +4670,7 @@
     },
     {
       "id": "0425",
+      "entryType": "avatar",
       "nickname": "Succubus Akyo",
       "avatarName": "akyo_サキュ",
       "category": "Fictional Being,Devil・Succubus",
@@ -4256,6 +4681,7 @@
     },
     {
       "id": "0426",
+      "entryType": "avatar",
       "nickname": "Inari Sushi Akyo",
       "avatarName": "akyo_いなりずし",
       "category": "Food,Food/Dish,Food/Sushi",
@@ -4266,6 +4692,7 @@
     },
     {
       "id": "0427",
+      "entryType": "avatar",
       "nickname": "Grocer Green Onion Akyo",
       "avatarName": "akyo_ねぎ八百屋",
       "category": "Food,Food/Vegetable,Role・Status",
@@ -4276,6 +4703,7 @@
     },
     {
       "id": "0428",
+      "entryType": "avatar",
       "nickname": "Farmer Green Onion Akyo",
       "avatarName": "akyo_ねぎ農家",
       "category": "Food,Food/Vegetable,Role・Status,Role・Status/Farmer",
@@ -4286,6 +4714,7 @@
     },
     {
       "id": "0429",
+      "entryType": "avatar",
       "nickname": "Palm Tree Akyo",
       "avatarName": "akyo_ヤシの木",
       "category": "Plant",
@@ -4296,6 +4725,7 @@
     },
     {
       "id": "0430",
+      "entryType": "avatar",
       "nickname": "Racing Fox Akyo",
       "avatarName": "akyo_レーシングきつね",
       "category": "Animal,Animal/Fox",
@@ -4306,6 +4736,7 @@
     },
     {
       "id": "0431",
+      "entryType": "avatar",
       "nickname": "Station Attendant Fox Akyo",
       "avatarName": "akyo_きつね駅員",
       "category": "Animal,Animal/Fox,Role・Status",
@@ -4316,6 +4747,7 @@
     },
     {
       "id": "0432",
+      "entryType": "avatar",
       "nickname": "Bunny Fox Akyo",
       "avatarName": "akyo_BunnyFox",
       "category": "Season・Event,Season・Event/Halloween,Animal,Animal/Fox,Fashion,Fashion/Roleplay,Pretty",
@@ -4326,6 +4758,7 @@
     },
     {
       "id": "0433",
+      "entryType": "avatar",
       "nickname": "Stretch Akyo",
       "avatarName": "akyo_ストレッチ",
       "category": "Parody,Parody/Stretchman,Physical,Physical/Athletic",
@@ -4336,6 +4769,7 @@
     },
     {
       "id": "0434",
+      "entryType": "avatar",
       "nickname": "Red Riding Hood Fox Akyo",
       "avatarName": "akyo_きつね赤ずきん",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
@@ -4346,6 +4780,7 @@
     },
     {
       "id": "0435",
+      "entryType": "avatar",
       "nickname": "Hunter Akyo",
       "avatarName": "akyo_猟師",
       "category": "Role・Status",
@@ -4356,6 +4791,7 @@
     },
     {
       "id": "0436",
+      "entryType": "avatar",
       "nickname": "Deer Akyo",
       "avatarName": "akyo_シカ",
       "category": "Animal,Animal/Deer",
@@ -4366,6 +4802,7 @@
     },
     {
       "id": "0437",
+      "entryType": "avatar",
       "nickname": "Singing Green Onion Akyo",
       "avatarName": "akyo_ねぎうた",
       "category": "Food,Food/Vegetable,Parody,Parody/Vocaloid",
@@ -4376,6 +4813,7 @@
     },
     {
       "id": "0438",
+      "entryType": "avatar",
       "nickname": "Ukyo Fox Akyo",
       "avatarName": "akyo_foxUkyo",
       "category": "Animal,Animal/Fox,Parody,Parody/AIBOU",
@@ -4386,6 +4824,7 @@
     },
     {
       "id": "0439",
+      "entryType": "avatar",
       "nickname": "Toast Tanuki Akyo",
       "avatarName": "akyo_to-stTANUKI",
       "category": "Food,Food/Dish,Animal,Animal/Tanuki",
@@ -4396,6 +4835,7 @@
     },
     {
       "id": "0440",
+      "entryType": "avatar",
       "nickname": "Crab Akyo",
       "avatarName": "akyo_kani",
       "category": "Animal,Animal/Crab,Animal/Marine Life",
@@ -4406,6 +4846,7 @@
     },
     {
       "id": "0441",
+      "entryType": "avatar",
       "nickname": "Mochi Akyo",
       "avatarName": "akyo_もち",
       "category": "Food,Food/Sweets,Season・Event,Season・Event/New Year",
@@ -4416,6 +4857,7 @@
     },
     {
       "id": "0442",
+      "entryType": "avatar",
       "nickname": "Magical Green Onion AkyoAkyo",
       "avatarName": "akyo_ねぎまほう",
       "category": "Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Food,Food/Vegetable,Fashion,Fashion/Roleplay",
@@ -4426,6 +4868,7 @@
     },
     {
       "id": "0443",
+      "entryType": "avatar",
       "nickname": "Mont Blanc Akyo",
       "avatarName": "akyo_モンブラン",
       "category": "Food,Food/Sweets",
@@ -4436,6 +4879,7 @@
     },
     {
       "id": "0444",
+      "entryType": "avatar",
       "nickname": "Mont Blanc Fox Akyo",
       "avatarName": "akyo_きつねモンブラン",
       "category": "Animal,Animal/Fox,Food,Food/Sweets",
@@ -4446,6 +4890,7 @@
     },
     {
       "id": "0445",
+      "entryType": "avatar",
       "nickname": "Wolf Akyo",
       "avatarName": "akyo_おおかみ",
       "category": "Animal,Animal/Wolf",
@@ -4456,6 +4901,7 @@
     },
     {
       "id": "0446",
+      "entryType": "avatar",
       "nickname": "Space Normal Akyo",
       "avatarName": "akyo_うちゅう",
       "category": "Environment・Weather,Role・Status,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
@@ -4466,6 +4912,7 @@
     },
     {
       "id": "0447",
+      "entryType": "avatar",
       "nickname": "Knight Fox Akyo",
       "avatarName": "akyo_きつねないと",
       "category": "Animal,Animal/Fox",
@@ -4476,6 +4923,7 @@
     },
     {
       "id": "0448",
+      "entryType": "avatar",
       "nickname": "Halloween Pumpkin Akyo",
       "avatarName": "akyo_かぼちゃHW",
       "category": "Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
@@ -4486,6 +4934,7 @@
     },
     {
       "id": "0449",
+      "entryType": "avatar",
       "nickname": "Halloween Poncho FoxBeer Akyo",
       "avatarName": "akyo_foxHW",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay",
@@ -4496,6 +4945,7 @@
     },
     {
       "id": "0450",
+      "entryType": "avatar",
       "nickname": "Jiangshi Fox Akyo",
       "avatarName": "akyo_きつねキョンシー",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Fictional Being,Fictional Being/Yokai・Ghost,Fashion,Fashion/Roleplay",
@@ -4506,6 +4956,7 @@
     },
     {
       "id": "0451",
+      "entryType": "avatar",
       "nickname": "Teapot Tanuki Akyo",
       "avatarName": "akyo_たぬきちゃがま",
       "category": "Animal,Animal/Tanuki",
@@ -4516,6 +4967,7 @@
     },
     {
       "id": "0452",
+      "entryType": "avatar",
       "nickname": "Beer Shop Tanuki Akyo",
       "avatarName": "akyo_たぬき酒屋",
       "category": "Animal,Animal/Tanuki",
@@ -4526,6 +4978,7 @@
     },
     {
       "id": "0453",
+      "entryType": "avatar",
       "nickname": "Cafe Wolf Akyo",
       "avatarName": "akyo_おおかみカフェ",
       "category": "Animal,Animal/Wolf",
@@ -4536,6 +4989,7 @@
     },
     {
       "id": "0454",
+      "entryType": "avatar",
       "nickname": "Dragon Akyo SP",
       "avatarName": "akyo_老どらごん",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon",
@@ -4546,6 +5000,7 @@
     },
     {
       "id": "0455",
+      "entryType": "avatar",
       "nickname": "Wood Carving Fox Akyo",
       "avatarName": "akyo_木彫りきつね",
       "category": "Animal,Animal/Fox,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Shape・Texture,Shape・Texture/Hard,Art",
@@ -4556,6 +5011,7 @@
     },
     {
       "id": "0456",
+      "entryType": "avatar",
       "nickname": "Halloween Japanese Radish Akyo",
       "avatarName": "akyo_だいこんHW",
       "category": "Food,Food/Vegetable,Season・Event,Season・Event/Halloween,Japanese Radish,Fashion,Fashion/Roleplay",
@@ -4566,6 +5022,7 @@
     },
     {
       "id": "0457",
+      "entryType": "avatar",
       "nickname": "Ermine Akyo 2024",
       "avatarName": "akyo_オコジョ24",
       "category": "Animal,Animal/Ermine",
@@ -4576,6 +5033,7 @@
     },
     {
       "id": "0458",
+      "entryType": "avatar",
       "nickname": "Kotatsu Fox Akyo",
       "avatarName": "akyo_きつねこたつ",
       "category": "Animal,Animal/Fox,Appliances・Furniture,Season・Event,Season・Event/New Year",
@@ -4586,6 +5044,7 @@
     },
     {
       "id": "0459",
+      "entryType": "avatar",
       "nickname": "Horse Haniwa Akyo",
       "avatarName": "akyo_はにわうま",
       "category": "Animal,Animal/Horse,History,Statue,Quadruped,Season・Event,Season・Event/New Year",
@@ -4596,6 +5055,7 @@
     },
     {
       "id": "0460",
+      "entryType": "avatar",
       "nickname": "Tower of the Sun Akyo",
       "avatarName": "akyo_taiyou",
       "category": "Art",
@@ -4606,6 +5066,7 @@
     },
     {
       "id": "0461",
+      "entryType": "avatar",
       "nickname": "Haniwa Warrior Akyo",
       "avatarName": "akyo_はにわぶし",
       "category": "History,Statue",
@@ -4616,6 +5077,7 @@
     },
     {
       "id": "0462",
+      "entryType": "avatar",
       "nickname": "Anubis Akyo",
       "avatarName": "akyo_あぬびす",
       "category": "Fictional Being,Fictional Being/God",
@@ -4626,6 +5088,7 @@
     },
     {
       "id": "0463",
+      "entryType": "avatar",
       "nickname": "Pudding Cup Akyo",
       "avatarName": "akyo_プリンカップ",
       "category": "Food,Food/Sweets",
@@ -4636,6 +5099,7 @@
     },
     {
       "id": "0464",
+      "entryType": "avatar",
       "nickname": "Station Attendant Wolf Akyo",
       "avatarName": "akyo_おおかみえきいん",
       "category": "Animal,Animal/Wolf",
@@ -4646,6 +5110,7 @@
     },
     {
       "id": "0465",
+      "entryType": "avatar",
       "nickname": "Snowman Fox Akyo",
       "avatarName": "akyo_ゆきだるま",
       "category": "Animal,Animal/Fox,Season・Event,Material・Raw Material,Shape・Texture,Shape・Texture/Cold",
@@ -4656,6 +5121,7 @@
     },
     {
       "id": "0466",
+      "entryType": "avatar",
       "nickname": "Pine Tree Akyo",
       "avatarName": "akyo_まつ",
       "category": "Plant",
@@ -4666,6 +5132,7 @@
     },
     {
       "id": "0467",
+      "entryType": "avatar",
       "nickname": "Chicken Akyo",
       "avatarName": "akyo_にわとり",
       "category": "Animal,Animal/Bird",
@@ -4676,6 +5143,7 @@
     },
     {
       "id": "0468",
+      "entryType": "avatar",
       "nickname": "Curry Akyo",
       "avatarName": "akyo_curry",
       "category": "Food,Food/Dish",
@@ -4686,6 +5154,7 @@
     },
     {
       "id": "0469",
+      "entryType": "avatar",
       "nickname": "Santa Fox Akyo",
       "avatarName": "akyo_きつねサンタ",
       "category": "Animal,Animal/Fox,Fashion,Season・Event,Season・Event/Christmas",
@@ -4696,6 +5165,7 @@
     },
     {
       "id": "0470",
+      "entryType": "avatar",
       "nickname": "Furisode Wolf Akyo",
       "avatarName": "おおかみふりそで",
       "category": "Animal,Animal/Wolf,Season・Event,Season・Event/New Year",
@@ -4706,6 +5176,7 @@
     },
     {
       "id": "0471",
+      "entryType": "avatar",
       "nickname": "Furisode Tanuki Akyo",
       "avatarName": "たぬきふりそで",
       "category": "Animal,Animal/Tanuki,Season・Event,Season・Event/New Year",
@@ -4716,6 +5187,7 @@
     },
     {
       "id": "0472",
+      "entryType": "avatar",
       "nickname": "Fluffy Akyo",
       "avatarName": "Fuwafuwa_Akyo",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Fluffy",
@@ -4726,6 +5198,7 @@
     },
     {
       "id": "0473",
+      "entryType": "avatar",
       "nickname": "Kotatsu Akyo",
       "avatarName": "kotatsu_akyo",
       "category": "Appliances・Furniture,Season・Event,Season・Event/New Year",
@@ -4736,6 +5209,7 @@
     },
     {
       "id": "0474",
+      "entryType": "avatar",
       "nickname": "Bear Costume Akyo",
       "avatarName": "bigkumasankigurumiAkyo",
       "category": "Animal,Animal/Bear",
@@ -4746,6 +5220,7 @@
     },
     {
       "id": "0475",
+      "entryType": "avatar",
       "nickname": "Prisoner Akyo",
       "avatarName": "PrisonerAkyo",
       "category": "Mint Chocolate,Role・Status,Role・Status/Convict,Captive",
@@ -4756,6 +5231,7 @@
     },
     {
       "id": "0476",
+      "entryType": "avatar",
       "nickname": "Kinda Sus Akyo",
       "avatarName": "nankayabaiAkyo",
       "category": "Art",
@@ -4766,6 +5242,7 @@
     },
     {
       "id": "0477",
+      "entryType": "avatar",
       "nickname": "Cyclops Akyo",
       "avatarName": "RedonCyclopeAkyo",
       "category": "Art",
@@ -4776,6 +5253,7 @@
     },
     {
       "id": "0478",
+      "entryType": "avatar",
       "nickname": "Akyo Train",
       "avatarName": "Akyonotesen",
       "category": "Mint Chocolate,Vehicle,Vehicle/Land,Role・Status",
@@ -4786,6 +5264,7 @@
     },
     {
       "id": "0479",
+      "entryType": "avatar",
       "nickname": "Festival Vibes Goat Akyo",
       "avatarName": "フェス気分のヤギAkyo",
       "category": "Animal,Animal/Goat,Gimmick・Special,Season・Event",
@@ -4796,6 +5275,7 @@
     },
     {
       "id": "0480",
+      "entryType": "avatar",
       "nickname": "Sushi Aquarium Employee Akyo",
       "avatarName": "すし水勤務のAkyo",
       "category": "Mint Chocolate,Role・Status",
@@ -4806,6 +5286,7 @@
     },
     {
       "id": "0481",
+      "entryType": "avatar",
       "nickname": "Coconut Akyo",
       "avatarName": "ココナッツakyo",
       "category": "Food,Food/Fruit",
@@ -4816,6 +5297,7 @@
     },
     {
       "id": "0482",
+      "entryType": "avatar",
       "nickname": "Asparagus Akyo",
       "avatarName": "アスパラakyo",
       "category": "Plant,Food,Food/Vegetable",
@@ -4826,6 +5308,7 @@
     },
     {
       "id": "0483",
+      "entryType": "avatar",
       "nickname": "Corgi Akyo",
       "avatarName": "akyo コーギー",
       "category": "Animal,Animal/Dog",
@@ -4836,6 +5319,7 @@
     },
     {
       "id": "0484",
+      "entryType": "avatar",
       "nickname": "Sailor Fox Akyo",
       "avatarName": "akyo Fox すいへい",
       "category": "Animal,Animal/Fox,Role・Status",
@@ -4846,6 +5330,7 @@
     },
     {
       "id": "0485",
+      "entryType": "avatar",
       "nickname": "Sleeping Bag Akyo",
       "avatarName": "akyo ねぶくろ",
       "category": "Mint Chocolate,Fashion,Sleep",
@@ -4856,6 +5341,7 @@
     },
     {
       "id": "0486",
+      "entryType": "avatar",
       "nickname": "Sick Akyo",
       "avatarName": "KazehikiAkyo",
       "category": "Mint Chocolate,Illness,Fashion,Fashion/Mask,Get Well Soon,Appliances・Furniture,Appliances・Furniture/Futon",
@@ -4866,6 +5352,7 @@
     },
     {
       "id": "0487",
+      "entryType": "avatar",
       "nickname": "Pikachu Akyo",
       "avatarName": "Akyochu",
       "category": "Parody,Parody/Pokemon",
@@ -4876,6 +5363,7 @@
     },
     {
       "id": "0488",
+      "entryType": "avatar",
       "nickname": "Charmander Akyo",
       "avatarName": "ヒトカゲあきょ",
       "category": "Parody,Parody/Pokemon",
@@ -4886,6 +5374,7 @@
     },
     {
       "id": "0489",
+      "entryType": "avatar",
       "nickname": "Squirtle Akyo",
       "avatarName": "ゼニガメあきょ",
       "category": "Parody,Parody/Pokemon",
@@ -4896,6 +5385,7 @@
     },
     {
       "id": "0490",
+      "entryType": "avatar",
       "nickname": "Bulbasaur Akyo",
       "avatarName": "フシギダネあきょ",
       "category": "Parody,Parody/Pokemon",
@@ -4906,6 +5396,7 @@
     },
     {
       "id": "0491",
+      "entryType": "avatar",
       "nickname": "NEET's Bubble Akyo",
       "avatarName": "Bubble Akyo",
       "category": "Gimmick・Special",
@@ -4916,6 +5407,7 @@
     },
     {
       "id": "0492",
+      "entryType": "avatar",
       "nickname": "Tilefish Akyo",
       "avatarName": "AmadaiAkyo",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -4926,6 +5418,7 @@
     },
     {
       "id": "0493",
+      "entryType": "avatar",
       "nickname": "Weedle Akyo",
       "avatarName": "ビーきょ",
       "category": "Parody,Parody/Pokemon",
@@ -4936,6 +5429,7 @@
     },
     {
       "id": "0494",
+      "entryType": "avatar",
       "nickname": "Quagsire Akyo",
       "avatarName": "ぬあきょ",
       "category": "Parody,Parody/Pokemon",
@@ -4946,6 +5440,7 @@
     },
     {
       "id": "0495",
+      "entryType": "avatar",
       "nickname": "Psyduck Akyo",
       "avatarName": "あきょダック",
       "category": "Parody,Parody/Pokemon",
@@ -4956,6 +5451,7 @@
     },
     {
       "id": "0496",
+      "entryType": "avatar",
       "nickname": "Apple Akyo",
       "avatarName": "apple_Akyo",
       "category": "Food,Food/Fruit",
@@ -4966,6 +5462,7 @@
     },
     {
       "id": "0497",
+      "entryType": "avatar",
       "nickname": "Persimmon Akyo",
       "avatarName": "柿Akyo",
       "category": "Food,Food/Fruit",
@@ -4976,6 +5473,7 @@
     },
     {
       "id": "0498",
+      "entryType": "avatar",
       "nickname": "Latte Art Akyo",
       "avatarName": "LatteArtAkyo",
       "category": "Art,Drink",
@@ -4986,6 +5484,7 @@
     },
     {
       "id": "0499",
+      "entryType": "avatar",
       "nickname": "Ribbon Fox Akyo",
       "avatarName": "リボンきつねakyo",
       "category": "Animal,Animal/Fox,Fashion",
@@ -4996,6 +5495,7 @@
     },
     {
       "id": "0500",
+      "entryType": "avatar",
       "nickname": "Singing Green Onion Akyo B",
       "avatarName": "ねぎうたB",
       "category": "Food,Food/Vegetable,Parody,Parody/Vocaloid,Green Onion",
@@ -5006,6 +5506,7 @@
     },
     {
       "id": "0501",
+      "entryType": "avatar",
       "nickname": "Sleeping Bag Akyo 2",
       "avatarName": "akyo ねぶくろ2",
       "category": "Mint Chocolate,Fashion,Sleep",
@@ -5016,6 +5517,7 @@
     },
     {
       "id": "0502",
+      "entryType": "avatar",
       "nickname": "Sleeping Bag Fox Akyo",
       "avatarName": "akyo_fox ねぶくろ",
       "category": "Animal,Animal/Fox,Fashion,Sleep",
@@ -5026,6 +5528,7 @@
     },
     {
       "id": "0503",
+      "entryType": "avatar",
       "nickname": "Bronze Statue Akyo",
       "avatarName": "ブロンズAKyo リターンズ",
       "category": "Statue,Material・Raw Material,Material・Raw Material/Metal,Shape・Texture,Shape・Texture/Hard",
@@ -5036,6 +5539,7 @@
     },
     {
       "id": "0504",
+      "entryType": "avatar",
       "nickname": "Golden Akyo",
       "avatarName": "A金yo",
       "category": "Color",
@@ -5046,6 +5550,7 @@
     },
     {
       "id": "0505",
+      "entryType": "avatar",
       "nickname": "Golden Butterfly Akyo",
       "avatarName": "ア蝶",
       "category": "Color,Animal,Animal/Bug,Animal/Bug/Butterfly",
@@ -5056,6 +5561,7 @@
     },
     {
       "id": "0506",
+      "entryType": "avatar",
       "nickname": "Color Inverted Akyo",
       "avatarName": "色彩反転Akyo",
       "category": "Gimmick・Special",
@@ -5066,6 +5572,7 @@
     },
     {
       "id": "0507",
+      "entryType": "avatar",
       "nickname": "Rabbit Akyo",
       "avatarName": "usagi-akyo",
       "category": "Animal,Animal/Rabbit",
@@ -5076,6 +5583,7 @@
     },
     {
       "id": "0508",
+      "entryType": "avatar",
       "nickname": "Fluffy Japanese Radish Akyo",
       "avatarName": "akyo だいこんモフ",
       "category": "Food,Food/Vegetable,Japanese Radish",
@@ -5086,6 +5594,7 @@
     },
     {
       "id": "0509",
+      "entryType": "avatar",
       "nickname": "Cinnamoroll Akyo",
       "avatarName": "akyo siro",
       "category": "Parody,Parody/Sinnamoroll",
@@ -5096,6 +5605,7 @@
     },
     {
       "id": "0510",
+      "entryType": "avatar",
       "nickname": "Missile Akyo",
       "avatarName": "AKYO S400 Missile system",
       "category": "Mint Chocolate,Military・Weapons",
@@ -5106,6 +5616,7 @@
     },
     {
       "id": "0511",
+      "entryType": "avatar",
       "nickname": "Mortar Akyo",
       "avatarName": "81mm_morter_AKYO",
       "category": "Mint Chocolate,Military・Weapons",
@@ -5116,6 +5627,7 @@
     },
     {
       "id": "0512",
+      "entryType": "avatar",
       "nickname": "Fake Mururu Akyo",
       "avatarName": "nisemururuAkyo",
       "category": "Parody,Parody/VRChat",
@@ -5126,6 +5638,7 @@
     },
     {
       "id": "0513",
+      "entryType": "avatar",
       "nickname": "Mamehinata Akyo",
       "avatarName": "MamehinatAkyo",
       "category": "Parody,Parody/VRChat",
@@ -5136,6 +5649,7 @@
     },
     {
       "id": "0514",
+      "entryType": "avatar",
       "nickname": "Vket-chan Akyo",
       "avatarName": "Akyoketchan",
       "category": "Parody,Parody/VRChat",
@@ -5146,6 +5660,7 @@
     },
     {
       "id": "0515",
+      "entryType": "avatar",
       "nickname": "Eevee Akyo",
       "avatarName": "noteeveeAkyo",
       "category": "Parody,Parody/Pokemon",
@@ -5156,6 +5671,7 @@
     },
     {
       "id": "0516",
+      "entryType": "avatar",
       "nickname": "Mokuri-like Akyo",
       "avatarName": "mokurimodokiakyo",
       "category": "Parody,Parody/Mokuri",
@@ -5166,6 +5682,7 @@
     },
     {
       "id": "0517",
+      "entryType": "avatar",
       "nickname": "Kipfel Akyo",
       "avatarName": "akyofel",
       "category": "Parody,Parody/VRChat",
@@ -5176,6 +5693,7 @@
     },
     {
       "id": "0518",
+      "entryType": "avatar",
       "nickname": "Wight Akyo",
       "avatarName": "Akyomosouomoimasu",
       "category": "Parody,Parody/Yu-Gi-Oh!",
@@ -5186,6 +5704,7 @@
     },
     {
       "id": "0519",
+      "entryType": "avatar",
       "nickname": "Zubat Akyo",
       "avatarName": "notzubattoAkyo",
       "category": "Parody,Parody/Pokemon",
@@ -5196,6 +5715,7 @@
     },
     {
       "id": "0520",
+      "entryType": "avatar",
       "nickname": "Humanoid-like Akyo",
       "avatarName": "NothumanoidAkyo",
       "category": "Fashion,Fashion/Roleplay,Parody,Parody/VRChat",
@@ -5206,6 +5726,7 @@
     },
     {
       "id": "0521",
+      "entryType": "avatar",
       "nickname": "Wormie Sock Akyo",
       "avatarName": "WormiesockAkyo",
       "category": "Parody,Parody/Wormiesock",
@@ -5216,6 +5737,7 @@
     },
     {
       "id": "0522",
+      "entryType": "avatar",
       "nickname": "Obligation Chocolate Akyo",
       "avatarName": "girichocoAkyo",
       "category": "Food,Food/Sweets,Season・Event",
@@ -5226,6 +5748,7 @@
     },
     {
       "id": "0523",
+      "entryType": "avatar",
       "nickname": "Cloth Ghost Akyo",
       "avatarName": "nunoghostAkyo",
       "category": "Mint Chocolate,Fictional Being,Fictional Being/Yokai・Ghost,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -5236,6 +5759,7 @@
     },
     {
       "id": "0524",
+      "entryType": "avatar",
       "nickname": "Robot Arm Akyo",
       "avatarName": "RoboArmAkyo",
       "category": "Mint Chocolate,Military・Weapons",
@@ -5246,6 +5770,7 @@
     },
     {
       "id": "0525",
+      "entryType": "avatar",
       "nickname": "Isosceles Triangle Akyo",
       "avatarName": "二等辺三角形",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -5256,6 +5781,7 @@
     },
     {
       "id": "0526",
+      "entryType": "avatar",
       "nickname": "Hello Kitty Akyo",
       "avatarName": "akyo siro2",
       "category": "Parody,Parody/Hello Kitty",
@@ -5266,6 +5792,7 @@
     },
     {
       "id": "0527",
+      "entryType": "avatar",
       "nickname": "Cafe Dragon Akyo",
       "avatarName": "akyo どらごんcefe",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Animal,Fictional Being/Dragon,Role・Status",
@@ -5276,6 +5803,7 @@
     },
     {
       "id": "0528",
+      "entryType": "avatar",
       "nickname": "Monkey Akyo",
       "avatarName": "akyo saru",
       "category": "Animal,Animal/Monkey",
@@ -5286,6 +5814,7 @@
     },
     {
       "id": "0529",
+      "entryType": "avatar",
       "nickname": "Cow Akyo 2",
       "avatarName": "akyo うし2",
       "category": "Animal,Animal/Cow",
@@ -5296,6 +5825,7 @@
     },
     {
       "id": "0530",
+      "entryType": "avatar",
       "nickname": "T-Rex Akyo 2",
       "avatarName": "ティラノ2",
       "category": "Animal,Animal/Dinosaur",
@@ -5306,6 +5836,7 @@
     },
     {
       "id": "0531",
+      "entryType": "avatar",
       "nickname": "Wedding Fox Akyo",
       "avatarName": "akyo foxウェディング",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Romance,Fashion,Pretty",
@@ -5316,6 +5847,7 @@
     },
     {
       "id": "0532",
+      "entryType": "avatar",
       "nickname": "Myaku Myaku Akyo",
       "avatarName": "akyo akyoakyo",
       "category": "Parody,Parody/Myakumyaku,Fictional Being,Fictional Being/God",
@@ -5326,6 +5858,7 @@
     },
     {
       "id": "0533",
+      "entryType": "avatar",
       "nickname": "R.I.P. Akyo",
       "avatarName": "RestInAkyo",
       "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Fashion,Fashion/Roleplay,Death",
@@ -5336,6 +5869,7 @@
     },
     {
       "id": "0534",
+      "entryType": "avatar",
       "nickname": "Tombstone Akyo",
       "avatarName": "bosekiAkyo",
       "category": "Mint Chocolate,Building,Season・Event,Season・Event/Halloween,Material・Raw Material,Material・Raw Material/Stone,Shape・Texture,Shape・Texture/Hard,Fashion,Fashion/Roleplay,Death",
@@ -5346,6 +5880,7 @@
     },
     {
       "id": "0535",
+      "entryType": "avatar",
       "nickname": "Real Cat Akyo",
       "avatarName": "Akyoxwell",
       "category": "Animal,Animal/Cat,Real Photo,Art,Parody,Parody/Meme",
@@ -5356,6 +5891,7 @@
     },
     {
       "id": "0536",
+      "entryType": "avatar",
       "nickname": "Backrooms Akyo",
       "avatarName": "kiiroibougohukuAkyo",
       "category": "Parody,Parody/Backrooms,Horror",
@@ -5366,6 +5902,7 @@
     },
     {
       "id": "0537",
+      "entryType": "avatar",
       "nickname": "Hinamatsuri Wolf Akyo",
       "avatarName": "akyo おおかみひなまつり",
       "category": "Season・Event,Animal,Animal/Wolf,Role・Status",
@@ -5376,6 +5913,7 @@
     },
     {
       "id": "0538",
+      "entryType": "avatar",
       "nickname": "Magical Girl Fox Akyo",
       "avatarName": "akyo fox 魔法少女",
       "category": "Animal,Animal/Fox,Role・Status,Season・Event,Season・Event/Halloween,Skill・Trait,Skill・Trait/Magic,Fashion,Fashion/Roleplay,Pretty",
@@ -5386,6 +5924,7 @@
     },
     {
       "id": "0539",
+      "entryType": "avatar",
       "nickname": "Sea Urchin Akyo",
       "avatarName": "akyo uni",
       "category": "Animal,Animal/Marine Life,Material・Raw Material,Shape・Texture,Shape・Texture/Spiky",
@@ -5396,6 +5935,7 @@
     },
     {
       "id": "0540",
+      "entryType": "avatar",
       "nickname": "Dorayaki Akyo",
       "avatarName": "akyo dorayaki",
       "category": "Food,Food/Sweets,Food/Dish",
@@ -5406,6 +5946,7 @@
     },
     {
       "id": "0541",
+      "entryType": "avatar",
       "nickname": "Palico Fox Akyo",
       "avatarName": "akyo きつねオトモ",
       "category": "Animal,Animal/Fox,Role・Status,Parody,Parody/Monster Hunter,Military・Weapons",
@@ -5416,6 +5957,7 @@
     },
     {
       "id": "0542",
+      "entryType": "avatar",
       "nickname": "Yamakasa Float Akyo",
       "avatarName": "Akyo_yamakasa",
       "category": "Mint Chocolate,Season・Event",
@@ -5426,6 +5968,7 @@
     },
     {
       "id": "0543",
+      "entryType": "avatar",
       "nickname": "Dancing Afro AkyoAkyo",
       "avatarName": "Akyo_Dancing Afro",
       "category": "Fashion,Fashion/Hair Style,Music・Instrument",
@@ -5436,6 +5979,7 @@
     },
     {
       "id": "0544",
+      "entryType": "avatar",
       "nickname": "Orina Akyon",
       "avatarName": "orinakyon",
       "category": "Parody",
@@ -5446,6 +5990,7 @@
     },
     {
       "id": "0545",
+      "entryType": "avatar",
       "nickname": "Felyne-like Akyo",
       "avatarName": "airoumodokiAkyo",
       "category": "Animal,Animal/Cat,Parody,Parody/Monster Hunter",
@@ -5456,6 +6001,7 @@
     },
     {
       "id": "0546",
+      "entryType": "avatar",
       "nickname": "Dr. Doom Akyo",
       "avatarName": "akyo魔博士",
       "category": "Parody,Parody/Fantastic Four,Season・Event,Season・Event/Halloween,Role・Status,Fashion,Fashion/Roleplay",
@@ -5466,6 +6012,7 @@
     },
     {
       "id": "0547",
+      "entryType": "avatar",
       "nickname": "Hand Akyo",
       "avatarName": "tekyo_test",
       "category": "Mint Chocolate",
@@ -5476,6 +6023,7 @@
     },
     {
       "id": "0548",
+      "entryType": "avatar",
       "nickname": "17Hz Akyo",
       "avatarName": "17Hz",
       "category": "Gimmick・Special",
@@ -5486,6 +6034,7 @@
     },
     {
       "id": "0549",
+      "entryType": "avatar",
       "nickname": "Stress Akyo",
       "avatarName": "応力Akyo",
       "category": "Gimmick・Special",
@@ -5496,6 +6045,7 @@
     },
     {
       "id": "0550",
+      "entryType": "avatar",
       "nickname": "Kirin Armor Fox Akyo",
       "avatarName": "akyo キリン装備",
       "category": "Animal,Animal/Fox,Role・Status,Parody,Parody/Monster Hunter,Military・Weapons",
@@ -5506,6 +6056,7 @@
     },
     {
       "id": "0551",
+      "entryType": "avatar",
       "nickname": "Dental Akyo",
       "avatarName": "akyo dental",
       "category": "Teeth",
@@ -5516,6 +6067,7 @@
     },
     {
       "id": "0552",
+      "entryType": "avatar",
       "nickname": "Shuttle Akyo",
       "avatarName": "Akyo シャトル",
       "category": "Vehicle,Vehicle/Aviation,Environment・Weather,Environment・Weather/Outer Space,Skill・Trait,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance",
@@ -5526,6 +6078,7 @@
     },
     {
       "id": "0553",
+      "entryType": "avatar",
       "nickname": "RR Dragon Akyo",
       "avatarName": "どらごんRR",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Parody,Parody/Pokemon,Animal,Fictional Being/Dragon",
@@ -5536,6 +6089,7 @@
     },
     {
       "id": "0554",
+      "entryType": "avatar",
       "nickname": "Noir Akyo",
       "avatarName": "akyo ノワール",
       "category": "Food,Food/Sweets",
@@ -5546,6 +6100,7 @@
     },
     {
       "id": "0555",
+      "entryType": "avatar",
       "nickname": "VRCTV Akyo",
       "avatarName": "VRCTVAkyo",
       "category": "Mint Chocolate,Gimmick・Special,Electronic",
@@ -5556,6 +6111,7 @@
     },
     {
       "id": "0556",
+      "entryType": "avatar",
       "nickname": "Soda Akyo 2",
       "avatarName": "akyo ソーダ2",
       "category": "Drink",
@@ -5566,6 +6122,7 @@
     },
     {
       "id": "0557",
+      "entryType": "avatar",
       "nickname": "Katsu Sandwich Akyo",
       "avatarName": "akyo カツサンド",
       "category": "Food,Food/Dish,Fried",
@@ -5576,6 +6133,7 @@
     },
     {
       "id": "0558",
+      "entryType": "avatar",
       "nickname": "Akyo's Light",
       "avatarName": "アキョウノトモシビ",
       "category": "Fungus",
@@ -5586,6 +6144,7 @@
     },
     {
       "id": "0559",
+      "entryType": "avatar",
       "nickname": "Corona Akyo",
       "avatarName": "coronakyo",
       "category": "Illness",
@@ -5596,6 +6155,7 @@
     },
     {
       "id": "0560",
+      "entryType": "avatar",
       "nickname": "Busty Succubus Akyo",
       "avatarName": "bigboinsuccubusAkyo",
       "category": "Mint Chocolate,Fictional Being,Devil・Succubus",
@@ -5606,6 +6166,7 @@
     },
     {
       "id": "0561",
+      "entryType": "avatar",
       "nickname": "Concrete Akyo",
       "avatarName": "ConcreteAkyo",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Hard",
@@ -5616,6 +6177,7 @@
     },
     {
       "id": "0562",
+      "entryType": "avatar",
       "nickname": "Concrete Akyo 2",
       "avatarName": "ConcreteAkyo",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Hard",
@@ -5626,6 +6188,7 @@
     },
     {
       "id": "0563",
+      "entryType": "avatar",
       "nickname": "Giant Puffball Akyo",
       "avatarName": "AKYOFUSUBE",
       "category": "Fungus",
@@ -5636,6 +6199,7 @@
     },
     {
       "id": "0564",
+      "entryType": "avatar",
       "nickname": "Mini Plush Akyo",
       "avatarName": "ミニぐるみAkyo",
       "category": "Mint Chocolate,Deformed",
@@ -5646,6 +6210,7 @@
     },
     {
       "id": "0565",
+      "entryType": "avatar",
       "nickname": "Princess Akyo",
       "avatarName": "ohimesamaAkyo",
       "category": "Mint Chocolate,Role・Status,Role・Status/Royalty,History,Pretty",
@@ -5656,6 +6221,7 @@
     },
     {
       "id": "0566",
+      "entryType": "avatar",
       "nickname": "Khezu Akyo",
       "avatarName": "huruhuruAkyo",
       "category": "Fictional Being,Monster,Parody,Parody/Monster Hunter",
@@ -5666,6 +6232,7 @@
     },
     {
       "id": "0567",
+      "entryType": "avatar",
       "nickname": "Fire Extinguisher Akyo",
       "avatarName": "syoukakiAkyo",
       "category": "Mint Chocolate,Equipment",
@@ -5676,6 +6243,7 @@
     },
     {
       "id": "0568",
+      "entryType": "avatar",
       "nickname": "Initial Akyo",
       "avatarName": "Akyoutouhuten86",
       "category": "Mint Chocolate,Vehicle,Parody,Parody/Initial D",
@@ -5686,6 +6254,7 @@
     },
     {
       "id": "0569",
+      "entryType": "avatar",
       "nickname": "Warp Star Akyo",
       "avatarName": "Warpakyoster",
       "category": "Mint Chocolate,Vehicle,Parody,Parody/Kirby",
@@ -5696,6 +6265,7 @@
     },
     {
       "id": "0570",
+      "entryType": "avatar",
       "nickname": "Family Akyo Chicken Akyo",
       "avatarName": "akyo チキ",
       "category": "Food,Food/Dish,Parody,Parody/Family Mart,Fried",
@@ -5706,6 +6276,7 @@
     },
     {
       "id": "0571",
+      "entryType": "avatar",
       "nickname": "Bread Loaf Fox Akyo 2",
       "avatarName": "akyo to-stFox2",
       "category": "Animal,Animal/Fox,Food,Food/Dish,Bread",
@@ -5716,6 +6287,7 @@
     },
     {
       "id": "0572",
+      "entryType": "avatar",
       "nickname": "Apple Akyo",
       "avatarName": "akyo りんご",
       "category": "Food,Food/Fruit",
@@ -5726,6 +6298,7 @@
     },
     {
       "id": "0573",
+      "entryType": "avatar",
       "nickname": "Bee Akyo",
       "avatarName": "akyo はち",
       "category": "Animal,Animal/Bug",
@@ -5736,6 +6309,7 @@
     },
     {
       "id": "0574",
+      "entryType": "avatar",
       "nickname": "Octopus Akyo",
       "avatarName": "たこAkyo",
       "category": "Animal,Animal/Octopus,Animal/Marine Life",
@@ -5746,6 +6320,7 @@
     },
     {
       "id": "0575",
+      "entryType": "avatar",
       "nickname": "Ant Akyo",
       "avatarName": "akyo あり",
       "category": "Animal,Animal/Bug",
@@ -5756,6 +6331,7 @@
     },
     {
       "id": "0576",
+      "entryType": "avatar",
       "nickname": "Melon Bread Turtle Akyo",
       "avatarName": "akyp かめメロンパン",
       "category": "Food,Animal,Food/Fruit,Food/Sweets,Food/Dish,Animal/Turtle,Bread",
@@ -5766,6 +6342,7 @@
     },
     {
       "id": "0577",
+      "entryType": "avatar",
       "nickname": "French Bread Akyo",
       "avatarName": "akyo フランスパン",
       "category": "Food,Food/Dish,Bread",
@@ -5776,6 +6353,7 @@
     },
     {
       "id": "0578",
+      "entryType": "avatar",
       "nickname": "Raincoat Dragon Akyo",
       "avatarName": "akyo どらごんレインコート",
       "category": "Fictional Being,Skill・Trait,Skill・Trait/Flying,Fashion,Animal,Fictional Being/Dragon,Environment・Weather,Environment・Weather/Rain",
@@ -5786,6 +6364,7 @@
     },
     {
       "id": "0579",
+      "entryType": "avatar",
       "nickname": "Fluffy Sheep Akyo",
       "avatarName": "mofumofusheepAkyo",
       "category": "Animal,Animal/Sheep",
@@ -5796,6 +6375,7 @@
     },
     {
       "id": "0580",
+      "entryType": "avatar",
       "nickname": "Gyaru AkyoAkyo",
       "avatarName": "galAkyo",
       "category": "Mint Chocolate,Fashion,School,Pretty",
@@ -5806,6 +6386,7 @@
     },
     {
       "id": "0581",
+      "entryType": "avatar",
       "nickname": "Reimu Akyo",
       "avatarName": "rakuennosutekinaAkyo",
       "category": "Parody,Parody/Touhou",
@@ -5816,6 +6397,7 @@
     },
     {
       "id": "0582",
+      "entryType": "avatar",
       "nickname": "Marisa Akyo",
       "avatarName": "hutsuunoAkyotsukai",
       "category": "Parody,Parody/Touhou",
@@ -5826,6 +6408,7 @@
     },
     {
       "id": "0583",
+      "entryType": "avatar",
       "nickname": "Vault-Akyo",
       "avatarName": "bault-Akyo",
       "category": "Mint Chocolate,Parody,Parody/Fallout",
@@ -5836,6 +6419,7 @@
     },
     {
       "id": "0584",
+      "entryType": "avatar",
       "nickname": "Skelton Akyo",
       "avatarName": "骨Akyo",
       "category": "Bone",
@@ -5846,6 +6430,7 @@
     },
     {
       "id": "0585",
+      "entryType": "avatar",
       "nickname": "Zakyo",
       "avatarName": "Zakyo",
       "category": "Parody,Parody/Gundam,Military・Weapons",
@@ -5856,6 +6441,7 @@
     },
     {
       "id": "0586",
+      "entryType": "avatar",
       "nickname": "Bell Pepper Akyo",
       "avatarName": "akyo ピーマン",
       "category": "Food,Food/Vegetable",
@@ -5866,6 +6452,7 @@
     },
     {
       "id": "0587",
+      "entryType": "avatar",
       "nickname": "Coffee Akyo 2",
       "avatarName": "akyo coffee2",
       "category": "Drink",
@@ -5876,6 +6463,7 @@
     },
     {
       "id": "0588",
+      "entryType": "avatar",
       "nickname": "Long Pug Akyo",
       "avatarName": "胴長パグakyo",
       "category": "Parody,Parody/VRChat,Animal,Animal/Dog",
@@ -5886,6 +6474,7 @@
     },
     {
       "id": "0589",
+      "entryType": "avatar",
       "nickname": "House Snail Akyo",
       "avatarName": "Akyothehousnail",
       "category": "Animal,Animal/Shell,Building,Parody,Parody/Jam the House Nail,Animal/Snail",
@@ -5896,6 +6485,7 @@
     },
     {
       "id": "0590",
+      "entryType": "avatar",
       "nickname": "River Akyo",
       "avatarName": "川Akyo",
       "category": "Environment・Weather",
@@ -5906,6 +6496,7 @@
     },
     {
       "id": "0591",
+      "entryType": "avatar",
       "nickname": "Whale Meat Akyo",
       "avatarName": "鯨肉Akyo",
       "category": "Food,Animal,Animal/Fish,Animal/Marine Life,Meat",
@@ -5916,6 +6507,7 @@
     },
     {
       "id": "0592",
+      "entryType": "avatar",
       "nickname": "Watermelon Akyo",
       "avatarName": "suika_akyo",
       "category": "Food,Food/Fruit",
@@ -5926,6 +6518,7 @@
     },
     {
       "id": "0593",
+      "entryType": "avatar",
       "nickname": "Blade Cosplay Akyo",
       "avatarName": "bladegokkoAkyo",
       "category": "Parody,Parody/Kamen Rider,Transformation,Role・Status,Role・Status/Hero",
@@ -5936,6 +6529,7 @@
     },
     {
       "id": "0594",
+      "entryType": "avatar",
       "nickname": "Gunner Akyo",
       "avatarName": "gunner akyo",
       "category": "Military・Weapons,Role・Status,Role・Status/Soldier",
@@ -5946,6 +6540,7 @@
     },
     {
       "id": "0595",
+      "entryType": "avatar",
       "nickname": "Army Akyo",
       "avatarName": "akyo_army",
       "category": "Military・Weapons,Role・Status,Role・Status/Soldier",
@@ -5956,6 +6551,7 @@
     },
     {
       "id": "0596",
+      "entryType": "avatar",
       "nickname": "Acorn Akyo",
       "avatarName": "DonguriAkyo",
       "category": "Plant,Nuts",
@@ -5966,6 +6562,7 @@
     },
     {
       "id": "0597",
+      "entryType": "avatar",
       "nickname": "Kokoro Akyo",
       "avatarName": "Akyou ［kokoro］",
       "category": "Mint Chocolate",
@@ -5976,6 +6573,7 @@
     },
     {
       "id": "0598",
+      "entryType": "avatar",
       "nickname": "Fish Akyo",
       "avatarName": "亜魚",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -5986,6 +6584,7 @@
     },
     {
       "id": "0599",
+      "entryType": "avatar",
       "nickname": "Axolotl Akyo",
       "avatarName": "亜魚露とル",
       "category": "Animal,Animal/Amphibian,Animal/Marine Life",
@@ -5996,6 +6595,7 @@
     },
     {
       "id": "0600",
+      "entryType": "avatar",
       "nickname": "Milk Akyo",
       "avatarName": "akyo milk",
       "category": "Drink",
@@ -6006,6 +6606,7 @@
     },
     {
       "id": "0601",
+      "entryType": "avatar",
       "nickname": "Whiskey Akyo",
       "avatarName": "akyo ウイスキー",
       "category": "Drink",
@@ -6016,6 +6617,7 @@
     },
     {
       "id": "0602",
+      "entryType": "avatar",
       "nickname": "Garren Cosplay Akyo",
       "avatarName": "gyarengokkoAkyo",
       "category": "Parody,Parody/Kamen Rider,Transformation,Role・Status,Role・Status/Hero",
@@ -6026,6 +6628,7 @@
     },
     {
       "id": "0603",
+      "entryType": "avatar",
       "nickname": "Mascot Costume Akyo Boy",
       "avatarName": "kigurumiAkyokun",
       "category": "Mint Chocolate,Role・Status",
@@ -6036,6 +6639,7 @@
     },
     {
       "id": "0604",
+      "entryType": "avatar",
       "nickname": "Ambulance Cosplay Akyo",
       "avatarName": "kyuukyuuAkyo",
       "category": "Mint Chocolate,Vehicle",
@@ -6046,6 +6650,7 @@
     },
     {
       "id": "0605",
+      "entryType": "avatar",
       "nickname": "Axolotl Akyo",
       "avatarName": "akyo uparupa",
       "category": "Animal,Animal/Amphibian",
@@ -6056,6 +6661,7 @@
     },
     {
       "id": "0606",
+      "entryType": "avatar",
       "nickname": "Octopus Skin Akyo",
       "avatarName": "タコ皮",
       "category": "Octopoid Mammal,Animal,Animal/Marine Life,Animal/Octopus",
@@ -6066,6 +6672,7 @@
     },
     {
       "id": "0607",
+      "entryType": "avatar",
       "nickname": "Nanachi-like Akyo",
       "avatarName": "nanachimodokiAkyo",
       "category": "Parody,Parody/Made in Abyss",
@@ -6076,6 +6683,7 @@
     },
     {
       "id": "0608",
+      "entryType": "avatar",
       "nickname": "Akyozaki Shiori",
       "avatarName": "Akyozakishiori",
       "category": "Parody",
@@ -6086,6 +6694,7 @@
     },
     {
       "id": "0609",
+      "entryType": "avatar",
       "nickname": "Bomberman Akyo",
       "avatarName": "bomberAkyon",
       "category": "Parody,Parody/Bomberman",
@@ -6096,6 +6705,7 @@
     },
     {
       "id": "0610",
+      "entryType": "avatar",
       "nickname": "Dreamy Unicorn Akyo",
       "avatarName": "yumekawaunicornAkyo",
       "category": "Fictional Being,Animal,Fictional Being/Mythical Beast・Spirit",
@@ -6106,6 +6716,7 @@
     },
     {
       "id": "0611",
+      "entryType": "avatar",
       "nickname": "Mascot Fish Head Akyo",
       "avatarName": "kigurumiokashirakun",
       "category": "Animal,Animal/Fish,Role・Status,Animal/Marine Life,Military・Weapons,Daily Necessities",
@@ -6116,6 +6727,7 @@
     },
     {
       "id": "0612",
+      "entryType": "avatar",
       "nickname": "Balloon Fox Akyo",
       "avatarName": "akyo 風船きつね",
       "category": "Animal,Animal/Fox,Skill・Trait,Skill・Trait/Flying",
@@ -6126,6 +6738,7 @@
     },
     {
       "id": "0613",
+      "entryType": "avatar",
       "nickname": "Acorn Akyo",
       "avatarName": "どんぐりあきょー",
       "category": "Plant,Nuts",
@@ -6136,6 +6749,7 @@
     },
     {
       "id": "0614",
+      "entryType": "avatar",
       "nickname": "Coffee Bean Akyo",
       "avatarName": "珈琲豆あきょ",
       "category": "Bean,Bean Akyo,Food,Food/Vegetable,Drink",
@@ -6146,6 +6760,7 @@
     },
     {
       "id": "0615",
+      "entryType": "avatar",
       "nickname": "Ramune Akyo",
       "avatarName": "らむねあきょ",
       "category": "Food,Food/Sweets,Drink",
@@ -6156,6 +6771,7 @@
     },
     {
       "id": "0616",
+      "entryType": "avatar",
       "nickname": "Spirit Horse Akyo",
       "avatarName": "精霊うまきょ",
       "category": "Spirit Horse,Food,Food/Vegetable,Animal,Animal/Horse,Fictional Being,Fictional Being/Mythical Beast・Spirit,Cucumber,Eggplant,Season・Event,Season・Event/New Year",
@@ -6166,6 +6782,7 @@
     },
     {
       "id": "0617",
+      "entryType": "avatar",
       "nickname": "Akyolin Gnome Horn",
       "avatarName": "あきょりん・のーむ・ほーん",
       "category": "Parody,Parody/Goblin Gnome Horn",
@@ -6176,6 +6793,7 @@
     },
     {
       "id": "0618",
+      "entryType": "avatar",
       "nickname": "Pencil Akyo",
       "avatarName": "鉛筆あきょ",
       "category": "Daily Necessities,School",
@@ -6186,6 +6804,7 @@
     },
     {
       "id": "0619",
+      "entryType": "avatar",
       "nickname": "Blue-Ringed Octopus Akyo",
       "avatarName": "ヒョウモンダコAkyo",
       "category": "Animal,Animal/Octopus,Mollusk,Animal/Marine Life",
@@ -6196,6 +6815,7 @@
     },
     {
       "id": "0620",
+      "entryType": "avatar",
       "nickname": "Bean Akyo (Goat)",
       "avatarName": "まめAkyo（ヤギ）",
       "category": "Bean,Bean Akyo,Animal,Animal/Goat",
@@ -6206,6 +6826,7 @@
     },
     {
       "id": "0621",
+      "entryType": "avatar",
       "nickname": "Bean Akyo",
       "avatarName": "そらまめAkyo",
       "category": "Bean,Bean Akyo",
@@ -6216,6 +6837,7 @@
     },
     {
       "id": "0622",
+      "entryType": "avatar",
       "nickname": "Soft Akyo",
       "avatarName": "柔らかいAkyo",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -6226,6 +6848,7 @@
     },
     {
       "id": "0623",
+      "entryType": "avatar",
       "nickname": "Mimic Akyo",
       "avatarName": "mimicAkyo",
       "category": "Fictional Being,Monster,Transformation",
@@ -6236,6 +6859,7 @@
     },
     {
       "id": "0624",
+      "entryType": "avatar",
       "nickname": "Nightcap Akyo",
       "avatarName": "nightcapAkyo",
       "category": "Mint Chocolate,Fashion,Sleep,Appliances・Furniture,Appliances・Furniture/Pillow",
@@ -6246,6 +6870,7 @@
     },
     {
       "id": "0625",
+      "entryType": "avatar",
       "nickname": "Big Boobs Cow Print Akyo",
       "avatarName": "bigboinushigaraAkyo",
       "category": "Body Type,Body Type/Plump,Animal,Animal/Cow",
@@ -6256,6 +6881,7 @@
     },
     {
       "id": "0626",
+      "entryType": "avatar",
       "nickname": "Milk Pouring Akyo",
       "avatarName": "gyuunyuuwososoguAkyo",
       "category": "Art,Drink",
@@ -6266,6 +6892,7 @@
     },
     {
       "id": "0627",
+      "entryType": "avatar",
       "nickname": "Box Akyo Dam",
       "avatarName": "hakoAkyodam",
       "category": "Mint Chocolate,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Parody,Parody/Gundam",
@@ -6276,6 +6903,7 @@
     },
     {
       "id": "0628",
+      "entryType": "avatar",
       "nickname": "Syarube-like Akyo",
       "avatarName": "syarubemodokiAkyo",
       "category": "Parody,Parody/Syarube",
@@ -6286,6 +6914,7 @@
     },
     {
       "id": "0629",
+      "entryType": "avatar",
       "nickname": "Rabbit Hole Akyo",
       "avatarName": "RabbitHoleAkyo",
       "category": "Animal,Animal/Rabbit,Fashion,Parody,Parody/Vocaloid,Body Part,Ear,Pretty",
@@ -6296,6 +6925,7 @@
     },
     {
       "id": "0630",
+      "entryType": "avatar",
       "nickname": "Toothpaste Akyo",
       "avatarName": "hamigakikoAkyo",
       "category": "Mint Chocolate,Daily Necessities",
@@ -6306,6 +6936,7 @@
     },
     {
       "id": "0631",
+      "entryType": "avatar",
       "nickname": "Cardboard Knight Akyo",
       "avatarName": "danbouruKnightAkyo",
       "category": "Role・Status,Material・Raw Material,Material・Raw Material/Plant,Material・Raw Material/Plant/Wood,Role・Status/Soldier,Military・Weapons",
@@ -6316,6 +6947,7 @@
     },
     {
       "id": "0632",
+      "entryType": "avatar",
       "nickname": "Refrigerator Akyo",
       "avatarName": "reizoukoAkyo",
       "category": "Appliances・Furniture",
@@ -6326,6 +6958,7 @@
     },
     {
       "id": "0633",
+      "entryType": "avatar",
       "nickname": "Lop-Eared Rabbit Akyo",
       "avatarName": "lopearedrabbitAkyo",
       "category": "Animal,Animal/Rabbit,Body Part,Ear",
@@ -6336,6 +6969,7 @@
     },
     {
       "id": "0634",
+      "entryType": "avatar",
       "nickname": "Lop-Eared Bunny Akyo",
       "avatarName": "lopearedrabbitbunnyAkyo",
       "category": "Animal,Animal/Rabbit,Fashion,Body Part,Ear,Pretty",
@@ -6346,6 +6980,7 @@
     },
     {
       "id": "0635",
+      "entryType": "avatar",
       "nickname": "Photograph of the Deceased Cosplay Akyo",
       "avatarName": "ieigokkoAkyo",
       "category": "Mint Chocolate,Death,Appliances・Furniture,Fashion,Fashion/Roleplay",
@@ -6356,6 +6991,7 @@
     },
     {
       "id": "0636",
+      "entryType": "avatar",
       "nickname": "Fluffy Lion Akyo",
       "avatarName": "mofumofulionAkyo",
       "category": "Animal,Animal/Lion",
@@ -6366,6 +7002,7 @@
     },
     {
       "id": "0637",
+      "entryType": "avatar",
       "nickname": "Magolor-like Akyo",
       "avatarName": "magolormodokiAkyo",
       "category": "Parody,Parody/Kirby",
@@ -6376,6 +7013,7 @@
     },
     {
       "id": "0638",
+      "entryType": "avatar",
       "nickname": "Marx-like Akyo",
       "avatarName": "marxmodokiAkyo",
       "category": "Parody,Parody/Kirby",
@@ -6386,6 +7024,7 @@
     },
     {
       "id": "0639",
+      "entryType": "avatar",
       "nickname": "Freedom Akyo",
       "avatarName": "FreedomAkyo",
       "category": "Statue,Art",
@@ -6396,6 +7035,7 @@
     },
     {
       "id": "0640",
+      "entryType": "avatar",
       "nickname": "Bean Kappa Akyo",
       "avatarName": "まめがっぱあきょ",
       "category": "Fictional Being,Fictional Being/Yokai・Ghost,Bean,Bean Akyo",
@@ -6406,6 +7046,7 @@
     },
     {
       "id": "0641",
+      "entryType": "avatar",
       "nickname": "Bean Akyo",
       "avatarName": "Bean Akyo",
       "category": "Bean,Bean Akyo",
@@ -6416,6 +7057,7 @@
     },
     {
       "id": "0642",
+      "entryType": "avatar",
       "nickname": "Epli Akyo",
       "avatarName": "epliもどき",
       "category": "Parody,Parody/VRChat",
@@ -6426,6 +7068,7 @@
     },
     {
       "id": "0643",
+      "entryType": "avatar",
       "nickname": "Kappa Maki Akyo",
       "avatarName": "akyo かっぱまき",
       "category": "Food,Food/Dish,Food/Sushi,Food/Vegetable,Cucumber",
@@ -6436,6 +7079,7 @@
     },
     {
       "id": "0644",
+      "entryType": "avatar",
       "nickname": "Kiwi Akyo 2",
       "avatarName": "akyo_キウイ2",
       "category": "Food,Food/Fruit",
@@ -6446,6 +7090,7 @@
     },
     {
       "id": "0645",
+      "entryType": "avatar",
       "nickname": "One-piece Fox Akyo 2025",
       "avatarName": "akyo_きつね25ワンピ",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Summer,Fashion,Pretty",
@@ -6456,6 +7101,7 @@
     },
     {
       "id": "0646",
+      "entryType": "avatar",
       "nickname": "Spotting Look Akyo",
       "avatarName": "SpottingLookAkyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -6466,6 +7112,7 @@
     },
     {
       "id": "0647",
+      "entryType": "avatar",
       "nickname": "Western Fox Akyo",
       "avatarName": "akyo_きつねウエスタン",
       "category": "Animal,Animal/Fox,Fashion,Fashion/Roleplay",
@@ -6476,6 +7123,7 @@
     },
     {
       "id": "0648",
+      "entryType": "avatar",
       "nickname": "Pine Cone Akyo",
       "avatarName": "akyo まつぼっくり",
       "category": "Food,Food/Fruit",
@@ -6486,6 +7134,7 @@
     },
     {
       "id": "0649",
+      "entryType": "avatar",
       "nickname": "Salmon Akyo",
       "avatarName": "akyo_しゃけ",
       "category": "Food,Animal,Animal/Fish,Animal/Marine Life",
@@ -6496,6 +7145,7 @@
     },
     {
       "id": "0650",
+      "entryType": "avatar",
       "nickname": "U Akyo",
       "avatarName": "う",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -6506,6 +7156,7 @@
     },
     {
       "id": "0651",
+      "entryType": "avatar",
       "nickname": "Stingray Akyo",
       "avatarName": "akyo_エイ",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -6516,6 +7167,7 @@
     },
     {
       "id": "0652",
+      "entryType": "avatar",
       "nickname": "Peach Akyo",
       "avatarName": "akyo_もも",
       "category": "Food,Food/Fruit",
@@ -6526,6 +7178,7 @@
     },
     {
       "id": "0653",
+      "entryType": "avatar",
       "nickname": "Hash Akyo",
       "avatarName": "HashAkyo",
       "category": "Gimmick・Special",
@@ -6536,6 +7189,7 @@
     },
     {
       "id": "0654",
+      "entryType": "avatar",
       "nickname": "Anti Floating-Point Akyo",
       "avatarName": "おい！浮動小数点浮動するな！",
       "category": "Gimmick・Special",
@@ -6546,6 +7200,7 @@
     },
     {
       "id": "0655",
+      "entryType": "avatar",
       "nickname": "Clione Akyo",
       "avatarName": "akyo クリオネ",
       "category": "Mollusk,Animal,Animal/Shell,Animal/Marine Life",
@@ -6556,6 +7211,7 @@
     },
     {
       "id": "0656",
+      "entryType": "avatar",
       "nickname": "Soga Plateau Akyo",
       "avatarName": "蘇我高原",
       "category": "Gimmick・Special",
@@ -6566,6 +7222,7 @@
     },
     {
       "id": "0657",
+      "entryType": "avatar",
       "nickname": "Crocodile Akyo",
       "avatarName": "akyo わに",
       "category": "Animal,Animal/Crocodile",
@@ -6576,6 +7233,7 @@
     },
     {
       "id": "0658",
+      "entryType": "avatar",
       "nickname": "Rune Akyo",
       "avatarName": "akyo ルーン",
       "category": "Gimmick・Special",
@@ -6586,6 +7244,7 @@
     },
     {
       "id": "0659",
+      "entryType": "avatar",
       "nickname": "Halloween Fox Akyo 2025",
       "avatarName": "akyo_きつねハロウィン25",
       "category": "Season・Event,Season・Event/Halloween,Animal,Animal/Fox,Fashion,Fashion/Roleplay",
@@ -6596,6 +7255,7 @@
     },
     {
       "id": "0660",
+      "entryType": "avatar",
       "nickname": "Masked Wolf Akyo",
       "avatarName": "akyo_おおかみマスク",
       "category": "Animal,Animal/Wolf,Fashion,Fashion/Mask,Season・Event,Season・Event/Halloween",
@@ -6606,6 +7266,7 @@
     },
     {
       "id": "0661",
+      "entryType": "avatar",
       "nickname": "Fly Agaric Akyo",
       "avatarName": "akyo_ベニテングタケ",
       "category": "Fungus",
@@ -6616,6 +7277,7 @@
     },
     {
       "id": "0662",
+      "entryType": "avatar",
       "nickname": "Halloween Maid Fox Akyo",
       "avatarName": "akyo_メイド_ハロウィン",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Halloween,Role・Status,Fashion,Fashion/Roleplay,Pretty",
@@ -6626,6 +7288,7 @@
     },
     {
       "id": "0663",
+      "entryType": "avatar",
       "nickname": "Doctor Dragon Akyo",
       "avatarName": "akyo 医者どらごんakyo",
       "category": "Role・Status,Fictional Being,Fictional Being/Dragon,Role・Status/Healthcare Worker,Skill・Trait,Skill・Trait/Flying,Animal",
@@ -6636,6 +7299,7 @@
     },
     {
       "id": "0664",
+      "entryType": "avatar",
       "nickname": "Halloween Carrot Akyo",
       "avatarName": "akyo_にんじんハロウィン",
       "category": "Food,Food/Vegetable,Season・Event,Season・Event/Halloween,Carrot,Fashion,Fashion/Roleplay",
@@ -6646,6 +7310,7 @@
     },
     {
       "id": "0665",
+      "entryType": "avatar",
       "nickname": "Onion Akyo",
       "avatarName": "akyo_たまねぎ",
       "category": "Food,Food/Vegetable",
@@ -6656,6 +7321,7 @@
     },
     {
       "id": "0666",
+      "entryType": "avatar",
       "nickname": "Look Akyo?",
       "avatarName": "Look? Akyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -6666,6 +7332,7 @@
     },
     {
       "id": "0667",
+      "entryType": "avatar",
       "nickname": "Lunch Charm Akyo",
       "avatarName": "akyo_ランチャーム",
       "category": "Seasoning,Food,Food/Dish,Food/Bento",
@@ -6676,6 +7343,7 @@
     },
     {
       "id": "0668",
+      "entryType": "avatar",
       "nickname": "Cold Akyo",
       "avatarName": "kazeakyo",
       "category": "Illness,Mint Chocolate,Fashion,Fashion/Mask,Get Well Soon,Appliances・Furniture,Appliances・Furniture/Futon,Appliances・Furniture/Pillow,Liquid,Liquid/IV Drip",
@@ -6686,6 +7354,7 @@
     },
     {
       "id": "0669",
+      "entryType": "avatar",
       "nickname": "Human-faced Akyo",
       "avatarName": "Akyo",
       "category": "Mint Chocolate,Horror",
@@ -6696,6 +7365,7 @@
     },
     {
       "id": "0670",
+      "entryType": "avatar",
       "nickname": "Ear Akyo",
       "avatarName": "Vacanti Akyo",
       "category": "Body Part,Ear",
@@ -6706,6 +7376,7 @@
     },
     {
       "id": "0671",
+      "entryType": "avatar",
       "nickname": "Multi-Eared Akyo",
       "avatarName": "多耳症あきょう",
       "category": "Body Part,Illness,Ear",
@@ -6716,6 +7387,7 @@
     },
     {
       "id": "0672",
+      "entryType": "avatar",
       "nickname": "Face Akyo",
       "avatarName": "Face",
       "category": "Body Part",
@@ -6726,6 +7398,7 @@
     },
     {
       "id": "0673",
+      "entryType": "avatar",
       "nickname": "Agyo",
       "avatarName": "agyo",
       "category": "Mint Chocolate,Gimmick・Special,Transformation,Unknown UMAkyo",
@@ -6736,6 +7409,7 @@
     },
     {
       "id": "0674",
+      "entryType": "avatar",
       "nickname": "Sea Turtle Akyo",
       "avatarName": "akyo_うみがめ",
       "category": "Animal,Animal/Turtle,Material・Raw Material,Shape・Texture,Shape・Texture/Hard",
@@ -6746,6 +7420,7 @@
     },
     {
       "id": "0675",
+      "entryType": "avatar",
       "nickname": "Akyo S",
       "avatarName": "Akyo S",
       "category": "Grotesque,Gimmick・Special",
@@ -6756,6 +7431,7 @@
     },
     {
       "id": "0676",
+      "entryType": "avatar",
       "nickname": "Akyo J",
       "avatarName": "akyo J",
       "category": "Gimmick・Special",
@@ -6766,6 +7442,7 @@
     },
     {
       "id": "0677",
+      "entryType": "avatar",
       "nickname": "Rainbow Akyo",
       "avatarName": "量産型ななきょう",
       "category": "Color,Environment・Weather,Environment・Weather/Rain,Rare",
@@ -6776,6 +7453,7 @@
     },
     {
       "id": "0678",
+      "entryType": "avatar",
       "nickname": "Rain Akyo",
       "avatarName": "amekyo",
       "category": "Environment・Weather,Environment・Weather/Rain,Liquid,Liquid/Water",
@@ -6786,6 +7464,7 @@
     },
     {
       "id": "0679",
+      "entryType": "avatar",
       "nickname": "Uro Akyo",
       "avatarName": "urokyo",
       "category": "Fashion,Fashion/Glasses",
@@ -6796,6 +7475,7 @@
     },
     {
       "id": "0680",
+      "entryType": "avatar",
       "nickname": "Bean Daruma Akyo / Daruma Bean Akyo",
       "avatarName": "まめあきょだるま",
       "category": "Season・Event,Season・Event/New Year,Bean,Bean Akyo,Appliances・Furniture,History",
@@ -6806,6 +7486,7 @@
     },
     {
       "id": "0681",
+      "entryType": "avatar",
       "nickname": "Spinning Top Akyo",
       "avatarName": "komakyo-test",
       "category": "Shape・Texture,Shape・Texture/Fluffy",
@@ -6816,6 +7497,7 @@
     },
     {
       "id": "0682",
+      "entryType": "avatar",
       "nickname": "Gingerbread Akyo",
       "avatarName": "GingerbreadAkyo",
       "category": "Food,Material・Raw Material,Shape・Texture,Shape・Texture/Thin,Food/Sweets",
@@ -6826,6 +7508,7 @@
     },
     {
       "id": "0683",
+      "entryType": "avatar",
       "nickname": "Do Not Touch Akyo",
       "avatarName": "donttoushAkyo",
       "category": "Equipment,Parody,Parody/Lobotomy Corporation",
@@ -6836,6 +7519,7 @@
     },
     {
       "id": "0684",
+      "entryType": "avatar",
       "nickname": "Muscle Kitsune Tsuki Fox Akyo",
       "avatarName": "muscle_sakyon",
       "category": "Art,Animal,Animal/Fox,Physical,Physical/Athletic",
@@ -6846,6 +7530,7 @@
     },
     {
       "id": "0685",
+      "entryType": "avatar",
       "nickname": "Takoyaki Akyo",
       "avatarName": "akyoyaki",
       "category": "Food,Food/Dish",
@@ -6856,6 +7541,7 @@
     },
     {
       "id": "0686",
+      "entryType": "avatar",
       "nickname": "Skyo / Sky Akyo",
       "avatarName": "Skyo",
       "category": "Real Photo,Environment・Weather",
@@ -6866,6 +7552,7 @@
     },
     {
       "id": "0687",
+      "entryType": "avatar",
       "nickname": "aaaa Akyo",
       "avatarName": "aaaa",
       "category": "Gimmick・Special",
@@ -6876,6 +7563,7 @@
     },
     {
       "id": "0688",
+      "entryType": "avatar",
       "nickname": "Void Akyo",
       "avatarName": "Void Akyo",
       "category": "Dimension",
@@ -6886,6 +7574,7 @@
     },
     {
       "id": "0689",
+      "entryType": "avatar",
       "nickname": "Bomb Akyo",
       "avatarName": "bomb-akyo",
       "category": "Hazardous Material,Hazardous Material/Explosive",
@@ -6896,6 +7585,7 @@
     },
     {
       "id": "0690",
+      "entryType": "avatar",
       "nickname": "Edamame Akyo",
       "avatarName": "枝豆Akyo",
       "category": "Bean,Bean Akyo,Food,Food/Vegetable",
@@ -6906,6 +7596,7 @@
     },
     {
       "id": "0691",
+      "entryType": "avatar",
       "nickname": "Sarracenia Flava Akyo",
       "avatarName": "Sarraceniakyo flava",
       "category": "Plant,Captive",
@@ -6916,6 +7607,7 @@
     },
     {
       "id": "0692",
+      "entryType": "avatar",
       "nickname": "God Bean Akyo / Bean Akyo with an Amazing Halo",
       "avatarName": "GODまめAkyo",
       "category": "Bean,Bean Akyo,Fictional Being,Fictional Being/God",
@@ -6926,6 +7618,7 @@
     },
     {
       "id": "0693",
+      "entryType": "avatar",
       "nickname": "The Halo Is Kinda Insane Akyo ULTIMATE Extreme Edition",
       "avatarName": "後光がなんかヤバいAkyoULTIMATEエクストリームエディション",
       "category": "Fictional Being,Fictional Being/God,Animal,Animal/Marine Life,Animal/Fish",
@@ -6936,6 +7629,7 @@
     },
     {
       "id": "0694",
+      "entryType": "avatar",
       "nickname": "Ayu Akyo Taro",
       "avatarName": "鮎Akyo太郎",
       "category": "Animal,Animal/Fish,Animal/Marine Life",
@@ -6946,6 +7640,7 @@
     },
     {
       "id": "0695",
+      "entryType": "avatar",
       "nickname": "Fish Bone Akyo",
       "avatarName": "akyo_フィッシュボーン",
       "category": "Bone,Animal,Animal/Marine Life,Animal/Fish",
@@ -6956,6 +7651,7 @@
     },
     {
       "id": "0696",
+      "entryType": "avatar",
       "nickname": "Wolf Sweater Akyo",
       "avatarName": "akyo_おおかみセーター",
       "category": "Fashion,Fashion/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Wolf,Fashion/Hat,Fashion/Gloves",
@@ -6966,6 +7662,7 @@
     },
     {
       "id": "0697",
+      "entryType": "avatar",
       "nickname": "Rhinoceros Beetle Akyo",
       "avatarName": "akyo_kabuto",
       "category": "Animal,Animal/Bug",
@@ -6976,6 +7673,7 @@
     },
     {
       "id": "0698",
+      "entryType": "avatar",
       "nickname": "Sweater Elephant Akyo",
       "avatarName": "akyo_ぞうセーター",
       "category": "Fashion,Fashion/Hat,Fashion/Warm Clothing,Season・Event,Season・Event/Winter,Animal,Animal/Elephant,Quadruped,Body Part,Body Part/Nose",
@@ -6986,6 +7684,7 @@
     },
     {
       "id": "0699",
+      "entryType": "avatar",
       "nickname": "Year of the Horse Akyo / New Year Horse Akyo",
       "avatarName": "akyo_うまどし",
       "category": "Quadruped,Animal,Animal/Horse,Season・Event,Season・Event/New Year,Fashion",
@@ -6996,6 +7695,7 @@
     },
     {
       "id": "0700",
+      "entryType": "avatar",
       "nickname": "Duck-and-Green-Onion Akyo",
       "avatarName": "akyo_かも＆ねぎ",
       "category": "Animal,Animal/Bird,Season・Event,Season・Event/New Year,Skill・Trait,Skill・Trait/Flying,Food,Food/Vegetable,Green Onion",
@@ -7006,6 +7706,7 @@
     },
     {
       "id": "0701",
+      "entryType": "avatar",
       "nickname": "Diamond Akyo",
       "avatarName": "DaiAkyo",
       "category": "Material・Texture,Material・Texture/Stone,Hard",
@@ -7016,6 +7717,7 @@
     },
     {
       "id": "0702",
+      "entryType": "avatar",
       "nickname": "Fox Bean Akyo",
       "avatarName": "akyo mameFox",
       "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Animal,Animal/Fox,Shape・Texture,Shape・Texture/Soft,Material・Raw Material",
@@ -7026,6 +7728,7 @@
     },
     {
       "id": "0703",
+      "entryType": "avatar",
       "nickname": "Cheese Akyo",
       "avatarName": "Akyo Cheese",
       "category": "Food",
@@ -7036,6 +7739,7 @@
     },
     {
       "id": "0704",
+      "entryType": "avatar",
       "nickname": "RGB Dance Akyo",
       "avatarName": "RGB Dance Akyo",
       "category": "Gimmick・Special,Gimmick・Special/Dance",
@@ -7046,6 +7750,7 @@
     },
     {
       "id": "0705",
+      "entryType": "avatar",
       "nickname": "Cosmic Akyo",
       "avatarName": "Cosmic Akyo",
       "category": "Body Part,Body Part/Wing,Skill・Trait,Skill・Trait/Flying,Skill・Trait/Zero-G Resistance,Skill・Trait/Hypoxia Resistance,Environment・Weather,Environment・Weather/Outer Space,Role・Status,Role・Status/Traveler",
@@ -7056,6 +7761,7 @@
     },
     {
       "id": "0706",
+      "entryType": "avatar",
       "nickname": "Crystal Akyo",
       "avatarName": "Crystal Akyo",
       "category": "Rare,Material・Raw Material,Material・Raw Material/Glass,Shape・Texture,Shape・Texture/Hard",
@@ -7066,6 +7772,7 @@
     },
     {
       "id": "0707",
+      "entryType": "avatar",
       "nickname": "Red Team Akyo",
       "avatarName": "Team Red Akyo",
       "category": "Group・Organization,Color",
@@ -7076,6 +7783,7 @@
     },
     {
       "id": "0708",
+      "entryType": "avatar",
       "nickname": "Blue Team Akyo",
       "avatarName": "Team Blue Akyo",
       "category": "Group・Organization,Color",
@@ -7086,6 +7794,7 @@
     },
     {
       "id": "0709",
+      "entryType": "avatar",
       "nickname": "Astral Akyo",
       "avatarName": "Astral Akyo",
       "category": "Fictional Being,Dimension",
@@ -7096,6 +7805,7 @@
     },
     {
       "id": "0710",
+      "entryType": "avatar",
       "nickname": "Holographic Akyo",
       "avatarName": "Holographic Akyo",
       "category": "Rare,Energy",
@@ -7106,6 +7816,7 @@
     },
     {
       "id": "0711",
+      "entryType": "avatar",
       "nickname": "Queen Akyo",
       "avatarName": "Queen Akyo",
       "category": "Pretty,Material・Raw Material,Shape・Texture,Shape・Texture/Slippery,Role・Status,Role・Status/Royalty",
@@ -7116,6 +7827,7 @@
     },
     {
       "id": "0712",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Snow Fox Akyo",
       "avatarName": "Snow Fox Akyo",
       "category": "Animal,Animal/Fox,Season・Event,Season・Event/Winter,Environment・Weather,Environment・Weather/Snow・Ice,Material・Raw Material,Shape・Texture,Shape・Texture/Cold",
@@ -7126,6 +7838,7 @@
     },
     {
       "id": "0713",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Golden Fox Akyo",
       "avatarName": "Golden Fox Akyo",
       "category": "Rare,Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Metal",
@@ -7136,6 +7849,7 @@
     },
     {
       "id": "0714",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Red Gummy Fox Akyo",
       "avatarName": "Red Gummy Fox Akyo",
       "category": "Animal,Animal/Fox,Food,Food/Sweets",
@@ -7146,6 +7860,7 @@
     },
     {
       "id": "0715",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Blue Gummy Fox Akyo",
       "avatarName": "Blue Gummy Fox Akyo",
       "category": "Animal,Animal/Fox,Food,Food/Sweets",
@@ -7156,6 +7871,7 @@
     },
     {
       "id": "0716",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Punk Fox Akyo",
       "avatarName": "Punk Akyo",
       "category": "Gimmick・Special,Gimmick・Special/AudioLink,Animal,Animal/Fox,Music・Instrument",
@@ -7166,6 +7882,7 @@
     },
     {
       "id": "0717",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Red Gem Fox Akyo",
       "avatarName": "Red Gem Fox Akyo",
       "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Personality・Preference,Personality・Preference/Glutton",
@@ -7176,6 +7893,7 @@
     },
     {
       "id": "0718",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Purple Gem Fox Akyo",
       "avatarName": "Purple Gem Fox Akyo",
       "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Personality・Preference,Personality・Preference/Glutton",
@@ -7186,6 +7904,7 @@
     },
     {
       "id": "0719",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's White Gem Fox Akyo",
       "avatarName": "White Gem Fox Akyo",
       "category": "Animal,Animal/Fox,Material・Raw Material,Shape・Texture,Shape・Texture/Hard,Material・Raw Material/Stone,Personality・Preference,Personality・Preference/Glutton",
@@ -7196,6 +7915,7 @@
     },
     {
       "id": "0720",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Aluminum Fox Akyo",
       "avatarName": "Aluminium Fox Akyo",
       "category": "Animal,Animal/Fox,Material・Raw Material,Material・Raw Material/Metal",
@@ -7206,6 +7926,7 @@
     },
     {
       "id": "0721",
+      "entryType": "avatar",
       "nickname": "Kitsunetsuki's Ethereal Fox Akyo",
       "avatarName": "Ethereal Fox Akyo",
       "category": "Animal,Animal/Fox,Energy,Fictional Being,Dimension",
@@ -7216,6 +7937,7 @@
     },
     {
       "id": "0722",
+      "entryType": "avatar",
       "nickname": "Electric Heater Akyo",
       "avatarName": "akyo_電気ヒーター",
       "category": "Appliances・Furniture,Energy,Energy/Electricity,Energy/Heat,Body Part,Body Part/Tail,Season・Event,Season・Event/Winter",
@@ -7226,6 +7948,7 @@
     },
     {
       "id": "0723",
+      "entryType": "avatar",
       "nickname": "Yaki Mochi Akyo",
       "avatarName": "akyo_やきもち",
       "category": "Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Shape・Texture/Square,Food,Food/Dish",
@@ -7236,6 +7959,7 @@
     },
     {
       "id": "0724",
+      "entryType": "avatar",
       "nickname": "Permafrost Akyo",
       "avatarName": "akyo_永久凍土",
       "category": "Captive,Animal,Material・Raw Material,Shape・Texture,Shape・Texture/Cold,Shape・Texture/Square,Shape・Texture/Hard,Material・Raw Material/Ice",
@@ -7246,6 +7970,7 @@
     },
     {
       "id": "0725",
+      "entryType": "avatar",
       "nickname": "Otter Akyo",
       "avatarName": "akyo_カワウソ",
       "category": "Animal,Animal/Otter,Body Part,Body Part/Tail,Personality・Preference,Personality・Preference/Curious,Personality・Preference/Friendly",
@@ -7256,6 +7981,7 @@
     },
     {
       "id": "0726",
+      "entryType": "avatar",
       "nickname": "Impostor Akyo",
       "avatarName": "Imposter Akyo",
       "category": "Mint Chocolate,Gimmick・Special",
@@ -7266,6 +7992,7 @@
     },
     {
       "id": "0727",
+      "entryType": "avatar",
       "nickname": "Mohawk Akyo",
       "avatarName": "akyo_モヒカン",
       "category": "Fashion,Fashion/Glasses,Fashion/Hair Style,Fashion/Hair Style/Mohawk",
@@ -7276,6 +8003,7 @@
     },
     {
       "id": "0728",
+      "entryType": "avatar",
       "nickname": "Butter Akyo",
       "avatarName": "バターあきょう",
       "category": "Parody,Parody/VRChat,Food,Seasoning",
@@ -7286,6 +8014,7 @@
     },
     {
       "id": "0729",
+      "entryType": "avatar",
       "nickname": "Peanuts-kun Akyo",
       "avatarName": "Akyo_Peanuts",
       "category": "Parody,Parody/VTuber,Food,Food/Vegetable",
@@ -7296,6 +8025,7 @@
     },
     {
       "id": "0730",
+      "entryType": "avatar",
       "nickname": "Ponpoko Akyo",
       "avatarName": "Akyo_Ponpoko",
       "category": "Parody,Parody/VTuber,Animal,Animal/Tanuki,Body Part,Body Part/Tail",
@@ -7306,6 +8036,7 @@
     },
     {
       "id": "0731",
+      "entryType": "avatar",
       "nickname": "Forest Nijimasu-man with Moss Akyo",
       "avatarName": "森のニジマスマンWith苔Akyo",
       "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Gimmick・Special,Real Photo,Plant,Moss,Material・Raw Material,Material・Raw Material/Plant,Art",
@@ -7316,6 +8047,7 @@
     },
     {
       "id": "0732",
+      "entryType": "avatar",
       "nickname": "Warrior of Bonds: Axolotlman & Horse Akyo",
       "avatarName": "絆の戦士・ウーパールーパーマン＆うまAkyo",
       "category": "Animal,Animal/Fish Head,Group・Organization,Group・Organization/Fishhead Tribe,Animal/Amphibian,Animal/Horse,Role・Status,Role・Status/Traveler,Role・Status/Hero,Vehicle,Vehicle/Land,Body Part,Body Part/Tail,Quadruped,Dimension",
@@ -7326,6 +8058,7 @@
     },
     {
       "id": "0733",
+      "entryType": "avatar",
       "nickname": "Akyoman / Akyo Head",
       "avatarName": "Akyohead",
       "category": "Mint Chocolate,Physical,Physical/Athletic,Unknown UMAkyo",
@@ -7336,6 +8069,7 @@
     },
     {
       "id": "0734",
+      "entryType": "avatar",
       "nickname": "Reptile Akyo",
       "avatarName": "レプタイルAkyo",
       "category": "Animal,Animal/Reptile,Material・Raw Material,Shape・Texture,Shape・Texture/Scales",
@@ -7346,6 +8080,7 @@
     },
     {
       "id": "0735",
+      "entryType": "avatar",
       "nickname": "Tanuki Bean Akyo / Bean Tanuki Akyo",
       "avatarName": "まめだぬきAkyo",
       "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Animal,Animal/Tanuki,Body Part,Body Part/Tail,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -7356,6 +8091,7 @@
     },
     {
       "id": "0736",
+      "entryType": "avatar",
       "nickname": "Bread Bean Akyo",
       "avatarName": "ぱんあきょ",
       "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Food,Bread,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -7366,6 +8102,7 @@
     },
     {
       "id": "0737",
+      "entryType": "avatar",
       "nickname": "Mochi Bean Akyo / Bean Mochi Akyo",
       "avatarName": "まめもちあきょ",
       "category": "Bean,Bean Akyo,Deformed,Body Type,Body Type/Plump,Season・Event,Season・Event/New Year,Material・Raw Material,Shape・Texture,Shape・Texture/Soft,Food,Food/Dish,Food/Fruit",
@@ -7376,6 +8113,7 @@
     },
     {
       "id": "0738",
+      "entryType": "avatar",
       "nickname": "Fushi Akyo",
       "avatarName": "ふしあきょ",
       "category": "Parody,Parody/Super Princess Kaguya!,Animal,Animal/Marine Life,Animal/Sea Slug,Material・Raw Material,Shape・Texture,Shape・Texture/Soft",
@@ -7386,6 +8124,7 @@
     },
     {
       "id": "0739",
+      "entryType": "avatar",
       "nickname": "Akyo (Third Generation)",
       "avatarName": "akyomo",
       "category": "Parody,Parody/Pokemon,Energy,Energy/Heat,Energy/Water,Energy/Plant,Body Part,Fictional Being,Monster,Body Part/Tail,Dimension",
@@ -7396,6 +8135,7 @@
     },
     {
       "id": "0740",
+      "entryType": "avatar",
       "nickname": "Mammoth Akyo",
       "avatarName": "akyo_マンモス",
       "category": "Animal,Animal/Mammoth,Quadruped,Revival,Body Part,Body Part/Nose,Environment・Weather,Environment・Weather/Snow・Ice,Sleep",
@@ -7406,6 +8146,7 @@
     },
     {
       "id": "0741",
+      "entryType": "avatar",
       "nickname": "Avocado Akyo",
       "avatarName": "akyo_アボカド",
       "category": "Plant,Nuts,Food,Food/Fruit",
@@ -7416,6 +8157,7 @@
     },
     {
       "id": "0742",
+      "entryType": "avatar",
       "nickname": "Colorful Spinning Akyo",
       "avatarName": "カラフル回転Akyo",
       "category": "Gimmick・Special,Gimmick・Special/Dance,Mint Chocolate",
@@ -7426,6 +8168,7 @@
     },
     {
       "id": "0743",
+      "entryType": "avatar",
       "nickname": "Octo-Bean Akyo",
       "avatarName": "まめたこ",
       "category": "Bean,Bean Akyo,Animal,Animal/Octopus,Mollusk,Animal/Marine Life",
@@ -7436,6 +8179,7 @@
     },
     {
       "id": "0744",
+      "entryType": "avatar",
       "nickname": "Red Rust Akyo",
       "avatarName": "Akyo_RedRust",
       "category": "History,Condition,Condition/Aging",
@@ -7446,6 +8190,7 @@
     },
     {
       "id": "0745",
+      "entryType": "avatar",
       "nickname": "Furret Akyo",
       "avatarName": "OOAKYO",
       "category": "Parody,Parody/Pokemon,Body Part,Body Part/Tail",
@@ -7456,6 +8201,8 @@
     },
     {
       "id": "0746",
+      "entryType": "world",
+      "displaySerial": "0001",
       "nickname": "Japan Street 0․448",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7466,6 +8213,8 @@
     },
     {
       "id": "0747",
+      "entryType": "world",
+      "displaySerial": "0002",
       "nickname": "AkyoLabo",
       "avatarName": "",
       "category": "World",
@@ -7476,6 +8225,8 @@
     },
     {
       "id": "0748",
+      "entryType": "world",
+      "displaySerial": "0003",
       "nickname": "Akyo集会所会場",
       "avatarName": "",
       "category": "World",
@@ -7486,6 +8237,8 @@
     },
     {
       "id": "0749",
+      "entryType": "world",
+      "displaySerial": "0004",
       "nickname": "‐ふくらめ‐あきょうの森（-Bulge-AkyoForest）",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7496,6 +8249,8 @@
     },
     {
       "id": "0750",
+      "entryType": "world",
+      "displaySerial": "0005",
       "nickname": "Akyo研究学会",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7506,6 +8261,8 @@
     },
     {
       "id": "0751",
+      "entryType": "world",
+      "displaySerial": "0006",
       "nickname": "PLANET AKYO REDUX",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7516,6 +8273,8 @@
     },
     {
       "id": "0752",
+      "entryType": "world",
+      "displaySerial": "0007",
       "nickname": "Forgotten Festival",
       "avatarName": "",
       "category": "World",
@@ -7526,6 +8285,8 @@
     },
     {
       "id": "0753",
+      "entryType": "world",
+      "displaySerial": "0008",
       "nickname": "雪空からす的な何か1․9（Flight Sim）",
       "avatarName": "",
       "category": "World",
@@ -7536,6 +8297,8 @@
     },
     {
       "id": "0754",
+      "entryType": "world",
+      "displaySerial": "0009",
       "nickname": "Himiko Avatar World",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7546,6 +8309,8 @@
     },
     {
       "id": "0755",
+      "entryType": "world",
+      "displaySerial": "0010",
       "nickname": "Virtual Office",
       "avatarName": "",
       "category": "World",
@@ -7556,6 +8321,8 @@
     },
     {
       "id": "0799",
+      "entryType": "world",
+      "displaySerial": "0054",
       "nickname": "黄金楽園（おきんきんランド）VCC",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7566,6 +8333,8 @@
     },
     {
       "id": "0756",
+      "entryType": "world",
+      "displaySerial": "0011",
       "nickname": "Akyo House",
       "avatarName": "",
       "category": "World",
@@ -7576,6 +8345,8 @@
     },
     {
       "id": "0811",
+      "entryType": "world",
+      "displaySerial": "0066",
       "nickname": "long-potato ville",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7586,6 +8357,8 @@
     },
     {
       "id": "0757",
+      "entryType": "world",
+      "displaySerial": "0012",
       "nickname": "sasanoki pedestal",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7596,6 +8369,8 @@
     },
     {
       "id": "0758",
+      "entryType": "world",
+      "displaySerial": "0013",
       "nickname": "Moakyo 1․2",
       "avatarName": "",
       "category": "World",
@@ -7606,6 +8381,8 @@
     },
     {
       "id": "0759",
+      "entryType": "world",
+      "displaySerial": "0014",
       "nickname": "アバター重量税",
       "avatarName": "",
       "category": "World",
@@ -7616,6 +8393,8 @@
     },
     {
       "id": "0800",
+      "entryType": "world",
+      "displaySerial": "0055",
       "nickname": "KAYA Avatar World with FISHHEAD",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7626,6 +8405,8 @@
     },
     {
       "id": "0760",
+      "entryType": "world",
+      "displaySerial": "0015",
       "nickname": "Akyoの惑星",
       "avatarName": "",
       "category": "World",
@@ -7636,6 +8417,8 @@
     },
     {
       "id": "0761",
+      "entryType": "world",
+      "displaySerial": "0016",
       "nickname": "Akyo Gallery",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7646,6 +8429,8 @@
     },
     {
       "id": "0801",
+      "entryType": "world",
+      "displaySerial": "0056",
       "nickname": "Avatar Museum 9",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7656,6 +8441,8 @@
     },
     {
       "id": "0762",
+      "entryType": "world",
+      "displaySerial": "0017",
       "nickname": "ものづくり交流会",
       "avatarName": "",
       "category": "World",
@@ -7666,6 +8453,8 @@
     },
     {
       "id": "0763",
+      "entryType": "world",
+      "displaySerial": "0018",
       "nickname": "おきつねはうす！",
       "avatarName": "",
       "category": "World",
@@ -7676,6 +8465,8 @@
     },
     {
       "id": "0802",
+      "entryType": "world",
+      "displaySerial": "0057",
       "nickname": "喰葉園 - Kuraba garden",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7686,6 +8477,8 @@
     },
     {
       "id": "0803",
+      "entryType": "world",
+      "displaySerial": "0058",
       "nickname": "Avatar Museum 10",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7696,6 +8489,8 @@
     },
     {
       "id": "0764",
+      "entryType": "world",
+      "displaySerial": "0019",
       "nickname": "ぐるメガ宿舎",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7706,6 +8501,8 @@
     },
     {
       "id": "0765",
+      "entryType": "world",
+      "displaySerial": "0020",
       "nickname": "ネコノミ'sアバターワールド - nekonomi's AvatarWorld",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7716,6 +8513,8 @@
     },
     {
       "id": "0766",
+      "entryType": "world",
+      "displaySerial": "0021",
       "nickname": "まんたん堂 - Mantan Dou",
       "avatarName": "",
       "category": "World",
@@ -7726,6 +8525,8 @@
     },
     {
       "id": "0767",
+      "entryType": "world",
+      "displaySerial": "0022",
       "nickname": "ふくらめ あきょうの街 -AkyoStreet-",
       "avatarName": "",
       "category": "World",
@@ -7736,6 +8537,8 @@
     },
     {
       "id": "0768",
+      "entryType": "world",
+      "displaySerial": "0023",
       "nickname": "きつねakyo ROOM",
       "avatarName": "",
       "category": "World",
@@ -7746,6 +8549,8 @@
     },
     {
       "id": "0769",
+      "entryType": "world",
+      "displaySerial": "0024",
       "nickname": "階段をのぼり続けるAkyo",
       "avatarName": "",
       "category": "World",
@@ -7756,6 +8561,8 @@
     },
     {
       "id": "0770",
+      "entryType": "world",
+      "displaySerial": "0025",
       "nickname": "Akyo's BAR",
       "avatarName": "",
       "category": "World",
@@ -7766,6 +8573,8 @@
     },
     {
       "id": "0804",
+      "entryType": "world",
+      "displaySerial": "0059",
       "nickname": "キツネツキ制作物展示場 -kitsune_tsuki works exhibition-",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7776,6 +8585,8 @@
     },
     {
       "id": "0805",
+      "entryType": "world",
+      "displaySerial": "0060",
       "nickname": "Avatar Museum 12",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7786,6 +8597,8 @@
     },
     {
       "id": "0771",
+      "entryType": "world",
+      "displaySerial": "0026",
       "nickname": "亜京湯",
       "avatarName": "",
       "category": "World",
@@ -7796,6 +8609,8 @@
     },
     {
       "id": "0772",
+      "entryType": "world",
+      "displaySerial": "0027",
       "nickname": "Safe House",
       "avatarName": "",
       "category": "World",
@@ -7806,6 +8621,8 @@
     },
     {
       "id": "0806",
+      "entryType": "world",
+      "displaySerial": "0061",
       "nickname": "FISH EXPO 2025 OSAKANA JAPAN",
       "avatarName": "",
       "category": "World",
@@ -7816,6 +8633,8 @@
     },
     {
       "id": "0773",
+      "entryType": "world",
+      "displaySerial": "0028",
       "nickname": "マンハッタン",
       "avatarName": "",
       "category": "World",
@@ -7826,6 +8645,8 @@
     },
     {
       "id": "0807",
+      "entryType": "world",
+      "displaySerial": "0062",
       "nickname": "Avatar Museum 11",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7836,6 +8657,8 @@
     },
     {
       "id": "0774",
+      "entryType": "world",
+      "displaySerial": "0029",
       "nickname": "百狐Akyo - The Night Parade of One Hundred Fox Akyos",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7846,6 +8669,8 @@
     },
     {
       "id": "0775",
+      "entryType": "world",
+      "displaySerial": "0030",
       "nickname": "最小限のチルと隣人",
       "avatarName": "",
       "category": "World",
@@ -7856,6 +8681,8 @@
     },
     {
       "id": "0776",
+      "entryType": "world",
+      "displaySerial": "0031",
       "nickname": "む〜ホーム",
       "avatarName": "",
       "category": "World",
@@ -7866,6 +8693,8 @@
     },
     {
       "id": "0777",
+      "entryType": "world",
+      "displaySerial": "0032",
       "nickname": "Akyo娘プリティーダービー⁄Akyomusume Pretty Derby",
       "avatarName": "",
       "category": "World",
@@ -7876,6 +8705,8 @@
     },
     {
       "id": "0778",
+      "entryType": "world",
+      "displaySerial": "0033",
       "nickname": "nooktown",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -7886,6 +8717,8 @@
     },
     {
       "id": "0779",
+      "entryType": "world",
+      "displaySerial": "0034",
       "nickname": "京獣戯画",
       "avatarName": "",
       "category": "World",
@@ -7896,6 +8729,8 @@
     },
     {
       "id": "0780",
+      "entryType": "world",
+      "displaySerial": "0035",
       "nickname": "【作業用】みんなの図工室",
       "avatarName": "",
       "category": "World",
@@ -7906,6 +8741,8 @@
     },
     {
       "id": "0781",
+      "entryType": "world",
+      "displaySerial": "0036",
       "nickname": "喵子立大功0v0",
       "avatarName": "",
       "category": "World",
@@ -7916,6 +8753,8 @@
     },
     {
       "id": "0782",
+      "entryType": "world",
+      "displaySerial": "0037",
       "nickname": "Lemon house",
       "avatarName": "",
       "category": "World",
@@ -7926,6 +8765,8 @@
     },
     {
       "id": "0783",
+      "entryType": "world",
+      "displaySerial": "0038",
       "nickname": "ひこさんのおへやNEO",
       "avatarName": "",
       "category": "World",
@@ -7936,6 +8777,8 @@
     },
     {
       "id": "0784",
+      "entryType": "world",
+      "displaySerial": "0039",
       "nickname": "あきょもいるへや",
       "avatarName": "",
       "category": "World",
@@ -7946,6 +8789,8 @@
     },
     {
       "id": "0785",
+      "entryType": "world",
+      "displaySerial": "0040",
       "nickname": "牧場Cafe ほしくさ",
       "avatarName": "",
       "category": "World",
@@ -7956,6 +8801,8 @@
     },
     {
       "id": "0786",
+      "entryType": "world",
+      "displaySerial": "0041",
       "nickname": "Akyo集会ポスター展示場",
       "avatarName": "",
       "category": "World",
@@ -7966,6 +8813,8 @@
     },
     {
       "id": "0787",
+      "entryType": "world",
+      "displaySerial": "0042",
       "nickname": "誰かのおうち",
       "avatarName": "",
       "category": "World",
@@ -7976,6 +8825,8 @@
     },
     {
       "id": "0788",
+      "entryType": "world",
+      "displaySerial": "0043",
       "nickname": "孤島の灯-Island Lantern-",
       "avatarName": "",
       "category": "World",
@@ -7986,6 +8837,8 @@
     },
     {
       "id": "0789",
+      "entryType": "world",
+      "displaySerial": "0044",
       "nickname": "亜京串",
       "avatarName": "",
       "category": "World",
@@ -7996,6 +8849,8 @@
     },
     {
       "id": "0790",
+      "entryType": "world",
+      "displaySerial": "0045",
       "nickname": "こなちるーむ -night-",
       "avatarName": "",
       "category": "World",
@@ -8006,6 +8861,8 @@
     },
     {
       "id": "0791",
+      "entryType": "world",
+      "displaySerial": "0046",
       "nickname": "かいてきなとうみん",
       "avatarName": "",
       "category": "World",
@@ -8016,6 +8873,8 @@
     },
     {
       "id": "0792",
+      "entryType": "world",
+      "displaySerial": "0047",
       "nickname": "Akyoビールショールーム",
       "avatarName": "",
       "category": "World",
@@ -8026,6 +8885,8 @@
     },
     {
       "id": "0793",
+      "entryType": "world",
+      "displaySerial": "0048",
       "nickname": "DCU-03˸ Phase-Safe Quarters",
       "avatarName": "",
       "category": "World",
@@ -8036,6 +8897,8 @@
     },
     {
       "id": "0808",
+      "entryType": "world",
+      "displaySerial": "0063",
       "nickname": "Avatar Museum 13",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -8046,6 +8909,8 @@
     },
     {
       "id": "0794",
+      "entryType": "world",
+      "displaySerial": "0049",
       "nickname": "雨音 ⁄ Rain Sounds",
       "avatarName": "",
       "category": "World",
@@ -8056,6 +8921,8 @@
     },
     {
       "id": "0795",
+      "entryType": "world",
+      "displaySerial": "0050",
       "nickname": "Akyo Avatar World",
       "avatarName": "",
       "category": "World,World/Pedestal",
@@ -8066,6 +8933,8 @@
     },
     {
       "id": "0809",
+      "entryType": "world",
+      "displaySerial": "0064",
       "nickname": "ベイクギミック用のモデルをハイポリに作りすぎて仕方なく普通にベイクしたやつ",
       "avatarName": "",
       "category": "World",
@@ -8076,6 +8945,8 @@
     },
     {
       "id": "0796",
+      "entryType": "world",
+      "displaySerial": "0051",
       "nickname": "キャンプフィールド-Akyo-",
       "avatarName": "",
       "category": "World",
@@ -8086,6 +8957,8 @@
     },
     {
       "id": "0810",
+      "entryType": "world",
+      "displaySerial": "0065",
       "nickname": "FketReal2025inEarth",
       "avatarName": "",
       "category": "World",
@@ -8096,6 +8969,8 @@
     },
     {
       "id": "0797",
+      "entryType": "world",
+      "displaySerial": "0052",
       "nickname": "電彩の縁側-NeonEngawa-",
       "avatarName": "",
       "category": "World",
@@ -8106,6 +8981,8 @@
     },
     {
       "id": "0798",
+      "entryType": "world",
+      "displaySerial": "0053",
       "nickname": "Sayonara",
       "avatarName": "",
       "category": "World",
