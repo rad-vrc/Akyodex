@@ -67,3 +67,15 @@ test('resolveVRChatWorldImageUrlFromHtml rewrites og:image through the width-awa
     'https://api.vrchat.cloud/api/1/image/file_abc123/1/96'
   );
 });
+
+test('resolveVRChatWorldImageUrlFromHtml keeps apostrophes inside double-quoted og:image', () => {
+  assert.equal(typeof resolveVRChatWorldImageUrlFromHtml, 'function');
+
+  const html =
+    '<meta property="og:image" content="https://vrchat.com/og?title=Builder\'s+World">';
+
+  assert.equal(
+    resolveVRChatWorldImageUrlFromHtml?.(html, 96),
+    "https://vrchat.com/og?title=Builder's+World"
+  );
+});

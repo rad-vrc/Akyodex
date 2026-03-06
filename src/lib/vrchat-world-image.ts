@@ -25,13 +25,13 @@ function extractMetaContent(html: string, name: string): string {
   const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
 
   for (const tag of metaTags) {
-    const contentMatch = tag.match(/\bcontent=["']([^"']+)["']/i);
-    if (!contentMatch?.[1]) {
+    const contentMatch = tag.match(/\bcontent=(["'])(.*?)\1/i);
+    if (!contentMatch?.[2]) {
       continue;
     }
 
-    if (new RegExp(`\\b(?:name|property)=["']${escapeRegExp(name)}["']`, 'i').test(tag)) {
-      return contentMatch[1];
+    if (new RegExp(`\\b(?:name|property)=(["'])${escapeRegExp(name)}\\1`, 'i').test(tag)) {
+      return contentMatch[2];
     }
   }
 
