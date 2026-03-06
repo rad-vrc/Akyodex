@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-03-06T14:05:54.985Z",
-  "count": 811,
+  "updatedAt": "2026-03-06T14:28:58.444Z",
+  "count": 816,
   "data": [
     {
       "id": "0001",
@@ -8320,18 +8320,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_d02e5ecd-faf5-4569-bab8-228fcd314458"
     },
     {
-      "id": "0799",
-      "entryType": "world",
-      "displaySerial": "0054",
-      "nickname": "黄金楽園（おきんきんランド）VCC",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "金はいいよなァ～！金最高～！おきんきんランドとは、黄金の、黄金による、黄金の為のテーマパークである。",
-      "author": "（Ｋ）けーちゃん",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_2ebe7a5f-a0b0-4459-9452-1583480d9b43",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_2ebe7a5f-a0b0-4459-9452-1583480d9b43"
-    },
-    {
       "id": "0756",
       "entryType": "world",
       "displaySerial": "0011",
@@ -8342,18 +8330,6 @@
       "author": "あ～さ～ arthur",
       "sourceUrl": "https://vrchat.com/home/world/wrld_0ba2c7eb-13af-461c-999e-a94df8a84616",
       "avatarUrl": "https://vrchat.com/home/world/wrld_0ba2c7eb-13af-461c-999e-a94df8a84616"
-    },
-    {
-      "id": "0811",
-      "entryType": "world",
-      "displaySerial": "0066",
-      "nickname": "long-potato ville",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "Jyapaneese countlyside",
-      "author": "long-potato",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_6902100b-c545-4ab6-8a66-418ed1885e56",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_6902100b-c545-4ab6-8a66-418ed1885e56"
     },
     {
       "id": "0757",
@@ -8392,18 +8368,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_0c353cc5-1f2b-47f7-b757-fad8cc65d244"
     },
     {
-      "id": "0800",
-      "entryType": "world",
-      "displaySerial": "0055",
-      "nickname": "KAYA Avatar World with FISHHEAD",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "kayaのアバターワールドです。マンボウやウーパールーパー、古生物などQuest対応パブリックアバターがあります。 This is KAYA's avatar world․ There are Quest compatible public avatars such as Sunfish‚axolotl‚ and paleontology․",
-      "author": "カヤ（kaya）",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_af5755ca-e00d-4197-a9ee-af8e4fcd4ab5",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_af5755ca-e00d-4197-a9ee-af8e4fcd4ab5"
-    },
-    {
       "id": "0760",
       "entryType": "world",
       "displaySerial": "0015",
@@ -8428,18 +8392,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_7e245366-447a-46db-8672-7d187bb946c0"
     },
     {
-      "id": "0801",
-      "entryType": "world",
-      "displaySerial": "0056",
-      "nickname": "Avatar Museum 9",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "「アバターだけの展示会」 AvatarMuseum9 アバターとポスターだけを展示するシンプルな展示会です。This is the simplest exhibition․",
-      "author": "おおかみちゃん",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_24334308-42cb-4b50-8670-7a4bd052be66",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_24334308-42cb-4b50-8670-7a4bd052be66"
-    },
-    {
       "id": "0762",
       "entryType": "world",
       "displaySerial": "0017",
@@ -8462,30 +8414,6 @@
       "author": "Yui_Asumi",
       "sourceUrl": "https://vrchat.com/home/world/wrld_81a88d7d-ce7a-4961-8a94-9040e6f77a1c",
       "avatarUrl": "https://vrchat.com/home/world/wrld_81a88d7d-ce7a-4961-8a94-9040e6f77a1c"
-    },
-    {
-      "id": "0802",
-      "entryType": "world",
-      "displaySerial": "0057",
-      "nickname": "喰葉園 - Kuraba garden",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "色々な食中植物が生えている庭です。 お散歩をしながら食べられ比べができます。 テレポーターから飛んだ場所以外の捕虫葉に落ちるとほぼ助からないので、一頻り絶望する虫の気持ちを楽しんだらリスポーンしてください。",
-      "author": "long-potato",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_49631f04-e908-4247-91a2-0e8e8a8acec2",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_49631f04-e908-4247-91a2-0e8e8a8acec2"
-    },
-    {
-      "id": "0803",
-      "entryType": "world",
-      "displaySerial": "0058",
-      "nickname": "Avatar Museum 10",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum10 アバターとポスターだけを展示するシンプルな展示会です。This is the simplest exhibition․",
-      "author": "おおかみちゃん",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_2374cdf4-7c1f-47ab-9133-b6e9bf76811f",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_2374cdf4-7c1f-47ab-9133-b6e9bf76811f"
     },
     {
       "id": "0764",
@@ -8572,30 +8500,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_6cd0aecc-1d81-497d-9c97-f173fef125a0"
     },
     {
-      "id": "0804",
-      "entryType": "world",
-      "displaySerial": "0059",
-      "nickname": "キツネツキ制作物展示場 -kitsune_tsuki works exhibition-",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "キツネツキの制作したアバターなどの3D作品を展示しています。 半分ぐらいクトゥルフ神話生物です This is an exhibition of avatars and other 3D works created by kitsune_tsuki․ About half of them are creatures from the Cthulhu Mythos․",
-      "author": "kitsune_tsuki",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_53d04329-e780-4a88-9388-61d1c53892a2",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_53d04329-e780-4a88-9388-61d1c53892a2"
-    },
-    {
-      "id": "0805",
-      "entryType": "world",
-      "displaySerial": "0060",
-      "nickname": "Avatar Museum 12",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum12 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
-      "author": "おおかみちゃん",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_5da8116b-1fc7-4197-a0b6-09a231e93a66",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_5da8116b-1fc7-4197-a0b6-09a231e93a66"
-    },
-    {
       "id": "0771",
       "entryType": "world",
       "displaySerial": "0026",
@@ -8620,18 +8524,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_32ec8f47-0f0e-418d-b937-503a37bb82a9"
     },
     {
-      "id": "0806",
-      "entryType": "world",
-      "displaySerial": "0061",
-      "nickname": "FISH EXPO 2025 OSAKANA JAPAN",
-      "avatarName": "",
-      "category": "World",
-      "comment": "फिश एक्सपो एक フィッシュヘッド प्रदर्शनी है जिसका विष 展示会य आभासी दुनिया का安全 उज्ज्वल保険加入 भविष्य है‚ जो अपेक्षाकृत सुरक्षित है।ी",
-      "author": "long-potato",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_e35c3663-9c35-494e-bee6-20e827a8be62",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_e35c3663-9c35-494e-bee6-20e827a8be62"
-    },
-    {
       "id": "0773",
       "entryType": "world",
       "displaySerial": "0028",
@@ -8642,18 +8534,6 @@
       "author": "ononocomachi",
       "sourceUrl": "https://vrchat.com/home/world/wrld_73fce025-ab81-4a5d-beb7-66cc64d79186",
       "avatarUrl": "https://vrchat.com/home/world/wrld_73fce025-ab81-4a5d-beb7-66cc64d79186"
-    },
-    {
-      "id": "0807",
-      "entryType": "world",
-      "displaySerial": "0062",
-      "nickname": "Avatar Museum 11",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum11 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
-      "author": "おおかみちゃん",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_4ab9edc5-27b8-4bbb-8680-111ec672353e",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_4ab9edc5-27b8-4bbb-8680-111ec672353e"
     },
     {
       "id": "0774",
@@ -8896,18 +8776,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_18a5ed3e-349b-44fe-8325-26d8cbc76a43"
     },
     {
-      "id": "0808",
-      "entryType": "world",
-      "displaySerial": "0063",
-      "nickname": "Avatar Museum 13",
-      "avatarName": "",
-      "category": "World,World/Pedestal",
-      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum13 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
-      "author": "おおかみちゃん",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_8ca15987-54f5-46c7-bb53-60a5c69582be",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_8ca15987-54f5-46c7-bb53-60a5c69582be"
-    },
-    {
       "id": "0794",
       "entryType": "world",
       "displaySerial": "0049",
@@ -8932,18 +8800,6 @@
       "avatarUrl": "https://vrchat.com/home/world/wrld_f6bb5781-32cc-4e02-946a-d20ec86da865"
     },
     {
-      "id": "0809",
-      "entryType": "world",
-      "displaySerial": "0064",
-      "nickname": "ベイクギミック用のモデルをハイポリに作りすぎて仕方なく普通にベイクしたやつ",
-      "avatarName": "",
-      "category": "World",
-      "comment": "今日も君はテロメアの犠牲により生かされている",
-      "author": "NEET ENGINEER",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_4e027972-e36c-40e0-b348-b76c3db34991",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_4e027972-e36c-40e0-b348-b76c3db34991"
-    },
-    {
       "id": "0796",
       "entryType": "world",
       "displaySerial": "0051",
@@ -8954,18 +8810,6 @@
       "author": "くろくま_",
       "sourceUrl": "https://vrchat.com/home/world/wrld_d8a7745e-1659-45c1-bbc3-782b5114b417",
       "avatarUrl": "https://vrchat.com/home/world/wrld_d8a7745e-1659-45c1-bbc3-782b5114b417"
-    },
-    {
-      "id": "0810",
-      "entryType": "world",
-      "displaySerial": "0065",
-      "nickname": "FketReal2025inEarth",
-      "avatarName": "",
-      "category": "World",
-      "comment": "ここで起きたことは全て現実に基づいています。",
-      "author": "甘水あみ",
-      "sourceUrl": "https://vrchat.com/home/world/wrld_63d29ae7-c04b-4c56-bdb8-1f6f8721e5d3",
-      "avatarUrl": "https://vrchat.com/home/world/wrld_63d29ae7-c04b-4c56-bdb8-1f6f8721e5d3"
     },
     {
       "id": "0797",
@@ -8990,6 +8834,222 @@
       "author": "bouvi",
       "sourceUrl": "https://vrchat.com/home/world/wrld_87935f09-9e44-4e56-bac2-572e3b9526fd",
       "avatarUrl": "https://vrchat.com/home/world/wrld_87935f09-9e44-4e56-bac2-572e3b9526fd"
+    },
+    {
+      "id": "0799",
+      "entryType": "world",
+      "displaySerial": "0054",
+      "nickname": "黄金楽園（おきんきんランド）VCC",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "金はいいよなァ～！金最高～！おきんきんランドとは、黄金の、黄金による、黄金の為のテーマパークである。",
+      "author": "（Ｋ）けーちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_2ebe7a5f-a0b0-4459-9452-1583480d9b43",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_2ebe7a5f-a0b0-4459-9452-1583480d9b43"
+    },
+    {
+      "id": "0800",
+      "entryType": "world",
+      "displaySerial": "0055",
+      "nickname": "KAYA Avatar World with FISHHEAD",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "kayaのアバターワールドです。マンボウやウーパールーパー、古生物などQuest対応パブリックアバターがあります。 This is KAYA's avatar world․ There are Quest compatible public avatars such as Sunfish‚axolotl‚ and paleontology․",
+      "author": "カヤ（kaya）",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_af5755ca-e00d-4197-a9ee-af8e4fcd4ab5",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_af5755ca-e00d-4197-a9ee-af8e4fcd4ab5"
+    },
+    {
+      "id": "0801",
+      "entryType": "world",
+      "displaySerial": "0056",
+      "nickname": "Avatar Museum 9",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "「アバターだけの展示会」 AvatarMuseum9 アバターとポスターだけを展示するシンプルな展示会です。This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_24334308-42cb-4b50-8670-7a4bd052be66",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_24334308-42cb-4b50-8670-7a4bd052be66"
+    },
+    {
+      "id": "0802",
+      "entryType": "world",
+      "displaySerial": "0057",
+      "nickname": "喰葉園 - Kuraba garden",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "色々な食中植物が生えている庭です。 お散歩をしながら食べられ比べができます。 テレポーターから飛んだ場所以外の捕虫葉に落ちるとほぼ助からないので、一頻り絶望する虫の気持ちを楽しんだらリスポーンしてください。",
+      "author": "long-potato",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_49631f04-e908-4247-91a2-0e8e8a8acec2",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_49631f04-e908-4247-91a2-0e8e8a8acec2"
+    },
+    {
+      "id": "0803",
+      "entryType": "world",
+      "displaySerial": "0058",
+      "nickname": "Avatar Museum 10",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum10 アバターとポスターだけを展示するシンプルな展示会です。This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_2374cdf4-7c1f-47ab-9133-b6e9bf76811f",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_2374cdf4-7c1f-47ab-9133-b6e9bf76811f"
+    },
+    {
+      "id": "0804",
+      "entryType": "world",
+      "displaySerial": "0059",
+      "nickname": "キツネツキ制作物展示場 -kitsune_tsuki works exhibition-",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "キツネツキの制作したアバターなどの3D作品を展示しています。 半分ぐらいクトゥルフ神話生物です This is an exhibition of avatars and other 3D works created by kitsune_tsuki․ About half of them are creatures from the Cthulhu Mythos․",
+      "author": "kitsune_tsuki",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_53d04329-e780-4a88-9388-61d1c53892a2",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_53d04329-e780-4a88-9388-61d1c53892a2"
+    },
+    {
+      "id": "0805",
+      "entryType": "world",
+      "displaySerial": "0060",
+      "nickname": "Avatar Museum 12",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum12 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_5da8116b-1fc7-4197-a0b6-09a231e93a66",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_5da8116b-1fc7-4197-a0b6-09a231e93a66"
+    },
+    {
+      "id": "0806",
+      "entryType": "world",
+      "displaySerial": "0061",
+      "nickname": "FISH EXPO 2025 OSAKANA JAPAN",
+      "avatarName": "",
+      "category": "World",
+      "comment": "फिश एक्सपो एक フィッシュヘッド प्रदर्शनी है जिसका विष 展示会य आभासी दुनिया का安全 उज्ज्वल保険加入 भविष्य है‚ जो अपेक्षाकृत सुरक्षित है।ी",
+      "author": "long-potato",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_e35c3663-9c35-494e-bee6-20e827a8be62",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_e35c3663-9c35-494e-bee6-20e827a8be62"
+    },
+    {
+      "id": "0807",
+      "entryType": "world",
+      "displaySerial": "0062",
+      "nickname": "Avatar Museum 11",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum11 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_4ab9edc5-27b8-4bbb-8680-111ec672353e",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_4ab9edc5-27b8-4bbb-8680-111ec672353e"
+    },
+    {
+      "id": "0808",
+      "entryType": "world",
+      "displaySerial": "0063",
+      "nickname": "Avatar Museum 13",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "事前ダウンロードを推奨しております 「アバターだけの展示会」 AvatarMuseum13 アバターとポスターだけを展示するシンプルな展示会です。 This is the simplest exhibition․",
+      "author": "おおかみちゃん",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_8ca15987-54f5-46c7-bb53-60a5c69582be",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_8ca15987-54f5-46c7-bb53-60a5c69582be"
+    },
+    {
+      "id": "0809",
+      "entryType": "world",
+      "displaySerial": "0064",
+      "nickname": "ベイクギミック用のモデルをハイポリに作りすぎて仕方なく普通にベイクしたやつ",
+      "avatarName": "",
+      "category": "World",
+      "comment": "今日も君はテロメアの犠牲により生かされている",
+      "author": "NEET ENGINEER",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_4e027972-e36c-40e0-b348-b76c3db34991",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_4e027972-e36c-40e0-b348-b76c3db34991"
+    },
+    {
+      "id": "0810",
+      "entryType": "world",
+      "displaySerial": "0065",
+      "nickname": "FketReal2025inEarth",
+      "avatarName": "",
+      "category": "World",
+      "comment": "ここで起きたことは全て現実に基づいています。",
+      "author": "甘水あみ",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_63d29ae7-c04b-4c56-bdb8-1f6f8721e5d3",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_63d29ae7-c04b-4c56-bdb8-1f6f8721e5d3"
+    },
+    {
+      "id": "0811",
+      "entryType": "world",
+      "displaySerial": "0066",
+      "nickname": "long-potato ville",
+      "avatarName": "",
+      "category": "World,World/Pedestal",
+      "comment": "Jyapaneese countlyside",
+      "author": "long-potato",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_6902100b-c545-4ab6-8a66-418ed1885e56",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_6902100b-c545-4ab6-8a66-418ed1885e56"
+    },
+    {
+      "id": "0812",
+      "entryType": "world",
+      "displaySerial": "0067",
+      "nickname": "Gumball Lounge",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "screamingcolor",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_b0748170-ed80-4544-8c0f-d5c9f8a1d764",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_b0748170-ed80-4544-8c0f-d5c9f8a1d764"
+    },
+    {
+      "id": "0813",
+      "entryType": "world",
+      "displaySerial": "0068",
+      "nickname": "CORRIDOR ABANDONNED",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "TontonDemon",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_e5f87a59-70a9-4110-9af9-67bc0e38195b",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_e5f87a59-70a9-4110-9af9-67bc0e38195b"
+    },
+    {
+      "id": "0814",
+      "entryType": "world",
+      "displaySerial": "0069",
+      "nickname": "Shoegaze Night",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "VVolfly",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_c5322553-b156-433e-9117-33386919dbc3",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_c5322553-b156-433e-9117-33386919dbc3"
+    },
+    {
+      "id": "0815",
+      "entryType": "world",
+      "displaySerial": "0070",
+      "nickname": "BOTANICA",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "TakeTake-たけたけ-",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_d7c64a4a-b795-456c-8c4a-4657c9c94920",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_d7c64a4a-b795-456c-8c4a-4657c9c94920"
+    },
+    {
+      "id": "0816",
+      "entryType": "world",
+      "displaySerial": "0071",
+      "nickname": "Horse Mountain",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "nprowler",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_b0d752e6-bbb8-4b1e-acfa-2a111a9cd990",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_b0d752e6-bbb8-4b1e-acfa-2a111a9cd990"
     }
   ]
 }
