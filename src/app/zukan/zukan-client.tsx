@@ -285,9 +285,7 @@ export function ZukanClient({
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
-  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState<boolean | null>(
-    null,
-  );
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(MOBILE_RENDER_LIMIT);
@@ -347,8 +345,6 @@ export function ZukanClient({
     : isLanguageRefetching
       ? t("loading.subtext", lang)
       : null;
-  const resolvedIsFilterPanelOpen =
-    isFilterPanelOpen ?? (isMobile === true ? false : true);
 
   // Sync server-rendered language payload to cache
   useEffect(() => {
@@ -365,14 +361,6 @@ export function ZukanClient({
       setRefetchError(null);
     }
   }, [lang, serverLang]);
-
-  useEffect(() => {
-    if (isMobile === undefined) return;
-    setIsFilterPanelOpen((current) => {
-      if (current !== null) return current;
-      return isMobile ? false : true;
-    });
-  }, [isMobile]);
 
   // Refetch data when language differs from server-rendered language
   useEffect(() => {
@@ -759,25 +747,19 @@ export function ZukanClient({
 
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
-          <div className="space-y-2">
+          <div className="sm:hidden space-y-2">
             <button
               type="button"
-              onClick={() =>
-                setIsFilterPanelOpen((current) =>
-                  current === null
-                    ? !(isMobile === true ? false : true)
-                    : !current,
-                )
-              }
-              aria-expanded={resolvedIsFilterPanelOpen}
+              onClick={() => setIsFilterPanelOpen((current) => !current)}
+              aria-expanded={isFilterPanelOpen}
               aria-controls="zukan-filter-panel"
               className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-sm transition-colors hover:bg-gray-50"
             >
-              {resolvedIsFilterPanelOpen
+              {isFilterPanelOpen
                 ? t("filter.panelHide", lang)
                 : t("filter.panelShow", lang)}
             </button>
-            {!resolvedIsFilterPanelOpen ? (
+            {!isFilterPanelOpen ? (
               <p className="text-xs text-[var(--text-secondary)]">
                 {t("filter.panelSummary", lang).replace(
                   "{count}",
@@ -789,7 +771,7 @@ export function ZukanClient({
 
           <div
             id="zukan-filter-panel"
-            className={resolvedIsFilterPanelOpen ? "block" : "hidden"}
+            className={isFilterPanelOpen ? "block sm:block" : "hidden sm:block"}
           >
             <FilterPanel
               // 動的に更新されるカテゴリ/作者を使用
