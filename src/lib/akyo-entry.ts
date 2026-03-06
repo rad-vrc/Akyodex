@@ -33,6 +33,32 @@ export function getDisplaySerial(akyo: AkyoData): string {
   return akyo.displaySerial?.trim() || akyo.id;
 }
 
+export function resolveDisplaySerialForSourceUrlChange(args: {
+  currentDisplaySerial: string;
+  detectedEntryType: AkyoEntryType | null;
+  id: string;
+  originalDisplaySerial?: string;
+  originalEntryType?: AkyoEntryType;
+}): string {
+  const {
+    currentDisplaySerial,
+    detectedEntryType,
+    id,
+    originalDisplaySerial,
+    originalEntryType,
+  } = args;
+
+  if (detectedEntryType === 'avatar') {
+    return id;
+  }
+
+  if (detectedEntryType === 'world' && originalEntryType === 'world') {
+    return originalDisplaySerial?.trim() || currentDisplaySerial;
+  }
+
+  return currentDisplaySerial;
+}
+
 export function getAkyoSourceUrl(akyo: Pick<AkyoData, 'sourceUrl' | 'avatarUrl'>): string {
   const sourceUrl = akyo.sourceUrl?.trim();
   if (sourceUrl) {

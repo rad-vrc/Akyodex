@@ -13,6 +13,7 @@ import {
     filterOutRecordById,
     findRecordById,
     formatAkyoCommitMessage,
+    getDisplaySerialForWorldRecord,
     getNextDisplaySerial,
     loadAkyoCsv,
     replaceRecordById,
@@ -144,7 +145,9 @@ export async function processAkyoCRUD(
                             recordData.displaySerial = String(existingRecord[displaySerialIndex] || '').trim();
                         }
                         if (!recordData.displaySerial) {
-                            recordData.displaySerial = getNextDisplaySerial(dataRecords, header, 'world');
+                            recordData.displaySerial =
+                                getDisplaySerialForWorldRecord(dataRecords, header, id) ||
+                                getNextDisplaySerial(dataRecords, header, 'world');
                         }
                     }
                 } else {

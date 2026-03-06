@@ -3,7 +3,11 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { IconClose, IconCloudUpload, IconCrop, IconEdit, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
-import { detectVrcEntryTypeFromUrl, getAkyoSourceUrl } from '@/lib/akyo-entry';
+import {
+  detectVrcEntryTypeFromUrl,
+  getAkyoSourceUrl,
+  resolveDisplaySerialForSourceUrlChange,
+} from '@/lib/akyo-entry';
 import type { AkyoData } from '@/types/akyo';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from './attribute-modal';
@@ -293,6 +297,13 @@ export function EditModal({
       sourceUrl: value,
       avatarUrl: value,
       entryType: detectedEntryType ?? prev.entryType,
+      displaySerial: resolveDisplaySerialForSourceUrlChange({
+        currentDisplaySerial: prev.displaySerial,
+        detectedEntryType,
+        id: akyo?.id ?? prev.displaySerial,
+        originalDisplaySerial: akyo?.displaySerial,
+        originalEntryType: akyo?.entryType,
+      }),
     }));
   };
 

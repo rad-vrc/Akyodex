@@ -20,6 +20,11 @@ const DISPLAY_SERIAL_COLUMN = 'DisplaySerial';
 const AKYO_EXTENDED_COLUMNS = [SOURCE_URL_COLUMN, ENTRY_TYPE_COLUMN, DISPLAY_SERIAL_COLUMN];
 const WORLD_ENTRY_TYPE = 'world';
 
+interface CsvRowLengthMismatch {
+  rowNumber: number;
+  columnCount: number;
+}
+
 /**
  * Parse CSV content into records
  *
@@ -67,6 +72,31 @@ function normalizeAkyoCsvShape(header: string[], dataRecords: string[][]): {
   };
 }
 
+function findCsvRowLengthMismatches(
+  header: string[],
+  dataRecords: string[][]
+): CsvRowLengthMismatch[] {
+  return dataRecords
+    .map((row, index) => ({ row, rowNumber: index + 2 }))
+    .filter(({ row }) => row.length !== header.length)
+    .map(({ row, rowNumber }) => ({
+      rowNumber,
+      columnCount: row.length,
+    }));
+}
+
+function formatCsvRowLengthMismatchMessage(
+  mismatches: CsvRowLengthMismatch[],
+  expectedColumnCount: number
+): string {
+  const preview = mismatches
+    .slice(0, 5)
+    .map((row) => `row ${row.rowNumber}: expected ${expectedColumnCount}, got ${row.columnCount}`)
+    .join('; ');
+
+  return `Malformed CSV detected: ${mismatches.length} row(s) have invalid column counts. ${preview}`;
+}
+
 function isWorldRecord(record: string[], header: string[]): boolean {
   const entryTypeIndex = header.indexOf(ENTRY_TYPE_COLUMN);
   const categoryIndex = header.indexOf('Category');
@@ -96,19 +126,32 @@ export async function loadAkyoCsv(options: {
 } = {}) {
   const { csvFileName, githubConfig } = options;
   const csvFile = await fetchCSVFromGitHub(csvFileName, { config: githubConfig });
-  const records = parseCSV(csvFile.content);
+  const normalized = parseLoadedAkyoCsvContent(csvFile.content);
+
+  return {
+    header: normalized.header,
+    dataRecords: normalized.dataRecords,
+    fileSha: csvFile.sha,
+  };
+}
+
+export function parseLoadedAkyoCsvContent(csvText: string): {
+  header: string[];
+  dataRecords: string[][];
+} {
+  const records = parseCSV(csvText);
 
   if (records.length === 0) {
     throw new Error('CSV file is empty');
   }
 
   const [header, ...dataRecords] = records;
-  const normalized = normalizeAkyoCsvShape(header, dataRecords);
-  return {
-    header: normalized.header,
-    dataRecords: normalized.dataRecords,
-    fileSha: csvFile.sha,
-  };
+  const rowLengthMismatches = findCsvRowLengthMismatches(header, dataRecords);
+  if (rowLengthMismatches.length > 0) {
+    throw new Error(formatCsvRowLengthMismatchMessage(rowLengthMismatches, header.length));
+  }
+
+  return normalizeAkyoCsvShape(header, dataRecords);
 }
 
 export async function commitAkyoCsv({
@@ -174,7 +217,19 @@ export function parseCsvToAkyoData(csvText: string): AkyoData[] {
   }
 
   const [header, ...dataRecords] = records;
-  const normalized = normalizeAkyoCsvShape(header, dataRecords);
+  const rowLengthMismatches = findCsvRowLengthMismatches(header, dataRecords);
+  if (rowLengthMismatches.length > 0) {
+    const preview = rowLengthMismatches
+      .slice(0, 5)
+      .map((row) => ({
+        expected: header.length,
+        got: row.columnCount,
+        rowNumber: row.rowNumber,
+      }));
+    console.warn('Column count mismatch - skipping malformed records:', preview);
+  }
+  const validRecords = dataRecords.filter((record) => record.length === header.length);
+  const normalized = normalizeAkyoCsvShape(header, validRecords);
   const data: AkyoData[] = [];
 
   for (const record of normalized.dataRecords) {
@@ -343,15 +398,10 @@ export function createAkyoRecord(data: {
   });
 }
 
-export function getNextDisplaySerial(
-  records: string[][],
-  header: string[],
-  entryType: 'avatar' | 'world'
-): string {
-  if (entryType !== WORLD_ENTRY_TYPE) {
-    return '';
-  }
-
+function buildWorldDisplaySerialState(records: string[][], header: string[]): {
+  maxSerial: number;
+  serialsById: Map<string, string>;
+} {
   const displaySerialIndex = header.indexOf(DISPLAY_SERIAL_COLUMN);
   const usedSerials = new Set<number>();
 
@@ -379,6 +429,7 @@ export function getNextDisplaySerial(
     return allocated;
   };
 
+  const serialsById = new Map<string, string>();
   let maxSerial = 0;
 
   for (const record of records) {
@@ -389,16 +440,38 @@ export function getNextDisplaySerial(
     const serialSource =
       displaySerialIndex >= 0 ? String(record[displaySerialIndex] || '').trim() : '';
     const parsed = Number.parseInt(serialSource, 10);
-    if (!Number.isNaN(parsed) && parsed > 0) {
-      maxSerial = Math.max(maxSerial, parsed);
-      continue;
-    }
+    const resolvedSerial =
+      !Number.isNaN(parsed) && parsed > 0 ? parsed : allocateFallbackSerial();
+    const recordId = String(record[0] ?? '').trim().replace(/^"|"$/g, '');
 
-    // Keep server-side allocation aligned with hydrateAkyoDataset() fallback serials
-    // so legacy rows without persisted DisplaySerial still reserve their visible numbers.
-    const fallbackSerial = allocateFallbackSerial();
-    maxSerial = Math.max(maxSerial, fallbackSerial);
+    serialsById.set(recordId, String(resolvedSerial).padStart(4, '0'));
+    maxSerial = Math.max(maxSerial, resolvedSerial);
   }
 
-  return String(maxSerial + 1).padStart(4, '0');
+  return { maxSerial, serialsById };
+}
+
+export function getDisplaySerialForWorldRecord(
+  records: string[][],
+  header: string[],
+  id: string
+): string | null {
+  const targetRecord = findRecordById(records, id);
+  if (!targetRecord || !isWorldRecord(targetRecord, header)) {
+    return null;
+  }
+
+  return buildWorldDisplaySerialState(records, header).serialsById.get(id) ?? null;
+}
+
+export function getNextDisplaySerial(
+  records: string[][],
+  header: string[],
+  entryType: 'avatar' | 'world'
+): string {
+  if (entryType !== WORLD_ENTRY_TYPE) {
+    return '';
+  }
+
+  return String(buildWorldDisplaySerialState(records, header).maxSerial + 1).padStart(4, '0');
 }

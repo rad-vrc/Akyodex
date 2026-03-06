@@ -7,45 +7,12 @@ import { connection } from 'next/server';
 import { jsonError } from '@/lib/api-helpers';
 import { VRCHAT_WORLD_ID_PATTERN } from '@/lib/akyo-entry';
 import { fetchVRChatWorldPage } from '@/lib/vrchat-utils';
+import {
+  getVRChatWorldImageRequestParams,
+  resolveVRChatWorldImageUrlFromHtml,
+} from '@/lib/vrchat-world-image';
 
 export const runtime = 'nodejs';
-
-const ALLOWED_IMAGE_HOSTS = new Set([
-  'api.vrchat.cloud',
-  'files.vrchat.cloud',
-  'images.vrchat.cloud',
-  'vrchat.com',
-]);
-
-function isAllowedImageUrl(url: string): boolean {
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === 'https:' && ALLOWED_IMAGE_HOSTS.has(parsed.hostname);
-  } catch {
-    return false;
-  }
-}
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function extractMetaContent(html: string, name: string): string {
-  const metaTags = html.match(/<meta\b[^>]*>/gi) || [];
-
-  for (const tag of metaTags) {
-    const contentMatch = tag.match(/\bcontent=["']([^"']+)["']/i);
-    if (!contentMatch?.[1]) {
-      continue;
-    }
-
-    if (new RegExp(`\\b(?:name|property)=["']${escapeRegExp(name)}["']`, 'i').test(tag)) {
-      return contentMatch[1];
-    }
-  }
-
-  return '';
-}
 
 function getErrorResponse(error: unknown, fallbackMessage: string): Response {
   const message = error instanceof Error ? error.message : fallbackMessage;
@@ -66,8 +33,7 @@ function getErrorResponse(error: unknown, fallbackMessage: string): Response {
 
 export async function GET(request: Request) {
   await connection();
-  const { searchParams } = new URL(request.url);
-  const wrld = searchParams.get('wrld');
+  const { wrld, width } = getVRChatWorldImageRequestParams(request.url);
 
   if (!wrld) {
     return jsonError('wrld parameter is required', 400);
@@ -80,17 +46,9 @@ export async function GET(request: Request) {
 
   try {
     const html = await fetchVRChatWorldPage(cleanWrld);
-    let imageUrl = '';
+    const imageUrl = resolveVRChatWorldImageUrlFromHtml(html, width);
 
-    const ogImage = extractMetaContent(html, 'og:image');
-    if (ogImage) {
-      const candidate = ogImage.startsWith('/') ? `https://vrchat.com${ogImage}` : ogImage;
-      if (isAllowedImageUrl(candidate)) {
-        imageUrl = candidate;
-      }
-    }
-
-    if (!isAllowedImageUrl(imageUrl)) {
+    if (!imageUrl) {
       return jsonError('Valid image not found', 404);
     }
 
