@@ -3,7 +3,11 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
-import { detectVrcEntryTypeFromUrl, extractVRChatWorldIdFromUrl } from '@/lib/akyo-entry';
+import {
+  detectVrcEntryTypeFromUrl,
+  ensureWorldCategory,
+  extractVRChatWorldIdFromUrl,
+} from '@/lib/akyo-entry';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 import { ADD_TAB_DRAFT_KEY } from '../draft-keys';
@@ -73,6 +77,19 @@ function normalizeStringList(value: unknown): string[] {
     .map((item) => (typeof item === 'string' ? item.trim() : ''))
     .filter(Boolean);
   return Array.from(new Set(normalized));
+}
+
+function normalizeCategoriesForSubmit(
+  categories: string[],
+  entryType: 'avatar' | 'world'
+): string[] {
+  const normalized = categories
+    .map((category) => category.trim())
+    .filter(Boolean);
+
+  return entryType === 'world'
+    ? ensureWorldCategory(normalized)
+    : Array.from(new Set(normalized));
 }
 
 function shouldResetWorldMetadata(previousUrl: string, nextUrl: string): boolean {
@@ -228,9 +245,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
       return;
     }
 
-    const resolvedCategories = Array.from(
-      new Set(entryType === 'world' ? ['ワールド', ...formData.categories] : formData.categories)
-    );
+    const resolvedCategories = normalizeCategoriesForSubmit(formData.categories, entryType);
     if (resolvedCategories.length === 0) {
       alert('カテゴリを1つ以上選択してください');
       return;
@@ -889,6 +904,9 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
                   </div>
                 )}
               </div>
+              <p className="text-xs text-gray-500 leading-snug">
+                ワールドならワールドカテゴリは自動追加されますが、階層型カテゴリを設定する場合は手動で設定してください。
+              </p>
             </div>
           </div>
 

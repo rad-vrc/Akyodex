@@ -42,6 +42,20 @@ const getNextWorldDisplaySerial = akyoEntryModule.getNextWorldDisplaySerial as
       entries: { entryType?: "avatar" | "world"; displaySerial?: string }[],
     ) => string)
   | undefined;
+const ensureWorldCategory = akyoEntryModule.ensureWorldCategory as
+  | ((categories: string[]) => string[])
+  | undefined;
+const resolveDisplaySerialForEntryUpdate =
+  akyoEntryModule.resolveDisplaySerialForEntryUpdate as
+    | ((args: {
+        entryType: "avatar" | "world";
+        id: string;
+        nextWorldDisplaySerial: string;
+        currentDisplaySerial?: string;
+        originalDisplaySerial?: string;
+        originalEntryType?: "avatar" | "world";
+      }) => string)
+    | undefined;
 
 test("resolveDisplaySerialForSourceUrlChange resets stale world serials for avatar URLs", () => {
   assert.equal(typeof resolveDisplaySerialForSourceUrlChange, "function");
@@ -161,5 +175,45 @@ test("resolveDisplaySerialForSourceUrlChange restores the original world serial 
       originalEntryType: "world",
     }),
     "0042",
+  );
+});
+
+test("ensureWorldCategory prepends the world marker exactly once", () => {
+  assert.equal(typeof ensureWorldCategory, "function");
+
+  assert.deepEqual(ensureWorldCategory?.(["ワールド/ペデスタル"]), [
+    "ワールド",
+    "ワールド/ペデスタル",
+  ]);
+  assert.deepEqual(
+    ensureWorldCategory?.(["ワールド", "ワールド/ペデスタル", "ワールド"]),
+    ["ワールド", "ワールド/ペデスタル"],
+  );
+});
+
+test("resolveDisplaySerialForEntryUpdate allocates a fresh world serial for avatar conversions", () => {
+  assert.equal(typeof resolveDisplaySerialForEntryUpdate, "function");
+
+  assert.equal(
+    resolveDisplaySerialForEntryUpdate?.({
+      entryType: "world",
+      id: "0900",
+      currentDisplaySerial: "0900",
+      originalEntryType: "avatar",
+      nextWorldDisplaySerial: "0002",
+    }),
+    "0002",
+  );
+
+  assert.equal(
+    resolveDisplaySerialForEntryUpdate?.({
+      entryType: "world",
+      id: "0746",
+      currentDisplaySerial: "",
+      originalDisplaySerial: "0001",
+      originalEntryType: "world",
+      nextWorldDisplaySerial: "0002",
+    }),
+    "0001",
   );
 });

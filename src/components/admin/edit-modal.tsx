@@ -5,6 +5,7 @@
 import { IconClose, IconCloudUpload, IconCrop, IconEdit, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
 import {
   detectVrcEntryTypeFromUrl,
+  ensureWorldCategory,
   getAkyoSourceUrl,
   resolveDisplaySerialForSourceUrlChange,
 } from '@/lib/akyo-entry';
@@ -22,6 +23,19 @@ interface EditModalProps {
   attributes: string[];
 
   onSuccess: () => void;
+}
+
+function normalizeCategoriesForSubmit(
+  categories: string[],
+  entryType: 'avatar' | 'world'
+): string[] {
+  const normalized = categories
+    .map((category) => category.trim())
+    .filter(Boolean);
+
+  return entryType === 'world'
+    ? ensureWorldCategory(normalized)
+    : Array.from(new Set(normalized));
 }
 
 /**
@@ -96,7 +110,10 @@ export function EditModal({
         displaySerial: akyo.displaySerial || (resolvedEntryType === 'world' ? '' : akyo.id),
         nickname: akyo.nickname || '',
         avatarName: akyo.avatarName || '',
-        categories: categoryStr ? categoryStr.split(/[、,]/).map(a => a.trim()) : [],
+        categories: normalizeCategoriesForSubmit(
+          categoryStr ? categoryStr.split(/[、,]/).map(a => a.trim()) : [],
+          resolvedEntryType
+        ),
         author: authorStr,
         sourceUrl: getAkyoSourceUrl(akyo),
         avatarUrl: akyo.avatarUrl || getAkyoSourceUrl(akyo),
@@ -564,6 +581,10 @@ export function EditModal({
     try {
       const submitData = new FormData();
       submitData.append('id', akyo.id);
+      const normalizedCategories = normalizeCategoriesForSubmit(
+        formData.categories,
+        formData.entryType
+      );
       const shouldClearDisplaySerialForWorldConversion =
         isWorldEntry && akyo.entryType !== 'world' && formData.displaySerial === akyo.id;
       const displaySerialForSubmit = shouldClearDisplaySerialForWorldConversion
@@ -579,12 +600,12 @@ export function EditModal({
 
       // 新フィールド
       submitData.append('author', formData.author);
-      submitData.append('category', formData.categories.join(','));
+      submitData.append('category', normalizedCategories.join(','));
       submitData.append('comment', formData.comment);
 
       // 旧フィールド (互換性のため)
       submitData.append('creator', formData.author);
-      submitData.append('attributes', formData.categories.join(','));
+      submitData.append('attributes', normalizedCategories.join(','));
       submitData.append('notes', formData.comment);
 
       if (croppedImageData) {
@@ -822,8 +843,11 @@ export function EditModal({
                             </span>
                           ))}
                         </div>
-                      )}
+                        )}
                     </div>
+                    <p className="text-xs text-gray-500 leading-snug">
+                      ワールドならワールドカテゴリは自動追加されますが、階層型カテゴリを設定する場合は手動で設定してください。
+                    </p>
                   </div>
                 </div>
 

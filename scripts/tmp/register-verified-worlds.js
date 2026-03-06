@@ -94,6 +94,8 @@ const VERIFIED_WORLDS = [
   },
 ];
 
+const WORLD_URL_PATTERN = /\bwrld_[A-Za-z0-9-]{1,64}\b/i;
+
 function parseCsv(content) {
   const records = [];
   let row = [];
@@ -236,6 +238,11 @@ function buildWorldUrl(wrld) {
   return `https://vrchat.com/home/world/${wrld}`;
 }
 
+function extractWrld(value) {
+  const match = String(value || '').match(WORLD_URL_PATTERN);
+  return match ? match[0] : '';
+}
+
 function getMaxNumericId(rows, indexMap) {
   let maxId = 0;
 
@@ -275,43 +282,96 @@ function hasWorldByWrld(rows, indexMap, wrld) {
   });
 }
 
-function appendVerifiedWorlds(csv, worlds) {
-  let nextId = getMaxNumericId(csv.rows, csv.indexMap) + 1;
-  let nextDisplaySerial = getMaxWorldDisplaySerial(csv.rows, csv.indexMap) + 1;
-  const added = [];
+function buildVerifiedWorldAssignments(jaCsv, worlds) {
+  let nextId = getMaxNumericId(jaCsv.rows, jaCsv.indexMap) + 1;
+  let nextDisplaySerial = getMaxWorldDisplaySerial(jaCsv.rows, jaCsv.indexMap) + 1;
+  const assignments = [];
 
   for (const world of worlds) {
-    if (hasWorldByWrld(csv.rows, csv.indexMap, world.wrld)) {
+    const existingRow = jaCsv.rows.find((row) => {
+      const avatarUrl = getCell(row, jaCsv.indexMap, 'AvatarURL');
+      const sourceUrl = getCell(row, jaCsv.indexMap, 'SourceURL');
+      return avatarUrl.includes(world.wrld) || sourceUrl.includes(world.wrld);
+    });
+
+    if (existingRow) {
+      assignments.push({
+        ...world,
+        id: getCell(existingRow, jaCsv.indexMap, 'ID').trim(),
+        displaySerial: getCell(existingRow, jaCsv.indexMap, 'DisplaySerial').trim(),
+      });
       continue;
     }
 
-    const row = csv.header.map(() => '');
     const id = format4(nextId);
     const displaySerial = format4(nextDisplaySerial);
-    const worldUrl = buildWorldUrl(world.wrld);
 
-    setCell(row, csv.indexMap, 'ID', id);
-    setCell(row, csv.indexMap, 'Nickname', world.nickname);
-    setCell(row, csv.indexMap, 'AvatarName', '');
-    setCell(row, csv.indexMap, 'Category', world.category || 'ワールド');
-    setCell(row, csv.indexMap, 'Comment', world.comment || '');
-    setCell(row, csv.indexMap, 'Author', world.author);
-    setCell(row, csv.indexMap, 'AvatarURL', worldUrl);
-    setCell(row, csv.indexMap, 'SourceURL', worldUrl);
-    setCell(row, csv.indexMap, 'EntryType', 'world');
-    setCell(row, csv.indexMap, 'DisplaySerial', displaySerial);
-
-    csv.rows.push(row);
-    added.push({
+    assignments.push({
+      ...world,
       id,
       displaySerial,
-      wrld: world.wrld,
-      nickname: world.nickname,
-      author: world.author,
     });
 
     nextId += 1;
     nextDisplaySerial += 1;
+  }
+
+  return assignments;
+}
+
+function applyVerifiedWorldAssignment(csv, assignment) {
+  const worldUrl = buildWorldUrl(assignment.wrld);
+  const existingRow = csv.rows.find((row) => {
+    const avatarUrl = getCell(row, csv.indexMap, 'AvatarURL');
+    const sourceUrl = getCell(row, csv.indexMap, 'SourceURL');
+    return avatarUrl.includes(assignment.wrld) || sourceUrl.includes(assignment.wrld);
+  });
+
+  if (existingRow) {
+    setCell(existingRow, csv.indexMap, 'ID', assignment.id);
+    setCell(existingRow, csv.indexMap, 'DisplaySerial', assignment.displaySerial);
+    setCell(existingRow, csv.indexMap, 'EntryType', 'world');
+    if (!getCell(existingRow, csv.indexMap, 'SourceURL').trim()) {
+      setCell(existingRow, csv.indexMap, 'SourceURL', worldUrl);
+    }
+    if (!extractWrld(getCell(existingRow, csv.indexMap, 'AvatarURL'))) {
+      setCell(existingRow, csv.indexMap, 'AvatarURL', worldUrl);
+    }
+    return false;
+  }
+
+  const row = csv.header.map(() => '');
+  setCell(row, csv.indexMap, 'ID', assignment.id);
+  setCell(row, csv.indexMap, 'Nickname', assignment.nickname);
+  setCell(row, csv.indexMap, 'AvatarName', '');
+  setCell(row, csv.indexMap, 'Category', assignment.category || 'ワールド');
+  setCell(row, csv.indexMap, 'Comment', assignment.comment || '');
+  setCell(row, csv.indexMap, 'Author', assignment.author);
+  setCell(row, csv.indexMap, 'AvatarURL', worldUrl);
+  setCell(row, csv.indexMap, 'SourceURL', worldUrl);
+  setCell(row, csv.indexMap, 'EntryType', 'world');
+  setCell(row, csv.indexMap, 'DisplaySerial', assignment.displaySerial);
+
+  csv.rows.push(row);
+  return true;
+}
+
+function syncVerifiedWorlds(csv, assignments) {
+  const added = [];
+
+  for (const assignment of assignments) {
+    const didAdd = applyVerifiedWorldAssignment(csv, assignment);
+    if (!didAdd) {
+      continue;
+    }
+
+    added.push({
+      id: assignment.id,
+      displaySerial: assignment.displaySerial,
+      wrld: assignment.wrld,
+      nickname: assignment.nickname,
+      author: assignment.author,
+    });
   }
 
   return added;
@@ -372,11 +432,12 @@ function main() {
     en: readCsvFile(CSV_FILES.en),
     ko: readCsvFile(CSV_FILES.ko),
   };
+  const assignments = buildVerifiedWorldAssignments(csvs.ja, VERIFIED_WORLDS);
 
   const addedByLocale = {
-    ja: appendVerifiedWorlds(csvs.ja, VERIFIED_WORLDS),
-    en: appendVerifiedWorlds(csvs.en, VERIFIED_WORLDS),
-    ko: appendVerifiedWorlds(csvs.ko, VERIFIED_WORLDS),
+    ja: syncVerifiedWorlds(csvs.ja, assignments),
+    en: syncVerifiedWorlds(csvs.en, assignments),
+    ko: syncVerifiedWorlds(csvs.ko, assignments),
   };
 
   writeCsvFile(csvs.ja);
@@ -396,4 +457,12 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  buildVerifiedWorldAssignments,
+  syncVerifiedWorlds,
+  main,
+};

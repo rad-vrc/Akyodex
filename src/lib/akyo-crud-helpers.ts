@@ -8,6 +8,11 @@
 import type { AkyoFormData } from './api-helpers';
 import { jsonError } from './api-helpers';
 import {
+    ensureWorldCategory,
+    resolveDisplaySerialForEntryUpdate,
+    WORLD_CATEGORY_MARKERS,
+} from './akyo-entry';
+import {
     commitAkyoCsv,
     createAkyoRecord,
     filterOutRecordById,
@@ -37,6 +42,47 @@ interface CrudResult {
 interface DeleteData {
     id: string;
     avatarName?: string;
+}
+
+function normalizeCategoryFieldForEntryType(
+    value: string,
+    entryType: 'avatar' | 'world'
+): string {
+    const categories = value
+        .split(/[、,]/)
+        .map((category) => category.trim())
+        .filter(Boolean);
+
+    const normalizedCategories =
+        entryType === 'world' ? ensureWorldCategory(categories) : categories;
+
+    return normalizedCategories.join(',');
+}
+
+function resolveEntryTypeFromRecord(
+    record: string[],
+    header: string[]
+): 'avatar' | 'world' {
+    const entryTypeIndex = header.indexOf('EntryType');
+    const categoryIndex = header.indexOf('Category');
+    const explicitEntryType =
+        entryTypeIndex >= 0 ? String(record[entryTypeIndex] || '').trim() : '';
+
+    if (explicitEntryType === 'avatar' || explicitEntryType === 'world') {
+        return explicitEntryType;
+    }
+
+    const categories =
+        categoryIndex >= 0
+            ? String(record[categoryIndex] || '')
+                .split(/[、,]/)
+                .map((category) => category.trim().toLowerCase())
+                .filter(Boolean)
+            : [];
+
+    return categories.some((category) => WORLD_CATEGORY_MARKERS.has(category))
+        ? 'world'
+        : 'avatar';
 }
 
 /**
@@ -90,6 +136,11 @@ export async function processAkyoCRUD(
         let updatedRecords: string[][];
         let commitMessageAction: string;
         let successMessage: string;
+        const normalizedEntryType = entryType === 'world' ? 'world' : 'avatar';
+        const normalizedCategory = normalizeCategoryFieldForEntryType(
+            category || attributes,
+            normalizedEntryType
+        );
         
         // createAkyoRecordに渡すデータ
         // 将来的にcreateAkyoRecordの引数も更新する必要があるが、
@@ -99,11 +150,11 @@ export async function processAkyoCRUD(
             id,
             nickname,
             avatarName,
-            entryType: entryType as Parameters<typeof createAkyoRecord>[0]['entryType'],
+            entryType: normalizedEntryType,
             displaySerial,
             sourceUrl,
             // 新フィールドを優先
-            attributes: category || attributes,
+            attributes: normalizedCategory,
             creator: author || creator,
             notes: comment || notes,
             avatarUrl: sourceUrl || avatarUrl,
@@ -137,19 +188,28 @@ export async function processAkyoCRUD(
                 if (!existingRecord) {
                     return jsonError(`ID: ${id} が見つかりませんでした`, 404);
                 }
+                const originalEntryType = resolveEntryTypeFromRecord(existingRecord, header);
 
                 if (recordData.entryType === 'world') {
-                    if (!recordData.displaySerial) {
-                        const displaySerialIndex = header.indexOf('DisplaySerial');
-                        if (displaySerialIndex >= 0) {
-                            recordData.displaySerial = String(existingRecord[displaySerialIndex] || '').trim();
-                        }
-                        if (!recordData.displaySerial) {
-                            recordData.displaySerial =
+                    const displaySerialIndex = header.indexOf('DisplaySerial');
+                    const originalDisplaySerial =
+                        originalEntryType === 'world'
+                            ? (
+                                (displaySerialIndex >= 0
+                                    ? String(existingRecord[displaySerialIndex] || '').trim()
+                                    : '') ||
                                 getDisplaySerialForWorldRecord(dataRecords, header, id) ||
-                                getNextDisplaySerial(dataRecords, header, 'world');
-                        }
-                    }
+                                undefined
+                            )
+                            : undefined;
+                    recordData.displaySerial = resolveDisplaySerialForEntryUpdate({
+                        entryType: 'world',
+                        id,
+                        currentDisplaySerial: recordData.displaySerial,
+                        originalDisplaySerial,
+                        originalEntryType,
+                        nextWorldDisplaySerial: getNextDisplaySerial(dataRecords, header, 'world'),
+                    });
                 } else {
                     recordData.displaySerial = recordData.displaySerial || id;
                 }

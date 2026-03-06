@@ -1,6 +1,7 @@
 import type { AkyoData, AkyoEntryType } from "@/types/akyo";
 
 export const WORLD_CATEGORY_MARKERS = new Set(["ワールド", "world", "월드"]);
+export const DEFAULT_WORLD_CATEGORY = "ワールド";
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 const WORLD_DISPLAY_SERIAL_PREFIX = "world";
 const AVATAR_DISPLAY_SERIAL_PREFIX = "avatar";
@@ -97,6 +98,53 @@ export function resolveDisplaySerialForSourceUrlChange(args: {
   }
 
   return currentDisplaySerial;
+}
+
+export function ensureWorldCategory(categories: string[]): string[] {
+  const normalized = categories
+    .map((category) => category.trim())
+    .filter(Boolean)
+    .filter((category, index, all) => all.indexOf(category) === index)
+    .filter((category) => category !== DEFAULT_WORLD_CATEGORY);
+
+  return [DEFAULT_WORLD_CATEGORY, ...normalized];
+}
+
+export function resolveDisplaySerialForEntryUpdate(args: {
+  entryType: AkyoEntryType;
+  id: string;
+  nextWorldDisplaySerial: string;
+  currentDisplaySerial?: string;
+  originalDisplaySerial?: string;
+  originalEntryType?: AkyoEntryType;
+}): string {
+  const {
+    entryType,
+    id,
+    nextWorldDisplaySerial,
+    currentDisplaySerial,
+    originalDisplaySerial,
+    originalEntryType,
+  } = args;
+
+  if (entryType === "avatar") {
+    return currentDisplaySerial?.trim() || id;
+  }
+
+  if (originalEntryType === "world") {
+    return (
+      originalDisplaySerial?.trim() ||
+      currentDisplaySerial?.trim() ||
+      nextWorldDisplaySerial
+    );
+  }
+
+  const normalizedCurrentDisplaySerial = currentDisplaySerial?.trim() || "";
+  if (normalizedCurrentDisplaySerial && normalizedCurrentDisplaySerial !== id) {
+    return normalizedCurrentDisplaySerial;
+  }
+
+  return nextWorldDisplaySerial;
 }
 
 export function getAkyoSourceUrl(
