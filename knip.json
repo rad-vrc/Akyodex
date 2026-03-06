@@ -4,6 +4,7 @@
     "open-next.config.ts",
     "public/sw.js",
     "sw.js",
+    "src/**/*.test.ts",
     "scripts/convert-akyo-data.js",
     "scripts/generate-vectorize-payload.js",
     "scripts/update-categories-en-v3.js",
