@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "language": "en",
-  "updatedAt": "2026-03-06T14:05:54.985Z",
-  "count": 811,
+  "updatedAt": "2026-03-06T14:52:31.210Z",
+  "count": 816,
   "data": [
     {
       "id": "0001",
@@ -8990,6 +8990,66 @@
       "author": "bouvi",
       "sourceUrl": "https://vrchat.com/home/world/wrld_87935f09-9e44-4e56-bac2-572e3b9526fd",
       "avatarUrl": "https://vrchat.com/home/world/wrld_87935f09-9e44-4e56-bac2-572e3b9526fd"
+    },
+    {
+      "id": "0812",
+      "entryType": "world",
+      "displaySerial": "0067",
+      "nickname": "最終バス（LastBus）",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "たくあん_",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_b0748170-ed80-4544-8c0f-d5c9f8a1d764",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_b0748170-ed80-4544-8c0f-d5c9f8a1d764"
+    },
+    {
+      "id": "0813",
+      "entryType": "world",
+      "displaySerial": "0068",
+      "nickname": "Legacy Japan Street",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "NEET ENGINEER",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_e5f87a59-70a9-4110-9af9-67bc0e38195b",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_e5f87a59-70a9-4110-9af9-67bc0e38195b"
+    },
+    {
+      "id": "0814",
+      "entryType": "world",
+      "displaySerial": "0069",
+      "nickname": "Last",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "Tentilicon",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_c5322553-b156-433e-9117-33386919dbc3",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_c5322553-b156-433e-9117-33386919dbc3"
+    },
+    {
+      "id": "0815",
+      "entryType": "world",
+      "displaySerial": "0070",
+      "nickname": "星月夜 - Starry Night -",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "ももx_x",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_d7c64a4a-b795-456c-8c4a-4657c9c94920",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_d7c64a4a-b795-456c-8c4a-4657c9c94920"
+    },
+    {
+      "id": "0816",
+      "entryType": "world",
+      "displaySerial": "0071",
+      "nickname": "こなちるーむ -day-",
+      "avatarName": "",
+      "category": "ワールド",
+      "comment": "",
+      "author": "konachi-",
+      "sourceUrl": "https://vrchat.com/home/world/wrld_b0d752e6-bbb8-4b1e-acfa-2a111a9cd990",
+      "avatarUrl": "https://vrchat.com/home/world/wrld_b0d752e6-bbb8-4b1e-acfa-2a111a9cd990"
     }
   ]
 }
