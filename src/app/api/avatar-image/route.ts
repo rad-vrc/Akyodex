@@ -45,16 +45,13 @@ async function getAvtrIdFromCsv(akyoId: string): Promise<string | null> {
       if (!idMatch) continue;
 
       if (idMatch[1] === akyoId) {
-        // CSV uses quoted fields, so we need proper parsing
-        // For now, use simple regex to extract the last URL
+        // Extract avtr ID from the AvatarURL column anywhere in the line.
+        // The regex scans the full CSV line so it works regardless of column position.
         const urlMatch = line.match(/https:\/\/vrchat\.com\/home\/avatar\/(avtr_[A-Za-z0-9-]{1,64})/);
         if (urlMatch) {
           return urlMatch[1];
         }
-        // Fallback: extract last column
-        const columns = line.split(',');
-        const avatarUrl = columns[columns.length - 1];
-        return extractVRChatAvatarIdFromUrl(avatarUrl);
+        return null;
       }
     }
 

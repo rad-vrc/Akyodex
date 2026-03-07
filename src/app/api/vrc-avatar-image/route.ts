@@ -5,6 +5,7 @@
 
 import { connection } from 'next/server';
 import { VRCHAT_AVATAR_ID_PATTERN } from '@/lib/akyo-entry';
+import { getApiErrorResponse, jsonError } from '@/lib/api-helpers';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 
 export async function GET(request: Request) {
@@ -16,18 +17,12 @@ export async function GET(request: Request) {
   const width = Number.isFinite(parsedWidth) ? Math.max(32, Math.min(4096, parsedWidth)) : 512;
 
   if (!avtr) {
-    return Response.json(
-      { error: 'avtr parameter is required' },
-      { status: 400 }
-    );
+    return jsonError('avtr parameter is required', 400);
   }
 
   // Validate avtr format (strict: full match, length cap)
   if (!VRCHAT_AVATAR_ID_PATTERN.test(avtr)) {
-    return Response.json(
-      { error: 'Invalid avtr format' },
-      { status: 400 }
-    );
+    return jsonError('Invalid avtr format', 400);
   }
 
   const cleanAvtr = avtr;
@@ -82,7 +77,7 @@ export async function GET(request: Request) {
     // Final validation (defense in depth)
     if (!isAllowedImageUrl(imageUrl)) {
       // All strategies exhausted → treat as not found
-      return Response.json({ error: 'Valid image not found' }, { status: 404 });
+      return jsonError('Valid image not found', 404);
     }
 
     // Fetch the image with timeout
@@ -103,18 +98,12 @@ export async function GET(request: Request) {
       clearTimeout(imageTimeoutId);
 
       if (!imageResponse.ok) {
-        return Response.json(
-          { error: `Image fetch returned ${imageResponse.status}` },
-          { status: imageResponse.status }
-        );
+        return jsonError(`Image fetch returned ${imageResponse.status}`, imageResponse.status);
       }
     } catch (imageFetchError) {
       clearTimeout(imageTimeoutId);
       if (imageFetchError instanceof Error && imageFetchError.name === 'AbortError') {
-        return Response.json(
-          { error: 'Image fetch timeout (30 seconds)' },
-          { status: 504 }
-        );
+        return jsonError('Image fetch timeout (30 seconds)', 504);
       }
       throw imageFetchError;
     }
@@ -132,9 +121,6 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error('[vrc-avatar-image] Error:', error);
-    return Response.json(
-      { error: 'Failed to fetch VRChat avatar image' },
-      { status: 500 }
-    );
+    return getApiErrorResponse(error, 'Failed to fetch VRChat avatar image');
   }
 }
