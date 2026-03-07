@@ -57,8 +57,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          max_attempts=30
-          interval_seconds=20
+          max_attempts=36
+          fast_interval_seconds=5
+          normal_interval_seconds=10
+          slow_interval_seconds=20
+          fast_threshold=8
+          normal_threshold=20
           project_candidates=()
 
           if [ -n "${CF_PROJECT_NAME_PRIMARY:-}" ]; then
@@ -183,7 +187,18 @@ jobs:
             else
               echo "GitHub check-runs request failed; continuing Cloudflare polling."
             fi
-            sleep "${interval_seconds}"
+            if [ "${attempt}" -lt "${max_attempts}" ]; then
+              if [ "${attempt}" -lt "${fast_threshold}" ]; then
+                sleep_seconds="${fast_interval_seconds}"
+              elif [ "${attempt}" -lt "${normal_threshold}" ]; then
+                sleep_seconds="${normal_interval_seconds}"
+              else
+                sleep_seconds="${slow_interval_seconds}"
+              fi
+
+              echo "Waiting ${sleep_seconds}s before next poll..."
+              sleep "${sleep_seconds}"
+            fi
           done
 
           echo "::error::Timed out waiting for Cloudflare Pages preview deployment result."
