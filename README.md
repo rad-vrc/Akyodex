@@ -47,6 +47,9 @@ npm install
 ```
 
 ### Step 2: Set Up Environment (1 minute)
+
+The example below uses Bash heredoc syntax. On PowerShell, create `.env.local` manually and paste the same key/value pairs.
+
 ```bash
 # Create .env.local file with default credentials
 cat > .env.local << 'EOF'
@@ -381,6 +384,8 @@ Akyodex/
 
 ### Installation
 
+The example below uses Bash heredoc syntax. On PowerShell, create `.env.local` manually and paste the same key/value pairs.
+
 ```bash
 # Clone repository
 git clone https://github.com/rad-vrc/Akyodex.git
@@ -447,194 +452,117 @@ npm run data:convert     # Convert CSV to JSON (npx tsx scripts/csv-to-json.ts)
 
 ## 🚀 Deployment Guide
 
-### Cloudflare Pages Setup
+### Current Deployment Model
 
-#### 1. Create Cloudflare Pages Project
+- `npm run build` runs `opennextjs-cloudflare build` and then `scripts/prepare-cloudflare-pages.js`, which reshapes `.open-next` for Pages (`_worker.js`, `_routes.json`, and root-level static assets).
+- `open-next.config.ts` stores incremental cache in R2, tag cache in KV, uses `queue: 'direct'`, and enables cache interception for Pages.
+- `push` to `main` triggers `.github/workflows/deploy-cloudflare-pages.yml`.
+- Non-draft PRs targeting `main` or `develop` are checked by `.github/workflows/cloudflare-pages-preview-gate.yml`.
+
+### 1. Create Cloudflare Pages Project
 
 Via Cloudflare Dashboard:
 1. Go to Cloudflare Dashboard → Pages
 2. Create a new project
 3. Connect to GitHub repository: `rad-vrc/Akyodex`
 
-#### 2. Build Configuration
+### 2. Build Configuration
 
 ```yaml
 Framework preset: None
 Build command: npm ci && npm run build
 Build output directory: .open-next
-Root directory: /  (repository root)
+Root directory: /
 ```
 
-#### 3. Environment Variables
-
-Go to **Settings** → **Environment variables** and add:
-
-```bash
-# Admin Authentication (plaintext - compared server-side)
-ADMIN_PASSWORD_OWNER=your_owner_password
-ADMIN_PASSWORD_ADMIN=your_admin_password
-
-# Session Secret (generate with: openssl rand -hex 64)
-SESSION_SECRET=your_128_char_hex_secret
-
-# App URL
-NEXT_PUBLIC_APP_URL=https://akyodex.com
-NEXT_PUBLIC_R2_BASE=https://images.akyodex.com
-
-# GitHub integration (for CSV sync)
-GITHUB_TOKEN=ghp_xxx
-GITHUB_REPO_OWNER=rad-vrc
-GITHUB_REPO_NAME=Akyodex
-GITHUB_BRANCH=main
-GITHUB_CSV_PATH_JA=data/akyo-data-ja.csv
-```
-
-#### 4. Cloudflare Bindings
+### 3. Required Cloudflare Bindings
 
 Bindings are defined in `wrangler.toml` and configured in **Settings** → **Functions**:
 
-```toml
-# R2 Bucket Binding
-[[r2_buckets]]
-binding = "AKYO_BUCKET"
-bucket_name = "akyo-images"
+| Binding | Type | Purpose | Notes |
+| ------- | ---- | ------- | ----- |
+| `AKYO_BUCKET` | R2 Bucket | Avatar images and `data/*.json` / CSV files | Usually points to `akyo-images` |
+| `NEXT_INC_CACHE_R2_BUCKET` | R2 Bucket | OpenNext incremental cache | Keys are namespaced under `incremental-cache/...` |
+| `AKYO_KV` | KV Namespace | Admin sessions + app data cache | App cache keys use `akyo-data:<locale>` |
+| `NEXT_TAG_CACHE_KV` | KV Namespace | OpenNext tag revalidation cache | Tag keys use `<NEXT_BUILD_ID>/<tag>` |
 
-# KV Namespace Binding
-[[kv_namespaces]]
-binding = "AKYO_KV"
-id = "your_kv_namespace_id"
-```
+`AKYO_BUCKET` と `NEXT_INC_CACHE_R2_BUCKET` は同じ bucket を共有できます。`AKYO_KV` と `NEXT_TAG_CACHE_KV` も同じ namespace を共有できますが、キー体系が重ならないことを確認してください。
 
-#### 5. Create R2 Bucket
+### 4. Runtime Secrets and Variables (Cloudflare Pages)
 
-```bash
-# Create R2 bucket
-npx wrangler r2 bucket create akyo-images
+Go to **Settings** → **Environment variables** and add:
 
-# Upload CSV files
-npx wrangler r2 object put akyo-images/data/akyo-data-ja.csv --file=data/akyo-data-ja.csv
-npx wrangler r2 object put akyo-images/data/akyo-data-en.csv --file=data/akyo-data-en.csv
-```
+| Variable | Required | Purpose |
+| -------- | -------- | ------- |
+| `ADMIN_PASSWORD_OWNER` | Yes | Owner role login code (`src/app/api/admin/login/route.ts`) |
+| `ADMIN_PASSWORD_ADMIN` | Yes | Admin role login code (`src/app/api/admin/login/route.ts`) |
+| `SESSION_SECRET` | Yes | HMAC session signing key (`src/lib/session.ts`) |
+| `NEXT_PUBLIC_APP_URL` | Yes | CSRF allowlist origin (`src/lib/api-helpers.ts`) |
+| `NEXT_PUBLIC_R2_BASE` | Yes | Public base URL for R2-hosted images/data |
+| `GITHUB_TOKEN` | Yes | CSV sync and admin-side GitHub writes |
+| `GITHUB_REPO_OWNER` | Yes | GitHub repo owner for CSV sync |
+| `GITHUB_REPO_NAME` | Yes | GitHub repo name for CSV sync |
+| `GITHUB_BRANCH` | Yes | Target branch for CSV sync |
+| `GITHUB_CSV_PATH_JA` | Yes | JA CSV path in repo |
+| `REVALIDATE_SECRET` | Recommended | Protects `/api/revalidate` |
+| `NEXT_PUBLIC_DIFY_CHATBOT_TOKEN` | Optional | Enables Dify/Udify chatbot widget |
 
-#### 6. Create KV Namespace
+### 5. GitHub Actions Secrets and Variables
 
-```bash
-# Create KV namespace for sessions and data cache
-npx wrangler kv:namespace create "AKYO_KV"
+These are for GitHub-hosted workflows, not for the runtime app itself:
 
-# Copy the ID and update wrangler.toml
-```
+| Name | Required | Used by | Notes |
+| ---- | -------- | ------- | ----- |
+| `CLOUDFLARE_API_TOKEN` | Yes | Deploy + Preview Gate | Must be able to deploy Pages and inspect deployments |
+| `CLOUDFLARE_ACCOUNT_ID` | Yes | Deploy + Preview Gate | Cloudflare account identifier |
+| `CLOUDFLARE_PAGES_PROJECT` | Recommended | Deploy + Preview Gate | Primary Pages project candidate; Preview Gate falls back to `akyodex` |
+| `NEXT_PUBLIC_SITE_URL` | Optional | Build workflows | Build-time public URL fallback |
+| `NEXT_PUBLIC_R2_BASE` | Optional | Build workflows | Build-time R2 URL fallback |
+| `R2_ACCESS_KEY_ID` | Optional | `sync-json-data.yml` | Required when JSON sync uploads to R2 |
+| `R2_SECRET_ACCESS_KEY` | Optional | `sync-json-data.yml` | Required when JSON sync uploads to R2 |
+| `DEFAULT_ADMIN_PASSWORD_HASH` | Optional / legacy | Build workflows only | Legacy fallback still exported by workflow YAML |
+| `DEFAULT_OWNER_PASSWORD_HASH` | Optional / legacy | Build workflows only | Legacy fallback still exported by workflow YAML |
+| `DEFAULT_JWT_SECRET` | Optional / legacy | Build workflows only | Legacy fallback still exported by workflow YAML |
 
-#### 7. Deploy
+The current runtime code reads `ADMIN_PASSWORD_OWNER`, `ADMIN_PASSWORD_ADMIN`, and `SESSION_SECRET`. The `*_HASH` / `DEFAULT_JWT_SECRET` values above are workflow-side compatibility defaults and are not read by `src/app/api/admin/login/route.ts` or `src/lib/session.ts`.
 
-Push to `main` branch for automatic deployment.
+### 6. Deployment Paths
+
+- **Production deploy**: push or merge to `main` → `deploy-cloudflare-pages.yml`
+- **Manual deploy**: Actions → `Deploy to Cloudflare Pages` → choose `production` or `staging`
+- **PR preview verification**: `cloudflare-pages-preview-gate.yml` polls the Cloudflare Pages API and falls back to the GitHub check run named `Cloudflare Pages` when Cloudflare omits commit metadata
+
+PR preview と production/manual deploy は source of truth が異なります。PR preview は Cloudflare Pages の Git-connected preview を監視し、production/manual deploy は GitHub Actions + `wrangler pages deploy` が本線です。
 
 ---
 
 ## ✅ Deployment Verification
 
-**After successful deployment, verify everything is working correctly:**
+### Fast Checks After `main` Deploy
 
-### 1. Build Success Check
+| Check | Where | Expected Result |
+| ----- | ----- | --------------- |
+| Deploy summary | GitHub Actions `Deploy to Cloudflare Pages` | `Deploy Step: success` and `Health Check: healthy` |
+| Deployment URL | Workflow output / Step Summary | URL is present and responds with `200`, `301`, or `302` within the health-check retry window |
+| Core routes | `/`, `/zukan`, `/admin` | Landing redirect works, gallery loads, admin login page renders |
+| Static/PWA assets | `/manifest.webmanifest`, `/sw.js` | Assets return successfully |
+| Cloudflare bindings | Pages dashboard or `wrangler.toml` | All four bindings (`AKYO_BUCKET`, `NEXT_INC_CACHE_R2_BUCKET`, `AKYO_KV`, `NEXT_TAG_CACHE_KV`) are present |
+| Admin flow | `/admin` | Login succeeds and session cookie is set |
+| Data plane | `https://images.akyodex.com/data/*.json` | Latest JSON is reachable after data sync |
 
-```bash
-# In Cloudflare Pages Dashboard
-✅ Build status: Success
-✅ Deployment URL: https://your-project.pages.dev
-✅ No build errors in logs
-```
+### PR Preview Gate Checks
 
-### 2. Basic Functionality Test
+1. Open a non-draft PR against `main` or `develop`.
+2. Confirm `Cloudflare Pages Preview Gate / Verify Cloudflare Pages Preview` succeeds.
+3. If Cloudflare's deployment API does not return commit metadata, confirm the fallback GitHub check run named `Cloudflare Pages` completed successfully.
+4. If the gate times out, check `CLOUDFLARE_PAGES_PROJECT`, the Cloudflare preview deployment logs, and the GitHub Actions run logs together.
 
-| Feature | URL | Expected Result |
-|---------|-----|----------------|
-| **Landing Page** | `https://your-project.pages.dev/` | Redirects to /zukan |
-| **Avatar Gallery** | `https://your-project.pages.dev/zukan` | Shows avatars |
-| **Admin Login** | `https://your-project.pages.dev/admin` | Login page loads |
-| **Language Switch** | Click language toggle | Switches between 日本語/English |
-| **PWA Manifest** | `https://your-project.pages.dev/manifest.webmanifest` | JSON file loads |
-| **Service Worker** | `https://your-project.pages.dev/sw.js` | JavaScript file loads |
+### Known Limitations
 
-### 3. Cloudflare Bindings Check
-
-```bash
-# Check R2 bucket
-npx wrangler r2 bucket list
-# Should show: akyo-images
-
-npx wrangler r2 object list akyo-images
-# Should show: data/akyo-data-ja.csv, data/akyo-data-en.csv, images/
-
-# Check KV namespace
-npx wrangler kv:namespace list
-# Should show: AKYO_KV with ID
-```
-
-### 4. Admin Panel Test
-
-| Tab | Action | Expected Result |
-|-----|--------|----------------|
-| **Add** | Fetch next ID | Shows next available 4-digit ID |
-| **Add** | VRChat fetch | Retrieves avatar/world info from VRChat URL |
-| **Edit** | Search entry | Finds existing entry |
-| **Edit** | Update field | Saves changes to CSV (synced to GitHub) |
-| **Tools** | View categories | Shows all category tags |
-
-### 5. PWA Installation Test
-
-```bash
-# Desktop (Chrome/Edge):
-# 1. Visit site in browser
-# 2. Look for install icon in address bar
-# 3. Click "Install" → Should install as desktop app
-
-# Mobile (Android/iOS):
-# 1. Visit site in browser
-# 2. Menu → "Add to Home Screen"
-# 3. Should add app icon to home screen
-```
-
-### 6. Performance Check
-
-```bash
-# Run Lighthouse audit (Chrome DevTools)
-# Expected scores:
-```
-
-- **Performance**: 90+ (green)
-- **Accessibility**: 95+ (green)
-- **Best Practices**: 90+ (green)
-- **SEO**: 90+ (green)
-- **PWA**: ✅ Installable
-
-### 7. Error Monitoring
-
-```bash
-# Check Cloudflare Pages Dashboard:
-✅ Functions → No errors in last 24h
-✅ Analytics → Requests succeeding
-✅ Logs → No 5xx errors
-```
-
-### Troubleshooting Failed Checks
-
-If any check fails, see [Troubleshooting](#troubleshooting) section for detailed solutions.
-
-**Quick fixes:**
-- Build fails → Check Root directory setting
-- 404 errors → Check Build output directory
-- API errors → Check Environment variables
-- Bindings not working → Check Settings → Functions
-
-### Cloudflare Pages Preview Gate limitation (fork PRs)
-
-The workflow `.github/workflows/cloudflare-pages-preview-gate.yml` has two steps:
-- `Validate required secrets`
-- `Skip gate for forked PRs`
-
-For forked PRs, `CF_API_TOKEN` and `CF_ACCOUNT_ID` are unavailable by design, so the preview verification is skipped.
-If you need strict verification for forked PRs as well, do not rely only on this workflow as a required status check.
-Use an alternative trusted-branch approach (for example, a secrets-dependent job that runs after maintainers push to a protected branch).
+- **Fork PRs**: Cloudflare secrets are unavailable by design, so Preview Gate is skipped for forked PRs.
+- **Project resolution**: Preview Gate checks `vars.CLOUDFLARE_PAGES_PROJECT` first and then falls back to `akyodex`.
+- **Missing deploy URL**: If deploy succeeds but the action does not return a URL, the workflow records `missing_url` and skips HTTP verification. Use the Pages dashboard URL in that case.
+- **Manual `staging` runs**: the workflow input only changes the GitHub Actions environment label. If you want true staging isolation, you must also provision separate Pages project / bindings / secrets.
 
 ---
 
@@ -671,17 +599,37 @@ Use an alternative trusted-branch approach (for example, a secrets-dependent job
 | `GITHUB_CSV_PATH_JA` | Japanese CSV path in repo | `data/akyo-data-ja.csv` |
 | `REVALIDATE_SECRET` | ISR revalidation API key | *(secret)* |
 
+#### GitHub Actions / CI-CD
+
+| Variable / Secret | Description | Example |
+| ----------------- | ----------- | ------- |
+| `CLOUDFLARE_API_TOKEN` | GitHub Actions から Pages deploy / preview を操作する API token | *(secret)* |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID | *(secret)* |
+| `CLOUDFLARE_PAGES_PROJECT` | Preview Gate が最初に参照する Pages project 名 | `akyodex` |
+| `NEXT_PUBLIC_SITE_URL` | Workflow build-time fallback URL | `https://akyodex.com` |
+| `NEXT_PUBLIC_R2_BASE` | Workflow build-time fallback R2 base | `https://images.akyodex.com` |
+| `R2_ACCESS_KEY_ID` | `sync-json-data.yml` が R2 に JSON を upload するときの access key | *(secret)* |
+| `R2_SECRET_ACCESS_KEY` | `sync-json-data.yml` が R2 に JSON を upload するときの secret key | *(secret)* |
+| `DEFAULT_ADMIN_PASSWORD_HASH` | Legacy workflow fallback（runtime 未使用） | *(optional)* |
+| `DEFAULT_OWNER_PASSWORD_HASH` | Legacy workflow fallback（runtime 未使用） | *(optional)* |
+| `DEFAULT_JWT_SECRET` | Legacy workflow fallback（runtime 未使用） | *(optional)* |
+
+Current runtime code reads `ADMIN_PASSWORD_OWNER`, `ADMIN_PASSWORD_ADMIN`, `SESSION_SECRET`, and `NEXT_PUBLIC_APP_URL`. The `DEFAULT_*_HASH` / `DEFAULT_JWT_SECRET` values are only referenced by the current workflow YAML.
+
 ### Cloudflare Bindings (wrangler.toml)
 
 | Binding | Type | Purpose |
-|---------|------|---------|
+| ------- | ---- | ------- |
 | `AKYO_BUCKET` | R2 Bucket | Avatar images and data files |
+| `NEXT_INC_CACHE_R2_BUCKET` | R2 Bucket | OpenNext incremental cache |
 | `AKYO_KV` | KV Namespace | Admin session storage + data cache |
 | `NEXT_TAG_CACHE_KV` | KV Namespace | OpenNext tag revalidation cache |
 
 `AKYO_KV` と `NEXT_TAG_CACHE_KV` を同じ namespace に割り当てる場合は、キー体系が重ならないことを確認してください。
 - App data cache keys: `akyo-data:ja`, `akyo-data:en` (pattern: `akyo-data:<locale>`)
 - OpenNext tag cache keys: `<NEXT_BUILD_ID>/<tag>`
+
+`AKYO_BUCKET` と `NEXT_INC_CACHE_R2_BUCKET` を同じ bucket に割り当てる場合は、OpenNext incremental cache が `incremental-cache/...` 配下に保存される前提で、画像や `data/*.json` と衝突しない構成にしてください。
 
 ### How to Generate Session Secret
 
@@ -1312,10 +1260,17 @@ git add .
 git commit -m "feat: description of changes"
 
 # 3. Push to remote
-git push origin feature/your-feature-name
+git push -u origin feature/your-feature-name
+
+# PowerShell in this repo automatically runs the PR conflict check after push.
+# Use this instead of plain git push in other shells:
+npm run push:check-pr -- -u origin HEAD
 
 # 4. Create Pull Request on GitHub
 ```
+
+If the push check exits with code `5`, the branch already has a merged PR and you should continue on a new branch / PR.
+Exit code `2` means the open PR has merge conflicts, and exit code `4` means GitHub has not finished calculating mergeability yet.
 
 ### Commit Message Convention
 
@@ -1341,8 +1296,9 @@ chore: Update dependencies
 
 1. ✅ Run `npm run lint`
 2. ✅ Run `npm run build` (includes type checking)
-3. ✅ Test locally with `npm run dev`
-4. ✅ Write descriptive PR description
+3. ✅ If needed, re-run `npm run push:check-pr -- --skip-push` to confirm the branch PR is still mergeable
+4. ✅ Test locally with `npm run dev`
+5. ✅ Write descriptive PR description with deploy/test notes
 
 ---
 
@@ -1371,6 +1327,6 @@ For questions or issues:
 
 ---
 
-**Last Updated**: 2026-02-13  
+**Last Updated**: 2026-03-07  
 **Status**: ✅ Production Ready
 
