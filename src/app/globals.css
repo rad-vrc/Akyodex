@@ -224,10 +224,13 @@ button,
 }
 
 #searchInput:focus,
-.search-input:focus {
-  border-color: var(--primary-blue) !important;
-  box-shadow: 0 0 0 4px rgba(102, 178, 255, 0.2) !important;
-  outline: none !important;
+#searchInput:focus-visible,
+.search-input:focus,
+.search-input:focus-visible {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.75) !important;
+  outline: 3px solid #1d4ed8 !important;
+  outline-offset: 3px !important;
 }
 
 /* ドロップダウン（属性・作者フィルター） */
@@ -506,7 +509,7 @@ select:focus {
 
 .list-view-table thead {
   background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-  color: white;
+  color: #4a2500;
 }
 
 .list-view-table th {

@@ -1,3 +1,6 @@
+import { DEFAULT_LANGUAGE, isValidLanguage, t, type SupportedLanguage } from '@/lib/i18n';
+import { cookies } from 'next/headers';
+
 /**
  * Zukan Loading State
  * 
@@ -5,7 +8,12 @@
  * Uses React Suspense boundary automatically.
  */
 
-export default function ZukanLoading() {
+export default async function ZukanLoading() {
+  const cookieStore = await cookies();
+  const cookieLang = cookieStore.get('AKYO_LANG')?.value;
+  const lang: SupportedLanguage =
+    cookieLang && isValidLanguage(cookieLang) ? cookieLang : DEFAULT_LANGUAGE;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       {/* Header Skeleton */}
@@ -68,9 +76,17 @@ export default function ZukanLoading() {
       </main>
 
       {/* Loading Indicator */}
-      <div className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-4 flex items-center gap-3 z-50">
-        <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-red-500"></div>
-        <span className="text-sm font-medium text-gray-700">読み込み中...</span>
+      <div
+        className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-4 flex items-center gap-3 z-50"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div
+          className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-red-500"
+          aria-hidden="true"
+        ></div>
+        <span className="text-sm font-medium text-gray-700">{t('loading.text', lang)}</span>
       </div>
     </div>
   );

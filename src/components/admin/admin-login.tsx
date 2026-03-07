@@ -56,10 +56,11 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-2">
+            <label htmlFor="admin-login-password" className="block text-gray-700 text-sm font-medium mb-2">
               Akyoワード
             </label>
             <input
+              id="admin-login-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

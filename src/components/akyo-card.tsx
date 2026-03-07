@@ -15,7 +15,7 @@ import { t, type SupportedLanguage } from "@/lib/i18n";
 import { buildAvatarImageUrl, safeOpenVRChatLink } from "@/lib/vrchat-utils";
 import type { AkyoData } from "@/types/akyo";
 import Image from "next/image";
-import { useState } from "react";
+import { type MouseEvent as ReactMouseEvent, useState } from "react";
 
 /**
  * Props for the AkyoCard component
@@ -28,7 +28,7 @@ interface AkyoCardProps {
   /** Optional callback when the favorite button is clicked */
   onToggleFavorite?: (id: string) => void;
   /** Optional callback when the card is clicked to show details */
-  onShowDetail?: (akyo: AkyoData) => void;
+  onShowDetail?: (akyo: AkyoData, triggerElement?: HTMLElement | null) => void;
   /** Prioritize image loading for above-the-fold cards */
   priority?: boolean;
 }
@@ -75,7 +75,7 @@ export function AkyoCard({
    * Handles clicks on the favorite heart icon button
    * @param e - React mouse event
    */
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  const handleFavoriteClick = (e: ReactMouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(akyo.id);
   };
@@ -83,8 +83,8 @@ export function AkyoCard({
   /**
    * Handles clicks on the card body to open detail view
    */
-  const handleCardClick = () => {
-    onShowDetail?.(akyo);
+  const handleCardClick = (triggerElement?: HTMLElement | null) => {
+    onShowDetail?.(akyo, triggerElement);
   };
 
   /**
@@ -92,7 +92,7 @@ export function AkyoCard({
    * Uses a server-side proxy to bypass CORS and force a download.
    * @param e - React mouse event
    */
-  const handleDownloadClick = (e: React.MouseEvent) => {
+  const handleDownloadClick = (e: ReactMouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
@@ -107,7 +107,7 @@ export function AkyoCard({
    * Handles clicks on the VRChat logo button to open the external detail page safely.
    * @param e - React mouse event
    */
-  const handleVRChatClick = (e: React.MouseEvent) => {
+  const handleVRChatClick = (e: ReactMouseEvent) => {
     safeOpenVRChatLink(e, sourceUrl);
   };
 
@@ -115,14 +115,24 @@ export function AkyoCard({
   const category = akyo.category || akyo.attribute;
   const author = akyo.author || akyo.creator;
   const sortedCategories = category ? parseAndSortCategories(category) : [];
+  const displayName = akyo.nickname || akyo.avatarName;
+  const cardLabel = `${formatDisplayId(akyo)} ${displayName} ${t("card.detail", lang)}`;
 
   return (
-    <div className="akyo-card cursor-pointer" onClick={handleCardClick}>
+    <article className="akyo-card relative">
+      <button
+        type="button"
+        data-card-trigger="true"
+        className="absolute inset-0 z-10 rounded-[20px] bg-transparent focus:outline-none focus-visible:ring-4 focus-visible:ring-orange-300 focus-visible:ring-offset-2"
+        aria-label={cardLabel}
+        aria-haspopup="dialog"
+        onClick={(e) => handleCardClick(e.currentTarget)}
+      />
       {/* 画像 */}
       <div className="relative w-full aspect-[3/2] bg-gray-100">
         <Image
           src={imageSrc}
-          alt={akyo.avatarName || akyo.nickname}
+          alt={displayName}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
@@ -163,21 +173,21 @@ export function AkyoCard({
         <button
           type="button"
           onClick={handleFavoriteClick}
-          className="favorite-btn absolute top-2 right-2 z-10"
+          className="favorite-btn absolute top-2 right-2 z-20"
           aria-label={
             akyo.isFavorite
               ? t("card.favorite.remove", lang)
               : t("card.favorite.add", lang)
           }
         >
-          {akyo.isFavorite ? "❤️" : "🤍"}
+          <span aria-hidden="true">{akyo.isFavorite ? "❤️" : "🤍"}</span>
         </button>
       </div>
 
       {/* カード情報 */}
       <div className="p-4 space-y-2">
         {/* VRChatリンク と 三面図DLボタン */}
-        <div className="flex items-center mb-1">
+        <div className="relative z-20 flex items-center mb-1">
           {sourceUrl && (
             <button
               type="button"
@@ -216,7 +226,7 @@ export function AkyoCard({
 
         {/* タイトル - 元の実装と同じフォント */}
         <h3 className="font-bold text-lg mb-1 text-gray-800 line-clamp-2">
-          {akyo.nickname || akyo.avatarName}
+          {displayName}
         </h3>
 
         {/* 属性バッジ */}
@@ -258,14 +268,14 @@ export function AkyoCard({
         {/* くわしく見るボタン */}
         <button
           type="button"
-          onClick={handleCardClick}
-          className="detail-button w-full flex items-center justify-center gap-2"
+          onClick={(e) => handleCardClick(e.currentTarget)}
+          className="detail-button relative z-20 w-full flex items-center justify-center gap-2"
         >
-          <span className="animate-bounce">🌟</span>
+          <span className="animate-bounce" aria-hidden="true">🌟</span>
           <span>{t("card.detail", lang)}</span>
-          <span className="animate-bounce">🌟</span>
+          <span className="animate-bounce" aria-hidden="true">🌟</span>
         </button>
       </div>
-    </div>
+    </article>
   );
 }
