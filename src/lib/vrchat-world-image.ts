@@ -53,24 +53,24 @@ export function getSizedVRChatWorldImageUrl(imageUrl: string, width: number): st
   const normalizedWidth = normalizeVRChatImageWidth(width);
 
   const apiImageMatch = imageUrl.match(
-    /^https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/1\/\d+$/i
+    /^https?:\/\/api\.vrchat\.cloud\/api\/1\/image\/(file_[A-Za-z0-9-]+)\/(\d+)\/\d+$/i
   );
-  if (apiImageMatch?.[1]) {
-    return `https://api.vrchat.cloud/api/1/image/${apiImageMatch[1]}/1/${normalizedWidth}`;
+  if (apiImageMatch?.[1] && apiImageMatch?.[2]) {
+    return `https://api.vrchat.cloud/api/1/image/${apiImageMatch[1]}/${apiImageMatch[2]}/${normalizedWidth}`;
   }
 
   const apiFileMatch = imageUrl.match(
-    /^https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/\d+\/file$/i
+    /^https?:\/\/api\.vrchat\.cloud\/api\/1\/file\/(file_[A-Za-z0-9-]+)\/(\d+)\/file$/i
   );
-  if (apiFileMatch?.[1]) {
-    return `https://api.vrchat.cloud/api/1/image/${apiFileMatch[1]}/1/${normalizedWidth}`;
+  if (apiFileMatch?.[1] && apiFileMatch?.[2]) {
+    return `https://api.vrchat.cloud/api/1/image/${apiFileMatch[1]}/${apiFileMatch[2]}/${normalizedWidth}`;
   }
 
   const filesThumbnailMatch = imageUrl.match(
-    /^https?:\/\/files\.vrchat\.cloud\/thumbnails\/(file_[A-Za-z0-9-]+)[^"'\s]*$/i
+    /^https?:\/\/files\.vrchat\.cloud\/thumbnails\/(file_[A-Za-z0-9-]+)\/(file_[A-Za-z0-9-]+)\.(\d+)\.thumbnail-\d+\.[A-Za-z]+$/i
   );
-  if (filesThumbnailMatch?.[1]) {
-    return `https://api.vrchat.cloud/api/1/image/${filesThumbnailMatch[1]}/1/${normalizedWidth}`;
+  if (filesThumbnailMatch?.[1] && filesThumbnailMatch?.[3]) {
+    return `https://api.vrchat.cloud/api/1/image/${filesThumbnailMatch[1]}/${filesThumbnailMatch[3]}/${normalizedWidth}`;
   }
 
   return imageUrl;
