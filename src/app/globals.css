@@ -341,12 +341,12 @@ select:focus {
 
 .view-toggle-btn.active img {
   filter: brightness(0) invert(1);
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-2px) scale(1.155);
 }
 
 .view-toggle-btn:not(.active) img {
   filter: brightness(0) invert(50%) sepia(10%) saturate(300%) hue-rotate(175deg) brightness(90%);
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-2px) scale(1.155);
 }
 
 .view-toggle-btn:hover {
