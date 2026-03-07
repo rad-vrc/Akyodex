@@ -253,7 +253,7 @@ function main() {
     headerMap[h.trim().replace(/^\ufeff/, "")] = i;
   });
 
-  // Validate required headers exist
+  // Validate required base headers exist; world-support columns remain optional
   const REQUIRED_HEADERS = [
     "ID",
     "Nickname",
@@ -262,9 +262,6 @@ function main() {
     "Comment",
     "Author",
     "AvatarURL",
-    "SourceURL",
-    "EntryType",
-    "DisplaySerial",
   ];
   const missingHeaders = REQUIRED_HEADERS.filter((h) => !(h in headerMap));
   if (missingHeaders.length > 0) {

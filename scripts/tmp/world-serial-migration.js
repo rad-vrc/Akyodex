@@ -382,4 +382,10 @@ function main() {
   console.log('ℹ️ Internal `id` values were preserved. Public world numbering now uses `DisplaySerial`.');
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  main,
+};
