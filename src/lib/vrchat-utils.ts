@@ -1,24 +1,40 @@
 import type { MouseEvent as ReactMouseEvent } from 'react';
+import {
+  detectVrcEntryTypeFromUrl,
+  extractVRChatAvatarIdFromUrl,
+  extractVRChatWorldIdFromUrl,
+  isValidVRChatEntityId,
+} from './akyo-entry';
 
 /**
  * VRChat Utilities
- * Helper functions for VRChat avatar operations
+ * Helper functions for VRChat entity operations
  */
 
 /**
- * Fetch VRChat avatar page with security validation and timeout
- * @param avtr - The VRChat avatar ID (e.g., avtr_xxx)
- * @returns The HTML content of the avatar page
+ * Fetch VRChat entity page with security validation and timeout
+ * @param entryType - The VRChat entity type
+ * @param id - The VRChat ID (e.g., avtr_xxx / wrld_xxx)
+ * @returns The HTML content of the entity page
  * @throws Error if the request fails or times out
  */
-export async function fetchVRChatPage(avtr: string): Promise<string> {
-  // Security: Explicitly construct VRChat URL to prevent SSRF
-  // Only allow vrchat.com domain
-  const vrchatPageUrl = `https://vrchat.com/home/avatar/${avtr}`;
+export async function fetchVRChatEntityPage(
+  entryType: 'avatar' | 'world',
+  id: string
+): Promise<string> {
+  const trimmedId = id.trim();
+  if (!isValidVRChatEntityId(entryType, trimmedId)) {
+    throw new Error('Invalid VRChat entity ID');
+  }
 
-  // Validate URL is actually vrchat.com (defense in depth)
-  const parsedUrl = new URL(vrchatPageUrl);
-  if (parsedUrl.hostname !== 'vrchat.com') {
+  // Security: construct the request from fixed host + fixed path prefixes only.
+  const parsedUrl = new URL('https://vrchat.com');
+  parsedUrl.pathname =
+    entryType === 'avatar'
+      ? `/home/avatar/${encodeURIComponent(trimmedId)}`
+      : `/home/world/${encodeURIComponent(trimmedId)}`;
+
+  if (parsedUrl.hostname !== 'vrchat.com' || parsedUrl.protocol !== 'https:') {
     throw new Error('Invalid domain');
   }
 
@@ -27,7 +43,7 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
-    const pageResponse = await fetch(vrchatPageUrl, {
+    const pageResponse = await fetch(parsedUrl.toString(), {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept': 'text/html',
@@ -53,24 +69,55 @@ export async function fetchVRChatPage(avtr: string): Promise<string> {
 }
 
 /**
+ * Fetch VRChat avatar page with security validation and timeout
+ * @param avtr - The VRChat avatar ID (e.g., avtr_xxx)
+ * @returns The HTML content of the avatar page
+ * @throws Error if the request fails or times out
+ */
+export async function fetchVRChatPage(avtr: string): Promise<string> {
+  return fetchVRChatEntityPage('avatar', avtr);
+}
+
+/**
+ * Fetch VRChat world page with security validation and timeout.
+ * Delegates to {@link fetchVRChatEntityPage} with the `world` entry type.
+ *
+ * @param wrld - The VRChat world ID or slug (e.g., wrld_xxx)
+ * @returns A promise that resolves to the HTML content of the world page
+ * @throws Error if the world ID is invalid, the request fails, or the request times out
+ */
+export async function fetchVRChatWorldPage(wrld: string): Promise<string> {
+  return fetchVRChatEntityPage('world', wrld);
+}
+
+/**
  * Extract VRChat avatar ID (avtr_xxx) from avatar URL
  * @param avatarUrl - The VRChat avatar URL (e.g., https://vrchat.com/home/avatar/avtr_xxx)
  * @returns The avatar ID (e.g., avtr_xxx) or null if not found
  */
 export function extractVRChatAvatarId(avatarUrl: string | undefined): string | null {
-  if (!avatarUrl) {
-    return null;
-  }
+  return extractVRChatAvatarIdFromUrl(avatarUrl);
+}
 
-  // Match avtr_ followed by alphanumeric characters and hyphens
-  const match = avatarUrl.match(/avtr_[A-Za-z0-9-]+/);
-  return match ? match[0] : null;
+/**
+ * Extract VRChat world ID (wrld_xxx) from world URL.
+ * Delegates to {@link extractVRChatWorldIdFromUrl}.
+ *
+ * @param worldUrl - The VRChat world URL (e.g., https://vrchat.com/home/world/wrld_xxx)
+ * @returns The world ID (e.g., wrld_xxx), or null for undefined / invalid URLs
+ *
+ * @example
+ * extractVRChatWorldId('https://vrchat.com/home/world/wrld_xxx') // 'wrld_xxx'
+ * extractVRChatWorldId(undefined) // null
+ */
+export function extractVRChatWorldId(worldUrl: string | undefined): string | null {
+  return extractVRChatWorldIdFromUrl(worldUrl);
 }
 
 /**
  * Validates and opens a VRChat URL safely in a new tab.
- * Extracts the avatar ID (avtr_...) to reconstruct a canonical URL, ensuring
- * only valid avatar pages are opened.
+ * Reconstructs a canonical avatar/world URL when a valid entity ID is present,
+ * and otherwise falls back to a strictly validated vrchat.com URL only.
  *
  * @param e - React or Native click event to stop propagation
  * @param url - The source URL to validate
@@ -80,15 +127,27 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
 
   if (!url) return;
 
-  // 1. Try to extract avatar ID and reconstruct canonical URL (Safest)
-  const avtrId = extractVRChatAvatarId(url);
-  if (avtrId) {
-    const canonicalUrl = `https://vrchat.com/home/avatar/${avtrId}`;
-    window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
-    return;
+  const entryType = detectVrcEntryTypeFromUrl(url);
+
+  if (entryType === 'avatar') {
+    const avtrId = extractVRChatAvatarId(url);
+    if (avtrId) {
+      const canonicalUrl = `https://vrchat.com/home/avatar/${encodeURIComponent(avtrId)}`;
+      window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
   }
 
-  // 2. Fallback: Strict domain validation if no ID found (e.g. general VRC links)
+  if (entryType === 'world') {
+    const wrldId = extractVRChatWorldId(url);
+    if (wrldId) {
+      const canonicalUrl = `https://vrchat.com/home/world/${encodeURIComponent(wrldId)}`;
+      window.open(canonicalUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+  }
+
+  // Fallback: Strict domain validation if no canonical entity URL can be reconstructed
   try {
     const parsed = new URL(url);
     if (parsed.protocol === 'https:' && parsed.hostname === 'vrchat.com') {
@@ -102,18 +161,27 @@ export function safeOpenVRChatLink(e: ReactMouseEvent | MouseEvent, url: string 
 }
 
 /**
- * Build avatar image URL with VRChat fallback support
+ * Build the catalog image URL using the source VRChat URL.
+ * When a world ID is present, this returns the world image proxy endpoint.
+ * When an avatar ID is present, this returns the avatar image proxy endpoint.
+ * Otherwise, it falls back to the default avatar image endpoint by Akyo ID only.
+ *
  * @param id - The Akyo ID
- * @param avatarUrl - The VRChat avatar URL
+ * @param sourceUrl - The source VRChat URL (avatar/world)
  * @param width - The desired image width (default: 512)
- * @returns The constructed image URL with avtr parameter if available
+ * @returns The constructed image URL for world, avatar, or default fallback cases
  */
 export function buildAvatarImageUrl(
   id: string,
-  avatarUrl: string | undefined,
+  sourceUrl: string | undefined,
   width: number = 512
 ): string {
-  const avtrId = extractVRChatAvatarId(avatarUrl);
+  const wrldId = extractVRChatWorldId(sourceUrl);
+  if (wrldId) {
+    return `/api/vrc-world-image?wrld=${wrldId}&w=${width}`;
+  }
+
+  const avtrId = extractVRChatAvatarId(sourceUrl);
 
   if (avtrId) {
     return `/api/avatar-image?id=${id}&avtr=${avtrId}&w=${width}`;

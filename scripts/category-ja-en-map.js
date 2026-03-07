@@ -211,6 +211,8 @@ module.exports = {
   '身分・役割/農家': 'Role・Status/Farmer',
   '身分・役割/王族': 'Role・Status/Royalty',
   '身分・役割/配達員': 'Role・Status/Delivery Worker',
+  'ワールド': 'World',
+  'ワールド/ペデスタル': 'World/Pedestal',
   '技能・特性': 'Skill・Trait',
   '技能・特性/ひこう': 'Skill・Trait/Flying',
   '技能・特性/まほう': 'Skill・Trait/Magic',

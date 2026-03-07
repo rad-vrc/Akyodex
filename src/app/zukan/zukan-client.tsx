@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Zukan Client Component
@@ -11,21 +11,22 @@
  * - Virtual scrolling (performance optimization)
  */
 
-import { AkyoCard } from '@/components/akyo-card';
-import { AkyoDetailModal } from '@/components/akyo-detail-modal';
-import { AkyoList } from '@/components/akyo-list';
-import { FilterPanel } from '@/components/filter-panel';
-import { IconCog, IconGrid, IconList } from '@/components/icons';
-import { LanguageToggle } from '@/components/language-toggle';
-import { SearchBar } from '@/components/search-bar';
-import { useAkyoData } from '@/hooks/use-akyo-data';
-import { useLanguage } from '@/hooks/use-language';
-import { t, type SupportedLanguage } from '@/lib/i18n';
-import type { AkyoData, ViewMode } from '@/types/akyo';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AkyoCard } from "@/components/akyo-card";
+import { AkyoDetailModal } from "@/components/akyo-detail-modal";
+import { AkyoList } from "@/components/akyo-list";
+import { FilterPanel } from "@/components/filter-panel";
+import { IconCog, IconGrid, IconList } from "@/components/icons";
+import { LanguageToggle } from "@/components/language-toggle";
+import { SearchBar } from "@/components/search-bar";
+import { useAkyoData } from "@/hooks/use-akyo-data";
+import { detectVrcEntryTypeFromUrl, resolveEntryType } from "@/lib/akyo-entry";
+import { useLanguage } from "@/hooks/use-language";
+import { t, type SupportedLanguage } from "@/lib/i18n";
+import type { AkyoData, ViewMode } from "@/types/akyo";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface ZukanClientProps {
   initialData: AkyoData[];
@@ -44,18 +45,18 @@ export interface ZukanClientProps {
   serverLang: SupportedLanguage;
 }
 
-const LOGO_BY_LANG: Record<SupportedLanguage | 'default', string> = {
-  ja: '/images/logo-mobile.webp',
-  en: '/images/logo-US-mobile.webp',
-  ko: '/images/logo-KO-mobile.webp',
-  default: '/images/logo-US-mobile.webp',
+const LOGO_BY_LANG: Record<SupportedLanguage | "default", string> = {
+  ja: "/images/logo-mobile.webp",
+  en: "/images/logo-US-mobile.webp",
+  ko: "/images/logo-KO-mobile.webp",
+  default: "/images/logo-US-mobile.webp",
 };
 
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 const DeferredMiniAkyoBg = dynamic(
-  () => import('@/components/mini-akyo-bg').then((mod) => mod.MiniAkyoBg),
-  { ssr: false }
+  () => import("@/components/mini-akyo-bg").then((mod) => mod.MiniAkyoBg),
+  { ssr: false },
 );
 
 // Virtual scrolling constants
@@ -70,7 +71,10 @@ function useResponsiveLayout() {
   // SSR-intentional behavior: isMobile is undefined during SSR/initial render
   // to avoid mismatched HTML. Visual stability is maintained by CSS (aspect ratio).
   // The actual device width is determined on client mount.
-  const [layout, setLayout] = useState<{ isMobile: boolean | undefined; gridCols: number }>({
+  const [layout, setLayout] = useState<{
+    isMobile: boolean | undefined;
+    gridCols: number;
+  }>({
     isMobile: undefined,
     gridCols: 1,
   });
@@ -104,10 +108,10 @@ function useResponsiveLayout() {
       timeoutId = window.setTimeout(handler, 150);
     };
 
-    window.addEventListener('resize', debouncedHandler);
+    window.addEventListener("resize", debouncedHandler);
     return () => {
       window.clearTimeout(timeoutId);
-      window.removeEventListener('resize', debouncedHandler);
+      window.removeEventListener("resize", debouncedHandler);
     };
   }, []);
 
@@ -121,42 +125,82 @@ interface LanguageDatasetCacheEntry {
 }
 
 function normalizeAkyoItem(item: unknown): AkyoData | undefined {
-  if (!item || typeof item !== 'object') return undefined;
+  if (!item || typeof item !== "object") return undefined;
 
   const raw = item as Record<string, unknown>;
-  const id = typeof raw.id === 'string' ? raw.id.trim() : '';
-  const avatarName = typeof raw.avatarName === 'string' ? raw.avatarName.trim() : '';
-  if (!id || !avatarName) return undefined;
+  const id = typeof raw.id === "string" ? raw.id.trim() : "";
+  const avatarName =
+    typeof raw.avatarName === "string" ? raw.avatarName.trim() : "";
+  const nickname = typeof raw.nickname === "string" ? raw.nickname.trim() : "";
 
   const category =
-    typeof raw.category === 'string'
+    typeof raw.category === "string"
       ? raw.category
-      : typeof raw.attribute === 'string'
+      : typeof raw.attribute === "string"
         ? raw.attribute
-        : '';
+        : "";
   const comment =
-    typeof raw.comment === 'string'
+    typeof raw.comment === "string"
       ? raw.comment
-      : typeof raw.notes === 'string'
+      : typeof raw.notes === "string"
         ? raw.notes
-        : '';
+        : "";
   const author =
-    typeof raw.author === 'string'
+    typeof raw.author === "string"
       ? raw.author
-      : typeof raw.creator === 'string'
+      : typeof raw.creator === "string"
         ? raw.creator
-        : '';
+        : "";
+  const sourceUrlCandidate =
+    typeof raw.sourceUrl === "string" && raw.sourceUrl.trim()
+      ? raw.sourceUrl.trim()
+      : typeof raw.avatarUrl === "string"
+        ? raw.avatarUrl
+        : "";
+  const explicitEntryType =
+    raw.entryType === "avatar" || raw.entryType === "world"
+      ? raw.entryType
+      : undefined;
+  const urlDetectedEntryType = detectVrcEntryTypeFromUrl(sourceUrlCandidate);
+  const categoryDetectedEntryType = category
+    .split(/[、,]/)
+    .map((value) => value.trim().toLowerCase())
+    .some(
+      (value) => value === "ワールド" || value === "world" || value === "월드",
+    )
+    ? "world"
+    : undefined;
+  const entryType =
+    explicitEntryType ||
+    urlDetectedEntryType ||
+    categoryDetectedEntryType ||
+    "avatar";
+  const displaySerial =
+    typeof raw.displaySerial === "string" && raw.displaySerial.trim()
+      ? raw.displaySerial.trim()
+      : undefined;
+
+  if (!id) return undefined;
+  if (entryType === "world" && !nickname) return undefined;
+  if (entryType === "avatar" && !avatarName) return undefined;
+
   const parsedCategory = Array.isArray(raw.parsedCategory)
-    ? raw.parsedCategory.filter((value): value is string => typeof value === 'string')
+    ? raw.parsedCategory.filter(
+        (value): value is string => typeof value === "string",
+      )
     : undefined;
   const parsedAuthor = Array.isArray(raw.parsedAuthor)
-    ? raw.parsedAuthor.filter((value): value is string => typeof value === 'string')
+    ? raw.parsedAuthor.filter(
+        (value): value is string => typeof value === "string",
+      )
     : undefined;
 
   return {
     id,
-    appearance: typeof raw.appearance === 'string' ? raw.appearance : '',
-    nickname: typeof raw.nickname === 'string' ? raw.nickname : '',
+    entryType,
+    displaySerial,
+    appearance: typeof raw.appearance === "string" ? raw.appearance : "",
+    nickname,
     avatarName,
     category,
     comment,
@@ -164,25 +208,29 @@ function normalizeAkyoItem(item: unknown): AkyoData | undefined {
     attribute: category,
     notes: comment,
     creator: author,
-    avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
-    isFavorite: typeof raw.isFavorite === 'boolean' ? raw.isFavorite : undefined,
-    parsedCategory: parsedCategory && parsedCategory.length > 0 ? parsedCategory : undefined,
-    parsedAuthor: parsedAuthor && parsedAuthor.length > 0 ? parsedAuthor : undefined,
+    sourceUrl: sourceUrlCandidate,
+    avatarUrl: typeof raw.avatarUrl === "string" ? raw.avatarUrl : "",
+    isFavorite:
+      typeof raw.isFavorite === "boolean" ? raw.isFavorite : undefined,
+    parsedCategory:
+      parsedCategory && parsedCategory.length > 0 ? parsedCategory : undefined,
+    parsedAuthor:
+      parsedAuthor && parsedAuthor.length > 0 ? parsedAuthor : undefined,
   };
 }
 
 function extractTaxonomy(
-  akyoItems: AkyoData[]
-): Pick<LanguageDatasetCacheEntry, 'categories' | 'authors'> {
+  akyoItems: AkyoData[],
+): Pick<LanguageDatasetCacheEntry, "categories" | "authors"> {
   const uniqueCategories = new Set<string>();
   const uniqueAuthors = new Set<string>();
 
   for (const item of akyoItems) {
-    const cats = (item.category || item.attribute || '')
+    const cats = (item.category || item.attribute || "")
       .split(MULTI_VALUE_SPLIT_PATTERN)
       .map((s) => s.trim())
       .filter(Boolean);
-    const auths = (item.author || item.creator || '')
+    const auths = (item.author || item.creator || "")
       .split(MULTI_VALUE_SPLIT_PATTERN)
       .map((s) => s.trim())
       .filter(Boolean);
@@ -227,15 +275,19 @@ export function ZukanClient({
   // — State —
   const [currentCategories, setCurrentCategories] = useState(categories);
   const [currentAuthors, setCurrentAuthors] = useState(authors);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
-  const [categoryMatchMode, setCategoryMatchMode] = useState<'or' | 'and'>('or');
+  const [categoryMatchMode, setCategoryMatchMode] = useState<"or" | "and">(
+    "or",
+  );
   const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
-  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState<boolean | null>(
+    null,
+  );
   const [selectedAkyo, setSelectedAkyo] = useState<AkyoData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renderLimit, setRenderLimit] = useState(MOBILE_RENDER_LIMIT);
@@ -243,33 +295,60 @@ export function ZukanClient({
   const [isMiniAkyoBgEnabled, setIsMiniAkyoBgEnabled] = useState(false);
   const [refetchError, setRefetchError] = useState<string | null>(null);
 
-  const languageDatasetCacheRef = useRef<Map<SupportedLanguage, LanguageDatasetCacheEntry>>(
-    new Map([[serverLang, { items: initialData, categories, authors }]])
-  );
+  const languageDatasetCacheRef = useRef<
+    Map<SupportedLanguage, LanguageDatasetCacheEntry>
+  >(new Map([[serverLang, { items: initialData, categories, authors }]]));
   const tickingRef = useRef(false);
   const filteredLengthRef = useRef(0);
   const dataLengthRef = useRef(data.length);
 
   // — Derived values —
-  const stats = useMemo(
-    () => ({
-      total: data.length,
-      displayed: filteredData.length,
-      favorites: data.filter((a) => a.isFavorite).length,
-    }),
-    [data, filteredData]
-  );
+  const stats = useMemo(() => {
+    const summarizeByEntryType = (items: AkyoData[]) =>
+      items.reduce(
+        (acc, item) => {
+          if (resolveEntryType(item) === "world") {
+            acc.worlds += 1;
+          } else {
+            acc.avatars += 1;
+          }
+
+          if (item.isFavorite) {
+            acc.favorites += 1;
+          }
+
+          return acc;
+        },
+        { avatars: 0, worlds: 0, favorites: 0 },
+      );
+
+    const totalSummary = summarizeByEntryType(data);
+    const displayedSummary = summarizeByEntryType(filteredData);
+
+    return {
+      totalAvatars: totalSummary.avatars,
+      totalWorlds: totalSummary.worlds,
+      displayedAvatars: displayedSummary.avatars,
+      displayedWorlds: displayedSummary.worlds,
+      favorites: totalSummary.favorites,
+    };
+  }, [data, filteredData]);
 
   const activeFilterCount = useMemo(
-    () => selectedAttributes.length + selectedCreators.length + (favoritesOnly ? 1 : 0),
-    [selectedAttributes, selectedCreators, favoritesOnly]
+    () =>
+      selectedAttributes.length +
+      selectedCreators.length +
+      (favoritesOnly ? 1 : 0),
+    [selectedAttributes, selectedCreators, favoritesOnly],
   );
   const isLanguageRefetching = loading && needsRefetch && data.length > 0;
   const languageStatusMessage = refetchError
     ? refetchError
     : isLanguageRefetching
-      ? t('loading.subtext', lang)
+      ? t("loading.subtext", lang)
       : null;
+  const resolvedIsFilterPanelOpen =
+    isFilterPanelOpen ?? (isMobile === true ? false : true);
 
   // Sync server-rendered language payload to cache
   useEffect(() => {
@@ -286,6 +365,14 @@ export function ZukanClient({
       setRefetchError(null);
     }
   }, [lang, serverLang]);
+
+  useEffect(() => {
+    if (isMobile === undefined) return;
+    setIsFilterPanelOpen((current) => {
+      if (current !== null) return current;
+      return isMobile ? false : true;
+    });
+  }, [isMobile]);
 
   // Refetch data when language differs from server-rendered language
   useEffect(() => {
@@ -311,37 +398,55 @@ export function ZukanClient({
       try {
         // Route language-switch requests through server API so
         // KV → JSON → CSV fallback strategy stays centralized.
-        const response = await fetch(`/api/akyo-data?lang=${encodeURIComponent(lang)}`, {
-          signal: controller.signal,
-        });
+        const response = await fetch(
+          `/api/akyo-data?lang=${encodeURIComponent(lang)}`,
+          {
+            signal: controller.signal,
+          },
+        );
         if (!response.ok) {
           throw new Error(`Failed to fetch data (${response.status})`);
         }
 
         const jsonData: unknown = await response.json();
         const wrappedData =
-          jsonData && typeof jsonData === 'object'
+          jsonData && typeof jsonData === "object"
             ? (jsonData as Record<string, unknown>).data
             : undefined;
         const akyoItems: AkyoData[] | undefined = Array.isArray(wrappedData)
-          ? wrappedData
-            .map(normalizeAkyoItem)
-            .filter((item): item is AkyoData => item !== undefined)
+          ? (() => {
+              const normalizedItems = wrappedData.map(normalizeAkyoItem);
+              const validItems = normalizedItems.filter(
+                (item): item is AkyoData => item !== undefined,
+              );
+              const droppedCount = normalizedItems.length - validItems.length;
+              if (droppedCount > 0) {
+                console.warn(
+                  `[ZukanClient] Dropped ${droppedCount} invalid entries while normalizing language payload`,
+                );
+              }
+              return validItems;
+            })()
           : undefined;
         if (!akyoItems) {
           // Sanitized summary — only safe metadata, no raw content
-          const payloadType = jsonData === null ? 'null'
-            : typeof jsonData === 'object' ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
-              : typeof jsonData;
+          const payloadType =
+            jsonData === null
+              ? "null"
+              : typeof jsonData === "object"
+                ? `object(keys:${Object.keys(jsonData as Record<string, unknown>).length})`
+                : typeof jsonData;
 
           throw new Error(
-            `[ZukanClient] Empty or invalid JSON: expected { data: AkyoData[] } with items, got ${payloadType}`
+            `[ZukanClient] Empty or invalid JSON: expected { data: AkyoData[] } with items, got ${payloadType}`,
           );
         }
 
         if (akyoItems.length === 0) {
-          console.warn('[ZukanClient] Empty language payload, keeping existing dataset.');
-          setRefetchError(t('error.languageUnavailable', lang));
+          console.warn(
+            "[ZukanClient] Empty language payload, keeping existing dataset.",
+          );
+          setRefetchError(t("error.languageUnavailable", lang));
           return;
         }
 
@@ -358,9 +463,10 @@ export function ZukanClient({
         });
       } catch (err) {
         if (cancelled) return;
-        if (err instanceof Error && err.name === 'AbortError') return;
-        console.error('[ZukanClient] Failed to refetch language data:', err);
-        const message = err instanceof Error ? err.message : t('error.title', lang);
+        if (err instanceof Error && err.name === "AbortError") return;
+        console.error("[ZukanClient] Failed to refetch language data:", err);
+        const message =
+          err instanceof Error ? err.message : t("error.title", lang);
         if (dataLengthRef.current > 0) {
           setRefetchError(message);
           return;
@@ -378,7 +484,15 @@ export function ZukanClient({
       cancelled = true;
       controller.abort();
     };
-  }, [isReady, needsRefetch, lang, serverLang, refetchWithNewData, setLoading, setError]);
+  }, [
+    isReady,
+    needsRefetch,
+    lang,
+    serverLang,
+    refetchWithNewData,
+    setLoading,
+    setError,
+  ]);
 
   // Initial mount optimizations: responsive render limit and defer heavy bg
   useEffect(() => {
@@ -414,7 +528,7 @@ export function ZukanClient({
     toggleFavorite(id);
     // Optimistically update modal state and let data-sync effect reconcile with source data.
     setSelectedAkyo((prev) =>
-      prev && prev.id === id ? { ...prev, isFavorite: !prev.isFavorite } : prev
+      prev && prev.id === id ? { ...prev, isFavorite: !prev.isFavorite } : prev,
     );
   };
 
@@ -430,7 +544,9 @@ export function ZukanClient({
   }, [data, isModalOpen]);
 
   useEffect(() => {
-    setRenderLimit(isMobile === false ? DESKTOP_RENDER_LIMIT : MOBILE_RENDER_LIMIT);
+    setRenderLimit(
+      isMobile === false ? DESKTOP_RENDER_LIMIT : MOBILE_RENDER_LIMIT,
+    );
   }, [
     searchQuery,
     selectedAttributes,
@@ -457,10 +573,14 @@ export function ZukanClient({
     if (tickingRef.current) return;
     tickingRef.current = true;
     requestAnimationFrame(() => {
-      const nearBottom = window.innerHeight + window.scrollY > document.documentElement.scrollHeight - 800;
+      const nearBottom =
+        window.innerHeight + window.scrollY >
+        document.documentElement.scrollHeight - 800;
       if (nearBottom) {
         const len = filteredLengthRef.current;
-        setRenderLimit((prev) => (prev < len ? Math.min(len, prev + RENDER_CHUNK) : prev));
+        setRenderLimit((prev) =>
+          prev < len ? Math.min(len, prev + RENDER_CHUNK) : prev,
+        );
       }
       tickingRef.current = false;
     });
@@ -468,8 +588,8 @@ export function ZukanClient({
 
   // Attach scroll listener (runs once thanks to stable handleScroll)
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
   // フィルター適用
@@ -478,7 +598,8 @@ export function ZukanClient({
     filterData(
       {
         searchQuery,
-        categories: selectedAttributes.length > 0 ? selectedAttributes : undefined,
+        categories:
+          selectedAttributes.length > 0 ? selectedAttributes : undefined,
         authors: selectedCreators.length > 0 ? selectedCreators : undefined,
         categoryMatchMode,
         // 新フィールド名を優先して渡す
@@ -489,7 +610,7 @@ export function ZukanClient({
         creator: selectedCreators[0] || undefined,
         favoritesOnly,
       },
-      sortAscending
+      sortAscending,
     );
   }, [
     searchQuery,
@@ -514,17 +635,17 @@ export function ZukanClient({
     } else {
       setRandomMode(true);
       // フィルタ状態をリセットしてからランダムフィルタを適用
-      setSearchQuery('');
+      setSearchQuery("");
       setSelectedAttributes([]);
-      setCategoryMatchMode('or');
+      setCategoryMatchMode("or");
       setSelectedCreators([]);
       setFavoritesOnly(false);
       filterData(
         {
-          searchQuery: '',
+          searchQuery: "",
           randomCount: 20,
         },
-        sortAscending
+        sortAscending,
       );
     }
   };
@@ -540,7 +661,7 @@ export function ZukanClient({
         <div className="akyo-card p-8 text-center space-y-4">
           <div className="text-6xl">😢</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            {t('error.title', lang)}
+            {t("error.title", lang)}
           </h2>
           <p className="text-[var(--text-secondary)]">{error}</p>
         </div>
@@ -555,9 +676,11 @@ export function ZukanClient({
         <div className="akyo-card p-8 text-center space-y-4 animate-pulse">
           <div className="text-6xl">🔄</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            {t('loading.text', lang)}
+            {t("loading.text", lang)}
           </h2>
-          <p className="text-[var(--text-secondary)]">{t('loading.subtext', lang)}</p>
+          <p className="text-[var(--text-secondary)]">
+            {t("loading.subtext", lang)}
+          </p>
         </div>
       </div>
     );
@@ -575,7 +698,7 @@ export function ZukanClient({
           <Link href="/" className="flex-shrink-0">
             <Image
               src={LOGO_BY_LANG[lang] || LOGO_BY_LANG.default}
-              alt={t('logo.alt', lang)}
+              alt={t("logo.alt", lang)}
               width={454}
               height={70}
               unoptimized
@@ -589,10 +712,14 @@ export function ZukanClient({
           {/* 統計情報 */}
           <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {t('stats.total', lang).replace('{count}', String(stats.total))}
+              {t("stats.totalBreakdown", lang)
+                .replace("{avatars}", String(stats.totalAvatars))
+                .replace("{worlds}", String(stats.totalWorlds))}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {t('stats.displayed', lang).replace('{count}', String(stats.displayed))}
+              {t("stats.displayedBreakdown", lang)
+                .replace("{avatars}", String(stats.displayedAvatars))
+                .replace("{worlds}", String(stats.displayedWorlds))}
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
               ❤️{stats.favorites}
@@ -607,10 +734,11 @@ export function ZukanClient({
           <div role="status" aria-live="polite" aria-atomic="true">
             {languageStatusMessage ? (
               <div
-                className={`rounded-xl px-4 py-3 text-sm shadow-sm ${refetchError
-                  ? 'border border-amber-300 bg-amber-50/95 text-amber-900'
-                  : 'border border-sky-300 bg-sky-50/95 text-sky-900'
-                  }`}
+                className={`rounded-xl px-4 py-3 text-sm shadow-sm ${
+                  refetchError
+                    ? "border border-amber-300 bg-amber-50/95 text-amber-900"
+                    : "border border-sky-300 bg-sky-50/95 text-sky-900"
+                }`}
               >
                 {languageStatusMessage}
               </div>
@@ -623,32 +751,46 @@ export function ZukanClient({
           <SearchBar
             onSearch={setSearchQuery}
             value={searchQuery}
-            placeholder={t('search.placeholder', lang)}
-            ariaLabel={t('search.ariaLabel', lang)}
-            clearAriaLabel={t('search.clearAriaLabel', lang)}
+            placeholder={t("search.placeholder", lang)}
+            ariaLabel={t("search.ariaLabel", lang)}
+            clearAriaLabel={t("search.clearAriaLabel", lang)}
           />
         </div>
 
         {/* フィルターとビュー切替 */}
         <div className="akyo-card p-4 sm:p-6 space-y-4">
-          <div className="sm:hidden space-y-2">
+          <div className="space-y-2">
             <button
               type="button"
-              onClick={() => setIsFilterPanelOpen((current) => !current)}
-              aria-expanded={isFilterPanelOpen}
+              onClick={() =>
+                setIsFilterPanelOpen((current) =>
+                  current === null
+                    ? !(isMobile === true ? false : true)
+                    : !current,
+                )
+              }
+              aria-expanded={resolvedIsFilterPanelOpen}
               aria-controls="zukan-filter-panel"
               className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-sm transition-colors hover:bg-gray-50"
             >
-              {isFilterPanelOpen ? t('filter.panelHide', lang) : t('filter.panelShow', lang)}
+              {resolvedIsFilterPanelOpen
+                ? t("filter.panelHide", lang)
+                : t("filter.panelShow", lang)}
             </button>
-            {!isFilterPanelOpen ? (
+            {!resolvedIsFilterPanelOpen ? (
               <p className="text-xs text-[var(--text-secondary)]">
-                {t('filter.panelSummary', lang).replace('{count}', String(activeFilterCount))}
+                {t("filter.panelSummary", lang).replace(
+                  "{count}",
+                  String(activeFilterCount),
+                )}
               </p>
             ) : null}
           </div>
 
-          <div id="zukan-filter-panel" className={isFilterPanelOpen ? 'block sm:block' : 'hidden sm:block'}>
+          <div
+            id="zukan-filter-panel"
+            className={resolvedIsFilterPanelOpen ? "block" : "hidden"}
+          >
             <FilterPanel
               // 動的に更新されるカテゴリ/作者を使用
               categories={currentCategories}
@@ -659,11 +801,13 @@ export function ZukanClient({
               selectedAttributes={selectedAttributes}
               selectedCreators={selectedCreators}
               categoryMatchMode={categoryMatchMode}
-              selectedCreator={selectedCreators[0] || ''}
+              selectedCreator={selectedCreators[0] || ""}
               onAttributesChange={setSelectedAttributes}
               onCreatorsChange={setSelectedCreators}
               onCategoryMatchModeChange={setCategoryMatchMode}
-              onCreatorChange={(creator) => setSelectedCreators(creator ? [creator] : [])}
+              onCreatorChange={(creator) =>
+                setSelectedCreators(creator ? [creator] : [])
+              }
               onSortToggle={handleSortToggle}
               onRandomClick={handleRandomClick}
               onFavoritesClick={handleFavoritesClick}
@@ -678,17 +822,17 @@ export function ZukanClient({
           <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => setViewMode('grid')}
-              className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              aria-label={t('view.grid', lang)}
+              onClick={() => setViewMode("grid")}
+              className={`view-toggle-btn ${viewMode === "grid" ? "active" : ""}`}
+              aria-label={t("view.grid", lang)}
             >
               <IconGrid size="w-5 h-5 md:w-6 md:h-6" />
             </button>
             <button
               type="button"
-              onClick={() => setViewMode('list')}
-              className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-              aria-label={t('view.list', lang)}
+              onClick={() => setViewMode("list")}
+              className={`view-toggle-btn ${viewMode === "list" ? "active" : ""}`}
+              aria-label={t("view.list", lang)}
             >
               <IconList size="w-5 h-5 md:w-6 md:h-6" />
             </button>
@@ -700,11 +844,13 @@ export function ZukanClient({
           <div className="akyo-card p-12 text-center space-y-4">
             <div className="text-6xl">🔍</div>
             <h3 className="text-2xl font-bold text-[var(--text-primary)]">
-              {t('notfound.title', lang)}
+              {t("notfound.title", lang)}
             </h3>
-            <p className="text-[var(--text-secondary)]">{t('notfound.message', lang)}</p>
+            <p className="text-[var(--text-secondary)]">
+              {t("notfound.message", lang)}
+            </p>
           </div>
-        ) : viewMode === 'list' ? (
+        ) : viewMode === "list" ? (
           <AkyoList
             data={filteredData.slice(0, renderLimit)}
             lang={lang}
@@ -715,10 +861,11 @@ export function ZukanClient({
           <div
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6"
             style={{
-              minHeight: (isMobile === false && filteredData.length > 0)
-                // 420px card height + 24px gap = 444px per row
-                ? `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / gridCols) * 444 - 24}px`
-                : undefined
+              minHeight:
+                isMobile === false && filteredData.length > 0
+                  ? // 420px card height + 24px gap = 444px per row
+                    `${Math.ceil(Math.min(filteredData.length, DESKTOP_RENDER_LIMIT) / gridCols) * 444 - 24}px`
+                  : undefined,
             }}
           >
             {filteredData.slice(0, renderLimit).map((akyo, index) => (
@@ -751,8 +898,8 @@ export function ZukanClient({
       <Link
         href="/admin"
         className="admin-button group"
-        aria-label={t('admin.panel', lang)}
-        title={t('admin.panel', lang)}
+        aria-label={t("admin.panel", lang)}
+        title={t("admin.panel", lang)}
       >
         <IconCog
           size="w-5 h-5 sm:w-6 sm:h-6"
@@ -761,7 +908,10 @@ export function ZukanClient({
       </Link>
 
       {/* AI Chat Assistant (Dify embed) */}
-      <div id="dify-chatbot-container" className="fixed bottom-6 right-6 z-[2147483647]" />
+      <div
+        id="dify-chatbot-container"
+        className="fixed bottom-6 right-6 z-[2147483647]"
+      />
     </div>
   );
 }

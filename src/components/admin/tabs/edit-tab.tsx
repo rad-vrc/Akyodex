@@ -1,6 +1,7 @@
 'use client';
 
 import { IconEdit, IconInfoCircle, IconSearch, IconTrash } from '@/components/icons';
+import { getAkyoSourceUrl } from '@/lib/akyo-entry';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AdminRole, AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -160,7 +161,7 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
                     {/* 画像 */}
                     <td className="px-4 py-3">
                       <Image
-                        src={buildAvatarImageUrl(akyo.id, akyo.avatarUrl, 64)}
+                        src={buildAvatarImageUrl(akyo.id, getAkyoSourceUrl(akyo), 64)}
                         alt={akyo.avatarName || akyo.nickname}
                         width={48}
                         height={48}

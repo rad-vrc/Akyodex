@@ -1,11 +1,35 @@
-'use client';
+"use client";
 
-import type { AkyoData, AkyoFilterOptions } from '@/types/akyo';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import type { AkyoData, AkyoFilterOptions } from "@/types/akyo";
+import { formatDisplayId } from "@/lib/akyo-entry";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /** localStorage のキー名 */
-const FAVORITES_STORAGE_KEY = 'akyoFavorites';
+const FAVORITES_STORAGE_KEY = "akyoFavorites";
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
+
+function toHiragana(value: string): string {
+  return value.replace(/[\u30A1-\u30F6]/g, (char) =>
+    String.fromCharCode(char.charCodeAt(0) - 0x60),
+  );
+}
+
+function toKatakana(value: string): string {
+  return value.replace(/[\u3041-\u3096]/g, (char) =>
+    String.fromCharCode(char.charCodeAt(0) + 0x60),
+  );
+}
+
+function normalizeSearchValue(value: string | undefined): string[] {
+  const base = String(value || "")
+    .trim()
+    .normalize("NFC")
+    .toLowerCase();
+  if (!base) return [];
+
+  const variants = new Set([base, toHiragana(base), toKatakana(base)]);
+  return Array.from(variants);
+}
 
 /**
  * Akyoデータを管理するカスタムフック (SSR対応版)
@@ -42,11 +66,11 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       // 別タブ更新を基準値として取り込み、次回の差分判定を正しくする
       lastPersistedFavoritesRef.current = JSON.stringify(getFavorites());
       favoritesDirtyRef.current = false;
-      setData(prev => applyFavorites(prev));
-      setFilteredData(prev => applyFavorites(prev));
+      setData((prev) => applyFavorites(prev));
+      setFilteredData((prev) => applyFavorites(prev));
     };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   // dataの変更に合わせてお気に入りIDを永続化（state updater内の副作用を回避）
@@ -58,10 +82,14 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     // シリアライズ比較まで完了した成功経路でのみ行う
     // 初期SSRデータ（isFavorite未同期）で localStorage を空上書きしない
     if (data.length === 0) return;
-    const hasFullySyncedFavoriteState = data.every((item) => typeof item.isFavorite === 'boolean');
+    const hasFullySyncedFavoriteState = data.every(
+      (item) => typeof item.isFavorite === "boolean",
+    );
     if (!hasFullySyncedFavoriteState) return;
 
-    const favorites = data.filter((item) => item.isFavorite).map((item) => item.id);
+    const favorites = data
+      .filter((item) => item.isFavorite)
+      .map((item) => item.id);
     const serializedFavorites = JSON.stringify(favorites);
     if (serializedFavorites === lastPersistedFavoritesRef.current) {
       favoritesDirtyRef.current = false;
@@ -83,86 +111,121 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   }, []);
 
   // フィルタリング機能
-  const filterData = useCallback((options: AkyoFilterOptions, sortAsc: boolean = true) => {
-    const query = (options.searchQuery || '').toLowerCase();
-    const targetCategory = options.category || options.attribute;
-    const targetAuthor = options.author || options.creator;
-    const createSelectedList = (values: string[] | undefined, singleValue: string | undefined) =>
-      (values && values.length > 0 ? values : singleValue && singleValue !== 'all' ? [singleValue] : [])
-        .map((item) => item.trim())
-        .filter(Boolean);
+  const filterData = useCallback(
+    (options: AkyoFilterOptions, sortAsc: boolean = true) => {
+      const normalizedQueryVariants = normalizeSearchValue(options.searchQuery);
+      const targetCategory = options.category || options.attribute;
+      const targetAuthor = options.author || options.creator;
+      const createSelectedList = (
+        values: string[] | undefined,
+        singleValue: string | undefined,
+      ) =>
+        (values && values.length > 0
+          ? values
+          : singleValue && singleValue !== "all"
+            ? [singleValue]
+            : []
+        )
+          .map((item) => item.trim())
+          .filter(Boolean);
 
-    const selectedAuthors = createSelectedList(options.authors, targetAuthor);
-    const selectedCategories = createSelectedList(options.categories, targetCategory);
-    const categoryMatchMode = options.categoryMatchMode === 'and' ? 'and' : 'or';
-
-    let filtered = [...data];
-
-    // Filter by categories (supports both single and multi-select)
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter((akyo) => {
-        const parsedCategories =
-          akyo.parsedCategory ?? parseMultiValueField(akyo.category || akyo.attribute || '');
-
-        if (categoryMatchMode === 'and') {
-          return selectedCategories.every((category) => parsedCategories.includes(category));
-        }
-        return selectedCategories.some((category) => parsedCategories.includes(category));
-      });
-    }
-
-    // Filter by creator/author
-    if (selectedAuthors.length > 0) {
-      filtered = filtered.filter((akyo) => {
-        const parsedAuthors =
-          akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || '');
-        return selectedAuthors.some((author) => parsedAuthors.includes(author));
-      });
-    }
-
-    // Filter by favorites
-    if (options.favoritesOnly) {
-      filtered = filtered.filter((akyo) => akyo.isFavorite);
-    }
-
-    // Filter by search query
-    if (query) {
-      filtered = filtered.filter(
-        (akyo) =>
-          (akyo.id || '').toLowerCase().includes(query) ||
-          (akyo.nickname || '').toLowerCase().includes(query) ||
-          (akyo.avatarName || '').toLowerCase().includes(query) ||
-          (akyo.category || akyo.attribute || '').toLowerCase().includes(query) ||
-          (akyo.author || akyo.creator || '').toLowerCase().includes(query) ||
-          (akyo.comment || akyo.notes || '').toLowerCase().includes(query)
+      const selectedAuthors = createSelectedList(options.authors, targetAuthor);
+      const selectedCategories = createSelectedList(
+        options.categories,
+        targetCategory,
       );
-    }
+      const categoryMatchMode =
+        options.categoryMatchMode === "and" ? "and" : "or";
 
-    // Random display mode
-    if (options.randomCount) {
-      filtered = filtered
-        .map((value) => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value)
-        .slice(0, options.randomCount);
-    } else {
-      // Sort by ID
-      filtered.sort((a, b) => {
-        const idA = Number.parseInt(a.id, 10);
-        const idB = Number.parseInt(b.id, 10);
-        const safeIdA = Number.isNaN(idA) ? 0 : idA;
-        const safeIdB = Number.isNaN(idB) ? 0 : idB;
-        return sortAsc ? safeIdA - safeIdB : safeIdB - safeIdA;
-      });
-    }
+      let filtered = [...data];
 
-    setFilteredData(filtered);
-  }, [data]);
+      // Filter by categories (supports both single and multi-select)
+      if (selectedCategories.length > 0) {
+        filtered = filtered.filter((akyo) => {
+          const parsedCategories =
+            akyo.parsedCategory ??
+            parseMultiValueField(akyo.category || akyo.attribute || "");
+
+          if (categoryMatchMode === "and") {
+            return selectedCategories.every((category) =>
+              parsedCategories.includes(category),
+            );
+          }
+          return selectedCategories.some((category) =>
+            parsedCategories.includes(category),
+          );
+        });
+      }
+
+      // Filter by creator/author
+      if (selectedAuthors.length > 0) {
+        filtered = filtered.filter((akyo) => {
+          const parsedAuthors =
+            akyo.parsedAuthor ??
+            parseMultiValueField(akyo.author || akyo.creator || "");
+          return selectedAuthors.some((author) =>
+            parsedAuthors.includes(author),
+          );
+        });
+      }
+
+      // Filter by favorites
+      if (options.favoritesOnly) {
+        filtered = filtered.filter((akyo) => akyo.isFavorite);
+      }
+
+      // Filter by search query
+      if (normalizedQueryVariants.length > 0) {
+        filtered = filtered.filter((akyo) => {
+          const searchTargets = [
+            akyo.id || "",
+            formatDisplayId(akyo),
+            akyo.nickname || "",
+            akyo.avatarName || "",
+            akyo.category || akyo.attribute || "",
+            akyo.author || akyo.creator || "",
+            akyo.comment || akyo.notes || "",
+          ];
+
+          const normalizedTargets = searchTargets.flatMap((value) =>
+            normalizeSearchValue(value),
+          );
+
+          return normalizedQueryVariants.some((query) =>
+            normalizedTargets.some((target) => target.includes(query)),
+          );
+        });
+      }
+
+      // Random display mode
+      if (options.randomCount) {
+        filtered = filtered
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value)
+          .slice(0, options.randomCount);
+      } else {
+        // Sort by ID
+        filtered.sort((a, b) => {
+          const idA = Number.parseInt(a.id, 10);
+          const idB = Number.parseInt(b.id, 10);
+          const safeIdA = Number.isNaN(idA) ? 0 : idA;
+          const safeIdB = Number.isNaN(idB) ? 0 : idB;
+          return sortAsc ? safeIdA - safeIdB : safeIdB - safeIdA;
+        });
+      }
+
+      setFilteredData(filtered);
+    },
+    [data],
+  );
 
   // お気に入り機能
   const toggleFavorite = useCallback((id: string) => {
     const toggleFavoriteFlag = (items: AkyoData[]) =>
-      items.map((akyo) => (akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo));
+      items.map((akyo) =>
+        akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo,
+      );
 
     favoritesDirtyRef.current = true;
     setData((prevData) => toggleFavoriteFlag(prevData));
@@ -206,12 +269,15 @@ function getFavorites(): string[] {
     }
     const parsed: unknown = JSON.parse(stored);
     // バリデーション: 配列かつ全要素が文字列であることを確認
-    if (Array.isArray(parsed) && parsed.every((item): item is string => typeof item === 'string')) {
+    if (
+      Array.isArray(parsed) &&
+      parsed.every((item): item is string => typeof item === "string")
+    ) {
       favoritesCache = parsed;
       return parsed;
     }
     // 不正なデータ形式の場合はリセット
-    console.warn('Invalid favorites data in localStorage, resetting');
+    console.warn("Invalid favorites data in localStorage, resetting");
     favoritesCache = [];
     return [];
   } catch {
@@ -232,7 +298,7 @@ function saveFavorites(ids: string[]): void {
   try {
     localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(idsCopy));
   } catch (e) {
-    console.warn('Failed to save favorites to localStorage:', e);
+    console.warn("Failed to save favorites to localStorage:", e);
   }
 }
 
@@ -243,10 +309,14 @@ function saveFavorites(ids: string[]): void {
 function applyFavorites(items: AkyoData[]): AkyoData[] {
   if (items.length === 0) return items;
   const favoritesSet = new Set(getFavorites());
-  return items.map(akyo => ({
+  return items.map((akyo) => ({
     ...akyo,
-    parsedCategory: akyo.parsedCategory ?? parseMultiValueField(akyo.category || akyo.attribute || ''),
-    parsedAuthor: akyo.parsedAuthor ?? parseMultiValueField(akyo.author || akyo.creator || ''),
+    parsedCategory:
+      akyo.parsedCategory ??
+      parseMultiValueField(akyo.category || akyo.attribute || ""),
+    parsedAuthor:
+      akyo.parsedAuthor ??
+      parseMultiValueField(akyo.author || akyo.creator || ""),
     isFavorite: favoritesSet.has(akyo.id),
   }));
 }

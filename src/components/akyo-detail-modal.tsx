@@ -24,13 +24,14 @@ import {
   IconUser,
 } from '@/components/icons';
 import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
+import { formatDisplayId, getAkyoSourceUrl, resolveEntryType } from '@/lib/akyo-entry';
 import type { SupportedLanguage } from '@/lib/i18n';
 import { t } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
 import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /**
  * Props for the AkyoDetailModal component
@@ -64,6 +65,24 @@ export function AkyoDetailModal({
   lang = 'ja',
 }: AkyoDetailModalProps) {
   const [localAkyo, setLocalAkyo] = useState<AkyoData | null>(akyo);
+  const sourceUrl = localAkyo ? getAkyoSourceUrl(localAkyo) : undefined;
+  const safeSourceUrl = useMemo(() => {
+    if (!sourceUrl) return null;
+
+    try {
+      const parsed = new URL(sourceUrl);
+      if (
+        (parsed.protocol === 'https:' || parsed.protocol === 'http:') &&
+        parsed.hostname.toLowerCase() === 'vrchat.com'
+      ) {
+        return parsed.toString();
+      }
+    } catch {
+      return null;
+    }
+
+    return null;
+  }, [sourceUrl]);
 
   // 三面図（PNG）優先、WebPフォールバック用の状態
   // Note: Hooks はすべて早期リターンの前に配置する必要がある (React Hooks ルール)
@@ -97,9 +116,16 @@ export function AkyoDetailModal({
   // 画像URLがリセットされるのを防ぐ
   useEffect(() => {
     if (localAkyo) {
-      const pngUrl = `${r2Base}/${localAkyo.id}.png`;
-      setImageUrl(pngUrl);
-      setImageLoadAttempt(0);
+      const nextSourceUrl = getAkyoSourceUrl(localAkyo);
+      const isWorldEntry = resolveEntryType(localAkyo) === 'world';
+      if (isWorldEntry) {
+        setImageUrl(buildAvatarImageUrl(localAkyo.id, nextSourceUrl, 800));
+        setImageLoadAttempt(1);
+      } else {
+        const pngUrl = `${r2Base}/${localAkyo.id}.png`;
+        setImageUrl(pngUrl);
+        setImageLoadAttempt(0);
+      }
       setIsZoomed(false); // ズーム状態もリセット
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- localAkyo.id の変更時のみ発火させたい
@@ -128,13 +154,13 @@ export function AkyoDetailModal({
   const handleImageError = useCallback(() => {
     if (localAkyo && imageLoadAttempt === 0) {
       // PNG失敗 → WebPにフォールバック
-      const webpUrl = buildAvatarImageUrl(localAkyo.id, localAkyo.avatarUrl, 800);
+      const webpUrl = buildAvatarImageUrl(localAkyo.id, sourceUrl, 800);
       console.log(`[detail-modal] PNG not found for ${localAkyo.id}, falling back to WebP`);
       setImageUrl(webpUrl);
       setImageLoadAttempt(1);
     }
     // WebPも失敗した場合はonErrorのスタイル処理に任せる
-  }, [imageLoadAttempt, localAkyo]);
+  }, [imageLoadAttempt, localAkyo, sourceUrl]);
 
   // シングルクリックでズームイン（クリック位置を中心に）
   const handleImageClick = useCallback(
@@ -278,11 +304,11 @@ export function AkyoDetailModal({
   const categoryStr = localAkyo.category || localAkyo.attribute || '';
   const authorStr = localAkyo.author || localAkyo.creator || '';
   const commentStr = localAkyo.comment || localAkyo.notes || '';
-
   const displayName = localAkyo.nickname || localAkyo.avatarName || '';
   const categories: string[] = categoryStr
     ? parseAndSortCategories(categoryStr)
     : [];
+  const isWorldEntry = resolveEntryType(localAkyo) === 'world';
   const categoryColor = getCategoryColor(categoryStr);
 
   const handleBackdropClick = (e: ReactMouseEvent<HTMLDivElement>) => {
@@ -310,21 +336,11 @@ export function AkyoDetailModal({
   };
 
   const handleVRChatOpen = () => {
-    if (localAkyo?.avatarUrl) {
-      // Security: Validate URL scheme before opening
-      try {
-        const url = new URL(localAkyo.avatarUrl);
-        // Only allow https and http protocols (prevent javascript:, data:, etc.)
-        if (url.protocol === 'https:' || url.protocol === 'http:') {
-          window.open(localAkyo.avatarUrl, '_blank', 'noopener,noreferrer');
-        } else {
-          console.error('Invalid URL protocol:', url.protocol);
-          alert('無効なURLです');
-        }
-      } catch (error) {
-        console.error('Invalid URL:', error);
-        alert('無効なURLです');
-      }
+    if (safeSourceUrl) {
+      window.open(safeSourceUrl, '_blank', 'noopener,noreferrer');
+    } else if (sourceUrl) {
+      console.error('Invalid URL:', sourceUrl);
+      alert('無効なURLです');
     }
   };
 
@@ -393,7 +409,7 @@ export function AkyoDetailModal({
                   unoptimized
                 />
                 <span>
-                  #{localAkyo.id} {displayName}
+                  {formatDisplayId(localAkyo)} {displayName}
                 </span>
               </h2>
             </div>
@@ -471,14 +487,15 @@ export function AkyoDetailModal({
                     <p className="text-xl font-black">{localAkyo.nickname || '-'}</p>
                   </div>
 
-                  {/* Avatar Name Card */}
-                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
-                    <h3 className="text-sm font-bold text-blue-600 mb-2">
-                      <IconUser size="w-3.5 h-3.5" className="mr-1" />
-                      {t('modal.avatarName', lang)}
-                    </h3>
-                    <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
-                  </div>
+                  {!isWorldEntry && (
+                    <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
+                      <h3 className="text-sm font-bold text-blue-600 mb-2">
+                        <IconUser size="w-3.5 h-3.5" className="mr-1" />
+                        {t('modal.avatarName', lang)}
+                      </h3>
+                      <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
+                    </div>
+                  )}
 
                   {/* Categories Card */}
                   <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4">
@@ -515,14 +532,14 @@ export function AkyoDetailModal({
                 </div>
 
                 {/* VRChat URL Section */}
-                {localAkyo.avatarUrl && (
+                {safeSourceUrl && (
                   <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-2">
                       {t('modal.vrchatUrl', lang)}
                     </h3>
                     <div className="bg-blue-50 rounded-lg p-4">
                       <a
-                        href={localAkyo.avatarUrl}
+                        href={safeSourceUrl}
                         onClick={(e) => {
                           e.preventDefault();
                           handleVRChatOpen();
@@ -530,7 +547,7 @@ export function AkyoDetailModal({
                         className="text-blue-600 hover:text-blue-800 text-sm break-all cursor-pointer"
                       >
                         <IconExternalLink size="w-3.5 h-3.5" className="mr-1" />
-                        {localAkyo.avatarUrl}
+                        {safeSourceUrl}
                       </a>
                     </div>
                   </div>
@@ -581,7 +598,7 @@ export function AkyoDetailModal({
                   </button>
 
                   {/* VRChat Button - Orange Gradient (not purple!) */}
-                  {localAkyo.avatarUrl && (
+                  {safeSourceUrl && (
                     <button
                       type="button"
                       onClick={handleVRChatOpen}

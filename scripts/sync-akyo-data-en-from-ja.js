@@ -273,7 +273,12 @@ function main() {
   assertCsvRowLengthsMatchHeader(ja, jaPath);
   assertCsvRowLengthsMatchHeader(en, enPath);
 
-  const outHeader = en.header;
+  const outHeader = [...en.header];
+  for (const optionalColumn of ['SourceURL', 'EntryType', 'DisplaySerial']) {
+    if (ja.header.includes(optionalColumn) && !outHeader.includes(optionalColumn)) {
+      outHeader.push(optionalColumn);
+    }
+  }
   const idx = {
     ID: indexOfHeader(outHeader, 'ID'),
     Nickname: indexOfHeader(outHeader, 'Nickname'),
@@ -282,6 +287,10 @@ function main() {
     Comment: indexOfHeader(outHeader, 'Comment'),
     Author: indexOfHeader(outHeader, 'Author'),
     AvatarURL: indexOfHeader(outHeader, 'AvatarURL'),
+    SourceURL: outHeader.includes('SourceURL') ? indexOfHeader(outHeader, 'SourceURL') : -1,
+    EntryType: outHeader.includes('EntryType') ? indexOfHeader(outHeader, 'EntryType') : -1,
+    DisplaySerial:
+      outHeader.includes('DisplaySerial') ? indexOfHeader(outHeader, 'DisplaySerial') : -1,
   };
 
   const jaIdx = {
@@ -292,6 +301,10 @@ function main() {
     Comment: indexOfHeader(ja.header, 'Comment'),
     Author: indexOfHeader(ja.header, 'Author'),
     AvatarURL: indexOfHeader(ja.header, 'AvatarURL'),
+    SourceURL: ja.header.includes('SourceURL') ? indexOfHeader(ja.header, 'SourceURL') : -1,
+    EntryType: ja.header.includes('EntryType') ? indexOfHeader(ja.header, 'EntryType') : -1,
+    DisplaySerial:
+      ja.header.includes('DisplaySerial') ? indexOfHeader(ja.header, 'DisplaySerial') : -1,
   };
 
   const enById = new Map();
@@ -346,6 +359,19 @@ function main() {
     outRow[idx.Comment] = comment;
     outRow[idx.Author] = String(jaRow[jaIdx.Author] || '');
     outRow[idx.AvatarURL] = String(jaRow[jaIdx.AvatarURL] || '');
+    if (idx.SourceURL >= 0) {
+      outRow[idx.SourceURL] =
+        jaIdx.SourceURL >= 0
+          ? String(jaRow[jaIdx.SourceURL] || jaRow[jaIdx.AvatarURL] || '')
+          : String(jaRow[jaIdx.AvatarURL] || '');
+    }
+    if (idx.EntryType >= 0) {
+      outRow[idx.EntryType] = jaIdx.EntryType >= 0 ? String(jaRow[jaIdx.EntryType] || '') : '';
+    }
+    if (idx.DisplaySerial >= 0) {
+      outRow[idx.DisplaySerial] =
+        jaIdx.DisplaySerial >= 0 ? String(jaRow[jaIdx.DisplaySerial] || '') : '';
+    }
     outRows.push(outRow);
   }
 

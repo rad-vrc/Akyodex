@@ -13,11 +13,14 @@ import path from 'path';
 
 interface AkyoData {
   id: string;
+  entryType?: 'avatar' | 'world';
+  displaySerial?: string;
   nickname: string;
   avatarName: string;
   category: string;
   comment: string;
   author: string;
+  sourceUrl?: string;
   avatarUrl: string;
 }
 
@@ -31,6 +34,15 @@ interface AkyoJsonOutput {
 
 function normalizeLineEndings(value: string): string {
   return value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+
+function normalizeEntryType(
+  value: string | undefined,
+): 'avatar' | 'world' | undefined {
+  const normalized = String(value || '').trim().toLowerCase();
+  return normalized === 'avatar' || normalized === 'world'
+    ? normalized
+    : undefined;
 }
 
 /**
@@ -106,12 +118,15 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
 
     data.push({
       id: rawRow['ID'] ?? '',
+      entryType: normalizeEntryType(rawRow['EntryType']),
+      displaySerial: rawRow['DisplaySerial'] || undefined,
       nickname: rawRow['Nickname'] ?? '',
       avatarName: rawRow['AvatarName'] ?? '',
       category: normalizeHierarchicalCategories(rawRow['Category'] ?? ''),
       comment: normalizeLineEndings(rawRow['Comment'] ?? ''),
       author: rawRow['Author'] ?? '',
-      avatarUrl: rawRow['AvatarURL'] ?? '',
+      sourceUrl: rawRow['SourceURL'] || rawRow['AvatarURL'] || '',
+      avatarUrl: rawRow['AvatarURL'] || rawRow['SourceURL'] || '',
     });
   }
 
