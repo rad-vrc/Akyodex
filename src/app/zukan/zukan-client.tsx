@@ -36,6 +36,7 @@ import type { AkyoData, AkyoEntryType, ViewMode } from "@/types/akyo";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface ZukanClientProps {
@@ -61,7 +62,6 @@ const LOGO_BY_LANG: Record<SupportedLanguage | "default", string> = {
   ko: "/images/logo-KO-mobile.webp",
   default: "/images/logo-US-mobile.webp",
 };
-
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
 
 const DeferredMiniAkyoBg = dynamic(
@@ -317,6 +317,8 @@ export function ZukanClient({
   const tickingRef = useRef(false);
   const filteredLengthRef = useRef(0);
   const dataLengthRef = useRef(data.length);
+  const mainContentRef = useRef<HTMLElement | null>(null);
+  const modalTriggerRef = useRef<HTMLElement | null>(null);
 
   // — Derived values —
   const stats = useMemo(() => {
@@ -539,7 +541,11 @@ export function ZukanClient({
     };
   }, [isMobile]);
 
-  const handleShowDetail = (akyo: AkyoData) => {
+  const handleShowDetail = (
+    akyo: AkyoData,
+    triggerElement: HTMLElement | null = document.activeElement as HTMLElement | null,
+  ) => {
+    modalTriggerRef.current = triggerElement;
     setSelectedAkyo(akyo);
     setIsModalOpen(true);
   };
@@ -699,11 +705,21 @@ export function ZukanClient({
     setFavoritesOnly((prev) => !prev);
   };
 
+  const handleSkipToContent = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    window.history.replaceState(null, "", "#main-content");
+    mainContentRef.current?.focus();
+    mainContentRef.current?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  };
+
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="akyo-card p-8 text-center space-y-4">
-          <div className="text-6xl">😢</div>
+          <div className="text-6xl" aria-hidden="true">😢</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
             {t("error.title", lang)}
           </h2>
@@ -718,7 +734,7 @@ export function ZukanClient({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="akyo-card p-8 text-center space-y-4 animate-pulse">
-          <div className="text-6xl">🔄</div>
+          <div className="text-6xl" aria-hidden="true">🔄</div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
             {t("loading.text", lang)}
           </h2>
@@ -735,9 +751,20 @@ export function ZukanClient({
       {/* Mini Akyo Background Animation */}
       {isMiniAkyoBgEnabled ? <DeferredMiniAkyoBg /> : null}
 
+      <a
+        href="#main-content"
+        onClick={handleSkipToContent}
+        className="absolute left-4 top-4 z-[120] -translate-y-[200%] rounded-xl bg-white px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-4 focus:ring-orange-300"
+      >
+        {t("skip.mainContent", lang)}
+      </a>
+
       {/* ヘッダー */}
       <header className="sticky top-0 z-50 p-4 sm:p-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <nav
+          aria-label={t("nav.primary", lang)}
+          className="max-w-7xl mx-auto flex items-center justify-between gap-4"
+        >
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0">
             <Image
@@ -754,26 +781,42 @@ export function ZukanClient({
           </Link>
 
           {/* 統計情報 */}
-          <div className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
+          <dl className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {t("stats.totalBreakdown", lang)
-                .replace("{avatars}", String(stats.totalAvatars))
-                .replace("{worlds}", String(stats.totalWorlds))}
+              <dt className="sr-only">{t("stats.totalLabel", lang)}</dt>
+              <dd>
+                {t("stats.totalBreakdown", lang)
+                  .replace("{avatars}", String(stats.totalAvatars))
+                  .replace("{worlds}", String(stats.totalWorlds))}
+              </dd>
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              {t("stats.displayedBreakdown", lang)
-                .replace("{avatars}", String(stats.displayedAvatars))
-                .replace("{worlds}", String(stats.displayedWorlds))}
+              <dt className="sr-only">{t("stats.displayedLabel", lang)}</dt>
+              <dd>
+                {t("stats.displayedBreakdown", lang)
+                  .replace("{avatars}", String(stats.displayedAvatars))
+                  .replace("{worlds}", String(stats.displayedWorlds))}
+              </dd>
             </div>
             <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              ❤️{stats.favorites}
+              <dt className="sr-only">{t("stats.favoritesLabel", lang)}</dt>
+              <dd>
+                <span aria-hidden="true">❤️</span>
+                {stats.favorites}
+              </dd>
             </div>
-          </div>
-        </div>
+          </dl>
+        </nav>
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10">
+      <main
+        id="main-content"
+        ref={mainContentRef}
+        tabIndex={-1}
+        className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 relative z-10 focus:outline-none"
+      >
+        <h1 className="sr-only">{t("page.title", lang)}</h1>
         <div className="fixed left-4 right-4 top-20 z-[80] pointer-events-none sm:left-auto sm:right-6 sm:top-24 sm:w-[420px]">
           <div role="status" aria-live="polite" aria-atomic="true">
             {languageStatusMessage ? (
@@ -869,6 +912,7 @@ export function ZukanClient({
               onClick={() => setViewMode("grid")}
               className={`view-toggle-btn ${viewMode === "grid" ? "active" : ""}`}
               aria-label={t("view.grid", lang)}
+              aria-pressed={viewMode === "grid"}
             >
               <IconGrid size="w-5 h-5 md:w-6 md:h-6" />
             </button>
@@ -877,6 +921,7 @@ export function ZukanClient({
               onClick={() => setViewMode("list")}
               className={`view-toggle-btn ${viewMode === "list" ? "active" : ""}`}
               aria-label={t("view.list", lang)}
+              aria-pressed={viewMode === "list"}
             >
               <IconList size="w-5 h-5 md:w-6 md:h-6" />
             </button>
@@ -911,7 +956,7 @@ export function ZukanClient({
         {/* Akyoカード/リスト表示 */}
         {filteredData.length === 0 ? (
           <div className="akyo-card p-12 text-center space-y-4">
-            <div className="text-6xl">🔍</div>
+            <div className="text-6xl" aria-hidden="true">🔍</div>
             <h3 className="text-2xl font-bold text-[var(--text-primary)]">
               {t("notfound.title", lang)}
             </h3>
@@ -958,6 +1003,7 @@ export function ZukanClient({
         onClose={handleCloseModal}
         onToggleFavorite={handleModalFavoriteToggle}
         lang={lang}
+        returnFocusRef={modalTriggerRef}
       />
 
       {/* Language Toggle Button - Top */}
@@ -980,6 +1026,8 @@ export function ZukanClient({
       <div
         id="dify-chatbot-container"
         className="fixed bottom-6 right-6 z-[2147483647]"
+        role="complementary"
+        aria-label={t("chatbot.ariaLabel", lang)}
       />
     </div>
   );

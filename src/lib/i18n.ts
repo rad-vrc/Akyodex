@@ -168,15 +168,40 @@ export const UI_TEXTS = {
     en: "Akyodex Logo",
     ko: "Akyo도감 로고",
   },
+  "page.title": {
+    ja: "Akyoずかん",
+    en: "Akyodex",
+    ko: "아쿄 도감",
+  },
+  "nav.primary": {
+    ja: "主要ナビゲーション",
+    en: "Primary navigation",
+    ko: "주요 내비게이션",
+  },
+  "skip.mainContent": {
+    ja: "メインコンテンツへスキップ",
+    en: "Skip to main content",
+    ko: "주요 콘텐츠로 건너뛰기",
+  },
   "stats.total": {
     ja: "全{count}体",
     en: "Total {count}",
     ko: "전체 {count}마리",
   },
+  "stats.totalLabel": {
+    ja: "総数",
+    en: "Total entries",
+    ko: "전체 항목",
+  },
   "stats.displayed": {
     ja: "表示{count}体",
     en: "Showing {count}",
     ko: "{count}건 표시",
+  },
+  "stats.displayedLabel": {
+    ja: "表示中",
+    en: "Displayed entries",
+    ko: "현재 표시 항목",
   },
   "stats.totalBreakdown": {
     ja: "全{avatars}体 / {worlds}ワールド",
@@ -187,6 +212,11 @@ export const UI_TEXTS = {
     ja: "表示{avatars}体 / {worlds}ワールド",
     en: "Showing {avatars} avatars / {worlds} worlds",
     ko: "{avatars}개 아바타 / {worlds}개 월드 표시",
+  },
+  "stats.favoritesLabel": {
+    ja: "お気に入り",
+    en: "Favorites",
+    ko: "즐겨찾기",
   },
   "search.placeholder": {
     ja: "名前・通称・作者で検索...",
@@ -202,6 +232,11 @@ export const UI_TEXTS = {
     ja: "検索をクリア",
     en: "Clear search",
     ko: "검색 지우기",
+  },
+  "chatbot.ariaLabel": {
+    ja: "AIチャットアシスタント",
+    en: "AI chat assistant",
+    ko: "AI 채팅 도우미",
   },
   "view.grid": {
     ja: "グリッド表示",
@@ -480,6 +515,16 @@ export const UI_TEXTS = {
     ja: "VRChatで見る",
     en: "View in VRChat",
     ko: "VRChat에서 보기",
+  },
+  "modal.imageZoomControl": {
+    ja: "画像のズーム切り替え",
+    en: "Toggle image zoom",
+    ko: "이미지 확대 전환",
+  },
+  "modal.imageMoveZoom": {
+    ja: "拡大画像を矢印キーで移動",
+    en: "Move zoomed image with arrow keys",
+    ko: "확대된 이미지를 방향키로 이동",
   },
   "modal.zoomHint": {
     ja: "タップでズーム 🔍",

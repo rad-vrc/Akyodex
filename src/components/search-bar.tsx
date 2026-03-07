@@ -80,9 +80,9 @@ export function SearchBar({
   return (
     <div className="relative w-full">
       {/* 検索アイコン */}
-      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl">
+      <span className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl" aria-hidden="true">
         🔍
-      </div>
+      </span>
 
       {/* 検索入力 */}
       <input
@@ -104,7 +104,7 @@ export function SearchBar({
           className="absolute right-5 top-1/2 -translate-y-1/2 text-2xl hover:scale-110 transition-transform"
           aria-label={clearAriaLabel}
         >
-          ❌
+          <span aria-hidden="true">❌</span>
         </button>
       )}
     </div>

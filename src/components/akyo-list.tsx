@@ -8,6 +8,7 @@ import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 
 /**
  * Props for the AkyoList component
@@ -20,7 +21,7 @@ interface AkyoListProps {
   /** Optional callback when the favorite button is clicked */
   onToggleFavorite?: (id: string) => void;
   /** Optional callback when a row is clicked to show details */
-  onShowDetail?: (akyo: AkyoData) => void;
+  onShowDetail?: (akyo: AkyoData, triggerElement?: HTMLElement | null) => void;
 }
 
 /**
@@ -37,7 +38,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
    * @param e - Event object
    * @param id - Akyo ID
    */
-  const handleFavoriteClick = (e: React.MouseEvent, id: string) => {
+  const handleFavoriteClick = (e: ReactMouseEvent, id: string) => {
     e.stopPropagation();
     onToggleFavorite?.(id);
   };
@@ -47,9 +48,9 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
    * @param e - Event object
    * @param akyo - Akyo data object
    */
-  const handleDetailClick = (e: React.MouseEvent, akyo: AkyoData) => {
+  const handleDetailClick = (e: ReactMouseEvent<HTMLButtonElement>, akyo: AkyoData) => {
     e.stopPropagation();
-    onShowDetail?.(akyo);
+    onShowDetail?.(akyo, e.currentTarget);
   };
 
   /**
@@ -57,7 +58,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
    * @param e - React mouse event
    * @param url - The target VRChat URL
    */
-  const handleVRChatClick = (e: React.MouseEvent, url: string | undefined) => {
+  const handleVRChatClick = (e: ReactMouseEvent, url: string | undefined) => {
     safeOpenVRChatLink(e, url);
   };
 
@@ -67,12 +68,12 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
         <table className="list-view-table">
           <thead>
             <tr>
-              <th>No.</th>
-              <th>{t('list.appearance', lang)}</th>
-              <th>{t('list.name', lang)}</th>
-              <th>{t('list.category', lang)}</th>
-              <th>{t('card.author', lang)}</th>
-              <th>{t('list.action', lang)}</th>
+              <th scope="col">No.</th>
+              <th scope="col">{t('list.appearance', lang)}</th>
+              <th scope="col">{t('list.name', lang)}</th>
+              <th scope="col">{t('list.category', lang)}</th>
+              <th scope="col">{t('card.author', lang)}</th>
+              <th scope="col">{t('list.action', lang)}</th>
             </tr>
           </thead>
           <tbody>
@@ -175,7 +176,9 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                             : t('card.favorite.add', lang)
                         }
                       >
-                        <span className="list-favorite-icon">{akyo.isFavorite ? '❤️' : '🤍'}</span>
+                        <span className="list-favorite-icon" aria-hidden="true">
+                          {akyo.isFavorite ? '❤️' : '🤍'}
+                        </span>
                       </button>
 
                       {/* 詳細ボタン */}
