@@ -8,6 +8,8 @@
     "src/**/*.test.ts",
     "scripts/convert-akyo-data.js",
     "scripts/csv-to-json.test.ts",
+    "scripts/world-image-backfill.ts",
+    "scripts/world-image-backfill.test.ts",
     "scripts/generate-vectorize-payload.js",
     "scripts/update-categories-en-v3.js",
     "scripts/update-categories-v3.js",

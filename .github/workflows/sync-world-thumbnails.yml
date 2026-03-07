@@ -1,0 +1,169 @@
+name: Sync World Thumbnails to R2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/akyo-data-ja.json"
+      - "scripts/world-image-backfill.ts"
+      - ".github/workflows/sync-world-thumbnails.yml"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-upload thumbnails even if the R2 key already exists"
+        required: false
+        default: false
+        type: boolean
+      ids:
+        description: "Optional comma-separated Akyo IDs to limit the backfill target set"
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  R2_BUCKET: akyo-images
+  SITE_URL: https://akyodex.com
+  WORLD_IMAGE_WIDTH: 1024
+
+jobs:
+  sync-world-thumbnails:
+    name: Backfill world thumbnails into R2
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Ensure ImageMagick is available
+        run: |
+          set -e
+          if ! command -v magick >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          fi
+          magick -version
+
+      - name: Generate world image backfill manifest
+        run: |
+          set -e
+          MANIFEST_PATH="$RUNNER_TEMP/world-image-backfill-targets.json"
+          npx tsx scripts/world-image-backfill.ts --input data/akyo-data-ja.json --output "$MANIFEST_PATH"
+          echo "WORLD_MANIFEST_PATH=$MANIFEST_PATH" >> "$GITHUB_ENV"
+          echo "Manifest entries: $(jq length "$MANIFEST_PATH")"
+
+      - name: Upload world thumbnails to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FORCE_REUPLOAD: ${{ github.event.inputs.force || 'false' }}
+          FILTER_IDS: ${{ github.event.inputs.ids || '' }}
+        run: |
+          set -euo pipefail
+
+          MISSING_SECRETS=""
+          if [ -z "${AWS_ACCESS_KEY_ID:-}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS}R2_ACCESS_KEY_ID "
+          fi
+          if [ -z "${AWS_SECRET_ACCESS_KEY:-}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS}R2_SECRET_ACCESS_KEY "
+          fi
+          if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS}CLOUDFLARE_ACCOUNT_ID "
+          fi
+          if [ -n "$MISSING_SECRETS" ]; then
+            echo "::error::Missing required secrets: $MISSING_SECRETS"
+            exit 1
+          fi
+
+          R2_ENDPOINT="https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com"
+          MANIFEST_PATH="${WORLD_MANIFEST_PATH}"
+
+          if ! aws s3 ls "s3://${R2_BUCKET}/" --endpoint-url "$R2_ENDPOINT" > /dev/null 2>&1; then
+            echo "::error::Cannot access R2 bucket '${R2_BUCKET}'"
+            exit 1
+          fi
+
+          FILTER_IDS_CSV="$(echo "${FILTER_IDS}" | tr -d '[:space:]')"
+          SUCCESS_COUNT=0
+          SKIPPED_COUNT=0
+          FAILED_COUNT=0
+
+          while IFS= read -r entry; do
+            id="$(echo "$entry" | jq -r '.id')"
+            wrld="$(echo "$entry" | jq -r '.wrld')"
+            displayName="$(echo "$entry" | jq -r '.displayName')"
+
+            if [ -n "$FILTER_IDS_CSV" ] && [[ ",$FILTER_IDS_CSV," != *",$id,"* ]]; then
+              continue
+            fi
+
+            if [ "$FORCE_REUPLOAD" != "true" ] && \
+              aws s3api head-object \
+                --bucket "$R2_BUCKET" \
+                --key "${id}.webp" \
+                --endpoint-url "$R2_ENDPOINT" \
+                > /dev/null 2>&1; then
+              echo "⏭️ Skip ${id} (${displayName}) - already present in R2"
+              SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
+              continue
+            fi
+
+            INPUT_PATH="$RUNNER_TEMP/${id}.input"
+            OUTPUT_PATH="$RUNNER_TEMP/${id}.webp"
+            SOURCE_URL="${SITE_URL}/api/vrc-world-image?wrld=${wrld}&w=${WORLD_IMAGE_WIDTH}"
+
+            if ! curl -fsSL "$SOURCE_URL" -o "$INPUT_PATH"; then
+              echo "::warning::Failed to fetch world image for ${id} (${wrld})"
+              FAILED_COUNT=$((FAILED_COUNT + 1))
+              continue
+            fi
+
+            if ! magick "$INPUT_PATH" -strip -quality 88 "$OUTPUT_PATH"; then
+              echo "::warning::Failed to convert world image to webp for ${id} (${wrld})"
+              FAILED_COUNT=$((FAILED_COUNT + 1))
+              continue
+            fi
+
+            if ! aws s3 cp \
+              "$OUTPUT_PATH" \
+              "s3://${R2_BUCKET}/${id}.webp" \
+              --endpoint-url "$R2_ENDPOINT" \
+              --content-type "image/webp" \
+              --cache-control "public, max-age=31536000, immutable"; then
+              echo "::warning::Failed to upload ${id}.webp to R2"
+              FAILED_COUNT=$((FAILED_COUNT + 1))
+              continue
+            fi
+
+            echo "✅ Uploaded ${id}.webp (${displayName})"
+            SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+          done < <(jq -c '.[]' "$MANIFEST_PATH")
+
+          {
+            echo "### World Thumbnail Backfill"
+            echo "- Uploaded: ${SUCCESS_COUNT}"
+            echo "- Skipped: ${SKIPPED_COUNT}"
+            echo "- Failed: ${FAILED_COUNT}"
+            echo "- Manifest: $(jq length "$MANIFEST_PATH") target(s)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$FAILED_COUNT" -gt 0 ]; then
+            echo "::error::World thumbnail backfill failed for ${FAILED_COUNT} item(s)"
+            exit 1
+          fi
