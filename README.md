@@ -90,19 +90,22 @@ npm run dev
 **Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズを網羅したオンライン図鑑です。
 
 ### Key Features
-- 🎨 **アバターデータベース** - 4桁ID管理システム（日本語/英語/韓国語 CSV + JSON データ）
+- 🎨 **アバター＋ワールドデータベース** - 4桁ID管理システム（日本語/英語/韓国語 CSV + JSON データ、avatar/world 二種別）
 - 🔐 **Admin Panel** - HMAC署名セッション認証、画像クロッピング、VRChat連携
 - 📱 **PWA対応** - 6種類のキャッシング戦略
 - 🌍 **多言語対応** - 日本語/英語/韓国語（自動検出 + 手動切替）
 - ⚡ **Edge Runtime** - Cloudflare Pages + R2 + KV
 - 🤖 **Difyチャットボット** - AI搭載のアバター検索アシスタント
 - 📊 **多段データロード** - KV → JSON → CSV 自動フォールバック
+- 🔍 **Sentry 監視** - エラー追跡 + パフォーマンスモニタリング
 
 ### Project Status
-- ✅ **Next.js 15.5.10 + Cloudflare Pages** (OpenNext adapter)
+- ✅ **Next.js 16.1.6 + Cloudflare Pages** (OpenNext adapter)
+- ✅ **Avatar + World Support** (Dual entry types with separate display IDs)
 - ✅ **Security Hardening** (Timing attack, XSS prevention, Input validation)
 - ✅ **PWA Implementation** (Service Worker with 6 caching strategies)
 - ✅ **VRChat Image Fallback** (3-tier fallback: R2 → VRChat API → Placeholder)
+- ✅ **Sentry Observability** (Error tracking + performance monitoring)
 - ✅ **Dify AI Chatbot Integration** (Natural language avatar search)
 - ✅ **Dual Admin System** (Owner/Admin role separation)
 - ✅ **On-demand ISR** (Revalidation API + KV Edge Cache)
@@ -148,7 +151,7 @@ npm run dev
 ┌─────────────────────────────────────────────────────────────┐
 │                    Cloudflare Pages                         │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │          Next.js 15 App (OpenNext Adapter)            │  │
+│  │          Next.js 16 App (OpenNext Adapter)            │  │
 │  │  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  │  │
 │  │  │   SSG Pages │  │ API Routes   │  │ Middleware  │  │  │
 │  │  │   (Static)  │  │ (Edge/Node)  │  │  (i18n+CSP) │  │  │
@@ -172,23 +175,27 @@ Data Source Priority: KV (~5ms) → JSON (~20ms) → CSV (~200ms)
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 15.5.10 (App Router)
-- **React**: 19.1.0 (Server/Client Components)
+- **Framework**: Next.js 16.1.6 (App Router)
+- **React**: 19.2.4 (Server/Client Components)
 - **Styling**: Tailwind CSS 4 (PostCSS plugin)
 - **Fonts**: Google Fonts (M PLUS Rounded 1c, Kosugi Maru, Noto Sans JP)
 - **PWA**: Custom Service Worker with 6 caching strategies
 
 ### Backend
 - **Runtime**: Cloudflare Pages (Edge + Node.js Runtime)
-- **Adapter**: @opennextjs/cloudflare ^1.16.4
+- **Adapter**: @opennextjs/cloudflare ^1.16.5
 - **Authentication**: HMAC-signed sessions (Web Crypto API)
 - **Session Storage**: Cloudflare KV
 - **File Storage**: Cloudflare R2
 - **CSV Processing**: csv-parse / csv-stringify
 - **Data Sync**: GitHub API (CSV commit on CRUD operations)
 
+### Observability
+- **Error Tracking**: Sentry (@sentry/nextjs) — runtime errors + performance monitoring
+- **Instrumentation**: Server-side (`instrumentation.ts`) + client-side (`instrumentation-client.ts`)
+
 ### Security
-- **HTML Sanitization**: sanitize-html 2.17.0
+- **HTML Sanitization**: sanitize-html ^2.17.0
 - **Timing Attack Prevention**: Node.js `crypto.timingSafeEqual`
 - **Input Validation**: Length-limited regex patterns
 - **XSS Prevention**: HTML entity decoding + tag stripping
@@ -200,7 +207,7 @@ Data Source Priority: KV (~5ms) → JSON (~20ms) → CSV (~200ms)
 - **Node Version**: 20.x
 - **TypeScript**: 5.9.3 (Strict mode)
 - **Linting**: ESLint 9 with Next.js config
-- **Testing**: Playwright (E2E tests)
+- **Testing**: Playwright (E2E), node:test + assert (unit tests)
 - **Dead Code Analysis**: Knip
 - **Git Workflow**: Feature branches → PR → main
 - **CI/CD**: Cloudflare Pages automatic deployment
@@ -252,15 +259,18 @@ Akyodex/
 │   │       │   ├── logout/          # POST - Logout
 │   │       │   ├── verify-session/  # GET - Session verification
 │   │       │   └── next-id/         # GET - Next available ID
-│   │       ├── upload-akyo/         # POST - Avatar registration
-│   │       ├── update-akyo/         # POST - Avatar update
-│   │       ├── delete-akyo/         # POST - Avatar deletion
+│   │       ├── akyo-data/           # GET - Data retrieval API (Node.js runtime)
+│   │       ├── upload-akyo/         # POST - Entry registration
+│   │       ├── update-akyo/         # POST - Entry update
+│   │       ├── delete-akyo/         # POST - Entry deletion
 │   │       ├── check-duplicate/     # POST - Duplicate check
-│   │       ├── avatar-image/        # GET - Image proxy (R2/VRChat fallback)
+│   │       ├── avatar-image/        # GET - Image proxy (R2 → VRChat page/API → Placeholder)
 │   │       ├── vrc-avatar-info/     # GET - VRChat avatar info fetch
 │   │       ├── vrc-avatar-image/    # GET - VRChat avatar image fetch
+│   │       ├── vrc-world-info/      # GET - VRChat world info fetch (Node.js runtime)
+│   │       ├── vrc-world-image/     # GET - VRChat world image fetch (Node.js runtime)
 │   │       ├── csv/                 # GET - CSV data endpoint
-│   │       ├── download-reference/  # GET - Reference image download
+│   │       ├── download-reference/  # GET - Reference image download (R2)
 │   │       ├── revalidate/          # POST - On-demand ISR revalidation
 │   │       ├── kv-migrate/          # POST - KV data migration
 │   │       └── manifest/            # GET - Dynamic manifest
@@ -301,25 +311,35 @@ Akyodex/
 │   │   ├── akyo-data-server.ts      # Server-side CSV data loading
 │   │   ├── akyo-data-helpers.ts     # Shared helpers (extractCategories, etc.)
 │   │   ├── akyo-crud-helpers.ts     # CRUD operation helpers
-│   │   ├── api-helpers.ts           # API helpers (jsonError, CSRF, session)
+│   │   ├── akyo-entry.ts            # Entry normalization (hydrateAkyoDataset)
+│   │   ├── api-helpers.ts           # API helpers (jsonError, getApiErrorResponse, CSRF, session)
 │   │   ├── csv-utils.ts             # CSV parsing/stringify + GitHub sync
 │   │   ├── github-utils.ts          # GitHub API operations
 │   │   ├── r2-utils.ts              # R2 storage operations
 │   │   ├── html-utils.ts            # HTML sanitization
 │   │   ├── i18n.ts                  # i18n utilities
+│   │   ├── next-id-state.ts         # Next ID allocation state
 │   │   ├── session.ts               # HMAC session management
-│   │   ├── vrchat-utils.ts          # VRChat API utilities
+│   │   ├── sentry-browser.ts        # Sentry browser configuration
+│   │   ├── vrchat-utils.ts          # VRChat avatar API utilities
+│   │   ├── vrchat-world-image.ts    # VRChat world image fetch
+│   │   ├── vrchat-world-info.ts     # VRChat world info fetch
+│   │   ├── world-registration.ts    # World entry registration helpers
 │   │   ├── blur-data-url.ts         # Blur placeholder generation
 │   │   └── cloudflare-image-loader.ts # Cloudflare Images loader
 │   │
 │   ├── types/
-│   │   ├── akyo.ts                  # Core types (AkyoData, etc.)
+│   │   ├── akyo.ts                  # Core types (AkyoData, AkyoEntryType, etc.)
 │   │   ├── kv.ts                    # KV binding types
 │   │   ├── env.d.ts                 # Environment variable types
+│   │   ├── cloudflare-workers.d.ts  # Cloudflare Workers type declarations
 │   │   ├── css.d.ts                 # CSS module types
 │   │   └── sanitize-html.d.ts       # sanitize-html type augmentation
 │   │
 │   └── middleware.ts                # Edge middleware (i18n + CSP + nonce)
+│
+├── instrumentation.ts               # Sentry server-side initialization
+├── instrumentation-client.ts        # Sentry client-side initialization
 │
 ├── scripts/                         # Utility scripts (ESLint excluded)
 │   ├── csv-to-json.ts               # CSV → JSON conversion
@@ -849,6 +869,47 @@ Users can ask questions like:
 
 **Response**: Image binary
 
+#### `GET /api/vrc-world-info`
+**Fetch VRChat world info (Node.js runtime)**
+
+**Query Parameters**:
+- `wrld` (string): VRChat world ID (e.g., "wrld_abc123...")
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "worldName": "World Name",
+    "creatorName": "Creator Name",
+    "description": "Description...",
+    "wrld": "wrld_abc123..."
+  }
+}
+```
+
+#### `GET /api/vrc-world-image`
+**Fetch VRChat world image (Node.js runtime)**
+
+**Query Parameters**:
+- `wrld` (string): VRChat world ID
+
+**Response**: Image binary
+
+#### `GET /api/akyo-data`
+**Fetch Akyo data by language (Node.js runtime)**
+
+**Query Parameters**:
+- `lang` (string): Language code (`ja`, `en`, `ko`)
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": [/* AkyoData[] */]
+}
+```
+
 ### Admin APIs (Authentication Required)
 
 #### `POST /api/admin/login`
@@ -985,7 +1046,7 @@ export function stripHTMLTags(html: string): string {
 
 ```typescript
 // Length-limited regex (prevents ReDoS)
-const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,50}$/);
+const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,64}$/);
 if (!avtrMatch) {
   return Response.json({ error: 'Invalid avtr format' }, { status: 400 });
 }
@@ -1167,7 +1228,7 @@ export const runtime = 'nodejs';
 ## 📜 Migration History
 
 ### Phase 1: Initial Next.js Setup (Completed 2025-01-15)
-- ✅ Next.js 15 project setup
+- ✅ Next.js project setup
 - ✅ Tailwind CSS configuration
 - ✅ Basic routing structure
 
@@ -1222,6 +1283,16 @@ export const runtime = 'nodejs';
 - ✅ Category definition scripts (JA/EN keyword matching)
 - ✅ HMAC-signed sessions (replacing JWT)
 - ✅ Nonce-based CSP via middleware
+
+### Phase 10: Next.js 16 + World Support (Completed)
+- ✅ Next.js 15 → 16 upgrade (React 19.2.4, @opennextjs/cloudflare ^1.16.5)
+- ✅ World entry type support (avatar + world dual entries)
+- ✅ Entry normalization (`hydrateAkyoDataset` — type inference, display serial allocation)
+- ✅ VRChat World APIs (`vrc-world-info`, `vrc-world-image`)
+- ✅ Extended CSV schema (`SourceURL`, `EntryType`, `DisplaySerial` columns)
+- ✅ Korean language data support (`akyo-data-ko.csv`)
+- ✅ Sentry integration (error tracking + performance monitoring)
+- ✅ Korean data generation script (`generate-ko-data.js`)
 
 ---
 
