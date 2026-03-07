@@ -8,6 +8,7 @@ import {
   ensureWorldCategory,
   extractVRChatAvatarIdFromUrl,
   extractVRChatWorldIdFromUrl,
+  shouldResetWorldMetadata,
 } from '@/lib/akyo-entry';
 import { assertWorldRegistrationAssets } from '@/lib/world-registration';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
@@ -92,15 +93,6 @@ function normalizeCategoriesForSubmit(
   return entryType === 'world'
     ? ensureWorldCategory(normalized)
     : Array.from(new Set(normalized));
-}
-
-function shouldResetWorldMetadata(previousUrl: string, nextUrl: string): boolean {
-  const previousType = detectVrcEntryTypeFromUrl(previousUrl);
-  const nextType = detectVrcEntryTypeFromUrl(nextUrl);
-  if (nextType !== 'world') {
-    return false;
-  }
-  return previousUrl.trim() !== nextUrl.trim() || previousType !== 'world';
 }
 
 /**

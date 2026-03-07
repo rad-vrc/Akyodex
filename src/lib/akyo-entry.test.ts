@@ -53,6 +53,9 @@ const extractVRChatWorldIdFromUrl =
   akyoEntryModule.extractVRChatWorldIdFromUrl as
     | ((url: string | undefined) => string | null)
     | undefined;
+const shouldResetWorldMetadata = akyoEntryModule.shouldResetWorldMetadata as
+  | ((previousUrl: string, nextUrl: string) => boolean)
+  | undefined;
 const resolveDisplaySerialForEntryUpdate =
   akyoEntryModule.resolveDisplaySerialForEntryUpdate as
     | ((args: {
@@ -222,6 +225,32 @@ test("ensureWorldCategory prepends the world marker exactly once", () => {
   assert.deepEqual(
     ensureWorldCategory?.(["ワールド", "ワールド/ペデスタル", "ワールド"]),
     ["ワールド", "ワールド/ペデスタル"],
+  );
+});
+
+test("shouldResetWorldMetadata only resets when the target world URL actually changes", () => {
+  assert.equal(typeof shouldResetWorldMetadata, "function");
+
+  assert.equal(
+    shouldResetWorldMetadata?.(
+      "https://vrchat.com/home/world/wrld_original",
+      "https://vrchat.com/home/world/wrld_updated",
+    ),
+    true,
+  );
+  assert.equal(
+    shouldResetWorldMetadata?.(
+      "https://vrchat.com/home/world/wrld_original",
+      "https://vrchat.com/home/world/wrld_original",
+    ),
+    false,
+  );
+  assert.equal(
+    shouldResetWorldMetadata?.(
+      "https://vrchat.com/home/world/wrld_original",
+      "https://vrchat.com/home/avatar/avtr_updated",
+    ),
+    false,
   );
 });
 
