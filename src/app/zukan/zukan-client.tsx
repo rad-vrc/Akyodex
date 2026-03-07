@@ -18,6 +18,11 @@ import { FilterPanel } from "@/components/filter-panel";
 import { IconCog, IconGrid, IconList } from "@/components/icons";
 import { LanguageToggle } from "@/components/language-toggle";
 import { SearchBar } from "@/components/search-bar";
+import {
+  createLanguageDatasetCacheEntry,
+  resolveImmediateLanguageDataset,
+  type LanguageDatasetCacheEntry,
+} from "./language-dataset-state";
 import { useAkyoData } from "@/hooks/use-akyo-data";
 import { detectVrcEntryTypeFromUrl, resolveEntryType } from "@/lib/akyo-entry";
 import { useLanguage } from "@/hooks/use-language";
@@ -116,12 +121,6 @@ function useResponsiveLayout() {
   }, []);
 
   return layout;
-}
-
-interface LanguageDatasetCacheEntry {
-  items: AkyoData[];
-  categories: string[];
-  authors: string[];
 }
 
 function normalizeAkyoItem(item: unknown): AkyoData | undefined {
@@ -271,6 +270,15 @@ export function ZukanClient({
     setLoading,
     setError,
   } = useAkyoData(initialData);
+  const serverDataset = useMemo(
+    () =>
+      createLanguageDatasetCacheEntry({
+        items: initialData,
+        categories,
+        authors,
+      }),
+    [initialData, categories, authors],
+  );
 
   // — State —
   const [currentCategories, setCurrentCategories] = useState(categories);
@@ -297,7 +305,7 @@ export function ZukanClient({
 
   const languageDatasetCacheRef = useRef<
     Map<SupportedLanguage, LanguageDatasetCacheEntry>
-  >(new Map([[serverLang, { items: initialData, categories, authors }]]));
+  >(new Map([[serverLang, serverDataset]]));
   const tickingRef = useRef(false);
   const filteredLengthRef = useRef(0);
   const dataLengthRef = useRef(data.length);
@@ -352,12 +360,8 @@ export function ZukanClient({
 
   // Sync server-rendered language payload to cache
   useEffect(() => {
-    languageDatasetCacheRef.current.set(serverLang, {
-      items: initialData,
-      categories,
-      authors,
-    });
-  }, [serverLang, initialData, categories, authors]);
+    languageDatasetCacheRef.current.set(serverLang, serverDataset);
+  }, [serverLang, serverDataset]);
 
   // Clear stale refetch status when language returns to server-rendered baseline.
   useEffect(() => {
@@ -376,13 +380,20 @@ export function ZukanClient({
 
   // Refetch data when language differs from server-rendered language
   useEffect(() => {
-    if (!isReady || !needsRefetch || lang === serverLang) return;
+    if (!isReady || !needsRefetch) return;
 
-    const cachedDataset = languageDatasetCacheRef.current.get(lang);
-    if (cachedDataset) {
-      refetchWithNewData(cachedDataset.items);
-      setCurrentCategories(cachedDataset.categories);
-      setCurrentAuthors(cachedDataset.authors);
+    const immediateDataset = resolveImmediateLanguageDataset({
+      lang,
+      serverLang,
+      cachedDataset: languageDatasetCacheRef.current.get(lang),
+      serverDataset,
+    });
+    if (immediateDataset) {
+      refetchWithNewData(immediateDataset.items);
+      setCurrentCategories(immediateDataset.categories);
+      setCurrentAuthors(immediateDataset.authors);
+      setSelectedAttributes([]);
+      setSelectedCreators([]);
       setRefetchError(null);
       setError(null);
       return;
@@ -456,6 +467,10 @@ export function ZukanClient({
         const taxonomy = extractTaxonomy(akyoItems);
         setCurrentCategories(taxonomy.categories);
         setCurrentAuthors(taxonomy.authors);
+        setSelectedAttributes([]);
+        setSelectedCreators([]);
+        setRefetchError(null);
+        setError(null);
         languageDatasetCacheRef.current.set(lang, {
           items: akyoItems,
           categories: taxonomy.categories,
@@ -489,6 +504,7 @@ export function ZukanClient({
     needsRefetch,
     lang,
     serverLang,
+    serverDataset,
     refetchWithNewData,
     setLoading,
     setError,
