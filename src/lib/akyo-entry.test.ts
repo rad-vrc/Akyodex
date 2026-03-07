@@ -45,6 +45,14 @@ const getNextWorldDisplaySerial = akyoEntryModule.getNextWorldDisplaySerial as
 const ensureWorldCategory = akyoEntryModule.ensureWorldCategory as
   | ((categories: string[]) => string[])
   | undefined;
+const extractVRChatAvatarIdFromUrl =
+  akyoEntryModule.extractVRChatAvatarIdFromUrl as
+    | ((url: string | undefined) => string | null)
+    | undefined;
+const extractVRChatWorldIdFromUrl =
+  akyoEntryModule.extractVRChatWorldIdFromUrl as
+    | ((url: string | undefined) => string | null)
+    | undefined;
 const resolveDisplaySerialForEntryUpdate =
   akyoEntryModule.resolveDisplaySerialForEntryUpdate as
     | ((args: {
@@ -175,6 +183,32 @@ test("resolveDisplaySerialForSourceUrlChange restores the original world serial 
       originalEntryType: "world",
     }),
     "0042",
+  );
+});
+
+test("extractVRChatAvatarIdFromUrl keeps valid avatar ids that end with a hyphen", () => {
+  assert.equal(typeof extractVRChatAvatarIdFromUrl, "function");
+
+  assert.equal(
+    extractVRChatAvatarIdFromUrl?.("avtr_abc-def-"),
+    "avtr_abc-def-",
+  );
+  assert.equal(
+    extractVRChatAvatarIdFromUrl?.("https://vrchat.com/home/avatar/avtr_abc-def-"),
+    "avtr_abc-def-",
+  );
+});
+
+test("extractVRChatWorldIdFromUrl keeps valid world ids that end with a hyphen", () => {
+  assert.equal(typeof extractVRChatWorldIdFromUrl, "function");
+
+  assert.equal(
+    extractVRChatWorldIdFromUrl?.("wrld_abc-def-"),
+    "wrld_abc-def-",
+  );
+  assert.equal(
+    extractVRChatWorldIdFromUrl?.("https://vrchat.com/home/world/wrld_abc-def-"),
+    "wrld_abc-def-",
   );
 });
 

@@ -247,8 +247,10 @@ export function extractVRChatAvatarIdFromUrl(
     return null;
   }
 
-  const match = url.match(/\bavtr_[A-Za-z0-9-]{1,64}\b/);
-  return match ? match[0] : null;
+  const match = url.match(
+    /(?:^|[^A-Za-z0-9_-])(avtr_[A-Za-z0-9-]{1,64})(?=$|[^A-Za-z0-9-])/,
+  );
+  return match ? match[1] : null;
 }
 
 export function extractVRChatWorldIdFromUrl(
@@ -258,8 +260,10 @@ export function extractVRChatWorldIdFromUrl(
     return null;
   }
 
-  const match = url.match(/\bwrld_[A-Za-z0-9-]{1,64}\b/);
-  return match ? match[0] : null;
+  const match = url.match(
+    /(?:^|[^A-Za-z0-9_-])(wrld_[A-Za-z0-9-]{1,64})(?=$|[^A-Za-z0-9-])/,
+  );
+  return match ? match[1] : null;
 }
 
 export function isValidVRChatEntityId(
