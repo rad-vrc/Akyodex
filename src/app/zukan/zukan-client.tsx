@@ -619,7 +619,18 @@ export function ZukanClient({
 
   // フィルター適用
   useEffect(() => {
-    if (randomMode) return; // ランダム表示中は通常フィルタ適用を抑止
+    if (randomMode) {
+      // ランダム表示中はエントリ種別フィルターのみ反映して再シャッフル
+      filterData(
+        {
+          searchQuery: "",
+          randomCount: 20,
+          entryTypeFilter,
+        },
+        sortAscending,
+      );
+      return;
+    }
     filterData(
       {
         searchQuery,
@@ -661,17 +672,17 @@ export function ZukanClient({
       setRandomMode(false);
     } else {
       setRandomMode(true);
-      // フィルタ状態をリセットしてからランダムフィルタを適用
+      // エントリ種別フィルターは維持し、他のフィルタ状態をリセット
       setSearchQuery("");
       setSelectedAttributes([]);
       setCategoryMatchMode("or");
       setSelectedCreators([]);
       setFavoritesOnly(false);
-      setEntryTypeFilter(undefined);
       filterData(
         {
           searchQuery: "",
           randomCount: 20,
+          entryTypeFilter,
         },
         sortAscending,
       );
