@@ -20,7 +20,6 @@ import {
   IconGlobe,
   IconGrid,
   IconList,
-  IconPerson,
 } from "@/components/icons";
 import { LanguageToggle } from "@/components/language-toggle";
 import { SearchBar } from "@/components/search-bar";
@@ -877,7 +876,14 @@ export function ZukanClient({
               aria-label={t("view.avatarsOnly", lang)}
               aria-pressed={entryTypeFilter === "avatar"}
             >
-              <IconPerson size="w-5 h-5 md:w-6 md:h-6" />
+              <Image
+                src="/images/profileIcon.webp"
+                alt=""
+                width={24}
+                height={24}
+                className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover"
+                unoptimized
+              />
             </button>
             <button
               type="button"
