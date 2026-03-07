@@ -1,7 +1,11 @@
 "use client";
 
 import type { AkyoData, AkyoFilterOptions } from "@/types/akyo";
-import { formatDisplayId, resolveEntryType } from "@/lib/akyo-entry";
+import {
+  formatDisplayId,
+  getDisplaySerialNumber,
+  resolveEntryType,
+} from "@/lib/akyo-entry";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /** localStorage のキー名 */
@@ -212,13 +216,13 @@ export function useAkyoData(initialData: AkyoData[] = []) {
           .map(({ value }) => value)
           .slice(0, options.randomCount);
       } else {
-        // Sort by ID
+        // Sort by display serial for worlds, by ID for avatars
         filtered.sort((a, b) => {
-          const idA = Number.parseInt(a.id, 10);
-          const idB = Number.parseInt(b.id, 10);
-          const safeIdA = Number.isNaN(idA) ? 0 : idA;
-          const safeIdB = Number.isNaN(idB) ? 0 : idB;
-          return sortAsc ? safeIdA - safeIdB : safeIdB - safeIdA;
+          const serialA = getDisplaySerialNumber(a);
+          const serialB = getDisplaySerialNumber(b);
+          const idA = serialA ?? (Number.parseInt(a.id, 10) || 0);
+          const idB = serialB ?? (Number.parseInt(b.id, 10) || 0);
+          return sortAsc ? idA - idB : idB - idA;
         });
       }
 

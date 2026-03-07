@@ -481,6 +481,16 @@ export const UI_TEXTS = {
     en: "View in VRChat",
     ko: "VRChat에서 보기",
   },
+  "modal.zoomHint": {
+    ja: "タップでズーム 🔍",
+    en: "Tap to zoom 🔍",
+    ko: "탭하여 확대 🔍",
+  },
+  "modal.dragHint": {
+    ja: "ドラッグで移動 / ダブルタップで戻る",
+    en: "Drag to move / Double-tap to reset",
+    ko: "드래그로 이동 / 더블탭으로 원래대로",
+  },
 } as const satisfies Record<string, Record<SupportedLanguage, string>>;
 
 export type UITextKey = keyof typeof UI_TEXTS;
