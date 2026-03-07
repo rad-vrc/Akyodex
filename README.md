@@ -1045,10 +1045,12 @@ export function stripHTMLTags(html: string): string {
 **File**: `src/app/api/vrc-avatar-info/route.ts`
 
 ```typescript
-// Length-limited regex (prevents ReDoS)
-const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,64}$/);
-if (!avtrMatch) {
-  return Response.json({ error: 'Invalid avtr format' }, { status: 400 });
+import { VRCHAT_AVATAR_ID_PATTERN } from '@/lib/akyo-entry';
+import { jsonError } from '@/lib/api-helpers';
+
+// Length-limited regex via shared pattern (prevents ReDoS)
+if (!VRCHAT_AVATAR_ID_PATTERN.test(avtr)) {
+  return jsonError('Invalid avtr format (must be avtr_[A-Za-z0-9-]{1,64})', 400);
 }
 ```
 
