@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
     description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
-    images: ['/opengraph-image'],
+    images: ['/twitter-image'],
     creator: '@akyodex',
   },
   icons: {
