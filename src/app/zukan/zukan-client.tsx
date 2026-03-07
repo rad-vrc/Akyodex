@@ -617,20 +617,9 @@ export function ZukanClient({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // フィルター適用
+  // フィルター適用（通常モード）
   useEffect(() => {
-    if (randomMode) {
-      // ランダム表示中はエントリ種別フィルターのみ反映して再シャッフル
-      filterData(
-        {
-          searchQuery: "",
-          randomCount: 20,
-          entryTypeFilter,
-        },
-        sortAscending,
-      );
-      return;
-    }
+    if (randomMode) return;
     filterData(
       {
         searchQuery,
@@ -661,6 +650,23 @@ export function ZukanClient({
     filterData,
   ]);
 
+  // ランダムモード中のエントリ種別フィルター変更時のみ再シャッフル
+  const entryTypeFilterRef = useRef(entryTypeFilter);
+  useEffect(() => {
+    if (!randomMode) return;
+    // randomMode に入った直後は handleRandomClick 側で filterData 済みなのでスキップ
+    if (entryTypeFilterRef.current === entryTypeFilter) return;
+    entryTypeFilterRef.current = entryTypeFilter;
+    filterData(
+      {
+        searchQuery: "",
+        randomCount: 20,
+        entryTypeFilter,
+      },
+      sortAscending,
+    );
+  }, [randomMode, entryTypeFilter, sortAscending, filterData]);
+
   // ソート切替
   const handleSortToggle = () => {
     setSortAscending((prev) => !prev);
@@ -672,6 +678,7 @@ export function ZukanClient({
       setRandomMode(false);
     } else {
       setRandomMode(true);
+      entryTypeFilterRef.current = entryTypeFilter;
       // エントリ種別フィルターは維持し、他のフィルタ状態をリセット
       setSearchQuery("");
       setSelectedAttributes([]);
