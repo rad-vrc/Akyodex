@@ -18,7 +18,6 @@ import {
   IconExternalLink,
   IconGift,
   IconHeart,
-  IconPalette,
   IconSparkles,
   IconTag,
   IconUser,
@@ -490,7 +489,15 @@ export function AkyoDetailModal({
                   {!isWorldEntry && (
                     <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4">
                       <h3 className="text-sm font-bold text-blue-600 mb-2">
-                        <IconUser size="w-3.5 h-3.5" className="mr-1" />
+                        <Image
+                          src="/images/profileIcon.webp"
+                          alt=""
+                          width={14}
+                          height={14}
+                          className="w-3.5 h-3.5 mr-1 inline-block rounded-full object-cover"
+                          style={{ filter: 'brightness(0) invert(39%) sepia(85%) saturate(1800%) hue-rotate(196deg) brightness(96%)' }}
+                          unoptimized
+                        />
                         {t('modal.avatarName', lang)}
                       </h3>
                       <p className="text-xl font-black">{localAkyo.avatarName || '-'}</p>
@@ -524,7 +531,7 @@ export function AkyoDetailModal({
                   {/* Author Card */}
                   <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4">
                     <h3 className="text-sm font-bold text-green-600 mb-2">
-                      <IconPalette size="w-3.5 h-3.5" className="mr-1" />
+                      <IconUser size="w-3.5 h-3.5" className="mr-1" />
                       {t('modal.author', lang)}
                     </h3>
                     <p className="text-xl font-black">{authorStr || ''}</p>
