@@ -2,7 +2,7 @@
  * Akyoデータの型定義
  */
 
-export type AkyoEntryType = 'avatar' | 'world';
+export type AkyoEntryType = "avatar" | "world";
 
 export interface AkyoData {
   id: string; // 4桁のID番号 (例: "0001")
@@ -12,7 +12,7 @@ export interface AkyoData {
   nickname: string; // 通称
   avatarName: string; // アバター名
   sourceUrl?: string; // エントリの元URL（avatar/world共通、未指定時は avatarUrl を使用）
-  
+
   // 新スキーマ
   category: string; // 属性（旧 attribute）
   comment: string; // 備考（旧 notes）
@@ -20,7 +20,7 @@ export interface AkyoData {
 
   // 旧スキーマ（互換性のため維持、将来的に削除）
   /** @deprecated Use category instead */
-  attribute: string; 
+  attribute: string;
   /** @deprecated Use comment instead */
   notes: string;
   /** @deprecated Use author instead */
@@ -39,12 +39,13 @@ export interface AkyoFilterOptions {
   searchQuery?: string;
   category?: string; // 新フィールド
   categories?: string[]; // 複数カテゴリ
-  categoryMatchMode?: 'or' | 'and'; // 複数カテゴリ一致条件
-  author?: string;   // 新フィールド
+  categoryMatchMode?: "or" | "and"; // 複数カテゴリ一致条件
+  author?: string; // 新フィールド
   authors?: string[]; // 複数作者（将来互換）
   randomCount?: number;
   favoritesOnly?: boolean;
-  
+  entryTypeFilter?: AkyoEntryType; // アバター/ワールド種別フィルタ
+
   /** @deprecated Use category instead */
   attribute?: string;
   /** @deprecated Use author instead */
@@ -54,12 +55,12 @@ export interface AkyoFilterOptions {
 /**
  * ビューモード
  */
-export type ViewMode = 'grid' | 'list';
+export type ViewMode = "grid" | "list";
 
 /**
  * 認証レベル
  */
-export type AdminRole = 'owner' | 'admin';
+export type AdminRole = "owner" | "admin";
 
 export type AuthRole = AdminRole | null;
 

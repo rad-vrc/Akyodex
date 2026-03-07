@@ -8,6 +8,7 @@ import {
   ensureWorldCategory,
   extractVRChatWorldIdFromUrl,
 } from '@/lib/akyo-entry';
+import { assertWorldRegistrationAssets } from '@/lib/world-registration';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { AttributeModal } from '../attribute-modal';
 import { ADD_TAB_DRAFT_KEY } from '../draft-keys';
@@ -384,27 +385,27 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           }));
         }
 
-        if (!resolvedNickname || !resolvedAuthor) {
-          restoreSubmitButton();
-          alert(
-            'ワールド情報の自動取得が一部不足しました。通称欄と作者欄を確認して、もう一度登録してください。'
+        const imageResponse = await fetch(
+          `/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`
+        );
+        if (!imageResponse.ok) {
+          const errorText = await imageResponse.text().catch(() => '');
+          throw new Error(
+            `ワールド画像取得に失敗しました (${imageResponse.status})${
+              errorText ? `: ${errorText}` : ''
+            }`
           );
-          return;
         }
 
-        try {
-          const imageResponse = await fetch(
-            `/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`
-          );
-          if (imageResponse.ok) {
-            const blob = await imageResponse.blob();
-            imageFile = new File([blob], `${wrldId}.webp`, { type: blob.type || 'image/webp' });
-          } else {
-            console.warn('[add-tab] World image response was not ok:', imageResponse.status);
-          }
-        } catch (imageError) {
-          console.warn('[add-tab] Failed to fetch world image:', imageError);
-        }
+        const blob = await imageResponse.blob();
+        imageFile = new File([blob], `${wrldId}.webp`, {
+          type: blob.type || 'image/webp',
+        });
+        assertWorldRegistrationAssets({
+          imageFile,
+          resolvedAuthor,
+          resolvedNickname,
+        });
       }
     } catch (error) {
       console.error('VRChat情報取得エラー:', error);

@@ -15,7 +15,13 @@ import { AkyoCard } from "@/components/akyo-card";
 import { AkyoDetailModal } from "@/components/akyo-detail-modal";
 import { AkyoList } from "@/components/akyo-list";
 import { FilterPanel } from "@/components/filter-panel";
-import { IconCog, IconGrid, IconList } from "@/components/icons";
+import {
+  IconCog,
+  IconGlobe,
+  IconGrid,
+  IconList,
+  IconPerson,
+} from "@/components/icons";
 import { LanguageToggle } from "@/components/language-toggle";
 import { SearchBar } from "@/components/search-bar";
 import {
@@ -27,7 +33,7 @@ import { useAkyoData } from "@/hooks/use-akyo-data";
 import { detectVrcEntryTypeFromUrl, resolveEntryType } from "@/lib/akyo-entry";
 import { useLanguage } from "@/hooks/use-language";
 import { t, type SupportedLanguage } from "@/lib/i18n";
-import type { AkyoData, ViewMode } from "@/types/akyo";
+import type { AkyoData, AkyoEntryType, ViewMode } from "@/types/akyo";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -293,6 +299,9 @@ export function ZukanClient({
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
   const [randomMode, setRandomMode] = useState(false);
+  const [entryTypeFilter, setEntryTypeFilter] = useState<
+    AkyoEntryType | undefined
+  >(undefined);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState<boolean | null>(
     null,
   );
@@ -346,8 +355,9 @@ export function ZukanClient({
     () =>
       selectedAttributes.length +
       selectedCreators.length +
-      (favoritesOnly ? 1 : 0),
-    [selectedAttributes, selectedCreators, favoritesOnly],
+      (favoritesOnly ? 1 : 0) +
+      (entryTypeFilter ? 1 : 0),
+    [selectedAttributes, selectedCreators, favoritesOnly, entryTypeFilter],
   );
   const isLanguageRefetching = loading && needsRefetch && data.length > 0;
   const languageStatusMessage = refetchError
@@ -625,6 +635,7 @@ export function ZukanClient({
         attribute: selectedAttributes[0] || undefined,
         creator: selectedCreators[0] || undefined,
         favoritesOnly,
+        entryTypeFilter,
       },
       sortAscending,
     );
@@ -636,6 +647,7 @@ export function ZukanClient({
     favoritesOnly,
     sortAscending,
     randomMode,
+    entryTypeFilter,
     filterData,
   ]);
 
@@ -656,6 +668,7 @@ export function ZukanClient({
       setCategoryMatchMode("or");
       setSelectedCreators([]);
       setFavoritesOnly(false);
+      setEntryTypeFilter(undefined);
       filterData(
         {
           searchQuery: "",
@@ -664,6 +677,11 @@ export function ZukanClient({
         sortAscending,
       );
     }
+  };
+
+  // エントリ種別フィルター切替（トグル: 同じボタンを再度押すと解除）
+  const handleEntryTypeFilterClick = (type: AkyoEntryType) => {
+    setEntryTypeFilter((prev) => (prev === type ? undefined : type));
   };
 
   // お気に入りフィルター切替
@@ -834,7 +852,7 @@ export function ZukanClient({
             />
           </div>
 
-          {/* ビュー切替 */}
+          {/* ビュー切替 & エントリ種別フィルター */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
@@ -851,6 +869,24 @@ export function ZukanClient({
               aria-label={t("view.list", lang)}
             >
               <IconList size="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleEntryTypeFilterClick("avatar")}
+              className={`view-toggle-btn ${entryTypeFilter === "avatar" ? "active" : ""}`}
+              aria-label={t("view.avatarsOnly", lang)}
+              aria-pressed={entryTypeFilter === "avatar"}
+            >
+              <IconPerson size="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleEntryTypeFilterClick("world")}
+              className={`view-toggle-btn ${entryTypeFilter === "world" ? "active" : ""}`}
+              aria-label={t("view.worldsOnly", lang)}
+              aria-pressed={entryTypeFilter === "world"}
+            >
+              <IconGlobe size="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         </div>

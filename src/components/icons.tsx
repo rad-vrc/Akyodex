@@ -10,13 +10,13 @@
  * https://fontawesome.com/license/free
  */
 
-import type { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 /**
  * Base properties for SVG Icon components
  */
 interface IconProps extends SVGProps<SVGSVGElement> {
-  /** 
+  /**
    * Icon size class (Tailwind CSS classes like "w-4 h-4" or "w-5 h-5").
    * Defaults to "w-4 h-4" in the wrapper component.
    */
@@ -26,13 +26,13 @@ interface IconProps extends SVGProps<SVGSVGElement> {
 /**
  * Common Icon Wrapper Component
  * Provides standard SVG structure, Tailwind sizing, and accessibility defaults (aria-hidden).
- * 
+ *
  * @param props - Component properties including size and children (paths)
  * @returns Accessible SVG element
  */
 function Icon({
-  size = 'w-4 h-4',
-  className = '',
+  size = "w-4 h-4",
+  className = "",
   children,
   ...props
 }: IconProps & { children: React.ReactNode }) {
@@ -54,8 +54,8 @@ function Icon({
 // Public page icons
 // ═══════════════════════════════════════
 
-/** 
- * Grid view icon (th-large equivalent) 
+/**
+ * Grid view icon (th-large equivalent)
  * @param props - Icon properties
  */
 export function IconGrid({ size, className, ...props }: IconProps) {
@@ -66,8 +66,8 @@ export function IconGrid({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * List view icon (list equivalent) 
+/**
+ * List view icon (list equivalent)
  * @param props - Icon properties
  */
 export function IconList({ size, className, ...props }: IconProps) {
@@ -78,8 +78,8 @@ export function IconList({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Settings gear icon (cog equivalent) 
+/**
+ * Settings gear icon (cog equivalent)
  * @param props - Icon properties
  */
 export function IconCog({ size, className, ...props }: IconProps) {
@@ -90,7 +90,7 @@ export function IconCog({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
+/**
  * Heart icon for favorites
  * @param props - Icon properties
  */
@@ -102,7 +102,7 @@ export function IconHeart({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
+/**
  * Dice icon for random selection
  * @param props - Icon properties
  */
@@ -114,7 +114,7 @@ export function IconDice({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
+/**
  * Info circle icon for details
  * @param props - Icon properties
  */
@@ -126,8 +126,8 @@ export function IconInfoCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * External link icon 
+/**
+ * External link icon
  * @param props - Icon properties
  */
 export function IconExternalLink({ size, className, ...props }: IconProps) {
@@ -138,8 +138,8 @@ export function IconExternalLink({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Tag icon (tag equivalent) 
+/**
+ * Tag icon (tag equivalent)
  * @param props - Icon properties
  */
 export function IconTag({ size, className, ...props }: IconProps) {
@@ -150,8 +150,8 @@ export function IconTag({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * User profile icon 
+/**
+ * User profile icon
  * @param props - Icon properties
  */
 export function IconUser({ size, className, ...props }: IconProps) {
@@ -162,8 +162,8 @@ export function IconUser({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Sparkles icon for special variants 
+/**
+ * Sparkles icon for special variants
  * @param props - Icon properties
  */
 export function IconSparkles({ size, className, ...props }: IconProps) {
@@ -183,8 +183,8 @@ export function IconVRChat({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Palette icon for color/category representation 
+/**
+ * Palette icon for color/category representation
  * @param props - Icon properties
  */
 export function IconPalette({ size, className, ...props }: IconProps) {
@@ -195,8 +195,8 @@ export function IconPalette({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Gift icon 
+/**
+ * Gift icon
  * @param props - Icon properties
  */
 export function IconGift({ size, className, ...props }: IconProps) {
@@ -207,8 +207,8 @@ export function IconGift({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Sort ascending icon 
+/**
+ * Sort ascending icon
  * @param props - Icon properties
  */
 export function IconSortAsc({ size, className, ...props }: IconProps) {
@@ -220,8 +220,8 @@ export function IconSortAsc({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Sort descending icon 
+/**
+ * Sort descending icon
  * @param props - Icon properties
  */
 export function IconSortDesc({ size, className, ...props }: IconProps) {
@@ -237,8 +237,8 @@ export function IconSortDesc({ size, className, ...props }: IconProps) {
 // Admin page icons
 // ═══════════════════════════════════════
 
-/** 
- * Shield icon for admin/security 
+/**
+ * Shield icon for admin/security
  * @param props - Icon properties
  */
 export function IconShield({ size, className, ...props }: IconProps) {
@@ -249,8 +249,8 @@ export function IconShield({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Home icon 
+/**
+ * Home icon
  * @param props - Icon properties
  */
 export function IconHome({ size, className, ...props }: IconProps) {
@@ -261,8 +261,8 @@ export function IconHome({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Sign out icon 
+/**
+ * Sign out icon
  * @param props - Icon properties
  */
 export function IconSignOut({ size, className, ...props }: IconProps) {
@@ -273,8 +273,8 @@ export function IconSignOut({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Lock icon for passwords/private content 
+/**
+ * Lock icon for passwords/private content
  * @param props - Icon properties
  */
 export function IconLock({ size, className, ...props }: IconProps) {
@@ -285,8 +285,8 @@ export function IconLock({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Sign in icon 
+/**
+ * Sign in icon
  * @param props - Icon properties
  */
 export function IconSignIn({ size, className, ...props }: IconProps) {
@@ -297,11 +297,15 @@ export function IconSignIn({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Exclamation circle icon for warnings 
+/**
+ * Exclamation circle icon for warnings
  * @param props - Icon properties
  */
-export function IconExclamationCircle({ size, className, ...props }: IconProps) {
+export function IconExclamationCircle({
+  size,
+  className,
+  ...props
+}: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
       <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
@@ -309,8 +313,8 @@ export function IconExclamationCircle({ size, className, ...props }: IconProps) 
   );
 }
 
-/** 
- * Plus circle icon 
+/**
+ * Plus circle icon
  * @param props - Icon properties
  */
 export function IconPlusCircle({ size, className, ...props }: IconProps) {
@@ -321,8 +325,8 @@ export function IconPlusCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Edit icon 
+/**
+ * Edit icon
  * @param props - Icon properties
  */
 export function IconEdit({ size, className, ...props }: IconProps) {
@@ -344,8 +348,8 @@ export function IconTools({ size, className, ...props }: IconProps) {
   return <IconCog size={size} className={className} {...props} />;
 }
 
-/** 
- * Multiple tags icon 
+/**
+ * Multiple tags icon
  * @param props - Icon properties
  */
 export function IconTags({ size, className, ...props }: IconProps) {
@@ -356,8 +360,8 @@ export function IconTags({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Close/X icon 
+/**
+ * Close/X icon
  * @param props - Icon properties
  */
 export function IconClose({ size, className, ...props }: IconProps) {
@@ -368,8 +372,8 @@ export function IconClose({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Search icon 
+/**
+ * Search icon
  * @param props - Icon properties
  */
 export function IconSearch({ size, className, ...props }: IconProps) {
@@ -380,8 +384,8 @@ export function IconSearch({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Check circle icon for success 
+/**
+ * Check circle icon for success
  * @param props - Icon properties
  */
 export function IconCheckCircle({ size, className, ...props }: IconProps) {
@@ -392,8 +396,8 @@ export function IconCheckCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Simple circle icon 
+/**
+ * Simple circle icon
  * @param props - Icon properties
  */
 export function IconCircle({ size, className, ...props }: IconProps) {
@@ -404,8 +408,8 @@ export function IconCircle({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Cloud upload icon 
+/**
+ * Cloud upload icon
  * @param props - Icon properties
  */
 export function IconCloudUpload({ size, className, ...props }: IconProps) {
@@ -416,8 +420,8 @@ export function IconCloudUpload({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Cloud download icon 
+/**
+ * Cloud download icon
  * @param props - Icon properties
  */
 export function IconCloudDownload({ size, className, ...props }: IconProps) {
@@ -428,8 +432,8 @@ export function IconCloudDownload({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Crop icon 
+/**
+ * Crop icon
  * @param props - Icon properties
  */
 export function IconCrop({ size, className, ...props }: IconProps) {
@@ -440,8 +444,8 @@ export function IconCrop({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Redo/refresh icon 
+/**
+ * Redo/refresh icon
  * @param props - Icon properties
  */
 export function IconRedo({ size, className, ...props }: IconProps) {
@@ -452,8 +456,8 @@ export function IconRedo({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Zoom in icon 
+/**
+ * Zoom in icon
  * @param props - Icon properties
  */
 export function IconZoomIn({ size, className, ...props }: IconProps) {
@@ -464,8 +468,8 @@ export function IconZoomIn({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Zoom out icon 
+/**
+ * Zoom out icon
  * @param props - Icon properties
  */
 export function IconZoomOut({ size, className, ...props }: IconProps) {
@@ -476,10 +480,36 @@ export function IconZoomOut({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Save icon 
+/**
+ * Save icon
  * @param props - Icon properties
  */
+/**
+ * Person / human silhouette icon (user-large equivalent)
+ * Used for "avatars only" entry type filter.
+ * @param props - Icon properties
+ */
+export function IconPerson({ size, className, ...props }: IconProps) {
+  return (
+    <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
+      <path d="M256 288A144 144 0 1 0 256 0a144 144 0 1 0 0 288zm-94.7 32C72.2 320 0 392.2 0 481.3c0 17 13.8 30.7 30.7 30.7H481.3c17 0 30.7-13.8 30.7-30.7C512 392.2 439.8 320 350.7 320H161.3z" />
+    </Icon>
+  );
+}
+
+/**
+ * Globe / earth icon (globe-americas equivalent)
+ * Used for "worlds only" entry type filter.
+ * @param props - Icon properties
+ */
+export function IconGlobe({ size, className, ...props }: IconProps) {
+  return (
+    <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
+      <path d="M256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM179.2 100.7c-5.1 1.1-9.4 5.3-13.8 12.4c-3.6 5.8-7.7 14.2-10.5 20.2c-1.4 3-2.5 5.4-3.1 6.8c-1.7 3.5-3.7 6.1-9.7 6.7c-5.9 .6-10.3-2.3-15.4-6.6c-1.9-1.6-4.2-3.6-6.9-5.5c-3.6-2.5-7.7-3.9-10.5-4.5c35-52.4 91.8-88.5 157.5-95.6c-1.1 .5-2.2 1-3.3 1.6C248.3 44.8 222.8 51 203.6 65c-10.1 7.4-18.5 16.7-22.6 28.2c-.5 1.4-1 2.8-1.6 4.1c0 1.1 0 2.3-.2 3.4zm230 182.9c-1.2 2.4-3.6 4.8-8.9 7.3c-4.9 2.4-11.2 4.1-18.4 5.6c-14.5 3.1-33.1 4.8-52.7 6.5c-2.5 .2-5 .4-7.5 .7c-20.4 1.8-42 3.8-60.2 9.2c-12.2 3.7-23.6 9.1-31.5 17.8c-8 8.7-12 20-12 33.7v51.4c0 5.3-.4 10.3-2.4 14.5c-1.9 4-5.3 7.1-11.4 9.1c-34.4-12.8-63.5-36.3-83.5-66.4c5.4-5.4 13.4-10.1 23.6-14c12.3-4.7 27.2-8.2 42.8-11.5c2.6-.6 5.3-1.1 8-1.7c20.7-4.3 42.6-8.9 59.7-18.2c8.9-4.8 17-11.1 22.4-19.6c5.5-8.6 8-18.9 8-30.6c0-18.7-7.3-33.7-19-44.9c-11.5-11-26.2-17.5-39.5-22.5l-1.3-.5c-14.1-5.3-25.9-9.8-34.5-17.4c-3.8-3.4-6.3-6.8-7.9-10.5c-1.5-3.5-2.4-7.9-2.4-13.7c0-6.9 1.3-10.3 2.7-12.4c1.3-1.8 3.4-3.5 6.9-5c7.7-3.4 19.2-5 33-5h31.4c13.7 0 23.2-1.4 29.6-5.2c5.6-3.4 9.4-9.1 9.4-19.8c0-12.2-5.1-19.6-11.7-24.4c-7-5-16.5-7.6-24.5-7.6h-2.1c-9.7 0-14.1-6.3-17.4-11.5l-1.2-1.8c-3-4.6-6.4-9.6-11-13.5c-3.1-2.6-7-4.8-11.9-5.8c16.3-6.3 34-9.8 52.4-9.8c17.1 0 33.6 2.9 48.9 8.4c-.4 5.8-.1 12.4 2.4 18.7c3 7.5 9 13.2 17.6 16c7 2.2 12.7 5.4 16.7 8.4c1.6 1.2 2.8 2.3 3.7 3.1c-2.1 3.3-3.5 8-3.5 14.6c0 7.8 2.4 14.4 7.3 19.2c4.6 4.5 10.2 6.5 14.8 7.5c4.4 1 9.2 1.3 13.5 1.3h5.2c.7 0 1.5 0 2.2 0c.8 3.5 1.5 7 2.1 10.6c.3 1.6 .5 3.2 .7 4.9c-4 1.4-8.4 3.4-12.5 6.3c-6.3 4.4-12.1 11-14.4 20.1c-2.2 8.6-1.2 17.4 2.5 25.5zm46.4-73c-2.2-1.3-4.4-2.1-6.1-2.6c.5-3 .9-6 1.2-9c3.6 3.5 5.7 7.4 4.9 11.6z" />
+    </Icon>
+  );
+}
+
 export function IconSave({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 448 512" {...props}>
@@ -488,8 +518,8 @@ export function IconSave({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Download icon 
+/**
+ * Download icon
  * @param props - Icon properties
  */
 export function IconDownload({ size, className, ...props }: IconProps) {
@@ -500,8 +530,8 @@ export function IconDownload({ size, className, ...props }: IconProps) {
   );
 }
 
-/** 
- * Trash icon 
+/**
+ * Trash icon
  * @param props - Icon properties
  */
 export function IconTrash({ size, className, ...props }: IconProps) {
