@@ -6,6 +6,7 @@ import { IconClose, IconCloudUpload, IconCrop, IconEdit, IconRedo, IconSave, Ico
 import {
   detectVrcEntryTypeFromUrl,
   ensureWorldCategory,
+  extractVRChatAvatarIdFromUrl,
   getAkyoSourceUrl,
   resolveDisplaySerialForSourceUrlChange,
 } from '@/lib/akyo-entry';
@@ -431,13 +432,12 @@ export function EditModal({
       return;
     }
 
-    const match = url.match(/avtr_[A-Za-z0-9-]+/);
-    if (!match) {
+    const avtrId = extractVRChatAvatarIdFromUrl(url);
+    if (!avtrId) {
       alert('有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...');
       return;
     }
 
-    const avtrId = match[0];
     setFetchingName(true);
 
     const controller = new AbortController();
@@ -483,13 +483,12 @@ export function EditModal({
       return;
     }
 
-    const match = url.match(/avtr_[A-Za-z0-9-]+/);
-    if (!match) {
+    const avtrId = extractVRChatAvatarIdFromUrl(url);
+    if (!avtrId) {
       alert('有効なVRChatアバターURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...');
       return;
     }
 
-    const avtrId = match[0];
     setFetchingImage(true);
 
     const controller = new AbortController();

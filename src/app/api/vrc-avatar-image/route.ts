@@ -4,6 +4,7 @@
  */
 
 import { connection } from 'next/server';
+import { VRCHAT_AVATAR_ID_PATTERN } from '@/lib/akyo-entry';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 
 export async function GET(request: Request) {
@@ -22,15 +23,14 @@ export async function GET(request: Request) {
   }
 
   // Validate avtr format (strict: full match, length cap)
-  const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,50}$/);
-  if (!avtrMatch) {
+  if (!VRCHAT_AVATAR_ID_PATTERN.test(avtr)) {
     return Response.json(
       { error: 'Invalid avtr format' },
       { status: 400 }
     );
   }
 
-  const cleanAvtr = avtrMatch[0];
+  const cleanAvtr = avtr;
 
   try {
     // Fetch VRChat page using shared utility

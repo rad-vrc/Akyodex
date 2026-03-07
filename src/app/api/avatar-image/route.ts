@@ -14,15 +14,7 @@
 
 import { connection } from 'next/server';
 import { jsonError } from '@/lib/api-helpers';
-
-/**
- * Extract avtr ID from VRChat URL
- */
-function extractAvtrId(url: string): string | null {
-  if (!url) return null;
-  const match = url.match(/avtr_[A-Za-z0-9-]+/);
-  return match ? match[0] : null;
-}
+import { VRCHAT_AVATAR_ID_PATTERN, extractVRChatAvatarIdFromUrl } from '@/lib/akyo-entry';
 
 /**
  * Fetch CSV data and find avtr ID for given Akyo ID
@@ -55,14 +47,14 @@ async function getAvtrIdFromCsv(akyoId: string): Promise<string | null> {
       if (idMatch[1] === akyoId) {
         // CSV uses quoted fields, so we need proper parsing
         // For now, use simple regex to extract the last URL
-        const urlMatch = line.match(/https:\/\/vrchat\.com\/home\/avatar\/(avtr_[A-Za-z0-9-]+)/);
+        const urlMatch = line.match(/https:\/\/vrchat\.com\/home\/avatar\/(avtr_[A-Za-z0-9-]{1,64})/);
         if (urlMatch) {
           return urlMatch[1];
         }
         // Fallback: extract last column
         const columns = line.split(',');
         const avatarUrl = columns[columns.length - 1];
-        return extractAvtrId(avatarUrl);
+        return extractVRChatAvatarIdFromUrl(avatarUrl);
       }
     }
 
@@ -102,9 +94,7 @@ export async function GET(request: Request) {
 
   // Strengthen input validation for security
   if (avtr) {
-    // Strict validation: must start with avtr_, followed by alphanumeric and hyphens, max 50 chars
-    const avtrRegex = /^avtr_[A-Za-z0-9-]{1,50}$/;
-    if (!avtrRegex.test(avtr)) {
+    if (!VRCHAT_AVATAR_ID_PATTERN.test(avtr)) {
       return jsonError('Invalid avtr format', 400);
     }
   }
@@ -180,12 +170,10 @@ export async function GET(request: Request) {
     // Step 2: Try VRChat API if avtr is available (from parameter or CSV lookup)
     if (avtr) {
       // Validate avtr format
-      const avtrMatch = avtr.match(/avtr_[A-Za-z0-9-]+/);
-      if (!avtrMatch) {
+      const cleanAvtr = extractVRChatAvatarIdFromUrl(avtr);
+      if (!cleanAvtr) {
         return jsonError('Invalid avtr format', 400);
       }
-
-      const cleanAvtr = avtrMatch[0];
 
       // Security: Explicitly construct VRChat URL to prevent SSRF
       // Only allow vrchat.com domain

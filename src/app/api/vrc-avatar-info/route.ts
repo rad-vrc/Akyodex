@@ -9,6 +9,7 @@
  */
 
 import { connection } from 'next/server';
+import { VRCHAT_AVATAR_ID_PATTERN } from '@/lib/akyo-entry';
 import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 import type { VRChatAvatarInfo } from '@/types/akyo';
@@ -26,15 +27,14 @@ export async function GET(request: Request) {
   }
 
   // Validate avtr format with length limit (防止 ReDoS and DoS攻撃)
-  const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,50}$/);
-  if (!avtrMatch) {
+  if (!VRCHAT_AVATAR_ID_PATTERN.test(avtr)) {
     return Response.json(
-      { error: 'Invalid avtr format (must be avtr_[A-Za-z0-9-]{1,50})' },
+      { error: 'Invalid avtr format (must be avtr_[A-Za-z0-9-]{1,64})' },
       { status: 400 }
     );
   }
 
-  const cleanAvtr = avtrMatch[0];
+  const cleanAvtr = avtr;
 
   try {
     // Fetch VRChat page using shared utility
