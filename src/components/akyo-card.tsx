@@ -132,16 +132,29 @@ export function AkyoCard({
           placeholder="blur"
           blurDataURL={generateBlurDataURL(akyo.id)}
           onError={() => {
-            // R2/Cloudflare失敗時はAPI経由にフォールバックし、それでも失敗したらプレースホルダー。
-            if (
-              imageSrc !== apiFallbackImageSrc &&
-              imageSrc !== placeholderImageSrc
-            ) {
-              setImageSrc(apiFallbackImageSrc);
-              return;
-            }
-            if (imageSrc !== placeholderImageSrc) {
-              setImageSrc(placeholderImageSrc);
+            if (isWorldEntry) {
+              // ワールド: VRChat API → R2画像 → placeholder
+              // bypassCloudflare パラメータは vrc-world-image では無視されるため、
+              // 冗長な再試行を避けてR2画像にフォールバックする
+              if (imageSrc === apiImageSrc) {
+                setImageSrc(primaryImageSrc);
+                return;
+              }
+              if (imageSrc !== placeholderImageSrc) {
+                setImageSrc(placeholderImageSrc);
+              }
+            } else {
+              // アバター: R2画像 → API(bypassCloudflare) → placeholder
+              if (
+                imageSrc !== apiFallbackImageSrc &&
+                imageSrc !== placeholderImageSrc
+              ) {
+                setImageSrc(apiFallbackImageSrc);
+                return;
+              }
+              if (imageSrc !== placeholderImageSrc) {
+                setImageSrc(placeholderImageSrc);
+              }
             }
           }}
         />
