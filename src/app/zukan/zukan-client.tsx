@@ -680,7 +680,11 @@ export function ZukanClient({
   };
 
   // エントリ種別フィルター切替（トグル: 同じボタンを再度押すと解除）
+  // ランダム表示中に押された場合はランダムモードを解除してからフィルタを適用する
   const handleEntryTypeFilterClick = (type: AkyoEntryType) => {
+    if (randomMode) {
+      setRandomMode(false);
+    }
     setEntryTypeFilter((prev) => (prev === type ? undefined : type));
   };
 

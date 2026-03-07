@@ -1,18 +1,29 @@
-'use client';
+"use client";
 
 /* eslint-disable @next/next/no-img-element */
 
-import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSearch, IconTag, IconTags, IconZoomIn, IconZoomOut } from '@/components/icons';
+import {
+  IconCloudDownload,
+  IconCrop,
+  IconPlusCircle,
+  IconRedo,
+  IconSave,
+  IconSearch,
+  IconTag,
+  IconTags,
+  IconZoomIn,
+  IconZoomOut,
+} from "@/components/icons";
 import {
   detectVrcEntryTypeFromUrl,
   ensureWorldCategory,
   extractVRChatWorldIdFromUrl,
-} from '@/lib/akyo-entry';
-import { assertWorldRegistrationAssets } from '@/lib/world-registration';
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { AttributeModal } from '../attribute-modal';
-import { ADD_TAB_DRAFT_KEY } from '../draft-keys';
-import type { AdminRole } from '@/types/akyo';
+} from "@/lib/akyo-entry";
+import { assertWorldRegistrationAssets } from "@/lib/world-registration";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { AttributeModal } from "../attribute-modal";
+import { ADD_TAB_DRAFT_KEY } from "../draft-keys";
+import type { AdminRole } from "@/types/akyo";
 
 interface AddTabProps {
   userRole: AdminRole;
@@ -35,19 +46,19 @@ interface AddTabDraft {
 
 function createDefaultFormData() {
   return {
-    nickname: '',
-    avatarName: '',
+    nickname: "",
+    avatarName: "",
     categories: [] as string[],
-    author: '',
-    sourceUrl: '',
-    comment: '',
+    author: "",
+    sourceUrl: "",
+    comment: "",
   };
 }
 
 function normalizeId(id: string): string | null {
   const parsed = Number.parseInt(id, 10);
   if (Number.isNaN(parsed)) return null;
-  return parsed.toString().padStart(4, '0');
+  return parsed.toString().padStart(4, "0");
 }
 
 function pickLatestId(currentId: string, candidateId?: string | null): string {
@@ -69,60 +80,69 @@ function pickLatestId(currentId: string, candidateId?: string | null): string {
 function getNextSequentialId(id: string): string | null {
   const normalized = normalizeId(id);
   if (!normalized) return null;
-  return (Number.parseInt(normalized, 10) + 1).toString().padStart(4, '0');
+  return (Number.parseInt(normalized, 10) + 1).toString().padStart(4, "0");
 }
 
 function normalizeStringList(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   const normalized = value
-    .map((item) => (typeof item === 'string' ? item.trim() : ''))
+    .map((item) => (typeof item === "string" ? item.trim() : ""))
     .filter(Boolean);
   return Array.from(new Set(normalized));
 }
 
 function normalizeCategoriesForSubmit(
   categories: string[],
-  entryType: 'avatar' | 'world'
+  entryType: "avatar" | "world",
 ): string[] {
   const normalized = categories
     .map((category) => category.trim())
     .filter(Boolean);
 
-  return entryType === 'world'
+  return entryType === "world"
     ? ensureWorldCategory(normalized)
     : Array.from(new Set(normalized));
 }
 
-function shouldResetWorldMetadata(previousUrl: string, nextUrl: string): boolean {
+function shouldResetWorldMetadata(
+  previousUrl: string,
+  nextUrl: string,
+): boolean {
   const previousType = detectVrcEntryTypeFromUrl(previousUrl);
   const nextType = detectVrcEntryTypeFromUrl(nextUrl);
-  if (nextType !== 'world') {
+  if (nextType !== "world") {
     return false;
   }
-  return previousUrl.trim() !== nextUrl.trim() || previousType !== 'world';
+  return previousUrl.trim() !== nextUrl.trim() || previousType !== "world";
 }
 
 /**
  * Add Tab Component
  * 新規登録タブ（完全再現 + VRChat自動取得 + 属性管理）
  */
-export function AddTab({ userRole, categories, authors, attributes, creators }: AddTabProps) {
+export function AddTab({
+  userRole,
+  categories,
+  authors,
+  attributes,
+  creators,
+}: AddTabProps) {
   // 新旧フィールドのマージ
   const [customCategories, setCustomCategories] = useState<string[]>([]);
   const allAttributes = Array.from(
-    new Set([...(categories || attributes), ...customCategories])
+    new Set([...(categories || attributes), ...customCategories]),
   ).sort();
   // authors/creators は将来の作者フィルター用に保持（現在はVRChatから自動取得）
   void (authors || creators);
 
-  const [nextId, setNextId] = useState('0001');
+  const [nextId, setNextId] = useState("0001");
   const [formData, setFormData] = useState(createDefaultFormData);
   const formRef = useRef<HTMLFormElement | null>(null);
   const nextIdRef = useRef(nextId);
   const draftHydratedRef = useRef(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
       const savedDraft = sessionStorage.getItem(ADD_TAB_DRAFT_KEY);
@@ -131,27 +151,29 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
       const parsed = JSON.parse(savedDraft) as Partial<AddTabDraft>;
       setFormData((prev) => ({
         ...prev,
-        nickname: typeof parsed.nickname === 'string' ? parsed.nickname : prev.nickname,
+        nickname:
+          typeof parsed.nickname === "string" ? parsed.nickname : prev.nickname,
         categories: normalizeStringList(parsed.categories),
         sourceUrl:
-          typeof parsed.sourceUrl === 'string'
+          typeof parsed.sourceUrl === "string"
             ? parsed.sourceUrl
-            : typeof (parsed as { avatarUrl?: unknown }).avatarUrl === 'string'
-            ? ((parsed as { avatarUrl: string }).avatarUrl)
-            : prev.sourceUrl,
-        author: typeof parsed.author === 'string' ? parsed.author : prev.author,
-        comment: typeof parsed.comment === 'string' ? parsed.comment : prev.comment,
+            : typeof (parsed as { avatarUrl?: unknown }).avatarUrl === "string"
+              ? (parsed as { avatarUrl: string }).avatarUrl
+              : prev.sourceUrl,
+        author: typeof parsed.author === "string" ? parsed.author : prev.author,
+        comment:
+          typeof parsed.comment === "string" ? parsed.comment : prev.comment,
       }));
       setCustomCategories(normalizeStringList(parsed.customCategories));
     } catch (error) {
-      console.warn('[add-tab] Failed to restore draft:', error);
+      console.warn("[add-tab] Failed to restore draft:", error);
     } finally {
       draftHydratedRef.current = true;
     }
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !draftHydratedRef.current) return;
+    if (typeof window === "undefined" || !draftHydratedRef.current) return;
 
     const draft: AddTabDraft = {
       nickname: formData.nickname,
@@ -173,20 +195,23 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
   const fetchNextId = useCallback(async (): Promise<string | null> => {
     try {
-      const response = await fetch('/api/admin/next-id');
+      const response = await fetch("/api/admin/next-id");
       if (response.ok) {
         const data = await response.json();
         if (data?.nextId) {
-          const latestId = pickLatestId(nextIdRef.current, data.nextId as string);
+          const latestId = pickLatestId(
+            nextIdRef.current,
+            data.nextId as string,
+          );
           nextIdRef.current = latestId;
           setNextId(latestId);
           return latestId;
         }
       } else {
-        console.error('Failed to fetch next ID, using default');
+        console.error("Failed to fetch next ID, using default");
       }
     } catch (error) {
-      console.error('Error fetching next ID:', error);
+      console.error("Error fetching next ID:", error);
     }
     return null;
   }, []);
@@ -215,8 +240,8 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
   // Duplicate check states
   const [nicknameStatus, setNicknameStatus] = useState({
-    message: '',
-    tone: 'neutral' as 'neutral' | 'success' | 'error',
+    message: "",
+    tone: "neutral" as "neutral" | "success" | "error",
   });
   const [checkingNickname, setCheckingNickname] = useState(false);
   const detectedEntryType = detectVrcEntryTypeFromUrl(formData.sourceUrl);
@@ -234,38 +259,43 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
     const url = formData.sourceUrl.trim();
     if (!url) {
-      alert('VRChat URLは必須です');
+      alert("VRChat URLは必須です");
       return;
     }
 
     const entryType = detectVrcEntryTypeFromUrl(url);
     if (!entryType) {
       alert(
-        '有効なVRChatアバター/ワールドURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...\nまたは: https://vrchat.com/home/world/wrld_xxx...'
+        "有効なVRChatアバター/ワールドURLを入力してください\n例: https://vrchat.com/home/avatar/avtr_xxx...\nまたは: https://vrchat.com/home/world/wrld_xxx...",
       );
       return;
     }
 
-    const resolvedCategories = normalizeCategoriesForSubmit(formData.categories, entryType);
+    const resolvedCategories = normalizeCategoriesForSubmit(
+      formData.categories,
+      entryType,
+    );
     if (resolvedCategories.length === 0) {
-      alert('カテゴリを1つ以上選択してください');
+      alert("カテゴリを1つ以上選択してください");
       return;
     }
 
-    if (nicknameStatus.tone === 'error') {
-      if (!confirm('重複する通称が検出されました。\n登録を続行しますか？')) {
+    if (nicknameStatus.tone === "error") {
+      if (!confirm("重複する通称が検出されました。\n登録を続行しますか？")) {
         return;
       }
     }
 
     const formEl = formRef.current;
     if (!formEl) {
-      console.error('Form element not found on submit');
+      console.error("Form element not found on submit");
       return;
     }
 
-    const submitBtn = formEl.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-    const originalText = submitBtn?.innerHTML || '';
+    const submitBtn = formEl.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement | null;
+    const originalText = submitBtn?.innerHTML || "";
     const restoreSubmitButton = () => {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -275,20 +305,20 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = '💾 VRChat情報取得中...';
+      submitBtn.textContent = "💾 VRChat情報取得中...";
     }
 
     const nextIdRefreshPromise = fetchNextId();
     let resolvedNickname = formData.nickname.trim();
-    let resolvedAvatarName = '';
-    let resolvedAuthor = '';
+    let resolvedAvatarName = "";
+    let resolvedAuthor = "";
     let imageFile: File | null = null;
 
     try {
-      if (entryType === 'avatar') {
+      if (entryType === "avatar") {
         const match = url.match(/avtr_[A-Za-z0-9-]+/);
         if (!match) {
-          throw new Error('有効なVRChatアバターURLを入力してください。');
+          throw new Error("有効なVRChatアバターURLを入力してください。");
         }
 
         const avtrId = match[0];
@@ -297,17 +327,21 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
         try {
           const [infoResponse, imageResponse] = await Promise.all([
-            fetch(`/api/vrc-avatar-info?avtr=${avtrId}`, { signal: controller.signal }),
-            fetch(`/api/vrc-avatar-image?avtr=${avtrId}&w=1024`, { signal: controller.signal }),
+            fetch(`/api/vrc-avatar-info?avtr=${avtrId}`, {
+              signal: controller.signal,
+            }),
+            fetch(`/api/vrc-avatar-image?avtr=${avtrId}&w=1024`, {
+              signal: controller.signal,
+            }),
           ]);
           clearTimeout(timeoutId);
 
           if (!infoResponse.ok) {
-            const errorText = await infoResponse.text().catch(() => '');
+            const errorText = await infoResponse.text().catch(() => "");
             throw new Error(
               `アバター情報取得に失敗しました (${infoResponse.status})${
-                errorText ? `: ${errorText}` : ''
-              }`
+                errorText ? `: ${errorText}` : ""
+              }`,
             );
           }
 
@@ -315,14 +349,18 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
             avatarName?: string;
             creatorName?: string;
           };
-          resolvedAvatarName = infoData.avatarName?.trim() || '';
-          resolvedAuthor = infoData.creatorName?.trim() || '';
+          resolvedAvatarName = infoData.avatarName?.trim() || "";
+          resolvedAuthor = infoData.creatorName?.trim() || "";
 
           if (!resolvedAvatarName) {
-            throw new Error('アバター名を取得できませんでした。URLが正しいか確認してください。');
+            throw new Error(
+              "アバター名を取得できませんでした。URLが正しいか確認してください。",
+            );
           }
           if (!resolvedAuthor) {
-            throw new Error('作者名を取得できませんでした。URLが正しいか確認してください。');
+            throw new Error(
+              "作者名を取得できませんでした。URLが正しいか確認してください。",
+            );
           }
 
           if (!imageResponse.ok) {
@@ -330,7 +368,9 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           }
 
           const blob = await imageResponse.blob();
-          imageFile = new File([blob], `${avtrId}.webp`, { type: 'image/webp' });
+          imageFile = new File([blob], `${avtrId}.webp`, {
+            type: "image/webp",
+          });
         } catch (error) {
           clearTimeout(timeoutId);
           throw error;
@@ -338,27 +378,33 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
       } else {
         const wrldId = extractVRChatWorldIdFromUrl(url);
         if (!wrldId) {
-          throw new Error('有効なVRChatワールドURLを入力してください。');
+          throw new Error("有効なVRChatワールドURLを入力してください。");
         }
 
         const worldController = new AbortController();
-        const worldTimeoutId = window.setTimeout(() => worldController.abort(), 30_000);
+        const worldTimeoutId = window.setTimeout(
+          () => worldController.abort(),
+          30_000,
+        );
 
         let infoResponse: Response;
         try {
-          infoResponse = await fetch(`/api/vrc-world-info?wrld=${encodeURIComponent(wrldId)}`, {
-            signal: worldController.signal,
-          });
+          infoResponse = await fetch(
+            `/api/vrc-world-info?wrld=${encodeURIComponent(wrldId)}`,
+            {
+              signal: worldController.signal,
+            },
+          );
         } finally {
           clearTimeout(worldTimeoutId);
         }
 
         if (!infoResponse.ok) {
-          const errorText = await infoResponse.text().catch(() => '');
+          const errorText = await infoResponse.text().catch(() => "");
           throw new Error(
             `ワールド情報取得に失敗しました (${infoResponse.status})${
-              errorText ? `: ${errorText}` : ''
-            }`
+              errorText ? `: ${errorText}` : ""
+            }`,
           );
         }
 
@@ -366,8 +412,8 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           worldName?: string;
           creatorName?: string;
         };
-        const fetchedWorldName = infoData.worldName?.trim() || '';
-        const fetchedCreatorName = infoData.creatorName?.trim() || '';
+        const fetchedWorldName = infoData.worldName?.trim() || "";
+        const fetchedCreatorName = infoData.creatorName?.trim() || "";
 
         resolvedAuthor = formData.author.trim() || fetchedCreatorName;
         resolvedNickname = formData.nickname.trim() || fetchedWorldName;
@@ -385,21 +431,42 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           }));
         }
 
-        const imageResponse = await fetch(
-          `/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`
+        const imageController = new AbortController();
+        const imageTimeoutId = window.setTimeout(
+          () => imageController.abort(),
+          30_000,
         );
+
+        let imageResponse: Response;
+        try {
+          imageResponse = await fetch(
+            `/api/vrc-world-image?wrld=${encodeURIComponent(wrldId)}&w=1024`,
+            { signal: imageController.signal },
+          );
+        } catch (imgFetchError) {
+          clearTimeout(imageTimeoutId);
+          if (
+            imgFetchError instanceof Error &&
+            imgFetchError.name === "AbortError"
+          ) {
+            throw new Error("ワールド画像取得がタイムアウトしました (30秒)");
+          }
+          throw imgFetchError;
+        }
+        clearTimeout(imageTimeoutId);
+
         if (!imageResponse.ok) {
-          const errorText = await imageResponse.text().catch(() => '');
+          const errorText = await imageResponse.text().catch(() => "");
           throw new Error(
             `ワールド画像取得に失敗しました (${imageResponse.status})${
-              errorText ? `: ${errorText}` : ''
-            }`
+              errorText ? `: ${errorText}` : ""
+            }`,
           );
         }
 
         const blob = await imageResponse.blob();
         imageFile = new File([blob], `${wrldId}.webp`, {
-          type: blob.type || 'image/webp',
+          type: blob.type || "image/webp",
         });
         assertWorldRegistrationAssets({
           imageFile,
@@ -408,13 +475,15 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
         });
       }
     } catch (error) {
-      console.error('VRChat情報取得エラー:', error);
+      console.error("VRChat情報取得エラー:", error);
       restoreSubmitButton();
 
       alert(
         `❌ 登録に失敗しました\n\n${
-          error instanceof Error ? error.message : 'VRChat情報の取得に失敗しました'
-        }\n\nURLが正しいか、対象が公開設定か確認してください。`
+          error instanceof Error
+            ? error.message
+            : "VRChat情報の取得に失敗しました"
+        }\n\nURLが正しいか、対象が公開設定か確認してください。`,
       );
       return;
     }
@@ -422,7 +491,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
     let croppedImageData: string | null = null;
     if (imageFile) {
       if (submitBtn) {
-        submitBtn.textContent = '💾 画像処理中...';
+        submitBtn.textContent = "💾 画像処理中...";
       }
 
       await new Promise<void>((resolve) => {
@@ -452,7 +521,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
     }
 
     if (submitBtn) {
-      submitBtn.textContent = '💾 登録中...';
+      submitBtn.textContent = "💾 登録中...";
     }
 
     try {
@@ -460,33 +529,37 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
       const refreshedId = await nextIdRefreshPromise;
       submitId = pickLatestId(submitId, refreshedId);
 
-      const displayName = entryType === 'world' ? resolvedNickname : resolvedAvatarName;
+      const displayName =
+        entryType === "world" ? resolvedNickname : resolvedAvatarName;
 
       const buildSubmitData = (id: string) => {
         const submitData = new FormData();
-        submitData.append('id', id);
-        submitData.append('entryType', entryType);
-        submitData.append('nickname', resolvedNickname);
-        submitData.append('avatarName', entryType === 'world' ? '' : resolvedAvatarName);
-        submitData.append('sourceUrl', url);
-        submitData.append('avatarUrl', url);
-        submitData.append('author', resolvedAuthor);
-        submitData.append('category', resolvedCategories.join(','));
-        submitData.append('comment', formData.comment);
-        submitData.append('creator', resolvedAuthor);
-        submitData.append('attributes', resolvedCategories.join(','));
-        submitData.append('notes', formData.comment);
+        submitData.append("id", id);
+        submitData.append("entryType", entryType);
+        submitData.append("nickname", resolvedNickname);
+        submitData.append(
+          "avatarName",
+          entryType === "world" ? "" : resolvedAvatarName,
+        );
+        submitData.append("sourceUrl", url);
+        submitData.append("avatarUrl", url);
+        submitData.append("author", resolvedAuthor);
+        submitData.append("category", resolvedCategories.join(","));
+        submitData.append("comment", formData.comment);
+        submitData.append("creator", resolvedAuthor);
+        submitData.append("attributes", resolvedCategories.join(","));
+        submitData.append("notes", formData.comment);
 
         if (croppedImageData) {
-          submitData.append('imageData', croppedImageData);
+          submitData.append("imageData", croppedImageData);
         }
 
         return submitData;
       };
 
       const uploadWithId = async (id: string) => {
-        const response = await fetch('/api/upload-akyo', {
-          method: 'POST',
+        const response = await fetch("/api/upload-akyo", {
+          method: "POST",
           body: buildSubmitData(id),
         });
         const result = await response.json();
@@ -494,7 +567,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
       };
 
       let { response, result } = await uploadWithId(submitId);
-      if (!result) result = { success: false, error: 'アップロード結果を取得できませんでした' };
+      if (!result)
+        result = {
+          success: false,
+          error: "アップロード結果を取得できませんでした",
+        };
 
       let latestKnownId: string | null = null;
 
@@ -511,7 +588,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
           response = retryResult.response;
           result = retryResult.result || {
             success: false,
-            error: 'リトライ結果を取得できませんでした',
+            error: "リトライ結果を取得できませんでした",
           };
         }
       }
@@ -520,46 +597,50 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
         if (response.status === 409) {
           const latestId = pickLatestId(
             submitId,
-            latestKnownId ?? (await fetchNextId()) ?? getNextSequentialId(submitId)
+            latestKnownId ??
+              (await fetchNextId()) ??
+              getNextSequentialId(submitId),
           );
           const latestHint =
-            userRole === 'owner'
+            userRole === "owner"
               ? latestId
                 ? `\n\n最新の利用可能ID: #${latestId}\n再度登録してください。`
-                : '\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。'
-              : '\n\nしばらく待ってから再度登録してください。';
-          throw new Error((result.error || 'IDが重複しています') + latestHint);
+                : "\n\nIDの再取得に失敗しました。画面を再読み込みして再試行してください。"
+              : "\n\nしばらく待ってから再度登録してください。";
+          throw new Error((result.error || "IDが重複しています") + latestHint);
         }
-        throw new Error(result.error || 'サーバーエラーが発生しました');
+        throw new Error(result.error || "サーバーエラーが発生しました");
       }
 
       alert(
         `✅ ${result.message}\n\n` +
           `ID: #${submitId}\n` +
-          `${entryType === 'world' ? '名称' : 'アバター名'}: ${displayName}\n` +
+          `${entryType === "world" ? "名称" : "アバター名"}: ${displayName}\n` +
           `作者: ${resolvedAuthor}\n\n` +
-          (result.commitUrl ? `コミット: ${result.commitUrl}` : '')
+          (result.commitUrl ? `コミット: ${result.commitUrl}` : ""),
       );
 
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         sessionStorage.removeItem(ADD_TAB_DRAFT_KEY);
       }
       setFormData(createDefaultFormData());
       setShowImagePreview(false);
       setOriginalImageSrc(null);
-      setNicknameStatus({ message: '', tone: 'neutral' });
+      setNicknameStatus({ message: "", tone: "neutral" });
 
       const currentId = parseInt(submitId, 10);
       if (!isNaN(currentId)) {
-        const nextSequentialId = (currentId + 1).toString().padStart(4, '0');
+        const nextSequentialId = (currentId + 1).toString().padStart(4, "0");
         setNextId((prev) => pickLatestId(prev, nextSequentialId));
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
       alert(
-        '❌ 登録に失敗しました\n\n' +
-          (error instanceof Error ? error.message : '不明なエラーが発生しました') +
-          '\n\nもう一度お試しください。'
+        "❌ 登録に失敗しました\n\n" +
+          (error instanceof Error
+            ? error.message
+            : "不明なエラーが発生しました") +
+          "\n\nもう一度お試しください。",
       );
     } finally {
       restoreSubmitButton();
@@ -567,11 +648,13 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
   };
 
   const handleInputChange = (field: string, value: string | string[]) => {
-    if (field === 'sourceUrl' && typeof value === 'string') {
+    if (field === "sourceUrl" && typeof value === "string") {
       setFormData((prev) => ({
         ...prev,
         sourceUrl: value,
-        ...(shouldResetWorldMetadata(prev.sourceUrl, value) ? { nickname: '', author: '' } : {}),
+        ...(shouldResetWorldMetadata(prev.sourceUrl, value)
+          ? { nickname: "", author: "" }
+          : {}),
       }));
       return;
     }
@@ -580,12 +663,13 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
   };
 
   const handleCreateCategory = (categoryName: string) => {
-    const normalizedInput = categoryName.trim().normalize('NFC').toLowerCase();
+    const normalizedInput = categoryName.trim().normalize("NFC").toLowerCase();
     if (!normalizedInput) return;
 
     setCustomCategories((prev) => {
       const exists = prev.some(
-        (existing) => existing.normalize('NFC').toLowerCase() === normalizedInput
+        (existing) =>
+          existing.normalize("NFC").toLowerCase() === normalizedInput,
       );
       if (exists) return prev;
       return [...prev, categoryName.trim()];
@@ -598,39 +682,39 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
     if (!trimmedValue) {
       setNicknameStatus({
-        message: '通称を入力してください',
-        tone: 'neutral',
+        message: "通称を入力してください",
+        tone: "neutral",
       });
       return;
     }
 
     setCheckingNickname(true);
-    setNicknameStatus({ message: '', tone: 'neutral' });
+    setNicknameStatus({ message: "", tone: "neutral" });
 
     try {
-      const response = await fetch('/api/check-duplicate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/check-duplicate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          field: 'nickname',
+          field: "nickname",
           value: trimmedValue,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Duplicate check failed');
+        throw new Error("Duplicate check failed");
       }
 
       const data = await response.json();
       setNicknameStatus({
         message: data.message,
-        tone: data.isDuplicate ? 'error' : 'success',
+        tone: data.isDuplicate ? "error" : "success",
       });
     } catch (error) {
-      console.error('通称 duplicate check error:', error);
+      console.error("通称 duplicate check error:", error);
       setNicknameStatus({
-        message: '重複チェックに失敗しました',
-        tone: 'error',
+        message: "重複チェックに失敗しました",
+        tone: "error",
       });
     } finally {
       setCheckingNickname(false);
@@ -701,10 +785,10 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
       const canvasW = 300;
       const canvasH = 200;
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = canvasW;
       canvas.height = canvasH;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       if (!ctx) {
         resolve(null);
         return;
@@ -727,7 +811,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
         const sw = Math.min(iw - sx, cw / totalScale);
         const sh = Math.min(ih - sy, ch / totalScale);
 
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = "white";
         ctx.fillRect(0, 0, canvasW, canvasH);
         ctx.drawImage(image, sx, sy, sw, sh, 0, 0, canvasW, canvasH);
 
@@ -741,11 +825,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               resolve(null);
             }
           },
-          'image/webp',
-          0.9
+          "image/webp",
+          0.9,
         );
       };
-      image.crossOrigin = 'anonymous';
+      image.crossOrigin = "anonymous";
       image.src = originalImageSrc;
     });
   };
@@ -753,17 +837,21 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
   return (
     <div>
       <h2 className="text-xl font-bold text-gray-800 mb-6">
-        <IconPlusCircle size="w-5 h-5" className="text-red-500 mr-2" /> 新しいAkyoアバター/ワールドを登録
+        <IconPlusCircle size="w-5 h-5" className="text-red-500 mr-2" />{" "}
+        新しいAkyoアバター/ワールドを登録
       </h2>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* ID（自動採番） */}
           <div>
-            <label htmlFor="add-tab-id" className="block text-gray-700 text-sm font-medium mb-1">
+            <label
+              htmlFor="add-tab-id"
+              className="block text-gray-700 text-sm font-medium mb-1"
+            >
               ID（自動採番）
             </label>
-            {userRole === 'owner' ? (
+            {userRole === "owner" ? (
               <input
                 id="add-tab-id"
                 type="text"
@@ -781,16 +869,19 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               />
             )}
             <p className="mt-2 text-xs text-gray-500 leading-snug">
-              {userRole === 'owner'
-                ? '画像IDの自動割り当てはローカルに保存された画像を優先的に参照し、未使用の番号（CSV未登録の画像も含む）から決定されます。'
-                : 'IDは登録時に自動で割り当てられます。'}
+              {userRole === "owner"
+                ? "画像IDの自動割り当てはローカルに保存された画像を優先的に参照し、未使用の番号（CSV未登録の画像も含む）から決定されます。"
+                : "IDは登録時に自動で割り当てられます。"}
             </p>
           </div>
 
           {/* 通称 */}
           <div>
             <div className="flex items-center justify-between gap-2">
-              <label htmlFor="add-tab-nickname" className="block text-gray-700 text-sm font-medium">
+              <label
+                htmlFor="add-tab-nickname"
+                className="block text-gray-700 text-sm font-medium"
+              >
                 通称
               </label>
               <button
@@ -836,9 +927,9 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               type="text"
               value={formData.nickname}
               onChange={(e) => {
-                handleInputChange('nickname', e.target.value);
+                handleInputChange("nickname", e.target.value);
                 // Clear status when user changes input
-                setNicknameStatus({ message: '', tone: 'neutral' });
+                setNicknameStatus({ message: "", tone: "neutral" });
               }}
               className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               placeholder="例: チョコミントAkyo"
@@ -846,11 +937,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
             {nicknameStatus.message && (
               <p
                 className={`mt-2 text-sm ${
-                  nicknameStatus.tone === 'error'
-                    ? 'text-red-600'
-                    : nicknameStatus.tone === 'success'
-                    ? 'text-green-600'
-                    : 'text-gray-600'
+                  nicknameStatus.tone === "error"
+                    ? "text-red-600"
+                    : nicknameStatus.tone === "success"
+                      ? "text-green-600"
+                      : "text-gray-600"
                 }`}
               >
                 {nicknameStatus.message}
@@ -860,16 +951,19 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* 名称 */}
           <div>
-            <label htmlFor="add-tab-name" className="block text-gray-700 text-sm font-medium mb-1">
+            <label
+              htmlFor="add-tab-name"
+              className="block text-gray-700 text-sm font-medium mb-1"
+            >
               名称
             </label>
             <input
               id="add-tab-name"
               type="text"
               value={
-                detectedEntryType === 'world'
-                  ? 'ワールド名は上の「通称」欄を名称として使用します'
-                  : '登録時にVRChat URLから自動取得'
+                detectedEntryType === "world"
+                  ? "ワールド名は上の「通称」欄を名称として使用します"
+                  : "登録時にVRChat URLから自動取得"
               }
               disabled
               className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500"
@@ -878,7 +972,9 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* カテゴリ (旧: 属性) */}
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1">カテゴリ</label>
+            <label className="block text-gray-700 text-sm font-medium mb-1">
+              カテゴリ
+            </label>
             <div className="space-y-2">
               <button
                 type="button"
@@ -890,7 +986,9 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
               </button>
               <div className="border border-dashed border-green-200 rounded-lg bg-white/60 p-3 min-h-[60px]">
                 {formData.categories.length === 0 ? (
-                  <p className="text-sm text-gray-500">選択されたカテゴリがここに表示されます</p>
+                  <p className="text-sm text-gray-500">
+                    選択されたカテゴリがここに表示されます
+                  </p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {formData.categories.map((cat) => (
@@ -913,15 +1011,18 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* 作者 */}
           <div>
-            <label htmlFor="add-tab-author" className="block text-gray-700 text-sm font-medium mb-1">
+            <label
+              htmlFor="add-tab-author"
+              className="block text-gray-700 text-sm font-medium mb-1"
+            >
               作者（自動取得 / 必要時は手動入力）
             </label>
-            {detectedEntryType === 'world' ? (
+            {detectedEntryType === "world" ? (
               <input
                 id="add-tab-author"
                 type="text"
                 value={formData.author}
-                onChange={(e) => handleInputChange('author', e.target.value)}
+                onChange={(e) => handleInputChange("author", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="取得失敗時はここで補完できます"
               />
@@ -938,40 +1039,47 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
           {/* VRChat URL */}
           <div>
-            <label htmlFor="add-tab-source-url" className="block text-gray-700 text-sm font-medium mb-1">
-              VRChat URL（アバターまたはワールド） <span className="text-red-500">*</span>
+            <label
+              htmlFor="add-tab-source-url"
+              className="block text-gray-700 text-sm font-medium mb-1"
+            >
+              VRChat URL（アバターまたはワールド）{" "}
+              <span className="text-red-500">*</span>
             </label>
             <input
               id="add-tab-source-url"
               type="url"
               value={formData.sourceUrl}
-              onChange={(e) => handleInputChange('sourceUrl', e.target.value)}
+              onChange={(e) => handleInputChange("sourceUrl", e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               placeholder="https://vrchat.com/home/avatar/avtr_... または https://vrchat.com/home/world/wrld_..."
             />
             {detectedEntryType && (
               <p className="mt-2 text-xs font-medium text-blue-600">
-                検出: {detectedEntryType === 'world' ? 'ワールド' : 'アバター'}
+                検出: {detectedEntryType === "world" ? "ワールド" : "アバター"}
               </p>
             )}
             <p className="mt-2 text-xs text-gray-500 leading-snug">
-              {detectedEntryType === 'world'
-                ? 'ワールドURLとして検出しました。登録時に名称・作者・画像を取得し、足りない項目だけ手動で補完できます。'
-                : '登録ボタンを押すと、このURLから名称・作者名・画像が自動的に取得されます。'}
+              {detectedEntryType === "world"
+                ? "ワールドURLとして検出しました。登録時に名称・作者・画像を取得し、足りない項目だけ手動で補完できます。"
+                : "登録ボタンを押すと、このURLから名称・作者名・画像が自動的に取得されます。"}
             </p>
           </div>
         </div>
 
         {/* おまけ情報（comment） */}
         <div>
-          <label htmlFor="add-tab-comment" className="block text-gray-700 text-sm font-medium mb-1">
+          <label
+            htmlFor="add-tab-comment"
+            className="block text-gray-700 text-sm font-medium mb-1"
+          >
             おまけ情報
           </label>
           <textarea
             id="add-tab-comment"
             value={formData.comment}
-            onChange={(e) => handleInputChange('comment', e.target.value)}
+            onChange={(e) => handleInputChange("comment", e.target.value)}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
             placeholder="Quest対応、特殊機能など"
@@ -984,12 +1092,15 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
             画像（登録時に自動取得）
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
-            <IconCloudDownload size="w-10 h-10" className="text-blue-400 mb-2 mx-auto" />
+            <IconCloudDownload
+              size="w-10 h-10"
+              className="text-blue-400 mb-2 mx-auto"
+            />
             <p className="text-gray-600 font-medium">VRChat URLから自動取得</p>
             <p className="text-sm text-gray-500 mt-1">
-              {detectedEntryType === 'world'
-                ? 'ワールドURLでもサムネイル取得を試み、失敗時は画像なしで登録できます'
-                : '登録ボタンを押すと、URL種別に応じてVRChatから画像を自動的に取得します'}
+              {detectedEntryType === "world"
+                ? "ワールドURLでもサムネイル取得を試み、失敗時は画像なしで登録できます"
+                : "登録ボタンを押すと、URL種別に応じてVRChatから画像を自動的に取得します"}
             </p>
           </div>
 
@@ -998,19 +1109,20 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
             <div className="mt-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
-                  <IconCrop size="w-4 h-4" className="mr-2" />画像のトリミング調整
+                  <IconCrop size="w-4 h-4" className="mr-2" />
+                  画像のトリミング調整
                 </h3>
 
                 {/* Crop Container */}
                 <div
                   ref={cropContainerRef}
                   className="relative mx-auto mb-4 overflow-hidden border-2 border-indigo-500 rounded-lg"
-                  style={{ width: '300px', height: '200px' }}
+                  style={{ width: "300px", height: "200px" }}
                   onWheel={handleWheel}
                 >
                   <img
                     ref={cropImageRef}
-                    src={originalImageSrc || ''}
+                    src={originalImageSrc || ""}
                     alt="Crop preview"
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
@@ -1019,7 +1131,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
                     className="absolute cursor-move"
                     style={{
                       transform: `translate(${imageX}px, ${imageY}px) scale(${imageScale})`,
-                      transformOrigin: 'center',
+                      transformOrigin: "center",
                     }}
                     draggable={false}
                   />
@@ -1072,7 +1184,7 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
         isOpen={showAttributeModal}
         onClose={() => setShowAttributeModal(false)}
         currentAttributes={formData.categories}
-        onApply={(attributes) => handleInputChange('categories', attributes)}
+        onApply={(attributes) => handleInputChange("categories", attributes)}
         allAttributes={allAttributes}
         onCreateAttribute={handleCreateCategory}
         listColumns={4}
