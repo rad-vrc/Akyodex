@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat/world-catalog-support
     paths:
       - "data/akyo-data-ja.json"
       - "scripts/world-image-backfill.ts"
