@@ -339,6 +339,16 @@ select:focus {
   border-color: #d1d5db;
 }
 
+.view-toggle-btn.active img {
+  filter: brightness(0) invert(1);
+  transform: translateY(-2px) scale(1.18);
+}
+
+.view-toggle-btn:not(.active) img {
+  filter: brightness(0) invert(50%) sepia(10%) saturate(300%) hue-rotate(175deg) brightness(90%);
+  transform: translateY(-2px) scale(1.18);
+}
+
 .view-toggle-btn:hover {
   transform: scale(1.05);
 }
