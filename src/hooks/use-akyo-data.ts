@@ -1,7 +1,7 @@
 "use client";
 
 import type { AkyoData, AkyoFilterOptions } from "@/types/akyo";
-import { formatDisplayId } from "@/lib/akyo-entry";
+import { formatDisplayId, resolveEntryType } from "@/lib/akyo-entry";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /** localStorage のキー名 */
@@ -138,6 +138,13 @@ export function useAkyoData(initialData: AkyoData[] = []) {
         options.categoryMatchMode === "and" ? "and" : "or";
 
       let filtered = [...data];
+
+      // Filter by entry type (avatar / world)
+      if (options.entryTypeFilter) {
+        filtered = filtered.filter(
+          (akyo) => resolveEntryType(akyo) === options.entryTypeFilter,
+        );
+      }
 
       // Filter by categories (supports both single and multi-select)
       if (selectedCategories.length > 0) {
