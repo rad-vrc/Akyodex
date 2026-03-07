@@ -36,6 +36,15 @@ function normalizeLineEndings(value: string): string {
   return value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 }
 
+function normalizeEntryType(
+  value: string | undefined,
+): 'avatar' | 'world' | undefined {
+  const normalized = String(value || '').trim().toLowerCase();
+  return normalized === 'avatar' || normalized === 'world'
+    ? normalized
+    : undefined;
+}
+
 /**
  * Ensure every subcategory token has all ancestor tokens in the same category list.
  * Example: "A/B/C,D" -> "A,A/B,A/B/C,D"
@@ -109,10 +118,7 @@ function parseCsvToAkyoData(csvText: string): AkyoData[] {
 
     data.push({
       id: rawRow['ID'] ?? '',
-      entryType:
-        rawRow['EntryType'] === 'avatar' || rawRow['EntryType'] === 'world'
-          ? rawRow['EntryType']
-          : undefined,
+      entryType: normalizeEntryType(rawRow['EntryType']),
       displaySerial: rawRow['DisplaySerial'] || undefined,
       nickname: rawRow['Nickname'] ?? '',
       avatarName: rawRow['AvatarName'] ?? '',
