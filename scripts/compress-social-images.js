@@ -1,5 +1,9 @@
 /**
  * 既存の OG/Twitter 画像を圧縮（切り取りは維持）
+ *
+ * 用途: 画像を手動で編集（切り取り調整など）した後に実行。
+ * generate-social-images.js は logo-200.png から再生成するため、
+ * 手動編集内容は失われる。本スクリプトは既存 PNG をそのまま再圧縮する。
  */
 const sharp = require('sharp');
 const path = require('path');
