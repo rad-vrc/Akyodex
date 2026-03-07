@@ -41,7 +41,35 @@ test('getSizedVRChatWorldImageUrl rewrites VRChat API image URLs to the requeste
       'https://files.vrchat.cloud/thumbnails/file_abc123/file_abc123.123.thumbnail-1200.png',
       256
     ),
-    'https://api.vrchat.cloud/api/1/image/file_abc123/1/256'
+    'https://api.vrchat.cloud/api/1/image/file_abc123/123/256'
+  );
+});
+
+test('getSizedVRChatWorldImageUrl preserves file version from VRChat image URLs', () => {
+  assert.equal(typeof getSizedVRChatWorldImageUrl, 'function');
+
+  // api.vrchat.cloud image URL with version > 1 preserves that version
+  assert.equal(
+    getSizedVRChatWorldImageUrl?.('https://api.vrchat.cloud/api/1/image/file_abc123/3/512', 256),
+    'https://api.vrchat.cloud/api/1/image/file_abc123/3/256'
+  );
+
+  // api.vrchat.cloud file URL preserves version
+  assert.equal(
+    getSizedVRChatWorldImageUrl?.(
+      'https://api.vrchat.cloud/api/1/file/file_abc123/5/file',
+      128
+    ),
+    'https://api.vrchat.cloud/api/1/image/file_abc123/5/128'
+  );
+
+  // files.vrchat.cloud thumbnail URL extracts version from filename
+  assert.equal(
+    getSizedVRChatWorldImageUrl?.(
+      'https://files.vrchat.cloud/thumbnails/file_xyz/file_xyz.7.thumbnail-512.png',
+      96
+    ),
+    'https://api.vrchat.cloud/api/1/image/file_xyz/7/96'
   );
 });
 
