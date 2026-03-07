@@ -495,7 +495,7 @@ export function AkyoDetailModal({
                           width={14}
                           height={14}
                           className="w-3.5 h-3.5 mr-1 inline-block rounded-full object-cover"
-                          style={{ filter: 'brightness(0) invert(39%) sepia(85%) saturate(1800%) hue-rotate(196deg) brightness(96%)' }}
+                          style={{ filter: 'brightness(0) invert(39%) sepia(85%) saturate(1800%) hue-rotate(196deg) brightness(96%)', transform: 'translateY(-2px) scale(1.18)' }}
                           unoptimized
                         />
                         {t('modal.avatarName', lang)}
