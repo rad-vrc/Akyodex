@@ -461,11 +461,11 @@ export function AkyoDetailModal({
                   {/* Zoom/Drag Hint */}
                   {!isZoomed ? (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      タップでズーム 🔍
+                      {t('modal.zoomHint', lang)}
                     </div>
                   ) : (
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full pointer-events-none">
-                      ドラッグで移動 / ダブルタップで戻る
+                      {t('modal.dragHint', lang)}
                     </div>
                   )}
 
