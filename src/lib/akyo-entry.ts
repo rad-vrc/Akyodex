@@ -3,8 +3,8 @@ import type { AkyoData, AkyoEntryType } from "@/types/akyo";
 export const WORLD_CATEGORY_MARKERS = new Set(["ワールド", "world", "월드"]);
 export const DEFAULT_WORLD_CATEGORY = "ワールド";
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
-const WORLD_DISPLAY_SERIAL_PREFIX = "world";
-const AVATAR_DISPLAY_SERIAL_PREFIX = "avatar";
+const WORLD_DISPLAY_SERIAL_PREFIX = "World";
+const AVATAR_DISPLAY_SERIAL_PREFIX = "Avatar";
 export const VRCHAT_AVATAR_ID_PATTERN = /^avtr_[A-Za-z0-9-]{1,64}$/;
 export const VRCHAT_WORLD_ID_PATTERN = /^wrld_[A-Za-z0-9-]{1,64}$/;
 
