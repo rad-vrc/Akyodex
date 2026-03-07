@@ -32,7 +32,7 @@ export function StructuredData({ nonce }: StructuredDataProps) {
       name: 'Akyodex',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://akyodex.com/images/logo-200.png',
+        url: 'https://akyodex.com/images/akyodexIcon-512.png',
       },
     },
     potentialAction: {
