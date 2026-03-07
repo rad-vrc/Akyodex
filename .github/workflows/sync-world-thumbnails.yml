@@ -53,11 +53,17 @@ jobs:
       - name: Ensure ImageMagick is available
         run: |
           set -e
-          if ! command -v magick >/dev/null 2>&1; then
+          if ! command -v magick >/dev/null 2>&1 && ! command -v convert >/dev/null 2>&1; then
             sudo apt-get update
             sudo apt-get install -y imagemagick
           fi
-          magick -version
+          if command -v magick >/dev/null 2>&1; then
+            echo "IMAGEMAGICK_CMD=magick" >> "$GITHUB_ENV"
+            magick -version
+          else
+            echo "IMAGEMAGICK_CMD=convert" >> "$GITHUB_ENV"
+            convert -version
+          fi
 
       - name: Generate world image backfill manifest
         run: |
@@ -135,7 +141,7 @@ jobs:
               continue
             fi
 
-            if ! magick "$INPUT_PATH" -strip -quality 88 "$OUTPUT_PATH"; then
+            if ! "$IMAGEMAGICK_CMD" "$INPUT_PATH" -strip -quality 88 "$OUTPUT_PATH"; then
               echo "::warning::Failed to convert world image to webp for ${id} (${wrld})"
               FAILED_COUNT=$((FAILED_COUNT + 1))
               continue
