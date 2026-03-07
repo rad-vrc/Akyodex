@@ -1,6 +1,6 @@
 # Akyodex - Next.js 16 + Cloudflare Pages
 
-**VRChat Avatar Encyclopedia**
+**VRChat Avatar & World Encyclopedia**
 
 ## 📋 Table of Contents
 
@@ -87,7 +87,7 @@ npm run dev
 
 ## 📖 Project Overview
 
-**Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズを網羅したオンライン図鑑です。
+**Akyodex** は、VRChatのオリジナルアバター「Akyo」シリーズと関連ワールドを網羅したオンライン図鑑です。
 
 ### Key Features
 - 🎨 **アバター＋ワールドデータベース** - 4桁ID管理システム（日本語/英語/韓国語 CSV + JSON データ、avatar/world 二種別）
@@ -104,7 +104,7 @@ npm run dev
 - ✅ **Avatar + World Support** (Dual entry types with separate display IDs)
 - ✅ **Security Hardening** (Timing attack, XSS prevention, Input validation)
 - ✅ **PWA Implementation** (Service Worker with 6 caching strategies)
-- ✅ **VRChat Image Fallback** (3-tier fallback: R2 → VRChat API → Placeholder)
+- ✅ **VRChat Image Fallback** (3-tier fallback: R2 → VRChat page/API → Placeholder)
 - ✅ **Sentry Observability** (Error tracking + performance monitoring)
 - ✅ **Dify AI Chatbot Integration** (Natural language avatar search)
 - ✅ **Dual Admin System** (Owner/Admin role separation)
@@ -191,7 +191,7 @@ Data Source Priority: KV (~5ms) → JSON (~20ms) → CSV (~200ms)
 - **Data Sync**: GitHub API (CSV commit on CRUD operations)
 
 ### Observability
-- **Error Tracking**: Sentry (@sentry/nextjs) — runtime errors + performance monitoring
+- **Error Tracking**: Sentry (@sentry/nextjs ^10.39.0) — runtime errors + performance monitoring
 - **Instrumentation**: Server-side (`instrumentation.ts`) + client-side (`instrumentation-client.ts`)
 
 ### Security
@@ -241,7 +241,6 @@ Akyodex/
 │   │   ├── manifest.ts              # PWA manifest (dynamic)
 │   │   ├── sitemap.ts               # Dynamic sitemap
 │   │   ├── robots.ts                # robots.txt
-│   │   ├── opengraph-image.tsx      # OG image generation
 │   │   ├── not-found.tsx            # 404 page
 │   │   ├── error.tsx                # Error boundary
 │   │   ├── global-error.tsx         # Global error boundary
@@ -249,7 +248,7 @@ Akyodex/
 │   │   ├── admin/                   # Admin panel
 │   │   │   ├── page.tsx             # Admin server component
 │   │   │   └── admin-client.tsx     # Admin client logic
-│   │   ├── zukan/                   # Avatar gallery
+│   │   ├── zukan/                   # Entry gallery
 │   │   │   ├── page.tsx             # Gallery page (SSG + ISR)
 │   │   │   ├── loading.tsx          # Loading skeleton
 │   │   │   └── zukan-client.tsx     # Gallery client component
@@ -276,8 +275,8 @@ Akyodex/
 │   │       └── manifest/            # GET - Dynamic manifest
 │   │
 │   ├── components/                  # React Components
-│   │   ├── akyo-card.tsx            # Avatar card (grid view)
-│   │   ├── akyo-list.tsx            # Avatar list (list view)
+│   │   ├── akyo-card.tsx            # Entry card (grid view)
+│   │   ├── akyo-list.tsx            # Entry list (list view)
 │   │   ├── akyo-detail-modal.tsx    # Detail modal
 │   │   ├── filter-panel.tsx         # Category/author filter
 │   │   ├── search-bar.tsx           # Search input
@@ -296,8 +295,8 @@ Akyodex/
 │   │       ├── attribute-modal.tsx  # Category management
 │   │       ├── edit-modal.tsx       # Edit modal
 │   │       └── tabs/
-│   │           ├── add-tab.tsx      # Add avatar tab
-│   │           ├── edit-tab.tsx     # Edit avatar tab
+│   │           ├── add-tab.tsx      # Add entry tab
+│   │           ├── edit-tab.tsx     # Edit entry tab
 │   │           └── tools-tab.tsx    # Tools tab
 │   │
 │   ├── hooks/                       # Custom React Hooks
@@ -321,7 +320,7 @@ Akyodex/
 │   │   ├── next-id-state.ts         # Next ID allocation state
 │   │   ├── session.ts               # HMAC session management
 │   │   ├── sentry-browser.ts        # Sentry browser configuration
-│   │   ├── vrchat-utils.ts          # VRChat avatar API utilities
+│   │   ├── vrchat-utils.ts          # VRChat avatar/world utilities
 │   │   ├── vrchat-world-image.ts    # VRChat world image fetch
 │   │   ├── vrchat-world-info.ts     # VRChat world info fetch
 │   │   ├── world-registration.ts    # World entry registration helpers
@@ -576,8 +575,8 @@ npx wrangler kv:namespace list
 | Tab | Action | Expected Result |
 |-----|--------|----------------|
 | **Add** | Fetch next ID | Shows next available 4-digit ID |
-| **Add** | VRChat fetch | Retrieves avatar info from VRChat URL |
-| **Edit** | Search avatar | Finds existing avatar |
+| **Add** | VRChat fetch | Retrieves avatar/world info from VRChat URL |
+| **Edit** | Search entry | Finds existing entry |
 | **Edit** | Update field | Saves changes to CSV (synced to GitHub) |
 | **Tools** | View categories | Shows all category tags |
 
@@ -716,7 +715,7 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 - **Detail View**: Modal with full information
 - **SSG + ISR**: Static generation with 1-hour revalidation
 - **Responsive**: Mobile-first design
-- **Image Fallback**: R2 → VRChat API → Placeholder (3-tier fallback system)
+- **Image Fallback**: R2 → VRChat page/API → Placeholder (3-tier fallback system)
 - **Favorites**: localStorage-based favorite system
 
 ### 2. Admin Panel
@@ -725,15 +724,15 @@ These are not meant to be highly secure passwords, but rather easy-to-remember c
 
 #### Features:
 - ✅ **HMAC Authentication**: Secure session management (Web Crypto API)
-- ✅ **Add Avatar**: 
+- ✅ **Add Entry**: 
   - Auto ID numbering (fetches next available ID)
   - Image upload to R2
-  - VRChat integration (fetch avatar info from VRChat)
+  - VRChat integration (fetch avatar/world info from VRChat)
   - Duplicate checking (nickname, avatar name)
-- ✅ **Edit Avatar**:
+- ✅ **Edit Entry**:
   - Update all fields (category, comment, author, etc.)
   - Re-upload images
-  - Delete avatars (owner only)
+  - Delete entries (owner only)
 - ✅ **Category Management**:
   - Add new categories
   - Edit existing categories
@@ -978,12 +977,12 @@ Users can ask questions like:
 - `imageData`: Base64 image data (optional)
 
 #### `POST /api/update-akyo`
-**Update existing avatar**
+**Update existing entry**
 
 **Body** (FormData): Same as upload-akyo
 
 #### `POST /api/delete-akyo`
-**Delete avatar**
+**Delete entry**
 
 **Body**:
 ```json
