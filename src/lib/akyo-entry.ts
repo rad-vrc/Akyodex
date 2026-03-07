@@ -110,6 +110,18 @@ export function ensureWorldCategory(categories: string[]): string[] {
   return [DEFAULT_WORLD_CATEGORY, ...normalized];
 }
 
+export function shouldResetWorldMetadata(
+  previousUrl: string,
+  nextUrl: string,
+): boolean {
+  const previousType = detectVrcEntryTypeFromUrl(previousUrl);
+  const nextType = detectVrcEntryTypeFromUrl(nextUrl);
+  if (nextType !== "world") {
+    return false;
+  }
+  return previousUrl.trim() !== nextUrl.trim() || previousType !== "world";
+}
+
 export function resolveDisplaySerialForEntryUpdate(args: {
   entryType: AkyoEntryType;
   id: string;

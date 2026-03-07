@@ -11,6 +11,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 /** localStorage のキー名 */
 const FAVORITES_STORAGE_KEY = "akyoFavorites";
 const MULTI_VALUE_SPLIT_PATTERN = /[、,]/;
+const FAVORITE_PERSIST_RETRY_BASE_DELAY_MS = 1000;
+const FAVORITE_PERSIST_RETRY_MAX_DELAY_MS = 30000;
+export type FavoriteOverrides = Record<string, boolean>;
 
 function toHiragana(value: string): string {
   return value.replace(/[\u30A1-\u30F6]/g, (char) =>
@@ -46,18 +49,79 @@ export function useAkyoData(initialData: AkyoData[] = []) {
   const [filteredData, setFilteredData] = useState<AkyoData[]>(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const dataRef = useRef<AkyoData[]>(initialData);
+  const filteredDataRef = useRef<AkyoData[]>(initialData);
   const favoritesDirtyRef = useRef(false);
+  const favoriteOverridesRef = useRef<FavoriteOverrides>({});
+  const favoritePersistRetryTimeoutRef = useRef<number | null>(null);
+  const favoritePersistRetryDelayRef = useRef<number | null>(null);
   const lastPersistedFavoritesRef = useRef<string | null>(null);
+  const [favoritePersistRetryNonce, setFavoritePersistRetryNonce] = useState(0);
+
+  const clearFavoritePersistRetry = useCallback(() => {
+    if (favoritePersistRetryTimeoutRef.current !== null) {
+      window.clearTimeout(favoritePersistRetryTimeoutRef.current);
+      favoritePersistRetryTimeoutRef.current = null;
+    }
+    favoritePersistRetryDelayRef.current = null;
+  }, []);
+
+  const scheduleFavoritePersistRetry = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    if (favoritePersistRetryTimeoutRef.current !== null) {
+      window.clearTimeout(favoritePersistRetryTimeoutRef.current);
+    }
+
+    const nextDelay = getNextFavoritePersistRetryDelayMs(
+      favoritePersistRetryDelayRef.current,
+    );
+    favoritePersistRetryDelayRef.current = nextDelay;
+    favoritePersistRetryTimeoutRef.current = window.setTimeout(() => {
+      favoritePersistRetryTimeoutRef.current = null;
+      setFavoritePersistRetryNonce((prev) => prev + 1);
+    }, nextDelay);
+  }, []);
+
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    filteredDataRef.current = filteredData;
+  }, [filteredData]);
+
+  useEffect(
+    () => () => {
+      clearFavoritePersistRetry();
+    },
+    [clearFavoritePersistRetry],
+  );
 
   // クライアントサイドでお気に入り情報を復元
   useEffect(() => {
     if (initialData.length > 0) {
-      const dataWithFavorites = applyFavorites(initialData);
+      const persistedFavorites = getFavorites();
+      favoriteOverridesRef.current = pruneFavoriteOverrides(
+        persistedFavorites,
+        favoriteOverridesRef.current,
+      );
+      const dataWithFavorites = applyFavoritesFromIds(
+        initialData,
+        applyFavoriteOverrides(
+          persistedFavorites,
+          favoriteOverridesRef.current,
+        ),
+      );
       // eslint-disable-next-line react-hooks/set-state-in-effect
+      dataRef.current = dataWithFavorites;
+      filteredDataRef.current = dataWithFavorites;
       setData(dataWithFavorites);
       setFilteredData(dataWithFavorites);
       // 初期復元時点の基準値を記録して、将来の差分判定を安定化させる
-      lastPersistedFavoritesRef.current = JSON.stringify(getFavorites());
+      lastPersistedFavoritesRef.current = JSON.stringify(persistedFavorites);
+      favoritesDirtyRef.current =
+        Object.keys(favoriteOverridesRef.current).length > 0;
     }
   }, [initialData]);
 
@@ -67,11 +131,28 @@ export function useAkyoData(initialData: AkyoData[] = []) {
       if (e.key !== FAVORITES_STORAGE_KEY) return;
       // キャッシュを無効化して最新の値を取得
       invalidateFavoritesCache();
+      const persistedFavorites = getFavorites();
+      favoriteOverridesRef.current = pruneFavoriteOverrides(
+        persistedFavorites,
+        favoriteOverridesRef.current,
+      );
+      const effectiveFavorites = applyFavoriteOverrides(
+        persistedFavorites,
+        favoriteOverridesRef.current,
+      );
       // 別タブ更新を基準値として取り込み、次回の差分判定を正しくする
-      lastPersistedFavoritesRef.current = JSON.stringify(getFavorites());
-      favoritesDirtyRef.current = false;
-      setData((prev) => applyFavorites(prev));
-      setFilteredData((prev) => applyFavorites(prev));
+      lastPersistedFavoritesRef.current = JSON.stringify(persistedFavorites);
+      favoritesDirtyRef.current =
+        Object.keys(favoriteOverridesRef.current).length > 0;
+      const { nextData, nextFilteredData } = syncFavoriteCollections({
+        data: dataRef.current,
+        filteredData: filteredDataRef.current,
+        favoriteIds: effectiveFavorites,
+      });
+      dataRef.current = nextData;
+      filteredDataRef.current = nextFilteredData;
+      setData(nextData);
+      setFilteredData(nextFilteredData);
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
@@ -79,7 +160,10 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
   // dataの変更に合わせてお気に入りIDを永続化（state updater内の副作用を回避）
   useEffect(() => {
-    if (!favoritesDirtyRef.current) return;
+    if (!favoritesDirtyRef.current) {
+      clearFavoritePersistRetry();
+      return;
+    }
 
     // ここでの早期 return は dirty フラグを意図的に残し、データ同期後に再判定するため
     // saveFavorites / lastPersistedFavoritesRef / favoritesDirtyRef の更新は
@@ -91,25 +175,58 @@ export function useAkyoData(initialData: AkyoData[] = []) {
     );
     if (!hasFullySyncedFavoriteState) return;
 
-    const favorites = data
-      .filter((item) => item.isFavorite)
-      .map((item) => item.id);
-    const serializedFavorites = JSON.stringify(favorites);
-    if (serializedFavorites === lastPersistedFavoritesRef.current) {
+    const persistedFavorites = getFavorites();
+    favoriteOverridesRef.current = pruneFavoriteOverrides(
+      persistedFavorites,
+      favoriteOverridesRef.current,
+    );
+
+    if (Object.keys(favoriteOverridesRef.current).length === 0) {
+      clearFavoritePersistRetry();
+      lastPersistedFavoritesRef.current = JSON.stringify(persistedFavorites);
       favoritesDirtyRef.current = false;
       return;
     }
 
-    saveFavorites(favorites);
+    const favorites = applyFavoriteOverrides(
+      persistedFavorites,
+      favoriteOverridesRef.current,
+    );
+    const serializedFavorites = JSON.stringify(favorites);
+    if (!saveFavorites(favorites)) {
+      scheduleFavoritePersistRetry();
+      return;
+    }
+
+    clearFavoritePersistRetry();
+    favoriteOverridesRef.current = {};
     lastPersistedFavoritesRef.current = serializedFavorites;
     favoritesDirtyRef.current = false;
-  }, [data]);
+  }, [
+    clearFavoritePersistRetry,
+    data,
+    favoritePersistRetryNonce,
+    scheduleFavoritePersistRetry,
+  ]);
 
   /**
    * 新しいデータでリフレッシュ（言語切り替え時などに使用）
    */
   const refetchWithNewData = useCallback((newData: AkyoData[]) => {
-    const dataWithFavorites = applyFavorites(newData);
+    const persistedFavorites = getFavorites();
+    favoriteOverridesRef.current = pruneFavoriteOverrides(
+      persistedFavorites,
+      favoriteOverridesRef.current,
+    );
+    const dataWithFavorites = applyFavoritesFromIds(
+      newData,
+      applyFavoriteOverrides(persistedFavorites, favoriteOverridesRef.current),
+    );
+    lastPersistedFavoritesRef.current = JSON.stringify(persistedFavorites);
+    favoritesDirtyRef.current =
+      Object.keys(favoriteOverridesRef.current).length > 0;
+    dataRef.current = dataWithFavorites;
+    filteredDataRef.current = dataWithFavorites;
     setData(dataWithFavorites);
     setFilteredData(dataWithFavorites);
   }, []);
@@ -226,6 +343,7 @@ export function useAkyoData(initialData: AkyoData[] = []) {
         });
       }
 
+      filteredDataRef.current = filtered;
       setFilteredData(filtered);
     },
     [data],
@@ -233,14 +351,34 @@ export function useAkyoData(initialData: AkyoData[] = []) {
 
   // お気に入り機能
   const toggleFavorite = useCallback((id: string) => {
-    const toggleFavoriteFlag = (items: AkyoData[]) =>
-      items.map((akyo) =>
-        akyo.id === id ? { ...akyo, isFavorite: !akyo.isFavorite } : akyo,
-      );
+    const currentData = dataRef.current;
+    const currentTarget = currentData.find((akyo) => akyo.id === id);
+    if (!currentTarget) return;
 
-    favoritesDirtyRef.current = true;
-    setData((prevData) => toggleFavoriteFlag(prevData));
-    setFilteredData((prevData) => toggleFavoriteFlag(prevData));
+    const persistedFavorites = getFavorites();
+    favoriteOverridesRef.current = reconcileFavoriteOverride({
+      persistedFavoriteIds: persistedFavorites,
+      overrides: favoriteOverridesRef.current,
+      id,
+      nextIsFavorite: !Boolean(currentTarget.isFavorite),
+    });
+
+    favoritesDirtyRef.current =
+      Object.keys(favoriteOverridesRef.current).length > 0;
+
+    const effectiveFavorites = applyFavoriteOverrides(
+      persistedFavorites,
+      favoriteOverridesRef.current,
+    );
+    const { nextData, nextFilteredData } = syncFavoriteCollections({
+      data: currentData,
+      filteredData: filteredDataRef.current,
+      favoriteIds: effectiveFavorites,
+    });
+    dataRef.current = nextData;
+    filteredDataRef.current = nextFilteredData;
+    setData(nextData);
+    setFilteredData(nextFilteredData);
   }, []);
 
   return {
@@ -284,8 +422,8 @@ function getFavorites(): string[] {
       Array.isArray(parsed) &&
       parsed.every((item): item is string => typeof item === "string")
     ) {
-      favoritesCache = parsed;
-      return parsed;
+      favoritesCache = normalizeFavoriteIds(parsed);
+      return favoritesCache;
     }
     // 不正なデータ形式の場合はリセット
     console.warn("Invalid favorites data in localStorage, resetting");
@@ -300,16 +438,16 @@ function getFavorites(): string[] {
 /**
  * お気に入りIDを保存（キャッシュも同時に更新）
  */
-function saveFavorites(ids: string[]): void {
-  // 防御的コピー: 呼び出し元による配列の変更からキャッシュを保護
-  const idsCopy = [...ids];
-  // キャッシュを先に更新してセッション内の一貫性を保つ
-  // (localStorage.setItem が容量超過等で失敗しても UI は正しく動作する)
-  favoritesCache = idsCopy;
+function saveFavorites(ids: string[]): boolean {
+  const idsCopy = normalizeFavoriteIds(ids);
   try {
     localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(idsCopy));
+    favoritesCache = idsCopy;
+    return true;
   } catch (e) {
+    invalidateFavoritesCache();
     console.warn("Failed to save favorites to localStorage:", e);
+    return false;
   }
 }
 
@@ -318,8 +456,15 @@ function saveFavorites(ids: string[]): void {
  * Set を使用して O(1) ルックアップを実現 (React Best Practices 7.11)
  */
 function applyFavorites(items: AkyoData[]): AkyoData[] {
+  return applyFavoritesFromIds(items, getFavorites());
+}
+
+function applyFavoritesFromIds(
+  items: AkyoData[],
+  favoriteIds: readonly string[],
+): AkyoData[] {
   if (items.length === 0) return items;
-  const favoritesSet = new Set(getFavorites());
+  const favoritesSet = new Set(normalizeFavoriteIds(favoriteIds));
   return items.map((akyo) => ({
     ...akyo,
     parsedCategory:
@@ -330,6 +475,95 @@ function applyFavorites(items: AkyoData[]): AkyoData[] {
       parseMultiValueField(akyo.author || akyo.creator || ""),
     isFavorite: favoritesSet.has(akyo.id),
   }));
+}
+
+export function syncFavoriteCollections<T extends { id: string; isFavorite?: boolean }>(
+  args: {
+    data: readonly T[];
+    filteredData: readonly T[];
+    favoriteIds: readonly string[];
+  },
+): {
+  nextData: T[];
+  nextFilteredData: T[];
+} {
+  const { data, filteredData, favoriteIds } = args;
+  const favoritesSet = new Set(normalizeFavoriteIds(favoriteIds));
+  const applyFavoriteFlags = (items: readonly T[]) =>
+    items.map((item) => ({
+      ...item,
+      isFavorite: favoritesSet.has(item.id),
+    }));
+
+  return {
+    nextData: applyFavoriteFlags(data),
+    nextFilteredData: applyFavoriteFlags(filteredData),
+  };
+}
+
+function normalizeFavoriteIds(ids: readonly string[]): string[] {
+  return Array.from(new Set(ids.filter(Boolean))).sort((a, b) =>
+    a.localeCompare(b),
+  );
+}
+
+export function getNextFavoritePersistRetryDelayMs(
+  previousDelayMs: number | null,
+): number {
+  if (previousDelayMs === null) {
+    return FAVORITE_PERSIST_RETRY_BASE_DELAY_MS;
+  }
+
+  return Math.min(
+    previousDelayMs * 2,
+    FAVORITE_PERSIST_RETRY_MAX_DELAY_MS,
+  );
+}
+
+export function applyFavoriteOverrides(
+  persistedFavoriteIds: readonly string[],
+  overrides: FavoriteOverrides,
+): string[] {
+  const nextFavorites = new Set(normalizeFavoriteIds(persistedFavoriteIds));
+  for (const [id, isFavorite] of Object.entries(overrides)) {
+    if (isFavorite) {
+      nextFavorites.add(id);
+    } else {
+      nextFavorites.delete(id);
+    }
+  }
+  return normalizeFavoriteIds(Array.from(nextFavorites));
+}
+
+export function pruneFavoriteOverrides(
+  persistedFavoriteIds: readonly string[],
+  overrides: FavoriteOverrides,
+): FavoriteOverrides {
+  const persistedFavorites = new Set(normalizeFavoriteIds(persistedFavoriteIds));
+  return Object.fromEntries(
+    Object.entries(overrides).filter(
+      ([id, isFavorite]) => persistedFavorites.has(id) !== isFavorite,
+    ),
+  );
+}
+
+export function reconcileFavoriteOverride(args: {
+  persistedFavoriteIds: readonly string[];
+  overrides: FavoriteOverrides;
+  id: string;
+  nextIsFavorite: boolean;
+}): FavoriteOverrides {
+  const { persistedFavoriteIds, overrides, id, nextIsFavorite } = args;
+  const nextOverrides = { ...overrides };
+  const persistedFavorites = new Set(normalizeFavoriteIds(persistedFavoriteIds));
+
+  if (persistedFavorites.has(id) === nextIsFavorite) {
+    delete nextOverrides[id];
+  } else {
+    nextOverrides[id] = nextIsFavorite;
+  }
+
+  return pruneFavoriteOverrides(persistedFavoriteIds, nextOverrides);
 }
 
 function parseMultiValueField(value: string): string[] {

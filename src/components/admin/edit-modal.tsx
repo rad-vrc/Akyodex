@@ -9,6 +9,7 @@ import {
   extractVRChatAvatarIdFromUrl,
   getAkyoSourceUrl,
   resolveDisplaySerialForSourceUrlChange,
+  shouldResetWorldMetadata,
 } from '@/lib/akyo-entry';
 import type { AkyoData } from '@/types/akyo';
 import { FormEvent, useEffect, useRef, useState } from 'react';
@@ -315,6 +316,9 @@ export function EditModal({
       sourceUrl: value,
       avatarUrl: value,
       entryType: detectedEntryType ?? prev.entryType,
+      ...(shouldResetWorldMetadata(prev.sourceUrl, value)
+        ? { nickname: '', author: '' }
+        : {}),
       displaySerial: resolveDisplaySerialForSourceUrlChange({
         currentDisplaySerial: prev.displaySerial,
         detectedEntryType,

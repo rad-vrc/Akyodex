@@ -4,9 +4,14 @@
  * Common utilities for API routes including session validation and CSRF protection.
  */
 
+import {
+  createHash,
+  timingSafeEqual as nodeTimingSafeEqual,
+} from "node:crypto";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 import type { AkyoEntryType } from "@/types/akyo";
+import { detectVrcEntryTypeFromUrl } from "./akyo-entry";
 import {
   SessionData,
   validateSession as validateSessionToken,
@@ -37,17 +42,30 @@ export function timingSafeCompare(a: string, b: string): boolean {
     const encoder = new TextEncoder();
     const bufA = encoder.encode(a);
     const bufB = encoder.encode(b);
+    const subtle = crypto.subtle as SubtleCrypto & {
+      timingSafeEqual?: (a: ArrayBufferView, b: ArrayBufferView) => boolean;
+    };
 
     // crypto.subtle.timingSafeEqual throws when lengths differ.
     // Compare user input against itself (constant-time no-op) and
     // negate so that length mismatches never leak timing information.
     const lengthsMatch = bufA.byteLength === bufB.byteLength;
-    return lengthsMatch
-      ? crypto.subtle.timingSafeEqual(bufA, bufB)
-      : !crypto.subtle.timingSafeEqual(bufA, bufA);
+    if (typeof subtle.timingSafeEqual === "function") {
+      return lengthsMatch
+        ? subtle.timingSafeEqual(bufA, bufB)
+        : !subtle.timingSafeEqual(bufA, bufA);
+    }
+
+    const digestA = createTimingSafeDigest(a);
+    const digestB = createTimingSafeDigest(b);
+    return nodeTimingSafeEqual(digestA, digestB);
   } catch {
     return false;
   }
+}
+
+export function createTimingSafeDigest(value: string): Buffer {
+  return createHash("sha256").update(value).digest();
 }
 
 /**
@@ -408,6 +426,14 @@ export function parseAkyoFormData(formData: FormData): AkyoFormParseResult {
       success: false,
       status: 400,
       error: "有効な4桁ID（0001-9999）が必要です",
+    };
+  }
+
+  if (detectVrcEntryTypeFromUrl(sourceUrl) !== entryType) {
+    return {
+      success: false,
+      status: 400,
+      error: "entryType と sourceUrl の種別が一致していません",
     };
   }
 
