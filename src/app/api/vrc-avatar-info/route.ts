@@ -9,6 +9,8 @@
  */
 
 import { connection } from 'next/server';
+import { VRCHAT_AVATAR_ID_PATTERN } from '@/lib/akyo-entry';
+import { getApiErrorResponse, jsonError } from '@/lib/api-helpers';
 import { decodeHTMLEntities, stripHTMLTags } from '@/lib/html-utils';
 import { fetchVRChatPage } from '@/lib/vrchat-utils';
 import type { VRChatAvatarInfo } from '@/types/akyo';
@@ -19,22 +21,15 @@ export async function GET(request: Request) {
   const avtr = searchParams.get('avtr');
 
   if (!avtr) {
-    return Response.json(
-      { error: 'avtr parameter is required' },
-      { status: 400 }
-    );
+    return jsonError('avtr parameter is required', 400);
   }
 
   // Validate avtr format with length limit (防止 ReDoS and DoS攻撃)
-  const avtrMatch = avtr.match(/^avtr_[A-Za-z0-9-]{1,50}$/);
-  if (!avtrMatch) {
-    return Response.json(
-      { error: 'Invalid avtr format (must be avtr_[A-Za-z0-9-]{1,50})' },
-      { status: 400 }
-    );
+  if (!VRCHAT_AVATAR_ID_PATTERN.test(avtr)) {
+    return jsonError('Invalid avtr format (must be avtr_[A-Za-z0-9-]{1,64})', 400);
   }
 
-  const cleanAvtr = avtrMatch[0];
+  const cleanAvtr = avtr;
 
   try {
     // Fetch VRChat page using shared utility
@@ -70,10 +65,7 @@ export async function GET(request: Request) {
     }
 
     if (!avatarName) {
-      return Response.json(
-        { error: 'Could not extract avatar name from page' },
-        { status: 404 }
-      );
+      return jsonError('Could not extract avatar name from page', 404);
     }
 
     // Parse "Avatar Name by Creator Name" format
@@ -104,9 +96,6 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error('[vrc-avatar-info] Error:', error);
-    return Response.json(
-      { error: 'Failed to fetch VRChat avatar info' },
-      { status: 500 }
-    );
+    return getApiErrorResponse(error, 'Failed to fetch VRChat avatar info');
   }
 }

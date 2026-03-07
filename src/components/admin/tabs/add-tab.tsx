@@ -6,6 +6,7 @@ import { IconCloudDownload, IconCrop, IconPlusCircle, IconRedo, IconSave, IconSe
 import {
   detectVrcEntryTypeFromUrl,
   ensureWorldCategory,
+  extractVRChatAvatarIdFromUrl,
   extractVRChatWorldIdFromUrl,
 } from '@/lib/akyo-entry';
 import { assertWorldRegistrationAssets } from '@/lib/world-registration';
@@ -286,12 +287,11 @@ export function AddTab({ userRole, categories, authors, attributes, creators }: 
 
     try {
       if (entryType === 'avatar') {
-        const match = url.match(/avtr_[A-Za-z0-9-]+/);
-        if (!match) {
+        const avtrId = extractVRChatAvatarIdFromUrl(url);
+        if (!avtrId) {
           throw new Error('有効なVRChatアバターURLを入力してください。');
         }
 
-        const avtrId = match[0];
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000);
 
