@@ -45,11 +45,9 @@ const nextConfig: NextConfig = {
     localPatterns: [
       {
         pathname: '/api/avatar-image',
-        search: '**',
       },
       {
         pathname: '/api/vrc-world-image',
-        search: '**',
       },
     ],
   },

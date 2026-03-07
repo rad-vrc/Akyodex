@@ -9,4 +9,7 @@ test("next image localPatterns allow both avatar and world image proxy routes", 
 
   assert.ok(pathnames.includes("/api/avatar-image"));
   assert.ok(pathnames.includes("/api/vrc-world-image"));
+  for (const pattern of localPatterns) {
+    assert.equal(pattern.search, undefined);
+  }
 });
