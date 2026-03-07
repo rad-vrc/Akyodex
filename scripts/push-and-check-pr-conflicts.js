@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { spawnSync } = require("node:child_process");
+const { classifyBranchPrState } = require("./push-pr-state");
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -63,13 +64,21 @@ function pushBranch(pushArgs) {
 }
 
 function loadOpenPullRequests(branch) {
+  return loadPullRequests(branch, "open");
+}
+
+function loadMergedPullRequests(branch) {
+  return loadPullRequests(branch, "merged");
+}
+
+function loadPullRequests(branch, state) {
   const result = run("gh", [
     "pr",
     "list",
     "--head",
     branch,
     "--state",
-    "open",
+    state,
     "--json",
     "number,url,title,mergeable,mergeStateStatus,baseRefName,headRefName",
   ]);
@@ -111,17 +120,43 @@ function loadOpenPullRequestsWithRetry(branch, options = {}) {
   return prs;
 }
 
+function failIfBranchPrAlreadyMerged(branch) {
+  const prState = classifyBranchPrState({
+    openPrs: loadOpenPullRequests(branch),
+    mergedPrs: loadMergedPullRequests(branch),
+  });
+
+  if (prState.state !== "merged") {
+    return;
+  }
+
+  console.error(`Branch '${branch}' already has a merged PR:`);
+  for (const pr of prState.prs) {
+    console.error(`- ${formatPr(pr)}`);
+  }
+  console.error("");
+  console.error("Create a new branch and a new PR instead of pushing more commits to the merged PR branch.");
+  process.exit(5);
+}
+
 function main() {
   const rawArgs = process.argv.slice(2);
   const skipPush = rawArgs.includes("--skip-push");
-  const pushArgs = rawArgs.filter((arg) => arg !== "--skip-push");
+  const failIfMergedOnly = rawArgs.includes("--fail-if-merged");
+  const pushArgs = rawArgs.filter((arg) => arg !== "--skip-push" && arg !== "--fail-if-merged");
+
+  checkGhAvailable();
+  const branch = getCurrentBranch();
+  failIfBranchPrAlreadyMerged(branch);
+
+  if (failIfMergedOnly) {
+    console.log(`Branch '${branch}' is safe to continue pushing.`);
+    return;
+  }
 
   if (!skipPush) {
     pushBranch(pushArgs);
   }
-  checkGhAvailable();
-
-  const branch = getCurrentBranch();
   const prs = loadOpenPullRequestsWithRetry(branch);
 
   if (prs.length === 0) {
