@@ -47,6 +47,10 @@ const nextConfig: NextConfig = {
         pathname: '/api/avatar-image',
         search: '**',
       },
+      {
+        pathname: '/api/vrc-world-image',
+        search: '**',
+      },
     ],
   },
 
