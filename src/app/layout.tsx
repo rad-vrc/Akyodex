@@ -44,13 +44,13 @@ export const metadata: Metadata = {
     description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
     url: 'https://akyodex.com/zukan',
     siteName: 'Akyoずかん',
-    images: [{ url: 'https://akyodex.com/images/logo-200.png', width: 200, height: 200, alt: 'Akyoずかん ロゴ' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Akyoずかん ロゴ' }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Akyoずかん-VRChatアバター Akyo図鑑-',
     description: 'VRChatに潜むなぞ生物アバター「Akyo」を500体以上収録した図鑑サイト。名前・作者・属性で探せる日本語対応の共有データベースで、今日からキミもAkyoファインダーの仲間入り!',
-    images: ['https://akyodex.com/images/logo-200.png'],
+    images: ['/opengraph-image'],
     creator: '@akyodex',
   },
   icons: {
