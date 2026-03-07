@@ -55,13 +55,27 @@ function Icon({
 // ═══════════════════════════════════════
 
 /**
- * Grid view icon (th-large equivalent)
+ * Card grid view icon
+ * Two portrait-oriented cards side by side, each with a transparent image area
+ * at top (cutout) and a solid content area below, clearly representing card layout.
  * @param props - Icon properties
  */
 export function IconGrid({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
-      <path d="M47.5 104H432.5C440.8 104 448 96.84 448 88.5V23.5C448 15.16 440.8 8 432.5 8H47.5C39.16 8 32 15.16 32 23.5V88.5C32 96.84 39.16 104 47.5 104zM47.5 264H432.5C440.8 264 448 256.8 448 248.5V183.5C448 175.2 440.8 168 432.5 168H47.5C39.16 168 32 175.2 32 183.5V248.5C32 256.8 39.16 264 47.5 264zM47.5 424H432.5C440.8 424 448 416.8 448 408.5V343.5C448 335.2 440.8 328 432.5 328H47.5C39.16 328 32 335.2 32 343.5V408.5C32 416.8 39.16 424 47.5 424z" />
+      <path
+        fillRule="evenodd"
+        d={[
+          // Card 1 outer rounded rect (x=36,y=56,w=196,h=400,rx=24)
+          "M 60 56 L 208 56 A 24 24 0 0 1 232 80 L 232 432 A 24 24 0 0 1 208 456 L 60 456 A 24 24 0 0 1 36 432 L 36 80 A 24 24 0 0 1 60 56 Z",
+          // Card 1 image area cutout (x=48,y=68,w=172,h=228)
+          "M 48 68 H 220 V 296 H 48 Z",
+          // Card 2 outer rounded rect (x=280,y=56,w=196,h=400,rx=24)
+          "M 304 56 L 452 56 A 24 24 0 0 1 476 80 L 476 432 A 24 24 0 0 1 452 456 L 304 456 A 24 24 0 0 1 280 432 L 280 80 A 24 24 0 0 1 304 56 Z",
+          // Card 2 image area cutout (x=292,y=68,w=172,h=228)
+          "M 292 68 H 464 V 296 H 292 Z",
+        ].join(" ")}
+      />
     </Icon>
   );
 }
@@ -484,19 +498,6 @@ export function IconZoomOut({ size, className, ...props }: IconProps) {
  * Save icon
  * @param props - Icon properties
  */
-/**
- * Person / human silhouette icon (user-large equivalent)
- * Used for "avatars only" entry type filter.
- * @param props - Icon properties
- */
-export function IconPerson({ size, className, ...props }: IconProps) {
-  return (
-    <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
-      <path d="M256 288A144 144 0 1 0 256 0a144 144 0 1 0 0 288zm-94.7 32C72.2 320 0 392.2 0 481.3c0 17 13.8 30.7 30.7 30.7H481.3c17 0 30.7-13.8 30.7-30.7C512 392.2 439.8 320 350.7 320H161.3z" />
-    </Icon>
-  );
-}
-
 /**
  * Globe / earth icon (globe-americas equivalent)
  * Used for "worlds only" entry type filter.
