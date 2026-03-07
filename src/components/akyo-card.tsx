@@ -1,14 +1,21 @@
-'use client';
+"use client";
 
-import { IconDownload, IconVRChat } from '@/components/icons';
-import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
-import { formatDisplayId, getAkyoSourceUrl, resolveEntryType } from '@/lib/akyo-entry';
-import { generateBlurDataURL } from '@/lib/blur-data-url';
-import { t, type SupportedLanguage } from '@/lib/i18n';
-import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
-import type { AkyoData } from '@/types/akyo';
-import Image from 'next/image';
-import { useState } from 'react';
+import { IconDownload, IconVRChat } from "@/components/icons";
+import {
+  getCategoryColor,
+  parseAndSortCategories,
+} from "@/lib/akyo-data-helpers";
+import {
+  formatDisplayId,
+  getAkyoSourceUrl,
+  resolveEntryType,
+} from "@/lib/akyo-entry";
+import { generateBlurDataURL } from "@/lib/blur-data-url";
+import { t, type SupportedLanguage } from "@/lib/i18n";
+import { buildAvatarImageUrl, safeOpenVRChatLink } from "@/lib/vrchat-utils";
+import type { AkyoData } from "@/types/akyo";
+import Image from "next/image";
+import { useState } from "react";
 
 /**
  * Props for the AkyoCard component
@@ -40,24 +47,29 @@ export function shouldBypassImageOptimization(src: string): boolean {
  */
 export function AkyoCard({
   akyo,
-  lang = 'ja',
+  lang = "ja",
   onToggleFavorite,
   onShowDetail,
   priority = false,
 }: AkyoCardProps) {
-  const cloudflareImagesEnabled = process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === 'true';
-  const r2BaseUrl = (process.env.NEXT_PUBLIC_R2_BASE || 'https://images.akyodex.com').replace(
-    /\/$/,
-    ''
-  );
+  const cloudflareImagesEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_CLOUDFLARE_IMAGES === "true";
+  const r2BaseUrl = (
+    process.env.NEXT_PUBLIC_R2_BASE || "https://images.akyodex.com"
+  ).replace(/\/$/, "");
   const sourceUrl = getAkyoSourceUrl(akyo);
   const apiImageSrc = buildAvatarImageUrl(akyo.id, sourceUrl, 512);
   const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
+  const entryType = resolveEntryType(akyo);
+  const isWorldEntry = entryType === "world";
   const primaryImageSrc = cloudflareImagesEnabled
     ? `/${akyo.id}.webp`
     : `${r2BaseUrl}/${akyo.id}.webp`;
-  const placeholderImageSrc = '/images/placeholder.webp';
-  const [imageSrc, setImageSrc] = useState(primaryImageSrc);
+  const placeholderImageSrc = "/images/placeholder.webp";
+  // ワールドの場合はVRChat APIから最新のサムネイルを取得する（R2には古い画像が残っている可能性があるため）
+  const [imageSrc, setImageSrc] = useState(
+    isWorldEntry ? apiImageSrc : primaryImageSrc,
+  );
 
   /**
    * Handles clicks on the favorite heart icon button
@@ -103,8 +115,6 @@ export function AkyoCard({
   const category = akyo.category || akyo.attribute;
   const author = akyo.author || akyo.creator;
   const sortedCategories = category ? parseAndSortCategories(category) : [];
-  const entryType = resolveEntryType(akyo);
-  const isWorldEntry = entryType === 'world';
 
   return (
     <div className="akyo-card cursor-pointer" onClick={handleCardClick}>
@@ -117,18 +127,34 @@ export function AkyoCard({
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
           unoptimized={shouldBypassImageOptimization(imageSrc)}
-          loading={priority ? 'eager' : 'lazy'}
-          fetchPriority={priority ? 'high' : 'auto'}
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
           placeholder="blur"
           blurDataURL={generateBlurDataURL(akyo.id)}
           onError={() => {
-            // R2/Cloudflare失敗時はAPI経由にフォールバックし、それでも失敗したらプレースホルダー。
-            if (imageSrc !== apiFallbackImageSrc && imageSrc !== placeholderImageSrc) {
-              setImageSrc(apiFallbackImageSrc);
-              return;
-            }
-            if (imageSrc !== placeholderImageSrc) {
-              setImageSrc(placeholderImageSrc);
+            if (isWorldEntry) {
+              // ワールド: VRChat API → R2画像 → placeholder
+              // bypassCloudflare パラメータは vrc-world-image では無視されるため、
+              // 冗長な再試行を避けてR2画像にフォールバックする
+              if (imageSrc === apiImageSrc) {
+                setImageSrc(primaryImageSrc);
+                return;
+              }
+              if (imageSrc !== placeholderImageSrc) {
+                setImageSrc(placeholderImageSrc);
+              }
+            } else {
+              // アバター: R2画像 → API(bypassCloudflare) → placeholder
+              if (
+                imageSrc !== apiFallbackImageSrc &&
+                imageSrc !== placeholderImageSrc
+              ) {
+                setImageSrc(apiFallbackImageSrc);
+                return;
+              }
+              if (imageSrc !== placeholderImageSrc) {
+                setImageSrc(placeholderImageSrc);
+              }
             }
           }}
         />
@@ -139,10 +165,12 @@ export function AkyoCard({
           onClick={handleFavoriteClick}
           className="favorite-btn absolute top-2 right-2 z-10"
           aria-label={
-            akyo.isFavorite ? t('card.favorite.remove', lang) : t('card.favorite.add', lang)
+            akyo.isFavorite
+              ? t("card.favorite.remove", lang)
+              : t("card.favorite.add", lang)
           }
         >
-          {akyo.isFavorite ? '❤️' : '🤍'}
+          {akyo.isFavorite ? "❤️" : "🤍"}
         </button>
       </div>
 
@@ -155,8 +183,8 @@ export function AkyoCard({
               type="button"
               onClick={handleVRChatClick}
               className="vrchat-link-button -ml-0.5 flex-shrink-0 p-0 transition-transform origin-left translate-y-[2px] scale-[1.1] hover:scale-[1.15] active:scale-[1.05] flex items-center justify-start min-h-[44px] min-w-[44px]"
-              title={t('modal.vrchatOpen', lang)}
-              aria-label={t('modal.vrchatOpen', lang)}
+              title={t("modal.vrchatOpen", lang)}
+              aria-label={t("modal.vrchatOpen", lang)}
             >
               <IconVRChat
                 size="w-12 h-12 max-sm:w-[75px] max-sm:h-[75px]"
@@ -170,18 +198,20 @@ export function AkyoCard({
               type="button"
               onClick={handleDownloadClick}
               className="reference-sheet-button ml-auto flex-shrink-0 origin-right scale-90 max-sm:scale-[1.2]"
-              title={t('card.download', lang)}
-              aria-label={t('card.download', lang)}
+              title={t("card.download", lang)}
+              aria-label={t("card.download", lang)}
             >
               <IconDownload size="w-4 h-4" />
-              <span className="text-xs">{t('card.downloadLabel', lang)}</span>
+              <span className="text-xs">{t("card.downloadLabel", lang)}</span>
             </button>
           )}
         </div>
 
         {/* ID（通称の直上） */}
         <div className="mb-1">
-          <span className="text-sm font-bold text-gray-500">{formatDisplayId(akyo)}</span>
+          <span className="text-sm font-bold text-gray-500">
+            {formatDisplayId(akyo)}
+          </span>
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
@@ -213,13 +243,16 @@ export function AkyoCard({
 
         {/* 作者情報 - 元の実装と同じ形式 (改行あり、:付き) */}
         <p className="text-xs text-gray-600 mb-2 whitespace-pre-line">
-          {!isWorldEntry && akyo.nickname && akyo.avatarName && akyo.nickname !== akyo.avatarName && (
-            <>
-              {t('card.avatarName', lang)}: {akyo.avatarName}
-              {'\n'}
-            </>
-          )}
-          {t('card.author', lang)}: {author}
+          {!isWorldEntry &&
+            akyo.nickname &&
+            akyo.avatarName &&
+            akyo.nickname !== akyo.avatarName && (
+              <>
+                {t("card.avatarName", lang)}: {akyo.avatarName}
+                {"\n"}
+              </>
+            )}
+          {t("card.author", lang)}: {author}
         </p>
 
         {/* くわしく見るボタン */}
@@ -229,7 +262,7 @@ export function AkyoCard({
           className="detail-button w-full flex items-center justify-center gap-2"
         >
           <span className="animate-bounce">🌟</span>
-          <span>{t('card.detail', lang)}</span>
+          <span>{t("card.detail", lang)}</span>
           <span className="animate-bounce">🌟</span>
         </button>
       </div>
