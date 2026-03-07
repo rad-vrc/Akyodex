@@ -52,7 +52,7 @@ jobs:
           path: |
             .next/cache
             .open-next
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json', 'next.config.ts', 'open-next.config.ts') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
             ${{ runner.os }}-nextjs-
@@ -126,6 +126,7 @@ jobs:
             done
 
             echo "⚠️  Deployment did not return a healthy HTTP status after ${max_attempts} attempts"
+            exit 1
           else
             echo "⚠️  Deployment URL not available for health check"
           fi

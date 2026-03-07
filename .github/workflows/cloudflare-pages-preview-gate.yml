@@ -61,6 +61,8 @@ jobs:
           fast_interval_seconds=5
           normal_interval_seconds=10
           slow_interval_seconds=20
+          fast_threshold=8
+          normal_threshold=20
           project_candidates=()
 
           if [ -n "${CF_PROJECT_NAME_PRIMARY:-}" ]; then
@@ -186,9 +188,9 @@ jobs:
               echo "GitHub check-runs request failed; continuing Cloudflare polling."
             fi
             if [ "${attempt}" -lt "${max_attempts}" ]; then
-              if [ "${attempt}" -lt 8 ]; then
+              if [ "${attempt}" -lt "${fast_threshold}" ]; then
                 sleep_seconds="${fast_interval_seconds}"
-              elif [ "${attempt}" -lt 20 ]; then
+              elif [ "${attempt}" -lt "${normal_threshold}" ]; then
                 sleep_seconds="${normal_interval_seconds}"
               else
                 sleep_seconds="${slow_interval_seconds}"
