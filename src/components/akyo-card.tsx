@@ -26,6 +26,10 @@ interface AkyoCardProps {
   priority?: boolean;
 }
 
+export function shouldBypassImageOptimization(src: string): boolean {
+  return src.startsWith("/api/") || src.startsWith("/images/");
+}
+
 /**
  * AkyoCard Component
  * Displays a single Akyo avatar as a stylized card with an image, metadata, and action buttons.
@@ -112,6 +116,7 @@ export function AkyoCard({
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
+          unoptimized={shouldBypassImageOptimization(imageSrc)}
           loading={priority ? 'eager' : 'lazy'}
           fetchPriority={priority ? 'high' : 'auto'}
           placeholder="blur"
