@@ -111,7 +111,7 @@ test("getPublicDisplayId formats avatar and world public ids independently", () 
       avatarUrl: "https://vrchat.com/home/avatar/avtr_example",
       sourceUrl: "https://vrchat.com/home/avatar/avtr_example",
     }),
-    "avatar0746",
+    "Avatar0746",
   );
 
   assert.equal(
@@ -131,7 +131,7 @@ test("getPublicDisplayId formats avatar and world public ids independently", () 
       avatarUrl: "https://vrchat.com/home/world/wrld_example",
       sourceUrl: "https://vrchat.com/home/world/wrld_example",
     }),
-    "world0003",
+    "World0003",
   );
 });
 
