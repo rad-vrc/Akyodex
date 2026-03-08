@@ -1,5 +1,6 @@
-import { DEFAULT_LANGUAGE, isValidLanguage, t, type SupportedLanguage } from '@/lib/i18n';
-import { cookies } from 'next/headers';
+import { DEFAULT_LANGUAGE, detectLanguageFromHeader, isValidLanguage, t, type SupportedLanguage } from '@/lib/i18n';
+import { cookies, headers } from 'next/headers';
+import { LoadingAnnouncement } from './loading-announcement';
 
 /**
  * Zukan Loading State
@@ -10,9 +11,12 @@ import { cookies } from 'next/headers';
 
 export default async function ZukanLoading() {
   const cookieStore = await cookies();
+  const headerStore = await headers();
   const cookieLang = cookieStore.get('AKYO_LANG')?.value;
   const lang: SupportedLanguage =
-    cookieLang && isValidLanguage(cookieLang) ? cookieLang : DEFAULT_LANGUAGE;
+    cookieLang && isValidLanguage(cookieLang)
+      ? cookieLang
+      : detectLanguageFromHeader(headerStore.get('accept-language')) || DEFAULT_LANGUAGE;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
@@ -75,19 +79,7 @@ export default async function ZukanLoading() {
         </div>
       </main>
 
-      {/* Loading Indicator */}
-      <div
-        className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-full shadow-lg p-4 flex items-center gap-3 z-50"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <div
-          className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-red-500"
-          aria-hidden="true"
-        ></div>
-        <span className="text-sm font-medium text-gray-700">{t('loading.text', lang)}</span>
-      </div>
+      <LoadingAnnouncement text={t('loading.text', lang)} />
     </div>
   );
 }

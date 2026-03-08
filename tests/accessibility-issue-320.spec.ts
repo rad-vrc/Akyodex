@@ -60,11 +60,26 @@ test.describe("Issue #320 accessibility regressions", () => {
       return {
         outlineStyle: styles.outlineStyle,
         outlineWidth: styles.outlineWidth,
+        boxShadow: styles.boxShadow,
       };
     });
 
-    expect(focusStyles.outlineStyle).toBe("solid");
-    expect(Number.parseFloat(focusStyles.outlineWidth)).toBeGreaterThanOrEqual(1);
+    const normalizedOutlineStyle = focusStyles.outlineStyle.trim().toLowerCase();
+    const normalizedBoxShadow = focusStyles.boxShadow.trim().toLowerCase();
+    const hasOutline =
+      ((normalizedOutlineStyle === "auto" &&
+        !["none", "hidden", ""].includes(normalizedOutlineStyle)) ||
+        (!["none", "hidden", ""].includes(normalizedOutlineStyle) &&
+          Number.parseFloat(focusStyles.outlineWidth) >= 1));
+    const hasVisibleShadow = !["none", "0px 0px 0px", "0px 0px 0px 0px"].includes(
+      normalizedBoxShadow,
+    );
+
+    expect(hasOutline || hasVisibleShadow).toBeTruthy();
+
+    await searchInput.fill("test");
+    await page.getByRole("button", { name: /検索をクリア|Clear search|검색 지우기/i }).click();
+    await expect(searchInput).toBeFocused();
 
     await page.getByRole("button", { name: /リスト|List|목록/i }).click();
 

@@ -53,7 +53,11 @@ function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
 
   return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) => {
     const computedStyle = window.getComputedStyle(element);
-    return computedStyle.display !== 'none' && computedStyle.visibility !== 'hidden';
+    return (
+      computedStyle.display !== 'none' &&
+      computedStyle.visibility !== 'hidden' &&
+      element.closest('[aria-hidden="true"]') === null
+    );
   });
 }
 

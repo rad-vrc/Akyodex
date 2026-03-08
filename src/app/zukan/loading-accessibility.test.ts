@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { renderToStaticMarkup } from "react-dom/server";
 import test from "node:test";
 
-const source = readFileSync(new URL("./loading.tsx", import.meta.url), "utf8");
+import { LoadingAnnouncement } from "./loading-announcement.ts";
 
 test("zukan loading state announces progress through a live region", () => {
-  assert.match(source, /role="status"/);
-  assert.match(source, /aria-live="polite"/);
+  const markup = renderToStaticMarkup(LoadingAnnouncement({ text: "Loading data..." }));
+
+  assert.match(markup, /role="status"/);
+  assert.match(markup, /aria-live="polite"/);
+  assert.match(markup, /Loading data/);
 });

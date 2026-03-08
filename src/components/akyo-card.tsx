@@ -270,6 +270,7 @@ export function AkyoCard({
           type="button"
           onClick={(e) => handleCardClick(e.currentTarget)}
           className="detail-button relative z-20 w-full flex items-center justify-center gap-2"
+          aria-haspopup="dialog"
         >
           <span className="animate-bounce" aria-hidden="true">🌟</span>
           <span>{t("card.detail", lang)}</span>

@@ -2,6 +2,7 @@
 
 import { IconEdit, IconInfoCircle, IconSearch, IconTrash } from '@/components/icons';
 import { getAkyoSourceUrl } from '@/lib/akyo-entry';
+import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AdminRole, AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -171,6 +172,8 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
                         height={48}
                         className="w-12 h-12 object-cover rounded"
                         unoptimized
+                        placeholder="blur"
+                        blurDataURL={generateBlurDataURL(akyo.id)}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/images/placeholder.webp';
