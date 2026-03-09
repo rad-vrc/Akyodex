@@ -37,7 +37,7 @@ export function AdminHeader({ isAuthenticated, userRole, onLogout }: AdminHeader
             <h1 className="text-2xl font-bold">Akyoずかん ファインダーモード</h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          <nav aria-label="管理者ナビゲーション" className="flex items-center gap-2">
             {isAuthenticated && userRole && (
               <span className="px-3 py-2 rounded-lg bg-gray-700 text-white text-sm">
                 {roleText}
@@ -53,11 +53,12 @@ export function AdminHeader({ isAuthenticated, userRole, onLogout }: AdminHeader
               <button
                 onClick={onLogout}
                 className="px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm transition-colors"
+                aria-label="ログアウト"
               >
                 <IconSignOut size="w-4 h-4" className="mr-1" /> ログアウト
               </button>
             )}
-          </div>
+          </nav>
         </div>
       </div>
     </header>

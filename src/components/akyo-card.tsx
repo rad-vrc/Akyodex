@@ -120,7 +120,7 @@ export function AkyoCard({
   const cardLabel = `${formatDisplayId(akyo)} ${displayName} ${t("card.detail", lang)}`;
 
   return (
-    <article className="akyo-card relative">
+    <article className="akyo-card relative" aria-labelledby={`card-title-${akyo.id}`}>
       <button
         type="button"
         data-card-trigger="true"
@@ -133,7 +133,8 @@ export function AkyoCard({
       <div className="relative w-full aspect-[3/2] bg-gray-100">
         <Image
           src={imageSrc}
-          alt={displayName}
+          alt={imageSrc === placeholderImageSrc ? "" : displayName}
+          role={imageSrc === placeholderImageSrc ? "presentation" : undefined}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover"
@@ -226,7 +227,7 @@ export function AkyoCard({
         </div>
 
         {/* タイトル - 元の実装と同じフォント */}
-        <h3 className="font-bold text-lg mb-1 text-gray-800 line-clamp-2">
+        <h3 id={`card-title-${akyo.id}`} className="font-bold text-lg mb-1 text-gray-800 line-clamp-2">
           {displayName}
         </h3>
 
@@ -271,7 +272,8 @@ export function AkyoCard({
           type="button"
           onClick={(e) => handleCardClick(e.currentTarget)}
           className="detail-button relative z-20 w-full flex items-center justify-center gap-2"
-          aria-haspopup="dialog"
+          aria-hidden="true"
+          tabIndex={-1}
         >
           <span className="animate-bounce" aria-hidden="true">🌟</span>
           <span>{t("card.detail", lang)}</span>

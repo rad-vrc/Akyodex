@@ -560,9 +560,9 @@ export function AkyoDetailModal({
                     className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none focus:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2 ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                       }`}
                     style={{ touchAction: isZoomed ? 'none' : 'auto' }}
-                    role="button"
+                    role="application"
                     tabIndex={0}
-                    aria-pressed={isZoomed}
+                    aria-roledescription="interactive image viewer"
                     aria-label={
                       isZoomed
                         ? `${displayName} ${t('modal.imageMoveZoom', lang)}`
@@ -595,11 +595,11 @@ export function AkyoDetailModal({
                         unoptimized
                         draggable={false}
                         onError={(e) => {
-                          // PNG→WebPフォールバック
                           handleImageError();
-                          // 最終フォールバック：グラデーション背景
                           const target = e.target as HTMLImageElement;
                           target.style.background = `linear-gradient(135deg, ${categoryColor}, ${categoryColor}66)`;
+                          target.alt = "";
+                          target.setAttribute('role', 'presentation');
                         }}
                       />
                     </div>

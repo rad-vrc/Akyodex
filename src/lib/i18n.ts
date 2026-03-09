@@ -178,6 +178,11 @@ export const UI_TEXTS = {
     en: "Primary navigation",
     ko: "주요 내비게이션",
   },
+  "nav.switchLanguage": {
+    ja: "{lang}表示に切り替える",
+    en: "Switch to {lang}",
+    ko: "{lang} 표시로 전환",
+  },
   "skip.mainContent": {
     ja: "メインコンテンツへスキップ",
     en: "Skip to main content",

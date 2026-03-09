@@ -17,6 +17,7 @@ import {
   LANGUAGE_NAMES,
   LANGUAGE_TOGGLE_LABELS,
   SUPPORTED_LANGUAGES,
+  t,
   type SupportedLanguage,
 } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
@@ -85,8 +86,8 @@ export function LanguageToggle({
         ${isChanging ? 'opacity-50 cursor-not-allowed' : ''}
         ${className}
     `}
-      aria-label={`Switch to ${nextLanguageLabel}`}
-      title={`Switch to ${nextLanguageLabel}`}
+      aria-label={t('nav.switchLanguage', effectiveLang).replace('{lang}', nextLanguageLabel)}
+      title={t('nav.switchLanguage', effectiveLang).replace('{lang}', nextLanguageLabel)}
     >
       <span className="text-lg font-bold">{LANGUAGE_TOGGLE_LABELS[effectiveLang]}</span>
     </button>

@@ -45,8 +45,8 @@
     }
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@playwright/test": "^1.56.1",
-    "sharp": "^0.34.5",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.24",
     "@types/react": "^19",
@@ -55,6 +55,7 @@
     "eslint-config-next": "16.1.6",
     "knip": "^5.66.4",
     "postcss": "^8.4.49",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "tsx": "^4.19.0",
     "typescript": "5.9.3",
