@@ -56,11 +56,14 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-2">
+            <label htmlFor="admin-login-password" className="block text-gray-700 text-sm font-medium mb-2">
               Akyoワード
             </label>
             <input
+              id="admin-login-password"
               type="password"
+              aria-invalid={error}
+              aria-describedby={error ? 'admin-login-error' : undefined}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -78,7 +81,11 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
           </button>
 
           {error && (
-            <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm" role="alert">
+            <div
+              id="admin-login-error"
+              className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"
+              role="alert"
+            >
               <IconExclamationCircle size="w-4 h-4" className="mr-1" /> Akyoワードが正しくありません
             </div>
           )}

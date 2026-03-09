@@ -44,6 +44,7 @@ export default function OfflinePage() {
         {/* Actions */}
         <div className="space-y-3">
           <button
+            type="button"
             onClick={() => window.location.reload()}
             className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium py-3 px-6 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
           >

@@ -2,6 +2,7 @@
 
 import { IconEdit, IconInfoCircle, IconSearch, IconTrash } from '@/components/icons';
 import { getAkyoSourceUrl } from '@/lib/akyo-entry';
+import { generateBlurDataURL } from '@/lib/blur-data-url';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AdminRole, AkyoData } from '@/types/akyo';
 import Image from 'next/image';
@@ -104,9 +105,13 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
 
       {/* 検索 */}
       <div className="mb-6">
+        <label htmlFor="edit-tab-search" className="sr-only">
+          Akyoを検索
+        </label>
         <div className="relative">
           <IconSearch size="w-4 h-4" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
+            id="edit-tab-search"
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -127,22 +132,22 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
           <table className="w-full">
             <thead className="bg-gray-50 sticky top-0">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   画像
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   ID
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   通称
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   アバター名
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   作者
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   操作
                 </th>
               </tr>
@@ -167,6 +172,8 @@ export function EditTab({ userRole, akyoData, attributes, onDataChange }: EditTa
                         height={48}
                         className="w-12 h-12 object-cover rounded"
                         unoptimized
+                        placeholder="blur"
+                        blurDataURL={generateBlurDataURL(akyo.id)}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/images/placeholder.webp';

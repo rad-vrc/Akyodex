@@ -29,6 +29,7 @@ export function SearchBar({
 }: SearchBarProps) {
   const [query, setQuery] = useState(value ?? '');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // onSearch の最新参照を保持（依存配列に含めずに済む）
   const onSearchRef = useRef(onSearch);
@@ -75,17 +76,21 @@ export function SearchBar({
     if (timerRef.current) clearTimeout(timerRef.current);
     setQuery('');
     onSearchRef.current('');
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
   };
 
   return (
     <div className="relative w-full">
       {/* 検索アイコン */}
-      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl">
+      <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-2xl" aria-hidden="true">
         🔍
-      </div>
+      </span>
 
       {/* 検索入力 */}
       <input
+        ref={inputRef}
         type="text"
         value={query}
         onChange={handleChange}
@@ -104,7 +109,7 @@ export function SearchBar({
           className="absolute right-5 top-1/2 -translate-y-1/2 text-2xl hover:scale-110 transition-transform"
           aria-label={clearAriaLabel}
         >
-          ❌
+          <span aria-hidden="true">❌</span>
         </button>
       )}
     </div>

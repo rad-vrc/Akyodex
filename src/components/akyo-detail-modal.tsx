@@ -29,8 +29,37 @@ import { t } from '@/lib/i18n';
 import { buildAvatarImageUrl } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
-import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from 'react';
+import type {
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent as ReactMouseEvent,
+  RefObject,
+  TouchEvent as ReactTouchEvent,
+} from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+const FOCUSABLE_SELECTOR = [
+  'a[href]:not([tabindex="-1"])',
+  'button:not([disabled]):not([tabindex="-1"])',
+  'input:not([disabled]):not([type="hidden"]):not([tabindex="-1"])',
+  'select:not([disabled]):not([tabindex="-1"])',
+  'textarea:not([disabled]):not([tabindex="-1"])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
+function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
+  if (!container) {
+    return [];
+  }
+
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) => {
+    const computedStyle = window.getComputedStyle(element);
+    return (
+      computedStyle.display !== 'none' &&
+      computedStyle.visibility !== 'hidden' &&
+      element.closest('[aria-hidden="true"]') === null
+    );
+  });
+}
 
 /**
  * Props for the AkyoDetailModal component
@@ -46,6 +75,8 @@ interface AkyoDetailModalProps {
   onToggleFavorite?: (id: string) => void;
   /** Currently selected language for translations (default: 'ja') */
   lang?: SupportedLanguage;
+  /** Element to restore focus to after closing the modal */
+  returnFocusRef?: RefObject<HTMLElement | null>;
 }
 
 /**
@@ -62,6 +93,7 @@ export function AkyoDetailModal({
   onClose,
   onToggleFavorite,
   lang = 'ja',
+  returnFocusRef,
 }: AkyoDetailModalProps) {
   const [localAkyo, setLocalAkyo] = useState<AkyoData | null>(akyo);
   const sourceUrl = localAkyo ? getAkyoSourceUrl(localAkyo) : undefined;
@@ -102,6 +134,9 @@ export function AkyoDetailModal({
   const lastTapRef = useRef<number>(0);
   const hasDraggedRef = useRef<boolean>(false); // 実際にドラッグ（移動）したか
   const justZoomedOutRef = useRef<boolean>(false); // ダブルタップでズーム解除した直後か
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const wasOpenRef = useRef(false);
   const DOUBLE_TAP_DELAY = 300; // ミリ秒
   const DRAG_THRESHOLD = 5; // ピクセル（これ以上動いたらドラッグとみなす）
 
@@ -131,23 +166,84 @@ export function AkyoDetailModal({
   }, [localAkyo?.id, r2Base]);
 
   useEffect(() => {
-    // ESCキーでモーダルを閉じる
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+    if (!isOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const focusInitialElement = () => {
+      const focusTarget =
+        closeButtonRef.current ?? getFocusableElements(dialogRef.current)[0] ?? dialogRef.current;
+      focusTarget?.focus();
+    };
+
+    const initialFocusFrame = window.requestAnimationFrame(focusInitialElement);
+    const fallbackFocusTimer = window.setTimeout(focusInitialElement, 50);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
         onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const focusableElements = getFocusableElements(dialogRef.current);
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialogRef.current?.focus();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement as HTMLElement | null;
+
+      if (!activeElement || !dialogRef.current?.contains(activeElement)) {
+        event.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (event.shiftKey && (activeElement === firstElement || activeElement === dialogRef.current)) {
+        event.preventDefault();
+        lastElement.focus();
+        return;
+      }
+
+      if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'hidden';
-    }
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      window.cancelAnimationFrame(initialFocusFrame);
+      window.clearTimeout(fallbackFocusTimer);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen && wasOpenRef.current) {
+      const elementToRestoreFocus = returnFocusRef?.current;
+      if (elementToRestoreFocus && elementToRestoreFocus.isConnected) {
+        window.requestAnimationFrame(() => {
+          elementToRestoreFocus.focus();
+        });
+      }
+    }
+
+    wasOpenRef.current = isOpen;
+  }, [isOpen, returnFocusRef]);
 
   // PNG→WebPフォールバック処理
   const handleImageError = useCallback(() => {
@@ -182,6 +278,42 @@ export function AkyoDetailModal({
       setIsZoomed(true);
     },
     [isZoomed, isDragging]
+  );
+
+  const handleImageKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (isZoomed) {
+          setIsZoomed(false);
+          return;
+        }
+
+        setZoomOrigin({ x: 50, y: 50 });
+        setIsZoomed(true);
+        return;
+      }
+
+      if (!isZoomed) {
+        return;
+      }
+
+      const step = 10;
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        setZoomOrigin((current) => ({ ...current, x: Math.max(0, current.x - step) }));
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        setZoomOrigin((current) => ({ ...current, x: Math.min(100, current.x + step) }));
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setZoomOrigin((current) => ({ ...current, y: Math.max(0, current.y - step) }));
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setZoomOrigin((current) => ({ ...current, y: Math.min(100, current.y + step) }));
+      }
+    },
+    [isZoomed]
   );
 
   // ダブルクリックでズームアウト
@@ -359,11 +491,17 @@ export function AkyoDetailModal({
       <div className="relative min-h-screen px-4 py-8" onClick={handleBackdropClick}>
         <div className="relative mx-auto max-w-2xl">
           <div
+            ref={dialogRef}
             className="bg-white rounded-3xl shadow-2xl modal-show"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="akyo-detail-modal-title"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={onClose}
               className="absolute top-4 right-4 w-12 h-12 rounded-full z-[60] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white/60 backdrop-blur-md border border-white/30"
@@ -398,10 +536,10 @@ export function AkyoDetailModal({
                   'linear-gradient(to right, rgb(243 232 255), rgb(252 231 243), rgb(219 234 254))',
               }}
             >
-              <h2 className="text-3xl font-black flex items-center">
+              <h2 id="akyo-detail-modal-title" className="text-3xl font-black flex items-center">
                 <Image
                   src="/images/profileIcon.webp"
-                  alt="Profile Icon"
+                  alt=""
                   width={40}
                   height={40}
                   className="w-10 h-10 mr-3 inline-block object-cover rounded-full"
@@ -419,10 +557,19 @@ export function AkyoDetailModal({
                 {/* Image Section with Zoom & Drag */}
                 <div className="relative">
                   <div
-                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
+                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none focus:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2 ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                       }`}
                     style={{ touchAction: isZoomed ? 'none' : 'auto' }}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={isZoomed}
+                    aria-label={
+                      isZoomed
+                        ? `${displayName} ${t('modal.imageMoveZoom', lang)}`
+                        : `${displayName} ${t('modal.imageZoomControl', lang)}`
+                    }
                     onClick={handleImageClick}
+                    onKeyDown={handleImageKeyDown}
                     onDoubleClick={handleImageDoubleClick}
                     onMouseDown={handleDragStart}
                     onMouseMove={handleDragMove}
@@ -471,7 +618,7 @@ export function AkyoDetailModal({
 
                   {/* Sparkle Effect */}
                   <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-full flex items-center justify-center animate-bounce">
-                    <span className="text-2xl">✨</span>
+                    <span className="text-2xl" aria-hidden="true">✨</span>
                   </div>
                 </div>
 
