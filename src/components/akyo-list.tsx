@@ -66,7 +66,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
     <div className="list-view-container">
       <div className="list-scroll-wrapper">
         <table className="list-view-table">
-          <caption className="sr-only">{t('page.title', lang)}</caption>
+          <caption className="sr-only">{t('list.tableCaption', lang)}</caption>
           <thead>
             <tr>
               <th scope="col">No.</th>
@@ -88,6 +88,9 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
               return (
                 <tr
                   key={akyo.id}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${formatDisplayId(akyo)} ${akyo.nickname || akyo.avatarName}`}
                   onClick={(e) => {
                     if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
                     handleDetailClick(e as any, akyo);
@@ -98,9 +101,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                       handleDetailClick(e as any, akyo);
                     }
                   }}
-                  tabIndex={0}
                   className="cursor-pointer hover:bg-orange-50/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
-                  aria-label={`${t('card.detail', lang)}: ${akyo.nickname || akyo.avatarName}`}
                 >
                   {/* No. */}
                   <td className="font-mono text-sm">{formatDisplayId(akyo)}</td>

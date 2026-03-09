@@ -86,8 +86,8 @@ export function LanguageToggle({
         ${isChanging ? 'opacity-50 cursor-not-allowed' : ''}
         ${className}
     `}
-      aria-label={t('nav.switchLanguage', effectiveLang).replace('{lang}', nextLanguageLabel)}
-      title={t('nav.switchLanguage', effectiveLang).replace('{lang}', nextLanguageLabel)}
+      aria-label={t('language.switchTo', effectiveLang).replace('{lang}', nextLanguageLabel)}
+      title={t('language.switchTo', effectiveLang).replace('{lang}', nextLanguageLabel)}
     >
       <span className="text-lg font-bold">{LANGUAGE_TOGGLE_LABELS[effectiveLang]}</span>
     </button>

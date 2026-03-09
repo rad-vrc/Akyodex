@@ -183,6 +183,16 @@ export const UI_TEXTS = {
     en: "Switch to {lang}",
     ko: "{lang} 표시로 전환",
   },
+  "language.switchTo": {
+    ja: "{lang}表示に切り替える",
+    en: "Switch to {lang}",
+    ko: "{lang} 표시로 전환",
+  },
+  "list.tableCaption": {
+    ja: "Akyo リスト",
+    en: "Akyo List",
+    ko: "Akyo 리스트",
+  },
   "skip.mainContent": {
     ja: "メインコンテンツへスキップ",
     en: "Skip to main content",
