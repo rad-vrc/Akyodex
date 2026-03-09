@@ -91,14 +91,15 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   tabIndex={0}
                   role="button"
                   aria-label={`${formatDisplayId(akyo)} ${akyo.nickname || akyo.avatarName}`}
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
                     if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
-                    handleDetailClick(e as any, akyo);
+                    onShowDetail?.(akyo, e.currentTarget);
                   }}
-                  onKeyDown={(e) => {
+                  onKeyDown={(e: React.KeyboardEvent<HTMLTableRowElement>) => {
+                    if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      handleDetailClick(e as any, akyo);
+                      onShowDetail?.(akyo, e.currentTarget);
                     }
                   }}
                   className="cursor-pointer hover:bg-orange-50/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"

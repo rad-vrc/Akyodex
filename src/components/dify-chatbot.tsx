@@ -260,11 +260,20 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     if (loadState === 'error') {
       container.classList.add('dify-chatbot-load-failed');
       container.setAttribute('data-dify-load-state', 'error');
+      // Keep hidden on error
+      container.setAttribute('aria-hidden', 'true');
       return;
     }
 
     container.classList.remove('dify-chatbot-load-failed');
     container.setAttribute('data-dify-load-state', loadState);
+    
+    // Remove aria-hidden when loaded to make it accessible to screen readers
+    if (loadState === 'loaded') {
+      container.removeAttribute('aria-hidden');
+    } else {
+      container.setAttribute('aria-hidden', 'true');
+    }
 
     return () => {
       container.classList.remove(styles.difyHost);

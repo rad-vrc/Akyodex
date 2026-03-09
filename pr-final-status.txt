@@ -1,0 +1,15 @@
+追加5件の world 登録と、検索/フィルタ改善まで反映済みです。
+
+反映内容:
+- 正しい5件の world を VRChat ログイン状態で確認して登録
+- 公開 world 連番は append-only で `world0067`〜`world0071`
+- `キツネ` / `きつね` のような、ひらがな・カタカナのかな揺れ検索対応
+- PC版にも絞り込みフィルタ折りたたみを実装
+- 初期状態は PC=開 / モバイル=閉
+
+ローカル確認済み:
+- `npm run lint` ✅
+- `npm run next:build` ✅
+
+補足:
+- diagnostics に残っているのは Tailwind の簡約提案 warning のみで、エラーはありません。

@@ -38,7 +38,7 @@ export function LanguageToggle({
   // SSR-safe values: use initialLang before mount to avoid hydration mismatch
   const effectiveLang = isMounted ? currentLang : initialLang;
   const nextLanguage = getNextLanguage(effectiveLang);
-  const nextLanguageLabel = LANGUAGE_NAMES[nextLanguage];
+  const nextLanguageLabel = t(`languageNames.${nextLanguage}` as any, effectiveLang);
 
   // Read language from cookie on mount (client-side only)
   useEffect(() => {

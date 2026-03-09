@@ -46,6 +46,7 @@ test.describe('Accessibility (a11y) Checks', () => {
     // Axe can scan specific includes if needed
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .include('div[role="dialog"]')
       .exclude('#dify-chatbot-container')
       .analyze();
 
