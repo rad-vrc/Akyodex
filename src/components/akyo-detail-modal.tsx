@@ -22,7 +22,7 @@ import {
   IconTag,
   IconUser,
 } from '@/components/icons';
-import { getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
+import { ensureContrastForWhiteText, getCategoryColor, parseAndSortCategories } from '@/lib/akyo-data-helpers';
 import { formatDisplayId, getAkyoSourceUrl, resolveEntryType } from '@/lib/akyo-entry';
 import type { SupportedLanguage } from '@/lib/i18n';
 import { t } from '@/lib/i18n';
@@ -660,12 +660,13 @@ export function AkyoDetailModal({
                     <div className="flex flex-wrap gap-2 mt-1">
                       {categories.map((cat, index) => {
                         const color = getCategoryColor(cat);
+                        const bgColor = ensureContrastForWhiteText(color);
                         return (
                           <span
                             key={index}
                             className="px-3 py-1 rounded-full text-sm font-bold text-white shadow-md"
                             style={{
-                              background: `linear-gradient(135deg, ${color}, ${color}dd)`,
+                              background: `linear-gradient(135deg, ${bgColor}, ${bgColor}dd)`,
                             }}
                           >
                             {cat}
