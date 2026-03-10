@@ -62,6 +62,29 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
     safeOpenVRChatLink(e, url);
   };
 
+  const handleRowDetailClick = (
+    e: ReactMouseEvent<HTMLButtonElement>,
+    akyo: AkyoData
+  ) => {
+    e.stopPropagation();
+    onShowDetail?.(akyo, e.currentTarget);
+  };
+
+  const renderRowDetailTrigger = (
+    akyo: AkyoData,
+    label: string,
+    options?: { hiddenFromAssistiveTech?: boolean }
+  ) => (
+    <button
+      type="button"
+      className="absolute inset-0 z-0 h-full w-full cursor-pointer bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
+      aria-label={options?.hiddenFromAssistiveTech ? undefined : label}
+      aria-hidden={options?.hiddenFromAssistiveTech || undefined}
+      tabIndex={options?.hiddenFromAssistiveTech ? -1 : 0}
+      onClick={(e) => handleRowDetailClick(e, akyo)}
+    />
+  );
+
   return (
     <div className="list-view-container">
       <div className="list-scroll-wrapper">
@@ -84,6 +107,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
               const sortedCategories = parseAndSortCategories(category);
               const isWorldEntry = resolveEntryType(akyo) === 'world';
               const sourceUrl = getAkyoSourceUrl(akyo);
+              const rowDetailLabel = `${formatDisplayId(akyo)} ${akyo.nickname || akyo.avatarName} ${t('card.detail', lang)}`;
 
               return (
                 <tr
@@ -92,29 +116,14 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                 >
                   {/* No. */}
                   <td className="font-mono text-sm relative">
-                    {/* The accessible interactive overlay for the whole row */}
-                    <button
-                      type="button"
-                      aria-label={`${formatDisplayId(akyo)} ${akyo.nickname || akyo.avatarName}`}
-                      className="absolute inset-0 z-0 w-full h-full cursor-pointer bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                        if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
-                        onShowDetail?.(akyo, e.currentTarget);
-                      }}
-                      onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-                        if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onShowDetail?.(akyo, e.currentTarget);
-                        }
-                      }}
-                    />
+                    {renderRowDetailTrigger(akyo, rowDetailLabel, { hiddenFromAssistiveTech: true })}
                     <span className="relative z-10 pointer-events-none">{formatDisplayId(akyo)}</span>
                   </td>
 
                   {/* 見た目 */}
-                  <td>
-                    <div className="list-image-wrapper">
+                  <td className="relative">
+                    {renderRowDetailTrigger(akyo, rowDetailLabel, { hiddenFromAssistiveTech: true })}
+                    <div className="list-image-wrapper relative z-10 pointer-events-none">
                       <Image
                         src={buildAvatarImageUrl(akyo.id, sourceUrl, 96)}
                         alt={akyo.avatarName || akyo.nickname}
@@ -134,12 +143,13 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   </td>
 
                   {/* 名前 */}
-                  <td>
-                    <div className="font-medium text-[var(--text-primary)]">
+                  <td className="relative">
+                    {renderRowDetailTrigger(akyo, rowDetailLabel)}
+                    <div className="relative z-10 pointer-events-none font-medium text-[var(--text-primary)]">
                       {akyo.nickname || akyo.avatarName}
                     </div>
                     {!isWorldEntry && akyo.nickname && akyo.avatarName && (
-                      <div className="text-xs text-[var(--text-secondary)]">
+                      <div className="relative z-10 pointer-events-none text-xs text-[var(--text-secondary)]">
                         {akyo.nickname === akyo.avatarName
                           ? `${t('card.avatarName', lang)}: ${akyo.avatarName}`
                           : akyo.avatarName}
@@ -148,8 +158,9 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   </td>
 
                   {/* カテゴリ */}
-                  <td>
-                    <div className="flex flex-wrap gap-1">
+                  <td className="relative">
+                    {renderRowDetailTrigger(akyo, rowDetailLabel, { hiddenFromAssistiveTech: true })}
+                    <div className="relative z-10 pointer-events-none flex flex-wrap gap-1">
                       {sortedCategories.map((trimmedCat, index) => {
                         const color = getCategoryColor(trimmedCat);
                         return (
@@ -170,7 +181,10 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   </td>
 
                   {/* 作者 */}
-                  <td className="text-sm text-[var(--text-secondary)]">{author}</td>
+                  <td className="relative text-sm text-[var(--text-secondary)]">
+                    {renderRowDetailTrigger(akyo, rowDetailLabel, { hiddenFromAssistiveTech: true })}
+                    <span className="relative z-10 pointer-events-none">{author}</span>
+                  </td>
 
                   {/* アクション */}
                   <td className="text-center relative z-10">

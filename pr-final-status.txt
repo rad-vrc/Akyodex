@@ -1,11 +1,21 @@
-アクセシビリティ改善（WCAG 2.1 AA対応）および追加のレビュー指摘の反映が完了しました。
+アクセシビリティ改善（WCAG 2.1 AA 対応）PR の更新内容を 2026-03-10 時点の差分に合わせて整理しました。
 
-反映内容:
-- `language-toggle.tsx`: 翻訳キー `UITextKey` への安全なキャストへの修正
-- `akyo-list.tsx`: `<tr>` 上の `role="button"` 等のアクセシビリティ非推奨実装を排除し、各行内に `z-0` で絶対配置の `<button>` を実装することで、セマンティクスを維持したまま行全体のクリック・キーボード操作を実現
-- 影響範囲の UI コンポーネントおよびテスト（a11y.spec.ts）は対応済み
+反映ファイル:
+- `src/app/globals.css`: グローバルのフォーカス表示とリストヘッダーのコントラストを調整
+- `src/app/zukan/loading.tsx`: 読み込み中画面にスクリーンリーダー向けの見出しを追加
+- `src/app/zukan/zukan-client.tsx`: 統計情報のラベル表示を改善し、chatbot コンテナの不要なランドマーク属性を削除
+- `src/components/admin/admin-header.tsx`: 管理リンク群を `nav` に変更し、ログアウトボタンのラベルを補強
+- `src/components/akyo-card.tsx`: カードの見出し関連付けとフォールバック画像の装飾扱いを追加
+- `src/components/akyo-detail-modal.tsx`: 画像ビューアーの説明文とフォールバック画像のアクセシビリティ制御を調整
+- `src/components/akyo-list.tsx`: 非アクション列ごとに詳細表示トリガーを配置し、行全体クリックとキーボード導線を両立
+- `src/components/dify-chatbot.tsx`: 読み込み状態に応じて `aria-hidden` を切り替えるよう修正
+- `src/components/language-toggle.tsx`: 言語名の翻訳と `UITextKey` による型安全なキー参照へ修正
+- `src/lib/i18n.ts`: 追加したアクセシビリティ文言と多言語ラベルを定義
+- `tests/a11y.spec.ts`: モーダルをスコープした axe チェックを追加
+- `tests/list-view-row-interaction.spec.ts`: リスト表示の名前セルクリックで詳細モーダルが開く回帰テストを追加
 
-ローカル確認済み:
-- `npm run lint` ✅
-- Axe E2E tests (`a11y.spec.ts`) ✅
-- `npm run next:build` ✅
+ローカル確認:
+- `npx playwright test tests/list-view-row-interaction.spec.ts --project=chromium`: 失敗を確認後、修正後の再実行で成功
+- `npm run lint`: 既存の warning 1 件のみ（`src/hooks/use-akyo-data.ts` の unused eslint-disable）
+- `npm run next:build`: 成功
+- `npx tsc --noEmit`: 既存の `src/app/zukan/loading-accessibility.test.ts` の `.ts` 拡張子 import で失敗（今回の差分外）
