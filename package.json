@@ -23,7 +23,8 @@
     "test:csv": "node scripts/test-csv-quality.js",
     "data:convert": "npx tsx scripts/csv-to-json.ts",
     "generate-ko-data": "node scripts/generate-ko-data.js",
-    "push:check-pr": "node scripts/push-and-check-pr-conflicts.js"
+    "push:check-pr": "node scripts/push-and-check-pr-conflicts.js",
+    "hooks:install": "git config --local core.hooksPath .githooks"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.16.5",
