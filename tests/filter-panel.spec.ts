@@ -6,7 +6,7 @@ test.describe("Filter panel responsive defaults", () => {
     isMobile: true,
   });
 
-  test("mobile view keeps the filter panel closed on initial render", async ({ page }) => {
+  test("mobile view keeps the filter panel closed after hydration", async ({ page }) => {
     await page.goto("/zukan");
     await page.waitForSelector(".akyo-card", { state: "attached" });
 

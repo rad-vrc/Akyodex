@@ -6,8 +6,8 @@ import {
   resolveFilterPanelOpenState,
 } from "./filter-panel-state";
 
-test("resolveFilterPanelOpenState keeps the filter panel closed until mobile state is known", () => {
-  assert.equal(resolveFilterPanelOpenState({ isFilterPanelOpen: null, isMobile: undefined }), false);
+test("resolveFilterPanelOpenState keeps the filter panel open unless mobile is explicitly known", () => {
+  assert.equal(resolveFilterPanelOpenState({ isFilterPanelOpen: null, isMobile: undefined }), true);
   assert.equal(resolveFilterPanelOpenState({ isFilterPanelOpen: null, isMobile: true }), false);
   assert.equal(resolveFilterPanelOpenState({ isFilterPanelOpen: null, isMobile: false }), true);
 });
@@ -18,7 +18,7 @@ test("resolveFilterPanelOpenState respects an explicit user toggle", () => {
 });
 
 test("getNextFilterPanelOpenState toggles from the resolved default state", () => {
-  assert.equal(getNextFilterPanelOpenState({ current: null, isMobile: undefined }), true);
+  assert.equal(getNextFilterPanelOpenState({ current: null, isMobile: undefined }), false);
   assert.equal(getNextFilterPanelOpenState({ current: null, isMobile: true }), true);
   assert.equal(getNextFilterPanelOpenState({ current: null, isMobile: false }), false);
   assert.equal(getNextFilterPanelOpenState({ current: true, isMobile: true }), false);

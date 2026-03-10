@@ -9,11 +9,7 @@ export function resolveFilterPanelOpenState({
     return isFilterPanelOpen;
   }
 
-  if (isMobile === false) {
-    return true;
-  }
-
-  return false;
+  return isMobile !== true;
 }
 
 export function getNextFilterPanelOpenState({
