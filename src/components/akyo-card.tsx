@@ -16,7 +16,11 @@ import { t, type SupportedLanguage } from "@/lib/i18n";
 import { buildAvatarImageUrl, safeOpenVRChatLink } from "@/lib/vrchat-utils";
 import type { AkyoData } from "@/types/akyo";
 import Image from "next/image";
-import { type MouseEvent as ReactMouseEvent, useState } from "react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useRef,
+  useState,
+} from "react";
 
 /**
  * Props for the AkyoCard component
@@ -71,6 +75,7 @@ export function AkyoCard({
   const [imageSrc, setImageSrc] = useState(
     isWorldEntry ? apiImageSrc : primaryImageSrc,
   );
+  const detailButtonRef = useRef<HTMLButtonElement | null>(null);
 
   /**
    * Handles clicks on the favorite heart icon button
@@ -125,9 +130,9 @@ export function AkyoCard({
         type="button"
         data-card-trigger="true"
         className="absolute inset-0 z-10 rounded-[20px] bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-300 focus-visible:ring-offset-2"
-        aria-label={cardLabel}
-        aria-haspopup="dialog"
-        onClick={(e) => handleCardClick(e.currentTarget)}
+        aria-hidden="true"
+        tabIndex={-1}
+        onClick={() => handleCardClick(detailButtonRef.current)}
       />
       {/* 画像 */}
       <div className="relative w-full aspect-[3/2] bg-gray-100">
@@ -269,11 +274,11 @@ export function AkyoCard({
 
         {/* くわしく見るボタン */}
         <button
+          ref={detailButtonRef}
           type="button"
           onClick={(e) => handleCardClick(e.currentTarget)}
           className="detail-button relative z-20 w-full flex items-center justify-center gap-2"
-          aria-hidden="true"
-          tabIndex={-1}
+          aria-haspopup="dialog"
         >
           <span className="animate-bounce" aria-hidden="true">🌟</span>
           <span>{t("card.detail", lang)}</span>
