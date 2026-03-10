@@ -56,25 +56,32 @@ function Icon({
 
 /**
  * Card view icon
- * Renders a small stack of overlapping cards while preserving currentColor styling.
+ * Renders a two-card outline stack while preserving currentColor styling.
  * @param props - Icon properties
  */
 export function IconGrid({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
-      <path
-        fill="currentColor"
-        fillOpacity="0.35"
-        d="M152 72c0-22.1 17.9-40 40-40h136c22.1 0 40 17.9 40 40v120c0 22.1-17.9 40-40 40H192c-22.1 0-40-17.9-40-40V72z"
+      <rect
+        x="216"
+        y="116"
+        width="160"
+        height="216"
+        rx="28"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="24"
       />
-      <path
-        fill="currentColor"
-        fillOpacity="0.6"
-        d="M96 156c0-22.1 17.9-40 40-40h184c22.1 0 40 17.9 40 40v144c0 22.1-17.9 40-40 40H136c-22.1 0-40-17.9-40-40V156z"
-      />
-      <path
-        fill="currentColor"
-        d="M144 240c0-22.1 17.9-40 40-40h184c22.1 0 40 17.9 40 40v168c0 22.1-17.9 40-40 40H184c-22.1 0-40-17.9-40-40V240zm40 8c-17.7 0-32 14.3-32 32v128c0 17.7 14.3 32 32 32h184c17.7 0 32-14.3 32-32V280c0-17.7-14.3-32-32-32H184z"
+      <rect
+        x="96"
+        y="76"
+        width="160"
+        height="216"
+        rx="28"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="24"
+        transform="rotate(-13 176 184)"
       />
     </Icon>
   );
