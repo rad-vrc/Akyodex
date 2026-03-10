@@ -557,7 +557,7 @@ export function AkyoDetailModal({
                 {/* Image Section with Zoom & Drag */}
                 <div className="relative">
                   <div
-                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none focus:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2 ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
+                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none focus:outline-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2 ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                       }`}
                     style={{ touchAction: isZoomed ? 'none' : 'auto' }}
                     role="button"

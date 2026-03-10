@@ -124,7 +124,7 @@ export function AkyoCard({
       <button
         type="button"
         data-card-trigger="true"
-        className="absolute inset-0 z-10 rounded-[20px] bg-transparent focus:outline-none focus-visible:ring-4 focus-visible:ring-orange-300 focus-visible:ring-offset-2"
+        className="absolute inset-0 z-10 rounded-[20px] bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-300 focus-visible:ring-offset-2"
         aria-label={cardLabel}
         aria-haspopup="dialog"
         onClick={(e) => handleCardClick(e.currentTarget)}

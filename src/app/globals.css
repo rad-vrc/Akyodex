@@ -121,7 +121,11 @@ button,
   letter-spacing: 0 !important;
 }
 
-*:focus-visible {
+button:focus-visible,
+.btn:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible {
   outline: 3px solid #1d4ed8;
   outline-offset: 2px;
 }

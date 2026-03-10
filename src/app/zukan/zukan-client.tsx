@@ -1026,7 +1026,6 @@ export function ZukanClient({
       <div
         id="dify-chatbot-container"
         className="fixed bottom-6 right-6 z-[2147483647]"
-        aria-hidden="true"
       />
     </div>
   );

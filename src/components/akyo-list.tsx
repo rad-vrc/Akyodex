@@ -102,7 +102,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                       onShowDetail?.(akyo, e.currentTarget);
                     }
                   }}
-                  className="cursor-pointer hover:bg-orange-50/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
+                  className="cursor-pointer hover:bg-orange-50/50 transition-colors focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
                 >
                   {/* No. */}
                   <td className="font-mono text-sm">{formatDisplayId(akyo)}</td>
