@@ -42,6 +42,10 @@ export function shouldBypassImageOptimization(src: string): boolean {
   return src.startsWith("/api/") || src.startsWith("/images/");
 }
 
+export function getCatalogCardImageRequestWidth(entryType: "avatar" | "world"): number {
+  return entryType === "world" ? 384 : 512;
+}
+
 /**
  * AkyoCard Component
  * Displays a single Akyo avatar as a stylized card with an image, metadata, and action buttons.
@@ -63,9 +67,13 @@ export function AkyoCard({
     process.env.NEXT_PUBLIC_R2_BASE || "https://images.akyodex.com"
   ).replace(/\/$/, "");
   const sourceUrl = getAkyoSourceUrl(akyo);
-  const apiImageSrc = buildAvatarImageUrl(akyo.id, sourceUrl, 512);
-  const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
   const entryType = resolveEntryType(akyo);
+  const apiImageSrc = buildAvatarImageUrl(
+    akyo.id,
+    sourceUrl,
+    getCatalogCardImageRequestWidth(entryType),
+  );
+  const apiFallbackImageSrc = `${apiImageSrc}&bypassCloudflare=1`;
   const isWorldEntry = entryType === "world";
   const primaryImageSrc = cloudflareImagesEnabled
     ? `/${akyo.id}.webp`
