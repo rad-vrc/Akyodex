@@ -1,11 +1,19 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { shouldBypassImageOptimization } from "./akyo-card";
+import {
+  getCatalogCardImageRequestWidth,
+  shouldBypassImageOptimization,
+} from "./akyo-card";
 
 test("shouldBypassImageOptimization bypasses local API and placeholder paths", () => {
   assert.equal(shouldBypassImageOptimization("/api/vrc-world-image?wrld=wrld_x&w=512"), true);
   assert.equal(shouldBypassImageOptimization("/api/avatar-image?id=0001&w=512"), true);
   assert.equal(shouldBypassImageOptimization("/images/placeholder.webp"), true);
   assert.equal(shouldBypassImageOptimization("https://images.akyodex.com/0001.webp"), false);
+});
+
+test("getCatalogCardImageRequestWidth uses a smaller proxy width for world cards", () => {
+  assert.equal(getCatalogCardImageRequestWidth("avatar"), 512);
+  assert.equal(getCatalogCardImageRequestWidth("world"), 384);
 });
