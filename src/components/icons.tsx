@@ -61,7 +61,7 @@ function Icon({
  */
 export function IconGrid({ size, className, ...props }: IconProps) {
   return (
-    <Icon size={size} className={className} viewBox="40 32 328 304" {...props}>
+    <Icon size={size} className={className} viewBox="40 32 348 304" {...props}>
       <rect
         x="216"
         y="116"
