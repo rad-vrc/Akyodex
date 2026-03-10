@@ -55,13 +55,34 @@ function Icon({
 // ═══════════════════════════════════════
 
 /**
- * Grid view icon (th-large equivalent)
+ * Card view icon
+ * Renders a two-card outline stack while preserving currentColor styling.
  * @param props - Icon properties
  */
 export function IconGrid({ size, className, ...props }: IconProps) {
   return (
-    <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
-      <path d="M47.5 104H432.5C440.8 104 448 96.84 448 88.5V23.5C448 15.16 440.8 8 432.5 8H47.5C39.16 8 32 15.16 32 23.5V88.5C32 96.84 39.16 104 47.5 104zM47.5 264H432.5C440.8 264 448 256.8 448 248.5V183.5C448 175.2 440.8 168 432.5 168H47.5C39.16 168 32 175.2 32 183.5V248.5C32 256.8 39.16 264 47.5 264zM47.5 424H432.5C440.8 424 448 416.8 448 408.5V343.5C448 335.2 440.8 328 432.5 328H47.5C39.16 328 32 335.2 32 343.5V408.5C32 416.8 39.16 424 47.5 424z" />
+    <Icon size={size} className={className} viewBox="40 32 348 304" {...props}>
+      <rect
+        x="216"
+        y="116"
+        width="160"
+        height="216"
+        rx="28"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="24"
+      />
+      <rect
+        x="96"
+        y="76"
+        width="160"
+        height="216"
+        rx="28"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="24"
+        transform="rotate(-13 176 184)"
+      />
     </Icon>
   );
 }
