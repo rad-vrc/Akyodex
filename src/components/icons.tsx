@@ -55,13 +55,27 @@ function Icon({
 // ═══════════════════════════════════════
 
 /**
- * Grid view icon (th-large equivalent)
+ * Card view icon
+ * Renders a small stack of overlapping cards while preserving currentColor styling.
  * @param props - Icon properties
  */
 export function IconGrid({ size, className, ...props }: IconProps) {
   return (
     <Icon size={size} className={className} viewBox="0 0 512 512" {...props}>
-      <path d="M47.5 104H432.5C440.8 104 448 96.84 448 88.5V23.5C448 15.16 440.8 8 432.5 8H47.5C39.16 8 32 15.16 32 23.5V88.5C32 96.84 39.16 104 47.5 104zM47.5 264H432.5C440.8 264 448 256.8 448 248.5V183.5C448 175.2 440.8 168 432.5 168H47.5C39.16 168 32 175.2 32 183.5V248.5C32 256.8 39.16 264 47.5 264zM47.5 424H432.5C440.8 424 448 416.8 448 408.5V343.5C448 335.2 440.8 328 432.5 328H47.5C39.16 328 32 335.2 32 343.5V408.5C32 416.8 39.16 424 47.5 424z" />
+      <path
+        fill="currentColor"
+        fillOpacity="0.35"
+        d="M152 72c0-22.1 17.9-40 40-40h136c22.1 0 40 17.9 40 40v120c0 22.1-17.9 40-40 40H192c-22.1 0-40-17.9-40-40V72z"
+      />
+      <path
+        fill="currentColor"
+        fillOpacity="0.6"
+        d="M96 156c0-22.1 17.9-40 40-40h184c22.1 0 40 17.9 40 40v144c0 22.1-17.9 40-40 40H136c-22.1 0-40-17.9-40-40V156z"
+      />
+      <path
+        fill="currentColor"
+        d="M144 240c0-22.1 17.9-40 40-40h184c22.1 0 40 17.9 40 40v168c0 22.1-17.9 40-40 40H184c-22.1 0-40-17.9-40-40V240zm40 8c-17.7 0-32 14.3-32 32v128c0 17.7 14.3 32 32 32h184c17.7 0 32-14.3 32-32V280c0-17.7-14.3-32-32-32H184z"
+      />
     </Icon>
   );
 }
