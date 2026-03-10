@@ -1,15 +1,11 @@
-追加5件の world 登録と、検索/フィルタ改善まで反映済みです。
+アクセシビリティ改善（WCAG 2.1 AA対応）および追加のレビュー指摘の反映が完了しました。
 
 反映内容:
-- 正しい5件の world を VRChat ログイン状態で確認して登録
-- 公開 world 連番は append-only で `world0067`〜`world0071`
-- `キツネ` / `きつね` のような、ひらがな・カタカナのかな揺れ検索対応
-- PC版にも絞り込みフィルタ折りたたみを実装
-- 初期状態は PC=開 / モバイル=閉
+- `language-toggle.tsx`: 翻訳キー `UITextKey` への安全なキャストへの修正
+- `akyo-list.tsx`: `<tr>` 上の `role="button"` 等のアクセシビリティ非推奨実装を排除し、各行内に `z-0` で絶対配置の `<button>` を実装することで、セマンティクスを維持したまま行全体のクリック・キーボード操作を実現
+- 影響範囲の UI コンポーネントおよびテスト（a11y.spec.ts）は対応済み
 
 ローカル確認済み:
 - `npm run lint` ✅
+- Axe E2E tests (`a11y.spec.ts`) ✅
 - `npm run next:build` ✅
-
-補足:
-- diagnostics に残っているのは Tailwind の簡約提案 warning のみで、エラーはありません。

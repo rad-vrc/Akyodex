@@ -88,24 +88,29 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
               return (
                 <tr
                   key={akyo.id}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`${formatDisplayId(akyo)} ${akyo.nickname || akyo.avatarName}`}
-                  onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
-                    if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
-                    onShowDetail?.(akyo, e.currentTarget);
-                  }}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLTableRowElement>) => {
-                    if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onShowDetail?.(akyo, e.currentTarget);
-                    }
-                  }}
-                  className="cursor-pointer hover:bg-orange-50/50 transition-colors focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
+                  className="group relative hover:bg-orange-50/50 transition-colors"
                 >
                   {/* No. */}
-                  <td className="font-mono text-sm">{formatDisplayId(akyo)}</td>
+                  <td className="font-mono text-sm relative">
+                    {/* The accessible interactive overlay for the whole row */}
+                    <button
+                      type="button"
+                      aria-label={`${formatDisplayId(akyo)} ${akyo.nickname || akyo.avatarName}`}
+                      className="absolute inset-0 z-0 w-full h-full cursor-pointer bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                        if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
+                        onShowDetail?.(akyo, e.currentTarget);
+                      }}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
+                        if ((e.target as HTMLElement).closest('.list-action-btn, .vrchat-link-button')) return;
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onShowDetail?.(akyo, e.currentTarget);
+                        }
+                      }}
+                    />
+                    <span className="relative z-10 pointer-events-none">{formatDisplayId(akyo)}</span>
+                  </td>
 
                   {/* 見た目 */}
                   <td>
@@ -168,7 +173,7 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
                   <td className="text-sm text-[var(--text-secondary)]">{author}</td>
 
                   {/* アクション */}
-                  <td className="text-center">
+                  <td className="text-center relative z-10">
                     <div className="flex items-center justify-center gap-1">
                       {/* VRChatリンク */}
                       {sourceUrl && (
