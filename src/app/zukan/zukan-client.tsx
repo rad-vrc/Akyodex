@@ -28,6 +28,10 @@ import {
   resolveImmediateLanguageDataset,
   type LanguageDatasetCacheEntry,
 } from "./language-dataset-state";
+import {
+  getNextFilterPanelOpenState,
+  resolveFilterPanelOpenState,
+} from "./filter-panel-state";
 import { useAkyoData } from "@/hooks/use-akyo-data";
 import { detectVrcEntryTypeFromUrl, resolveEntryType } from "@/lib/akyo-entry";
 import { useLanguage } from "@/hooks/use-language";
@@ -366,8 +370,10 @@ export function ZukanClient({
     : isLanguageRefetching
       ? t("loading.subtext", lang)
       : null;
-  const resolvedIsFilterPanelOpen =
-    isFilterPanelOpen ?? (isMobile === true ? false : true);
+  const resolvedIsFilterPanelOpen = resolveFilterPanelOpenState({
+    isFilterPanelOpen,
+    isMobile,
+  });
 
   // Sync server-rendered language payload to cache
   useEffect(() => {
@@ -385,7 +391,10 @@ export function ZukanClient({
     if (isMobile === undefined) return;
     setIsFilterPanelOpen((current) => {
       if (current !== null) return current;
-      return isMobile ? false : true;
+      return resolveFilterPanelOpenState({
+        isFilterPanelOpen: current,
+        isMobile,
+      });
     });
   }, [isMobile]);
 
@@ -851,9 +860,10 @@ export function ZukanClient({
               type="button"
               onClick={() =>
                 setIsFilterPanelOpen((current) =>
-                  current === null
-                    ? !(isMobile === true ? false : true)
-                    : !current,
+                  getNextFilterPanelOpenState({
+                    current,
+                    isMobile,
+                  }),
                 )
               }
               aria-expanded={resolvedIsFilterPanelOpen}
