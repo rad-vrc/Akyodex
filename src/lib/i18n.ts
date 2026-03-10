@@ -178,6 +178,31 @@ export const UI_TEXTS = {
     en: "Primary navigation",
     ko: "주요 내비게이션",
   },
+  "language.switchTo": {
+    ja: "{lang}表示に切り替える",
+    en: "Switch to {lang}",
+    ko: "{lang} 표시로 전환",
+  },
+  "languageNames.ja": {
+    ja: "日本語",
+    en: "Japanese",
+    ko: "일본어",
+  },
+  "languageNames.en": {
+    ja: "英語 (English)",
+    en: "English",
+    ko: "영어 (English)",
+  },
+  "languageNames.ko": {
+    ja: "韓国語 (Korean)",
+    en: "Korean",
+    ko: "한국어",
+  },
+  "list.tableCaption": {
+    ja: "Akyo リスト",
+    en: "Akyo List",
+    ko: "Akyo 리스트",
+  },
   "skip.mainContent": {
     ja: "メインコンテンツへスキップ",
     en: "Skip to main content",
@@ -525,6 +550,11 @@ export const UI_TEXTS = {
     ja: "拡大画像を矢印キーで移動",
     en: "Move zoomed image with arrow keys",
     ko: "확대된 이미지를 방향키로 이동",
+  },
+  "modal.imageViewerRoleDescription": {
+    ja: "インタラクティブな画像ビューワー",
+    en: "Interactive image viewer",
+    ko: "인터랙티브 이미지 뷰어",
   },
   "modal.zoomHint": {
     ja: "タップでズーム 🔍",

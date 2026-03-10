@@ -557,12 +557,13 @@ export function AkyoDetailModal({
                 {/* Image Section with Zoom & Drag */}
                 <div className="relative">
                   <div
-                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none focus:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2 ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
+                    className={`h-64 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-100 to-blue-100 p-2 select-none focus:outline-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2 ${isZoomed ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'
                       }`}
                     style={{ touchAction: isZoomed ? 'none' : 'auto' }}
                     role="button"
                     tabIndex={0}
                     aria-pressed={isZoomed}
+                    aria-roledescription={t('modal.imageViewerRoleDescription', lang)}
                     aria-label={
                       isZoomed
                         ? `${displayName} ${t('modal.imageMoveZoom', lang)}`
@@ -588,18 +589,23 @@ export function AkyoDetailModal({
                     >
                       <Image
                         src={imageUrl}
-                        alt={displayName}
+                        alt={imageLoadAttempt >= 2 ? "" : displayName}
+                        role={imageLoadAttempt >= 2 ? "presentation" : undefined}
                         width={800}
                         height={533}
                         className="w-full h-full object-contain rounded-2xl"
                         unoptimized
                         draggable={false}
                         onError={(e) => {
-                          // PNG→WebPフォールバック
                           handleImageError();
-                          // 最終フォールバック：グラデーション背景
+                          if (imageLoadAttempt >= 1) {
+                            setImageLoadAttempt(2);
+                          }
                           const target = e.target as HTMLImageElement;
                           target.style.background = `linear-gradient(135deg, ${categoryColor}, ${categoryColor}66)`;
+                          // Temporarily mutate DOM while React updates state
+                          target.alt = "";
+                          target.setAttribute('role', 'presentation');
                         }}
                       />
                     </div>

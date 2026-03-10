@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { getDifyContainerAriaHidden, type DifyLoadState } from './dify-chatbot-a11y';
 import styles from './dify-chatbot.module.css';
 
 // Delay in milliseconds to wait for Dify chatbot to load before initializing observers
@@ -30,7 +31,7 @@ interface DifyChatbotProps {
  * from the button when the chat window is open.
  */
 export function DifyChatbot({ token }: DifyChatbotProps) {
-  const [loadState, setLoadState] = useState<'idle' | 'loaded' | 'error'>('idle');
+  const [loadState, setLoadState] = useState<DifyLoadState>('idle');
 
   useEffect(() => {
     if (!token) {
@@ -256,15 +257,27 @@ export function DifyChatbot({ token }: DifyChatbotProps) {
     const container = document.getElementById('dify-chatbot-container');
     if (!container) return;
     container.classList.add(styles.difyHost);
+    const ariaHidden = getDifyContainerAriaHidden(loadState);
 
     if (loadState === 'error') {
       container.classList.add('dify-chatbot-load-failed');
       container.setAttribute('data-dify-load-state', 'error');
+      if (ariaHidden === null) {
+        container.removeAttribute('aria-hidden');
+      } else {
+        container.setAttribute('aria-hidden', ariaHidden);
+      }
       return;
     }
 
     container.classList.remove('dify-chatbot-load-failed');
     container.setAttribute('data-dify-load-state', loadState);
+
+    if (ariaHidden === null) {
+      container.removeAttribute('aria-hidden');
+    } else {
+      container.setAttribute('aria-hidden', ariaHidden);
+    }
 
     return () => {
       container.classList.remove(styles.difyHost);

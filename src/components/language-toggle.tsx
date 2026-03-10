@@ -17,7 +17,9 @@ import {
   LANGUAGE_NAMES,
   LANGUAGE_TOGGLE_LABELS,
   SUPPORTED_LANGUAGES,
+  t,
   type SupportedLanguage,
+  type UITextKey,
 } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
 
@@ -37,7 +39,7 @@ export function LanguageToggle({
   // SSR-safe values: use initialLang before mount to avoid hydration mismatch
   const effectiveLang = isMounted ? currentLang : initialLang;
   const nextLanguage = getNextLanguage(effectiveLang);
-  const nextLanguageLabel = LANGUAGE_NAMES[nextLanguage];
+  const nextLanguageLabel = t(`languageNames.${nextLanguage}` as UITextKey, effectiveLang);
 
   // Read language from cookie on mount (client-side only)
   useEffect(() => {
@@ -85,8 +87,8 @@ export function LanguageToggle({
         ${isChanging ? 'opacity-50 cursor-not-allowed' : ''}
         ${className}
     `}
-      aria-label={`Switch to ${nextLanguageLabel}`}
-      title={`Switch to ${nextLanguageLabel}`}
+      aria-label={t('language.switchTo', effectiveLang).replace('{lang}', nextLanguageLabel)}
+      title={t('language.switchTo', effectiveLang).replace('{lang}', nextLanguageLabel)}
     >
       <span className="text-lg font-bold">{LANGUAGE_TOGGLE_LABELS[effectiveLang]}</span>
     </button>

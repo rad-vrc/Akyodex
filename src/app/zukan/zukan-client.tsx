@@ -781,26 +781,26 @@ export function ZukanClient({
           </Link>
 
           {/* 統計情報 */}
-          <dl className="flex gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
-            <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              <dt className="sr-only">{t("stats.totalLabel", lang)}</dt>
-              <dd>
+          <dl className="flex flex-wrap gap-2 sm:gap-4 text-sm sm:text-base font-bold text-white">
+            <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full flex items-center gap-1 sm:gap-2">
+              <dt className="text-xs sm:text-sm text-white/90 whitespace-nowrap">{t("stats.totalLabel", lang)}：</dt>
+              <dd className="whitespace-nowrap">
                 {t("stats.totalBreakdown", lang)
                   .replace("{avatars}", String(stats.totalAvatars))
                   .replace("{worlds}", String(stats.totalWorlds))}
               </dd>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              <dt className="sr-only">{t("stats.displayedLabel", lang)}</dt>
-              <dd>
+            <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full flex items-center gap-1 sm:gap-2">
+              <dt className="text-xs sm:text-sm text-white/90 whitespace-nowrap">{t("stats.displayedLabel", lang)}：</dt>
+              <dd className="whitespace-nowrap">
                 {t("stats.displayedBreakdown", lang)
                   .replace("{avatars}", String(stats.displayedAvatars))
                   .replace("{worlds}", String(stats.displayedWorlds))}
               </dd>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-              <dt className="sr-only">{t("stats.favoritesLabel", lang)}</dt>
-              <dd>
+            <div className="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full flex items-center gap-1 sm:gap-2">
+              <dt className="text-xs sm:text-sm text-white/90 whitespace-nowrap">{t("stats.favoritesLabel", lang)}：</dt>
+              <dd className="whitespace-nowrap flex items-center gap-1">
                 <span aria-hidden="true">❤️</span>
                 {stats.favorites}
               </dd>
@@ -1026,8 +1026,6 @@ export function ZukanClient({
       <div
         id="dify-chatbot-container"
         className="fixed bottom-6 right-6 z-[2147483647]"
-        role="complementary"
-        aria-label={t("chatbot.ariaLabel", lang)}
       />
     </div>
   );

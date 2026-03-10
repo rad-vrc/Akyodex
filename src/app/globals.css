@@ -121,6 +121,17 @@ button,
   letter-spacing: 0 !important;
 }
 
+button:focus-visible,
+.btn:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+
+
 /* Akyoカード */
 .akyo-card {
   background: white !important;
@@ -246,8 +257,9 @@ select {
 
 select:focus {
   border-color: var(--primary-green) !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(102, 217, 165, 0.2) !important;
+  outline: 3px solid #059669 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(102, 217, 165, 0.5) !important;
 }
 
 /* スクロールバー */
@@ -509,7 +521,7 @@ select:focus {
 
 .list-view-table thead {
   background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-  color: #4a2500;
+  color: #2d1600; /* #4a2500 → #2d1600 に変更（約5.5:1） */
 }
 
 .list-view-table th {
