@@ -8,7 +8,10 @@ import { t, type SupportedLanguage } from '@/lib/i18n';
 import { buildAvatarImageUrl, safeOpenVRChatLink } from '@/lib/vrchat-utils';
 import type { AkyoData } from '@/types/akyo';
 import Image from 'next/image';
-import type { MouseEvent as ReactMouseEvent } from 'react';
+import {
+  type MouseEvent as ReactMouseEvent,
+  useRef,
+} from 'react';
 
 /**
  * Props for the AkyoList component
@@ -33,6 +36,8 @@ interface AkyoListProps {
  * @returns Table-based list element
  */
 export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: AkyoListProps) {
+  const rowDetailTriggerRefs = useRef(new Map<string, HTMLButtonElement | null>());
+
   /**
    * Handles click on the favorite icon button
    * @param e - Event object
@@ -64,11 +69,22 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
 
   const handleRowDetailClick = (
     e: ReactMouseEvent<HTMLButtonElement>,
-    akyo: AkyoData
+    akyo: AkyoData,
+    triggerElement: HTMLElement | null
   ) => {
     e.stopPropagation();
-    onShowDetail?.(akyo, e.currentTarget);
+    onShowDetail?.(akyo, triggerElement);
   };
+
+  const setRowDetailTriggerRef =
+    (id: string) => (element: HTMLButtonElement | null) => {
+      if (element) {
+        rowDetailTriggerRefs.current.set(id, element);
+        return;
+      }
+
+      rowDetailTriggerRefs.current.delete(id);
+    };
 
   const renderRowDetailTrigger = (
     akyo: AkyoData,
@@ -76,12 +92,21 @@ export function AkyoList({ data, lang = 'ja', onToggleFavorite, onShowDetail }: 
     options?: { hiddenFromAssistiveTech?: boolean }
   ) => (
     <button
+      ref={options?.hiddenFromAssistiveTech ? undefined : setRowDetailTriggerRef(akyo.id)}
       type="button"
       className="absolute inset-0 z-0 h-full w-full cursor-pointer bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-inset"
       aria-label={options?.hiddenFromAssistiveTech ? undefined : label}
       aria-hidden={options?.hiddenFromAssistiveTech || undefined}
       tabIndex={options?.hiddenFromAssistiveTech ? -1 : 0}
-      onClick={(e) => handleRowDetailClick(e, akyo)}
+      onClick={(e) =>
+        handleRowDetailClick(
+          e,
+          akyo,
+          options?.hiddenFromAssistiveTech
+            ? rowDetailTriggerRefs.current.get(akyo.id) ?? null
+            : e.currentTarget
+        )
+      }
     />
   );
 
