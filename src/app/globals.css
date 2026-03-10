@@ -520,8 +520,8 @@ select:focus {
 }
 
 .list-view-table thead {
-  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-  color: #2d1600; /* #4a2500 → #2d1600 に変更（約5.5:1） */
+  background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-orange) 100%);
+  color: #2d1600; /* 濃い文字色は維持してコントラストを確保 */
 }
 
 .list-view-table th {
